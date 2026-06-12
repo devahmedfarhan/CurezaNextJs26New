@@ -8,5 +8,8 @@ export const getImageUrl = (path: string | null | undefined) => {
     // Assuming API is at 127.0.0.1:8000 for now, or use env var
     const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000';
 
-    return `${baseUrl}/${cleanPath}`;
+    if (cleanPath.startsWith('storage/')) {
+        return `${baseUrl}/${cleanPath}`;
+    }
+    return `${baseUrl}/storage/${cleanPath}`;
 };

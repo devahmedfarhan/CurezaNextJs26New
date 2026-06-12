@@ -63,15 +63,43 @@ class ProductSeeder extends Seeder
         );
 
         // --- 2. SETUP BRANDS ---
-        $noelleRosa = Brand::firstOrCreate(
-            ['slug' => 'noelle-rosa'],
-            ['name' => 'Noelle Rosa', 'is_active' => true]
-        );
+        $noelleRosa = Brand::where('slug', 'noelle-rosa')->first();
+        if (!$noelleRosa) {
+            $noelleRosaSeller = User::firstOrCreate(
+                ['email' => 'noellerosa@cureza-seller.com'],
+                [
+                    'name' => 'Noelle Rosa',
+                    'password' => bcrypt('password123'),
+                    'role' => 'vendor',
+                    'email_verified_at' => now(),
+                ]
+            );
+            $noelleRosa = Brand::create([
+                'slug' => 'noelle-rosa',
+                'name' => 'Noelle Rosa',
+                'is_active' => true,
+                'user_id' => $noelleRosaSeller->id,
+            ]);
+        }
 
-        $greenEarth = Brand::firstOrCreate(
-            ['slug' => 'green-earth'],
-            ['name' => 'Green Earth', 'is_active' => true]
-        );
+        $greenEarth = Brand::where('slug', 'green-earth')->first();
+        if (!$greenEarth) {
+            $greenEarthSeller = User::firstOrCreate(
+                ['email' => 'greenearth@cureza-seller.com'],
+                [
+                    'name' => 'Green Earth',
+                    'password' => bcrypt('password123'),
+                    'role' => 'vendor',
+                    'email_verified_at' => now(),
+                ]
+            );
+            $greenEarth = Brand::create([
+                'slug' => 'green-earth',
+                'name' => 'Green Earth',
+                'is_active' => true,
+                'user_id' => $greenEarthSeller->id,
+            ]);
+        }
 
         $productsData = [
             // --- NOELLE ROSA (User Request) ---
@@ -262,12 +290,13 @@ class ProductSeeder extends Seeder
                 'tags' => ['Immunity', 'Herbal']
             ]
         ];
-
         foreach ($productsData as $productData) {
             $tags = $productData['tags'] ?? [];
             unset($productData['tags']);
 
-            $product = Product::create(array_merge($productData, ['seller_id' => $seller->id]));
+            $brand = Brand::find($productData['brand_id']);
+            $productSellerId = $brand ? $brand->user_id : $seller->id;
+            $product = Product::create(array_merge($productData, ['seller_id' => $productSellerId]));
 
             // Sync Tags
             if (!empty($tags)) {

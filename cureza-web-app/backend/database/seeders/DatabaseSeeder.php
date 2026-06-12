@@ -8,7 +8,8 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
+    // Enable model events during seeding so slugs and default attributes are properly generated
+    // use WithoutModelEvents;
 
     /**
      * Seed the application's database.
@@ -21,6 +22,13 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             UsersSeeder::class,
             MenuItemSeeder::class,
+            BlogSeeder::class,
+            CommissionSeeder::class,
+            CommunitySeeder::class,
+            ProductSeeder::class,
+            ShippingMethodSeeder::class,
+            PrescriptionSeeder::class,
+            DemoDataMasterSeeder::class,
         ]);
     }
 }

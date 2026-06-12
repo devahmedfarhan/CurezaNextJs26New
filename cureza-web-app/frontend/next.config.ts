@@ -24,6 +24,11 @@ const nextConfig: NextConfig = {
     ],
   },
   async headers() {
+    const isProd = process.env.NODE_ENV === 'production';
+    const cspValue = isProd
+      ? "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com; connect-src 'self' http://127.0.0.1:8000 http://localhost:8000 https://challenges.cloudflare.com; img-src 'self' data: http://127.0.0.1:8000 http://localhost:8000 https://images.unsplash.com; style-src 'self' 'unsafe-inline'; frame-src 'self' https://challenges.cloudflare.com; font-src 'self' data:;"
+      : "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src 'self' ws: wss: http://127.0.0.1:8000 http://localhost:8000 https://challenges.cloudflare.com; img-src * data: blob:; style-src 'self' 'unsafe-inline'; frame-src 'self' https://challenges.cloudflare.com; font-src 'self' data:;";
+
     return [
       {
         source: '/(.*)',
@@ -50,7 +55,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com; connect-src 'self' http://127.0.0.1:8000 http://localhost:8000 https://challenges.cloudflare.com; img-src 'self' data: http://127.0.0.1:8000 http://localhost:8000 https://images.unsplash.com; style-src 'self' 'unsafe-inline'; frame-src 'self' https://challenges.cloudflare.com; font-src 'self' data:;",
+            value: cspValue,
           },
         ],
       },

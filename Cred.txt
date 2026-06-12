@@ -13,3 +13,5 @@ Seller / Vendor	seller@cureza.com	password	http://localhost:3000/seller
 8	Ojas Organics	ojasorganics@cureza-seller.com	password123
 9	Sattva Remedies	sattvaremedies@cureza-seller.com	password123
 10	Amrit Life	amritlife@cureza-seller.com	password123
+11	Noelle Rosa	noellerosa@cureza-seller.com	password123
+12	Green Earth	greenearth@cureza-seller.com	password123
