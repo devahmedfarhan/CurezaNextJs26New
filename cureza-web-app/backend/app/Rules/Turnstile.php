@@ -24,7 +24,7 @@ class Turnstile implements ValidationRule
         }
 
         $secretKey = config('services.cloudflare.turnstile_secret');
-        if (app()->environment('local') && empty($secretKey)) {
+        if (app()->environment('local') && (empty($secretKey) || empty($value))) {
             return;
         }
 
