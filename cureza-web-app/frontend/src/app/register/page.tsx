@@ -201,24 +201,7 @@ function RegisterContent() {
                                 </div>
                             </div>
 
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">I am a</label>
-                                <div className="grid grid-cols-3 gap-3">
-                                    {['customer', 'vendor', 'doctor'].map((r) => (
-                                        <button
-                                            key={r}
-                                            type="button"
-                                            onClick={() => setRole(r)}
-                                            className={`py-2 px-4 rounded-lg text-sm font-medium capitalize border transition-colors ${role === r
-                                                ? 'bg-cureza-green text-white border-cureza-green'
-                                                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                                                }`}
-                                        >
-                                            {r}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
+
 
                             {role === 'vendor' && (
                                 <div>
