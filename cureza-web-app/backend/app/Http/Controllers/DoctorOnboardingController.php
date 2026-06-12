@@ -159,19 +159,19 @@ class DoctorOnboardingController extends Controller
 
             // 3. Handle File Uploads
             if ($request->hasFile('profile_photo')) {
-                $path = $request->file('profile_photo')->store('doctor_profile/' . $user->id, 'public');
+                $path = $this->storeFileSecurely($request->file('profile_photo'), 'doctor_profile/' . $user->id);
                 $user->profile_photo_path = $path;
             }
             if ($request->hasFile('license_doc')) {
-                $path = $request->file('license_doc')->store('doctor_kyc/' . $user->id, 'public');
+                $path = $this->storeFileSecurely($request->file('license_doc'), 'doctor_kyc/' . $user->id);
                 $user->license_path = $path;
             }
             if ($request->hasFile('identity_proof')) {
-                $path = $request->file('identity_proof')->store('doctor_kyc/' . $user->id, 'public');
+                $path = $this->storeFileSecurely($request->file('identity_proof'), 'doctor_kyc/' . $user->id);
                 $user->identity_proof_path = $path;
             }
             if ($request->hasFile('ayush_document')) {
-                $path = $request->file('ayush_document')->store('doctor_kyc/' . $user->id, 'public');
+                $path = $this->storeFileSecurely($request->file('ayush_document'), 'doctor_kyc/' . $user->id);
                 $user->ayush_document_path = $path;
             }
             
@@ -200,6 +200,9 @@ class DoctorOnboardingController extends Controller
                 ]
             ], 201);
 
+        } catch (\InvalidArgumentException $e) {
+            DB::rollBack();
+            return response()->json(['message' => $e->getMessage()], 422);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Doctor Registration Failed', ['error' => $e->getMessage()]);
@@ -306,19 +309,23 @@ class DoctorOnboardingController extends Controller
         // We will allow reupload for status that is 'rejected', 'pending', or 'approved' to make the "Update Document" flow seamless.
         // It will reset the state of that document back to pending and require re-verification.
 
-        // Upload and store the file
-        if ($type === 'profile_photo') {
-            $path = $request->file('file')->store('doctor_profile/' . $user->id, 'public');
-            $user->profile_photo_path = $path;
-        } else if ($type === 'license_doc') {
-            $path = $request->file('file')->store('doctor_kyc/' . $user->id, 'public');
-            $user->license_path = $path;
-        } else if ($type === 'identity_proof') {
-            $path = $request->file('file')->store('doctor_kyc/' . $user->id, 'public');
-            $user->identity_proof_path = $path;
-        } else if ($type === 'ayush_document') {
-            $path = $request->file('file')->store('doctor_kyc/' . $user->id, 'public');
-            $user->ayush_document_path = $path;
+        try {
+            // Upload and store the file
+            if ($type === 'profile_photo') {
+                $path = $this->storeFileSecurely($request->file('file'), 'doctor_profile/' . $user->id);
+                $user->profile_photo_path = $path;
+            } else if ($type === 'license_doc') {
+                $path = $this->storeFileSecurely($request->file('file'), 'doctor_kyc/' . $user->id);
+                $user->license_path = $path;
+            } else if ($type === 'identity_proof') {
+                $path = $this->storeFileSecurely($request->file('file'), 'doctor_kyc/' . $user->id);
+                $user->identity_proof_path = $path;
+            } else if ($type === 'ayush_document') {
+                $path = $this->storeFileSecurely($request->file('file'), 'doctor_kyc/' . $user->id);
+                $user->ayush_document_path = $path;
+            }
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
         }
 
         // Set status to pending and clear rejection reason

@@ -468,4 +468,53 @@ class SecurityHardeningTest extends TestCase
             'description' => 'Test credit description',
         ]);
     }
+
+    public function test_file_upload_security()
+    {
+        \Illuminate\Support\Facades\Storage::fake('public');
+        \Illuminate\Support\Facades\Storage::fake('s3');
+
+        $seller = User::factory()->create(['role' => 'vendor']);
+
+        // 1. Test uploading a valid file (JPEG)
+        $validFile = \Illuminate\Http\UploadedFile::fake()->image('document.jpg');
+
+        $this->actingAs($seller, 'sanctum');
+
+        $response = $this->postJson('/api/seller/settings/kyc', [
+            'pan_image' => $validFile,
+        ]);
+
+        $response->assertStatus(200);
+
+        // Verify that the file was renamed to a UUID and stored
+        $changeRequest = \App\Models\SellerChangeRequest::where('seller_id', $seller->id)->first();
+        $this->assertNotNull($changeRequest);
+        $storedPath = $changeRequest->new_data['pan_image'];
+        $this->assertStringStartsWith('/storage/', $storedPath);
+
+        // Strip the '/storage/' prefix to get the relative path
+        $relativePath = str_replace('/storage/', '', $storedPath);
+        
+        // Assert filename is UUID
+        $filename = basename($relativePath);
+        $this->assertTrue(preg_match('/^[a-f0-9-]{36}\.(jpeg|jpg)$/i', $filename) === 1);
+
+        // Verify storage
+        $disk = env('FILESYSTEM_DISK') === 's3' ? 's3' : 'public';
+        \Illuminate\Support\Facades\Storage::disk($disk)->assertExists($relativePath);
+
+        // Clean up the pending request to avoid a 400 response blocking our invalid file test
+        $changeRequest->delete();
+
+        // 2. Test uploading a forbidden file type (e.g. php file disguised or not)
+        $invalidFile = \Illuminate\Http\UploadedFile::fake()->create('malicious.php', 100, 'text/x-php');
+
+        $response = $this->postJson('/api/seller/settings/kyc', [
+            'pan_image' => $invalidFile,
+        ]);
+
+        // Should return 422
+        $response->assertStatus(422);
+    }
 }

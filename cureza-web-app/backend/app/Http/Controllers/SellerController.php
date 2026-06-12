@@ -237,7 +237,11 @@ class SellerController extends Controller
         ];
 
         // Handle File Upload
-        $path = $request->file('file')->store('kyc/' . $type, 'public');
+        try {
+            $path = $this->storeFileSecurely($request->file('file'), 'kyc/' . $type);
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
         
         if (array_key_exists($type, $columnMap)) {
             $config = $columnMap[$type];

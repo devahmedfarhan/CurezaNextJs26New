@@ -225,11 +225,15 @@ class SellerSettingsController extends Controller
             'signature_image' => 'kyc/signature',
         ];
 
-        foreach ($files as $field => $path) {
-            if ($request->hasFile($field)) {
-                $storedPath = $request->file($field)->store($path, 'public');
-                $newData[$field] = '/storage/' . $storedPath;
+        try {
+            foreach ($files as $field => $path) {
+                if ($request->hasFile($field)) {
+                    $storedPath = $this->storeFileSecurely($request->file($field), $path);
+                    $newData[$field] = '/storage/' . $storedPath;
+                }
             }
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
         }
 
         if (empty($newData)) {

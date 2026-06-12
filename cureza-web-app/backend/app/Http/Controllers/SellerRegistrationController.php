@@ -172,18 +172,23 @@ class SellerRegistrationController extends Controller
             $filePaths = [];
             $requiredFiles = ['cheque_image' => 'cheque_image_path', 'signature_image' => 'signature_image_path'];
 
-            foreach ($requiredFiles as $key => $column) {
-                if ($request->hasFile($key)) {
-                    $filePaths[$column] = '/storage/' . $request->file($key)->store('seller_documents', 'public');
+            try {
+                foreach ($requiredFiles as $key => $column) {
+                    if ($request->hasFile($key)) {
+                        $filePaths[$column] = '/storage/' . $this->storeFileSecurely($request->file($key), 'seller_documents');
+                    }
                 }
-            }
 
-            // Process Dynamic KYC Files
-            $kycDocPaths = [];
-            if ($request->hasFile('kyc_docs')) {
-                foreach ($request->file('kyc_docs') as $id => $file) {
-                    $kycDocPaths[$id] = $file->store('seller_documents', 'public');
+                // Process Dynamic KYC Files
+                $kycDocPaths = [];
+                if ($request->hasFile('kyc_docs')) {
+                    foreach ($request->file('kyc_docs') as $id => $file) {
+                        $kycDocPaths[$id] = $this->storeFileSecurely($file, 'seller_documents');
+                    }
                 }
+            } catch (\InvalidArgumentException $e) {
+                DB::rollBack();
+                return response()->json(['message' => $e->getMessage()], 422);
             }
 
             // 2b. Fetch existing profile to merge data
@@ -380,18 +385,23 @@ class SellerRegistrationController extends Controller
             // Upload Files if any
             $filePaths = [];
             $requiredFiles = ['cheque_image' => 'cheque_image_path', 'signature_image' => 'signature_image_path'];
-            foreach ($requiredFiles as $key => $column) {
-                if ($request->hasFile($key)) {
-                    $filePaths[$column] = '/storage/' . $request->file($key)->store('seller_documents', 'public');
+            try {
+                foreach ($requiredFiles as $key => $column) {
+                    if ($request->hasFile($key)) {
+                        $filePaths[$column] = '/storage/' . $this->storeFileSecurely($request->file($key), 'seller_documents');
+                    }
                 }
-            }
 
-            // Process Dynamic KYC Files
-            $kycDocPaths = [];
-            if ($request->hasFile('kyc_docs')) {
-                foreach ($request->file('kyc_docs') as $id => $file) {
-                    $kycDocPaths[$id] = $file->store('seller_documents', 'public');
+                // Process Dynamic KYC Files
+                $kycDocPaths = [];
+                if ($request->hasFile('kyc_docs')) {
+                    foreach ($request->file('kyc_docs') as $id => $file) {
+                        $kycDocPaths[$id] = $this->storeFileSecurely($file, 'seller_documents');
+                    }
                 }
+            } catch (\InvalidArgumentException $e) {
+                DB::rollBack();
+                return response()->json(['message' => $e->getMessage()], 422);
             }
 
             // 2b. Fetch existing profile to merge data
