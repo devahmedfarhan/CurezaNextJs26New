@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Star, Info, FileText, ClipboardList } from 'lucide-react';
 import 'react-quill-new/dist/quill.snow.css';
+import DOMPurify from 'isomorphic-dompurify';
 
 export default function TabsSection({ product }: { product: any }) {
     const [activeTab, setActiveTab] = useState('description');
@@ -74,7 +75,9 @@ export default function TabsSection({ product }: { product: any }) {
                                     [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mb-6 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:mb-4
                                     [&_strong]:font-bold [&_em]:italic [&_a]:text-cureza-green [&_a]:underline
                                     dark:[&_h1]:text-white dark:[&_h2]:text-white dark:[&_h3]:text-white"
-                                dangerouslySetInnerHTML={{ __html: tabs.find(t => t.id === activeTab)?.content }}
+                                dangerouslySetInnerHTML={{ 
+                                    __html: DOMPurify.sanitize(tabs.find(t => t.id === activeTab)?.content || '') 
+                                }}
                             />
                         </div>
                     ) : tabs.find(t => t.id === activeTab)?.type === 'html' && (
