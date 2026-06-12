@@ -285,4 +285,71 @@ class SecurityHardeningTest extends TestCase
         ]);
         $response->assertStatus(429);
     }
+
+    public function test_database_fields_encryption()
+    {
+        // 1. Verify User fields encryption
+        $user = User::factory()->create([
+            'phone' => '9876543210',
+            'medical_license_number' => 'LIC-12345',
+            'bank_account_number' => 'ACC-98765',
+            'bank_ifsc' => 'IFSC0001234',
+            'bank_account_holder' => 'John Doe H',
+            'address' => '123 Test Street, Suite 100',
+        ]);
+
+        // Get raw DB record
+        $rawUser = \Illuminate\Support\Facades\DB::table('users')->where('id', $user->id)->first();
+
+        // Assert they are not equal to plaintext (since they are encrypted in DB)
+        $this->assertNotEquals('9876543210', $rawUser->phone);
+        $this->assertNotEquals('LIC-12345', $rawUser->medical_license_number);
+        $this->assertNotEquals('ACC-98765', $rawUser->bank_account_number);
+        $this->assertNotEquals('IFSC0001234', $rawUser->bank_ifsc);
+        $this->assertNotEquals('John Doe H', $rawUser->bank_account_holder);
+        $this->assertNotEquals('123 Test Street, Suite 100', $rawUser->address);
+
+        // Assert they are decrypted correctly when loaded via Eloquent
+        $loadedUser = User::find($user->id);
+        $this->assertEquals('9876543210', $loadedUser->phone);
+        $this->assertEquals('LIC-12345', $loadedUser->medical_license_number);
+        $this->assertEquals('ACC-98765', $loadedUser->bank_account_number);
+        $this->assertEquals('IFSC0001234', $loadedUser->bank_ifsc);
+        $this->assertEquals('John Doe H', $loadedUser->bank_account_holder);
+        $this->assertEquals('123 Test Street, Suite 100', $loadedUser->address);
+
+        // 2. Verify SellerProfile fields encryption
+        $seller = User::factory()->create(['role' => 'vendor']);
+        $profile = \App\Models\SellerProfile::create([
+            'user_id' => $seller->id,
+            'registering_as' => 'Brand',
+            'pan_number' => 'ABCDE1234F',
+            'gst_number' => '29GGGGG1314R1Z3',
+            'aadhaar_number' => '123456789012',
+            'bank_account_number' => 'BANK-ACC-1111',
+            'account_holder_name' => 'Seller Name H',
+            'ifsc_code' => 'IFSC0009999',
+            'status' => 'active',
+        ]);
+
+        // Get raw DB record
+        $rawProfile = \Illuminate\Support\Facades\DB::table('seller_profiles')->where('id', $profile->id)->first();
+
+        // Assert they are not equal to plaintext
+        $this->assertNotEquals('ABCDE1234F', $rawProfile->pan_number);
+        $this->assertNotEquals('29GGGGG1314R1Z3', $rawProfile->gst_number);
+        $this->assertNotEquals('123456789012', $rawProfile->aadhaar_number);
+        $this->assertNotEquals('BANK-ACC-1111', $rawProfile->bank_account_number);
+        $this->assertNotEquals('Seller Name H', $rawProfile->account_holder_name);
+        $this->assertNotEquals('IFSC0009999', $rawProfile->ifsc_code);
+
+        // Assert they are decrypted correctly when loaded via Eloquent
+        $loadedProfile = \App\Models\SellerProfile::find($profile->id);
+        $this->assertEquals('ABCDE1234F', $loadedProfile->pan_number);
+        $this->assertEquals('29GGGGG1314R1Z3', $loadedProfile->gst_number);
+        $this->assertEquals('123456789012', $loadedProfile->aadhaar_number);
+        $this->assertEquals('BANK-ACC-1111', $loadedProfile->bank_account_number);
+        $this->assertEquals('Seller Name H', $loadedProfile->account_holder_name);
+        $this->assertEquals('IFSC0009999', $loadedProfile->ifsc_code);
+    }
 }

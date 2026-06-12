@@ -109,6 +109,14 @@ class User extends Authenticatable
             'certifications' => 'array',
             'professional_affiliations' => 'array',
             
+            // Sensitive Encrypted Casts (Section 4.1)
+            'phone' => 'encrypted',
+            'medical_license_number' => 'encrypted',
+            'bank_account_number' => 'encrypted',
+            'bank_ifsc' => 'encrypted',
+            'bank_account_holder' => 'encrypted',
+            'address' => 'encrypted',
+            
             // New Doctor Casts
             'languages_spoken' => 'array',
             'secondary_specializations' => 'array',

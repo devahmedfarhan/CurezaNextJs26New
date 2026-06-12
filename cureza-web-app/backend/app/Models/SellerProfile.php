@@ -77,6 +77,12 @@ class SellerProfile extends Model
         'kyc_document_statuses' => 'array',
         'kyc_document_reasons' => 'array',
         'selected_licenses' => 'array',
+        'pan_number' => 'encrypted',
+        'gst_number' => 'encrypted',
+        'aadhaar_number' => 'encrypted',
+        'bank_account_number' => 'encrypted',
+        'account_holder_name' => 'encrypted',
+        'ifsc_code' => 'encrypted',
     ];
 
     public function user()
