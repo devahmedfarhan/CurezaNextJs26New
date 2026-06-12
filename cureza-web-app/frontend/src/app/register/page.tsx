@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Mail, Lock, User, Phone, ArrowRight, Heart, ShieldCheck, Leaf, Store } from 'lucide-react';
+import { Mail, Lock, User, Phone, ArrowRight, Heart, ShieldCheck, Leaf, Store, Check, X } from 'lucide-react';
 import { Turnstile } from '@/components/common/Turnstile';
 
 function RegisterContent() {
@@ -29,7 +29,6 @@ function RegisterContent() {
 
     const getPasswordStrength = (pwd: string) => {
         let s = 0;
-        if (pwd.length >= 8) s++;
         if (pwd.length >= 12) s++;
         if (/[A-Z]/.test(pwd)) s++;
         if (/[a-z]/.test(pwd)) s++;
@@ -242,18 +241,38 @@ function RegisterContent() {
                                     />
                                 </div>
                                 {password && (
-                                    <div className="mt-2">
+                                    <div className="mt-2 space-y-2">
                                         <div className="flex justify-between text-xs font-semibold text-gray-500 mb-1">
                                             <span>Password Strength:</span>
-                                            <span>
-                                                {password.length === 0 ? '' : getPasswordStrength(password) <= 2 ? 'Weak' : getPasswordStrength(password) <= 4 ? 'Medium' : 'Strong'}
+                                            <span className={getPasswordStrength(password) <= 2 ? 'text-red-500' : getPasswordStrength(password) <= 4 ? 'text-yellow-600' : 'text-green-600'}>
+                                                {getPasswordStrength(password) <= 2 ? 'Weak' : getPasswordStrength(password) <= 4 ? 'Medium' : 'Strong'}
                                             </span>
                                         </div>
                                         <div className="h-1.5 w-full bg-gray-200 rounded-full overflow-hidden">
                                             <div
                                                 className={`h-full ${getPasswordStrength(password) <= 2 ? 'bg-red-500' : getPasswordStrength(password) <= 4 ? 'bg-yellow-500' : 'bg-green-500'} transition-all duration-300`}
-                                                style={{ width: `${(getPasswordStrength(password) / 6) * 100}%` }}
+                                                style={{ width: `${(getPasswordStrength(password) / 5) * 100}%` }}
                                             />
+                                        </div>
+                                        <div className="mt-3 space-y-1.5 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                                            {[
+                                                { label: 'At least 12 characters long', met: password.length >= 12 },
+                                                { label: 'Contains uppercase letter (A-Z)', met: /[A-Z]/.test(password) },
+                                                { label: 'Contains lowercase letter (a-z)', met: /[a-z]/.test(password) },
+                                                { label: 'Contains number (0-9)', met: /[0-9]/.test(password) },
+                                                { label: 'Contains special character (@, #, $, etc.)', met: /[^A-Za-z0-9]/.test(password) },
+                                            ].map((cond, idx) => (
+                                                <div key={idx} className="flex items-center gap-2 text-[11px]">
+                                                    {cond.met ? (
+                                                        <Check size={12} className="text-green-600 flex-shrink-0" />
+                                                    ) : (
+                                                        <X size={12} className="text-red-400 flex-shrink-0" />
+                                                    )}
+                                                    <span className={`transition-all ${cond.met ? 'line-through text-gray-400 font-medium' : 'text-gray-600'}`}>
+                                                        {cond.label}
+                                                    </span>
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
                                 )}
