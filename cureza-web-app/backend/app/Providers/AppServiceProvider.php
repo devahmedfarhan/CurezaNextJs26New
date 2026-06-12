@@ -65,5 +65,14 @@ class AppServiceProvider extends ServiceProvider
             }
             return $request->cookie('token');
         });
+
+        // Register Log Redaction Processor (G.2)
+        if (app()->has('log')) {
+            try {
+                \Illuminate\Support\Facades\Log::pushProcessor(new \App\Logging\LogRedactorProcessor());
+            } catch (\Throwable $e) {
+                // Fail-safe if log channel is not monolog compatible
+            }
+        }
     }
 }

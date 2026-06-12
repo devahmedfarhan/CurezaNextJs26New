@@ -95,8 +95,21 @@ class PaymentController extends Controller
             ];
             $appointment->save();
 
+            Log::info("Payment verified successfully.", [
+                'appointment_id' => $request->appointment_id,
+                'order_id' => $request->razorpay_order_id,
+                'payment_id' => $request->razorpay_payment_id,
+                'user_id' => $appointment->patient_id ?? null,
+            ]);
+
             return response()->json(['message' => 'Payment successful', 'status' => 'success']);
         } else {
+            Log::warning("Payment signature verification failed.", [
+                'appointment_id' => $request->appointment_id,
+                'order_id' => $request->razorpay_order_id,
+                'payment_id' => $request->razorpay_payment_id,
+                'ip' => $request->ip(),
+            ]);
             return response()->json(['message' => 'Invalid signature', 'status' => 'failed'], 400);
         }
     }

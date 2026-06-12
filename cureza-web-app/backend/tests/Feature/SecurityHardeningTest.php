@@ -517,4 +517,67 @@ class SecurityHardeningTest extends TestCase
         // Should return 422
         $response->assertStatus(422);
     }
+
+    public function test_logging_redacts_sensitive_parameters()
+    {
+        $processor = new \App\Logging\LogRedactorProcessor();
+
+        $record = new \Monolog\LogRecord(
+            datetime: new \DateTimeImmutable(),
+            channel: 'test',
+            level: \Monolog\Level::Info,
+            message: 'User login event',
+            context: [
+                'email' => 'user@example.com',
+                'password' => 'secret12345!',
+                'cvv' => '123',
+                'pan_number' => 'ABCDE1234F',
+            ]
+        );
+
+        $processedRecord = $processor($record);
+
+        $this->assertEquals('[REDACTED]', $processedRecord->context['password']);
+        $this->assertEquals('[REDACTED]', $processedRecord->context['cvv']);
+        $this->assertEquals('[REDACTED]', $processedRecord->context['pan_number']);
+        $this->assertEquals('user@example.com', $processedRecord->context['email']);
+    }
+
+    public function test_intrusion_alert_triggers_on_spikes()
+    {
+        $this->withoutMiddleware(\Illuminate\Routing\Middleware\ThrottleRequests::class);
+        $this->withoutMiddleware(\App\Http\Middleware\HoneypotMiddleware::class);
+        \Illuminate\Support\Facades\Cache::flush();
+
+        // Count critical logs
+        $criticalLogs = 0;
+        \Illuminate\Support\Facades\Log::listen(function ($message) use (&$criticalLogs) {
+            if ($message->level === 'critical' && str_contains($message->message, 'Intrusion Alert')) {
+                $criticalLogs++;
+            }
+        });
+
+        // Make 10 failed unauthenticated/unauthorized attempts to trigger spike
+        for ($i = 0; $i < 10; $i++) {
+            $response = $this->getJson('/api/seller/settings');
+            $response->assertStatus(401);
+        }
+
+        $this->assertEquals(1, $criticalLogs);
+    }
+
+    public function test_honeypot_blocks_bot_requests()
+    {
+        // Try submitting login with honeypot field filled
+        $response = $this->postJson('/api/login', [
+            'email' => 'bot@example.com',
+            'password' => 'SecuReP@ss12345!',
+            'website_hp' => 'http://spam.com', // Filled honeypot
+        ]);
+
+        // Asserts dummy success response to quiet the bot (200)
+        $response->assertStatus(200);
+        $this->assertTrue($response->json('success'));
+        $this->assertEquals('Submission received successfully.', $response->json('message'));
+    }
 }

@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,
+            'honeypot' => \App\Http\Middleware\HoneypotMiddleware::class,
         ]);
         $middleware->validateCsrfTokens(except: [
             'api/*', // Force all API routes to be stateless (no CSRF)
@@ -38,10 +39,37 @@ return Application::configure(basePath: dirname(__DIR__))
                     ], $status);
                 } elseif ($e instanceof \Illuminate\Auth\Access\AuthorizationException) {
                     $status = 403;
+                    \Illuminate\Support\Facades\Log::warning("Policy authorization failure on " . $request->getRequestUri(), [
+                        'ip' => $request->ip(),
+                        'user_id' => $request->user()?->id,
+                        'message' => $e->getMessage(),
+                    ]);
                 } elseif ($e instanceof \Illuminate\Auth\AuthenticationException) {
                     $status = 401;
+                    \Illuminate\Support\Facades\Log::warning("Unauthenticated request to " . $request->getRequestUri(), [
+                        'ip' => $request->ip(),
+                    ]);
                 } elseif ($e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
                     $status = 404;
+                }
+
+                // Intrusion Alert tracking (Section 9)
+                if ($status === 401 || $status === 403) {
+                    $ip = $request->ip();
+                    $cacheKey = "auth_failures_spike_" . $ip;
+                    $count = (int)\Illuminate\Support\Facades\Cache::get($cacheKey, 0) + 1;
+                    \Illuminate\Support\Facades\Cache::put($cacheKey, $count, now()->addMinutes(5));
+
+                    if ($count === 10) {
+                        \Illuminate\Support\Facades\Log::critical("Intrusion Alert: 10+ failed API authorization checks from IP: " . $ip);
+                        if (config('logging.channels.slack.url')) {
+                            try {
+                                \Illuminate\Support\Facades\Log::channel('slack')->critical("Intrusion Alert: 10+ failed API authorization checks from IP: " . $ip);
+                            } catch (\Throwable $err) {
+                                // ignore
+                            }
+                        }
+                    }
                 }
 
                 $response = [

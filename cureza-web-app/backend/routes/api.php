@@ -34,7 +34,7 @@ use App\Http\Controllers\ComparisonController;
 use App\Http\Controllers\SellerOrderController;
 
 // Sensitive Authentication, Registration & OTP Routes (Section 3.1)
-Route::middleware('throttle:sensitive')->group(function () {
+Route::middleware(['throttle:sensitive', 'honeypot'])->group(function () {
     // Customer Authentication Routes
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);

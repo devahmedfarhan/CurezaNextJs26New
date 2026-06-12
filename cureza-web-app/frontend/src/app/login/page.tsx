@@ -129,6 +129,10 @@ function LoginContent() {
                     </div>
 
                     <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+                        <div style={{ display: 'none' }} aria-hidden="true">
+                            <input type="text" name="website_hp" tabIndex={-1} autoComplete="off" />
+                            <input type="email" name="spamtrap_email" tabIndex={-1} autoComplete="off" />
+                        </div>
                         <div className="space-y-4">
                             <div>
                                 <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>

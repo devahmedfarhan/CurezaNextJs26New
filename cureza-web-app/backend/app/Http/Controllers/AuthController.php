@@ -93,6 +93,10 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
+            \Illuminate\Support\Facades\Log::warning("Failed login attempt for user", [
+                'email' => $request->email,
+                'ip' => $request->ip(),
+            ]);
             \Illuminate\Support\Facades\RateLimiter::hit($throttleKey, 900); // 15-minute lockout
             throw ValidationException::withMessages([
                 'email' => ['Invalid credentials'],
