@@ -14,13 +14,17 @@ class Turnstile implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        if (app()->environment('testing')) {
+            return;
+        }
+
         if (empty($value)) {
             $fail('The CAPTCHA verification is required.');
             return;
         }
 
         $secretKey = config('services.cloudflare.turnstile_secret');
-        if (app()->environment('local', 'testing') && empty($secretKey)) {
+        if (app()->environment('local') && empty($secretKey)) {
             return;
         }
 

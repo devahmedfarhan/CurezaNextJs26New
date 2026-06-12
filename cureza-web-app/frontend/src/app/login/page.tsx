@@ -6,10 +6,12 @@ import api from '@/lib/api';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Mail, Lock, ArrowRight, Heart, ShieldCheck, Leaf } from 'lucide-react';
+import { Turnstile } from '@/components/common/Turnstile';
 
 function LoginContent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [turnstileToken, setTurnstileToken] = useState('');
     const [error, setError] = useState('');
     const { login, user } = useAuth();
     const router = useRouter();
@@ -35,7 +37,11 @@ function LoginContent() {
         e.preventDefault();
         setError('');
         try {
-            const response = await api.post('/login', { email, password });
+            const response = await api.post('/login', {
+                email,
+                password,
+                cf_turnstile_token: turnstileToken || undefined,
+            });
 
             // Update Auth Context
             login(response.data.access_token, response.data.user);
@@ -168,6 +174,11 @@ function LoginContent() {
                                 </div>
                             </div>
                         </div>
+
+                        <Turnstile
+                            sitekey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || '1x00000000000000000000SH'}
+                            onVerify={setTurnstileToken}
+                        />
 
                         {error && (
                             <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg p-3 text-center">

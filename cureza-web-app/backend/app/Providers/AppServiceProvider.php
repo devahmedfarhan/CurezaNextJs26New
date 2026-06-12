@@ -56,5 +56,14 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Support\Facades\RateLimiter::for('public-catalog', function (\Illuminate\Http\Request $request) {
             return \Illuminate\Cache\RateLimiting\Limit::perMinute(60)->by($request->ip());
         });
+
+        // Access token from cookie fallback (A.6)
+        \Laravel\Sanctum\Sanctum::getAccessTokenFromRequestUsing(function (\Illuminate\Http\Request $request) {
+            $token = $request->header('Authorization');
+            if ($token) {
+                return str_starts_with($token, 'Bearer ') ? substr($token, 7) : $token;
+            }
+            return $request->cookie('token');
+        });
     }
 }

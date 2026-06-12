@@ -21,7 +21,7 @@ class AuthController extends Controller
             'password' => ['required', 'string', 'confirmed', Password::min(12)->letters()->mixedCase()->numbers()->symbols()->uncompromised()],
             'role' => 'required|in:customer,vendor,doctor',
             'phone' => 'nullable|string|max:20',
-            'cf_turnstile_token' => [app()->environment('local', 'testing') && empty(config('services.cloudflare.turnstile_secret')) ? 'nullable' : 'required', new \App\Rules\Turnstile],
+            'cf_turnstile_token' => [app()->environment('testing') || (app()->environment('local') && empty(config('services.cloudflare.turnstile_secret'))) ? 'nullable' : 'required', new \App\Rules\Turnstile],
         ]);
 
         try {
@@ -78,7 +78,7 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
-            'cf_turnstile_token' => [app()->environment('local', 'testing') && empty(config('services.cloudflare.turnstile_secret')) ? 'nullable' : 'required', new \App\Rules\Turnstile],
+            'cf_turnstile_token' => [app()->environment('testing') || (app()->environment('local') && empty(config('services.cloudflare.turnstile_secret'))) ? 'nullable' : 'required', new \App\Rules\Turnstile],
         ]);
 
         $throttleKey = Str::lower($request->input('email')) . '|' . $request->ip();
@@ -353,7 +353,10 @@ class AuthController extends Controller
                 // Generate 4-digit OTP
                 $otp = rand(1000, 9999);
                 $cacheKey = "otp_{$type}_{$loginId}";
-                \Illuminate\Support\Facades\Cache::put($cacheKey, $otp, now()->addMinutes(3));
+                $attemptsKey = "otp_attempts_{$type}_{$loginId}";
+                $hashedOtp = hash('sha256', $otp);
+                \Illuminate\Support\Facades\Cache::put($cacheKey, $hashedOtp, now()->addMinutes(3));
+                \Illuminate\Support\Facades\Cache::put($attemptsKey, 0, now()->addMinutes(3));
                 \Illuminate\Support\Facades\Log::info("Password reset OTP generated for {$type} {$loginId}: {$otp}");
                 $devOtp = $otp;
             } else {

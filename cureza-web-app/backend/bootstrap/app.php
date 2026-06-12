@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->statefulApi();
         $middleware->api(append: [
             'throttle:global',
+            \App\Http\Middleware\SecureCookieMiddleware::class,
         ]);
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,

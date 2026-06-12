@@ -6,6 +6,7 @@ import api from '@/lib/api';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Mail, Lock, User, Phone, ArrowRight, Heart, ShieldCheck, Leaf, Store } from 'lucide-react';
+import { Turnstile } from '@/components/common/Turnstile';
 
 function RegisterContent() {
     const searchParams = useSearchParams();
@@ -22,8 +23,20 @@ function RegisterContent() {
     const [brandName, setBrandName] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
+    const [turnstileToken, setTurnstileToken] = useState('');
     const [error, setError] = useState('');
     const { login } = useAuth();
+
+    const getPasswordStrength = (pwd: string) => {
+        let s = 0;
+        if (pwd.length >= 8) s++;
+        if (pwd.length >= 12) s++;
+        if (/[A-Z]/.test(pwd)) s++;
+        if (/[a-z]/.test(pwd)) s++;
+        if (/[0-9]/.test(pwd)) s++;
+        if (/[^A-Za-z0-9]/.test(pwd)) s++;
+        return s;
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -46,6 +59,7 @@ function RegisterContent() {
                 role,
                 phone,
                 brand_name: role === 'vendor' ? brandName : undefined,
+                cf_turnstile_token: turnstileToken || undefined,
             });
 
             // Store token and user data
@@ -240,6 +254,22 @@ function RegisterContent() {
                                         onChange={(e) => setPassword(e.target.value)}
                                     />
                                 </div>
+                                {password && (
+                                    <div className="mt-2">
+                                        <div className="flex justify-between text-xs font-semibold text-gray-500 mb-1">
+                                            <span>Password Strength:</span>
+                                            <span>
+                                                {password.length === 0 ? '' : getPasswordStrength(password) <= 2 ? 'Weak' : getPasswordStrength(password) <= 4 ? 'Medium' : 'Strong'}
+                                            </span>
+                                        </div>
+                                        <div className="h-1.5 w-full bg-gray-200 rounded-full overflow-hidden">
+                                            <div
+                                                className={`h-full ${getPasswordStrength(password) <= 2 ? 'bg-red-500' : getPasswordStrength(password) <= 4 ? 'bg-yellow-500' : 'bg-green-500'} transition-all duration-300`}
+                                                style={{ width: `${(getPasswordStrength(password) / 6) * 100}%` }}
+                                            />
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             <div>
@@ -261,6 +291,11 @@ function RegisterContent() {
                                 </div>
                             </div>
                         </div>
+
+                        <Turnstile
+                            sitekey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || '1x00000000000000000000SH'}
+                            onVerify={setTurnstileToken}
+                        />
 
                         {error && (
                             <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg p-3 text-center">
