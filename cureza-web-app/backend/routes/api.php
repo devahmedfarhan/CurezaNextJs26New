@@ -33,46 +33,50 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\ComparisonController;
 use App\Http\Controllers\SellerOrderController;
 
-// Customer Authentication Routes
-Route::post('/register', [AuthController::class, 'register']);
+// Sensitive Authentication, Registration & OTP Routes (Section 3.1)
+Route::middleware('throttle:sensitive')->group(function () {
+    // Customer Authentication Routes
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/auth/send-otp', [AuthController::class, 'sendOtp']);
+    Route::post('/auth/verify-otp', [AuthController::class, 'verifyOtp']);
+    Route::post('/auth/forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::post('/auth/reset-password', [AuthController::class, 'resetPasswordWithOtp']);
+
+    // Seller/Vendor Authentication Routes
+    Route::post('/pre-register-seller', [SellerRegistrationController::class, 'preRegister']);
+    Route::post('/save-draft-seller', [SellerRegistrationController::class, 'saveDraft']);
+    Route::post('/register-seller', [SellerRegistrationController::class, 'register']);
+    Route::post('/seller/register', [SellerAuthController::class, 'register']);
+    Route::post('/seller/login', [SellerAuthController::class, 'login']);
+
+    // Doctor Authentication & Onboarding Routes
+    Route::post('/doctor/register-full', [\App\Http\Controllers\DoctorOnboardingController::class, 'registerFull']);
+    Route::post('/doctor/login', [DoctorController::class, 'login']);
+
+    // Admin Authentication Routes (Login only, no registration)
+    Route::post('/admin/login', [AdminAuthController::class, 'login']);
+});
+
 Route::get('/login', function () {
     return response()->json(['message' => 'Unauthorized'], 401);
 })->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/auth/send-otp', [AuthController::class, 'sendOtp']);
-Route::post('/auth/verify-otp', [AuthController::class, 'verifyOtp']);
-Route::post('/auth/forgot-password', [AuthController::class, 'forgotPassword']);
-Route::post('/auth/reset-password', [AuthController::class, 'resetPasswordWithOtp']);
-
-// Seller/Vendor Authentication Routes
-Route::post('/pre-register-seller', [SellerRegistrationController::class, 'preRegister']);
-Route::post('/save-draft-seller', [SellerRegistrationController::class, 'saveDraft']);
-Route::post('/register-seller', [SellerRegistrationController::class, 'register']);
-Route::post('/seller/register', [SellerAuthController::class, 'register']);
-Route::post('/seller/login', [SellerAuthController::class, 'login']);
-
-// Doctor Authentication & Onboarding Routes
-Route::post('/doctor/register-full', [\App\Http\Controllers\DoctorOnboardingController::class, 'registerFull']);
-Route::post('/doctor/login', [DoctorController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/doctor/upload-kyc', [\App\Http\Controllers\DoctorOnboardingController::class, 'uploadKYC']);
-    Route::post('/doctor/send-otp', [\App\Http\Controllers\DoctorOnboardingController::class, 'sendOTP']);
-    Route::post('/doctor/resend-otp', [\App\Http\Controllers\DoctorOnboardingController::class, 'resendOTP']);
-    Route::post('/doctor/verify-otp', [\App\Http\Controllers\DoctorOnboardingController::class, 'verifyOTP']);
+    Route::post('/doctor/send-otp', [\App\Http\Controllers\DoctorOnboardingController::class, 'sendOTP'])->middleware('throttle:sensitive');
+    Route::post('/doctor/resend-otp', [\App\Http\Controllers\DoctorOnboardingController::class, 'resendOTP'])->middleware('throttle:sensitive');
+    Route::post('/doctor/verify-otp', [\App\Http\Controllers\DoctorOnboardingController::class, 'verifyOTP'])->middleware('throttle:sensitive');
     Route::post('/doctor/reupload-document', [\App\Http\Controllers\DoctorOnboardingController::class, 'reuploadDocument']);
     Route::post('/doctor/submit-application', [\App\Http\Controllers\DoctorOnboardingController::class, 'submitApplication']);
 });
-
-// Admin Authentication Routes (Login only, no registration)
-Route::post('/admin/login', [AdminAuthController::class, 'login']);
 
 // Public Routes
 Route::get('/brands', [\App\Http\Controllers\PublicStoreController::class, 'index']);
 Route::get('/brand/{slug}', [\App\Http\Controllers\PublicStoreController::class, 'show']);
 Route::get('/products/latest', [ProductController::class, 'latest']);
-Route::get('/products', [ProductController::class, 'index']);
-Route::get('/products/search', [ProductController::class, 'index']); // Alias for search
+Route::get('/products', [ProductController::class, 'index'])->middleware('throttle:public-catalog');
+Route::get('/products/search', [ProductController::class, 'index'])->middleware('throttle:public-catalog'); // Alias for search
 Route::get('/products/compare', [ComparisonController::class, 'getComparisonDetails']);
 Route::get('/products/{slug}', [ProductController::class, 'show']);
 Route::get('/products/{id}/related', [ProductController::class, 'getRelated']);
@@ -102,11 +106,11 @@ Route::get('/debug-auth', function (Request $request) {
 });
 
 // Public Checkout Routes (Guest Checkout Support)
-Route::get('/checkout/initiate', [App\Http\Controllers\CheckoutController::class, 'initiate']);
-Route::post('/checkout/calculate', [App\Http\Controllers\CheckoutController::class, 'calculate']);
+Route::get('/checkout/initiate', [App\Http\Controllers\CheckoutController::class, 'initiate'])->middleware('throttle:sensitive');
+Route::post('/checkout/calculate', [App\Http\Controllers\CheckoutController::class, 'calculate'])->middleware('throttle:sensitive');
 
 // Public Order Placement (Guest Checkout Support)
-Route::post('/orders', [OrderController::class, 'store']);
+Route::post('/orders', [OrderController::class, 'store'])->middleware('throttle:sensitive');
 Route::get('/orders/{id}', [OrderController::class, 'show']); // Public order view for guests
 
 // Protected Routes (All authenticated users)
@@ -515,8 +519,8 @@ Route::delete('/cart/coupon', [CartController::class, 'removeCoupon']); // Remov
 Route::get('/cart/upsells', [\App\Http\Controllers\UpsellController::class, 'forCart']);
 
 // Checkout Routes (Public/Guest accessible)
-Route::get('/checkout/initiate', [CheckoutController::class, 'initiate']);
-Route::post('/checkout/calculate', [CheckoutController::class, 'calculate']);
+Route::get('/checkout/initiate', [CheckoutController::class, 'initiate'])->middleware('throttle:sensitive');
+Route::post('/checkout/calculate', [CheckoutController::class, 'calculate'])->middleware('throttle:sensitive');
 Route::post('/coupons/validate', [CouponController::class, 'validateCoupon']);
 Route::get('/coupons', [CouponController::class, 'getActiveCoupons']); // Public: Get active coupons for customers
 

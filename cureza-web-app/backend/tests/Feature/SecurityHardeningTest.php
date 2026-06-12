@@ -51,6 +51,8 @@ class SecurityHardeningTest extends TestCase
 
     public function test_login_brute_force_lockout()
     {
+        $this->withoutMiddleware(\Illuminate\Routing\Middleware\ThrottleRequests::class);
+
         $email = 'bruteforce@example.com';
         $user = User::factory()->create([
             'email' => $email,
@@ -78,6 +80,8 @@ class SecurityHardeningTest extends TestCase
 
     public function test_otp_attempt_limits()
     {
+        $this->withoutMiddleware(\Illuminate\Routing\Middleware\ThrottleRequests::class);
+
         $loginId = 'customer@cureza.com';
         $user = User::factory()->create([
             'email' => $loginId,
@@ -238,5 +242,47 @@ class SecurityHardeningTest extends TestCase
         $this->actingAs($customer1, 'sanctum');
         $response = $this->getJson('/api/orders/' . $order->id);
         $response->assertStatus(200);
+    }
+
+    public function test_api_error_response_sanitization_in_production()
+    {
+        // Set app.debug to false
+        config(['app.debug' => false]);
+
+        // Register a temporary test route that throws an exception
+        \Illuminate\Support\Facades\Route::get('/api/test-error-sanitization', function () {
+            throw new \Exception('Sensitive DB query or internal error info');
+        });
+
+        // Make request
+        $response = $this->getJson('/api/test-error-sanitization');
+
+        // Assert response is clean and contains only generic Server Error message
+        $response->assertStatus(500);
+        $response->assertExactJson([
+            'message' => 'Server Error.'
+        ]);
+
+        // Assert it doesn't leak exception, file, line, or trace keys
+        $response->assertJsonMissing(['exception', 'file', 'line', 'trace']);
+    }
+
+    public function test_sensitive_endpoints_rate_limiter()
+    {
+        // Hits login endpoint 5 times, which is the limit for throttle:sensitive
+        for ($i = 0; $i < 5; $i++) {
+            $response = $this->postJson('/api/login', [
+                'email' => 'ratelimit@example.com',
+                'password' => 'SecuReP@ss12345!',
+            ]);
+            $this->assertNotEquals(429, $response->status());
+        }
+
+        // 6th hit should trigger 429 Too Many Requests
+        $response = $this->postJson('/api/login', [
+            'email' => 'ratelimit@example.com',
+            'password' => 'SecuReP@ss12345!',
+        ]);
+        $response->assertStatus(429);
     }
 }

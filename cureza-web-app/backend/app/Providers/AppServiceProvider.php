@@ -43,5 +43,18 @@ class AppServiceProvider extends ServiceProvider
             $token->ip_address = request()->ip();
             $token->user_agent = request()->userAgent();
         });
+
+        // Configure Rate Limiters (Section 3.1)
+        \Illuminate\Support\Facades\RateLimiter::for('global', function (\Illuminate\Http\Request $request) {
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute(60)->by($request->ip());
+        });
+
+        \Illuminate\Support\Facades\RateLimiter::for('sensitive', function (\Illuminate\Http\Request $request) {
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute(5)->by($request->ip());
+        });
+
+        \Illuminate\Support\Facades\RateLimiter::for('public-catalog', function (\Illuminate\Http\Request $request) {
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute(60)->by($request->ip());
+        });
     }
 }
