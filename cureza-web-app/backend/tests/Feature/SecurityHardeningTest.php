@@ -352,4 +352,120 @@ class SecurityHardeningTest extends TestCase
         $this->assertEquals('Seller Name H', $loadedProfile->account_holder_name);
         $this->assertEquals('IFSC0009999', $loadedProfile->ifsc_code);
     }
+
+    public function test_payment_and_order_security()
+    {
+        // 1. Setup secrets
+        config(['services.razorpay.secret' => 'test_secret']);
+        config(['services.razorpay.webhook_secret' => 'webhook_secret']);
+
+        // Create models
+        $patient = User::factory()->create(['role' => 'customer']);
+        $doctor = User::factory()->create(['role' => 'doctor']);
+        $appointment = \App\Models\Appointment::create([
+            'doctor_id' => $doctor->id,
+            'patient_id' => $patient->id,
+            'appointment_date' => now()->addDay(),
+            'status' => 'pending',
+            'amount' => 500.00,
+            'consultation_type' => 'video',
+            'consent_accepted' => true,
+            'payment_status' => 'pending',
+            'payment_method' => 'online',
+        ]);
+
+        $orderId = 'order_123';
+        $paymentId = 'pay_456';
+        $generatedSignature = hash_hmac('sha256', $orderId . "|" . $paymentId, 'test_secret');
+
+        // Test signature validation successfully confirms payment
+        $this->actingAs($patient, 'sanctum');
+        $response = $this->postJson('/api/verify-payment', [
+            'razorpay_order_id' => $orderId,
+            'razorpay_payment_id' => $paymentId,
+            'razorpay_signature' => $generatedSignature,
+            'appointment_id' => $appointment->id,
+        ]);
+        $response->assertStatus(200);
+
+        $appointment->refresh();
+        $this->assertEquals('confirmed', $appointment->status);
+        $this->assertEquals('paid', $appointment->payment_status);
+
+        // Test signature validation fails on invalid signature
+        $appointment->status = 'pending';
+        $appointment->payment_status = 'pending';
+        $appointment->save();
+
+        $response = $this->postJson('/api/verify-payment', [
+            'razorpay_order_id' => $orderId,
+            'razorpay_payment_id' => $paymentId,
+            'razorpay_signature' => 'invalid_signature',
+            'appointment_id' => $appointment->id,
+        ]);
+        $response->assertStatus(400);
+
+        // 2. Test Webhook Verification
+        $payload = json_encode([
+            'event' => 'payment.captured',
+            'payload' => [
+                'payment' => [
+                    'entity' => [
+                        'id' => 'pay_789',
+                        'order_id' => 'order_999',
+                        'notes' => [
+                            'appointment_id' => $appointment->id,
+                        ],
+                    ]
+                ]
+            ]
+        ]);
+        $webhookSignature = hash_hmac('sha256', $payload, 'webhook_secret');
+
+        // Webhook signature matching succeeds
+        $response = $this->call(
+            'POST',
+            '/api/payments/webhook',
+            [],
+            [],
+            [],
+            [
+                'HTTP_X-Razorpay-Signature' => $webhookSignature,
+                'CONTENT_TYPE' => 'application/json'
+            ],
+            $payload
+        );
+        $response->assertStatus(200);
+
+        $appointment->refresh();
+        $this->assertEquals('confirmed', $appointment->status);
+        $this->assertEquals('paid', $appointment->payment_status);
+
+        // Webhook signature fails with incorrect secret signature header
+        $response = $this->call(
+            'POST',
+            '/api/payments/webhook',
+            [],
+            [],
+            [],
+            [
+                'HTTP_X-Razorpay-Signature' => 'bad_signature',
+                'CONTENT_TYPE' => 'application/json'
+            ],
+            $payload
+        );
+        $response->assertStatus(400);
+
+        // 3. Test Wallet Audit Logging and database locking
+        $seller = User::factory()->create(['role' => 'vendor']);
+        $walletService = new \App\Services\WalletService();
+        $walletService->creditEarnings($seller->id, null, 150.00, 'Test credit description');
+
+        $this->assertDatabaseHas('transaction_logs', [
+            'wallet_type' => 'seller',
+            'action' => 'credit_earnings',
+            'amount' => 150.00,
+            'description' => 'Test credit description',
+        ]);
+    }
 }

@@ -113,6 +113,9 @@ Route::post('/checkout/calculate', [App\Http\Controllers\CheckoutController::cla
 Route::post('/orders', [OrderController::class, 'store'])->middleware('throttle:sensitive');
 Route::get('/orders/{id}', [OrderController::class, 'show']); // Public order view for guests
 
+// Payment Webhook Callback
+Route::post('/payments/webhook', [\App\Http\Controllers\PaymentController::class, 'handleWebhook']);
+
 // Protected Routes (All authenticated users)
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/create-razorpay-order', [\App\Http\Controllers\PaymentController::class, 'createRazorpayOrder']);

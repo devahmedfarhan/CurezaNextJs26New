@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use App\Models\Appointment;
 
 class PaymentController extends Controller
@@ -15,8 +16,8 @@ class PaymentController extends Controller
 
     public function __construct()
     {
-        $this->key = env('RAZORPAY_KEY');
-        $this->secret = env('RAZORPAY_SECRET');
+        $this->key = config('services.razorpay.key') ?? env('RAZORPAY_KEY');
+        $this->secret = config('services.razorpay.secret') ?? env('RAZORPAY_SECRET');
     }
 
     public function createRazorpayOrder(Request $request)
@@ -52,7 +53,7 @@ class PaymentController extends Controller
                 $order = $response->json();
                 
                 // You might want to save the order_id in the appointment
-                $appointment->payment_details = json_encode(['order_id' => $order['id']]);
+                $appointment->payment_details = ['order_id' => $order['id']];
                 $appointment->save();
 
                 return response()->json([
@@ -83,20 +84,84 @@ class PaymentController extends Controller
 
         $generatedSignature = hash_hmac('sha256', $request->razorpay_order_id . "|" . $request->razorpay_payment_id, $this->secret);
 
-        if ($generatedSignature === $request->razorpay_signature) {
+        if (hash_equals($generatedSignature, $request->razorpay_signature)) {
             // Payment successful
             $appointment = Appointment::find($request->appointment_id);
             $appointment->status = 'confirmed';
             $appointment->payment_status = 'paid';
-            $appointment->payment_details = json_encode([
+            $appointment->payment_details = [
                 'order_id' => $request->razorpay_order_id,
                 'payment_id' => $request->razorpay_payment_id
-            ]);
+            ];
             $appointment->save();
 
             return response()->json(['message' => 'Payment successful', 'status' => 'success']);
         } else {
             return response()->json(['message' => 'Invalid signature', 'status' => 'failed'], 400);
         }
+    }
+
+    public function handleWebhook(Request $request)
+    {
+        $signature = $request->header('X-Razorpay-Signature');
+        $webhookSecret = config('services.razorpay.webhook_secret') ?? env('RAZORPAY_WEBHOOK_SECRET');
+
+        if (!$signature || !$webhookSecret) {
+            Log::warning('Razorpay Webhook verification failed: Missing signature or webhook secret.');
+            return response()->json(['message' => 'Unauthorized: Missing signature or secret'], 400);
+        }
+
+        $payload = $request->getContent();
+        $expectedSignature = hash_hmac('sha256', $payload, $webhookSecret);
+
+        if (!hash_equals($expectedSignature, $signature)) {
+            Log::warning('Razorpay Webhook verification failed: Invalid signature matching.');
+            return response()->json(['message' => 'Unauthorized: Invalid signature'], 400);
+        }
+
+        $data = $request->all();
+        $event = $data['event'] ?? '';
+
+        Log::info('Razorpay Webhook received event: ' . $event);
+
+        if ($event === 'payment.captured' || $event === 'order.paid') {
+            $paymentEntity = $data['payload']['payment']['entity'] ?? [];
+            $orderId = $paymentEntity['order_id'] ?? '';
+            $paymentId = $paymentEntity['id'] ?? '';
+            $appointmentId = $paymentEntity['notes']['appointment_id'] ?? null;
+
+            $appointment = null;
+            if ($appointmentId) {
+                $appointment = Appointment::find($appointmentId);
+            }
+            
+            if (!$appointment && $orderId) {
+                $appointment = Appointment::where('payment_details->order_id', $orderId)->first();
+                if (!$appointment) {
+                    $appointment = Appointment::where('payment_details', 'like', '%' . $orderId . '%')->first();
+                }
+            }
+
+            if ($appointment) {
+                DB::transaction(function () use ($appointment, $orderId, $paymentId) {
+                    $lockedAppointment = Appointment::where('id', $appointment->id)->lockForUpdate()->first();
+                    if ($lockedAppointment->payment_status !== 'paid') {
+                        $lockedAppointment->status = 'confirmed';
+                        $lockedAppointment->payment_status = 'paid';
+                        $lockedAppointment->payment_id = $paymentId;
+                        $lockedAppointment->payment_details = [
+                            'order_id' => $orderId,
+                            'payment_id' => $paymentId
+                        ];
+                        $lockedAppointment->save();
+                        Log::info("Appointment ID {$lockedAppointment->id} updated via Razorpay Webhook");
+                    }
+                });
+            } else {
+                Log::warning("Razorpay Webhook: No appointment found for Order ID: {$orderId}, Appointment ID: {$appointmentId}");
+            }
+        }
+
+        return response()->json(['status' => 'ok']);
     }
 }

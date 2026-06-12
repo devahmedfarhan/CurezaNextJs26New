@@ -28,7 +28,7 @@ class PayoutService
     {
         DB::beginTransaction();
         try {
-            $wallet = SellerWallet::where('seller_id', $sellerId)->first();
+            $wallet = SellerWallet::where('seller_id', $sellerId)->lockForUpdate()->first();
 
             if (!$wallet || $wallet->available_balance < $amount) {
                 throw new \Exception("Insufficient balance. Available: ₹" . ($wallet->available_balance ?? 0));

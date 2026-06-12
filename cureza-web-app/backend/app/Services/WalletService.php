@@ -30,6 +30,22 @@ class WalletService
     }
 
     /**
+     * Get wallet for update (locked)
+     * 
+     * @param int $sellerId
+     * @return SellerWallet
+     */
+    private function getWalletForUpdate($sellerId)
+    {
+        $wallet = SellerWallet::where('seller_id', $sellerId)->lockForUpdate()->first();
+        if (!$wallet) {
+            $this->initializeWallet($sellerId);
+            $wallet = SellerWallet::where('seller_id', $sellerId)->lockForUpdate()->first();
+        }
+        return $wallet;
+    }
+
+    /**
      * Credit earnings to seller wallet
      * 
      * @param int $sellerId
@@ -43,7 +59,7 @@ class WalletService
     {
         DB::beginTransaction();
         try {
-            $wallet = $this->initializeWallet($sellerId);
+            $wallet = $this->getWalletForUpdate($sellerId);
             $balanceBefore = $wallet->available_balance;
 
             // Update wallet
@@ -61,6 +77,20 @@ class WalletService
                 'balance_after' => $wallet->available_balance,
                 'description' => $description,
                 'metadata' => $metadata,
+            ]);
+
+            // Audit transaction log
+            DB::table('transaction_logs')->insert([
+                'wallet_type' => 'seller',
+                'wallet_id' => $wallet->id,
+                'action' => 'credit_earnings',
+                'amount' => $amount,
+                'balance_before' => $balanceBefore,
+                'balance_after' => $wallet->available_balance,
+                'description' => $description,
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+                'created_at' => now(),
             ]);
 
             DB::commit();
@@ -89,7 +119,7 @@ class WalletService
     {
         DB::beginTransaction();
         try {
-            $wallet = $this->initializeWallet($sellerId);
+            $wallet = $this->getWalletForUpdate($sellerId);
             $balanceBefore = $wallet->available_balance;
 
             if ($wallet->available_balance < $amount) {
@@ -111,6 +141,20 @@ class WalletService
                 'balance_after' => $wallet->available_balance,
                 'description' => $description,
                 'metadata' => [],
+            ]);
+
+            // Audit transaction log
+            DB::table('transaction_logs')->insert([
+                'wallet_type' => 'seller',
+                'wallet_id' => $wallet->id,
+                'action' => 'debit_amount',
+                'amount' => $amount,
+                'balance_before' => $balanceBefore,
+                'balance_after' => $wallet->available_balance,
+                'description' => $description,
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+                'created_at' => now(),
             ]);
 
             DB::commit();
@@ -137,7 +181,7 @@ class WalletService
     {
         DB::beginTransaction();
         try {
-            $wallet = $this->initializeWallet($sellerId);
+            $wallet = $this->getWalletForUpdate($sellerId);
             $balanceBefore = $wallet->available_balance;
 
             if ($wallet->available_balance < $amount) {
@@ -159,6 +203,20 @@ class WalletService
                 'balance_after' => $wallet->available_balance,
                 'description' => $description,
                 'metadata' => ['payout_id' => $payoutId],
+            ]);
+
+            // Audit transaction log
+            DB::table('transaction_logs')->insert([
+                'wallet_type' => 'seller',
+                'wallet_id' => $wallet->id,
+                'action' => 'process_payout',
+                'amount' => $amount,
+                'balance_before' => $balanceBefore,
+                'balance_after' => $wallet->available_balance,
+                'description' => $description,
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+                'created_at' => now(),
             ]);
 
             DB::commit();
@@ -234,7 +292,7 @@ class WalletService
     {
         DB::beginTransaction();
         try {
-            $wallet = $this->initializeWallet($sellerId);
+            $wallet = $this->getWalletForUpdate($sellerId);
             $balanceBefore = $wallet->available_balance;
 
             if ($wallet->available_balance < $amount) {
@@ -258,6 +316,20 @@ class WalletService
                 'metadata' => ['reason' => $reason, 'status' => 'on_hold'],
             ]);
 
+            // Audit transaction log
+            DB::table('transaction_logs')->insert([
+                'wallet_type' => 'seller',
+                'wallet_id' => $wallet->id,
+                'action' => 'put_on_hold',
+                'amount' => $amount,
+                'balance_before' => $balanceBefore,
+                'balance_after' => $wallet->available_balance,
+                'description' => "Amount put on hold: {$reason}",
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+                'created_at' => now(),
+            ]);
+
             DB::commit();
             return true;
 
@@ -279,7 +351,7 @@ class WalletService
     {
         DB::beginTransaction();
         try {
-            $wallet = $this->initializeWallet($sellerId);
+            $wallet = $this->getWalletForUpdate($sellerId);
 
             if ($wallet->on_hold_amount < $amount) {
                 throw new \Exception("Insufficient on-hold amount");
@@ -301,6 +373,20 @@ class WalletService
                 'balance_after' => $wallet->available_balance,
                 'description' => "Amount released from hold: {$reason}",
                 'metadata' => ['reason' => $reason, 'status' => 'released'],
+            ]);
+
+            // Audit transaction log
+            DB::table('transaction_logs')->insert([
+                'wallet_type' => 'seller',
+                'wallet_id' => $wallet->id,
+                'action' => 'release_from_hold',
+                'amount' => $amount,
+                'balance_before' => $balanceBefore,
+                'balance_after' => $wallet->available_balance,
+                'description' => "Amount released from hold: {$reason}",
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+                'created_at' => now(),
             ]);
 
             DB::commit();
