@@ -117,6 +117,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/change-password', [AuthController::class, 'changePassword']);
+    Route::get('/auth/sessions', [AuthController::class, 'getSessions']);
+    Route::delete('/auth/sessions/{id}', [AuthController::class, 'deleteSession']);
+    Route::delete('/auth/sessions', [AuthController::class, 'deleteOtherSessions']);
     Route::post('/user/profile', [\App\Http\Controllers\ProfileController::class, 'update']);
 
     // Wishlist

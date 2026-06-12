@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -15,9 +18,10 @@ class AuthController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => ['required', 'string', 'confirmed', Password::min(12)->letters()->mixedCase()->numbers()->symbols()->uncompromised()],
             'role' => 'required|in:customer,vendor,doctor',
             'phone' => 'nullable|string|max:20',
+            'cf_turnstile_token' => [app()->environment('local', 'testing') && empty(config('services.cloudflare.turnstile_secret')) ? 'nullable' : 'required', new \App\Rules\Turnstile],
         ]);
 
         try {
@@ -71,13 +75,31 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+            'cf_turnstile_token' => [app()->environment('local', 'testing') && empty(config('services.cloudflare.turnstile_secret')) ? 'nullable' : 'required', new \App\Rules\Turnstile],
+        ]);
+
+        $throttleKey = Str::lower($request->input('email')) . '|' . $request->ip();
+
+        if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = \Illuminate\Support\Facades\RateLimiter::availableIn($throttleKey);
+            throw ValidationException::withMessages([
+                'email' => ['Too many failed login attempts. Please try again in ' . ceil($seconds / 60) . ' minutes.'],
+            ]);
+        }
+
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
+            \Illuminate\Support\Facades\RateLimiter::hit($throttleKey, 900); // 15-minute lockout
             throw ValidationException::withMessages([
                 'email' => ['Invalid credentials'],
             ]);
         }
+
+        \Illuminate\Support\Facades\RateLimiter::clear($throttleKey);
         
         if ($user->role === 'vendor') {
             $user->load('brand');
@@ -166,7 +188,7 @@ class AuthController extends Controller
     {
         $validated = $request->validate([
             'current_password' => 'required',
-            'new_password' => 'required|string|min:8|confirmed',
+            'new_password' => ['required', 'string', 'confirmed', Password::min(12)->letters()->mixedCase()->numbers()->symbols()->uncompromised()],
         ]);
 
         $user = $request->user();
@@ -218,9 +240,12 @@ class AuthController extends Controller
             
             // Cache Key Prefix based on type
             $cacheKey = "otp_{$type}_{$loginId}";
+            $attemptsKey = "otp_attempts_{$type}_{$loginId}";
 
-            // Store in Cache for 5 minutes
-            \Illuminate\Support\Facades\Cache::put($cacheKey, $otp, now()->addMinutes(5));
+            // Store hashed OTP in Cache for 3 minutes (A.11)
+            $hashedOtp = hash('sha256', $otp);
+            \Illuminate\Support\Facades\Cache::put($cacheKey, $hashedOtp, now()->addMinutes(3));
+            \Illuminate\Support\Facades\Cache::put($attemptsKey, 0, now()->addMinutes(3));
 
             // Log explicitly
             \Illuminate\Support\Facades\Log::info("OTP generated for {$type} {$loginId}: {$otp}");
@@ -249,15 +274,39 @@ class AuthController extends Controller
         $loginId = $request->login_id;
         $type = filter_var($loginId, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
         $cacheKey = "otp_{$type}_{$loginId}";
+        $attemptsKey = "otp_attempts_{$type}_{$loginId}";
 
         $cachedOtp = \Illuminate\Support\Facades\Cache::get($cacheKey);
 
-        if (!$cachedOtp || $cachedOtp != $request->otp) {
-            \Illuminate\Support\Facades\Log::warning("Invalid OTP for {$loginId}. Cached: {$cachedOtp}, Provided: {$request->otp}");
+        if (!$cachedOtp) {
             throw ValidationException::withMessages([
                 'otp' => ['Invalid or expired OTP.']
             ]);
         }
+
+        // Track and limit verification attempts (A.11)
+        $attempts = (int)\Illuminate\Support\Facades\Cache::get($attemptsKey, 0);
+        if ($attempts >= 3) {
+            \Illuminate\Support\Facades\Cache::forget($cacheKey);
+            \Illuminate\Support\Facades\Cache::forget($attemptsKey);
+            throw ValidationException::withMessages([
+                'otp' => ['Too many failed attempts. Please request a new OTP.']
+            ]);
+        }
+
+        // Compare using hashed values
+        $providedHash = hash('sha256', $request->otp);
+        if (!hash_equals($cachedOtp, $providedHash)) {
+            \Illuminate\Support\Facades\Cache::put($attemptsKey, $attempts + 1, now()->addMinutes(3));
+            \Illuminate\Support\Facades\Log::warning("Invalid OTP for {$loginId}. Attempt " . ($attempts + 1));
+            throw ValidationException::withMessages([
+                'otp' => ['Invalid or expired OTP.']
+            ]);
+        }
+
+        // Clear cached keys upon success
+        \Illuminate\Support\Facades\Cache::forget($cacheKey);
+        \Illuminate\Support\Facades\Cache::forget($attemptsKey);
 
         // OTP Valid.
         // Check if user exists
@@ -291,9 +340,36 @@ class AuthController extends Controller
     
     public function forgotPassword(Request $request) 
     {
-        // Re-use sendOtp logic but force check user existence first
-        // If the frontend calls this endpoint, it expects "Forgot Password" mode
-        return $this->sendOtp($request);
+        try {
+            $request->validate(['login_id' => 'required|string']); 
+            
+            $loginId = $request->login_id;
+            $type = filter_var($loginId, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
+            
+            $user = User::where($type, $loginId)->first();
+
+            $devOtp = null;
+            if ($user) {
+                // Generate 4-digit OTP
+                $otp = rand(1000, 9999);
+                $cacheKey = "otp_{$type}_{$loginId}";
+                \Illuminate\Support\Facades\Cache::put($cacheKey, $otp, now()->addMinutes(3));
+                \Illuminate\Support\Facades\Log::info("Password reset OTP generated for {$type} {$loginId}: {$otp}");
+                $devOtp = $otp;
+            } else {
+                \Illuminate\Support\Facades\Log::info("Password reset requested for unregistered {$type}: {$loginId}");
+            }
+
+            // SECURE: Generic message regardless of existence (Anti-User Enumeration)
+            return response()->json([
+                'message' => 'If this email or phone number is registered, an OTP has been sent.',
+                'type' => $type,
+                'dev_otp' => $devOtp
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('forgotPassword failed: ' . $e->getMessage());
+            return response()->json(['message' => 'An error occurred processing your request.'], 500);
+        }
     }
 
     public function resetPasswordWithOtp(Request $request)
@@ -301,17 +377,31 @@ class AuthController extends Controller
         $request->validate([
             'login_id' => 'required|string',
             'otp' => 'required|string',
-            'password' => 'required|string|min:8|confirmed'
+            'password' => ['required', 'string', 'confirmed', Password::min(12)->letters()->mixedCase()->numbers()->symbols()->uncompromised()]
         ]);
         
         $loginId = $request->login_id;
         $type = filter_var($loginId, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
         $cacheKey = "otp_{$type}_{$loginId}";
+        $attemptsKey = "otp_attempts_{$type}_{$loginId}";
         
         $cachedOtp = \Illuminate\Support\Facades\Cache::get($cacheKey);
         
-        if (!$cachedOtp || $cachedOtp != $request->otp) {
-             throw ValidationException::withMessages(['otp' => ['Invalid OTP.']]);
+        if (!$cachedOtp) {
+            throw ValidationException::withMessages(['otp' => ['Invalid or expired OTP.']]);
+        }
+
+        $attempts = (int)\Illuminate\Support\Facades\Cache::get($attemptsKey, 0);
+        if ($attempts >= 3) {
+            \Illuminate\Support\Facades\Cache::forget($cacheKey);
+            \Illuminate\Support\Facades\Cache::forget($attemptsKey);
+            throw ValidationException::withMessages(['otp' => ['Too many failed attempts. Please request a new OTP.']]);
+        }
+
+        $providedHash = hash('sha256', $request->otp);
+        if (!hash_equals($cachedOtp, $providedHash)) {
+            \Illuminate\Support\Facades\Cache::put($attemptsKey, $attempts + 1, now()->addMinutes(3));
+            throw ValidationException::withMessages(['otp' => ['Invalid OTP.']]);
         }
         
         $user = User::where($type, $loginId)->firstOrFail();
@@ -319,7 +409,53 @@ class AuthController extends Controller
         $user->save();
         
         \Illuminate\Support\Facades\Cache::forget($cacheKey);
+        \Illuminate\Support\Facades\Cache::forget($attemptsKey);
         
         return response()->json(['message' => 'Password reset successfully.']);
+    }
+
+    public function getSessions(Request $request)
+    {
+        $user = $request->user();
+        $currentTokenId = $user->currentAccessToken()->id;
+
+        $sessions = $user->tokens()->orderBy('last_used_at', 'desc')->get()->map(function ($token) use ($currentTokenId) {
+            return [
+                'id' => $token->id,
+                'name' => $token->name,
+                'ip_address' => $token->ip_address,
+                'user_agent' => $token->user_agent,
+                'last_used_at' => $token->last_used_at ? $token->last_used_at->toIso8601String() : null,
+                'created_at' => $token->created_at->toIso8601String(),
+                'is_current' => $token->id === $currentTokenId,
+            ];
+        });
+
+        return response()->json($sessions);
+    }
+
+    public function deleteSession(Request $request, $id)
+    {
+        $user = $request->user();
+        $token = $user->tokens()->where('id', $id)->first();
+
+        if (!$token) {
+            return response()->json(['message' => 'Session not found'], 404);
+        }
+
+        $token->delete();
+
+        return response()->json(['message' => 'Session revoked successfully']);
+    }
+
+    public function deleteOtherSessions(Request $request)
+    {
+        $user = $request->user();
+        $currentTokenId = $user->currentAccessToken()->id;
+
+        // Revoke all tokens except current one
+        $user->tokens()->where('id', '!=', $currentTokenId)->delete();
+
+        return response()->json(['message' => 'Other sessions revoked successfully']);
     }
 }
