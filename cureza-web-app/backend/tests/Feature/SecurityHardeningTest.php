@@ -155,4 +155,88 @@ class SecurityHardeningTest extends TestCase
             ->getJson('/api/auth/sessions');
         $this->assertCount(1, $sessionResponse->json());
     }
+
+    public function test_product_policy_prevents_idor()
+    {
+        $vendor1 = User::factory()->create(['role' => 'vendor']);
+        $vendor2 = User::factory()->create(['role' => 'vendor']);
+
+        // Create a category
+        $category = \App\Models\Category::create([
+            'name' => 'Test Category',
+            'slug' => 'test-category',
+            'type' => 'category'
+        ]);
+
+        // Create brand for vendor 1
+        $brand1 = \App\Models\Brand::create([
+            'user_id' => $vendor1->id,
+            'name' => 'Brand 1',
+            'slug' => 'brand-1'
+        ]);
+
+        // Create product for vendor 1
+        $product = \App\Models\Product::create([
+            'seller_id' => $vendor1->id,
+            'brand_id' => $brand1->id,
+            'category_id' => $category->id,
+            'title' => 'Vendor 1 Product',
+            'slug' => 'vendor-1-product',
+            'price' => 100,
+            'stock' => 10,
+            'stock_status' => 'in_stock',
+            'status' => 'published'
+        ]);
+
+        // Vendor 2 attempts to edit Vendor 1's product
+        $this->actingAs($vendor2, 'sanctum');
+        $response = $this->putJson('/api/seller/products/' . $product->id, [
+            'title' => 'Hacked Title',
+            'price' => 50
+        ]);
+        $response->assertStatus(403);
+
+        // Vendor 2 attempts to delete Vendor 1's product
+        $response = $this->deleteJson('/api/seller/products/' . $product->id);
+        $response->assertStatus(403);
+
+        // Vendor 1 (owner) can request edits successfully
+        $this->actingAs($vendor1, 'sanctum');
+        $response = $this->putJson('/api/seller/products/' . $product->id, [
+            'title' => 'Vendor 1 Updated Title',
+            'price' => 120
+        ]);
+        $response->assertStatus(200);
+    }
+
+    public function test_order_policy_prevents_idor()
+    {
+        $customer1 = User::factory()->create(['role' => 'customer']);
+        $customer2 = User::factory()->create(['role' => 'customer']);
+
+        // Create order for customer 1
+        $order = \App\Models\Order::create([
+            'order_number' => 'ORD-TEST1234',
+            'user_id' => $customer1->id,
+            'total_amount' => 100,
+            'tax_amount' => 18,
+            'shipping_amount' => 50,
+            'final_amount' => 168,
+            'status' => 'pending',
+            'payment_status' => 'pending',
+            'payment_method' => 'cod',
+            'shipping_address_json' => ['street' => '123 Test St'],
+            'billing_address_json' => ['street' => '123 Test St']
+        ]);
+
+        // Customer 2 attempts to view Customer 1's order
+        $this->actingAs($customer2, 'sanctum');
+        $response = $this->getJson('/api/orders/' . $order->id);
+        $response->assertStatus(403);
+
+        // Customer 1 can view their own order
+        $this->actingAs($customer1, 'sanctum');
+        $response = $this->getJson('/api/orders/' . $order->id);
+        $response->assertStatus(200);
+    }
 }

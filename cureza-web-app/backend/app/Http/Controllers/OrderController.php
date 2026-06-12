@@ -37,15 +37,23 @@ class OrderController extends Controller
         // Use sanctum guard to detect authenticated users even on public routes
         $user = Auth::guard('sanctum')->user();
         
-        // For authenticated users, verify they own the order
+        $order = Order::with(['items.product.brand', 'shippingMethod'])
+            ->findOrFail($id);
+
         if ($user) {
-            $order = Order::where('user_id', $user->id)
-                ->with(['items.product.brand', 'shippingMethod'])
-                ->findOrFail($id);
+            \Illuminate\Support\Facades\Gate::authorize('view', $order);
         } else {
-            // For guests, just fetch the order by ID (they need the ID to view it)
-            $order = Order::with(['items.product.brand', 'shippingMethod'])
-                ->findOrFail($id);
+            // Guest order view validation:
+            // 1. If the order belongs to an authenticated user, guests cannot access it.
+            if ($order->user_id !== null) {
+                return response()->json(['message' => 'Unauthorized'], 403);
+            }
+
+            // 2. If it's a guest order, verify they are the one who placed it in this session.
+            $allowedOrders = session()->get('placed_guest_orders', []);
+            if (!in_array($order->id, $allowedOrders)) {
+                return response()->json(['message' => 'Unauthorized access to guest order'], 403);
+            }
         }
         
         return response()->json($order);
@@ -169,6 +177,11 @@ class OrderController extends Controller
                 if ($cart) {
                     $cart->items()->delete();
                 }
+            } else {
+                // For guests, store order ID in session to allow them to view it
+                $placedOrders = session()->get('placed_guest_orders', []);
+                $placedOrders[] = $order->id;
+                session()->put('placed_guest_orders', $placedOrders);
             }
 
             // Send notifications to sellers
@@ -187,8 +200,9 @@ class OrderController extends Controller
 
     public function downloadInvoice($id)
     {
-        $user = Auth::user();
-        $order = Order::where('user_id', $user->id)->with(['items.product', 'shippingMethod'])->findOrFail($id);
+        $order = Order::with(['items.product', 'shippingMethod'])->findOrFail($id);
+        
+        \Illuminate\Support\Facades\Gate::authorize('view', $order);
 
         $logoPath = public_path('storage/images/logo.png');
         $logoBase64 = '';

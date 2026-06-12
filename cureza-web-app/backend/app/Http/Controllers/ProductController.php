@@ -266,10 +266,8 @@ class ProductController extends Controller
         $user = $request->user();
         $isAdmin = in_array($user->role, ['admin', 'super_admin']);
 
-        // Authorization: Seller can only update their own products
-        if (!$isAdmin && $product->seller_id !== $user->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
+        // Authorization using ProductPolicy
+        \Illuminate\Support\Facades\Gate::authorize('update', $product);
 
         $input = $request->all();
 
@@ -459,10 +457,8 @@ class ProductController extends Controller
         $user = $request->user();
         $isAdmin = in_array($user->role, ['admin', 'super_admin']);
 
-        // Authorization: Seller can only delete their own products
-        if (!$isAdmin && $product->seller_id !== $user->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
+        // Authorization using ProductPolicy
+        \Illuminate\Support\Facades\Gate::authorize('delete', $product);
 
         // ADMIN: Instant delete
         if ($isAdmin) {

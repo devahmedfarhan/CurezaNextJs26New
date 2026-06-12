@@ -67,6 +67,8 @@ class PayoutController extends Controller
             'transactions'
         ])->findOrFail($id);
 
+        \Illuminate\Support\Facades\Gate::authorize('view', $payout);
+
         // Get seller's recent transactions
         $recentTransactions = $this->walletService->getTransactionHistory(
             $payout->seller_id,
@@ -97,6 +99,9 @@ class PayoutController extends Controller
      */
     public function approve(Request $request, $id)
     {
+        $payout = Payout::findOrFail($id);
+        \Illuminate\Support\Facades\Gate::authorize('manage', $payout);
+
         $validator = Validator::make($request->all(), [
             'transaction_id' => 'nullable|string',
             'approved_amount' => 'nullable|numeric|min:0',
@@ -137,6 +142,9 @@ class PayoutController extends Controller
      */
     public function reject(Request $request, $id)
     {
+        $payout = Payout::findOrFail($id);
+        \Illuminate\Support\Facades\Gate::authorize('manage', $payout);
+
         $validator = Validator::make($request->all(), [
             'reason' => 'required|string',
         ]);

@@ -127,9 +127,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/wishlist/toggle', [WishlistController::class, 'toggle']);
 
     // Doctor Routes
-    Route::get('/doctor/profile', [DoctorController::class, 'profile']);
-    Route::put('/doctor/profile', [DoctorController::class, 'updateProfile']);
-    Route::get('/doctor/dashboard/summary', [DoctorController::class, 'dashboardSummary']);
+    Route::middleware('role:doctor')->group(function () {
+        Route::get('/doctor/profile', [DoctorController::class, 'profile']);
+        Route::put('/doctor/profile', [DoctorController::class, 'updateProfile']);
+        Route::get('/doctor/dashboard/summary', [DoctorController::class, 'dashboardSummary']);
+        Route::post('/prescriptions', [App\Http\Controllers\PrescriptionController::class, 'store']);
+        Route::get('/prescriptions/patient/{patientId}', [App\Http\Controllers\PrescriptionController::class, 'patientHistory']);
+        Route::get('/doctor/prescription-requests', [App\Http\Controllers\PrescriptionController::class, 'pendingProductPrescriptions']);
+        Route::post('/doctor/prescription-requests/{id}/approve', [App\Http\Controllers\PrescriptionController::class, 'approveProductPrescription']);
+    });
 
     // Appointment Routes
     Route::get('/appointments', [App\Http\Controllers\AppointmentController::class, 'index']);
@@ -138,69 +144,100 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/appointments/{id}', [App\Http\Controllers\AppointmentController::class, 'show']);
     Route::put('/appointments/{id}', [App\Http\Controllers\AppointmentController::class, 'update']);
 
-    // Prescription / Consultation Recording
-    Route::post('/prescriptions', [App\Http\Controllers\PrescriptionController::class, 'store']);
-    Route::get('/prescriptions/patient/{patientId}', [App\Http\Controllers\PrescriptionController::class, 'patientHistory']);
-    Route::get('/doctor/prescription-requests', [App\Http\Controllers\PrescriptionController::class, 'pendingProductPrescriptions']);
-    Route::post('/doctor/prescription-requests/{id}/approve', [App\Http\Controllers\PrescriptionController::class, 'approveProductPrescription']);
-
     // Seller Routes
-    Route::post('/seller/products', [ProductController::class, 'store']);
-    Route::get('/seller/products', [ProductController::class, 'sellerIndex']);
-    Route::get('/seller/products/{id}', [ProductController::class, 'sellerShow']); // Get single product for editing
-    Route::put('/seller/products/{id}', [ProductController::class, 'update']);
-    Route::delete('/seller/products/{id}', [ProductController::class, 'destroy']);
-    Route::get('/seller/change-requests', [ProductController::class, 'sellerChangeRequests']);
-    Route::get('/seller/brand', function (\Illuminate\Http\Request $request) {
-        // Return the authenticated seller's brand
-        $user = $request->user();
-        \Illuminate\Support\Facades\Log::info('Seller brand lookup', ['user_id' => $user->id, 'user_name' => $user->name]);
+    Route::middleware('role:vendor')->group(function () {
+        Route::post('/seller/products', [ProductController::class, 'store']);
+        Route::get('/seller/products', [ProductController::class, 'sellerIndex']);
+        Route::get('/seller/products/{id}', [ProductController::class, 'sellerShow']); // Get single product for editing
+        Route::put('/seller/products/{id}', [ProductController::class, 'update']);
+        Route::delete('/seller/products/{id}', [ProductController::class, 'destroy']);
+        Route::get('/seller/change-requests', [ProductController::class, 'sellerChangeRequests']);
+        Route::get('/seller/brand', function (\Illuminate\Http\Request $request) {
+            // Return the authenticated seller's brand
+            $user = $request->user();
+            \Illuminate\Support\Facades\Log::info('Seller brand lookup', ['user_id' => $user->id, 'user_name' => $user->name]);
+            
+            $brand = \App\Models\Brand::where('user_id', $user->id)->first();
+            
+            \Illuminate\Support\Facades\Log::info('Brand found', ['brand' => $brand ? $brand->name : 'none']);
+            
+            if (!$brand) {
+                return response()->json(['name' => null, 'id' => null], 200);
+            }
+            return response()->json($brand);
+        });
+        Route::get('/seller/orders', [SellerOrderController::class, 'index']);
+        Route::get('/seller/orders/{id}', [SellerOrderController::class, 'show']);
         
-        $brand = \App\Models\Brand::where('user_id', $user->id)->first();
+        // Seller Dashboard Analytics
+        Route::prefix('seller/dashboard')->group(function () {
+            Route::get('/summary', [\App\Http\Controllers\Api\Seller\DashboardController::class, 'summary']);
+            Route::get('/sales-graph', [\App\Http\Controllers\Api\Seller\DashboardController::class, 'salesGraph']);
+            Route::get('/order-status', [\App\Http\Controllers\Api\Seller\DashboardController::class, 'orderStatus']);
+            Route::get('/top-products', [\App\Http\Controllers\Api\Seller\DashboardController::class, 'topProducts']);
+            Route::get('/recent-orders', [\App\Http\Controllers\Api\Seller\DashboardController::class, 'recentOrders']);
+            Route::get('/export', [\App\Http\Controllers\Api\Seller\DashboardController::class, 'export']);
+        });
         
-        \Illuminate\Support\Facades\Log::info('Brand found', ['brand' => $brand ? $brand->name : 'none']);
-        
-        if (!$brand) {
-            return response()->json(['name' => null, 'id' => null], 200);
-        }
-        return response()->json($brand);
-    });
-    Route::get('/seller/orders', [SellerOrderController::class, 'index']);
-    Route::get('/seller/orders/{id}', [SellerOrderController::class, 'show']);
-    
-    // Seller Dashboard Analytics
-    Route::prefix('seller/dashboard')->group(function () {
-        Route::get('/summary', [\App\Http\Controllers\Api\Seller\DashboardController::class, 'summary']);
-        Route::get('/sales-graph', [\App\Http\Controllers\Api\Seller\DashboardController::class, 'salesGraph']);
-        Route::get('/order-status', [\App\Http\Controllers\Api\Seller\DashboardController::class, 'orderStatus']);
-        Route::get('/top-products', [\App\Http\Controllers\Api\Seller\DashboardController::class, 'topProducts']);
-        Route::get('/recent-orders', [\App\Http\Controllers\Api\Seller\DashboardController::class, 'recentOrders']);
-        Route::get('/export', [\App\Http\Controllers\Api\Seller\DashboardController::class, 'export']);
-    });
-    
-    // Seller Store Profile Management
-    Route::get('/seller/profile/store', [\App\Http\Controllers\SellerStoreController::class, 'getProfile']);
-    Route::post('/seller/profile/store', [\App\Http\Controllers\SellerStoreController::class, 'updateProfile']);
-    Route::delete('/seller/profile/store/request/{id}', [\App\Http\Controllers\SellerStoreController::class, 'cancelRequest']);
+        // Seller Store Profile Management
+        Route::get('/seller/profile/store', [\App\Http\Controllers\SellerStoreController::class, 'getProfile']);
+        Route::post('/seller/profile/store', [\App\Http\Controllers\SellerStoreController::class, 'updateProfile']);
+        Route::delete('/seller/profile/store/request/{id}', [\App\Http\Controllers\SellerStoreController::class, 'cancelRequest']);
 
-    // New Unified Seller Settings Routes
-    Route::prefix('seller/settings')->group(function () {
-        Route::get('/', [\App\Http\Controllers\SellerSettingsController::class, 'getSettings']);
-        Route::post('/password', [\App\Http\Controllers\SellerSettingsController::class, 'updatePassword']);
-        Route::post('/notifications', [\App\Http\Controllers\SellerSettingsController::class, 'updateNotifications']);
-        Route::post('/bank', [\App\Http\Controllers\SellerSettingsController::class, 'updateBank']);
-        Route::post('/profile', [\App\Http\Controllers\SellerSettingsController::class, 'updateProfile']);
-        Route::post('/kyc', [\App\Http\Controllers\SellerSettingsController::class, 'updateKYC']);
+        // New Unified Seller Settings Routes
+        Route::prefix('seller/settings')->group(function () {
+            Route::get('/', [\App\Http\Controllers\SellerSettingsController::class, 'getSettings']);
+            Route::post('/password', [\App\Http\Controllers\SellerSettingsController::class, 'updatePassword']);
+            Route::post('/notifications', [\App\Http\Controllers\SellerSettingsController::class, 'updateNotifications']);
+            Route::post('/bank', [\App\Http\Controllers\SellerSettingsController::class, 'updateBank']);
+            Route::post('/profile', [\App\Http\Controllers\SellerSettingsController::class, 'updateProfile']);
+            Route::post('/kyc', [\App\Http\Controllers\SellerSettingsController::class, 'updateKYC']);
+        });
+        
+        // Seller Order Routes
+        Route::prefix('seller')->group(function () {
+            Route::get('/orders', [\App\Http\Controllers\SellerOrderController::class, 'index']);
+            Route::get('/orders/{id}', [\App\Http\Controllers\SellerOrderController::class, 'show']);
+            Route::put('/orders/{id}/status', [\App\Http\Controllers\SellerOrderController::class, 'updateStatus']);
+            Route::get('/orders/{id}/invoice', [\App\Http\Controllers\SellerOrderController::class, 'downloadInvoice']);
+            Route::get('/orders/{id}/shipping-label', [\App\Http\Controllers\SellerOrderController::class, 'downloadShippingLabel']);
+            Route::post('/orders/bulk-invoices', [\App\Http\Controllers\SellerOrderController::class, 'bulkDownloadInvoices']);
+            Route::post('/orders/bulk-shipping-labels', [\App\Http\Controllers\SellerOrderController::class, 'bulkDownloadShippingLabels']);
+            Route::put('/orders/{id}/tracking', [\App\Http\Controllers\SellerOrderController::class, 'updateTracking']);
+            
+            // Seller Dashboard Routes
+            Route::prefix('dashboard')->group(function () {
+                Route::get('/summary', [\App\Http\Controllers\SellerDashboardController::class, 'summary']);
+                Route::get('/sales-graph', [\App\Http\Controllers\SellerDashboardController::class, 'salesGraph']);
+                Route::get('/order-status', [\App\Http\Controllers\SellerDashboardController::class, 'orderStatus']);
+                Route::get('/top-products', [\App\Http\Controllers\SellerDashboardController::class, 'topProducts']);
+                Route::get('/recent-orders', [\App\Http\Controllers\SellerDashboardController::class, 'recentOrders']);
+                Route::get('/export', [\App\Http\Controllers\SellerDashboardController::class, 'export']);
+            });
+            
+            // Seller Finance Routes
+            Route::prefix('finance')->group(function () {
+                Route::get('/summary', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'summary']);
+                Route::get('/commission-breakdown', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'commissionBreakdown']);
+                Route::get('/transactions', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'transactions']);
+                Route::post('/request-payout', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'requestPayout']);
+                Route::get('/payouts', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'payouts']);
+                Route::get('/export', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'export']);
+            });
+
+            // Seller Review Routes
+            Route::prefix('reviews')->group(function () {
+                Route::get('/', [\App\Http\Controllers\Api\Seller\ReviewController::class, 'index']);
+                Route::get('/pending', [\App\Http\Controllers\Api\Seller\ReviewController::class, 'pendingReplies']);
+                Route::get('/statistics', [\App\Http\Controllers\Api\Seller\ReviewController::class, 'statistics']);
+                Route::get('/{id}', [\App\Http\Controllers\Api\Seller\ReviewController::class, 'show']);
+                Route::post('/{id}/reply', [\App\Http\Controllers\Api\Seller\ReviewController::class, 'reply']);
+            });
+        });
     });
-    
+
     // Address Routes
     Route::apiResource('addresses', AddressController::class);
-
-    // Checkout Routes
-    // Checkout Routes - Moved to Public for Guest Checkout Support
-
-
-
 
     // Order Routes (Authenticated)
     Route::get('/orders', [OrderController::class, 'index']); // List user's orders
@@ -252,47 +289,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/reviews', [\App\Http\Controllers\Api\Customer\ReviewController::class, 'myReviews']);
         Route::get('/products/{productId}/eligibility', [\App\Http\Controllers\Api\Customer\ReviewController::class, 'checkProductReviewEligibility']);
         Route::get('/doctors/{doctorId}/eligibility', [\App\Http\Controllers\Api\Customer\ReviewController::class, 'checkDoctorReviewEligibility']);
-    });
-
-    // Seller Order Routes
-    Route::prefix('seller')->group(function () {
-        Route::get('/orders', [\App\Http\Controllers\SellerOrderController::class, 'index']);
-        Route::get('/orders/{id}', [\App\Http\Controllers\SellerOrderController::class, 'show']);
-        Route::put('/orders/{id}/status', [\App\Http\Controllers\SellerOrderController::class, 'updateStatus']);
-        Route::get('/orders/{id}/invoice', [\App\Http\Controllers\SellerOrderController::class, 'downloadInvoice']);
-        Route::get('/orders/{id}/shipping-label', [\App\Http\Controllers\SellerOrderController::class, 'downloadShippingLabel']);
-        Route::post('/orders/bulk-invoices', [\App\Http\Controllers\SellerOrderController::class, 'bulkDownloadInvoices']);
-        Route::post('/orders/bulk-shipping-labels', [\App\Http\Controllers\SellerOrderController::class, 'bulkDownloadShippingLabels']);
-        Route::put('/orders/{id}/tracking', [\App\Http\Controllers\SellerOrderController::class, 'updateTracking']);
-        
-        // Seller Dashboard Routes
-        Route::prefix('dashboard')->group(function () {
-            Route::get('/summary', [\App\Http\Controllers\SellerDashboardController::class, 'summary']);
-            Route::get('/sales-graph', [\App\Http\Controllers\SellerDashboardController::class, 'salesGraph']);
-            Route::get('/order-status', [\App\Http\Controllers\SellerDashboardController::class, 'orderStatus']);
-            Route::get('/top-products', [\App\Http\Controllers\SellerDashboardController::class, 'topProducts']);
-            Route::get('/recent-orders', [\App\Http\Controllers\SellerDashboardController::class, 'recentOrders']);
-            Route::get('/export', [\App\Http\Controllers\SellerDashboardController::class, 'export']);
-        });
-        
-        // Seller Finance Routes
-        Route::prefix('finance')->group(function () {
-            Route::get('/summary', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'summary']);
-            Route::get('/commission-breakdown', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'commissionBreakdown']);
-            Route::get('/transactions', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'transactions']);
-            Route::post('/request-payout', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'requestPayout']);
-            Route::get('/payouts', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'payouts']);
-            Route::get('/export', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'export']);
-        });
-
-        // Seller Review Routes
-        Route::prefix('reviews')->group(function () {
-            Route::get('/', [\App\Http\Controllers\Api\Seller\ReviewController::class, 'index']);
-            Route::get('/pending', [\App\Http\Controllers\Api\Seller\ReviewController::class, 'pendingReplies']);
-            Route::get('/statistics', [\App\Http\Controllers\Api\Seller\ReviewController::class, 'statistics']);
-            Route::get('/{id}', [\App\Http\Controllers\Api\Seller\ReviewController::class, 'show']);
-            Route::post('/{id}/reply', [\App\Http\Controllers\Api\Seller\ReviewController::class, 'reply']);
-        });
     });
 
     // Admin Routes

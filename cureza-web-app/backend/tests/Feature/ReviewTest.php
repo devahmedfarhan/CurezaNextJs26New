@@ -25,7 +25,7 @@ class ReviewTest extends TestCase
 
         // Create test users
         $this->customer = User::factory()->create(['role' => 'customer']);
-        $this->seller = User::factory()->create(['role' => 'seller']);
+        $this->seller = User::factory()->create(['role' => 'vendor']);
         $this->admin = User::factory()->create(['role' => 'super_admin']);
 
         // Create test product and order (you'll need to adjust based on your schema)

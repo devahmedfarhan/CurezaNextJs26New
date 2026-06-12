@@ -61,6 +61,8 @@ class SellerOrderController extends Controller
             }
         ])->findOrFail($id);
 
+        \Illuminate\Support\Facades\Gate::authorize('view', $order);
+
         return response()->json($order);
     }
 
@@ -79,6 +81,8 @@ class SellerOrderController extends Controller
         $order = Order::whereHas('items', function ($q) use ($sellerId) {
             $q->where('seller_id', $sellerId);
         })->findOrFail($id);
+
+        \Illuminate\Support\Facades\Gate::authorize('update', $order);
 
         // Prevent changing status if already delivered
         if ($order->status === 'delivered') {
@@ -116,6 +120,8 @@ class SellerOrderController extends Controller
             $q->where('seller_id', $sellerId);
         })->with(['items.product', 'shippingMethod', 'user'])->findOrFail($id);
 
+        \Illuminate\Support\Facades\Gate::authorize('view', $order);
+
         $logoPath = public_path('storage/images/logo.png');
         $logoBase64 = '';
         if (file_exists($logoPath)) {
@@ -142,6 +148,8 @@ class SellerOrderController extends Controller
         $order = Order::whereHas('items', function ($q) use ($sellerId) {
             $q->where('seller_id', $sellerId);
         })->with(['items.product', 'user'])->findOrFail($id);
+
+        \Illuminate\Support\Facades\Gate::authorize('view', $order);
 
         // Generate shipping label HTML
         $html = view('shipping-label', compact('order'))->render();
@@ -238,6 +246,8 @@ class SellerOrderController extends Controller
         $order = Order::whereHas('items', function ($q) use ($sellerId) {
             $q->where('seller_id', $sellerId);
         })->findOrFail($id);
+
+        \Illuminate\Support\Facades\Gate::authorize('update', $order);
 
         // Update tracking details
         $order->tracking_id = $request->tracking_id;
