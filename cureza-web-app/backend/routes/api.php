@@ -1,0 +1,539 @@
+<?php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\PrescriptionController;
+use App\Http\Controllers\WalletController;
+use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\ChallengeController;
+use App\Http\Controllers\ReferralController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SellerAuthController;
+use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\MenuItemController;
+use App\Http\Controllers\Admin\DoctorManagementController;
+use App\Http\Controllers\SellerRegistrationController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\SellerController;
+use App\Http\Controllers\TagController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\AttributeController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\AddressController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CouponController;
+use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\ComparisonController;
+use App\Http\Controllers\SellerOrderController;
+
+// Customer Authentication Routes
+Route::post('/register', [AuthController::class, 'register']);
+Route::get('/login', function () {
+    return response()->json(['message' => 'Unauthorized'], 401);
+})->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/auth/send-otp', [AuthController::class, 'sendOtp']);
+Route::post('/auth/verify-otp', [AuthController::class, 'verifyOtp']);
+Route::post('/auth/forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('/auth/reset-password', [AuthController::class, 'resetPasswordWithOtp']);
+
+// Seller/Vendor Authentication Routes
+Route::post('/pre-register-seller', [SellerRegistrationController::class, 'preRegister']);
+Route::post('/save-draft-seller', [SellerRegistrationController::class, 'saveDraft']);
+Route::post('/register-seller', [SellerRegistrationController::class, 'register']);
+Route::post('/seller/register', [SellerAuthController::class, 'register']);
+Route::post('/seller/login', [SellerAuthController::class, 'login']);
+
+// Doctor Authentication & Onboarding Routes
+Route::post('/doctor/register-full', [\App\Http\Controllers\DoctorOnboardingController::class, 'registerFull']);
+Route::post('/doctor/login', [DoctorController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/doctor/upload-kyc', [\App\Http\Controllers\DoctorOnboardingController::class, 'uploadKYC']);
+    Route::post('/doctor/send-otp', [\App\Http\Controllers\DoctorOnboardingController::class, 'sendOTP']);
+    Route::post('/doctor/resend-otp', [\App\Http\Controllers\DoctorOnboardingController::class, 'resendOTP']);
+    Route::post('/doctor/verify-otp', [\App\Http\Controllers\DoctorOnboardingController::class, 'verifyOTP']);
+    Route::post('/doctor/reupload-document', [\App\Http\Controllers\DoctorOnboardingController::class, 'reuploadDocument']);
+    Route::post('/doctor/submit-application', [\App\Http\Controllers\DoctorOnboardingController::class, 'submitApplication']);
+});
+
+// Admin Authentication Routes (Login only, no registration)
+Route::post('/admin/login', [AdminAuthController::class, 'login']);
+
+// Public Routes
+Route::get('/brands', [\App\Http\Controllers\PublicStoreController::class, 'index']);
+Route::get('/brand/{slug}', [\App\Http\Controllers\PublicStoreController::class, 'show']);
+Route::get('/products/latest', [ProductController::class, 'latest']);
+Route::get('/products', [ProductController::class, 'index']);
+Route::get('/products/search', [ProductController::class, 'index']); // Alias for search
+Route::get('/products/compare', [ComparisonController::class, 'getComparisonDetails']);
+Route::get('/products/{slug}', [ProductController::class, 'show']);
+Route::get('/products/{id}/related', [ProductController::class, 'getRelated']);
+Route::get('/products/{id}/upsells', [ProductController::class, 'getUpsells']);
+Route::get('/products/{id}/bundles', [ProductController::class, 'getBundles']);
+Route::get('/products/recently-viewed', [ProductController::class, 'getRecentlyViewed']);
+Route::get('/products/{id}/reviews', [ReviewController::class, 'index']);
+Route::post('/reviews', [ReviewController::class, 'store']);
+Route::get('/categories', [CategoryController::class, 'publicIndex']);
+Route::get('/menu-items', [MenuItemController::class, 'index']);
+Route::get('/attributes', [AttributeController::class, 'index']);
+Route::get('/tags', [TagController::class, 'index']); // Public tags listing for sellers
+Route::get('/tags/{slug}', [TagController::class, 'show']);
+
+// Public Doctor Listing
+Route::get('/public/doctors', [App\Http\Controllers\PublicDoctorController::class, 'index']);
+Route::get('/public/doctors/{id}', [App\Http\Controllers\PublicDoctorController::class, 'show']);
+
+// Debug Route
+Route::get('/debug-auth', function (Request $request) {
+    return response()->json([
+        'headers' => $request->headers->all(),
+        'has_token' => $request->bearerToken() ? 'Yes' : 'No',
+        'token_snippet' => substr($request->bearerToken() ?? '', 0, 10),
+        'manual_user_check' => Auth::guard('sanctum')->user()
+    ]);
+});
+
+// Public Checkout Routes (Guest Checkout Support)
+Route::get('/checkout/initiate', [App\Http\Controllers\CheckoutController::class, 'initiate']);
+Route::post('/checkout/calculate', [App\Http\Controllers\CheckoutController::class, 'calculate']);
+
+// Public Order Placement (Guest Checkout Support)
+Route::post('/orders', [OrderController::class, 'store']);
+Route::get('/orders/{id}', [OrderController::class, 'show']); // Public order view for guests
+
+// Protected Routes (All authenticated users)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/create-razorpay-order', [\App\Http\Controllers\PaymentController::class, 'createRazorpayOrder']);
+    Route::post('/verify-payment', [\App\Http\Controllers\PaymentController::class, 'verifyPayment']);
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/user', [AuthController::class, 'user']);
+    Route::post('/change-password', [AuthController::class, 'changePassword']);
+    Route::post('/user/profile', [\App\Http\Controllers\ProfileController::class, 'update']);
+
+    // Wishlist
+    Route::get('/wishlist', [WishlistController::class, 'index']);
+    Route::post('/wishlist/toggle', [WishlistController::class, 'toggle']);
+
+    // Doctor Routes
+    Route::get('/doctor/profile', [DoctorController::class, 'profile']);
+    Route::put('/doctor/profile', [DoctorController::class, 'updateProfile']);
+    Route::get('/doctor/dashboard/summary', [DoctorController::class, 'dashboardSummary']);
+
+    // Appointment Routes
+    Route::get('/appointments', [App\Http\Controllers\AppointmentController::class, 'index']);
+    Route::get('/appointments/patients', [App\Http\Controllers\AppointmentController::class, 'patients']);
+    Route::post('/appointments', [App\Http\Controllers\AppointmentController::class, 'store']);
+    Route::get('/appointments/{id}', [App\Http\Controllers\AppointmentController::class, 'show']);
+    Route::put('/appointments/{id}', [App\Http\Controllers\AppointmentController::class, 'update']);
+
+    // Prescription / Consultation Recording
+    Route::post('/prescriptions', [App\Http\Controllers\PrescriptionController::class, 'store']);
+    Route::get('/prescriptions/patient/{patientId}', [App\Http\Controllers\PrescriptionController::class, 'patientHistory']);
+    Route::get('/doctor/prescription-requests', [App\Http\Controllers\PrescriptionController::class, 'pendingProductPrescriptions']);
+    Route::post('/doctor/prescription-requests/{id}/approve', [App\Http\Controllers\PrescriptionController::class, 'approveProductPrescription']);
+
+    // Seller Routes
+    Route::post('/seller/products', [ProductController::class, 'store']);
+    Route::get('/seller/products', [ProductController::class, 'sellerIndex']);
+    Route::get('/seller/products/{id}', [ProductController::class, 'sellerShow']); // Get single product for editing
+    Route::put('/seller/products/{id}', [ProductController::class, 'update']);
+    Route::delete('/seller/products/{id}', [ProductController::class, 'destroy']);
+    Route::get('/seller/change-requests', [ProductController::class, 'sellerChangeRequests']);
+    Route::get('/seller/brand', function (\Illuminate\Http\Request $request) {
+        // Return the authenticated seller's brand
+        $user = $request->user();
+        \Illuminate\Support\Facades\Log::info('Seller brand lookup', ['user_id' => $user->id, 'user_name' => $user->name]);
+        
+        $brand = \App\Models\Brand::where('user_id', $user->id)->first();
+        
+        \Illuminate\Support\Facades\Log::info('Brand found', ['brand' => $brand ? $brand->name : 'none']);
+        
+        if (!$brand) {
+            return response()->json(['name' => null, 'id' => null], 200);
+        }
+        return response()->json($brand);
+    });
+    Route::get('/seller/orders', [SellerOrderController::class, 'index']);
+    Route::get('/seller/orders/{id}', [SellerOrderController::class, 'show']);
+    
+    // Seller Dashboard Analytics
+    Route::prefix('seller/dashboard')->group(function () {
+        Route::get('/summary', [\App\Http\Controllers\Api\Seller\DashboardController::class, 'summary']);
+        Route::get('/sales-graph', [\App\Http\Controllers\Api\Seller\DashboardController::class, 'salesGraph']);
+        Route::get('/order-status', [\App\Http\Controllers\Api\Seller\DashboardController::class, 'orderStatus']);
+        Route::get('/top-products', [\App\Http\Controllers\Api\Seller\DashboardController::class, 'topProducts']);
+        Route::get('/recent-orders', [\App\Http\Controllers\Api\Seller\DashboardController::class, 'recentOrders']);
+        Route::get('/export', [\App\Http\Controllers\Api\Seller\DashboardController::class, 'export']);
+    });
+    
+    // Seller Store Profile Management
+    Route::get('/seller/profile/store', [\App\Http\Controllers\SellerStoreController::class, 'getProfile']);
+    Route::post('/seller/profile/store', [\App\Http\Controllers\SellerStoreController::class, 'updateProfile']);
+    Route::delete('/seller/profile/store/request/{id}', [\App\Http\Controllers\SellerStoreController::class, 'cancelRequest']);
+
+    // New Unified Seller Settings Routes
+    Route::prefix('seller/settings')->group(function () {
+        Route::get('/', [\App\Http\Controllers\SellerSettingsController::class, 'getSettings']);
+        Route::post('/password', [\App\Http\Controllers\SellerSettingsController::class, 'updatePassword']);
+        Route::post('/notifications', [\App\Http\Controllers\SellerSettingsController::class, 'updateNotifications']);
+        Route::post('/bank', [\App\Http\Controllers\SellerSettingsController::class, 'updateBank']);
+        Route::post('/profile', [\App\Http\Controllers\SellerSettingsController::class, 'updateProfile']);
+        Route::post('/kyc', [\App\Http\Controllers\SellerSettingsController::class, 'updateKYC']);
+    });
+    
+    // Address Routes
+    Route::apiResource('addresses', AddressController::class);
+
+    // Checkout Routes
+    // Checkout Routes - Moved to Public for Guest Checkout Support
+
+
+
+
+    // Order Routes (Authenticated)
+    Route::get('/orders', [OrderController::class, 'index']); // List user's orders
+    Route::get('/orders/{id}/track', [\App\Http\Controllers\OrderTrackingController::class, 'track']);
+    Route::get('/orders/{id}/invoice', [OrderController::class, 'downloadInvoice']);
+    Route::get('/user/reviews', [ReviewController::class, 'userIndex']);
+    
+    // Prescription Routes
+    Route::get('/user/prescriptions', [PrescriptionController::class, 'index']);
+    Route::get('/user/prescriptions/{id}', [PrescriptionController::class, 'show']);
+    Route::get('/user/prescriptions/{id}/download', [PrescriptionController::class, 'download']);
+    Route::delete('/user/prescriptions/{id}', [PrescriptionController::class, 'destroy']);
+    Route::post('/user/prescriptions/{id}/duplicate', [PrescriptionController::class, 'duplicate']);
+
+    // Community & Rewards
+    Route::get('/user/wallet', [WalletController::class, 'index']);
+    Route::get('/user/community', [CommunityController::class, 'index']);
+    Route::get('/user/challenges', [ChallengeController::class, 'index']);
+    Route::post('/user/challenges/{id}/join', [ChallengeController::class, 'join']);
+    Route::get('/user/referrals', [ReferralController::class, 'index']);
+
+    // Dashboard Overview
+    Route::get('/user/dashboard', [DashboardController::class, 'index']);
+    Route::post('/user/products/{id}/view', [ProductController::class, 'recordView']);
+
+    // Notifications
+    Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index']);
+    Route::get('/notifications/unread-count', [\App\Http\Controllers\NotificationController::class, 'unreadCount']);
+    Route::post('/notifications/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead']);
+
+    // Support / Ticket System
+    Route::prefix('tickets')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Api\Support\TicketController::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\Api\Support\TicketController::class, 'store']);
+        Route::get('/{id}', [\App\Http\Controllers\Api\Support\TicketController::class, 'show']);
+        Route::post('/{id}/reply', [\App\Http\Controllers\Api\Support\TicketController::class, 'reply']);
+        
+        // Admin specific actions on tickets
+        Route::put('/{id}/status', [\App\Http\Controllers\Api\Support\TicketController::class, 'updateStatus']);
+        Route::delete('/{id}', [\App\Http\Controllers\Api\Support\TicketController::class, 'destroy']);
+        Route::get('/{id}/attachments/{attachmentId}', [\App\Http\Controllers\Api\Support\TicketController::class, 'downloadAttachment']);
+    });
+
+    // Customer Review Routes
+    Route::prefix('customer')->group(function () {
+        Route::post('/reviews/product', [\App\Http\Controllers\Api\Customer\ReviewController::class, 'createProductReview']);
+        Route::post('/reviews/seller', [\App\Http\Controllers\Api\Customer\ReviewController::class, 'createSellerReview']);
+        Route::post('/reviews/doctor', [\App\Http\Controllers\Api\Customer\ReviewController::class, 'createDoctorReview']);
+        Route::get('/reviews', [\App\Http\Controllers\Api\Customer\ReviewController::class, 'myReviews']);
+        Route::get('/products/{productId}/eligibility', [\App\Http\Controllers\Api\Customer\ReviewController::class, 'checkProductReviewEligibility']);
+        Route::get('/doctors/{doctorId}/eligibility', [\App\Http\Controllers\Api\Customer\ReviewController::class, 'checkDoctorReviewEligibility']);
+    });
+
+    // Seller Order Routes
+    Route::prefix('seller')->group(function () {
+        Route::get('/orders', [\App\Http\Controllers\SellerOrderController::class, 'index']);
+        Route::get('/orders/{id}', [\App\Http\Controllers\SellerOrderController::class, 'show']);
+        Route::put('/orders/{id}/status', [\App\Http\Controllers\SellerOrderController::class, 'updateStatus']);
+        Route::get('/orders/{id}/invoice', [\App\Http\Controllers\SellerOrderController::class, 'downloadInvoice']);
+        Route::get('/orders/{id}/shipping-label', [\App\Http\Controllers\SellerOrderController::class, 'downloadShippingLabel']);
+        Route::post('/orders/bulk-invoices', [\App\Http\Controllers\SellerOrderController::class, 'bulkDownloadInvoices']);
+        Route::post('/orders/bulk-shipping-labels', [\App\Http\Controllers\SellerOrderController::class, 'bulkDownloadShippingLabels']);
+        Route::put('/orders/{id}/tracking', [\App\Http\Controllers\SellerOrderController::class, 'updateTracking']);
+        
+        // Seller Dashboard Routes
+        Route::prefix('dashboard')->group(function () {
+            Route::get('/summary', [\App\Http\Controllers\SellerDashboardController::class, 'summary']);
+            Route::get('/sales-graph', [\App\Http\Controllers\SellerDashboardController::class, 'salesGraph']);
+            Route::get('/order-status', [\App\Http\Controllers\SellerDashboardController::class, 'orderStatus']);
+            Route::get('/top-products', [\App\Http\Controllers\SellerDashboardController::class, 'topProducts']);
+            Route::get('/recent-orders', [\App\Http\Controllers\SellerDashboardController::class, 'recentOrders']);
+            Route::get('/export', [\App\Http\Controllers\SellerDashboardController::class, 'export']);
+        });
+        
+        // Seller Finance Routes
+        Route::prefix('finance')->group(function () {
+            Route::get('/summary', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'summary']);
+            Route::get('/commission-breakdown', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'commissionBreakdown']);
+            Route::get('/transactions', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'transactions']);
+            Route::post('/request-payout', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'requestPayout']);
+            Route::get('/payouts', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'payouts']);
+            Route::get('/export', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'export']);
+        });
+
+        // Seller Review Routes
+        Route::prefix('reviews')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Api\Seller\ReviewController::class, 'index']);
+            Route::get('/pending', [\App\Http\Controllers\Api\Seller\ReviewController::class, 'pendingReplies']);
+            Route::get('/statistics', [\App\Http\Controllers\Api\Seller\ReviewController::class, 'statistics']);
+            Route::get('/{id}', [\App\Http\Controllers\Api\Seller\ReviewController::class, 'show']);
+            Route::post('/{id}/reply', [\App\Http\Controllers\Api\Seller\ReviewController::class, 'reply']);
+        });
+    });
+
+    // Admin Routes
+    Route::middleware(['auth:sanctum', 'role:admin,super_admin'])->prefix('admin')->group(function () {
+        // Doctor Management
+        Route::get('/doctors', [DoctorManagementController::class, 'index']);
+        Route::get('/doctors/{id}', [DoctorManagementController::class, 'show']);
+        Route::post('/doctors/{id}/approve', [DoctorManagementController::class, 'approve']);
+        Route::post('/doctors/{id}/reject', [DoctorManagementController::class, 'reject']);
+        Route::put('/doctors/{id}', [DoctorManagementController::class, 'update']);
+        Route::delete('/doctors/{id}', [DoctorManagementController::class, 'destroy']);
+        Route::post('/doctors/{id}/verify-document', [DoctorManagementController::class, 'verifyDocument']);
+        Route::post('/doctors/{id}/approve-update', [DoctorManagementController::class, 'approveUpdate']);
+        Route::post('/doctors/{id}/reject-update', [DoctorManagementController::class, 'rejectUpdate']);
+
+        // Products
+        Route::get('/products/export/template', [App\Http\Controllers\Admin\ProductImportExportController::class, 'downloadTemplate']);
+        Route::get('/products/export', [App\Http\Controllers\Admin\ProductImportExportController::class, 'export']);
+        Route::post('/products/import', [App\Http\Controllers\Admin\ProductImportExportController::class, 'import']);
+        
+        Route::get('/products/all', [ProductController::class, 'adminIndex']); // All products with filters
+        Route::get('/products/pending', [ProductController::class, 'adminPending']);
+        Route::post('/products/{id}/approve', [ProductController::class, 'approve']);
+        Route::post('/products/{id}/reject', [ProductController::class, 'reject']);
+        Route::get('/products/{id}', [ProductController::class, 'adminShow']);
+        Route::post('/products', [ProductController::class, 'store']);
+        Route::put('/products/{id}', [ProductController::class, 'update']);
+        Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+        
+        // Product Change Requests
+        Route::get('/change-requests', [\App\Http\Controllers\Admin\ProductChangeRequestController::class, 'index']);
+        Route::get('/change-requests/stats', [\App\Http\Controllers\Admin\ProductChangeRequestController::class, 'stats']);
+        Route::get('/change-requests/{id}', [\App\Http\Controllers\Admin\ProductChangeRequestController::class, 'show']);
+        Route::post('/change-requests/{id}/approve', [\App\Http\Controllers\Admin\ProductChangeRequestController::class, 'approve']);
+        Route::post('/change-requests/{id}/reject', [\App\Http\Controllers\Admin\ProductChangeRequestController::class, 'reject']);
+        Route::post('/change-requests/bulk-approve', [\App\Http\Controllers\Admin\ProductChangeRequestController::class, 'bulkApprove']);
+        Route::post('/change-requests/bulk-reject', [\App\Http\Controllers\Admin\ProductChangeRequestController::class, 'bulkReject']);
+
+        // Store Change Requests (Deprecated - Moving to unified)
+        Route::get('/store-requests', [\App\Http\Controllers\AdminStoreRequestController::class, 'index']);
+        Route::get('/store-requests/{id}', [\App\Http\Controllers\AdminStoreRequestController::class, 'show']);
+        Route::post('/store-requests/{id}/approve', [\App\Http\Controllers\AdminStoreRequestController::class, 'approve']);
+        Route::post('/store-requests/{id}/reject', [\App\Http\Controllers\AdminStoreRequestController::class, 'reject']);
+
+        // Unified Seller Change Requests
+        Route::prefix('seller-requests')->group(function () {
+            Route::get('/', [\App\Http\Controllers\AdminSellerRequestController::class, 'index']);
+            Route::get('/{id}', [\App\Http\Controllers\AdminSellerRequestController::class, 'show']);
+            Route::post('/{id}/approve', [\App\Http\Controllers\AdminSellerRequestController::class, 'approve']);
+            Route::post('/{id}/reject', [\App\Http\Controllers\AdminSellerRequestController::class, 'reject']);
+        });
+
+        // Categories
+        Route::get('/categories', [CategoryController::class, 'index']);
+        Route::post('/categories', [CategoryController::class, 'store']);
+        Route::put('/categories/{id}', [CategoryController::class, 'update']);
+        Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+
+        // Menu Items
+        Route::get('/menu-items', [MenuItemController::class, 'adminIndex']);
+        Route::post('/menu-items', [MenuItemController::class, 'store']);
+        Route::put('/menu-items/{id}', [MenuItemController::class, 'update']);
+        Route::delete('/menu-items/{id}', [MenuItemController::class, 'destroy']);
+        Route::post('/menu-items/reorder', [MenuItemController::class, 'reorder']);
+
+        // Customers
+        Route::get('/customers', [CustomerController::class, 'index']);
+        Route::get('/customers/{id}', [CustomerController::class, 'show']);
+        Route::post('/customers', [CustomerController::class, 'store']);
+        Route::put('/customers/{id}', [CustomerController::class, 'update']);
+        Route::delete('/customers/{id}', [CustomerController::class, 'destroy']);
+
+        // Sellers
+        Route::get('/sellers', [SellerController::class, 'index']);
+        Route::get('/sellers/{id}', [SellerController::class, 'show']);
+        Route::put('/sellers/{id}', [SellerController::class, 'adminUpdate']);
+        Route::post('/sellers/{id}/verify', [SellerController::class, 'verify']);
+        Route::post('/sellers/{id}/approve', [SellerController::class, 'approve']);
+        Route::post('/sellers/{id}/reject', [SellerController::class, 'reject']);
+        Route::post('/sellers/{id}/documents/{type}', [SellerController::class, 'updateDocumentStatus']);
+        Route::post('/sellers/{id}/documents/{type}/upload', [SellerController::class, 'uploadDocument']);
+        Route::delete('/sellers/{id}/documents/{type}', [SellerController::class, 'deleteDocument']);
+        Route::delete('/sellers/{id}', [SellerController::class, 'destroy']);
+        
+        // Tags
+        Route::get('/tags', [TagController::class, 'index']);
+        Route::post('/tags', [TagController::class, 'store']);
+        Route::post('/tags/bulk-delete', [TagController::class, 'bulkDestroy']);
+        Route::put('/tags/{id}', [TagController::class, 'update']);
+        Route::delete('/tags/{id}', [TagController::class, 'destroy']);
+
+        // Brands
+        Route::get('/brands', [BrandController::class, 'index']);
+        Route::post('/brands', [BrandController::class, 'store']);
+        Route::put('/brands/{id}', [BrandController::class, 'update']);
+        Route::delete('/brands/{id}', [BrandController::class, 'destroy']);
+
+        // Attributes
+        Route::apiResource('attributes', AttributeController::class);
+        Route::post('/attributes/{id}/terms', [AttributeController::class, 'addTerm']);
+        Route::put('/attributes/{id}/terms/{termId}', [AttributeController::class, 'updateTerm']);
+        Route::delete('/attributes/{id}/terms/{termId}', [AttributeController::class, 'deleteTerm']);
+
+        // Team Management
+        Route::apiResource('team', \App\Http\Controllers\Admin\TeamController::class);
+
+        // Blog System (Admin)
+        Route::apiResource('blog/posts', \App\Http\Controllers\Api\Admin\AdminBlogPostController::class);
+        Route::apiResource('blog/categories', \App\Http\Controllers\Api\Admin\AdminBlogCategoryController::class);
+        Route::apiResource('blog/tags', \App\Http\Controllers\Api\Admin\AdminBlogTagController::class);
+        Route::apiResource('blog/authors', \App\Http\Controllers\Api\Admin\AdminBlogAuthorController::class);
+        // Route::apiResource('users', \App\Http\Controllers\Admin\UserController::class);
+        
+        // Super Admin User Creation
+        Route::post('/users/create-seller', [\App\Http\Controllers\Admin\SuperAdminUserController::class, 'storeSeller']);
+        Route::post('/users/create-doctor', [\App\Http\Controllers\Admin\SuperAdminUserController::class, 'storeDoctor']);
+        Route::post('/users/create-customer', [\App\Http\Controllers\Admin\SuperAdminUserController::class, 'storeCustomer']);
+
+
+        Route::get('shipping-methods', [\App\Http\Controllers\Admin\ShippingController::class, 'index']);
+        Route::put('shipping-methods/{id}', [\App\Http\Controllers\Admin\ShippingController::class, 'update']);
+
+        // Reviews
+        // Reviews - Moved to dedicated prefix group below (lines 422+)
+        // Route::get('/reviews', [ReviewController::class, 'adminIndex']);
+        // Route::put('/reviews/{id}/status', [ReviewController::class, 'updateStatus']);
+
+
+        // Coupons
+        Route::apiResource('coupons', CouponController::class);
+
+        // Upsells
+        Route::apiResource('upsells', \App\Http\Controllers\UpsellController::class);
+
+        // Dashboard & Analytics
+        Route::get('/dashboard', [\App\Http\Controllers\Api\Admin\DashboardController::class, 'index']);
+        
+        Route::prefix('analytics')->group(function () {
+            Route::get('/revenue', [\App\Http\Controllers\Api\Admin\AnalyticsController::class, 'revenue']);
+            Route::get('/user-growth', [\App\Http\Controllers\Api\Admin\AnalyticsController::class, 'userGrowth']);
+            Route::get('/top-performance', [\App\Http\Controllers\Api\Admin\AnalyticsController::class, 'topPerformance']);
+            Route::get('/system-health', [\App\Http\Controllers\Api\Admin\AnalyticsController::class, 'systemHealth']);
+        });
+
+        // Reports
+        Route::get('/reports/generate', [\App\Http\Controllers\Api\Admin\ReportController::class, 'generate']);
+
+        // Finance & Payouts
+        Route::prefix('finance')->group(function () {
+            Route::get('/overview', [\App\Http\Controllers\Api\Admin\AdminFinanceController::class, 'overview']);
+            Route::get('/sellers', [\App\Http\Controllers\Api\Admin\AdminFinanceController::class, 'sellers']);
+            Route::get('/doctors', [\App\Http\Controllers\Api\Admin\AdminFinanceController::class, 'doctors']);
+            Route::get('/commission-breakdown', [\App\Http\Controllers\Api\Admin\AdminFinanceController::class, 'commissionBreakdown']);
+            Route::get('/transactions', [\App\Http\Controllers\Api\Admin\AdminFinanceController::class, 'transactions']);
+            Route::get('/export', [\App\Http\Controllers\Api\Admin\AdminFinanceController::class, 'export']);
+        });
+
+        // Payouts
+        Route::prefix('payouts')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Api\Admin\PayoutController::class, 'index']);
+            Route::get('/pending', [\App\Http\Controllers\Api\Admin\PayoutController::class, 'pending']);
+            Route::get('/statistics', [\App\Http\Controllers\Api\Admin\PayoutController::class, 'statistics']);
+            Route::get('/{id}', [\App\Http\Controllers\Api\Admin\PayoutController::class, 'show']);
+            Route::post('/{id}/approve', [\App\Http\Controllers\Api\Admin\PayoutController::class, 'approve']);
+            Route::post('/{id}/reject', [\App\Http\Controllers\Api\Admin\PayoutController::class, 'reject']);
+        });
+
+        // Commission Configuration
+        Route::prefix('commissions')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Api\Admin\CommissionConfigController::class, 'index']);
+            Route::get('/unconfigured', [\App\Http\Controllers\Api\Admin\CommissionConfigController::class, 'unconfigured']);
+            Route::get('/seller/{sellerId}', [\App\Http\Controllers\Api\Admin\CommissionConfigController::class, 'show']);
+            Route::post('/seller/{sellerId}', [\App\Http\Controllers\Api\Admin\CommissionConfigController::class, 'store']);
+            Route::get('/seller/{sellerId}/history', [\App\Http\Controllers\Api\Admin\CommissionConfigController::class, 'history']);
+            Route::post('/bulk-update', [\App\Http\Controllers\Api\Admin\CommissionConfigController::class, 'bulkUpdate']);
+        });
+
+        // Orders (Super Admin)
+        Route::get('/orders', [\App\Http\Controllers\Admin\SuperAdminOrderController::class, 'index']);
+        Route::post('/orders', [\App\Http\Controllers\Admin\SuperAdminOrderController::class, 'store']); // Manual Create
+        Route::get('/orders/export', [\App\Http\Controllers\Admin\SuperAdminOrderController::class, 'export']);
+        Route::get('/orders/{id}', [\App\Http\Controllers\Admin\SuperAdminOrderController::class, 'show']);
+        Route::put('/orders/{id}', [\App\Http\Controllers\Admin\SuperAdminOrderController::class, 'update']); // Edit
+        Route::get('/orders/{id}/invoice', [\App\Http\Controllers\Admin\SuperAdminOrderController::class, 'downloadInvoice']); // PDF
+        Route::delete('/orders/{id}', [\App\Http\Controllers\Admin\SuperAdminOrderController::class, 'destroy']); // Delete Order
+        
+        // Shipments (Super Admin)
+        Route::get('/shipments', [\App\Http\Controllers\Admin\SuperAdminShipmentController::class, 'index']);
+        
+        // Refunds (Super Admin)
+        Route::get('/refunds', [\App\Http\Controllers\Admin\SuperAdminRefundController::class, 'index']);
+        Route::post('/refund/approve', [\App\Http\Controllers\Admin\SuperAdminRefundController::class, 'approve']);
+
+        // Review Management (Super Admin)
+        Route::prefix('reviews')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Api\SuperAdmin\ReviewController::class, 'index']);
+            Route::get('/statistics', [\App\Http\Controllers\Api\SuperAdmin\ReviewController::class, 'statistics']);
+            Route::post('/', [\App\Http\Controllers\Api\SuperAdmin\ReviewController::class, 'store']); // Manual create
+            Route::get('/{id}', [\App\Http\Controllers\Api\SuperAdmin\ReviewController::class, 'show']);
+            Route::put('/{id}', [\App\Http\Controllers\Api\SuperAdmin\ReviewController::class, 'update']);
+            Route::delete('/{id}', [\App\Http\Controllers\Api\SuperAdmin\ReviewController::class, 'destroy']);
+            Route::patch('/{id}/status', [\App\Http\Controllers\Api\SuperAdmin\ReviewController::class, 'updateStatus']);
+            Route::delete('/reply/{id}', [\App\Http\Controllers\Api\SuperAdmin\ReviewController::class, 'deleteReply']);
+        });
+
+        // Bundle Offers (Super Admin)
+        Route::prefix('bundles')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\AdminBundleController::class, 'index']);
+            Route::post('/', [\App\Http\Controllers\Admin\AdminBundleController::class, 'store']);
+            Route::put('/{id}', [\App\Http\Controllers\Admin\AdminBundleController::class, 'update']);
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\AdminBundleController::class, 'destroy']);
+        });
+    });
+});
+
+// Cart Routes (Public/Guest accessible)
+Route::get('/cart', [CartController::class, 'index']);
+Route::post('/cart/add', [CartController::class, 'store']);
+Route::delete('/cart/clear', [CartController::class, 'clear']); // Clear entire cart
+Route::put('/cart/items/{id}', [CartController::class, 'update']);
+Route::delete('/cart/items/{id}', [CartController::class, 'destroy']);
+Route::post('/cart/coupon', [CartController::class, 'applyCoupon']); // Apply Coupon
+Route::delete('/cart/coupon', [CartController::class, 'removeCoupon']); // Remove Coupon
+Route::get('/cart/upsells', [\App\Http\Controllers\UpsellController::class, 'forCart']);
+
+// Checkout Routes (Public/Guest accessible)
+Route::get('/checkout/initiate', [CheckoutController::class, 'initiate']);
+Route::post('/checkout/calculate', [CheckoutController::class, 'calculate']);
+Route::post('/coupons/validate', [CouponController::class, 'validateCoupon']);
+Route::get('/coupons', [CouponController::class, 'getActiveCoupons']); // Public: Get active coupons for customers
+
+// Public Review & Rating Routes
+Route::prefix('public')->group(function () {
+    Route::get('/products/{productId}/reviews', [\App\Http\Controllers\Api\Public\ReviewController::class, 'getProductReviews']);
+    Route::get('/products/{productId}/rating', [\App\Http\Controllers\Api\Public\ReviewController::class, 'getProductRating']);
+    Route::get('/sellers/{sellerId}/reviews', [\App\Http\Controllers\Api\Public\ReviewController::class, 'getSellerReviews']);
+    Route::get('/sellers/{sellerId}/rating', [\App\Http\Controllers\Api\Public\ReviewController::class, 'getSellerRating']);
+});
+
+// Blog System (Public)
+Route::prefix('blog')->group(function () {
+    Route::get('/posts', [\App\Http\Controllers\Api\BlogController::class, 'index']);
+    Route::get('/posts/{slug}', [\App\Http\Controllers\Api\BlogController::class, 'show']);
+    Route::get('/categories/{slug}', [\App\Http\Controllers\Api\BlogController::class, 'byCategory']);
+    Route::get('/tags/{slug}', [\App\Http\Controllers\Api\BlogController::class, 'byTag']);
+    Route::get('/authors/{slug}', [\App\Http\Controllers\Api\BlogController::class, 'byAuthor']);
+});

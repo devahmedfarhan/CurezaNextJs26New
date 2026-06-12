@@ -1,0 +1,342 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Redefine dark variant to only activate with .dark class */
+@variant dark (&:where(.dark, .dark *));
+
+:root {
+  /* --- Color Palette --- */
+
+  /* Primary: Cureza Green (Nature, Growth, Health) */
+  --cureza-green-50: #E8F5E9;
+  --cureza-green-100: #C8E6C9;
+  --cureza-green-200: #A5D6A7;
+  --cureza-green-300: #81C784;
+  --cureza-green-400: #66BB6A;
+  --cureza-green-500: #4CAF50;
+  --cureza-green-600: #43A047;
+  --cureza-green-700: #2E7D32;
+  /* Brand Primary */
+  --cureza-green-800: #1B5E20;
+  --cureza-green-900: #1B5E20;
+
+  /* Secondary: Trust Blue (Medical, Professional, Clean) */
+  --trust-blue-50: #E3F2FD;
+  --trust-blue-100: #BBDEFB;
+  --trust-blue-200: #90CAF9;
+  --trust-blue-300: #64B5F6;
+  --trust-blue-400: #42A5F5;
+  --trust-blue-500: #2196F3;
+  --trust-blue-600: #1E88E5;
+  --trust-blue-700: #1976D2;
+  /* Brand Secondary */
+  --trust-blue-800: #1565C0;
+  --trust-blue-900: #0D47A1;
+
+  /* Accent: Earth & Sand (Ayurveda, Organic, Warmth) */
+  --warm-sand-50: #FAFAFA;
+  --warm-sand-100: #F5F5F5;
+  /* Page Background */
+  --warm-sand-200: #EEEEEE;
+  --warm-sand-300: #E0E0E0;
+  --warm-sand-400: #BDBDBD;
+  --warm-sand-500: #9E9E9E;
+
+  /* Neutrals: Charcoal & Gray (Text, Borders) */
+  --charcoal-50: #FAFAFA;
+  --charcoal-100: #F4F4F5;
+  --charcoal-200: #E4E4E7;
+  --charcoal-300: #D4D4D8;
+  --charcoal-400: #A1A1AA;
+  --charcoal-500: #71717A;
+  --charcoal-600: #52525B;
+  --charcoal-700: #3F3F46;
+  --charcoal-800: #27272A;
+  --charcoal-900: #18181B;
+  /* Main Text */
+
+  /* Semantic Colors */
+  --alert-red: #D32F2F;
+  --warning-orange: #ED6C02;
+  --success-green: #2E7D32;
+  --info-blue: #0288D1;
+
+  /* --- UI Tokens --- */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+
+  /* --- Base Variables --- */
+
+  /* Force light mode color scheme */
+  color-scheme: light;
+  /* --- Shadcn Mappings (User Provided) --- */
+  --radius: 0.625rem;
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.60 0.13 163);
+  --primary-foreground: oklch(0.98 0.02 166);
+  --secondary: oklch(0.967 0.001 286.375);
+  --secondary-foreground: oklch(0.21 0.006 285.885);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.58 0.22 27);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.85 0.13 165);
+  --chart-2: oklch(0.77 0.15 163);
+  --chart-3: oklch(0.70 0.15 162);
+  --chart-4: oklch(0.60 0.13 163);
+  --chart-5: oklch(0.51 0.10 166);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.60 0.13 163);
+  --sidebar-primary-foreground: oklch(0.98 0.02 166);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+}
+
+@theme inline {
+  /* Colors */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-cureza-green: var(--cureza-green-700);
+  --color-cureza-green-50: var(--cureza-green-50);
+  --color-cureza-green-100: var(--cureza-green-100);
+  --color-cureza-green-200: var(--cureza-green-200);
+  --color-cureza-green-300: var(--cureza-green-300);
+  --color-cureza-green-400: var(--cureza-green-400);
+  --color-cureza-green-500: var(--cureza-green-500);
+  --color-cureza-green-600: var(--cureza-green-600);
+  --color-cureza-green-700: var(--cureza-green-700);
+  --color-cureza-green-800: var(--cureza-green-800);
+  --color-cureza-green-900: var(--cureza-green-900);
+
+  --color-trust-blue: var(--trust-blue-700);
+  --color-trust-blue-50: var(--trust-blue-50);
+  --color-trust-blue-100: var(--trust-blue-100);
+  --color-trust-blue-200: var(--trust-blue-200);
+  --color-trust-blue-300: var(--trust-blue-300);
+  --color-trust-blue-400: var(--trust-blue-400);
+  --color-trust-blue-500: var(--trust-blue-500);
+  --color-trust-blue-600: var(--trust-blue-600);
+  --color-trust-blue-700: var(--trust-blue-700);
+  --color-trust-blue-800: var(--trust-blue-800);
+  --color-trust-blue-900: var(--trust-blue-900);
+
+  --color-warm-sand: var(--warm-sand-100);
+  --color-charcoal: var(--charcoal-900);
+  --color-alert-red: var(--alert-red);
+
+  /* Typography */
+  --font-sans: var(--font-sans);
+  --font-inter: var(--font-inter);
+  --font-outfit: var(--font-outfit);
+
+  /* Radius */
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-full: var(--radius-full);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+
+  /* Premium Shadows */
+  --shadow-premium-light: 0 8px 30px rgba(0, 0, 0, 0.04);
+  --shadow-premium-hover: 0 8px 30px rgba(0, 0, 0, 0.08);
+  --shadow-premium-deep: 0 10px 40px rgba(0, 0, 0, 0.05);
+
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+}
+
+body {
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.70 0.15 162);
+  --primary-foreground: oklch(0.26 0.05 173);
+  --secondary: oklch(0.274 0.006 286.033);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.371 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.85 0.13 165);
+  --chart-2: oklch(0.77 0.15 163);
+  --chart-3: oklch(0.70 0.15 162);
+  --chart-4: oklch(0.60 0.13 163);
+  --chart-5: oklch(0.51 0.10 166);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.77 0.15 163);
+  --sidebar-primary-foreground: oklch(0.26 0.05 173);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    @apply bg-background text-foreground;
+    @apply bg-background text-foreground;
+  }
+
+  .input-settings {
+    @apply w-full h-11 px-4 rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-800 text-sm focus:ring-2 focus:ring-cureza-green/50 outline-none transition-all;
+  }
+
+  /* --- Premium UI Utilities --- */
+  .premium-card {
+    @apply bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-premium-light hover:shadow-premium-hover transition-all duration-300;
+  }
+
+  .premium-glass {
+    @apply bg-white/70 dark:bg-gray-900/70 backdrop-blur-md border border-white/20 dark:border-gray-800/20 shadow-xl;
+  }
+
+  .premium-shadow {
+    @apply shadow-premium-deep;
+  }
+
+  .premium-table-header {
+    @apply text-xs font-semibold text-gray-500 uppercase tracking-wider bg-gray-50/50 dark:bg-gray-800/50 backdrop-blur-sm;
+  }
+
+  .status-dot {
+    @apply w-2 h-2 rounded-full inline-block mr-2;
+  }
+
+  .nav-item-active {
+    @apply bg-green-50 text-cureza-green relative;
+  }
+
+  .nav-item-active::after {
+    content: '';
+    @apply absolute left-0 top-1/4 bottom-1/4 w-1 bg-cureza-green rounded-r-full;
+  }
+}
+
+/* Safari FIX — force GPU acceleration */
+.marquee,
+.marquee2 {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Main marquee animation */
+@-webkit-keyframes marquee {
+  0% {
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    -webkit-transform: translate3d(-100%, 0, 0);
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+/* Second track animation */
+@-webkit-keyframes marquee2 {
+  0% {
+    -webkit-transform: translate3d(100%, 0, 0);
+  }
+
+  100% {
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes marquee2 {
+  0% {
+    transform: translate3d(100%, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.marquee {
+  animation: marquee 250s linear infinite;
+  -webkit-animation: marquee 250s linear infinite;
+}
+
+.marquee2 {
+  animation: marquee2 250s linear infinite;
+  -webkit-animation: marquee2 250s linear infinite;
+}

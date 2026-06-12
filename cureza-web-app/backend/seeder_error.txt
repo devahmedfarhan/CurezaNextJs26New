@@ -1,0 +1,1 @@
+SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: categories.type (Connection: sqlite, SQL: insert into "categories" ("slug", "name", "updated_at", "created_at") values (oils, Oils, 2025-11-28 20:20:13, 2025-11-28 20:20:13))

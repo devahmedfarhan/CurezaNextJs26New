@@ -1,0 +1,15 @@
+Stakeholder Role	Login Email	Password	Dashboard/Login URL
+Super Admin	admin@cureza.com	password	http://localhost:3000/superadmin
+Doctor	doctor@cureza.com	password	http://localhost:3000/doctor
+Customer (User)	customer@cureza.com	password	http://localhost:3000/login
+Seller / Vendor	seller@cureza.com	password	http://localhost:3000/seller
+1	Aura Wellness	aurawellness@cureza-seller.com	password123
+2	Vedic Pure	vedicpure@cureza-seller.com	password123
+3	Hemp Horizon	hemphorizon@cureza-seller.com	password123
+4	Prana Naturals	prananaturals@cureza-seller.com	password123
+5	Somya Herbals	somyaherbals@cureza-seller.com	password123
+6	Green Elements	greenelements@cureza-seller.com	password123
+7	Pure Ayur	pureayur@cureza-seller.com	password123
+8	Ojas Organics	ojasorganics@cureza-seller.com	password123
+9	Sattva Remedies	sattvaremedies@cureza-seller.com	password123
+10	Amrit Life	amritlife@cureza-seller.com	password123

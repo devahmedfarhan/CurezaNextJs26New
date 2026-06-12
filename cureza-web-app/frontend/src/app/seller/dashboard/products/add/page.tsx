@@ -1,0 +1,27 @@
+'use client';
+
+import ProductForm from '@/components/products/ProductForm';
+import { AlertCircle } from 'lucide-react';
+
+export default function SellerAddProductPage() {
+    return (
+        <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
+            {/* Approval Notice Banner */}
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
+                <div className="flex items-start gap-3">
+                    <AlertCircle className="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" size={18} />
+                    <div className="text-sm text-blue-800 dark:text-blue-200">
+                        <p className="font-medium">Products Require Approval</p>
+                        <p className="text-blue-600 dark:text-blue-300 mt-1">
+                            Your product will be submitted for review. Once approved by our team, it will be published on the marketplace.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Product Form - Seller Mode (brand auto-assigned) */}
+            <ProductForm isSuperAdmin={false} />
+        </div>
+    );
+}
+

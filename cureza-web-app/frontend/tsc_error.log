@@ -1,0 +1,44 @@
+src/app/category/[slug]/page.tsx(125,25): error TS2561: Object literal may only specify known properties, but 'tag' does not exist in type 'ProductProps'. Did you mean to write 'tags'?
+src/app/concern/[slug]/page.tsx(126,25): error TS2561: Object literal may only specify known properties, but 'tag' does not exist in type 'ProductProps'. Did you mean to write 'tags'?
+src/app/superadmin/dashboard/cms/blogs/[id]/page.tsx(10,26): error TS2307: Cannot find module '@/components/ui/textarea' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/[id]/page.tsx(17,8): error TS2307: Cannot find module '@/components/ui/select' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/[id]/page.tsx(18,24): error TS2307: Cannot find module '@/components/ui/switch' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/[id]/page.tsx(19,23): error TS2307: Cannot find module 'sonner' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/[id]/page.tsx(197,40): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/app/superadmin/dashboard/cms/blogs/[id]/page.tsx(219,44): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/app/superadmin/dashboard/cms/blogs/[id]/page.tsx(243,49): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/app/superadmin/dashboard/cms/blogs/[id]/page.tsx(261,51): error TS7006: Parameter 'checked' implicitly has an 'any' type.
+src/app/superadmin/dashboard/cms/blogs/[id]/page.tsx(272,49): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/app/superadmin/dashboard/cms/blogs/[id]/page.tsx(291,49): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/app/superadmin/dashboard/cms/blogs/[id]/page.tsx(310,38): error TS2304: Cannot find name 'Badge'.
+src/app/superadmin/dashboard/cms/blogs/[id]/page.tsx(322,39): error TS2304: Cannot find name 'Badge'.
+src/app/superadmin/dashboard/cms/blogs/authors/page.tsx(13,8): error TS2307: Cannot find module '@/components/ui/table' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/authors/page.tsx(16,26): error TS2307: Cannot find module '@/components/ui/textarea' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/authors/page.tsx(24,8): error TS2307: Cannot find module '@/components/ui/dialog' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/authors/page.tsx(25,23): error TS2307: Cannot find module 'sonner' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/authors/page.tsx(169,54): error TS7006: Parameter 'open' implicitly has an 'any' type.
+src/app/superadmin/dashboard/cms/blogs/authors/page.tsx(206,48): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/app/superadmin/dashboard/cms/blogs/authors/page.tsx(223,48): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/app/superadmin/dashboard/cms/blogs/categories/page.tsx(13,8): error TS2307: Cannot find module '@/components/ui/table' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/categories/page.tsx(23,8): error TS2307: Cannot find module '@/components/ui/dialog' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/categories/page.tsx(24,23): error TS2307: Cannot find module 'sonner' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/categories/page.tsx(150,54): error TS7006: Parameter 'open' implicitly has an 'any' type.
+src/app/superadmin/dashboard/cms/blogs/create/page.tsx(10,26): error TS2307: Cannot find module '@/components/ui/textarea' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/create/page.tsx(17,8): error TS2307: Cannot find module '@/components/ui/select' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/create/page.tsx(18,24): error TS2307: Cannot find module '@/components/ui/switch' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/create/page.tsx(19,23): error TS2307: Cannot find module 'sonner' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/create/page.tsx(174,40): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/app/superadmin/dashboard/cms/blogs/create/page.tsx(196,44): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/app/superadmin/dashboard/cms/blogs/create/page.tsx(220,49): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/app/superadmin/dashboard/cms/blogs/create/page.tsx(238,51): error TS7006: Parameter 'checked' implicitly has an 'any' type.
+src/app/superadmin/dashboard/cms/blogs/create/page.tsx(249,49): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/app/superadmin/dashboard/cms/blogs/create/page.tsx(268,49): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/app/superadmin/dashboard/cms/blogs/create/page.tsx(287,38): error TS2304: Cannot find name 'Badge'.
+src/app/superadmin/dashboard/cms/blogs/create/page.tsx(299,39): error TS2304: Cannot find name 'Badge'.
+src/app/superadmin/dashboard/cms/blogs/page.tsx(14,8): error TS2307: Cannot find module '@/components/ui/table' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/page.tsx(15,23): error TS2307: Cannot find module '@/components/ui/badge' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/page.tsx(17,23): error TS2307: Cannot find module 'sonner' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/tags/page.tsx(13,8): error TS2307: Cannot find module '@/components/ui/table' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/tags/page.tsx(23,8): error TS2307: Cannot find module '@/components/ui/dialog' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/tags/page.tsx(24,23): error TS2307: Cannot find module 'sonner' or its corresponding type declarations.
+src/app/superadmin/dashboard/cms/blogs/tags/page.tsx(142,54): error TS7006: Parameter 'open' implicitly has an 'any' type.
