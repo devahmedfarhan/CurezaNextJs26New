@@ -69,11 +69,12 @@ export default function Home() {
       </div>
 
       {/* 13. KNOWLEDGE HUB - RECENT INSIGHTS */}
-      <div className="bg-white py-16 border-t border-[#052326]/5">
+      <div className="bg-[#F8F3EF] py-20">
         <BlogList
           categories={['ayurveda', 'wellness']}
           limit={3}
           grid={3}
+          isDarkBg={false}
         />
       </div>
 

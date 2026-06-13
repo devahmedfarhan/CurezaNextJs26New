@@ -38,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning data-theme="light" className={`${inter.variable} ${manrope.variable}`}>
       <body
-        className={`${inter.variable} ${manrope.variable} antialiased font-sans bg-warm-sand text-charcoal`}
+        className={`${inter.variable} ${manrope.variable} antialiased font-sans bg-background text-charcoal`}
         suppressHydrationWarning
       >
         <AuthProvider>
