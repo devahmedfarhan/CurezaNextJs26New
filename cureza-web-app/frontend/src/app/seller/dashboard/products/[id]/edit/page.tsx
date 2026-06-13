@@ -64,7 +64,7 @@ export default function SellerEditProductPage({ params }: { params: Promise<{ id
     }
 
     return (
-        <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
+        <div className="w-full py-6 space-y-6">
             {/* Edit Notice Banner */}
             <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
                 <div className="flex items-start gap-3">

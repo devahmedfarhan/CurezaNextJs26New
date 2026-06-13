@@ -14,19 +14,16 @@ class TicketController extends Controller
 
         if ($user->role !== 'admin' && $user->role !== 'super_admin') {
             $query->where('created_by_id', $user->id);
-            // We assume a user can have multiple roles but here we treat the login role as the context
-            // If stricter role check is needed: $query->where('created_by_role', $user->role);
-        } else {
-            // Admin filters
-            if ($request->filled('status')) {
-                $query->where('status', $request->status);
-            }
-            if ($request->filled('priority')) {
-                $query->where('priority', $request->priority);
-            }
-            if ($request->filled('role')) {
-                $query->where('created_by_role', $request->role);
-            }
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('priority')) {
+            $query->where('priority', $request->priority);
+        }
+        if ($request->filled('role') && ($user->role === 'admin' || $user->role === 'super_admin')) {
+            $query->where('created_by_role', $request->role);
         }
         
         return response()->json($query->latest()->paginate(20));
@@ -218,5 +215,27 @@ class TicketController extends Controller
         }
 
         return \Illuminate\Support\Facades\Storage::disk('local')->download($attachment->file_path, $attachment->file_name);
+    }
+
+    public function stats(Request $request)
+    {
+        $user = $request->user();
+        $query = \App\Models\Ticket::query();
+
+        if ($user->role !== 'admin' && $user->role !== 'super_admin') {
+            $query->where('created_by_id', $user->id);
+        }
+
+        $tickets = $query->get();
+
+        $total = $tickets->count();
+        $active = $tickets->whereNotIn('status', ['RESOLVED', 'CLOSED'])->count();
+        $resolved = $tickets->whereIn('status', ['RESOLVED', 'CLOSED'])->count();
+
+        return response()->json([
+            'total' => $total,
+            'active' => $active,
+            'resolved' => $resolved
+        ]);
     }
 }

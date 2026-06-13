@@ -26,6 +26,27 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
     const [isEditing, setIsEditing] = useState(false);
     const [editForm, setEditForm] = useState<any>(null);
 
+    // Categories and Concerns classifications
+    const [allCategories, setAllCategories] = useState<any[]>([]);
+    const [allConcerns, setAllConcerns] = useState<any[]>([]);
+
+    useEffect(() => {
+        fetchClassifications();
+    }, []);
+
+    const fetchClassifications = async () => {
+        try {
+            const [catsRes, concernsRes] = await Promise.all([
+                api.get('/categories?type=category'),
+                api.get('/categories?type=concern')
+            ]);
+            setAllCategories(catsRes.data || []);
+            setAllConcerns(concernsRes.data || []);
+        } catch (e) {
+            console.error('Failed to load classifications', e);
+        }
+    };
+
     const fetchSeller = async () => {
         try {
             const response = await api.get(`/admin/sellers/${id}`);
@@ -34,7 +55,19 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                 name: response.data.name,
                 email: response.data.email,
                 phone: response.data.phone || '',
-                profile: { ...response.data.profile }
+                profile: { ...response.data.profile },
+                brand: response.data.brand ? {
+                    name: response.data.brand.name || '',
+                    short_description: response.data.brand.short_description || '',
+                    description: response.data.brand.description || '',
+                    meta_title: response.data.brand.meta_title || '',
+                    meta_description: response.data.brand.meta_description || '',
+                    meta_keywords: response.data.brand.meta_keywords || '',
+                    keywords: response.data.brand.keywords || [],
+                    faqs: response.data.brand.faqs || [],
+                    categories: (response.data.brand.categories || []).map((c: any) => c.id),
+                    concerns: (response.data.brand.concerns || []).map((c: any) => c.id),
+                } : null
             });
         } catch (error) {
             console.error('Failed to fetch seller details', error);
@@ -51,6 +84,12 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
     const handleSaveEdits = async () => {
         try {
             await api.put(`/admin/sellers/${id}`, editForm);
+            
+            // Direct Brand Save by Admin
+            if (seller.brand && editForm.brand) {
+                await api.put(`/admin/brands/${seller.brand.id}`, editForm.brand);
+            }
+
             showToast('Seller details updated successfully', 'success');
             setIsEditing(false);
             fetchSeller();
@@ -69,10 +108,24 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
         }
     };
 
+    const handleApproveStoreRequest = async (requestId: string) => {
+        try {
+            await api.post(`/admin/store-requests/${requestId}/approve`);
+            showToast('Store request approved and changes applied', 'success');
+            fetchSeller();
+        } catch (error) {
+            showToast('Approval failed', 'error');
+        }
+    };
+
     const handleRejectRequest = async () => {
         if (!rejectionReason) return showToast('Reason is required', 'error');
         try {
-            await api.post(`/admin/seller-requests/${rejectionModal.requestId}/reject`, {
+            const endpoint = rejectionModal.section === 'Brand'
+                ? `/admin/store-requests/${rejectionModal.requestId}/reject`
+                : `/admin/seller-requests/${rejectionModal.requestId}/reject`;
+
+            await api.post(endpoint, {
                 rejection_reason: rejectionReason
             });
             showToast('Request rejected', 'success');
@@ -276,6 +329,58 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
     };
 
     const categorizedDocs = getCategorizedDocs();
+
+    const brandPendingRequest = seller.brand?.change_requests?.[0] || seller.brand?.changeRequests?.[0] ? {
+        id: (seller.brand.change_requests?.[0] || seller.brand.changeRequests?.[0]).id,
+        created_at: (seller.brand.change_requests?.[0] || seller.brand.changeRequests?.[0]).created_at,
+        new_data: (() => {
+            const req = seller.brand.change_requests?.[0] || seller.brand.changeRequests?.[0];
+            const proposed = req.proposed_data || {};
+            const result: any = {};
+            const keys = ['name', 'short_description', 'description', 'meta_title', 'meta_description', 'meta_keywords'];
+            keys.forEach(k => {
+                if (proposed[k] !== seller.brand[k]) {
+                    result[k] = proposed[k];
+                }
+            });
+            // Categories & Concerns
+            const newCats = (proposed.categories || []).map((id: any) => {
+                const cat = allCategories.find(c => String(c.id) === String(id));
+                return cat ? cat.name : id;
+            }).join(', ');
+            const oldCats = (seller.brand.categories || []).map((c: any) => c.name).join(', ');
+            if (newCats !== oldCats) {
+                result['categories'] = newCats || '(none)';
+            }
+
+            const newConcerns = (proposed.concerns || []).map((id: any) => {
+                const con = allConcerns.find(c => String(c.id) === String(id));
+                return con ? con.name : id;
+            }).join(', ');
+            const oldConcerns = (seller.brand.concerns || []).map((c: any) => c.name).join(', ');
+            if (newConcerns !== oldConcerns) {
+                result['concerns'] = newConcerns || '(none)';
+            }
+            
+            // FAQs
+            if (JSON.stringify(proposed.faqs) !== JSON.stringify(seller.brand.faqs)) {
+                result['faqs'] = `${(proposed.faqs || []).length} Proposed FAQs`;
+            }
+
+            return result;
+        })(),
+        old_data: (() => {
+            const result: any = {};
+            const keys = ['name', 'short_description', 'description', 'meta_title', 'meta_description', 'meta_keywords'];
+            keys.forEach(k => {
+                result[k] = seller.brand[k] || '(empty)';
+            });
+            result['categories'] = (seller.brand.categories || []).map((c: any) => c.name).join(', ') || '(empty)';
+            result['concerns'] = (seller.brand.concerns || []).map((c: any) => c.name).join(', ') || '(empty)';
+            result['faqs'] = `${(seller.brand.faqs || []).length} Live FAQs`;
+            return result;
+        })()
+    } : null;
 
     return (
         <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-24 font-sans selection:bg-emerald-500 selection:text-white">
@@ -613,6 +718,286 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                             />
                         </div>
                     </DetailSection>
+
+                    {/* Public Brand Profile & Search Optimization Section */}
+                    {seller.brand && (
+                        <DetailSection
+                            title="Public Brand Profile & Search Optimization"
+                            icon={Globe}
+                            pending={brandPendingRequest}
+                            onApprove={handleApproveStoreRequest}
+                            onReject={(requestId: string) => setRejectionModal({ show: true, requestId, section: 'Brand' })}
+                        >
+                            <div className="p-8 space-y-8">
+                                {/* Logo & Banner Row */}
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+                                    {/* Banner Preview */}
+                                    <div className="md:col-span-2 space-y-2">
+                                        <span className="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Digital Storefront (Banner)</span>
+                                        <div className="relative w-full aspect-[21/9] bg-gray-50 dark:bg-gray-800 rounded-3xl overflow-hidden border border-gray-150 dark:border-gray-700">
+                                            {editForm?.brand?.banner_path || brand.banner_path ? (
+                                                <img 
+                                                    src={editForm?.brand?.banner_path ? (editForm.brand.banner_path.startsWith('http') ? editForm.brand.banner_path : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'}${editForm.brand.banner_path}`) : (brand.banner_path.startsWith('http') ? brand.banner_path : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'}${brand.banner_path}`)} 
+                                                    alt="Brand Banner" 
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="flex items-center justify-center h-full text-gray-400 text-xs">No Banner Configured</div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    {/* Logo Preview */}
+                                    <div className="space-y-2">
+                                        <span className="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Identity Mark (Logo)</span>
+                                        <div className="w-28 h-28 bg-gray-50 dark:bg-gray-800 rounded-3xl overflow-hidden border border-gray-150 dark:border-gray-700 flex items-center justify-center">
+                                            {editForm?.brand?.logo || brand.logo ? (
+                                                <img 
+                                                    src={editForm?.brand?.logo ? (editForm.brand.logo.startsWith('http') ? editForm.brand.logo : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'}${editForm.brand.logo}`) : (brand.logo.startsWith('http') ? brand.logo : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'}${brand.logo}`)} 
+                                                    alt="Brand Logo" 
+                                                    className="w-3/4 h-3/4 object-contain"
+                                                />
+                                            ) : (
+                                                <div className="text-gray-400 text-xs">No Logo</div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* General Brand Fields */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <InfoField
+                                        label="Brand Public Name"
+                                        value={editForm?.brand?.name || brand.name}
+                                        isEditing={isEditing}
+                                        onChange={(val: string) => setEditForm({ ...editForm, brand: { ...editForm.brand, name: val } })}
+                                    />
+                                    <InfoField
+                                        label="Brand Tagline / Short Description"
+                                        value={editForm?.brand?.short_description || brand.short_description}
+                                        isEditing={isEditing}
+                                        onChange={(val: string) => setEditForm({ ...editForm, brand: { ...editForm.brand, short_description: val } })}
+                                    />
+                                    <div className="md:col-span-2 space-y-2">
+                                        <span className="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Brand Narrative (Full History)</span>
+                                        {isEditing ? (
+                                            <textarea
+                                                value={editForm?.brand?.description || ''}
+                                                onChange={(e) => setEditForm({ ...editForm, brand: { ...editForm.brand, description: e.target.value } })}
+                                                className="w-full text-xs font-medium bg-white dark:bg-gray-800 border rounded-2xl p-4 border-gray-250 dark:border-gray-700 focus:border-emerald-500 focus:outline-none text-gray-900 dark:text-white transition-colors font-sans resize-none h-32 leading-relaxed"
+                                            />
+                                        ) : (
+                                            <div className="text-xs font-medium text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-800/40 p-4 rounded-2xl leading-relaxed border border-gray-100 dark:border-gray-800" dangerouslySetInnerHTML={{ __html: brand.description || 'Not Provided' }} />
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* SEO Metadata Fields */}
+                                <div className="pt-6 border-t border-gray-100 dark:border-gray-800 space-y-4">
+                                    <h4 className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest flex items-center gap-1.5">
+                                        <Globe size={10} className="text-emerald-600" />
+                                        Search Engine Optimization (SEO)
+                                    </h4>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <InfoField
+                                            label="Meta Title (Google Title)"
+                                            value={editForm?.brand?.meta_title || brand.meta_title || ''}
+                                            isEditing={isEditing}
+                                            onChange={(val: string) => setEditForm({ ...editForm, brand: { ...editForm.brand, meta_title: val } })}
+                                        />
+                                        <InfoField
+                                            label="Meta Keywords"
+                                            value={editForm?.brand?.meta_keywords || brand.meta_keywords || ''}
+                                            isEditing={isEditing}
+                                            onChange={(val: string) => setEditForm({ ...editForm, brand: { ...editForm.brand, meta_keywords: val } })}
+                                        />
+                                        <div className="md:col-span-2 space-y-2">
+                                            <span className="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Meta Description</span>
+                                            {isEditing ? (
+                                                <textarea
+                                                    value={editForm?.brand?.meta_description || ''}
+                                                    onChange={(e) => setEditForm({ ...editForm, brand: { ...editForm.brand, meta_description: e.target.value } })}
+                                                    className="w-full text-xs font-medium bg-white dark:bg-gray-800 border rounded-2xl p-4 border-gray-250 dark:border-gray-700 focus:border-emerald-500 focus:outline-none text-gray-900 dark:text-white transition-colors font-sans resize-none h-20 leading-relaxed"
+                                                />
+                                            ) : (
+                                                <div className="text-xs font-medium text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-800/40 p-4 rounded-2xl leading-relaxed border border-gray-100 dark:border-gray-800">
+                                                    {brand.meta_description || 'Not Provided'}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Classifications Section */}
+                                <div className="pt-6 border-t border-gray-100 dark:border-gray-800 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* Categories */}
+                                    <div className="space-y-4">
+                                        <span className="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest border-b pb-2 block">Categories Selection</span>
+                                        {isEditing ? (
+                                            <div className="max-h-48 overflow-y-auto space-y-2 pr-2">
+                                                {allCategories.map(cat => (
+                                                    <label key={cat.id} className="flex items-center gap-3 px-3 py-2 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100/50 cursor-pointer border border-gray-100 dark:border-gray-700 transition-all">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={editForm?.brand?.categories?.includes(cat.id)}
+                                                            onChange={(e) => {
+                                                                const current = editForm?.brand?.categories || [];
+                                                                const updated = e.target.checked 
+                                                                    ? [...current, cat.id] 
+                                                                    : current.filter((id: number) => id !== cat.id);
+                                                                setEditForm({ ...editForm, brand: { ...editForm.brand, categories: updated } });
+                                                            }}
+                                                            className="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                                                        />
+                                                        <span className="text-xs font-bold text-gray-700 dark:text-gray-300">{cat.name}</span>
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="flex flex-wrap gap-2">
+                                                {brand.categories && brand.categories.length > 0 ? (
+                                                    brand.categories.map((cat: any) => (
+                                                        <span key={cat.id} className="px-3 py-1 rounded-xl bg-emerald-50 text-emerald-700 text-[10px] font-extrabold uppercase tracking-wide border border-emerald-100">
+                                                            {cat.name}
+                                                        </span>
+                                                    ))
+                                                ) : (
+                                                    <span className="text-xs text-gray-400 italic">No Categories Configured</span>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Concerns */}
+                                    <div className="space-y-4">
+                                        <span className="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest border-b pb-2 block">Concerns Selection</span>
+                                        {isEditing ? (
+                                            <div className="max-h-48 overflow-y-auto space-y-2 pr-2">
+                                                {allConcerns.map(concern => (
+                                                    <label key={concern.id} className="flex items-center gap-3 px-3 py-2 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100/50 cursor-pointer border border-gray-100 dark:border-gray-700 transition-all">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={editForm?.brand?.concerns?.includes(concern.id)}
+                                                            onChange={(e) => {
+                                                                const current = editForm?.brand?.concerns || [];
+                                                                const updated = e.target.checked 
+                                                                    ? [...current, concern.id] 
+                                                                    : current.filter((id: number) => id !== concern.id);
+                                                                setEditForm({ ...editForm, brand: { ...editForm.brand, concerns: updated } });
+                                                            }}
+                                                            className="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                                                        />
+                                                        <span className="text-xs font-bold text-gray-700 dark:text-gray-300">{concern.name}</span>
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="flex flex-wrap gap-2">
+                                                {brand.concerns && brand.concerns.length > 0 ? (
+                                                    brand.concerns.map((concern: any) => (
+                                                        <span key={concern.id} className="px-3 py-1 rounded-xl bg-blue-50 text-blue-700 text-[10px] font-extrabold uppercase tracking-wide border border-blue-100">
+                                                            {concern.name}
+                                                        </span>
+                                                    ))
+                                                ) : (
+                                                    <span className="text-xs text-gray-400 italic">No Concerns Configured</span>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* FAQs Section */}
+                                <div className="pt-6 border-t border-gray-100 dark:border-gray-800 space-y-4">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Brand FAQs</span>
+                                        {isEditing && (
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const currentFaqs = editForm?.brand?.faqs || [];
+                                                    setEditForm({
+                                                        ...editForm,
+                                                        brand: {
+                                                            ...editForm.brand,
+                                                            faqs: [...currentFaqs, { question: '', answer: '' }]
+                                                        }
+                                                    });
+                                                }}
+                                                className="px-3 py-1.5 bg-gray-900 text-white rounded-xl text-[10px] font-bold uppercase tracking-wider hover:bg-black transition-colors"
+                                            >
+                                                + Add FAQ
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        {isEditing ? (
+                                            (editForm?.brand?.faqs || []).length === 0 ? (
+                                                <p className="text-xs text-gray-400 italic">No FAQs Configured</p>
+                                            ) : (
+                                                (editForm?.brand?.faqs || []).map((faq: any, idx: number) => (
+                                                    <div key={idx} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 space-y-2 relative">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                const currentFaqs = editForm?.brand?.faqs || [];
+                                                                setEditForm({
+                                                                    ...editForm,
+                                                                    brand: {
+                                                                        ...editForm.brand,
+                                                                        faqs: currentFaqs.filter((_: any, i: number) => i !== idx)
+                                                                    }
+                                                                });
+                                                            }}
+                                                            className="absolute top-2 right-2 text-[10px] font-bold text-rose-500 hover:text-rose-650 transition-colors uppercase"
+                                                        >
+                                                            Remove
+                                                        </button>
+                                                        <div className="space-y-1">
+                                                            <span className="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Question #{idx + 1}</span>
+                                                            <input
+                                                                type="text"
+                                                                value={faq.question}
+                                                                onChange={(e) => {
+                                                                    const currentFaqs = [...(editForm?.brand?.faqs || [])];
+                                                                    currentFaqs[idx].question = e.target.value;
+                                                                    setEditForm({ ...editForm, brand: { ...editForm.brand, faqs: currentFaqs } });
+                                                                }}
+                                                                className="w-full h-10 px-3 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs font-bold focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none"
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1">
+                                                            <span className="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Answer #{idx + 1}</span>
+                                                            <textarea
+                                                                value={faq.answer}
+                                                                onChange={(e) => {
+                                                                    const currentFaqs = [...(editForm?.brand?.faqs || [])];
+                                                                    currentFaqs[idx].answer = e.target.value;
+                                                                    setEditForm({ ...editForm, brand: { ...editForm.brand, faqs: currentFaqs } });
+                                                                }}
+                                                                className="w-full p-3 h-16 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none resize-none leading-relaxed"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            )
+                                        ) : (
+                                            (brand.faqs || []).length === 0 ? (
+                                                <span className="text-xs text-gray-400 italic">No FAQs Configured</span>
+                                            ) : (
+                                                (brand.faqs || []).map((faq: any, idx: number) => (
+                                                    <div key={idx} className="p-4 bg-gray-50/50 dark:bg-gray-800/20 rounded-2xl border border-gray-100 dark:border-gray-800 space-y-1">
+                                                        <p className="text-xs font-bold text-gray-900 dark:text-white">Q: {faq.question}</p>
+                                                        <p className="text-xs text-gray-650 dark:text-gray-400 pl-4">A: {faq.answer}</p>
+                                                    </div>
+                                                ))
+                                            )
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </DetailSection>
+                    )}
                 </div>
 
                 {/* Right Dossier Cards: Review Panel */}

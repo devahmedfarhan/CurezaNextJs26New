@@ -280,6 +280,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Support / Ticket System
     Route::prefix('tickets')->group(function () {
         Route::get('/', [\App\Http\Controllers\Api\Support\TicketController::class, 'index']);
+        Route::get('/stats', [\App\Http\Controllers\Api\Support\TicketController::class, 'stats']);
         Route::post('/', [\App\Http\Controllers\Api\Support\TicketController::class, 'store']);
         Route::get('/{id}', [\App\Http\Controllers\Api\Support\TicketController::class, 'show']);
         Route::post('/{id}/reply', [\App\Http\Controllers\Api\Support\TicketController::class, 'reply']);
@@ -358,6 +359,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/store-requests/{id}', [\App\Http\Controllers\AdminStoreRequestController::class, 'show']);
         Route::post('/store-requests/{id}/approve', [\App\Http\Controllers\AdminStoreRequestController::class, 'approve']);
         Route::post('/store-requests/{id}/reject', [\App\Http\Controllers\AdminStoreRequestController::class, 'reject']);
+        Route::put('/brands/{id}', [\App\Http\Controllers\AdminStoreRequestController::class, 'updateBrand']);
 
         // Unified Seller Change Requests
         Route::prefix('seller-requests')->group(function () {

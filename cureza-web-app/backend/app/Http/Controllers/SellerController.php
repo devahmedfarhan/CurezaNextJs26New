@@ -71,7 +71,9 @@ class SellerController extends Controller
     {
         $user = User::where('id', $id)->where('role', 'vendor')
             ->with(['sellerProfile', 'brand' => function($q) {
-                $q->withCount('products');
+                $q->withCount('products')->with(['categories', 'concerns', 'changeRequests' => function($sq) {
+                    $sq->where('status', 'pending');
+                }]);
             }, 'sellerChangeRequests' => function($q) {
                 $q->where('status', 'pending');
             }])

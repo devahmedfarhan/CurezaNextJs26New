@@ -49,7 +49,7 @@ export default function SellerSettingsPage() {
     }
 
     return (
-        <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-500">
+        <div className="w-full space-y-8 animate-in fade-in duration-500">
             <div className="flex flex-col gap-2 mb-4">
                 <h1 className="text-3xl font-extrabold text-gray-900 dark:text-gray-100 tracking-tight">Account Intelligence</h1>
                 <p className="text-gray-500 dark:text-gray-400 font-medium">Coordinate your security, communication channels, and financial parameters.</p>

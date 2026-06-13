@@ -14,6 +14,13 @@ export default function SellerProfilePage() {
     const [profile, setProfile] = useState<any>(null);
     const [pendingRequest, setPendingRequest] = useState<any>(null);
 
+    // Dynamic SEO, FAQ, and categorization states
+    const [allCategories, setAllCategories] = useState<any[]>([]);
+    const [allConcerns, setAllConcerns] = useState<any[]>([]);
+    const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+    const [selectedConcerns, setSelectedConcerns] = useState<number[]>([]);
+    const [faqs, setFaqs] = useState<{ question: string; answer: string }[]>([]);
+
     // Form handling
     const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm();
 
@@ -22,11 +29,21 @@ export default function SellerProfilePage() {
     const [bannerPreview, setBannerPreview] = useState<string | null>(null);
 
     useEffect(() => {
-        fetchProfile();
+        fetchProfileAndClassifications();
     }, []);
 
-    const fetchProfile = async () => {
+    const fetchProfileAndClassifications = async () => {
         try {
+            setIsLoading(true);
+
+            // Fetch active classifications
+            const [catsRes, concernsRes] = await Promise.all([
+                axios.get('/categories?type=category'),
+                axios.get('/categories?type=concern')
+            ]);
+            setAllCategories(catsRes.data || []);
+            setAllConcerns(concernsRes.data || []);
+
             const res = await axios.get('/seller/profile/store');
             const data = res.data;
             setProfile(data.brand);
@@ -35,18 +52,28 @@ export default function SellerProfilePage() {
             if (data.brand) {
                 setValue('name', data.brand.name);
                 setValue('short_description', data.brand.short_description);
-                // Handle keywords (array to comma-separated string)
                 setValue('keywords', Array.isArray(data.brand.keywords) ? data.brand.keywords.join(', ') : '');
-
-                // For long description, we might need a RichText editor, for now simple textarea
                 setValue('description', data.brand.description);
+
+                // Set SEO metadata values
+                setValue('meta_title', data.brand.meta_title || '');
+                setValue('meta_description', data.brand.meta_description || '');
+                setValue('meta_keywords', data.brand.meta_keywords || '');
 
                 setLogoPreview(getImageUrl(data.brand.logo));
                 setBannerPreview(getImageUrl(data.brand.banner_path));
+
+                // Populate categories & concerns
+                const currentCatIds = (data.brand.categories || []).map((c: any) => c.id);
+                const currentConcernIds = (data.brand.concerns || []).map((c: any) => c.id);
+                setSelectedCategories(currentCatIds);
+                setSelectedConcerns(currentConcernIds);
+
+                // Populate FAQs
+                setFaqs(Array.isArray(data.brand.faqs) ? data.brand.faqs : []);
             }
         } catch (err) {
             console.error(err);
-            // showToast("Failed to load profile", "error");
         } finally {
             setIsLoading(false);
         }
@@ -81,11 +108,27 @@ export default function SellerProfilePage() {
 
             // Convert comma string to array for backend
             const tags = data.keywords.split(',').map((t: string) => t.trim()).filter((t: string) => t.length > 0);
-            // Laravel expects array for json casting or handle it in controller. 
-            // Our controller expects array, but FormData arrays are tricky. 
-            // Let's send key by key
             tags.forEach((tag: string, index: number) => {
                 formData.append(`keywords[${index}]`, tag);
+            });
+
+            // Append SEO fields
+            formData.append('meta_title', data.meta_title || '');
+            formData.append('meta_description', data.meta_description || '');
+            formData.append('meta_keywords', data.meta_keywords || '');
+
+            // Append FAQ items
+            faqs.forEach((faq: any, index: number) => {
+                formData.append(`faqs[${index}][question]`, faq.question || '');
+                formData.append(`faqs[${index}][answer]`, faq.answer || '');
+            });
+
+            // Append Category/Concern IDs
+            selectedCategories.forEach((id: number, index: number) => {
+                formData.append(`categories[${index}]`, id.toString());
+            });
+            selectedConcerns.forEach((id: number, index: number) => {
+                formData.append(`concerns[${index}]`, id.toString());
             });
 
             const logoFile = (document.getElementById('logo-upload') as HTMLInputElement)?.files?.[0];
@@ -99,7 +142,7 @@ export default function SellerProfilePage() {
             });
 
             showToast("Change request submitted successfully!", "success");
-            fetchProfile(); // Refresh to show pending state
+            fetchProfileAndClassifications(); // Refresh to lock state
             window.scrollTo(0, 0);
         } catch (err: any) {
             console.error(err);
@@ -114,7 +157,7 @@ export default function SellerProfilePage() {
         try {
             await axios.delete(`/seller/profile/store/request/${pendingRequest.id}`);
             showToast("Request cancelled", "success");
-            fetchProfile();
+            fetchProfileAndClassifications();
         } catch (err) {
             showToast("Failed to cancel", "error");
         }
@@ -122,11 +165,11 @@ export default function SellerProfilePage() {
 
     if (isLoading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin" /></div>;
 
-    // Disabled state if there is a pending request
+    // Disabled state if there is a pending request (restored)
     const isLocked = !!pendingRequest;
 
     return (
-        <div className="max-w-5xl mx-auto p-6 space-y-8">
+        <div className="w-full space-y-8">
 
             <div className="flex flex-col gap-2 mb-4">
                 <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Store Architecture</h1>
@@ -279,6 +322,179 @@ export default function SellerProfilePage() {
                     </div>
                 </div>
 
+                {/* SEO Settings Card */}
+                <div className="grid grid-cols-1 gap-8 premium-card p-10">
+                    <div className="border-b border-gray-100 pb-4">
+                        <h3 className="text-lg font-extrabold text-gray-900 tracking-tight">Search Engine Optimization (SEO)</h3>
+                        <p className="text-xs text-gray-400 font-medium mt-1">Configure metadata to improve your brand page rankings on Google search.</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="space-y-2">
+                            <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Google Search Title (Meta Title)</label>
+                            <input
+                                {...register('meta_title', { maxLength: 255 })}
+                                className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
+                                placeholder="Recommended: 50-60 characters"
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Google Search Keywords (Meta Keywords)</label>
+                            <input
+                                {...register('meta_keywords', { maxLength: 255 })}
+                                className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
+                                placeholder="e.g. Wellness, health, premium organic"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Google Snippet Description (Meta Description)</label>
+                        <textarea
+                            {...register('meta_description')}
+                            className="w-full h-28 p-6 rounded-3xl bg-gray-50 border border-gray-100 text-sm font-medium focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all resize-none leading-relaxed"
+                            placeholder="Recommended: 150-160 characters describing your brand for Google search results snippet..."
+                        />
+                    </div>
+                </div>
+
+                {/* Brand Classifications Card */}
+                <div className="grid grid-cols-1 gap-8 premium-card p-10">
+                    <div className="border-b border-gray-100 pb-4">
+                        <h3 className="text-lg font-extrabold text-gray-900 tracking-tight">Brand Classification & Segments</h3>
+                        <p className="text-xs text-gray-400 font-medium mt-1">Select the product categories and therapeutic concerns your brand caters to.</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {/* Categories */}
+                        <div className="space-y-4">
+                            <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1 border-b pb-2">Active Product Categories</label>
+                            <div className="max-h-60 overflow-y-auto space-y-2.5 pr-2">
+                                {allCategories.length === 0 ? (
+                                    <p className="text-xs text-gray-400 italic">No categories available</p>
+                                ) : (
+                                    allCategories.map(cat => (
+                                        <label key={cat.id} className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-gray-50 hover:bg-gray-100/50 cursor-pointer border border-gray-50 transition-all">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedCategories.includes(cat.id)}
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        setSelectedCategories([...selectedCategories, cat.id]);
+                                                    } else {
+                                                        setSelectedCategories(selectedCategories.filter(id => id !== cat.id));
+                                                    }
+                                                }}
+                                                className="w-4 h-4 text-cureza-green border-gray-300 rounded focus:ring-cureza-green"
+                                            />
+                                            <span className="text-xs font-bold text-gray-700">{cat.name}</span>
+                                        </label>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Concerns */}
+                        <div className="space-y-4">
+                            <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1 border-b pb-2">Therapeutic Concerns Catered To</label>
+                            <div className="max-h-60 overflow-y-auto space-y-2.5 pr-2">
+                                {allConcerns.length === 0 ? (
+                                    <p className="text-xs text-gray-400 italic">No concerns available</p>
+                                ) : (
+                                    allConcerns.map(concern => (
+                                        <label key={concern.id} className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-gray-50 hover:bg-gray-100/50 cursor-pointer border border-gray-50 transition-all">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedConcerns.includes(concern.id)}
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        setSelectedConcerns([...selectedConcerns, concern.id]);
+                                                    } else {
+                                                        setSelectedConcerns(selectedConcerns.filter(id => id !== concern.id));
+                                                    }
+                                                }}
+                                                className="w-4 h-4 text-cureza-green border-gray-300 rounded focus:ring-cureza-green"
+                                            />
+                                            <span className="text-xs font-bold text-gray-700">{concern.name}</span>
+                                        </label>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* FAQ Manager Card */}
+                <div className="grid grid-cols-1 gap-8 premium-card p-10">
+                    <div className="border-b border-gray-100 pb-4 flex justify-between items-center">
+                        <div>
+                            <h3 className="text-lg font-extrabold text-gray-900 tracking-tight">Brand FAQs (Frequently Asked Questions)</h3>
+                            <p className="text-xs text-gray-400 font-medium mt-1">Provide answers to common queries to educate shoppers and improve SEO indexes.</p>
+                        </div>
+                        {!isLocked && (
+                            <button
+                                type="button"
+                                onClick={() => setFaqs([...faqs, { question: '', answer: '' }])}
+                                className="px-4 py-2 bg-gray-900 text-white rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-black transition-colors"
+                            >
+                                + Add FAQ
+                            </button>
+                        )}
+                    </div>
+
+                    <div className="space-y-6">
+                        {faqs.length === 0 ? (
+                            <div className="text-center py-10 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                                <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">No FAQs Configured</p>
+                            </div>
+                        ) : (
+                            faqs.map((faq, index) => (
+                                <div key={index} className="p-6 bg-gray-50 rounded-2xl border border-gray-100 space-y-4 relative group">
+                                    {!isLocked && (
+                                        <button
+                                            type="button"
+                                            onClick={() => setFaqs(faqs.filter((_, i) => i !== index))}
+                                            className="absolute top-4 right-4 text-xs font-bold text-rose-500 hover:text-rose-600 transition-colors uppercase tracking-widest"
+                                        >
+                                            Remove
+                                        </button>
+                                    )}
+                                    <div className="space-y-2 pr-12">
+                                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">Question #{index + 1}</label>
+                                        <input
+                                            type="text"
+                                            value={faq.question || ''}
+                                            disabled={isLocked}
+                                            onChange={(e) => {
+                                                const updated = [...faqs];
+                                                updated[index].question = e.target.value;
+                                                setFaqs(updated);
+                                            }}
+                                            placeholder="e.g. Are your products 100% organic?"
+                                            className="w-full h-12 px-4 rounded-xl bg-white border border-gray-200 text-xs font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all disabled:bg-gray-100 disabled:text-gray-500"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">Answer #{index + 1}</label>
+                                        <textarea
+                                            value={faq.answer || ''}
+                                            disabled={isLocked}
+                                            onChange={(e) => {
+                                                const updated = [...faqs];
+                                                updated[index].answer = e.target.value;
+                                                setFaqs(updated);
+                                            }}
+                                            placeholder="Write the detailed answer here..."
+                                            className="w-full h-24 p-4 rounded-2xl bg-white border border-gray-200 text-xs font-medium focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all resize-none leading-relaxed disabled:bg-gray-100 disabled:text-gray-500"
+                                        />
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </div>
+
                 {/* Submit */}
                 <div className="flex justify-end pt-8">
                     <button
@@ -293,10 +509,10 @@ export default function SellerProfilePage() {
                     >
                         {isSubmitting ? (
                             <span className="flex items-center gap-3">
-                                <Loader2 className="animate-spin" size={18} /> Synchronizing...
+                                <Loader2 className="animate-spin" size={18} /> Submitting Request...
                             </span>
                         ) : isLocked ? (
-                            "Protocol In Progress"
+                            "Request Under Audit"
                         ) : (
                             "Request Profile Update"
                         )}

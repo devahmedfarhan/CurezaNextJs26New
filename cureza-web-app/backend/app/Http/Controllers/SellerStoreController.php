@@ -15,12 +15,12 @@ class SellerStoreController extends Controller
     {
         $seller = Auth::user();
         
-        // Ensure seller has a brand (should be created on registration or later)
+        // Ensure seller has a brand
         if (!$seller->brand) {
             return response()->json(['message' => 'Brand profile not found.'], 404);
         }
 
-        $brand = $seller->brand()->with('changeRequests')->first();
+        $brand = $seller->brand()->with(['changeRequests', 'categories', 'concerns'])->first();
         
         // Check for pending request
         $pendingRequest = $brand->changeRequests()
@@ -43,7 +43,7 @@ class SellerStoreController extends Controller
             return response()->json(['message' => 'Brand not found'], 404);
         }
 
-        // Check if there is already a pending request
+        // Restoring approval flow restriction: Check if there is already a pending request
         $existingRequest = $brand->changeRequests()->where('status', 'pending')->exists();
         if ($existingRequest) {
             return response()->json(['message' => 'You already have a pending change request. Please wait for approval.'], 400);
@@ -56,6 +56,16 @@ class SellerStoreController extends Controller
             'keywords' => 'nullable|array',
             'logo' => 'nullable|image|max:2048', // 2MB max
             'banner' => 'nullable|image|max:4096', // 4MB max
+            
+            // New SEO, FAQ and Categorization validation
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string',
+            'meta_keywords' => 'nullable|string|max:255',
+            'faqs' => 'nullable|array',
+            'categories' => 'nullable|array',
+            'categories.*' => 'integer|exists:categories,id',
+            'concerns' => 'nullable|array',
+            'concerns.*' => 'integer|exists:categories,id',
         ]);
 
         $proposedData = [
@@ -65,9 +75,17 @@ class SellerStoreController extends Controller
             'keywords' => $validated['keywords'] ?? [],
             'logo' => $brand->logo, // default to existing
             'banner_path' => $brand->banner_path, // default to existing
+            
+            // SEO & FAQs proposed data fields
+            'meta_title' => $validated['meta_title'] ?? null,
+            'meta_description' => $validated['meta_description'] ?? null,
+            'meta_keywords' => $validated['meta_keywords'] ?? null,
+            'faqs' => $validated['faqs'] ?? [],
+            'categories' => $validated['categories'] ?? [],
+            'concerns' => $validated['concerns'] ?? [],
         ];
 
-        // Handle File Uploads (Store new files but don't attach to Brand yet)
+        // Handle File Uploads
         if ($request->hasFile('logo')) {
             $path = $request->file('logo')->store('brands/logos', 'public');
             $proposedData['logo'] = '/storage/' . $path;
@@ -78,7 +96,7 @@ class SellerStoreController extends Controller
             $proposedData['banner_path'] = '/storage/' . $path;
         }
 
-        // Create Request
+        // Create Change Request as PENDING (goes to superadmin)
         $changeRequest = StoreChangeRequest::create([
             'seller_id' => $seller->id,
             'brand_id' => $brand->id,

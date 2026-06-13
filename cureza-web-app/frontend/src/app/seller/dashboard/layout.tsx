@@ -22,7 +22,8 @@ import {
     Bell,
     User,
     AlertCircle,
-    ArrowRight
+    ArrowRight,
+    Menu
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -67,6 +68,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [unreadCount, setUnreadCount] = useState(0);
     const [fullProfile, setFullProfile] = useState<any>(null);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         if (user && (user as any).seller_profile?.status === 'pending') {
@@ -574,18 +576,40 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
     }
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
+        <div className="flex min-h-screen bg-gray-50 flex-col md:flex-row seller-theme">
+            {/* Mobile Header */}
+            <header className="md:hidden bg-white border-b border-gray-100 px-6 py-3.5 flex items-center justify-between sticky top-0 z-50">
+                <div className="flex items-center gap-2">
+                    <img src="/logo-black-no-tagline.svg" alt="Cureza Logo" className="h-6 w-auto object-contain dark:invert" />
+                    <span className="text-[10px] font-black uppercase tracking-wider text-cureza-green bg-green-50 px-2 py-0.5 rounded">Seller Hub</span>
+                </div>
+                <button
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    className="p-1.5 text-gray-500 hover:text-gray-800 transition-colors rounded-md hover:bg-gray-100"
+                >
+                    {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+                </button>
+            </header>
+
+            {/* Sidebar Overlay for Mobile */}
+            {mobileMenuOpen && (
+                <div
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="md:hidden fixed inset-0 bg-black/20 backdrop-blur-[2px] z-40 transition-opacity"
+                />
+            )}
+
             {/* Sidebar */}
-            <aside className="w-64 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 fixed h-full z-20 hidden md:block premium-shadow">
-                <div className="p-8">
-                    <Link href="/" className="flex items-center gap-3 group">
-                        <div className="w-10 h-10 bg-gradient-to-br from-cureza-green to-green-700 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-green-200 group-hover:scale-110 transition-transform">
-                            C
-                        </div>
-                        <div>
-                            <span className="text-xl font-bold text-charcoal block leading-none">Cureza</span>
-                            <span className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold">Seller Hub</span>
-                        </div>
+            <aside className={`
+                w-64 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 fixed h-full z-40
+                transform md:transform-none transition-transform duration-200 ease-out
+                ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+                md:block premium-shadow
+            `}>
+                <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex flex-col items-center">
+                    <Link href="/" className="flex flex-col items-center gap-1 group w-full text-center">
+                        <img src="/logo-black-no-tagline.svg" alt="Cureza Logo" className="h-6.5 w-auto object-contain dark:invert transition-transform group-hover:scale-105" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-cureza-green mt-2 bg-green-50/50 px-2.5 py-0.5 rounded-full border border-green-100">Seller Hub</span>
                     </Link>
                 </div>
 
@@ -599,13 +623,14 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
                         return (
                             <Link
                                 key={link.href}
+                                onClick={() => setMobileMenuOpen(false)}
                                 href={link.href}
-                                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group ${isActive
-                                    ? 'nav-item-active'
+                                className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200 group ${isActive
+                                    ? 'bg-cureza-green/10 text-cureza-green font-bold'
                                     : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:bg-gray-800'
                                     }`}
                             >
-                                <Icon size={20} className={`${isActive ? 'text-cureza-green' : 'text-gray-400 group-hover:text-gray-600'}`} />
+                                <Icon size={16} className={`${isActive ? 'text-cureza-green' : 'text-gray-400 group-hover:text-gray-600'}`} />
                                 {link.name}
                             </Link>
                         );
@@ -614,148 +639,149 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 md:ml-64">
-                {/* Header */}
-                <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 h-16 flex items-center justify-between px-8 sticky top-0 z-10">
-                    <div className="flex items-center gap-4">
-                        <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg md:hidden">
-                            <LayoutDashboard size={20} className="text-gray-400" />
-                        </div>
-                        <div>
-                            <h2 className="font-bold text-gray-900 text-lg">
-                                {SELLER_LINKS.find(l => l.href === pathname)?.name || 'Dashboard'}
-                            </h2>
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                        {/* Status Banner for Pending Sellers */}
-                        {(user as any).seller_profile?.status === 'pending' && (
-                            <div className="hidden md:flex items-center gap-2 px-4 py-1.5 bg-yellow-50 border border-yellow-200 rounded-full animate-pulse">
-                                <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
-                                <span className="text-[11px] font-bold text-yellow-700 uppercase tracking-widest">Application Under Review</span>
+            <main className="flex-1 md:ml-64 min-w-0">
+                <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 h-16 sticky top-0 z-10">
+                    <div className="w-full h-full flex items-center justify-between px-4 md:px-8">
+                        <div className="flex items-center gap-4">
+                            <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg md:hidden">
+                                <LayoutDashboard size={20} className="text-gray-400" />
                             </div>
-                        )}
+                            <div>
+                                <h2 className="font-bold text-gray-900 text-lg">
+                                    {SELLER_LINKS.find(l => l.href === pathname)?.name || 'Dashboard'}
+                                </h2>
+                            </div>
+                        </div>
 
-                        {/* Notification Bell */}
-                        <div className="relative">
-                            <button
-                                onClick={() => {
-                                    setShowNotifications(!showNotifications);
-                                    if (!showNotifications) {
-                                        fetchNotifications();
-                                    }
-                                }}
-                                className="p-2 text-gray-400 hover:text-gray-600 relative"
-                            >
-                                <Bell size={20} />
-                                {unreadCount > 0 && (
-                                    <span className="absolute top-1 right-1 min-w-[18px] h-[18px] bg-red-500 text-white text-xs rounded-full flex items-center justify-center px-1">
-                                        {unreadCount > 9 ? '9+' : unreadCount}
-                                    </span>
-                                )}
-                            </button>
-
-                            {/* Notification Dropdown */}
-                            {showNotifications && (
-                                <div className="absolute right-0 mt-2 w-96 bg-white rounded-lg shadow-lg border border-gray-200 max-h-[500px] overflow-hidden">
-                                    <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-                                        <h3 className="font-bold text-gray-900">Notifications</h3>
-                                        <button
-                                            onClick={() => setShowNotifications(false)}
-                                            className="text-gray-400 hover:text-gray-600"
-                                        >
-                                            <X size={18} />
-                                        </button>
-                                    </div>
-
-                                    <div className="overflow-y-auto max-h-[400px]">
-                                        {notifications.length === 0 ? (
-                                            <div className="p-8 text-center text-gray-500">
-                                                <Bell size={48} className="mx-auto mb-2 text-gray-300" />
-                                                <p>No notifications yet</p>
-                                            </div>
-                                        ) : (
-                                            notifications.map((notification) => (
-                                                <div
-                                                    key={notification.id}
-                                                    onClick={() => handleNotificationClick(notification)}
-                                                    className={`p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors ${!notification.read_at ? 'bg-green-50/30' : ''
-                                                        }`}
-                                                >
-                                                    <div className="flex gap-3">
-                                                        <div className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${!notification.read_at ? 'bg-cureza-green' : 'bg-transparent'
-                                                            }`} />
-                                                        <div className="flex-1 min-w-0">
-                                                            <h4 className={`text-sm font-medium ${!notification.read_at ? 'text-gray-900' : 'text-gray-700'
-                                                                }`}>
-                                                                {notification.data.title}
-                                                            </h4>
-                                                            <p className="text-sm text-gray-600 mt-1">
-                                                                {notification.data.message}
-                                                            </p>
-                                                            {notification.data.order_number && (
-                                                                <p className="text-xs text-gray-500 mt-1">
-                                                                    Order: {notification.data.order_number}
-                                                                </p>
-                                                            )}
-                                                            <p className="text-xs text-gray-400 mt-2">
-                                                                {new Date(notification.created_at).toLocaleString('en-IN')}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))
-                                        )}
-                                    </div>
-
-                                    {notifications.length > 0 && (
-                                        <div className="p-3 border-t border-gray-200 flex gap-2">
-                                            <Link
-                                                href="/seller/dashboard/notifications"
-                                                onClick={() => setShowNotifications(false)}
-                                                className="flex-1 text-center py-2 text-sm text-cureza-green hover:bg-green-50 rounded-lg transition-colors"
-                                            >
-                                                View All
-                                            </Link>
-                                            {unreadCount > 0 && (
-                                                <button
-                                                    onClick={() => markAsRead()}
-                                                    className="flex-1 text-center py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
-                                                >
-                                                    Mark All Read
-                                                </button>
-                                            )}
-                                        </div>
-                                    )}
+                        <div className="flex items-center gap-4">
+                            {/* Status Banner for Pending Sellers */}
+                            {(user as any).seller_profile?.status === 'pending' && (
+                                <div className="hidden md:flex items-center gap-2 px-4 py-1.5 bg-yellow-50 border border-yellow-200 rounded-full animate-pulse">
+                                    <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                                    <span className="text-[11px] font-bold text-yellow-700 uppercase tracking-widest">Application Under Review</span>
                                 </div>
                             )}
-                        </div>
 
-                        <div className="flex items-center gap-3 pl-4 border-l border-gray-100 dark:border-gray-800 ml-2">
-                            <div className="text-right hidden sm:block">
-                                <p className="text-sm font-bold text-gray-900 leading-none">{user.name}</p>
-                                <div className="flex items-center justify-end gap-1 mt-1">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Verified Seller</p>
+                            {/* Notification Bell */}
+                            <div className="relative">
+                                <button
+                                    onClick={() => {
+                                        setShowNotifications(!showNotifications);
+                                        if (!showNotifications) {
+                                            fetchNotifications();
+                                        }
+                                    }}
+                                    className="p-2 text-gray-400 hover:text-gray-600 relative"
+                                >
+                                    <Bell size={20} />
+                                    {unreadCount > 0 && (
+                                        <span className="absolute top-1 right-1 min-w-[18px] h-[18px] bg-red-500 text-white text-xs rounded-full flex items-center justify-center px-1">
+                                            {unreadCount > 9 ? '9+' : unreadCount}
+                                        </span>
+                                    )}
+                                </button>
+
+                                {/* Notification Dropdown */}
+                                {showNotifications && (
+                                    <div className="absolute right-0 mt-2 w-96 bg-white rounded-lg shadow-lg border border-gray-200 max-h-[500px] overflow-hidden">
+                                        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+                                            <h3 className="font-bold text-gray-900">Notifications</h3>
+                                            <button
+                                                onClick={() => setShowNotifications(false)}
+                                                className="text-gray-400 hover:text-gray-600"
+                                            >
+                                                <X size={18} />
+                                            </button>
+                                        </div>
+
+                                        <div className="overflow-y-auto max-h-[400px]">
+                                            {notifications.length === 0 ? (
+                                                <div className="p-8 text-center text-gray-500">
+                                                    <Bell size={48} className="mx-auto mb-2 text-gray-300" />
+                                                    <p>No notifications yet</p>
+                                                </div>
+                                            ) : (
+                                                notifications.map((notification) => (
+                                                    <div
+                                                        key={notification.id}
+                                                        onClick={() => handleNotificationClick(notification)}
+                                                        className={`p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors ${!notification.read_at ? 'bg-green-50/30' : ''
+                                                            }`}
+                                                    >
+                                                        <div className="flex gap-3">
+                                                            <div className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${!notification.read_at ? 'bg-cureza-green' : 'bg-transparent'
+                                                                }`} />
+                                                            <div className="flex-1 min-w-0">
+                                                                <h4 className={`text-sm font-medium ${!notification.read_at ? 'text-gray-900' : 'text-gray-700'
+                                                                    }`}>
+                                                                    {notification.data.title}
+                                                                </h4>
+                                                                <p className="text-sm text-gray-600 mt-1">
+                                                                    {notification.data.message}
+                                                                </p>
+                                                                {notification.data.order_number && (
+                                                                    <p className="text-xs text-gray-500 mt-1">
+                                                                        Order: {notification.data.order_number}
+                                                                    </p>
+                                                                )}
+                                                                <p className="text-xs text-gray-400 mt-2">
+                                                                    {new Date(notification.created_at).toLocaleString('en-IN')}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            )}
+                                        </div>
+
+                                        {notifications.length > 0 && (
+                                            <div className="p-3 border-t border-gray-200 flex gap-2">
+                                                <Link
+                                                    href="/seller/dashboard/notifications"
+                                                    onClick={() => setShowNotifications(false)}
+                                                    className="flex-1 text-center py-2 text-sm text-cureza-green hover:bg-green-50 rounded-lg transition-colors"
+                                                >
+                                                    View All
+                                                </Link>
+                                                {unreadCount > 0 && (
+                                                    <button
+                                                        onClick={() => markAsRead()}
+                                                        className="flex-1 text-center py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+                                                    >
+                                                        Mark All Read
+                                                    </button>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="flex items-center gap-3 pl-4 border-l border-gray-100 dark:border-gray-800 ml-2">
+                                <div className="text-right hidden sm:block">
+                                    <p className="text-sm font-bold text-gray-900 leading-none">{user.name}</p>
+                                    <div className="flex items-center justify-end gap-1 mt-1">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Verified Seller</p>
+                                    </div>
+                                </div>
+                                <div className="w-10 h-10 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 rounded-full flex items-center justify-center text-gray-500 shadow-inner">
+                                    <User size={20} />
                                 </div>
                             </div>
-                            <div className="w-10 h-10 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 rounded-full flex items-center justify-center text-gray-500 shadow-inner">
-                                <User size={20} />
-                            </div>
-                        </div>
 
-                        <button
-                            onClick={logout}
-                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
-                            title="Logout"
-                        >
-                            <LogOut size={20} />
-                        </button>
+                            <button
+                                onClick={logout}
+                                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
+                                title="Logout"
+                            >
+                                <LogOut size={20} />
+                            </button>
+                        </div>
                     </div>
                 </header>
 
-                <div className="p-8">
+                <div className="p-4 md:p-8 w-full">
                     {children}
                 </div>
             </main>

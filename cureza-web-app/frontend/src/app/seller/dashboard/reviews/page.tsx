@@ -94,7 +94,7 @@ export default function SellerReviewsPage() {
     };
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="space-y-6 w-full">
             {/* Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-2">
                 <div>

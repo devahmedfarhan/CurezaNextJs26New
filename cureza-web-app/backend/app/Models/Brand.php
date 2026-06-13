@@ -15,11 +15,16 @@ class Brand extends Model
         'banner_path', 
         'keywords', 
         'user_id',
-        'is_active'
+        'is_active',
+        'meta_title',
+        'meta_description',
+        'meta_keywords',
+        'faqs'
     ];
 
     protected $casts = [
         'keywords' => 'array',
+        'faqs' => 'array',
         'is_active' => 'boolean',
     ];
 
@@ -36,5 +41,20 @@ class Brand extends Model
     public function changeRequests()
     {
         return $this->hasMany(StoreChangeRequest::class);
+    }
+
+    public function allCategories()
+    {
+        return $this->belongsToMany(Category::class, 'brand_category', 'brand_id', 'category_id');
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'brand_category', 'brand_id', 'category_id')->where('type', 'category');
+    }
+
+    public function concerns()
+    {
+        return $this->belongsToMany(Category::class, 'brand_category', 'brand_id', 'category_id')->where('type', 'concern');
     }
 }

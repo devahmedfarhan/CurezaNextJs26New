@@ -45,17 +45,17 @@ export default function SellerReviewForm({ sellerId, onSuccess }: SellerReviewFo
 
     if (!user) {
         return (
-            <div className="bg-white p-8 rounded-2xl border border-gray-100 text-center space-y-4 shadow-sm">
-                <div className="bg-gray-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
-                    <LogIn className="text-gray-600" size={24} />
+            <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-[#052326]/12 text-center space-y-4">
+                <div className="bg-gray-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto">
+                    <LogIn className="text-[#052326]" size={20} />
                 </div>
-                <h3 className="text-lg font-bold text-gray-900">Login to Review</h3>
-                <p className="text-gray-500 text-sm max-w-xs mx-auto">
+                <h3 className="text-base font-bold text-gray-900">Login to Review</h3>
+                <p className="text-gray-500 text-xs max-w-xs mx-auto">
                     Share your experience with this seller. Login required.
                 </p>
                 <button
                     onClick={handleLoginRedirect}
-                    className="px-6 py-2.5 bg-black text-white rounded-full font-bold text-sm hover:bg-gray-800 transition-colors"
+                    className="px-6 py-2 bg-[#052326] text-white rounded-xl font-bold text-xs hover:bg-[#0b403a] transition-colors"
                 >
                     Login / Register
                 </button>
@@ -92,9 +92,9 @@ export default function SellerReviewForm({ sellerId, onSuccess }: SellerReviewFo
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-3xl border border-gray-100 space-y-6 shadow-sm">
+        <form onSubmit={handleSubmit} className="bg-white p-4 rounded-[10px] border-[0.5px] border-[#052326]/12 space-y-5">
             <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <Star className="fill-yellow-400 text-yellow-400" size={24} />
+                <Star className="fill-amber-400 text-amber-400" size={24} />
                 Rate this Seller
             </h3>
 
@@ -113,8 +113,8 @@ export default function SellerReviewForm({ sellerId, onSuccess }: SellerReviewFo
                         >
                             <Star
                                 size={32}
-                                fill={star <= (hoverRating || rating) ? "#FBBF24" : "none"}
-                                className={star <= (hoverRating || rating) ? "text-yellow-400" : "text-gray-200"}
+                                fill={star <= (hoverRating || rating) ? "#fbbf24" : "none"}
+                                className={star <= (hoverRating || rating) ? "text-amber-400" : "text-gray-250"}
                             />
                         </button>
                     ))}
@@ -129,7 +129,7 @@ export default function SellerReviewForm({ sellerId, onSuccess }: SellerReviewFo
                         type="text"
                         value={formData.full_name}
                         disabled
-                        className="w-full rounded-xl border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-500 cursor-not-allowed"
+                        className="w-full rounded-xl border-gray-250 bg-gray-50 px-4 py-2.5 text-gray-500 cursor-not-allowed text-sm font-bold"
                     />
                 </div>
                 <div>
@@ -138,7 +138,7 @@ export default function SellerReviewForm({ sellerId, onSuccess }: SellerReviewFo
                         type="email"
                         value={formData.email}
                         disabled
-                        className="w-full rounded-xl border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-500 cursor-not-allowed"
+                        className="w-full rounded-xl border-gray-250 bg-gray-50 px-4 py-2.5 text-gray-500 cursor-not-allowed text-sm font-bold"
                     />
                 </div>
             </div>
@@ -150,15 +150,15 @@ export default function SellerReviewForm({ sellerId, onSuccess }: SellerReviewFo
                     rows={4}
                     value={reviewText}
                     onChange={e => setReviewText(e.target.value)}
-                    className="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-black/5 focus:border-gray-400 transition-all bg-gray-50 px-4 py-3 resize-none"
-                    placeholder="How was your experience with this seller? Shipping, packaging, communication..."
+                    className="w-full rounded-xl border-gray-250 focus:ring-2 focus:ring-emerald-700/10 focus:border-emerald-700 transition-all bg-[#F8F3EF] px-4 py-3 resize-none text-sm font-medium"
+                    placeholder="How was your experience with this seller? Shipping, packaging, quality..."
                 />
             </div>
 
             <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3.5 bg-black text-white rounded-xl font-bold hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-3.5 bg-[#052326] text-white rounded-xl font-bold hover:bg-[#0d3f44] transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
             >
                 {isSubmitting ? (
                     <>

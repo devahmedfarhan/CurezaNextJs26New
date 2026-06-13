@@ -36,8 +36,8 @@ const StatusBadge = ({ status, displayStatus }: { status: string; displayStatus?
     const label = displayStatus || config.label;
 
     return (
-        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider border ${config.bg}`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${config.dot}`}></span>
+        <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider border ${config.bg}`}>
+            <span className={`w-1 h-1 rounded-full ${config.dot}`}></span>
             {label}
         </span>
     );
@@ -52,6 +52,13 @@ export default function SellerProductsPage() {
     const [deleting, setDeleting] = useState(false);
     const router = useRouter();
     const { showToast } = useToast();
+
+    const getImageUrl = (path: string | null) => {
+        if (!path) return '';
+        if (path.startsWith('http')) return path;
+        const backend = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+        return path.startsWith('/') ? `${backend}${path}` : `${backend}/storage/${path}`;
+    };
 
     useEffect(() => {
         fetchProducts();
@@ -135,7 +142,7 @@ export default function SellerProductsPage() {
     const lowStockCount = products.filter(p => p.stock <= 10 || p.stock_status === 'low_stock' || p.stock === 0).length;
 
     return (
-        <div className="space-y-8 max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="space-y-8 w-full">
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div>
@@ -158,7 +165,7 @@ export default function SellerProductsPage() {
                 {/* Total Listings */}
                 <div className="premium-card p-6 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 flex items-center justify-between group hover:scale-[1.02] transition-all">
                     <div>
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block">Total Listings</span>
+                        <span className="text-xs font-bold text-gray-400 tracking-wider block">Total Listings</span>
                         <span className="text-3xl font-outfit font-black text-gray-900 dark:text-gray-100 block mt-1.5">{totalCount}</span>
                     </div>
                     <div className="w-12 h-12 rounded-2xl bg-gray-50 dark:bg-gray-800 flex items-center justify-center text-gray-500">
@@ -169,7 +176,7 @@ export default function SellerProductsPage() {
                 {/* Live on Shop */}
                 <div className="premium-card p-6 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 flex items-center justify-between group hover:scale-[1.02] transition-all">
                     <div>
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block">Live on Shop</span>
+                        <span className="text-xs font-bold text-gray-400 tracking-wider block">Live on Shop</span>
                         <span className="text-3xl font-outfit font-black text-emerald-600 dark:text-emerald-400 block mt-1.5">{activeCount}</span>
                     </div>
                     <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
@@ -180,7 +187,7 @@ export default function SellerProductsPage() {
                 {/* Under Review */}
                 <div className="premium-card p-6 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 flex items-center justify-between group hover:scale-[1.02] transition-all">
                     <div>
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block">Under Review</span>
+                        <span className="text-xs font-bold text-gray-400 tracking-wider block">Under Review</span>
                         <span className="text-3xl font-outfit font-black text-amber-600 dark:text-amber-400 block mt-1.5">{pendingCount}</span>
                     </div>
                     <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
@@ -191,7 +198,7 @@ export default function SellerProductsPage() {
                 {/* Stock Alert */}
                 <div className="premium-card p-6 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 flex items-center justify-between group hover:scale-[1.02] transition-all">
                     <div>
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block">Stock Alerts</span>
+                        <span className="text-xs font-bold text-gray-400 tracking-wider block">Stock Alerts</span>
                         <span className="text-3xl font-outfit font-black text-rose-600 dark:text-rose-400 block mt-1.5">{lowStockCount}</span>
                     </div>
                     <div className="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-950/30 flex items-center justify-center text-rose-600 dark:text-rose-400">
@@ -232,18 +239,18 @@ export default function SellerProductsPage() {
                 {loading ? (
                     <div className="p-24 flex flex-col items-center justify-center gap-4">
                         <Loader2 className="animate-spin text-cureza-green" size={40} />
-                        <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">Loading Catalog...</span>
+                        <span className="text-sm font-bold text-gray-400 tracking-widest">Loading Catalog...</span>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
-                        <table className="w-full text-sm text-left border-collapse">
+                        <table className="w-full text-xs text-left border-collapse">
                             <thead className="premium-table-header border-b border-gray-100 dark:border-gray-800">
                                 <tr>
-                                    <th className="px-8 py-5 text-[11px] font-black uppercase tracking-wider text-gray-500">Product Details</th>
-                                    <th className="px-8 py-5 text-[11px] font-black uppercase tracking-wider text-gray-500 text-center">Price</th>
-                                    <th className="px-8 py-5 text-[11px] font-black uppercase tracking-wider text-gray-500 text-center">Stock</th>
-                                    <th className="px-8 py-5 text-[11px] font-black uppercase tracking-wider text-gray-500">Status</th>
-                                    <th className="px-8 py-5 text-[11px] font-black uppercase tracking-wider text-gray-500 text-right">Actions</th>
+                                    <th className="px-5 py-3 text-[10px] font-bold tracking-wider text-gray-500">Product Details</th>
+                                    <th className="px-5 py-3 text-[10px] font-bold tracking-wider text-gray-500 text-center">Price</th>
+                                    <th className="px-5 py-3 text-[10px] font-bold tracking-wider text-gray-500 text-center">Stock</th>
+                                    <th className="px-5 py-3 text-[10px] font-bold tracking-wider text-gray-500">Status</th>
+                                    <th className="px-5 py-3 text-[10px] font-bold tracking-wider text-gray-500 text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
@@ -251,47 +258,47 @@ export default function SellerProductsPage() {
                                     filteredProducts.map((product) => (
                                         <tr key={product.id} className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/10 transition-all">
                                             {/* Details cell */}
-                                            <td className="px-8 py-6">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-14 h-14 bg-gray-50 dark:bg-gray-800/50 rounded-2xl flex-shrink-0 overflow-hidden border border-gray-200 dark:border-gray-800 group-hover:scale-105 transition-transform flex items-center justify-center">
+                                            <td className="px-5 py-3">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-10 h-10 bg-gray-50 dark:bg-gray-800/50 rounded-lg flex-shrink-0 overflow-hidden border border-gray-200 dark:border-gray-800 group-hover:scale-105 transition-transform flex items-center justify-center">
                                                         {product.image ? (
                                                             <img 
-                                                                src={product.image.startsWith('http') ? product.image : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}${product.image}`} 
+                                                                src={getImageUrl(product.image)} 
                                                                 alt="" 
                                                                 className="w-full h-full object-cover" 
                                                             />
                                                         ) : (
-                                                            <span className="text-xl">📦</span>
+                                                            <span className="text-base">📦</span>
                                                         )}
                                                     </div>
                                                     <div>
-                                                        <span className="font-outfit font-extrabold text-gray-900 dark:text-gray-100 block text-base group-hover:text-cureza-green transition-colors">{product.title}</span>
-                                                        <div className="flex items-center gap-2 mt-1">
-                                                            <span className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">
+                                                        <span className="font-outfit font-bold text-gray-900 dark:text-gray-100 block text-xs group-hover:text-cureza-green transition-colors whitespace-normal break-words max-w-[320px]">{product.title}</span>
+                                                        <div className="flex items-center gap-1.5 mt-0.5">
+                                                            <span className="text-[9px] font-bold text-gray-400 tracking-wider">
                                                                 {typeof product.category === 'object' ? product.category?.name : product.category}
                                                             </span>
                                                             {product.sku && (
                                                                 <>
                                                                     <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-                                                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{product.sku}</span>
+                                                                    <span className="text-[9px] font-medium text-gray-400 tracking-widest">{product.sku}</span>
                                                                 </>
                                                             )}
                                                         </div>
-
+ 
                                                         {/* Rejection / Note reasons support */}
                                                         {product.status === 'archived' && (product.rejection_reason || product.admin_note) && (
-                                                            <div className="mt-2 bg-rose-50/40 dark:bg-rose-950/20 border border-rose-100/30 rounded-lg p-2.5 flex items-start gap-2 max-w-md animate-in fade-in">
-                                                                <MessageSquare className="text-rose-500 flex-shrink-0 mt-0.5" size={13} />
-                                                                <p className="text-[11px] text-rose-700 dark:text-rose-400 leading-relaxed font-semibold">
-                                                                    <span className="uppercase text-[9px] font-black block text-rose-500 mb-0.5">Rejection Note:</span>
+                                                            <div className="mt-1.5 bg-rose-50/40 dark:bg-rose-950/20 border border-rose-100/30 rounded-lg p-2 flex items-start gap-1.5 max-w-md animate-in fade-in">
+                                                                <MessageSquare className="text-rose-500 flex-shrink-0 mt-0.5" size={12} />
+                                                                <p className="text-[10px] text-rose-700 dark:text-rose-400 leading-relaxed font-semibold">
+                                                                    <span className="text-[8px] font-black block text-rose-500 mb-0.5">Rejection Note:</span>
                                                                     {product.rejection_reason || product.admin_note}
                                                                 </p>
                                                             </div>
                                                         )}
-
+ 
                                                         {/* Pending request badge */}
                                                         {product.pending_change_request && (
-                                                            <p className="text-[10px] font-black text-blue-600 dark:text-blue-400 mt-2 uppercase tracking-wider bg-blue-50 dark:bg-blue-950/20 px-2 py-0.5 rounded border border-blue-100/30 inline-block">
+                                                            <p className="text-[9px] font-black text-blue-600 dark:text-blue-400 mt-1 tracking-wider bg-blue-50 dark:bg-blue-950/20 px-1.5 py-0.5 rounded border border-blue-100/30 inline-block">
                                                                 {product.pending_change_request.change_type === 'edit' ? '📝 Edit pending approval' :
                                                                     product.pending_change_request.change_type === 'delete' ? '🗑️ Delete request pending' : '⏳ Pending review'}
                                                             </p>
@@ -299,25 +306,25 @@ export default function SellerProductsPage() {
                                                     </div>
                                                 </div>
                                             </td>
-
+ 
                                             {/* Price Cell */}
-                                            <td className="px-8 py-6 text-center font-outfit font-extrabold text-gray-900 dark:text-gray-100 text-base">
+                                            <td className="px-5 py-3 text-center font-outfit font-bold text-gray-900 dark:text-gray-100 text-xs">
                                                 ₹{product.price}
                                             </td>
-
+ 
                                             {/* Stock Cell */}
-                                            <td className="px-8 py-6">
+                                            <td className="px-5 py-3">
                                                 <div className="flex flex-col items-center">
-                                                    <span className={`font-outfit font-black text-lg ${
+                                                    <span className={`font-outfit font-extrabold text-sm ${
                                                         product.stock === 0 ? 'text-rose-600' :
                                                         product.stock <= 10 ? 'text-amber-500' : 'text-emerald-600'
                                                     }`}>
                                                         {product.stock}
                                                     </span>
-                                                    <span className="text-[8px] font-extrabold text-gray-400 uppercase tracking-wider mt-0.5">Available</span>
+                                                    <span className="text-[8px] font-bold text-gray-400 tracking-wider mt-0.5">Available</span>
                                                     
                                                     {/* Visual mini stock bar */}
-                                                    <div className="w-12 h-1 bg-gray-100 dark:bg-gray-800 rounded-full mt-1.5 overflow-hidden">
+                                                    <div className="w-12 h-1 bg-gray-100 dark:bg-gray-800 rounded-full mt-1 overflow-hidden">
                                                         <div 
                                                             className={`h-full rounded-full ${
                                                                 product.stock === 0 ? 'bg-rose-500 w-0' :
@@ -327,54 +334,54 @@ export default function SellerProductsPage() {
                                                     </div>
                                                 </div>
                                             </td>
-
+ 
                                             {/* Status Badge */}
-                                            <td className="px-8 py-6">
+                                            <td className="px-5 py-3">
                                                 <StatusBadge
                                                     status={product.status}
                                                     displayStatus={product.display_status}
                                                 />
                                             </td>
-
+ 
                                             {/* Actions */}
-                                            <td className="px-8 py-6 text-right">
-                                                <div className="flex justify-end items-center gap-1">
+                                            <td className="px-5 py-3 text-right">
+                                                <div className="flex justify-end items-center gap-0.5">
                                                     {/* View live store link */}
                                                     <Link
                                                         href={`/product/${product.slug || product.id}`}
                                                         target="_blank"
-                                                        className="p-2 text-gray-400 hover:text-cureza-green hover:bg-cureza-green-50/40 rounded-xl transition-all"
+                                                        className="p-1.5 text-gray-400 hover:text-cureza-green hover:bg-cureza-green-50/40 rounded-lg transition-all"
                                                         title="View Live Store Page"
                                                     >
-                                                        <Eye size={17} />
+                                                        <Eye size={15} />
                                                     </Link>
-
+ 
                                                     {/* Edit Button */}
                                                     <button
                                                         onClick={() => handleEdit(product)}
                                                         disabled={hasPendingAction(product)}
-                                                        className={`p-2 rounded-xl transition-all ${
+                                                        className={`p-1.5 rounded-lg transition-all ${
                                                             hasPendingAction(product)
                                                                 ? 'text-gray-200 dark:text-gray-800 cursor-not-allowed'
                                                                 : 'text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/20'
                                                         }`}
                                                         title={hasPendingAction(product) ? 'Under review - cannot edit' : 'Edit Listing'}
                                                     >
-                                                        <Edit2 size={17} />
+                                                        <Edit2 size={15} />
                                                     </button>
-
+ 
                                                     {/* Delete Button */}
                                                     <button
                                                         onClick={() => handleDeleteClick(product)}
                                                         disabled={hasPendingAction(product)}
-                                                        className={`p-2 rounded-xl transition-all ${
+                                                        className={`p-1.5 rounded-lg transition-all ${
                                                             hasPendingAction(product)
                                                                 ? 'text-gray-200 dark:text-gray-800 cursor-not-allowed'
                                                                 : 'text-gray-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20'
                                                         }`}
                                                         title={hasPendingAction(product) ? 'Under review - cannot delete' : 'Request Delete'}
                                                     >
-                                                        <Trash2 size={17} />
+                                                        <Trash2 size={15} />
                                                     </button>
                                                 </div>
                                             </td>
@@ -419,7 +426,7 @@ export default function SellerProductsPage() {
                             </div>
                             <div>
                                 <h3 className="text-lg font-outfit font-extrabold text-gray-900 dark:text-gray-100 tracking-tight">Request Deletion</h3>
-                                <span className="text-[10px] text-rose-500 font-extrabold tracking-wider uppercase">Action Required Review</span>
+                                <span className="text-[10px] text-rose-500 font-extrabold tracking-wider">Action Required Review</span>
                             </div>
                         </div>
                         <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-3 font-medium">

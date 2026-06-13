@@ -18,6 +18,7 @@ export default function StoreApprovalsPage() {
     const [requests, setRequests] = useState<any[]>([]);
     const [selectedRequest, setSelectedRequest] = useState<any>(null);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [allCategoriesAndConcerns, setAllCategoriesAndConcerns] = useState<any[]>([]);
 
     // Approval/Rejection handling
     const [rejectReason, setRejectReason] = useState('');
@@ -26,12 +27,27 @@ export default function StoreApprovalsPage() {
 
     useEffect(() => {
         fetchRequests();
+        fetchClassifications();
     }, []);
+
+    const fetchClassifications = async () => {
+        try {
+            const res = await axios.get('/categories');
+            setAllCategoriesAndConcerns(res.data || []);
+        } catch (e) {
+            console.error('Failed to load classifications', e);
+        }
+    };
+
+    const getClassificationName = (id: any) => {
+        const item = allCategoriesAndConcerns.find(c => String(c.id) === String(id));
+        return item ? item.name : `ID: ${id}`;
+    };
 
     const fetchRequests = async () => {
         try {
             const res = await axios.get('/admin/store-requests?status=pending');
-            setRequests(res.data.data);
+            setRequests(res.data.data || []);
         } catch (err) {
             console.error(err);
         } finally {
@@ -56,6 +72,10 @@ export default function StoreApprovalsPage() {
 
     const handleReject = async () => {
         if (!selectedRequest) return;
+        if (!rejectReason.trim()) {
+            showToast("Rejection reason is required", "error");
+            return;
+        }
         setIsProcessing(true);
         try {
             await axios.post(`/admin/store-requests/${selectedRequest.id}/reject`, {
@@ -150,7 +170,7 @@ export default function StoreApprovalsPage() {
 
             {/* DETAILS DIALOG */}
             <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                <DialogContent className="sm:max-w-[90vw] md:max-w-[85vw] lg:max-w-[80vw] w-full max-h-[90vh] overflow-y-auto p-8 rounded-3xl">
                     <DialogHeader>
                         <DialogTitle>Review Store Profile Changes</DialogTitle>
                     </DialogHeader>
@@ -159,92 +179,175 @@ export default function StoreApprovalsPage() {
                         <div className="space-y-8 py-4">
 
                             {/* Comparison Section */}
-                            <div className="grid grid-cols-2 gap-8">
+                             <div className="grid grid-cols-2 gap-8">
                                 {/* OLD */}
-                                <div className="space-y-4 opacity-70">
+                                <div className="space-y-4 opacity-70 border-r pr-4 border-gray-100">
                                     <h3 className="font-bold text-gray-500 text-xs uppercase tracking-wider border-b pb-2">Current Live Version</h3>
 
                                     <div className="space-y-1">
-                                        <label className="text-xs text-gray-400">Banner</label>
+                                        <label className="text-[10px] uppercase font-bold text-gray-400">Banner</label>
                                         <div className="h-24 bg-gray-100 rounded-md overflow-hidden">
                                             <img src={getImageUrl(selectedRequest.brand?.banner_path)} className="w-full h-full object-cover grayscale" />
                                         </div>
                                     </div>
 
                                     <div className="space-y-1">
-                                        <label className="text-xs text-gray-400">Logo</label>
+                                        <label className="text-[10px] uppercase font-bold text-gray-400">Logo</label>
                                         <div className="w-16 h-16 bg-gray-100 rounded-full overflow-hidden">
                                             <img src={getImageUrl(selectedRequest.brand?.logo)} className="w-full h-full object-contain grayscale" />
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label className="text-xs text-gray-400">Name</label>
-                                        <div className="font-medium text-gray-700">{selectedRequest.brand?.name}</div>
+                                        <label className="text-[10px] uppercase font-bold text-gray-400">Name</label>
+                                        <div className="font-semibold text-gray-700">{selectedRequest.brand?.name}</div>
                                     </div>
 
                                     <div>
-                                        <label className="text-xs text-gray-400">Short Desc</label>
+                                        <label className="text-[10px] uppercase font-bold text-gray-400">Short Desc</label>
                                         <div className="text-sm text-gray-600">{selectedRequest.brand?.short_description}</div>
+                                    </div>
+
+                                    <div>
+                                        <label className="text-[10px] uppercase font-bold text-gray-400">SEO Title</label>
+                                        <div className="text-xs text-gray-600 font-medium">{selectedRequest.brand?.meta_title || 'N/A'}</div>
+                                    </div>
+
+                                    <div>
+                                        <label className="text-[10px] uppercase font-bold text-gray-400">SEO Description</label>
+                                        <div className="text-xs text-gray-600 leading-relaxed">{selectedRequest.brand?.meta_description || 'N/A'}</div>
+                                    </div>
+
+                                    <div>
+                                        <label className="text-[10px] uppercase font-bold text-gray-400">Live FAQs Count</label>
+                                        <div className="text-xs font-bold text-gray-700">
+                                            {Array.isArray(selectedRequest.brand?.faqs) ? selectedRequest.brand.faqs.length : 0} FAQs
+                                        </div>
                                     </div>
                                 </div>
 
                                 {/* NEW */}
-                                <div className="space-y-4 bg-green-50/50 p-4 rounded-xl border border-green-100">
+                                <div className="space-y-4 bg-green-50/40 p-4 rounded-xl border border-green-100">
                                     <h3 className="font-bold text-green-700 text-xs uppercase tracking-wider border-b border-green-200 pb-2 flex items-center justify-between">
                                         Proposed Changes
                                         <span className="bg-green-100 text-green-800 px-2 py-0.5 rounded text-[10px]">NEW</span>
                                     </h3>
 
                                     <div className="space-y-1">
-                                        <label className="text-xs text-green-700 font-semibold">Banner</label>
+                                        <label className="text-[10px] uppercase font-bold text-green-750 font-semibold">Banner</label>
                                         <div className="h-24 bg-white rounded-md overflow-hidden border border-green-100 shadow-sm">
                                             <img src={getImageUrl(selectedRequest.proposed_data.banner_path)} className="w-full h-full object-cover" />
                                         </div>
                                     </div>
 
                                     <div className="space-y-1">
-                                        <label className="text-xs text-green-700 font-semibold">Logo</label>
+                                        <label className="text-[10px] uppercase font-bold text-green-755 font-semibold">Logo</label>
                                         <div className="w-16 h-16 bg-white rounded-full overflow-hidden border border-green-100 shadow-sm">
                                             <img src={getImageUrl(selectedRequest.proposed_data.logo)} className="w-full h-full object-contain" />
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label className="text-xs text-green-700 font-semibold">Name</label>
+                                        <label className="text-[10px] uppercase font-bold text-green-760 font-semibold">Name</label>
                                         <div className="font-bold text-gray-900">{selectedRequest.proposed_data.name}</div>
                                     </div>
 
                                     <div>
-                                        <label className="text-xs text-green-700 font-semibold">Short Desc</label>
+                                        <label className="text-[10px] uppercase font-bold text-green-760 font-semibold">Short Desc</label>
                                         <div className="text-sm text-gray-800 font-medium">{selectedRequest.proposed_data.short_description}</div>
                                     </div>
 
                                     <div>
-                                        <label className="text-xs text-green-700 font-semibold">Keywords</label>
+                                        <label className="text-[10px] uppercase font-bold text-green-760 font-semibold">Keywords</label>
                                         <div className="flex flex-wrap gap-1">
                                             {Array.isArray(selectedRequest.proposed_data.keywords) && selectedRequest.proposed_data.keywords.map((k: string) => (
                                                 <span key={k} className="text-[10px] bg-white border border-green-200 px-1.5 py-0.5 rounded text-green-800">{k}</span>
                                             ))}
                                         </div>
                                     </div>
+
+                                    {/* SEO proposed fields */}
+                                    <div className="border-t border-green-100 pt-3">
+                                        <label className="text-[10px] uppercase font-bold text-green-760 font-semibold">Proposed SEO Title</label>
+                                        <div className="text-xs text-gray-900 font-bold">{selectedRequest.proposed_data.meta_title || 'Not Configured'}</div>
+                                    </div>
+
+                                    <div>
+                                        <label className="text-[10px] uppercase font-bold text-green-760 font-semibold">Proposed SEO Description</label>
+                                        <div className="text-xs text-gray-800 leading-normal">{selectedRequest.proposed_data.meta_description || 'Not Configured'}</div>
+                                    </div>
+
+                                    <div>
+                                        <label className="text-[10px] uppercase font-bold text-green-760 font-semibold">Proposed SEO Keywords</label>
+                                        <div className="text-xs text-gray-800">{selectedRequest.proposed_data.meta_keywords || 'Not Configured'}</div>
+                                    </div>
+
+                                    {/* Proposed Categories & Concerns */}
+                                    <div className="border-t border-green-100 pt-3 space-y-2">
+                                        <div>
+                                            <label className="text-[10px] uppercase font-bold text-green-760 font-semibold block mb-1">Proposed Categories</label>
+                                            <div className="flex flex-wrap gap-1">
+                                                {Array.isArray(selectedRequest.proposed_data.categories) && selectedRequest.proposed_data.categories.length > 0 ? (
+                                                    selectedRequest.proposed_data.categories.map((id: number) => (
+                                                        <span key={id} className="text-[10px] bg-white border border-green-200 px-2 py-0.5 rounded text-green-800">
+                                                            {getClassificationName(id)}
+                                                        </span>
+                                                    ))
+                                                ) : (
+                                                    <span className="text-[10px] text-gray-400 italic">None selected</span>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="text-[10px] uppercase font-bold text-green-760 font-semibold block mb-1">Proposed Concerns</label>
+                                            <div className="flex flex-wrap gap-1">
+                                                {Array.isArray(selectedRequest.proposed_data.concerns) && selectedRequest.proposed_data.concerns.length > 0 ? (
+                                                    selectedRequest.proposed_data.concerns.map((id: number) => (
+                                                        <span key={id} className="text-[10px] bg-white border border-green-200 px-2 py-0.5 rounded text-green-800">
+                                                            {getClassificationName(id)}
+                                                        </span>
+                                                    ))
+                                                ) : (
+                                                    <span className="text-[10px] text-gray-400 italic">None selected</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Proposed FAQs */}
+                                    <div className="border-t border-green-100 pt-3 space-y-2">
+                                        <label className="text-[10px] uppercase font-bold text-green-760 font-semibold block">Proposed FAQs ({selectedRequest.proposed_data.faqs?.length || 0})</label>
+                                        <div className="space-y-3 max-h-48 overflow-y-auto pr-1">
+                                            {Array.isArray(selectedRequest.proposed_data.faqs) && selectedRequest.proposed_data.faqs.length > 0 ? (
+                                                selectedRequest.proposed_data.faqs.map((faq: any, i: number) => (
+                                                    <div key={i} className="bg-white p-2.5 rounded-lg border border-green-100 space-y-1">
+                                                        <div className="text-[10px] font-extrabold text-green-900">Q: {faq.question}</div>
+                                                        <div className="text-[10px] text-gray-600">A: {faq.answer}</div>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <span className="text-[10px] text-gray-400 italic">No FAQs configured</span>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
                             {/* Action Buttons */}
-                            <div className="flex gap-4 pt-4 border-t">
+                            <div className="flex justify-end gap-3 pt-4 border-t">
                                 <button
                                     onClick={() => setIsRejectDialogOpen(true)}
-                                    className="flex-1 py-3 border border-red-200 text-red-600 font-bold rounded-lg hover:bg-red-50 transition-colors"
+                                    className="px-5 py-2.5 border border-red-200 text-red-600 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-red-50 transition-all"
                                 >
                                     Reject Request
                                 </button>
                                 <button
                                     onClick={handleApprove}
                                     disabled={isProcessing}
-                                    className="flex-[2] py-3 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 shadow-lg shadow-green-200 transition-colors flex items-center justify-center gap-2"
+                                    className="px-6 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-all font-bold text-xs uppercase tracking-wider shadow-md flex items-center gap-2"
                                 >
-                                    {isProcessing ? <Loader2 className="animate-spin" /> : <Check size={18} />}
+                                    {isProcessing ? <Loader2 className="animate-spin" size={14} /> : <Check size={14} />}
                                     Approve & Publish Live
                                 </button>
                             </div>

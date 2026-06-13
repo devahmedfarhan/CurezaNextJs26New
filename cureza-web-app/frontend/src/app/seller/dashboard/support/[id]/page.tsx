@@ -31,8 +31,7 @@ export default function TicketChatPage() {
     if (!ticket) return <div>Ticket not found</div>;
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-2xl font-bold mb-6">Ticket #{ticket.id}: {ticket.subject}</h1>
+        <div className="w-full">
             <TicketChat ticket={ticket} currentUserRole="seller" />
         </div>
     );

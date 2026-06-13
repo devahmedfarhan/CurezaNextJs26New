@@ -52,6 +52,12 @@ export const ticketService = {
         return response.data;
     },
 
+    // Fetch stats of tickets (total, active, resolved counts)
+    getTicketStats: async () => {
+        const response = await api.get('/tickets/stats');
+        return response.data;
+    },
+
     // Fetch a single ticket details
     getTicket: async (id: number) => {
         const response = await api.get(`/tickets/${id}`);

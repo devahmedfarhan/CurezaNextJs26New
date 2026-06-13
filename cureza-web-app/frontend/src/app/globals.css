@@ -27,6 +27,17 @@
   --glass-border: rgba(255, 255, 255, 0.12);
   --glass-shadow: rgba(0, 0, 0, 0.2);
 
+  --cureza-green-50: #f0fdf4;
+  --cureza-green-100: #d1fae5;
+  --cureza-green-200: #a7f3d0;
+  --cureza-green-300: #6ee7b7;
+  --cureza-green-400: #34d399;
+  --cureza-green-500: #10b981;
+  --cureza-green-600: #059669;
+  --cureza-green-700: #047857;
+  --cureza-green-800: #065f46;
+  --cureza-green-900: #064e3b;
+
   --radius-card: 0.75rem;
   --radius-button: 3.75rem;
 
@@ -320,4 +331,57 @@ body {
 .animate-marquee2 {
   animation: marquee2 35s linear infinite;
   will-change: transform;
+}
+
+/* --- Seller Theme Override --- */
+.seller-theme {
+  --radius-card: 10px;
+  --radius-button: 10px;
+  --radius: 10px;
+}
+
+.seller-theme .premium-card,
+.seller-theme .premium-glass,
+.seller-theme .glass-card {
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+.seller-theme .premium-shadow {
+  box-shadow: none !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+.seller-theme .rounded-2xl,
+.seller-theme .rounded-3xl,
+.seller-theme .rounded-\[2rem\],
+.seller-theme .rounded-\[2\.5rem\],
+.seller-theme .rounded-\[4rem\],
+.seller-theme .rounded-\[1\.25rem\],
+.seller-theme .rounded-\[1\.5rem\],
+.seller-theme .rounded-\[3rem\],
+.seller-theme .rounded-xl {
+  border-radius: 10px !important;
+}
+
+.seller-theme .shadow-sm,
+.seller-theme .shadow,
+.seller-theme .shadow-md,
+.seller-theme .shadow-lg,
+.seller-theme .shadow-xl,
+.seller-theme .shadow-2xl,
+.seller-theme .shadow-premium-light,
+.seller-theme .shadow-premium-hover,
+.seller-theme .shadow-premium-deep {
+  box-shadow: none !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Ensure buttons and inputs in seller theme follow the 10px border-radius */
+.seller-theme button,
+.seller-theme input,
+.seller-theme select,
+.seller-theme textarea {
+  border-radius: 10px !important;
 }

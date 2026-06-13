@@ -176,9 +176,7 @@ export default function DoctorDashboardLayout({ children }: { children: React.Re
             {/* Mobile Header */}
             <header className="md:hidden bg-white border-b border-black/[0.05] px-4 py-2.5 flex items-center justify-between sticky top-0 z-50">
                 <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 bg-emerald-50 rounded-md flex items-center justify-center border border-black/[0.05]">
-                        <Stethoscope className="text-emerald-600" size={14} />
-                    </div>
+                    <img src="/logo-black-no-tagline.svg" alt="Cureza Logo" className="h-6 w-auto object-contain dark:invert" />
                     <span className="font-bold text-sm text-gray-800 tracking-tight">Cureza</span>
                 </div>
                 <button
@@ -205,14 +203,11 @@ export default function DoctorDashboardLayout({ children }: { children: React.Re
                 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
             `}>
                 {/* Logo */}
-                <div className="px-4 py-4 border-b border-black/[0.05] hidden md:flex items-center gap-2.5">
-                    <div className="w-8 h-8 bg-emerald-50 rounded-lg flex items-center justify-center border border-black/[0.05]">
-                        <Stethoscope className="text-emerald-600" size={16} />
-                    </div>
-                    <div>
-                        <span className="font-bold text-sm text-gray-800 tracking-tight block leading-none">Cureza</span>
-                        <span className="text-[9px] font-semibold text-emerald-600 uppercase tracking-widest leading-none mt-0.5 block">Doctor Portal</span>
-                    </div>
+                <div className="px-4 py-4 border-b border-black/[0.05] hidden md:flex flex-col items-center">
+                    <Link href="/" className="flex flex-col items-center gap-1 group w-full text-center">
+                        <img src="/logo-black-no-tagline.svg" alt="Cureza Logo" className="h-6.5 w-auto object-contain dark:invert transition-transform group-hover:scale-105" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 mt-2 bg-emerald-50/50 px-2.5 py-0.5 rounded-full border border-emerald-100">Doctor Portal</span>
+                    </Link>
                 </div>
 
                 {/* Navigation */}
@@ -267,13 +262,13 @@ export default function DoctorDashboardLayout({ children }: { children: React.Re
                                 key={item.href}
                                 onClick={() => setMobileMenuOpen(false)}
                                 href={item.href}
-                                className={`flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[12px] font-medium transition-all duration-150 ${
+                                className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-150 ${
                                     active
-                                        ? 'bg-emerald-50/80 text-emerald-700 font-semibold'
+                                        ? 'bg-emerald-50/80 text-emerald-700 font-bold'
                                         : 'text-gray-500 hover:text-gray-800 hover:bg-gray-50'
                                 }`}
                             >
-                                <item.icon size={15} className={active ? 'text-emerald-600' : 'text-gray-400'} />
+                                <item.icon size={16} className={active ? 'text-emerald-600' : 'text-gray-400'} />
                                 {item.label}
                             </Link>
                         );
@@ -412,7 +407,7 @@ export default function DoctorDashboardLayout({ children }: { children: React.Re
                     </div>
                 </header>
 
-                <div className="p-4 md:p-6 w-full max-w-none flex-1">
+                <div className="p-4 md:p-6 w-full max-w-7xl mx-auto flex-1">
                     {user?.doctor_status !== 'approved' ? (
                         <div className="min-h-[80vh] flex flex-col items-center justify-center text-center space-y-5 max-w-xl mx-auto bg-white p-6 rounded-lg border border-black/[0.05] my-4">
                             <div className={`w-16 h-16 rounded-xl flex items-center justify-center ${user?.doctor_status === 'rejected' ? 'bg-red-50 text-red-500' : 'bg-blue-50 text-blue-500'}`}>
