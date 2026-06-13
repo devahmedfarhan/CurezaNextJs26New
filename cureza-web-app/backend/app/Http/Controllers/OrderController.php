@@ -38,10 +38,12 @@ class OrderController extends Controller
         $user = Auth::guard('sanctum')->user();
         
         $order = Order::with(['items.product.brand', 'shippingMethod'])
-            ->findOrFail($id);
+            ->where('id', $id)
+            ->orWhere('order_number', $id)
+            ->firstOrFail();
 
         if ($user) {
-            \Illuminate\Support\Facades\Gate::authorize('view', $order);
+            \Illuminate\Support\Facades\Gate::forUser($user)->authorize('view', $order);
         } else {
             // Guest order view validation:
             // 1. If the order belongs to an authenticated user, guests cannot access it.
@@ -61,12 +63,14 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
+        Log::info('ORDER STORE REACHED', ['ip' => $request->ip(), 'user' => Auth::guard('sanctum')->user()?->id]);
         $request->validate([
             'billing_address' => 'required|array',
             'shipping_address' => 'required|array',
-            'payment_method' => 'required|in:cod,razorpay,upi',
+            'payment_method' => 'required|in:cod,razorpay,stripe,payu,phonepe',
             'order_notes' => 'nullable|string',
             'coupon_code' => 'nullable|string',
+            'save_address' => 'nullable|boolean',
             'items' => 'required|array', // For guest checkout, items must be sent
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1',
@@ -127,10 +131,40 @@ class OrderController extends Controller
         $taxAmount = $subtotal * $taxRate;
         $finalTotal = $subtotal + $shippingCost + $taxAmount;
 
+        $format = config('services.order.format', 'custom');
+        $customPrefix = config('services.order.prefix', 'CZ');
+        $configYear = config('services.order.year', 'auto');
+
+        $orderNumber = null;
+        if ($format === 'custom') {
+            $sellerId = 0;
+            if (!empty($orderItems)) {
+                $sellerId = $orderItems[0]['product']->seller_id ?? 0;
+            }
+
+            $year = ($configYear === 'auto' || empty($configYear)) ? date('y') : $configYear;
+            $prefix = $customPrefix . sprintf('%02d', $sellerId) . $year;
+            
+            $attempt = 0;
+            while ($orderNumber === null && $attempt < 10) {
+                $count = Order::where('order_number', 'like', $prefix . '%')->count() + $attempt;
+                $candidate = $prefix . sprintf('%04d', $count + 1);
+                if (!Order::where('order_number', $candidate)->exists()) {
+                    $orderNumber = $candidate;
+                }
+                $attempt++;
+            }
+            if ($orderNumber === null) {
+                $orderNumber = $prefix . sprintf('%04d', rand(1000, 9999));
+            }
+        } else {
+            $orderNumber = 'ORD-' . strtoupper(Str::random(10));
+        }
+
         DB::beginTransaction();
         try {
             $order = Order::create([
-                'order_number' => 'ORD-' . strtoupper(Str::random(10)),
+                'order_number' => $orderNumber,
                 'user_id' => $userId, // Nullable for guest orders
                 'total_amount' => $subtotal,
                 'discount_amount' => 0,
@@ -177,6 +211,46 @@ class OrderController extends Controller
                 if ($cart) {
                     $cart->items()->delete();
                 }
+
+                // Save address to user's address book if requested
+                if ($request->input('save_address')) {
+                    $billingAddressData = $request->input('billing_address');
+                    
+                    if (!empty($billingAddressData)) {
+                        $name = trim(($billingAddressData['first_name'] ?? '') . ' ' . ($billingAddressData['last_name'] ?? ''));
+                        $address1 = $billingAddressData['street_address'] ?? '';
+                        $city = $billingAddressData['city'] ?? '';
+                        $state = $billingAddressData['state'] ?? '';
+                        $zip = $billingAddressData['postcode'] ?? '';
+
+                        // Avoid exact duplicates
+                        $exists = \App\Models\Address::where('user_id', $user->id)
+                            ->where('name', $name)
+                            ->where('address_line_1', $address1)
+                            ->where('city', $city)
+                            ->where('state', $state)
+                            ->where('zip', $zip)
+                            ->exists();
+
+                        if (!$exists) {
+                            $hasAddresses = \App\Models\Address::where('user_id', $user->id)->exists();
+
+                            \App\Models\Address::create([
+                                'user_id' => $user->id,
+                                'name' => $name,
+                                'phone' => $billingAddressData['phone'] ?? '',
+                                'address_line_1' => $address1,
+                                'address_line_2' => $billingAddressData['apartment'] ?? null,
+                                'city' => $city,
+                                'state' => $state,
+                                'zip' => $zip,
+                                'country' => $billingAddressData['country'] ?? 'India',
+                                'type' => 'billing',
+                                'is_default' => !$hasAddresses,
+                            ]);
+                        }
+                    }
+                }
             } else {
                 // For guests, store order ID in session to allow them to view it
                 $placedOrders = session()->get('placed_guest_orders', []);
@@ -189,7 +263,7 @@ class OrderController extends Controller
 
             DB::commit();
 
-            return response()->json(['message' => 'Order placed successfully', 'order_id' => $order->id], 201);
+            return response()->json(['message' => 'Order placed successfully', 'order_id' => $order->order_number], 201);
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -200,7 +274,10 @@ class OrderController extends Controller
 
     public function downloadInvoice($id)
     {
-        $order = Order::with(['items.product', 'shippingMethod'])->findOrFail($id);
+        $order = Order::with(['items.product', 'shippingMethod'])
+            ->where('id', $id)
+            ->orWhere('order_number', $id)
+            ->firstOrFail();
         
         \Illuminate\Support\Facades\Gate::authorize('view', $order);
 

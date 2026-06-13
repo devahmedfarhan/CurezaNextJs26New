@@ -56,11 +56,13 @@ export default function CheckoutPage() {
     const [shipToDifferentAddress, setShipToDifferentAddress] = useState(false);
     const [orderNotes, setOrderNotes] = useState('');
     const [createAccount, setCreateAccount] = useState(false);
+    const [saveAddressToBook, setSaveAddressToBook] = useState(true);
     const [couponCode, setCouponCode] = useState('');
 
     const [checkoutSummary, setCheckoutSummary] = useState<any>(null); // To store backend summary
     const [savedAddresses, setSavedAddresses] = useState<AddressData[]>([]);
-    const [paymentMethod, setPaymentMethod] = useState('cod');
+    const [paymentMethod, setPaymentMethod] = useState('');
+    const [publicSettings, setPublicSettings] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isPageLoading, setIsPageLoading] = useState(true);
     const [showAddressForm, setShowAddressForm] = useState(false);
@@ -72,6 +74,30 @@ export default function CheckoutPage() {
     useEffect(() => {
         const fetchCheckoutData = async () => {
             try {
+                // Fetch public settings for payment gateways first
+                let defaultPayment = '';
+                try {
+                    const settingsResponse = await axios.get('/settings/public');
+                    const settings = settingsResponse.data;
+                    setPublicSettings(settings);
+                    
+                    if (settings) {
+                        if (settings.cod_enabled) {
+                            defaultPayment = 'cod';
+                        } else if (settings.razorpay_enabled) {
+                            defaultPayment = 'razorpay';
+                        } else if (settings.stripe_enabled) {
+                            defaultPayment = 'stripe';
+                        } else if (settings.payu_enabled) {
+                            defaultPayment = 'payu';
+                        } else if (settings.phonepe_enabled) {
+                            defaultPayment = 'phonepe';
+                        }
+                    }
+                } catch (settingsError) {
+                    console.error('Failed to fetch public settings:', settingsError);
+                }
+
                 const response = await axios.get('/checkout/initiate');
                 setCheckoutSummary(response.data.summary);
 
@@ -117,6 +143,9 @@ export default function CheckoutPage() {
                 } else {
                     setShowAddressForm(true);
                 }
+
+                // Apply default payment method
+                setPaymentMethod(defaultPayment);
             } catch (error: any) {
                 console.error('Failed to fetch checkout data:', error);
                 if (error.response?.status === 400 && error.response?.data?.message === 'Cart is empty') {
@@ -235,7 +264,7 @@ export default function CheckoutPage() {
                 order_notes: orderNotes,
                 payment_method: paymentMethod,
                 create_account: createAccount, // For guests, if we enable guest checkout later
-                save_address: user && showAddressForm, // Save address if user is logged in and entered a new one
+                save_address: user && (showAddressForm || savedAddresses.length === 0) && saveAddressToBook,
                 shipping_method_id: selectedShippingMethodId
             };
 
@@ -447,6 +476,21 @@ export default function CheckoutPage() {
                                                     onChange={(e) => setCreateAccount(e.target.checked)}
                                                 />
                                                 <span className="text-gray-700 font-medium">Create an account?</span>
+                                            </label>
+                                        </div>
+                                    )}
+
+                                    {/* Save Address to Address Book Checkbox - Only show if user IS logged in */}
+                                    {user && (
+                                        <div className="md:col-span-2 mt-2">
+                                            <label className="flex items-center space-x-2 cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    className="rounded border-gray-300 text-cureza-green focus:ring-cureza-green"
+                                                    checked={saveAddressToBook}
+                                                    onChange={(e) => setSaveAddressToBook(e.target.checked)}
+                                                />
+                                                <span className="text-gray-700 font-medium select-none">Save this address to my address book</span>
                                             </label>
                                         </div>
                                     )}
@@ -729,58 +773,107 @@ export default function CheckoutPage() {
 
                             {/* Payment Methods */}
                             <div className="space-y-4 mb-6">
-                                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                                    <label className="flex items-start cursor-pointer">
-                                        <input
-                                            type="radio"
-                                            name="payment"
-                                            value="cod"
-                                            checked={paymentMethod === 'cod'}
-                                            onChange={() => setPaymentMethod('cod')}
-                                            className="mt-1 w-4 h-4 text-cureza-green focus:ring-cureza-green"
-                                        />
-                                        <div className="ml-3">
-                                            <span className="block font-bold text-charcoal">Cash on delivery</span>
-                                            {paymentMethod === 'cod' && (
-                                                <p className="text-sm text-gray-600 mt-1 animate-fadeIn">
-                                                    Pay with cash upon delivery.
-                                                </p>
-                                            )}
-                                        </div>
-                                    </label>
-                                </div>
-                                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                                    <label className="flex items-start cursor-pointer">
-                                        <input
-                                            type="radio"
-                                            name="payment"
-                                            value="razorpay"
-                                            checked={paymentMethod === 'razorpay'}
-                                            onChange={() => setPaymentMethod('razorpay')}
-                                            className="mt-1 w-4 h-4 text-cureza-green focus:ring-cureza-green"
-                                        />
-                                        <div className="ml-3">
-                                            <span className="block font-bold text-charcoal">Razorpay Secure</span>
-                                            {paymentMethod === 'razorpay' && (
-                                                <div className="mt-2">
-                                                    <img src="https://cdn.razorpay.com/static/assets/logo/payment.svg" alt="Razorpay" className="h-6" />
-                                                    <p className="text-sm text-gray-600 mt-1">
-                                                        Pay securely by Credit or Debit card or Internet Banking through Razorpay.
-                                                    </p>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </label>
-                                </div>
-                            </div>
+                                {(() => {
+                                    const paymentOptions = [
+                                        {
+                                            id: 'cod',
+                                            title: 'Cash on Delivery',
+                                            enabled: publicSettings?.cod_enabled,
+                                            description: 'Pay with cash upon delivery.',
+                                            logo: null,
+                                            icon: <Truck className="text-cureza-green w-5 h-5" />
+                                        },
+                                        {
+                                            id: 'razorpay',
+                                            title: 'Razorpay Secure',
+                                            enabled: publicSettings?.razorpay_enabled,
+                                            description: 'Pay securely using Credit or Debit cards, Netbanking, or UPI via Razorpay.',
+                                            logo: 'https://cdn.razorpay.com/static/assets/logo/payment.svg',
+                                            icon: null
+                                        },
+                                        {
+                                            id: 'stripe',
+                                            title: 'Credit / Debit Card (Stripe)',
+                                            enabled: publicSettings?.stripe_enabled,
+                                            description: 'Pay securely with Credit Card, Debit Card, or international cards through Stripe.',
+                                            logo: 'https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_blue.svg',
+                                            icon: null
+                                        },
+                                        {
+                                            id: 'payu',
+                                            title: 'PayU Checkout',
+                                            enabled: publicSettings?.payu_enabled,
+                                            description: 'Easy and secure check out with Cards, UPI, Netbanking via PayU.',
+                                            logo: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/PayU_logo.svg',
+                                            icon: null
+                                        },
+                                        {
+                                            id: 'phonepe',
+                                            title: 'PhonePe UPI & Cards',
+                                            enabled: publicSettings?.phonepe_enabled,
+                                            description: 'Instant and secure payment using PhonePe UPI app, Cards, or Wallets.',
+                                            logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e1/PhonePe_Logo.svg',
+                                            icon: null
+                                        }
+                                    ];
 
+                                    const activePaymentOptions = paymentOptions.filter(opt => opt.enabled);
+
+                                    if (activePaymentOptions.length === 0) {
+                                        return (
+                                            <div className="bg-red-50 border border-red-200 p-4 rounded-lg text-center text-red-600 text-sm font-semibold">
+                                                No active payment methods. Please contact the administrator.
+                                            </div>
+                                        );
+                                    }
+
+                                    return activePaymentOptions.map((opt) => (
+                                        <div 
+                                            key={opt.id} 
+                                            className={`p-4 rounded-xl border-2 transition-all cursor-pointer ${
+                                                paymentMethod === opt.id 
+                                                    ? 'border-cureza-green bg-green-50/20' 
+                                                    : 'border-gray-200 hover:border-gray-300 bg-white'
+                                            }`}
+                                            onClick={() => setPaymentMethod(opt.id)}
+                                        >
+                                            <label className="flex items-start cursor-pointer w-full">
+                                                <input
+                                                    type="radio"
+                                                    name="payment"
+                                                    value={opt.id}
+                                                    checked={paymentMethod === opt.id}
+                                                    onChange={() => setPaymentMethod(opt.id)}
+                                                    className="mt-1 w-4 h-4 text-cureza-green focus:ring-cureza-green"
+                                                />
+                                                <div className="ml-3 flex-1">
+                                                    <div className="flex items-center justify-between gap-2">
+                                                        <span className="block font-bold text-charcoal">{opt.title}</span>
+                                                        {opt.logo ? (
+                                                            <img src={opt.logo} alt={opt.title} className="h-5 object-contain max-w-[80px]" />
+                                                        ) : (
+                                                            opt.icon
+                                                        )}
+                                                    </div>
+                                                    {paymentMethod === opt.id && (
+                                                        <p className="text-sm text-gray-600 mt-2 animate-fadeIn border-t border-gray-100 pt-2 leading-relaxed">
+                                                            {opt.description}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            </label>
+                                        </div>
+                                    ));
+                                })()}
+                            </div>
+ 
                             <div className="text-xs text-gray-500 mb-6">
                                 Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our <a href="#" className="text-cureza-green hover:underline">privacy policy</a>.
                             </div>
-
+ 
                             <button
                                 type="submit"
-                                disabled={isLoading || !selectedShippingMethodId}
+                                disabled={isLoading || !selectedShippingMethodId || !paymentMethod}
                                 className="w-full bg-cureza-green text-white font-bold py-4 rounded-lg hover:bg-green-800 transition shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center"
                             >
                                 {isLoading ? (
@@ -795,7 +888,7 @@ export default function CheckoutPage() {
                         </div>
                     </div>
                 </form>
-            </div >
-        </div >
+            </div>
+        </div>
     );
 }

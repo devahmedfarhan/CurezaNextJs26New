@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import Link from 'next/link';
@@ -27,6 +27,72 @@ function RegisterContent() {
     const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
     const [turnstileToken, setTurnstileToken] = useState('');
     const [error, setError] = useState('');
+    const [googleAuthEnabled, setGoogleAuthEnabled] = useState(false);
+    const [googleClientId, setGoogleClientId] = useState('');
+
+    // Fetch settings and initialize Google OAuth
+    useEffect(() => {
+        api.get('/settings/public')
+            .then((res) => {
+                setGoogleAuthEnabled(res.data.google_auth_enabled);
+                setGoogleClientId(res.data.google_client_id);
+            })
+            .catch((err) => {
+                console.error('Failed to load public settings:', err);
+            });
+    }, []);
+
+    const handleGoogleCredential = async (response: any) => {
+        try {
+            setError('');
+            const res = await api.post('/auth/google', {
+                credential: response.credential,
+            });
+
+            // Update Auth Context & Cookie
+            login(res.data.access_token, res.data.user);
+
+            // Redirect to homepage
+            window.location.href = '/';
+        } catch (err: any) {
+            setError(err.response?.data?.message || 'Google authentication failed.');
+        }
+    };
+
+    useEffect(() => {
+        if (!googleAuthEnabled || !googleClientId) return;
+
+        // Dynamically load Google client script
+        const script = document.createElement('script');
+        script.src = 'https://accounts.google.com/gsi/client';
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+            const google = (window as any).google;
+            if (google) {
+                google.accounts.id.initialize({
+                    client_id: googleClientId,
+                    callback: handleGoogleCredential,
+                });
+                
+                // Render button
+                const btnContainer = document.getElementById('google-signin-button');
+                if (btnContainer) {
+                    google.accounts.id.renderButton(btnContainer, {
+                        theme: 'outline',
+                        size: 'large',
+                        width: btnContainer.clientWidth || 380,
+                    });
+                }
+            }
+        };
+        document.body.appendChild(script);
+
+        return () => {
+            document.body.removeChild(script);
+        };
+    }, [googleAuthEnabled, googleClientId]);
+
     const { login } = useAuth();
 
     const getPasswordStrength = (pwd: string) => {
@@ -335,6 +401,30 @@ function RegisterContent() {
                             </button>
                         </div>
                     </form>
+
+                    <div className="relative my-4">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-gray-200"></div>
+                        </div>
+                        <div className="relative flex justify-center text-sm">
+                            <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                        </div>
+                    </div>
+
+                    {googleAuthEnabled ? (
+                        <div className="w-full flex justify-center py-2">
+                            <div id="google-signin-button" className="w-full"></div>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-2 gap-3">
+                            <button type="button" onClick={() => alert('Google authentication is disabled.')} className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-200 rounded-lg shadow-sm bg-gray-50 text-sm font-medium text-gray-400 cursor-not-allowed transition-colors" disabled>
+                                <span className="text-lg">G</span> Google (Disabled)
+                            </button>
+                            <button type="button" className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                                <span className="text-lg">f</span> Facebook
+                            </button>
+                        </div>
+                    )}
 
                     <div className="text-center text-sm">
                         <span className="text-gray-600">Already have an account? </span>

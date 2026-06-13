@@ -38,6 +38,7 @@ Route::middleware(['throttle:sensitive', 'honeypot'])->group(function () {
     // Customer Authentication Routes
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/auth/google', [AuthController::class, 'googleLogin']);
     Route::post('/auth/send-otp', [AuthController::class, 'sendOtp']);
     Route::post('/auth/verify-otp', [AuthController::class, 'verifyOtp']);
     Route::post('/auth/forgot-password', [AuthController::class, 'forgotPassword']);
@@ -72,6 +73,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 // Public Routes
+Route::get('/settings/public', [\App\Http\Controllers\Api\Admin\SystemSettingsController::class, 'publicSettings']);
 Route::get('/brands', [\App\Http\Controllers\PublicStoreController::class, 'index']);
 Route::get('/brand/{slug}', [\App\Http\Controllers\PublicStoreController::class, 'show']);
 Route::get('/products/latest', [ProductController::class, 'latest']);
@@ -300,6 +302,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Admin Routes
     Route::middleware(['auth:sanctum', 'role:admin,super_admin'])->prefix('admin')->group(function () {
+        // System Settings
+        Route::get('/settings', [\App\Http\Controllers\Api\Admin\SystemSettingsController::class, 'index']);
+        Route::post('/settings', [\App\Http\Controllers\Api\Admin\SystemSettingsController::class, 'store']);
+
         // Doctor Management
         Route::get('/doctors', [DoctorManagementController::class, 'index']);
         Route::get('/doctors/{id}', [DoctorManagementController::class, 'show']);

@@ -55,7 +55,6 @@ export default function Home() {
           layout="grid"
           columns={5}
           limit={8}
-          concernSlug="wellness"
         />
       </div>
 

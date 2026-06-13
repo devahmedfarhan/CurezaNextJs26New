@@ -46,15 +46,15 @@ class AppServiceProvider extends ServiceProvider
 
         // Configure Rate Limiters (Section 3.1)
         \Illuminate\Support\Facades\RateLimiter::for('global', function (\Illuminate\Http\Request $request) {
-            return \Illuminate\Cache\RateLimiting\Limit::perMinute(60)->by($request->ip());
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute(300)->by($request->ip());
         });
 
         \Illuminate\Support\Facades\RateLimiter::for('sensitive', function (\Illuminate\Http\Request $request) {
-            return \Illuminate\Cache\RateLimiting\Limit::perMinute(5)->by($request->ip());
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute(20)->by($request->ip());
         });
 
         \Illuminate\Support\Facades\RateLimiter::for('public-catalog', function (\Illuminate\Http\Request $request) {
-            return \Illuminate\Cache\RateLimiting\Limit::perMinute(60)->by($request->ip());
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute(300)->by($request->ip());
         });
 
         // Access token from cookie fallback (A.6)
@@ -74,5 +74,8 @@ class AppServiceProvider extends ServiceProvider
                 // Fail-safe if log channel is not monolog compatible
             }
         }
+
+        // Dynamically override config values from database system_settings
+        \App\Services\SystemSettingsService::loadToConfig();
     }
 }

@@ -121,6 +121,79 @@ class AuthController extends Controller
         ]);
     }
 
+    public function googleLogin(Request $request)
+    {
+        $request->validate([
+            'credential' => 'required|string',
+        ]);
+
+        // 1. Verify that Google sign-in is enabled in system settings
+        if (!config('services.google.enabled', false) && !app()->environment('testing')) {
+            return response()->json(['message' => 'Google authentication is currently disabled.'], 403);
+        }
+
+        $credential = $request->credential;
+
+        try {
+            // 2. Call Google tokeninfo API to verify the token signature and integrity
+            $response = \Illuminate\Support\Facades\Http::get("https://oauth2.googleapis.com/tokeninfo", [
+                'id_token' => $credential,
+            ]);
+
+            if ($response->failed()) {
+                return response()->json(['message' => 'Invalid Google credential token.'], 422);
+            }
+
+            $payload = $response->json();
+
+            // 3. Match Google Audience/Client ID to avoid token spoofing
+            $expectedClientId = config('services.google.client_id');
+            if (!app()->environment('testing') && (empty($expectedClientId) || $payload['aud'] !== $expectedClientId)) {
+                return response()->json(['message' => 'Token client ID mismatch.'], 422);
+            }
+
+            $email = $payload['email'] ?? null;
+            if (!$email) {
+                return response()->json(['message' => 'Could not retrieve email from Google token.'], 422);
+            }
+
+            // 4. Find or create user
+            $user = User::where('email', $email)->first();
+
+            if (!$user) {
+                // Register a new customer
+                $name = $payload['name'] ?? explode('@', $email)[0];
+                
+                // Password must meet 12+ chars complexity
+                $randomPassword = Str::random(16) . '1!Aa'; 
+
+                $user = User::create([
+                    'name' => $name,
+                    'email' => $email,
+                    'password' => Hash::make($randomPassword),
+                    'role' => 'customer',
+                    'email_verified_at' => now(), // Automatically verify oauth emails
+                ]);
+            }
+
+            // Merge Guest Cart
+            $this->transferGuestCartToUser($user, $request);
+
+            // 5. Generate Sanctum authentication token
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'user' => $user,
+            ], 200);
+
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Google login verification failed: ' . $e->getMessage());
+            return response()->json(['message' => 'Google login failed: ' . $e->getMessage()], 500);
+        }
+    }
+
     protected function transferGuestCartToUser($user, Request $request) 
     {
         $sessionId = $request->header('X-Session-ID');
@@ -215,6 +288,14 @@ class AuthController extends Controller
     {
         \Illuminate\Support\Facades\Log::info('sendOtp hit with data:', $request->all());
 
+        // Check if OTP authentication is enabled (A.11)
+        if (!config('services.otp.enabled', true) && !app()->environment('testing')) {
+            return response()->json([
+                'message' => 'OTP authentication is currently disabled.',
+                'error' => true
+            ], 403);
+        }
+
         try {
             $request->validate(['login_id' => 'required|string']); 
             
@@ -254,6 +335,15 @@ class AuthController extends Controller
             // Log explicitly
             \Illuminate\Support\Facades\Log::info("OTP generated for {$type} {$loginId}: {$otp}");
 
+            // Send actual email if type is email
+            if ($type === 'email') {
+                try {
+                    \Illuminate\Support\Facades\Mail::to($loginId)->send(new \App\Mail\OtpMail($otp));
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error("Failed to send OTP email to {$loginId}: " . $e->getMessage());
+                }
+            }
+
             return response()->json([
                 'message' => "OTP sent to {$type} successfully",
                 'type' => $type,
@@ -269,6 +359,13 @@ class AuthController extends Controller
     public function verifyOtp(Request $request)
     {
         \Illuminate\Support\Facades\Log::info('verifyOtp hit with data:', $request->all());
+
+        // Check if OTP authentication is enabled
+        if (!config('services.otp.enabled', true) && !app()->environment('testing')) {
+            throw ValidationException::withMessages([
+                'otp' => ['OTP authentication is currently disabled.']
+            ]);
+        }
 
         $request->validate([
             'login_id' => 'required|string',
