@@ -109,6 +109,13 @@ class SystemSettingsService
             'order_number_format' => 'services.order.format',
             'order_number_prefix' => 'services.order.prefix',
             'order_number_year' => 'services.order.year',
+
+            // Cart & Checkout settings
+            'cart_free_shipping_enabled' => 'services.cart.free_shipping_enabled',
+            'cart_free_shipping_threshold' => 'services.cart.free_shipping_threshold',
+            'checkout_secure_badge_text' => 'services.checkout.secure_badge_text',
+            'checkout_order_notes_enabled' => 'services.checkout.order_notes_enabled',
+            'checkout_save_address_default' => 'services.checkout.save_address_default',
         ];
 
         $overrides = [];
@@ -117,7 +124,7 @@ class SystemSettingsService
                 $val = $setting->value;
                 
                 // Convert truthy/falsy values for boolean fields
-                if (in_array($setting->key, ['google_auth_enabled', 'razorpay_enabled', 'otp_enabled', 'stripe_enabled', 'payu_enabled', 'phonepe_enabled', 'cod_enabled'])) {
+                if (in_array($setting->key, ['google_auth_enabled', 'razorpay_enabled', 'otp_enabled', 'stripe_enabled', 'payu_enabled', 'phonepe_enabled', 'cod_enabled', 'cart_free_shipping_enabled', 'checkout_order_notes_enabled', 'checkout_save_address_default'])) {
                     $val = filter_var($val, FILTER_VALIDATE_BOOLEAN);
                 }
 

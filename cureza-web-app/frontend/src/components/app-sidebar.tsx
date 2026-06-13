@@ -202,6 +202,7 @@ const data = {
       items: [
         { title: "General Settings", url: "/superadmin/dashboard/settings/general" },
         { title: "Payment Gateways", url: "/superadmin/dashboard/settings/payments" },
+        { title: "Checkout & Cart", url: "/superadmin/dashboard/settings/checkout-cart" },
         { title: "Notifications", url: "/superadmin/dashboard/settings/notifications" },
         { title: "Legal Pages", url: "/superadmin/dashboard/settings/legal" },
         { title: "Roles & Access", url: "/superadmin/dashboard/settings/rbac" },

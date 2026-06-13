@@ -21,12 +21,15 @@ export interface CartItem {
     price: number;
     image: string;
     quantity: number;
+    is_gift?: boolean;
     patientDetails?: PatientDetails;
 }
 
 export interface CartSummary {
     subtotal: number;
     discount: number;
+    milestone_discount?: number;
+    milestone_free_shipping?: boolean;
     coupon_applied: string | null;
     coupon_message: string | null;
     taxable_amount: number;
@@ -35,6 +38,31 @@ export interface CartSummary {
     igst: number;
     total_tax: number;
     shipping_cost: number;
+    platform_fee: number;
+    wallet_deduction: number;
+    projected_cashback: number;
+    wallet_balance: number;
+    rewards: {
+        current_milestone_id: number | null;
+        next_milestone_name: string | null;
+        amount_to_next_milestone: number;
+        progress_percentage: number;
+        active_slabs: Array<{
+            id: number;
+            name: string;
+            threshold: number;
+            unlocked: boolean;
+            icon: string | null;
+            free_shipping?: boolean;
+            discount_amount?: number | null;
+            gift_product?: {
+                id: number;
+                title: string;
+                price: number;
+                sku: string;
+            } | null;
+        }>;
+    } | null;
     final_total: number;
 }
 
@@ -49,6 +77,7 @@ interface CartContextType {
     isLoading: boolean;
     applyCoupon: (code: string) => Promise<{ success: boolean; message: string }>;
     removeCoupon: () => Promise<void>;
+    toggleCoins: () => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -90,6 +119,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
                     price: parseFloat(item.price), // Snapshot price
                     image: item.product.image,
                     quantity: item.quantity,
+                    is_gift: !!item.is_gift,
                     patientDetails: item.patient_name ? {
                         patient_name: item.patient_name,
                         patient_age: item.patient_age,
@@ -202,6 +232,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
         }
     };
 
+    const toggleCoins = async () => {
+        try {
+            await axios.post('/cart/coins/redeem', {}, {
+                headers: { 'X-Session-ID': sessionId }
+            });
+            await fetchCart(sessionId);
+        } catch (error) {
+            console.error('Failed to toggle coins:', error);
+        }
+    };
+
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
     return (
@@ -216,7 +257,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 totalItems,
                 isLoading,
                 applyCoupon,
-                removeCoupon
+                removeCoupon,
+                toggleCoins
             }}
         >
             {children}

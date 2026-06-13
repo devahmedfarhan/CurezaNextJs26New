@@ -436,6 +436,9 @@ Route::middleware('auth:sanctum')->group(function () {
         // Upsells
         Route::apiResource('upsells', \App\Http\Controllers\UpsellController::class);
 
+        // Reward Slabs
+        Route::apiResource('reward-slabs', \App\Http\Controllers\Api\Admin\AdminRewardSlabController::class);
+
         // Dashboard & Analytics
         Route::get('/dashboard', [\App\Http\Controllers\Api\Admin\DashboardController::class, 'index']);
         
@@ -526,6 +529,7 @@ Route::delete('/cart/items/{id}', [CartController::class, 'destroy']);
 Route::post('/cart/coupon', [CartController::class, 'applyCoupon']); // Apply Coupon
 Route::delete('/cart/coupon', [CartController::class, 'removeCoupon']); // Remove Coupon
 Route::get('/cart/upsells', [\App\Http\Controllers\UpsellController::class, 'forCart']);
+Route::post('/cart/coins/redeem', [CartController::class, 'toggleCoins']);
 
 // Checkout Routes (Public/Guest accessible)
 Route::get('/checkout/initiate', [CheckoutController::class, 'initiate'])->middleware('throttle:sensitive');

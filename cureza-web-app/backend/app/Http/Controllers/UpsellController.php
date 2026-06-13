@@ -49,34 +49,42 @@ class UpsellController extends Controller
             $cart = Cart::where('session_id', $sessionId)->first();
         }
 
+        $cartProductIds = $cart ? $cart->items->pluck('product_id')->toArray() : [];
+
+        // Check if manual pinned mode is active
+        $upsellMode = \App\Models\SystemSetting::where('key', 'cart_drawer_upsell_mode')->value('value') ?? 'ai';
+
+        if ($upsellMode === 'manual') {
+            $pinnedJson = \App\Models\SystemSetting::where('key', 'cart_drawer_pinned_upsells')->value('value') ?? '[]';
+            $pinnedIds = json_decode($pinnedJson, true);
+            if (!is_array($pinnedIds)) {
+                $pinnedIds = [];
+            }
+            
+            $upsells = Product::whereIn('id', $pinnedIds)
+                ->whereNotIn('id', $cartProductIds)
+                ->where('status', 'published')
+                ->limit(7)
+                ->get();
+                
+            return response()->json($upsells);
+        }
+
+        // AI Mode (original parent-product logic)
         if (!$cart || $cart->items->isEmpty()) {
-             // Return generic bestsellers or empty?
-             // Prompt says "Real product-based upsell".
-             // If cart empty, maybe random popular?
              return response()->json([]);
         }
 
-        $cartProductIds = $cart->items->pluck('product_id')->toArray();
-
-        // Find upsells where parent is in cart
         $upsells = Upsell::whereIn('parent_product_id', $cartProductIds)
             ->where('is_active', true)
-            ->whereNotIn('upsell_product_id', $cartProductIds) // Don't upsell what they already have
+            ->whereNotIn('upsell_product_id', $cartProductIds)
             ->with('upsellProduct')
             ->orderBy('priority', 'desc')
             ->limit(3)
             ->get()
-            ->pluck('upsellProduct'); // Return the actual product objects
+            ->pluck('upsellProduct')
+            ->filter();
 
-        if ($upsells->isEmpty()) {
-            // Fallback: Latest products or similar?
-            // Let's stick to strict upsell logic for now as requested.
-            // Or return generic latest as fallback like the old frontend did?
-            // "Upsell shows dummy products" -> "Real product-based upsell".
-            // If no link, maybe return nothing.
-            return response()->json([]);
-        }
-
-        return response()->json($upsells);
+        return response()->json($upsells->values());
     }
 }

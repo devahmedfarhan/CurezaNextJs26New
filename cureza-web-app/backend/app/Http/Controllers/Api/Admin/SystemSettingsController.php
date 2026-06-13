@@ -103,13 +103,55 @@ class SystemSettingsController extends Controller
             'payu_merchant_key',
             'phonepe_enabled',
             'phonepe_merchant_id',
-            'cod_enabled'
+            'cod_enabled',
+            'cart_free_shipping_enabled',
+            'cart_free_shipping_threshold',
+            'checkout_secure_badge_text',
+            'checkout_order_notes_enabled',
+            'checkout_save_address_default',
+            'cart_drawer_primary_color',
+            'cart_drawer_animation_speed',
+            'cart_drawer_title',
+            'cart_drawer_logo_url',
+            'cart_drawer_urgency_text',
+            'cart_drawer_empty_text',
+            'cart_drawer_empty_cta_label',
+            'cart_drawer_secure_text',
+            'cart_drawer_checkout_cta_label',
+            'cart_drawer_reviews_text',
+            'cart_drawer_upsell_title',
+            'cart_drawer_upsell_mode',
+            'cart_drawer_enable_rewards',
+            'cart_drawer_enable_coupons',
+            'cart_drawer_enable_coins',
+            'cart_drawer_enable_upsell',
+            'cart_drawer_enable_delivery_note',
+            'cart_coins_earn_percentage',
+            'cart_coins_max_earn_limit',
+            'cart_coins_conversion_rate',
+            'cart_drawer_pinned_upsells'
         ];
 
         $settings = SystemSetting::whereIn('key', $publicKeys)->get();
 
         $publicSettings = [];
-        $booleanKeys = ['google_auth_enabled', 'otp_enabled', 'razorpay_enabled', 'stripe_enabled', 'payu_enabled', 'phonepe_enabled', 'cod_enabled'];
+        $booleanKeys = [
+            'google_auth_enabled', 
+            'otp_enabled', 
+            'razorpay_enabled', 
+            'stripe_enabled', 
+            'payu_enabled', 
+            'phonepe_enabled', 
+            'cod_enabled',
+            'cart_free_shipping_enabled',
+            'checkout_order_notes_enabled',
+            'checkout_save_address_default',
+            'cart_drawer_enable_rewards',
+            'cart_drawer_enable_coupons',
+            'cart_drawer_enable_coins',
+            'cart_drawer_enable_upsell',
+            'cart_drawer_enable_delivery_note'
+        ];
 
         foreach ($settings as $setting) {
             $val = $setting->value;
@@ -132,6 +174,32 @@ class SystemSettingsController extends Controller
         if (!isset($publicSettings['phonepe_enabled'])) $publicSettings['phonepe_enabled'] = false;
         if (!isset($publicSettings['phonepe_merchant_id'])) $publicSettings['phonepe_merchant_id'] = '';
         if (!isset($publicSettings['cod_enabled'])) $publicSettings['cod_enabled'] = true;
+        if (!isset($publicSettings['cart_free_shipping_enabled'])) $publicSettings['cart_free_shipping_enabled'] = true;
+        if (!isset($publicSettings['cart_free_shipping_threshold'])) $publicSettings['cart_free_shipping_threshold'] = 500;
+        if (!isset($publicSettings['checkout_secure_badge_text'])) $publicSettings['checkout_secure_badge_text'] = '100% Safe & Secure Checkout';
+        if (!isset($publicSettings['checkout_order_notes_enabled'])) $publicSettings['checkout_order_notes_enabled'] = true;
+        if (!isset($publicSettings['checkout_save_address_default'])) $publicSettings['checkout_save_address_default'] = true;
+        if (!isset($publicSettings['cart_drawer_primary_color'])) $publicSettings['cart_drawer_primary_color'] = '#16A34A';
+        if (!isset($publicSettings['cart_drawer_animation_speed'])) $publicSettings['cart_drawer_animation_speed'] = 300;
+        if (!isset($publicSettings['cart_drawer_title'])) $publicSettings['cart_drawer_title'] = 'YOUR CART';
+        if (!isset($publicSettings['cart_drawer_logo_url'])) $publicSettings['cart_drawer_logo_url'] = '';
+        if (!isset($publicSettings['cart_drawer_urgency_text'])) $publicSettings['cart_drawer_urgency_text'] = 'Get free items by meeting checkout milestones!';
+        if (!isset($publicSettings['cart_drawer_empty_text'])) $publicSettings['cart_drawer_empty_text'] = 'Your cart is empty';
+        if (!isset($publicSettings['cart_drawer_empty_cta_label'])) $publicSettings['cart_drawer_empty_cta_label'] = 'Continue Shopping';
+        if (!isset($publicSettings['cart_drawer_secure_text'])) $publicSettings['cart_drawer_secure_text'] = '100% Safe & Secure Checkout';
+        if (!isset($publicSettings['cart_drawer_checkout_cta_label'])) $publicSettings['cart_drawer_checkout_cta_label'] = 'Checkout';
+        if (!isset($publicSettings['cart_drawer_reviews_text'])) $publicSettings['cart_drawer_reviews_text'] = 'Trustified & Certified wellness products';
+        if (!isset($publicSettings['cart_drawer_upsell_title'])) $publicSettings['cart_drawer_upsell_title'] = 'Best offers';
+        if (!isset($publicSettings['cart_drawer_upsell_mode'])) $publicSettings['cart_drawer_upsell_mode'] = 'ai';
+        if (!isset($publicSettings['cart_drawer_enable_rewards'])) $publicSettings['cart_drawer_enable_rewards'] = true;
+        if (!isset($publicSettings['cart_drawer_enable_coupons'])) $publicSettings['cart_drawer_enable_coupons'] = true;
+        if (!isset($publicSettings['cart_drawer_enable_coins'])) $publicSettings['cart_drawer_enable_coins'] = true;
+        if (!isset($publicSettings['cart_drawer_enable_upsell'])) $publicSettings['cart_drawer_enable_upsell'] = true;
+        if (!isset($publicSettings['cart_drawer_enable_delivery_note'])) $publicSettings['cart_drawer_enable_delivery_note'] = true;
+        if (!isset($publicSettings['cart_coins_earn_percentage'])) $publicSettings['cart_coins_earn_percentage'] = 5.0;
+        if (!isset($publicSettings['cart_coins_max_earn_limit'])) $publicSettings['cart_coins_max_earn_limit'] = 500.00;
+        if (!isset($publicSettings['cart_coins_conversion_rate'])) $publicSettings['cart_coins_conversion_rate'] = 1.0;
+        if (!isset($publicSettings['cart_drawer_pinned_upsells'])) $publicSettings['cart_drawer_pinned_upsells'] = '[]';
 
         return response()->json($publicSettings);
     }

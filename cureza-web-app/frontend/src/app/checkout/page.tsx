@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { CheckCircle, CreditCard, Truck, MapPin, ChevronDown, ChevronUp, Plus } from 'lucide-react';
+import { CheckCircle, CreditCard, Truck, MapPin, ChevronDown, ChevronUp, Plus, Lock, ArrowLeft, Tag } from 'lucide-react';
 import axios from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/contexts/ToastContext';
@@ -92,6 +92,10 @@ export default function CheckoutPage() {
                             defaultPayment = 'payu';
                         } else if (settings.phonepe_enabled) {
                             defaultPayment = 'phonepe';
+                        }
+
+                        if (settings.checkout_save_address_default !== undefined) {
+                            setSaveAddressToBook(settings.checkout_save_address_default);
                         }
                     }
                 } catch (settingsError) {
@@ -293,347 +297,391 @@ export default function CheckoutPage() {
     if (!checkoutSummary) return null;
 
     return (
-        <div className="bg-gray-50 min-h-screen py-12">
-            <div className="container mx-auto px-4">
-                <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Checkout</h1>
+        <div className="bg-gray-50 min-h-screen">
+            {/* Custom Secure Header (Shopflo Style) */}
+            <div className="bg-white border-b border-gray-200 py-4 mb-8 sticky top-0 z-20 shadow-sm">
+                <div className="container mx-auto px-4 flex items-center justify-between">
+                    <button
+                        type="button"
+                        onClick={() => router.push('/cart')}
+                        className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-800 font-semibold transition"
+                    >
+                        <ArrowLeft size={16} /> Back to Cart
+                    </button>
+                    
+                    <div className="text-xl font-black text-cureza-green tracking-widest uppercase font-sans flex items-center gap-1.5 cursor-pointer" onClick={() => router.push('/')}>
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cureza-green text-white font-bold text-base">
+                            C
+                        </div>
+                        Cureza
+                    </div>
+                    
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-green-700 bg-green-50 px-3 py-1.5 rounded-full border border-green-100/60 shadow-sm">
+                        <Lock size={12} className="text-green-600" />
+                        {publicSettings?.checkout_secure_badge_text || '100% Safe & Secure Checkout'}
+                    </div>
+                </div>
+            </div>
 
+            <div className="container mx-auto px-4 pb-24">
                 <form onSubmit={handlePlaceOrder} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Left Column: Billing & Shipping */}
+                    {/* Left Column: Checkout Steps */}
                     <div className="lg:col-span-2 space-y-8">
 
-                        {/* Address Book Selection */}
-                        {savedAddresses.length > 0 && (
-                            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                                <h2 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
-                                    <MapPin className="text-cureza-green" /> Select Address
-                                </h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                    {savedAddresses.map((addr, index) => (
-                                        <div
-                                            key={addr.id || index}
-                                            onClick={() => handleAddressSelect(addr)}
-                                            className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${billingAddress.id === addr.id
-                                                ? 'border-cureza-green bg-green-50'
-                                                : 'border-gray-200 hover:border-gray-300'
+                        {/* Step 1 Card: Delivery Address */}
+                        <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm space-y-6">
+                            <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
+                                <span className="w-8 h-8 rounded-full bg-cureza-green text-white font-extrabold flex items-center justify-center text-sm shadow-sm shadow-green-500/20">1</span>
+                                <h2 className="text-xl font-extrabold text-charcoal">Delivery Address</h2>
+                            </div>
+
+                            {/* Address Book Selection */}
+                            {savedAddresses.length > 0 && (
+                                <div className="space-y-4">
+                                    <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-2">
+                                        <MapPin size={16} className="text-cureza-green" /> Select a Saved Address
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {savedAddresses.map((addr, index) => (
+                                            <div
+                                                key={addr.id || index}
+                                                onClick={() => handleAddressSelect(addr)}
+                                                className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                                                    billingAddress.id === addr.id
+                                                        ? 'border-cureza-green bg-green-50/20 shadow-sm'
+                                                        : 'border-gray-200 hover:border-gray-300'
                                                 }`}
-                                        >
-                                            <div className="font-bold text-gray-900">{addr.first_name} {addr.last_name}</div>
-                                            <div className="text-sm text-gray-600 mt-1">
-                                                {addr.street_address}, {addr.apartment && `${addr.apartment}, `}
-                                                {addr.city}, {addr.state} - {addr.postcode}
+                                            >
+                                                <div className="font-bold text-gray-900">{addr.first_name} {addr.last_name}</div>
+                                                <div className="text-sm text-gray-600 mt-1.5 leading-relaxed">
+                                                    {addr.street_address}, {addr.apartment && `${addr.apartment}, `}
+                                                    {addr.city}, {addr.state} - {addr.postcode}
+                                                </div>
+                                                <div className="text-sm text-gray-500 mt-2 font-medium">{addr.phone}</div>
                                             </div>
-                                            <div className="text-sm text-gray-600 mt-1">{addr.phone}</div>
+                                        ))}
+
+                                        {/* Add New Address Button */}
+                                        <div
+                                            onClick={() => {
+                                                setBillingAddress(initialAddress);
+                                                setShowAddressForm(true);
+                                            }}
+                                            className={`p-4 rounded-xl border-2 border-dashed border-gray-300 cursor-pointer hover:border-cureza-green hover:bg-green-50/10 flex flex-col items-center justify-center text-gray-500 hover:text-cureza-green transition-all min-h-[120px] ${
+                                                showAddressForm ? 'border-cureza-green bg-green-50/10 text-cureza-green' : ''
+                                            }`}
+                                        >
+                                            <Plus size={24} />
+                                            <span className="font-bold mt-2">Add New Address</span>
                                         </div>
-                                    ))}
-
-                                    {/* Add New Address Button */}
-                                    <div
-                                        onClick={() => {
-                                            setBillingAddress(initialAddress);
-                                            setShowAddressForm(true);
-                                        }}
-                                        className={`p-4 rounded-lg border-2 border-dashed border-gray-300 cursor-pointer hover:border-cureza-green hover:bg-gray-50 flex flex-col items-center justify-center text-gray-500 hover:text-cureza-green transition-all ${showAddressForm ? 'border-cureza-green bg-gray-50' : ''}`}
-                                    >
-                                        <Plus size={24} />
-                                        <span className="font-medium mt-2">Add New Address</span>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Billing Details Form */}
-                        {(showAddressForm || savedAddresses.length === 0) && (
-                            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                                <h2 className="text-xl font-bold text-charcoal mb-6 flex items-center gap-2">
-                                    <CreditCard className="text-cureza-green" /> Billing Details
-                                </h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">First name *</label>
-                                        <input
-                                            type="text"
-                                            required
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
-                                            value={billingAddress.first_name}
-                                            onChange={(e) => setBillingAddress({ ...billingAddress, first_name: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">Last name *</label>
-                                        <input
-                                            type="text"
-                                            required
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
-                                            value={billingAddress.last_name}
-                                            onChange={(e) => setBillingAddress({ ...billingAddress, last_name: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="md:col-span-2 space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">Company name (optional)</label>
-                                        <input
-                                            type="text"
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
-                                            value={billingAddress.company_name}
-                                            onChange={(e) => setBillingAddress({ ...billingAddress, company_name: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="md:col-span-2 space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">Country / Region *</label>
-                                        <select
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
-                                            value={billingAddress.country}
-                                            onChange={(e) => setBillingAddress({ ...billingAddress, country: e.target.value })}
-                                        >
-                                            <option value="India">India</option>
-                                        </select>
-                                    </div>
-                                    <div className="md:col-span-2 space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">Street address *</label>
-                                        <input
-                                            type="text"
-                                            required
-                                            placeholder="House number and street name"
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green mb-2"
-                                            value={billingAddress.street_address}
-                                            onChange={(e) => setBillingAddress({ ...billingAddress, street_address: e.target.value })}
-                                        />
-                                        <input
-                                            type="text"
-                                            placeholder="Apartment, suite, unit, etc. (optional)"
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
-                                            value={billingAddress.apartment}
-                                            onChange={(e) => setBillingAddress({ ...billingAddress, apartment: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">Town / City *</label>
-                                        <select
-                                            required
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
-                                            value={billingAddress.city}
-                                            onChange={(e) => setBillingAddress({ ...billingAddress, city: e.target.value })}
-                                            disabled={!billingAddress.state}
-                                        >
-                                            <option value="">Select City</option>
-                                            {billingAddress.state && indianLocations[billingAddress.state]?.map((city) => (
-                                                <option key={city} value={city}>{city}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">State *</label>
-                                        <select
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
-                                            value={billingAddress.state}
-                                            onChange={(e) => setBillingAddress({ ...billingAddress, state: e.target.value, city: '' })}
-                                        >
-                                            <option value="">Select State</option>
-                                            {Object.keys(indianLocations).map((state) => (
-                                                <option key={state} value={state}>{state}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">PIN Code *</label>
-                                        <input
-                                            type="text"
-                                            required
-                                            maxLength={6}
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
-                                            value={billingAddress.postcode}
-                                            onChange={(e) => setBillingAddress({ ...billingAddress, postcode: e.target.value.replace(/\D/g, '') })}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">Phone *</label>
-                                        <input
-                                            type="tel"
-                                            required
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
-                                            value={billingAddress.phone}
-                                            onChange={(e) => setBillingAddress({ ...billingAddress, phone: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="md:col-span-2 space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">Email address *</label>
-                                        <input
-                                            type="email"
-                                            required
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
-                                            value={billingAddress.email}
-                                            onChange={(e) => setBillingAddress({ ...billingAddress, email: e.target.value })}
-                                        />
-                                    </div>
-
-                                    {/* Create Account Checkbox - Only show if user is NOT logged in */}
-                                    {!user && (
-                                        <div className="md:col-span-2">
-                                            <label className="flex items-center space-x-2 cursor-pointer">
-                                                <input
-                                                    type="checkbox"
-                                                    className="rounded border-gray-300 text-cureza-green focus:ring-cureza-green"
-                                                    checked={createAccount}
-                                                    onChange={(e) => setCreateAccount(e.target.checked)}
-                                                />
-                                                <span className="text-gray-700 font-medium">Create an account?</span>
-                                            </label>
-                                        </div>
-                                    )}
-
-                                    {/* Save Address to Address Book Checkbox - Only show if user IS logged in */}
-                                    {user && (
-                                        <div className="md:col-span-2 mt-2">
-                                            <label className="flex items-center space-x-2 cursor-pointer">
-                                                <input
-                                                    type="checkbox"
-                                                    className="rounded border-gray-300 text-cureza-green focus:ring-cureza-green"
-                                                    checked={saveAddressToBook}
-                                                    onChange={(e) => setSaveAddressToBook(e.target.checked)}
-                                                />
-                                                <span className="text-gray-700 font-medium select-none">Save this address to my address book</span>
-                                            </label>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Shipping Address Toggle */}
-                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                            <label className="flex items-center space-x-2 cursor-pointer mb-4">
-                                <input
-                                    type="checkbox"
-                                    className="rounded border-gray-300 text-cureza-green focus:ring-cureza-green"
-                                    checked={shipToDifferentAddress}
-                                    onChange={(e) => setShipToDifferentAddress(e.target.checked)}
-                                />
-                                <span className="text-lg font-bold text-charcoal flex items-center gap-2">
-                                    <Truck className="text-cureza-green" /> Ship to a different address?
-                                </span>
-                            </label>
-
-                            {shipToDifferentAddress && (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">First name *</label>
-                                        <input
-                                            type="text"
-                                            required={shipToDifferentAddress}
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
-                                            value={shippingAddress.first_name}
-                                            onChange={(e) => setShippingAddress({ ...shippingAddress, first_name: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">Last name *</label>
-                                        <input
-                                            type="text"
-                                            required={shipToDifferentAddress}
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
-                                            value={shippingAddress.last_name}
-                                            onChange={(e) => setShippingAddress({ ...shippingAddress, last_name: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="md:col-span-2 space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">Company name (optional)</label>
-                                        <input
-                                            type="text"
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
-                                            value={shippingAddress.company_name}
-                                            onChange={(e) => setShippingAddress({ ...shippingAddress, company_name: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="md:col-span-2 space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">Country / Region *</label>
-                                        <select
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
-                                            value={shippingAddress.country}
-                                            onChange={(e) => setShippingAddress({ ...shippingAddress, country: e.target.value })}
-                                        >
-                                            <option value="India">India</option>
-                                        </select>
-                                    </div>
-                                    <div className="md:col-span-2 space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">Street address *</label>
-                                        <input
-                                            type="text"
-                                            required={shipToDifferentAddress}
-                                            placeholder="House number and street name"
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green mb-2"
-                                            value={shippingAddress.street_address}
-                                            onChange={(e) => setShippingAddress({ ...shippingAddress, street_address: e.target.value })}
-                                        />
-                                        <input
-                                            type="text"
-                                            placeholder="Apartment, suite, unit, etc. (optional)"
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
-                                            value={shippingAddress.apartment}
-                                            onChange={(e) => setShippingAddress({ ...shippingAddress, apartment: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">Town / City *</label>
-                                        <select
-                                            required={shipToDifferentAddress}
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
-                                            value={shippingAddress.city}
-                                            onChange={(e) => setShippingAddress({ ...shippingAddress, city: e.target.value })}
-                                            disabled={!shippingAddress.state}
-                                        >
-                                            <option value="">Select City</option>
-                                            {shippingAddress.state && indianLocations[shippingAddress.state]?.map((city) => (
-                                                <option key={city} value={city}>{city}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">State *</label>
-                                        <select
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
-                                            value={shippingAddress.state}
-                                            onChange={(e) => setShippingAddress({ ...shippingAddress, state: e.target.value, city: '' })}
-                                        >
-                                            <option value="">Select State</option>
-                                            {Object.keys(indianLocations).map((state) => (
-                                                <option key={state} value={state}>{state}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">PIN Code *</label>
-                                        <input
-                                            type="text"
-                                            required={shipToDifferentAddress}
-                                            maxLength={6}
-                                            className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
-                                            value={shippingAddress.postcode}
-                                            onChange={(e) => setShippingAddress({ ...shippingAddress, postcode: e.target.value.replace(/\D/g, '') })}
-                                        />
                                     </div>
                                 </div>
                             )}
 
-                            <div className="mt-6 space-y-2">
-                                <label className="text-sm font-medium text-gray-700">Order notes (optional)</label>
-                                <textarea
-                                    className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
-                                    placeholder="Notes about your order, e.g. special notes for delivery."
-                                    rows={3}
-                                    value={orderNotes}
-                                    onChange={(e) => setOrderNotes(e.target.value)}
-                                />
+                            {/* Billing Details Form */}
+                            {(showAddressForm || savedAddresses.length === 0) && (
+                                <div className="space-y-6 pt-2 border-t border-gray-50 mt-4">
+                                    <h3 className="text-lg font-bold text-charcoal mb-4 flex items-center gap-2">
+                                        <CreditCard className="text-cureza-green" size={20} /> Billing Details
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700">First name *</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
+                                                value={billingAddress.first_name}
+                                                onChange={(e) => setBillingAddress({ ...billingAddress, first_name: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700">Last name *</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
+                                                value={billingAddress.last_name}
+                                                onChange={(e) => setBillingAddress({ ...billingAddress, last_name: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="md:col-span-2 space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700">Company name (optional)</label>
+                                            <input
+                                                type="text"
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
+                                                value={billingAddress.company_name}
+                                                onChange={(e) => setBillingAddress({ ...billingAddress, company_name: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="md:col-span-2 space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700">Country / Region *</label>
+                                            <select
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
+                                                value={billingAddress.country}
+                                                onChange={(e) => setBillingAddress({ ...billingAddress, country: e.target.value })}
+                                            >
+                                                <option value="India">India</option>
+                                            </select>
+                                        </div>
+                                        <div className="md:col-span-2 space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700">Street address *</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                placeholder="House number and street name"
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green mb-2"
+                                                value={billingAddress.street_address}
+                                                onChange={(e) => setBillingAddress({ ...billingAddress, street_address: e.target.value })}
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="Apartment, suite, unit, etc. (optional)"
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
+                                                value={billingAddress.apartment}
+                                                onChange={(e) => setBillingAddress({ ...billingAddress, apartment: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700">Town / City *</label>
+                                            <select
+                                                required
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
+                                                value={billingAddress.city}
+                                                onChange={(e) => setBillingAddress({ ...billingAddress, city: e.target.value })}
+                                                disabled={!billingAddress.state}
+                                            >
+                                                <option value="">Select City</option>
+                                                {billingAddress.state && indianLocations[billingAddress.state]?.map((city) => (
+                                                    <option key={city} value={city}>{city}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700">State *</label>
+                                            <select
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
+                                                value={billingAddress.state}
+                                                onChange={(e) => setBillingAddress({ ...billingAddress, state: e.target.value, city: '' })}
+                                            >
+                                                <option value="">Select State</option>
+                                                {Object.keys(indianLocations).map((state) => (
+                                                    <option key={state} value={state}>{state}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700">PIN Code *</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                maxLength={6}
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
+                                                value={billingAddress.postcode}
+                                                onChange={(e) => setBillingAddress({ ...billingAddress, postcode: e.target.value.replace(/\D/g, '') })}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700">Phone *</label>
+                                            <input
+                                                type="tel"
+                                                required
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
+                                                value={billingAddress.phone}
+                                                onChange={(e) => setBillingAddress({ ...billingAddress, phone: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="md:col-span-2 space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700">Email address *</label>
+                                            <input
+                                                type="email"
+                                                required
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
+                                                value={billingAddress.email}
+                                                onChange={(e) => setBillingAddress({ ...billingAddress, email: e.target.value })}
+                                            />
+                                        </div>
+
+                                        {/* Create Account Checkbox - Only show if user is NOT logged in */}
+                                        {!user && (
+                                            <div className="md:col-span-2 mt-2">
+                                                <label className="flex items-center space-x-2 cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="rounded border-gray-300 text-cureza-green focus:ring-cureza-green h-4 w-4"
+                                                        checked={createAccount}
+                                                        onChange={(e) => setCreateAccount(e.target.checked)}
+                                                    />
+                                                    <span className="text-gray-700 font-semibold select-none text-sm">Create an account?</span>
+                                                </label>
+                                            </div>
+                                        )}
+
+                                        {/* Save Address to Address Book Checkbox - Only show if user IS logged in */}
+                                        {user && (
+                                            <div className="md:col-span-2 mt-2">
+                                                <label className="flex items-center space-x-2 cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="rounded border-gray-300 text-cureza-green focus:ring-cureza-green h-4 w-4"
+                                                        checked={saveAddressToBook}
+                                                        onChange={(e) => setSaveAddressToBook(e.target.checked)}
+                                                    />
+                                                    <span className="text-gray-700 font-semibold select-none text-sm">Save this address to my address book</span>
+                                                </label>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Shipping Address Toggle & Form */}
+                            <div className="border-t border-gray-100 pt-6 mt-6">
+                                <label className="flex items-center space-x-2 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        className="rounded border-gray-300 text-cureza-green focus:ring-cureza-green h-4 w-4"
+                                        checked={shipToDifferentAddress}
+                                        onChange={(e) => setShipToDifferentAddress(e.target.checked)}
+                                    />
+                                    <span className="text-base font-bold text-charcoal flex items-center gap-2 select-none">
+                                        <Truck className="text-cureza-green" size={18} /> Ship to a different address?
+                                    </span>
+                                </label>
+
+                                {shipToDifferentAddress && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 animate-fadeIn">
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700">First name *</label>
+                                            <input
+                                                type="text"
+                                                required={shipToDifferentAddress}
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
+                                                value={shippingAddress.first_name}
+                                                onChange={(e) => setShippingAddress({ ...shippingAddress, first_name: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700">Last name *</label>
+                                            <input
+                                                type="text"
+                                                required={shipToDifferentAddress}
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
+                                                value={shippingAddress.last_name}
+                                                onChange={(e) => setShippingAddress({ ...shippingAddress, last_name: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="md:col-span-2 space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700">Company name (optional)</label>
+                                            <input
+                                                type="text"
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
+                                                value={shippingAddress.company_name}
+                                                onChange={(e) => setShippingAddress({ ...shippingAddress, company_name: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="md:col-span-2 space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700">Country / Region *</label>
+                                            <select
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
+                                                value={shippingAddress.country}
+                                                onChange={(e) => setShippingAddress({ ...shippingAddress, country: e.target.value })}
+                                            >
+                                                <option value="India">India</option>
+                                            </select>
+                                        </div>
+                                        <div className="md:col-span-2 space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700">Street address *</label>
+                                            <input
+                                                type="text"
+                                                required={shipToDifferentAddress}
+                                                placeholder="House number and street name"
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green mb-2"
+                                                value={shippingAddress.street_address}
+                                                onChange={(e) => setShippingAddress({ ...shippingAddress, street_address: e.target.value })}
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="Apartment, suite, unit, etc. (optional)"
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
+                                                value={shippingAddress.apartment}
+                                                onChange={(e) => setShippingAddress({ ...shippingAddress, apartment: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700">Town / City *</label>
+                                            <select
+                                                required={shipToDifferentAddress}
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
+                                                value={shippingAddress.city}
+                                                onChange={(e) => setShippingAddress({ ...shippingAddress, city: e.target.value })}
+                                                disabled={!shippingAddress.state}
+                                            >
+                                                <option value="">Select City</option>
+                                                {shippingAddress.state && indianLocations[shippingAddress.state]?.map((city) => (
+                                                    <option key={city} value={city}>{city}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700">State *</label>
+                                            <select
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
+                                                value={shippingAddress.state}
+                                                onChange={(e) => setShippingAddress({ ...shippingAddress, state: e.target.value, city: '' })}
+                                            >
+                                                <option value="">Select State</option>
+                                                {Object.keys(indianLocations).map((state) => (
+                                                    <option key={state} value={state}>{state}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700">PIN Code *</label>
+                                            <input
+                                                type="text"
+                                                required={shipToDifferentAddress}
+                                                maxLength={6}
+                                                className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
+                                                value={shippingAddress.postcode}
+                                                onChange={(e) => setShippingAddress({ ...shippingAddress, postcode: e.target.value.replace(/\D/g, '') })}
+                                            />
+                                        </div>
+                                    </div>
+                                )}
                             </div>
+
+                            {/* Order Notes (optional) - Conditionally Visible */}
+                            {publicSettings?.checkout_order_notes_enabled && (
+                                <div className="border-t border-gray-100 pt-6 mt-6 space-y-2">
+                                    <label className="text-sm font-semibold text-gray-700">Order notes (optional)</label>
+                                    <textarea
+                                        className="w-full rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green"
+                                        placeholder="Notes about your order, e.g. special notes for delivery."
+                                        rows={3}
+                                        value={orderNotes}
+                                        onChange={(e) => setOrderNotes(e.target.value)}
+                                    />
+                                </div>
+                            )}
                         </div>
 
-
-                        {/* Shipping Methods */}
-                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                            <h2 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
-                                <Truck className="text-cureza-green" /> Shipping Method
-                            </h2>
+                        {/* Step 2 Card: Shipping Method */}
+                        <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm space-y-6">
+                            <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
+                                <span className="w-8 h-8 rounded-full bg-cureza-green text-white font-extrabold flex items-center justify-center text-sm shadow-sm shadow-green-500/20">2</span>
+                                <h2 className="text-xl font-extrabold text-charcoal">Shipping Method</h2>
+                            </div>
                             <div className="space-y-4">
                                 {shippingMethods.map((method) => (
-                                    <label key={method.id} className="flex items-center justify-between p-4 border rounded-lg cursor-pointer hover:border-cureza-green transition-colors">
+                                    <label 
+                                        key={method.id} 
+                                        className={`flex items-center justify-between p-4 border rounded-xl cursor-pointer hover:border-cureza-green transition-colors ${
+                                            selectedShippingMethodId === method.id 
+                                                ? 'border-cureza-green bg-green-50/10' 
+                                                : 'border-gray-200'
+                                        }`}
+                                    >
                                         <div className="flex items-center gap-3">
                                             <input
                                                 type="radio"
@@ -655,124 +703,15 @@ export default function CheckoutPage() {
                                 ))}
                             </div>
                         </div>
-                    </div>
 
-                    {/* Right Column: Order Summary */}
-                    <div className="lg:col-span-1">
-                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 sticky top-24">
-                            <h3 className="text-xl font-bold mb-6 text-charcoal">Your Order</h3>
-
-                            {/* Product List */}
-                            <div className="space-y-4 mb-6 border-b pb-6">
-                                <div className="flex justify-between font-bold text-sm text-gray-600 uppercase">
-                                    <span>Product</span>
-                                    <span>Subtotal</span>
-                                </div>
-                                {cartItems.map((item: any) => (
-                                    <div key={item.id} className="flex justify-between text-sm">
-                                        <div className="text-gray-700">
-                                            <div className="text-xs text-gray-500 mb-0.5">{item.brand}</div>
-                                            <span className="font-medium text-charcoal">{item.title}</span>
-                                            <span className="text-gray-500"> × {item.quantity}</span>
-                                            {item.patientDetails && (
-                                                <div className="text-xs text-gray-500 mt-1">Patient: {item.patientDetails.patient_name}</div>
-                                            )}
-                                        </div>
-                                        <span className="font-medium">₹{(item.price * item.quantity).toFixed(2)}</span>
-                                    </div>
-                                ))}
+                        {/* Step 3 Card: Payment Options */}
+                        <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm space-y-6">
+                            <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
+                                <span className="w-8 h-8 rounded-full bg-cureza-green text-white font-extrabold flex items-center justify-center text-sm shadow-sm shadow-green-500/20">3</span>
+                                <h2 className="text-xl font-extrabold text-charcoal">Payment Options</h2>
                             </div>
 
-
-                            {/* Coupon Section */}
-                            <div className="mb-6 border-b pb-6">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Have a coupon?</label>
-                                <div className="flex gap-2">
-                                    <input
-                                        type="text"
-                                        placeholder="Enter coupon code"
-                                        className="flex-1 rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green uppercase"
-                                        value={couponCode}
-                                        onChange={(e) => setCouponCode(e.target.value)}
-                                        disabled={!!checkoutSummary.coupon_applied}
-                                    />
-                                    {checkoutSummary.coupon_applied ? (
-                                        <button
-                                            type="button"
-                                            onClick={handleRemoveCoupon}
-                                            className="px-4 py-2 bg-red-100 text-red-600 rounded-lg font-medium hover:bg-red-200"
-                                        >
-                                            Remove
-                                        </button>
-                                    ) : (
-                                        <button
-                                            type="button"
-                                            onClick={handleApplyCoupon}
-                                            disabled={isApplyingCoupon || !couponCode}
-                                            className="px-4 py-2 bg-gray-900 text-white rounded-lg font-medium hover:bg-black disabled:opacity-50"
-                                        >
-                                            {isApplyingCoupon ? '...' : 'Apply'}
-                                        </button>
-                                    )}
-                                </div>
-                                {checkoutSummary.coupon_applied && (
-                                    <div className="mt-2 text-sm text-green-600 font-medium">
-                                        Coupon "{checkoutSummary.coupon_applied}" applied!
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Totals */}
-                            <div className="space-y-3 mb-6 border-b pb-6">
-                                <div className="flex justify-between text-gray-600">
-                                    <span>Subtotal</span>
-                                    <span className="font-bold text-charcoal">₹{checkoutSummary.subtotal}</span>
-                                </div>
-                                {checkoutSummary.discount > 0 && (
-                                    <div className="flex justify-between text-green-600">
-                                        <span>Discount</span>
-                                        <span className="font-bold">-₹{checkoutSummary.discount}</span>
-                                    </div>
-                                )}
-                                <div className="flex justify-between text-gray-600">
-                                    <span>Shipping</span>
-                                    {selectedShippingMethodId ? (
-                                        <span className={checkoutSummary.shipping_cost === 0 ? "text-green-600 font-medium" : "font-bold text-charcoal"}>
-                                            {checkoutSummary.shipping_cost === 0 ? 'Free' : `₹${checkoutSummary.shipping_cost}`}
-                                        </span>
-                                    ) : (
-                                        <span className="text-sm italic text-orange-500">Select method below</span>
-                                    )}
-                                </div>
-                                {checkoutSummary.igst > 0 ? (
-                                    <div className="flex justify-between text-gray-600">
-                                        <span>IGST</span>
-                                        <span className="font-medium">₹{checkoutSummary.igst}</span>
-                                    </div>
-                                ) : (
-                                    <>
-                                        <div className="flex justify-between text-gray-600">
-                                            <span>CGST</span>
-                                            <span className="font-medium">₹{checkoutSummary.cgst}</span>
-                                        </div>
-                                        <div className="flex justify-between text-gray-600">
-                                            <span>SGST</span>
-                                            <span className="font-medium">₹{checkoutSummary.sgst}</span>
-                                        </div>
-                                    </>
-                                )}
-
-                                <div className="flex justify-between text-xl font-bold text-charcoal pt-2">
-                                    <span>Total</span>
-                                    <span>₹{checkoutSummary.final_total}</span>
-                                </div>
-                                <div className="text-xs text-gray-500 text-right">
-                                    (includes ₹{checkoutSummary.total_tax} Tax)
-                                </div>
-                            </div>
-
-                            {/* Payment Methods */}
-                            <div className="space-y-4 mb-6">
+                            <div className="space-y-4">
                                 {(() => {
                                     const paymentOptions = [
                                         {
@@ -821,7 +760,7 @@ export default function CheckoutPage() {
 
                                     if (activePaymentOptions.length === 0) {
                                         return (
-                                            <div className="bg-red-50 border border-red-200 p-4 rounded-lg text-center text-red-600 text-sm font-semibold">
+                                            <div className="bg-red-50 border border-red-200 p-4 rounded-xl text-center text-red-600 text-sm font-semibold">
                                                 No active payment methods. Please contact the administrator.
                                             </div>
                                         );
@@ -832,7 +771,7 @@ export default function CheckoutPage() {
                                             key={opt.id} 
                                             className={`p-4 rounded-xl border-2 transition-all cursor-pointer ${
                                                 paymentMethod === opt.id 
-                                                    ? 'border-cureza-green bg-green-50/20' 
+                                                    ? 'border-cureza-green bg-green-50/10 shadow-sm' 
                                                     : 'border-gray-200 hover:border-gray-300 bg-white'
                                             }`}
                                             onClick={() => setPaymentMethod(opt.id)}
@@ -866,15 +805,15 @@ export default function CheckoutPage() {
                                     ));
                                 })()}
                             </div>
- 
-                            <div className="text-xs text-gray-500 mb-6">
+
+                            <div className="text-xs text-gray-500 leading-relaxed border-t border-gray-100 pt-4">
                                 Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our <a href="#" className="text-cureza-green hover:underline">privacy policy</a>.
                             </div>
- 
+
                             <button
                                 type="submit"
                                 disabled={isLoading || !selectedShippingMethodId || !paymentMethod}
-                                className="w-full bg-cureza-green text-white font-bold py-4 rounded-lg hover:bg-green-800 transition shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center"
+                                className="w-full bg-gradient-to-r from-cureza-green to-green-700 hover:from-green-700 hover:to-green-800 text-white font-extrabold py-4 rounded-xl transition-all shadow-lg hover:shadow-xl disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center gap-2 transform active:scale-[0.98]"
                             >
                                 {isLoading ? (
                                     <>
@@ -882,9 +821,124 @@ export default function CheckoutPage() {
                                         Processing...
                                     </>
                                 ) : (
-                                    'Place order'
+                                    <>
+                                        Place Order & Pay Securely <Lock size={16} />
+                                    </>
                                 )}
                             </button>
+                        </div>
+                    </div>
+
+                    {/* Right Column: Order Summary */}
+                    <div className="lg:col-span-1">
+                        <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm sticky top-24 space-y-6">
+                            <h3 className="text-xl font-bold text-charcoal pb-4 border-b border-gray-100">Order Summary</h3>
+
+                            {/* Product List */}
+                            <div className="space-y-4 max-h-[300px] overflow-y-auto pr-1">
+                                {cartItems.map((item: any) => (
+                                    <div key={item.id} className="flex justify-between gap-4 text-sm pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                                        <div className="text-gray-700 flex-1">
+                                            <div className="text-[10px] uppercase font-bold text-gray-400 mb-0.5 tracking-wider">{item.brand}</div>
+                                            <span className="font-semibold text-charcoal block line-clamp-2">{item.title}</span>
+                                            <span className="text-gray-500 text-xs">Qty: {item.quantity}</span>
+                                            {item.patientDetails && (
+                                                <div className="text-[11px] text-gray-500 mt-1 bg-gray-50 p-1.5 rounded">
+                                                    Patient: {item.patientDetails.patient_name}
+                                                </div>
+                                            )}
+                                        </div>
+                                        <span className="font-bold text-charcoal whitespace-nowrap">₹{(item.price * item.quantity).toFixed(2)}</span>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Coupon Section */}
+                            <div className="border-t border-gray-100 pt-6">
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Have a coupon?</label>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="text"
+                                        placeholder="Enter coupon code"
+                                        className="flex-1 rounded-lg border-gray-300 focus:border-cureza-green focus:ring-cureza-green uppercase text-sm"
+                                        value={couponCode}
+                                        onChange={(e) => setCouponCode(e.target.value)}
+                                        disabled={!!checkoutSummary.coupon_applied}
+                                    />
+                                    {checkoutSummary.coupon_applied ? (
+                                        <button
+                                            type="button"
+                                            onClick={handleRemoveCoupon}
+                                            className="px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-bold hover:bg-red-100 transition-colors"
+                                        >
+                                            Remove
+                                        </button>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            onClick={handleApplyCoupon}
+                                            disabled={isApplyingCoupon || !couponCode}
+                                            className="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-bold hover:bg-black disabled:opacity-50 transition-colors"
+                                        >
+                                            {isApplyingCoupon ? '...' : 'Apply'}
+                                        </button>
+                                    )}
+                                </div>
+                                {checkoutSummary.coupon_applied && (
+                                    <div className="mt-2 text-xs text-green-600 font-bold flex items-center gap-1">
+                                        <Tag size={12} /> Coupon "{checkoutSummary.coupon_applied}" applied!
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Totals */}
+                            <div className="border-t border-gray-100 pt-6 space-y-3">
+                                <div className="flex justify-between text-sm text-gray-600">
+                                    <span>Subtotal</span>
+                                    <span className="font-bold text-charcoal">₹{checkoutSummary.subtotal}</span>
+                                </div>
+                                {checkoutSummary.discount > 0 && (
+                                    <div className="flex justify-between text-sm text-green-600 font-semibold">
+                                        <span>Discount</span>
+                                        <span>-₹{checkoutSummary.discount}</span>
+                                    </div>
+                                )}
+                                <div className="flex justify-between text-sm text-gray-600">
+                                    <span>Shipping</span>
+                                    {selectedShippingMethodId ? (
+                                        <span className={checkoutSummary.shipping_cost === 0 ? "text-green-600 font-semibold text-sm" : "font-bold text-charcoal"}>
+                                            {checkoutSummary.shipping_cost === 0 ? 'Free' : `₹${checkoutSummary.shipping_cost}`}
+                                        </span>
+                                    ) : (
+                                        <span className="text-xs italic text-orange-500">Select method</span>
+                                    )}
+                                </div>
+                                {checkoutSummary.igst > 0 ? (
+                                    <div className="flex justify-between text-sm text-gray-600">
+                                        <span>IGST</span>
+                                        <span className="font-semibold">₹{checkoutSummary.igst}</span>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <div className="flex justify-between text-sm text-gray-600">
+                                            <span>CGST</span>
+                                            <span className="font-semibold">₹{checkoutSummary.cgst}</span>
+                                        </div>
+                                        <div className="flex justify-between text-sm text-gray-600">
+                                            <span>SGST</span>
+                                            <span className="font-semibold">₹{checkoutSummary.sgst}</span>
+                                        </div>
+                                    </>
+                                )}
+
+                                <div className="flex justify-between text-lg font-extrabold text-charcoal pt-3 border-t border-gray-100">
+                                    <span>Total</span>
+                                    <span>₹{checkoutSummary.final_total}</span>
+                                </div>
+                                <div className="text-[10px] text-gray-400 text-right font-medium">
+                                    (includes ₹{checkoutSummary.total_tax} Tax)
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </form>

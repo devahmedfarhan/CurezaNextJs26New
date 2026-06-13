@@ -206,4 +206,12 @@ class CartController extends Controller
         
         return $this->index($request);
     }
+
+    public function toggleCoins(Request $request)
+    {
+        $cart = $this->getCart($request);
+        $cart->update(['use_wallet_coins' => !$cart->use_wallet_coins]);
+        
+        return $this->index($request);
+    }
 }
