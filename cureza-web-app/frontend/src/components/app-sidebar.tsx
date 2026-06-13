@@ -77,6 +77,7 @@ const data = {
         { title: "All Products", url: "/superadmin/dashboard/products" },
         { title: "Add New Product", url: "/superadmin/dashboard/products/create" },
         { title: "Bulk Upload", url: "/superadmin/dashboard/products/bulk" },
+        { title: "Web Catalog Scraper", url: "/superadmin/dashboard/scraper" },
         { title: "Categories", url: "/superadmin/dashboard/categories" },
         { title: "Brands", url: "/superadmin/dashboard/brands" },
         { title: "Attributes", url: "/superadmin/dashboard/attributes" },

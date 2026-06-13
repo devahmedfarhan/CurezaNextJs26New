@@ -306,6 +306,19 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/settings', [\App\Http\Controllers\Api\Admin\SystemSettingsController::class, 'index']);
         Route::post('/settings', [\App\Http\Controllers\Api\Admin\SystemSettingsController::class, 'store']);
 
+        // Product Scraper
+        Route::post('/scraper/start', [\App\Http\Controllers\Api\Admin\ScrapedProductController::class, 'startScrape']);
+        Route::get('/scraper/products', [\App\Http\Controllers\Api\Admin\ScrapedProductController::class, 'getScrapedProducts']);
+        Route::get('/scraper/status', [\App\Http\Controllers\Api\Admin\ScrapedProductController::class, 'getScraperStatus']);
+        Route::get('/scraper/tasks/{id}', [\App\Http\Controllers\Api\Admin\ScrapedProductController::class, 'getTaskStatus']);
+        Route::post('/scraper/tasks/{id}/cancel', [\App\Http\Controllers\Api\Admin\ScrapedProductController::class, 'cancelTask']);
+        Route::get('/scraper/active-task', [\App\Http\Controllers\Api\Admin\ScrapedProductController::class, 'getActiveTask']);
+        Route::post('/scraper/products/bulk-approve', [\App\Http\Controllers\Api\Admin\ScrapedProductController::class, 'bulkApprove']);
+        Route::post('/scraper/products/bulk-delete', [\App\Http\Controllers\Api\Admin\ScrapedProductController::class, 'bulkDelete']);
+        Route::post('/scraper/products/{id}/approve', [\App\Http\Controllers\Api\Admin\ScrapedProductController::class, 'approveImport']);
+        Route::delete('/scraper/products/{id}', [\App\Http\Controllers\Api\Admin\ScrapedProductController::class, 'deleteDraft']);
+        Route::get('/scraper/export', [\App\Http\Controllers\Api\Admin\ScrapedProductController::class, 'exportCsv']);
+
         // Doctor Management
         Route::get('/doctors', [DoctorManagementController::class, 'index']);
         Route::get('/doctors/{id}', [DoctorManagementController::class, 'show']);
