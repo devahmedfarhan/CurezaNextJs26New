@@ -192,8 +192,8 @@ export default function ProductCard({ product }: any) {
           </div>
 
           {/* PRICE & ADD TO CART ACTION */}
-          <div className="flex items-center justify-between pt-2.5 sm:pt-3 gap-2 sm:gap-3">
-            <div className="flex flex-col min-w-[65px] sm:min-w-[70px]">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-2.5 sm:pt-3 gap-2.5 sm:gap-3">
+            <div className="flex flex-row items-baseline gap-2 sm:flex-col sm:gap-0 min-w-[65px] sm:min-w-[70px]">
               {discountPercentage > 0 && (
                 <span className="text-[9px] sm:text-[10px] text-[#052326]/40 line-through">
                   ₹{originalPrice}
@@ -206,7 +206,7 @@ export default function ProductCard({ product }: any) {
 
             <button
               onClick={handleCart}
-              className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-2 sm:py-2.5 rounded-[8px] sm:rounded-[10px] text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-sm ${
+              className={`w-full sm:flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-2 sm:py-2.5 rounded-[8px] sm:rounded-[10px] text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-sm ${
                 product.is_prescription_required
                   ? "bg-[#052326]/10 text-[#052326] hover:bg-[#052326]/20"
                   : "bg-[#052326] text-[#F8F3EF] hover:bg-[#052326]/90 hover:scale-[1.01]"

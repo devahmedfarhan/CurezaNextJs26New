@@ -68,3 +68,5 @@ Route::get('/seed-aura-reviews', function () {
     $total = \App\Models\Review::where('seller_id', $sellerId)->count();
     return "Successfully seeded {$count} reviews for Aura Wellness! Total existing in DB: {$total}";
 });
+
+

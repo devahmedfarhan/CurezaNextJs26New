@@ -102,24 +102,139 @@ class AdminSellerRequestController extends Controller
                     }
                     
                     $kycUpdates = [];
-                    if (isset($newData['aadhaar_number'])) $kycUpdates['aadhaar_number'] = $newData['aadhaar_number'];
-                    
-                    // Map file paths and update status/timestamps
-                    $docMaps = [
-                        'pan_image' => 'pan',
-                        'gst_image' => 'gst',
-                        'aadhaar_image' => 'aadhaar',
-                        'cheque_image' => 'cheque',
-                        'signature_image' => 'signature'
-                    ];
+                    if (isset($newData['company_type'])) {
+                        $kycUpdates['company_type'] = $newData['company_type'];
+                    }
+                    if (isset($newData['selected_licenses'])) {
+                        $kycUpdates['selected_licenses'] = $newData['selected_licenses'];
+                    }
 
-                    foreach ($docMaps as $dataKey => $dbPrefix) {
-                        if (isset($newData[$dataKey])) {
-                            $pathCol = ($dbPrefix === 'pan' || $dbPrefix === 'gst') ? "{$dbPrefix}_image_path" : "{$dbPrefix}_image_path";
-                            $kycUpdates[$pathCol] = $newData[$dataKey];
-                            $kycUpdates["{$dbPrefix}_status"] = 'approved';
-                            $kycUpdates["{$dbPrefix}_updated_at"] = now();
+                    // Merging kyc_docs
+                    $mergedKycDocs = $profile->kyc_docs ?? [];
+                    if (isset($newData['kyc_docs']) && is_array($newData['kyc_docs'])) {
+                        foreach ($newData['kyc_docs'] as $k => $v) {
+                            $mergedKycDocs[$k] = $v;
                         }
+                    }
+                    // Merging kyc_numbers
+                    $mergedKycNumbers = $profile->kyc_numbers ?? [];
+                    if (isset($newData['kyc_numbers']) && is_array($newData['kyc_numbers'])) {
+                        foreach ($newData['kyc_numbers'] as $k => $v) {
+                            $mergedKycNumbers[$k] = $v;
+                        }
+                    }
+
+                    // Legacy mappings
+                    // GST
+                    if (isset($mergedKycDocs['gst_cert'])) {
+                        $kycUpdates['gst_image_path'] = $mergedKycDocs['gst_cert'];
+                        $kycUpdates['gst_status'] = 'approved';
+                        $kycUpdates['gst_updated_at'] = now();
+                    }
+                    // PAN
+                    $panKeys = ['proprietor_pan', 'firm_pan', 'company_pan', 'llp_pan'];
+                    foreach ($panKeys as $panKey) {
+                        if (isset($mergedKycDocs[$panKey])) {
+                            $kycUpdates['pan_image_path'] = $mergedKycDocs[$panKey];
+                            $kycUpdates['pan_status'] = 'approved';
+                            $kycUpdates['pan_updated_at'] = now();
+                            break;
+                        }
+                    }
+                    // Aadhaar
+                    $aadhaarKeys = ['proprietor_aadhaar', 'signatory_aadhaar', 'director_aadhaar', 'partner_aadhaar_upload'];
+                    foreach ($aadhaarKeys as $aadhaarKey) {
+                        if (isset($mergedKycDocs[$aadhaarKey])) {
+                            $kycUpdates['aadhaar_image_path'] = $mergedKycDocs[$aadhaarKey];
+                            $kycUpdates['aadhaar_status'] = 'approved';
+                            $kycUpdates['aadhaar_updated_at'] = now();
+                            break;
+                        }
+                    }
+                    // Bank Proof
+                    if (isset($mergedKycDocs['bank_proof'])) {
+                        $kycUpdates['cheque_image_path'] = $mergedKycDocs['bank_proof'];
+                        $kycUpdates['cheque_status'] = 'approved';
+                        $kycUpdates['cheque_updated_at'] = now();
+                    }
+                    // Signature
+                    $signatureKeys = ['signatory_signature', 'director_signature', 'partner_signature'];
+                    foreach ($signatureKeys as $sigKey) {
+                        if (isset($mergedKycDocs[$sigKey])) {
+                            $kycUpdates['signature_image_path'] = $mergedKycDocs[$sigKey];
+                            $kycUpdates['signature_status'] = 'approved';
+                            $kycUpdates['signature_updated_at'] = now();
+                            break;
+                        }
+                    }
+
+                    // Other dynamic documents
+                    if (isset($mergedKycDocs['license_drug_license'])) {
+                        $kycUpdates['drug_license_image_path'] = $mergedKycDocs['license_drug_license'];
+                    }
+                    if (isset($mergedKycDocs['license_ayush_license'])) {
+                        $kycUpdates['ayush_document_path'] = $mergedKycDocs['license_ayush_license'];
+                    }
+                    if (isset($mergedKycDocs['license_fssai_license'])) {
+                        $kycUpdates['trade_license_image_path'] = $mergedKycDocs['license_fssai_license'];
+                    }
+
+                    // Extract numbers
+                    // Aadhaar
+                    foreach ($aadhaarKeys as $aadhaarKey) {
+                        if (isset($mergedKycNumbers[$aadhaarKey])) {
+                            $kycUpdates['aadhaar_number'] = $mergedKycNumbers[$aadhaarKey];
+                            break;
+                        }
+                    }
+                    // PAN
+                    foreach ($panKeys as $panKey) {
+                        if (isset($mergedKycNumbers[$panKey])) {
+                            $kycUpdates['pan_number'] = $mergedKycNumbers[$panKey];
+                            break;
+                        }
+                    }
+                    // GST
+                    if (isset($mergedKycNumbers['gst_cert'])) {
+                        $kycUpdates['gst_number'] = $mergedKycNumbers['gst_cert'];
+                    }
+
+                    // Update document statuses array
+                    $kycDocStatuses = $profile->kyc_document_statuses ?? [];
+                    foreach (array_keys($mergedKycDocs) as $docId) {
+                        $kycDocStatuses[$docId] = 'approved';
+                    }
+                    $kycUpdates['kyc_document_statuses'] = $kycDocStatuses;
+
+                    $kycUpdates['kyc_docs'] = $mergedKycDocs;
+                    $kycUpdates['kyc_numbers'] = $mergedKycNumbers;
+
+                    // Direct updates
+                    if (isset($newData['aadhaar_number'])) $kycUpdates['aadhaar_number'] = $newData['aadhaar_number'];
+                    if (isset($newData['pan_image'])) {
+                        $kycUpdates['pan_image_path'] = $newData['pan_image'];
+                        $kycUpdates['pan_status'] = 'approved';
+                        $kycUpdates['pan_updated_at'] = now();
+                    }
+                    if (isset($newData['gst_image'])) {
+                        $kycUpdates['gst_image_path'] = $newData['gst_image'];
+                        $kycUpdates['gst_status'] = 'approved';
+                        $kycUpdates['gst_updated_at'] = now();
+                    }
+                    if (isset($newData['aadhaar_image'])) {
+                        $kycUpdates['aadhaar_image_path'] = $newData['aadhaar_image'];
+                        $kycUpdates['aadhaar_status'] = 'approved';
+                        $kycUpdates['aadhaar_updated_at'] = now();
+                    }
+                    if (isset($newData['cheque_image'])) {
+                        $kycUpdates['cheque_image_path'] = $newData['cheque_image'];
+                        $kycUpdates['cheque_status'] = 'approved';
+                        $kycUpdates['cheque_updated_at'] = now();
+                    }
+                    if (isset($newData['signature_image'])) {
+                        $kycUpdates['signature_image_path'] = $newData['signature_image'];
+                        $kycUpdates['signature_status'] = 'approved';
+                        $kycUpdates['signature_updated_at'] = now();
                     }
 
                     $profile->update($kycUpdates);

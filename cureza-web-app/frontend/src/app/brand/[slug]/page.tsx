@@ -53,6 +53,7 @@ export default function BrandPage({ params }: { params: { slug: string } }) {
 
     // States for simple client-side features
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('all');
     const [refreshReviews, setRefreshReviews] = useState(0);
     const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
@@ -117,9 +118,23 @@ export default function BrandPage({ params }: { params: { slug: string } }) {
         return path.startsWith('/') ? `${backend}${path}` : `${backend}/storage/${path}`;
     };
 
-    const filteredProducts = products.filter(p =>
-        p.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const uniqueCategories = [
+        'all',
+        ...Array.from(
+            new Set(
+                products
+                    .map((p) => (typeof p.category === 'object' ? p.category?.name : p.category))
+                    .filter(Boolean)
+            )
+        )
+    ];
+
+    const filteredProducts = products.filter((p) => {
+        const matchesSearch = p.title.toLowerCase().includes(searchTerm.toLowerCase());
+        const prodCat = typeof p.category === 'object' ? p.category?.name : p.category;
+        const matchesCategory = selectedCategory === 'all' || prodCat === selectedCategory;
+        return matchesSearch && matchesCategory;
+    });
 
     const renderBrandSpecs = () => {
         return (
@@ -321,6 +336,14 @@ export default function BrandPage({ params }: { params: { slug: string } }) {
                                     <Sparkles className="w-5 h-5 text-emerald-700" />
                                     Our Story
                                 </h2>
+
+                                {/* Editorial Brand Slogan Quote */}
+                                <div className="border-l-4 border-emerald-700 pl-4 py-1.5 mb-6 bg-emerald-50/20 rounded-r-lg">
+                                    <p className="text-xs md:text-sm font-semibold text-[#052326]/90 italic leading-relaxed">
+                                        "Healing from the roots. We bring you pure formulations compiled with ancient Ayurvedic wisdom, modern standards, and absolute transparency."
+                                    </p>
+                                </div>
+
                                 <div
                                     className="prose prose-slate max-w-none text-gray-655 leading-relaxed text-sm md:text-base font-medium space-y-4"
                                     dangerouslySetInnerHTML={{ __html: brand.description || '' }}
@@ -328,7 +351,7 @@ export default function BrandPage({ params }: { params: { slug: string } }) {
                             </div>
                         )}
 
-                        {/* Store Catalog (Search & Carousel) */}
+                        {/* Store Catalog (Search & Filters) */}
                         <div className="space-y-6">
                             {/* Search & Filter Bar */}
                             <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-[#052326]/12 flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -351,6 +374,25 @@ export default function BrandPage({ params }: { params: { slug: string } }) {
                                     />
                                 </div>
                             </div>
+
+                            {/* Category Filter Pills (Instant client-side filter) */}
+                            {uniqueCategories.length > 2 && (
+                                <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none snap-x">
+                                    {uniqueCategories.map((cat: any) => (
+                                        <button
+                                            key={cat}
+                                            onClick={() => setSelectedCategory(cat)}
+                                            className={`px-3.5 py-1.5 rounded-full text-xs font-extrabold transition-all border snap-start flex-shrink-0 ${
+                                                selectedCategory === cat
+                                                    ? 'bg-[#052326] text-white border-[#052326] shadow-sm'
+                                                    : 'bg-white text-[#052326] border-[#052326]/10 hover:border-[#052326]/25 hover:bg-gray-50'
+                                            }`}
+                                        >
+                                            {cat === 'all' ? 'All Formulations' : cat}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
 
                             {/* Products display: Grid on Desktop, 2-Row Horizontal Swipe Carousel on Mobile */}
                             <div>
@@ -407,10 +449,10 @@ export default function BrandPage({ params }: { params: { slug: string } }) {
                                         return (
                                             <div
                                                 key={i}
-                                                className={`border-[0.5px] rounded-[8px] transition-all duration-300 ${
+                                                className={`border-[0.5px] rounded-[8px] transition-all duration-300 overflow-hidden ${
                                                     isOpen
-                                                        ? 'border-emerald-750 bg-emerald-50/10'
-                                                        : 'border-[#052326]/12 bg-white hover:border-[#052326]/25'
+                                                        ? 'border-emerald-700/30 bg-emerald-50/10 border-l-4 border-l-emerald-700'
+                                                        : 'border-[#052326]/12 bg-white hover:border-[#052326]/25 border-l-[0.5px]'
                                                 }`}
                                             >
                                                 <button

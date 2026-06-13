@@ -38,8 +38,8 @@ class SellerSettingsController extends Controller
             'account_info' => [
                 'status' => $user->sellerProfile->status ?? 'pending',
                 'is_verified' => $user->sellerProfile->is_verified ?? false,
-                'last_login_at' => null, // Tracking can be added if needed
-                'last_login_ip' => null,
+                'last_login_at' => $user->tokens()->latest()->first()?->created_at?->toDateTimeString(),
+                'last_login_ip' => request()->ip(),
             ]
         ]);
     }
@@ -101,6 +101,7 @@ class SellerSettingsController extends Controller
             'branch_name' => 'required|string|max:255',
             'bank_account_number' => 'required|string|max:255',
             'ifsc_code' => 'required|string|max:255',
+            'account_holder_name' => 'required|string|max:255',
             'bic_swift_code' => 'nullable|string|max:255',
             'gst_number' => 'nullable|string|max:255',
             'pan_number' => 'nullable|string|max:255',
@@ -156,6 +157,9 @@ class SellerSettingsController extends Controller
             'sourcing_method' => 'nullable|string|max:255',
             'annual_turnover' => 'nullable|string|max:255',
             'product_count' => 'nullable|string|max:255',
+            'sell_on_other_platforms' => 'nullable|string|max:10',
+            'has_website' => 'nullable|string|max:10',
+            'website_url' => 'nullable|string|max:255',
         ]);
 
         // Capture current data
@@ -176,6 +180,9 @@ class SellerSettingsController extends Controller
             'sourcing_method' => $profile->sourcing_method ?? '',
             'annual_turnover' => $profile->annual_turnover ?? '',
             'product_count' => $profile->product_count ?? '',
+            'sell_on_other_platforms' => ($profile->sell_on_other_platforms ?? false) ? 'Yes' : 'No',
+            'has_website' => ($profile->has_website ?? false) ? 'Yes' : 'No',
+            'website_url' => $profile->website_url ?? '',
         ];
 
         SellerChangeRequest::create([
@@ -192,6 +199,7 @@ class SellerSettingsController extends Controller
     public function updateKYC(Request $request)
     {
         $user = Auth::user();
+        $profile = $user->sellerProfile;
         
         $existing = SellerChangeRequest::where('seller_id', $user->id)
             ->where('section', 'kyc')
@@ -203,47 +211,77 @@ class SellerSettingsController extends Controller
         }
 
         $validated = $request->validate([
-            'pan_image' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:5120',
-            'gst_image' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:5120',
-            'aadhaar_number' => 'nullable|string|max:20',
-            'aadhaar_image' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:5120',
-            'cheque_image' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:5120',
-            'signature_image' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:5120',
+            'company_type' => 'nullable|string|max:255',
+            'selected_licenses' => 'nullable|array',
+            'kyc_numbers' => 'nullable|array',
+            'kyc_docs' => 'nullable|array',
+            'kyc_docs.*' => 'file|mimes:jpeg,png,jpg,pdf|max:8192',
+            'pan_image' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:8192',
+            'gst_image' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:8192',
+            'aadhaar_image' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:8192',
+            'cheque_image' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:8192',
+            'signature_image' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:8192',
         ]);
 
         $newData = [];
-        if ($request->has('aadhaar_number')) {
-            $newData['aadhaar_number'] = $validated['aadhaar_number'];
+        if ($request->has('company_type')) {
+            $newData['company_type'] = $request->company_type;
+        }
+        if ($request->has('selected_licenses')) {
+            $newData['selected_licenses'] = $request->selected_licenses;
         }
 
-        // Handle File Uploads
-        $files = [
-            'pan_image' => 'kyc/pan',
-            'gst_image' => 'kyc/gst',
-            'aadhaar_image' => 'kyc/aadhaar',
-            'cheque_image' => 'kyc/cheque',
-            'signature_image' => 'kyc/signature',
-        ];
+        // Merge kyc_numbers
+        $newKycNumbers = [];
+        if ($request->has('kyc_numbers')) {
+            $newKycNumbers = is_array($request->kyc_numbers) ? $request->kyc_numbers : json_decode($request->kyc_numbers, true);
+            if (!is_array($newKycNumbers)) {
+                $newKycNumbers = [];
+            }
+        }
+        $newData['kyc_numbers'] = $newKycNumbers;
 
-        try {
-            foreach ($files as $field => $path) {
-                if ($request->hasFile($field)) {
-                    $storedPath = $this->storeFileSecurely($request->file($field), $path);
-                    $newData[$field] = '/storage/' . $storedPath;
+        // Process Uploaded files inside kyc_docs array
+        $newKycDocs = [];
+        if ($request->hasFile('kyc_docs')) {
+            foreach ($request->file('kyc_docs') as $key => $file) {
+                try {
+                    $storedPath = $this->storeFileSecurely($file, 'seller_documents');
+                    $newKycDocs[$key] = '/storage/' . $storedPath;
+                } catch (\InvalidArgumentException $e) {
+                    return response()->json(['message' => $e->getMessage()], 422);
                 }
             }
-        } catch (\InvalidArgumentException $e) {
-            return response()->json(['message' => $e->getMessage()], 422);
+        }
+        $newData['kyc_docs'] = $newKycDocs;
+
+        // Also check for legacy direct file inputs if any
+        $legacyFiles = [
+            'pan_image' => 'pan_image',
+            'gst_image' => 'gst_image',
+            'aadhaar_image' => 'aadhaar_image',
+            'cheque_image' => 'cheque_image',
+            'signature_image' => 'signature_image',
+        ];
+        foreach ($legacyFiles as $inputKey => $dataKey) {
+            if ($request->hasFile($inputKey)) {
+                try {
+                    $storedPath = $this->storeFileSecurely($request->file($inputKey), 'seller_documents');
+                    $newData[$dataKey] = '/storage/' . $storedPath;
+                } catch (\InvalidArgumentException $e) {
+                    return response()->json(['message' => $e->getMessage()], 422);
+                }
+            }
         }
 
-        if (empty($newData)) {
+        if (empty($newData['company_type']) && empty($newData['selected_licenses']) && empty($newData['kyc_numbers']) && empty($newData['kyc_docs']) && empty($newData['pan_image']) && empty($newData['gst_image']) && empty($newData['aadhaar_image']) && empty($newData['cheque_image']) && empty($newData['signature_image'])) {
             return response()->json(['message' => 'No KYC data provided.'], 400);
         }
 
         SellerChangeRequest::create([
             'seller_id' => $user->id,
             'section' => 'kyc',
-            'old_data' => [], // KYC is usually additive or replaces files
+            'old_data' => [], // KYC is additive/replaces
             'new_data' => $newData,
             'status' => 'pending'
         ]);

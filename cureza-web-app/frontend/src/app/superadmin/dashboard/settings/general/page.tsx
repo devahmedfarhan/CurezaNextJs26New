@@ -294,7 +294,7 @@ export default function AdminGeneralSettingsPage() {
                             <div className="flex items-center gap-2 mb-4">
                                 <Palette className="text-cureza-green" size={20} />
                                 <div>
-                                    <h4 className="font-bold text-gray-[#052326] text-base">BOHECO Theme Visual Engine</h4>
+                                    <h4 className="font-bold text-gray-[#052326] text-base">Cureza Theme Visual Engine</h4>
                                     <p className="text-gray-500 text-xs">Configure theme styles, custom fonts, strict border-radius limits (10px–14px), and page layouts.</p>
                                 </div>
                             </div>
