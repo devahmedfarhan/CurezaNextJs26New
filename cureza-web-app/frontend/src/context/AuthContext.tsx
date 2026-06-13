@@ -63,21 +63,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // 2. Background Fetch with SWR
     // Only fetch if we have a token in local state (or localStorage check)
     const [token, setToken] = useState<string | null>(typeof window !== 'undefined' ? localStorage.getItem('token') : null);
+    const [skipUserFetch, setSkipUserFetch] = useState<boolean>(false);
 
-    const { data: swrUser, error, mutate } = useSWR(token ? '/user' : null, fetcher, {
+    const { data: swrUser, error, mutate } = useSWR(token && !skipUserFetch ? '/user' : null, fetcher, {
         shouldRetryOnError: false,
         revalidateOnFocus: true,
         onSuccess: (newData) => {
             setUser(newData);
             setStoredUser(newData); // Sync to storage
             setIsLoading(false);
+            setSkipUserFetch(false); // Reset if successful
         },
         onError: () => {
             // 401 handling is done in interceptor or effect below
         }
     });
 
-    // Sync SWR error to logout if needed (optional, but good for validity)
     // Sync SWR error to logout if needed (optional, but good for validity)
     useEffect(() => {
         if (error) {
@@ -93,6 +94,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 // The registration flow needs to manage its own "pseudo-authenticated" state.
                 if (typeof window !== 'undefined' && window.location.pathname.includes('/doctor/register')) {
                     console.log('AuthContext: Ignoring 401 on doctor registration page to preserve onboarding session.');
+                    setSkipUserFetch(true);
                     return;
                 }
 
@@ -103,6 +105,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 setStoredUser(null);
                 setUser(null);
                 setToken(null); // Reset local token state to stop SWR retries
+                setSkipUserFetch(true);
             }
         }
     }, [error]);
@@ -120,6 +123,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         localStorage.setItem('token', finalToken);
+        setSkipUserFetch(false); // Enable user fetching again
         setToken(finalToken); // Trigger SWR
         api.defaults.headers.common['Authorization'] = `Bearer ${finalToken}`;
         setUser(userData);
@@ -134,6 +138,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         // Wipe local auth state instantly before network call to prevent useSWR background triggers
         setToken(null);
+        setSkipUserFetch(false); // Reset user fetch skipping
         localStorage.removeItem('token');
         delete api.defaults.headers.common['Authorization'];
         clearStoredUser();

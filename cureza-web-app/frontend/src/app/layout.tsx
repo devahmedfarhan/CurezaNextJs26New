@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit, Inter } from "next/font/google";
+import { Inter, Manrope } from "next/font/google";
 import "./globals.css";
 import ConditionalNavbar from "@/components/layout/ConditionalNavbar";
 import ConditionalFooter from "@/components/layout/ConditionalFooter";
@@ -10,19 +10,24 @@ import { ToastProvider } from "@/contexts/ToastContext";
 import { CategoryProvider } from "@/contexts/CategoryContext";
 import FloatingCompareBar from "@/components/FloatingCompareBar";
 
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
-});
-
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-heading",
+});
+
 export const metadata: Metadata = {
   title: "Cureza | Multi-Vendor Wellness Marketplace",
   description: "Authentic Ayurvedic, Herbal, and Wellness products verified by doctors.",
+  icons: {
+    icon: "/logo-black.svg",
+    shortcut: "/logo-black.svg",
+    apple: "/logo-black.svg",
+  }
 };
 
 export default function RootLayout({
@@ -31,9 +36,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning data-theme="light" className={inter.variable}>
+    <html lang="en" suppressHydrationWarning data-theme="light" className={`${inter.variable} ${manrope.variable}`}>
       <body
-        className={`${outfit.variable} ${inter.variable} antialiased font-sans bg-warm-sand text-charcoal`}
+        className={`${inter.variable} ${manrope.variable} antialiased font-sans bg-warm-sand text-charcoal`}
         suppressHydrationWarning
       >
         <AuthProvider>

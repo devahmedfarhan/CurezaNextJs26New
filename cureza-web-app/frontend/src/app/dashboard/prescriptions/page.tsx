@@ -105,57 +105,73 @@ export default function PrescriptionsPage() {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[300px] text-muted-foreground gap-3">
-                <RefreshCw className="h-7 w-7 animate-spin text-cureza-green" />
-                <p className="text-sm">Loading prescriptions...</p>
+            <div className="flex flex-col items-center justify-center min-h-[300px] text-[#052326]/50 gap-3">
+                <RefreshCw className="h-7 w-7 animate-spin text-[#052326]" />
+                <p className="text-xs font-light">Loading prescriptions...</p>
             </div>
         );
     }
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-charcoal dark:text-gray-100">My Prescriptions</h1>
+            <div className="flex justify-between items-center border-b border-[#052326]/12 pb-4">
+                <div>
+                    <h1 className="text-xl font-bold font-heading text-[#052326]">My Prescriptions</h1>
+                    <p className="text-xs text-[#052326]/50 font-light mt-0.5">Track your clinical consult summaries and digital prescriptions</p>
+                </div>
             </div>
 
             {/* Prescription List */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {prescriptions.length === 0 ? (
-                    <p className="text-gray-500">No prescriptions found.</p>
+                    <div className="md:col-span-2 text-center py-12 border border-dashed border-[#052326]/20 rounded-[14px]">
+                        <p className="text-xs text-[#052326]/50 font-light">No prescriptions found in your account history.</p>
+                    </div>
                 ) : (
                     prescriptions.map((prescription) => (
-                        <div key={prescription.prescription_number} className="bg-white dark:bg-gray-900 p-6 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow group flex flex-col justify-between">
+                        <div 
+                            key={prescription.prescription_number} 
+                            className="bg-white p-6 rounded-[12px] border border-[#052326]/12 shadow-premium-light hover:shadow-premium-hover transition-all duration-300 group flex flex-col justify-between"
+                        >
                             <div className="flex items-start gap-4">
-                                <div className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${prescription.type === 'digital' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400'}`}>
+                                <div className={`w-12 h-12 rounded-[10px] flex items-center justify-center flex-shrink-0 ${
+                                    prescription.type === 'digital' 
+                                        ? 'bg-[#052326]/5 text-[#052326]' 
+                                        : 'bg-[#F0C417]/10 text-[#052326]'
+                                }`}>
                                     <FileText size={24} />
                                 </div>
-                                <div className="flex-1">
-                                    <h3 className="font-bold text-charcoal dark:text-gray-100 line-clamp-1">
+                                <div className="flex-1 min-w-0">
+                                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#052326]/40 block mb-1">
+                                        {prescription.type === 'digital' ? 'Clinical Telehealth' : 'Product Purchase Rx'}
+                                    </span>
+                                    <h3 className="font-bold text-[#052326] text-sm truncate">
                                         {prescription.diagnosis || 'General Consultation'}
                                     </h3>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                                        {prescription.doctor?.name || 'Unknown'}
+                                    <p className="text-xs text-[#052326]/60 mt-1 font-medium">
+                                        {prescription.doctor?.name ? `Dr. ${prescription.doctor.name}` : 'Clinical Care Team'}
                                     </p>
-                                    <p className="text-xs text-gray-500 mt-1">Patient: {prescription.patient_name}</p>
-                                    <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mt-3">
-                                        <Calendar size={14} /> {new Date(prescription.date).toLocaleDateString()}
+                                    <p className="text-[10px] text-[#052326]/40 mt-1 font-light">Patient: {prescription.patient_name}</p>
+                                    <div className="flex items-center gap-1.5 text-[10px] text-[#052326]/50 mt-3">
+                                        <Calendar size={12} className="text-[#052326]/30" /> 
+                                        <span>Issued {new Date(prescription.date).toLocaleDateString()}</span>
                                     </div>
-                                    <div className="text-xs text-gray-400 mt-1">#{prescription.prescription_number}</div>
+                                    <div className="text-[9px] text-[#052326]/30 font-mono mt-1">#{prescription.prescription_number}</div>
                                 </div>
                             </div>
                             
-                            <div className="space-y-2 mt-6 pt-4 border-t border-gray-100 dark:border-gray-800">
+                            <div className="space-y-2 mt-6 pt-4 border-t border-[#052326]/8">
                                 <div className="flex gap-2">
                                     {prescription.view_url ? (
                                         <Link
                                             href={prescription.view_url}
-                                            className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm font-medium"
+                                            className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-[10px] bg-[#052326]/5 text-[#052326] hover:bg-[#052326]/10 transition-colors text-xs font-semibold uppercase tracking-wider"
                                         >
-                                            <Eye size={16} /> View
+                                            <Eye size={14} /> View Details
                                         </Link>
                                     ) : (
-                                        <span className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg bg-gray-50 text-gray-400 text-sm font-medium cursor-not-allowed">
-                                            <Eye size={16} /> View
+                                        <span className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-[10px] bg-gray-50 text-gray-300 text-xs font-semibold uppercase tracking-wider cursor-not-allowed">
+                                            <Eye size={14} /> View Details
                                         </span>
                                     )}
 
@@ -178,13 +194,13 @@ export default function PrescriptionsPage() {
                                                     window.open(prescription.download_url!, '_blank');
                                                 }
                                             }}
-                                            className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg bg-cureza-green/10 text-cureza-green hover:bg-cureza-green/20 transition-colors text-sm font-medium"
+                                            className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-[10px] bg-[#052326] text-[#F8F3EF] hover:bg-[#052326]/90 transition-colors text-xs font-semibold uppercase tracking-wider"
                                         >
-                                            <Download size={16} /> Download
+                                            <Download size={14} /> Download PDF
                                         </button>
                                     ) : (
-                                        <span className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg bg-gray-50 text-gray-400 text-sm font-medium cursor-not-allowed">
-                                            <Download size={16} /> Pending
+                                        <span className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-[10px] bg-gray-50 text-gray-300 text-xs font-semibold uppercase tracking-wider cursor-not-allowed">
+                                            <Download size={14} /> Pending
                                         </span>
                                     )}
                                 </div>
@@ -192,9 +208,9 @@ export default function PrescriptionsPage() {
                                 {prescription.doctor && prescription.doctor.id && prescription.type === 'digital' && (
                                     <button
                                         onClick={() => handleOpenReview(prescription.doctor!)}
-                                        className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-amber-500/10 text-amber-600 hover:bg-amber-500/20 transition-colors text-sm font-semibold border border-amber-500/20"
+                                        className="w-full flex items-center justify-center gap-1.5 py-2 rounded-[10px] bg-[#F0C417]/10 text-[#052326] hover:bg-[#F0C417]/20 transition-colors text-xs font-bold uppercase tracking-wider border border-[#F0C417]/20"
                                     >
-                                        <Star size={15} className="fill-amber-500 text-amber-500" /> Review Doctor Feedback
+                                        <Star size={13} className="fill-[#052326] text-[#052326]" /> Review Doctor Feedback
                                     </button>
                                 )}
                             </div>
@@ -205,19 +221,19 @@ export default function PrescriptionsPage() {
 
             {/* Review Dialog */}
             <Dialog open={isReviewOpen} onOpenChange={setIsReviewOpen}>
-                <DialogContent className="sm:max-w-[425px]">
+                <DialogContent className="sm:max-w-[425px] rounded-[14px] border border-[#052326]/12 bg-white p-6">
                     <DialogHeader>
-                        <DialogTitle className="flex items-center gap-2 text-charcoal">
-                            <MessageSquare className="h-5 w-5 text-amber-500" />
+                        <DialogTitle className="flex items-center gap-2 text-base font-bold font-heading text-[#052326]">
+                            <MessageSquare className="h-5 w-5 text-[#F0C417]" />
                             Rate Your Experience
                         </DialogTitle>
-                        <DialogDescription>
+                        <DialogDescription className="text-xs text-[#052326]/60 font-light mt-1">
                             Your feedback helps others choose the right practitioner. Share your review for <b>{selectedDoctor?.name}</b>.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-6 py-4">
                         <div className="flex flex-col items-center gap-2">
-                            <span className="text-sm font-semibold text-slate-500">Overall Rating</span>
+                            <span className="text-xs font-semibold text-[#052326]/60 uppercase tracking-wider">Overall Rating</span>
                             <div className="flex gap-2">
                                 {[1, 2, 3, 4, 5].map((star) => (
                                     <button
@@ -227,39 +243,40 @@ export default function PrescriptionsPage() {
                                         className="p-1 hover:scale-110 transition-transform"
                                     >
                                         <Star
-                                            size={32}
+                                            size={28}
                                             className={`${
                                                 star <= rating
-                                                    ? 'fill-amber-500 text-amber-500'
-                                                    : 'text-slate-300 dark:text-slate-600'
+                                                    ? 'fill-[#F0C417] text-[#F0C417]'
+                                                    : 'text-[#052326]/12'
                                             }`}
                                         />
                                     </button>
                                 ))}
                             </div>
                         </div>
-                        <div className="flex flex-col gap-2">
-                            <span className="text-sm font-semibold text-slate-600">Review Comments (Optional)</span>
+                        <div className="flex flex-col gap-1.5">
+                            <span className="text-xs font-semibold text-[#052326]/60 uppercase tracking-wider">Review Comments</span>
                             <Textarea
                                 placeholder="Describe your consultation experience..."
                                 value={reviewText}
                                 onChange={(e) => setReviewText(e.target.value)}
-                                className="min-h-[100px] focus:ring-cureza-green"
+                                className="min-h-[90px] rounded-[10px] border-[#052326]/12 focus:ring-[#052326]/20"
                             />
                         </div>
                     </div>
-                    <DialogFooter>
+                    <DialogFooter className="gap-2 sm:gap-0">
                         <Button
                             variant="ghost"
                             onClick={() => setIsReviewOpen(false)}
                             disabled={submittingReview}
+                            className="rounded-[10px] text-xs font-bold uppercase tracking-wider"
                         >
                             Cancel
                         </Button>
                         <Button
                             onClick={handleSubmitReview}
                             disabled={submittingReview}
-                            className="bg-cureza-green hover:bg-green-700 font-bold"
+                            className="bg-[#052326] text-[#F8F3EF] hover:bg-[#052326]/90 rounded-[10px] text-xs font-bold uppercase tracking-wider px-5 h-10"
                         >
                             {submittingReview ? 'Submitting...' : 'Submit Feedback'}
                         </Button>

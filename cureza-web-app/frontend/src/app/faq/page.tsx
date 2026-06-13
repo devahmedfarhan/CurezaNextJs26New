@@ -2,92 +2,95 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Search, ChevronRight, MessageCircle } from 'lucide-react';
+import { Search, ChevronRight, MessageCircle, Mail } from 'lucide-react';
 import { HELP_TOPICS } from '@/data/helpCenterData';
 
 export default function FAQPage() {
     const [searchQuery, setSearchQuery] = useState('');
 
+    const filteredTopics = HELP_TOPICS.filter(topic =>
+        topic.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        topic.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
-        <div className="bg-white min-h-screen pb-12 font-sans">
+        <div className="bg-[#F8F3EF] min-h-screen pb-16 text-[#052326]">
             {/* Header Section */}
-            <div className="bg-gray-50 border-b border-gray-100 pb-8 pt-6 px-4">
-                <div className="container mx-auto max-w-3xl px-4 py-2">
-                    {/* Title + Subtitle */}
-                    <div className="text-center mb-8 space-y-2">
-                        <h1 className=" text-2xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
+            <div className="bg-white border-b border-[#052326]/12 pb-12 pt-10 px-6">
+                <div className="container mx-auto max-w-3xl text-center space-y-6">
+                    <div className="space-y-2">
+                        <span className="text-[#052326] font-bold tracking-wider uppercase text-[10px] px-3.5 py-1 bg-[#052326]/5 rounded-full border border-[#052326]/10">
+                            Cureza Help Center
+                        </span>
+                        <h1 className="text-3xl md:text-4xl font-extrabold font-heading text-[#052326] tracking-tight">
                             How can we help you today?
                         </h1>
-                        <p className="text-gray-600 text-base">
+                        <p className="text-[#052326]/60 text-xs font-light max-w-md mx-auto">
                             Search for answers, browse categories, or connect with our support team instantly.
                         </p>
                     </div>
 
                     {/* Search Bar */}
-                    <div className="relative">
+                    <div className="relative max-w-xl mx-auto">
                         <input
                             type="text"
                             placeholder="Search help articles..."
-                            className="w-full pl-5 pr-16 py-4 rounded-md border border-gray-200 
-                       shadow-md focus:border-cureza-green focus:ring-2 
-                       focus:ring-cureza-green/30 outline-none text-gray-800 
-                       placeholder-gray-500 text-lg transition"
+                            className="w-full pl-5 pr-16 py-3.5 rounded-[10px] border border-[#052326]/12 bg-[#F8F3EF]/50 text-sm outline-none transition focus:border-[#052326] focus:ring-1 focus:ring-[#052326] focus:bg-white"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
-
-                        <button
-                            className="absolute right-0 top-0 h-full w-14 flex items-center 
-                       justify-center bg-cureza-green hover:bg-cureza-green/90 
-                       transition rounded-r-md shadow-md"
-                        >
-                            <Search className="text-white" size={24} />
+                        <button className="absolute right-0 top-0 h-full w-14 flex items-center justify-center bg-[#052326] text-[#F8F3EF] rounded-r-[10px] hover:bg-[#052326]/90 transition">
+                            <Search size={18} />
                         </button>
                     </div>
 
                     {/* Suggestion Chips */}
-                    <div className="flex flex-wrap gap-3 mt-5 text-sm justify-center">
-                        <span className="px-4 py-2 bg-gray-100 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer transition">
+                    <div className="flex flex-wrap gap-2.5 justify-center text-[10px] font-bold uppercase tracking-wider">
+                        <Link href="/track-order" className="px-3.5 py-1.5 bg-[#F8F3EF] border border-[#052326]/8 rounded-full text-[#052326]/75 hover:bg-[#052326] hover:text-[#F8F3EF] transition">
                             Track Order
-                        </span>
-                        <span className="px-4 py-2 bg-gray-100 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer transition">
+                        </Link>
+                        <Link href="/legal/cancellation-returns" className="px-3.5 py-1.5 bg-[#F8F3EF] border border-[#052326]/8 rounded-full text-[#052326]/75 hover:bg-[#052326] hover:text-[#F8F3EF] transition">
                             Return / Refund
-                        </span>
-                        <span className="px-4 py-2 bg-gray-100 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer transition">
-                            Payment Issues
-                        </span>
-                        <span className="px-4 py-2 bg-gray-100 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer transition">
-                            Account Support
-                        </span>
+                        </Link>
+                        <Link href="/contact" className="px-3.5 py-1.5 bg-[#F8F3EF] border border-[#052326]/8 rounded-full text-[#052326]/75 hover:bg-[#052326] hover:text-[#F8F3EF] transition">
+                            Contact Support
+                        </Link>
                     </div>
                 </div>
-
             </div>
 
-            <div className="container mx-auto px-4 py-8 space-y-8">
+            <div className="container mx-auto px-6 py-10 max-w-6xl space-y-10">
                 {/* Login Prompt Banner */}
-                <div className="bg-green-50 p-6 rounded-lg flex flex-col md:flex-row items-center justify-between gap-4 border border-green-100">
+                <div className="bg-white p-6 rounded-[12px] border border-[#052326]/12 flex flex-col md:flex-row items-center justify-between gap-4 shadow-premium-light">
                     <div>
-                        <h3 className="font-bold text-lg text-gray-900">Getting help is easy.</h3>
-                        <p className="text-gray-600 text-sm">Log in to get help with your recent orders and account.</p>
+                        <h3 className="font-bold text-sm text-[#052326]">Getting personalized help?</h3>
+                        <p className="text-[#052326]/60 text-xs font-light mt-0.5">Log in to view orders, check prescription status, and contact your doctor.</p>
                     </div>
-                    <Link href="/login" className="bg-white text-cureza-green border border-green-200 px-8 py-2.5 rounded-md font-bold hover:bg-green-50 transition whitespace-nowrap shadow-sm">
+                    <Link href="/login" className="bg-[#052326] text-[#F8F3EF] px-6 py-2.5 rounded-[10px] text-xs font-bold uppercase tracking-wider hover:bg-[#052326]/90 transition whitespace-nowrap shadow">
                         Log In
                     </Link>
                 </div>
 
                 {/* Topics Grid */}
-                <div>
-                    <h2 className="text-xl font-bold text-gray-900 mb-6 capitalize tracking-wide text-sm text-gray-500">Browse Topics</h2>
+                <div className="space-y-6">
+                    <h2 className="text-xs font-bold text-[#052326]/40 uppercase tracking-widest">Browse Topics</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {HELP_TOPICS.map((topic) => (
-                            <Link key={topic.id} href={`/faq/${topic.id}`} className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-lg hover:border-green-200 transition group flex flex-col h-40 justify-between">
-                                <div>
-                                    <h3 className="font-bold text-gray-900 mb-2 group-hover:text-cureza-green transition-colors">{topic.title}</h3>
-                                    <p className="text-sm text-gray-500 line-clamp-2">{topic.description}</p>
+                        {filteredTopics.map((topic) => (
+                            <Link 
+                                key={topic.id} 
+                                href={`/faq/${topic.id}`} 
+                                className="bg-white p-6 rounded-[12px] border border-[#052326]/12 hover:shadow-md hover:border-[#052326]/30 transition group flex flex-col h-44 justify-between"
+                            >
+                                <div className="space-y-2">
+                                    <div className="w-8 h-8 rounded-lg bg-[#052326]/5 flex items-center justify-center text-[#052326] group-hover:bg-[#052326] group-hover:text-white transition">
+                                        <topic.icon size={16} />
+                                    </div>
+                                    <h3 className="font-bold text-sm text-[#052326] tracking-tight">{topic.title}</h3>
+                                    <p className="text-xs text-[#052326]/50 line-clamp-2 font-light leading-relaxed">{topic.description}</p>
                                 </div>
-                                <div className="flex justify-end">
-                                    <topic.icon className="text-gray-300 group-hover:text-cureza-green transition-colors" size={32} />
+                                <div className="flex justify-end items-center text-[10px] font-bold uppercase tracking-wider text-[#052326]/40 group-hover:text-[#052326] transition">
+                                    <span>Explore</span>
+                                    <ChevronRight size={12} className="ml-1" />
                                 </div>
                             </Link>
                         ))}
@@ -95,38 +98,31 @@ export default function FAQPage() {
                 </div>
 
                 {/* Footer / Contact */}
-                <div className="pt-12 border-t border-gray-100 mt-12">
-                    <div className="max-w-xl mx-auto flex flex-col items-center text-center space-y-6">
+                <div className="pt-12 border-t border-[#052326]/12 text-center max-w-xl mx-auto space-y-6">
+                    <div className="space-y-2">
+                        <h3 className="font-extrabold font-heading text-xl text-[#052326]">Need More Help?</h3>
+                        <p className="text-[#052326]/60 text-xs font-light leading-relaxed">
+                            Our support team is here to assist you with orders, returns, product issues,
+                            and anything else you need. Connect with us anytime.
+                        </p>
+                    </div>
 
-                        <div className="space-y-2">
-                            <h3 className="font-bold text-2xl text-gray-900">Need More Help?</h3>
-                            <p className="text-gray-600 text-sm leading-relaxed">
-                                Our support team is here to assist you with orders, returns, product issues,
-                                and anything else you need. Connect with us anytime.
-                            </p>
-                        </div>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        {/* Chat Button */}
+                        <Link href="/contact" className="flex items-center justify-center gap-2 px-6 py-2.5 bg-[#052326] text-[#F8F3EF] hover:bg-[#052326]/90 rounded-[10px] text-xs font-bold uppercase tracking-wider transition shadow w-full sm:w-auto">
+                            <MessageCircle size={16} />
+                            <span>Contact Us Form</span>
+                        </Link>
 
-                        <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+                        {/* Email Button */}
+                        <a href="mailto:help@cureza.in" className="flex items-center justify-center gap-2 px-6 py-2.5 border border-[#052326]/12 text-[#052326] hover:bg-white rounded-[10px] text-xs font-bold uppercase tracking-wider transition w-full sm:w-auto">
+                            <Mail size={16} />
+                            <span>Email help@cureza.in</span>
+                        </a>
+                    </div>
 
-                            {/* Chat Button */}
-                            <button className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-lg font-semibold hover:bg-gray-800 transition shadow-md w-full sm:w-auto">
-                                <MessageCircle size={20} />
-                                <span>Chat with Us</span>
-                            </button>
-
-                            {/* Email Button */}
-                            <button className="flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition w-full sm:w-auto">
-                                {/* <Mail size={20} /> */}
-                                <span>Email Support</span>
-                            </button>
-                        </div>
-
-                        {/* Trust Text */}
-                        <div className="flex items-center gap-2 text-gray-500 text-sm">
-                            {/* <ShieldCheck size={18} 
-                            className="text-cureza-green" /> */}
-                            <span>24/7 Support • Safe & Secure Assistance</span>
-                        </div>
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/40">
+                        24/7 Support • Safe & Secure Assistance
                     </div>
                 </div>
 

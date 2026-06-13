@@ -76,7 +76,13 @@ class SystemSettingsTest extends TestCase
             'google_client_id',
             'otp_enabled',
             'razorpay_enabled',
-            'razorpay_key'
+            'razorpay_key',
+            'theme_primary_color',
+            'theme_background_color',
+            'theme_border_radius',
+            'theme_font_heading',
+            'theme_font_body',
+            'homepage_section_order'
         ]);
 
         // Ensure sensitive fields are absent

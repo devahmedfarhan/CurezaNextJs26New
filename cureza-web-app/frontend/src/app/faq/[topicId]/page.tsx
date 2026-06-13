@@ -13,9 +13,9 @@ export default function FAQTopicPage() {
 
     if (!topic) {
         return (
-            <div className="container mx-auto px-4 py-12 text-center">
-                <h1 className="text-2xl font-bold text-gray-900 mb-4">Topic not found</h1>
-                <Link href="/faq" className="text-cureza-green hover:underline">
+            <div className="container mx-auto px-4 py-12 text-center text-[#052326]">
+                <h1 className="text-xl font-bold font-heading mb-4">Topic not found</h1>
+                <Link href="/faq" className="text-[#052326] underline font-bold text-xs uppercase tracking-wider">
                     Return to Help Center
                 </Link>
             </div>
@@ -23,61 +23,59 @@ export default function FAQTopicPage() {
     }
 
     return (
-        <div className="bg-gray-50 min-h-screen pb-12">
-            <div className="bg-white border-b border-gray-200 py-4 px-4">
-                <div className="container mx-auto px-4 py-4">
-                    <Link href="/faq" className="inline-flex items-center text-gray-500 hover:text-gray-900 mb-6 transition">
-                        <ArrowLeft size={16} className="mr-2" />
+        <div className="bg-[#F8F3EF] min-h-screen pb-16 text-[#052326]">
+            <div className="bg-white border-b border-[#052326]/12 py-6 px-6">
+                <div className="container mx-auto max-w-6xl">
+                    <Link href="/faq" className="inline-flex items-center text-xs font-semibold text-[#052326]/60 hover:text-[#052326] mb-6 transition">
+                        <ArrowLeft size={14} className="mr-1.5" />
                         Back to Help Center
                     </Link>
-                    <div className="flex items-center gap-4 mb-2">
-                        <div className="p-3 bg-green-50 rounded-md text-cureza-green">
-                            <topic.icon size={32} />
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-[#052326]/5 text-[#052326] rounded-[10px] flex items-center justify-center">
+                            <topic.icon size={22} />
                         </div>
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900">{topic.title}</h1>
-                            <p className="text-gray-500">{topic.description}</p>
+                            <h1 className="text-2xl font-bold font-heading text-[#052326] leading-tight">{topic.title}</h1>
+                            <p className="text-xs text-[#052326]/50 mt-1 font-light">{topic.description}</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className="container mx-auto px-4 py-8 flex flex-col md:flex-row md:gap-8 gap-6">
+            <div className="container mx-auto px-6 py-10 max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                 {topic.subTopics?.map((subTopic) => (
                     <div
                         key={subTopic.id}
-                        className="bg-white rounded-md border border-gray-200 shadow-sm 
-                       overflow-hidden w-full md:w-1/2 transition hover:shadow-md"
+                        className="bg-white rounded-[12px] border border-[#052326]/12 shadow-premium-light overflow-hidden transition hover:shadow-md"
                     >
                         {/* Header */}
-                        <div className="bg-gray-50 px-6 py-4 border-b border-gray-100">
-                            <h2 className="font-semibold text-gray-900 text-lg">
+                        <div className="bg-[#F8F3EF]/30 px-6 py-4 border-b border-[#052326]/8">
+                            <h2 className="font-bold text-[#052326] text-sm font-heading">
                                 {subTopic.title}
                             </h2>
                         </div>
 
                         {/* FAQ List */}
-                        <div className="divide-y divide-gray-100">
+                        <div className="divide-y divide-[#052326]/8">
                             {subTopic.faqs.map((faq) => (
                                 <Link
                                     key={faq.id}
                                     href={`/faq/${topicId}/${faq.id}`}
-                                    className="flex items-center justify-between p-5 hover:bg-gray-50 
-                                   transition group cursor-pointer"
+                                    className="flex items-center justify-between p-4 hover:bg-[#F8F3EF]/30 transition group cursor-pointer"
                                 >
-                                    <div className="flex items-center gap-4">
+                                    <div className="flex items-center gap-3 min-w-0 pr-2">
                                         <FileText
-                                            className="text-gray-400 group-hover:text-cureza-green"
-                                            size={20}
+                                            className="text-[#052326]/30 group-hover:text-[#052326] shrink-0"
+                                            size={16}
                                         />
-                                        <span className="font-medium text-gray-900 group-hover:text-cureza-green">
+                                        <span className="font-medium text-xs text-[#052326]/80 group-hover:text-[#052326] truncate">
                                             {faq.q}
                                         </span>
                                     </div>
 
                                     <ChevronRight
-                                        className="text-gray-300 group-hover:text-cureza-green"
-                                        size={18}
+                                        className="text-[#052326]/30 group-hover:text-[#052326] shrink-0"
+                                        size={14}
                                     />
                                 </Link>
                             ))}
@@ -87,12 +85,11 @@ export default function FAQTopicPage() {
 
                 {/* No Subtopics */}
                 {(!topic.subTopics || topic.subTopics.length === 0) && (
-                    <div className="text-center py-12 text-gray-500">
+                    <div className="text-center py-12 text-[#052326]/40 text-xs font-medium col-span-2 bg-white rounded-[12px] border border-[#052326]/12">
                         No articles found for this topic.
                     </div>
                 )}
             </div>
-
         </div>
     );
 }

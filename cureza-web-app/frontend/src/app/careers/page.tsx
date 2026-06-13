@@ -6,9 +6,6 @@ export const metadata: Metadata = {
     description: 'Explore career opportunities at Cureza. Join our team of innovators building the future of wellness. Full-time roles, internships, and freelance positions available in Jaipur.',
 };
 
-/* ============================================================
-   TEAM DATA
-   ============================================================ */
 const TEAM = [
     "Dr. Farhan Ahmed Khan",
     "Aditi Sharma",
@@ -20,9 +17,6 @@ const TEAM = [
     "Riya Sharma",
 ];
 
-/* ============================================================
-   JOBS DATA
-   ============================================================ */
 const JOBS = [
     {
         title: "Senior Frontend Developer",
@@ -43,27 +37,9 @@ const JOBS = [
         title: "Technology & Web Development Intern",
         type: "Internship",
         location: "Jaipur",
-    },
-    {
-        title: "Sales & Business Development Intern",
-        type: "Internship",
-        location: "Jaipur",
-    },
-    {
-        title: "Freelance Graphic Designer",
-        type: "Freelance",
-        location: "Remote / Hybrid",
-    },
-    {
-        title: "Freelance Photographer",
-        type: "Freelance",
-        location: "Jaipur / Hybrid",
-    },
+    }
 ];
 
-/* ============================================================
-   PERKS & CULTURE
-   ============================================================ */
 const CULTURE = [
     {
         title: "You Are Included",
@@ -80,7 +56,7 @@ const CULTURE = [
     {
         title: "You Always Belong",
         desc: "Diversity makes us stronger. Cureza is a place where everyone feels welcome.",
-    },
+    }
 ];
 
 const PERKS = [
@@ -95,203 +71,145 @@ const PERKS = [
     "Creative Freedom",
 ];
 
-/* ============================================================
-   MAIN COMPONENT
-   ============================================================ */
 export default function CareersCureza() {
     return (
-        <div className="bg-gray-50 min-h-screen pt-0 pb-20">
+        <div className="bg-[#F8F3EF] min-h-screen pt-0 pb-20 text-[#052326]">
 
             {/* HERO SECTION */}
-            <section className="relative bg-gradient-to-br from-emerald-600 via-emerald-700 to-emerald-900 text-white py-24 overflow-hidden">
-                <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-
-                <div className=" container mx-auto px-6 relative z-10 text-center">
-                    <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+            <section className="relative bg-[#052326] text-[#F8F3EF] py-20 overflow-hidden text-center">
+                <div className="container mx-auto px-6 relative z-10 space-y-4">
+                    <span className="text-[#F8F3EF]/60 font-bold tracking-wider uppercase text-[10px] px-3.5 py-1 bg-white/10 rounded-full border border-white/10">
+                        Join Our Team
+                    </span>
+                    <h1 className="text-3xl md:text-5xl font-extrabold font-heading leading-tight">
                         Careers at Cureza
                     </h1>
-                    <p className="text-lg md:text-xl mt-4 text-emerald-100 max-w-3xl mx-auto">
+                    <p className="text-xs md:text-sm text-[#F8F3EF]/70 max-w-2xl mx-auto font-light leading-relaxed">
                         Help us build India’s most trusted wellness marketplace.
                         Join the Cureza family and shape the future of holistic health.
                     </p>
-
                     <a
-                        href="https://forms.gle/KpVT9Example"
-                        className="inline-block mt-8 px-10 py-4 bg-white text-emerald-900 rounded-lg  font-semibold hover:bg-gray-100 transition"
+                        href="mailto:careers@cureza.in"
+                        className="inline-block mt-4 px-8 py-3 bg-[#F8F3EF] text-[#052326] hover:bg-[#F8F3EF]/90 rounded-[10px] text-xs font-bold uppercase tracking-wider shadow transition"
                     >
                         Apply Now
                     </a>
                 </div>
             </section>
 
-
             {/* WHO WE ARE */}
-            <section className="container mx-auto px-6 mt-16">
-                <h2 className="text-3xl font-bold text-emerald-900 mb-6 text-center">
-                    Who We Are
-                </h2>
-
-                <p className="text-gray-700 text-lg leading-relaxed text-center max-w-4xl mx-auto">
+            <section className="container mx-auto px-6 mt-16 max-w-4xl text-center space-y-4">
+                <h2 className="text-xl font-bold font-heading text-[#052326]">Who We Are</h2>
+                <p className="text-[#052326]/75 text-sm leading-relaxed font-light">
                     Cureza works to enable a healthier, smarter, and more empowered lifestyle
                     through wellness, Ayurveda, and science-backed products.
-                    Our mission is to build a world with <strong>Healthier People, Healthier Ecosystems,
-                        and Healthier Technology</strong> — all powered through wellness innovation.
+                    Our mission is to build a world with <strong className="font-semibold text-[#052326]">Healthier People, Healthier Ecosystems,
+                    and Healthier Technology</strong> — all powered through wellness innovation.
                 </p>
             </section>
 
-
             {/* OPPORTUNITIES */}
-            <section className="container mx-auto px-6 mt-20">
-                <h2 className="text-3xl font-bold text-emerald-900 mb-10 text-center">
-                    Opportunities at Cureza
-                </h2>
+            <section className="container mx-auto px-6 mt-16 max-w-5xl">
+                <h2 className="text-xs font-bold text-[#052326]/40 uppercase tracking-widest text-center mb-8">Opportunities at Cureza</h2>
 
-                <div className="grid md:grid-cols-3 gap-8">
-
-                    <div className="bg-white p-8 rounded-lg border">
-                        <h3 className="text-xl font-bold text-emerald-900 mb-2">Full-time Roles</h3>
-                        <p className="text-gray-600">
+                <div className="grid md:grid-cols-3 gap-6">
+                    <div className="bg-white p-6 rounded-[12px] border border-[#052326]/12 shadow-premium-light space-y-2">
+                        <h3 className="text-sm font-bold text-[#052326] font-heading">Full-time Roles</h3>
+                        <p className="text-xs text-[#052326]/60 font-light leading-relaxed">
                             Step into the next big chapter of your professional journey.
                             Build world-class products and inspire millions.
                         </p>
                     </div>
 
-                    <div className="bg-white p-8 rounded-lg border">
-                        <h3 className="text-xl font-bold text-emerald-900 mb-2">Internships</h3>
-                        <p className="text-gray-600">
+                    <div className="bg-white p-6 rounded-[12px] border border-[#052326]/12 shadow-premium-light space-y-2">
+                        <h3 className="text-sm font-bold text-[#052326] font-heading">Internships</h3>
+                        <p className="text-xs text-[#052326]/60 font-light leading-relaxed">
                             Grow your skills, polish your CV, and learn directly from industry experts.
                         </p>
                     </div>
 
-                    <div className="bg-white p-8 rounded-lg border">
-                        <h3 className="text-xl font-bold text-emerald-900 mb-2">Freelancers</h3>
-                        <p className="text-gray-600">
+                    <div className="bg-white p-6 rounded-[12px] border border-[#052326]/12 shadow-premium-light space-y-2">
+                        <h3 className="text-sm font-bold text-[#052326] font-heading">Freelancers</h3>
+                        <p className="text-xs text-[#052326]/60 font-light leading-relaxed">
                             Work with flexibility and bring your unique creative ideas to life.
                         </p>
                     </div>
                 </div>
             </section>
 
-
-            {/* TEAM */}
-            <section className=" container mx-auto px-6 mt-20">
-                <h2 className="text-3xl font-bold text-emerald-900 text-center mb-10">
-                    Meet the People Behind Cureza
-                </h2>
-
-                <p className="text-center text-gray-600 mb-12">
-                    A dedicated team of creators, designers, doctors, developers,
-                    marketers, and innovators — building the future of wellness.
-                </p>
-
-                <div className="grid md:grid-cols-4 gap-6">
-                    {TEAM.map((name, i) => (
-                        <div key={i} className="bg-white p-6 rounded-lg border text-center">
-                            <div className="w-20 h-20 rounded-full bg-emerald-200 mx-auto mb-4"></div>
-                            <h4 className="font-semibold text-lg">{name}</h4>
-                            <p className="text-gray-500 text-sm">Cureza Team Member</p>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-
             {/* JOB LISTINGS */}
-            <section className="container mx-auto px-6 mt-20">
-                <h2 className="text-3xl font-bold text-emerald-900 mb-8">
+            <section className="container mx-auto px-6 mt-16 max-w-4xl space-y-6">
+                <h2 className="text-xl font-bold font-heading text-[#052326]">
                     Current Openings
                 </h2>
 
-                <div className="space-y-6">
+                <div className="space-y-4">
                     {JOBS.map((job, index) => (
-                        <div key={index} className="bg-white p-6 rounded-lg border">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <h3 className="text-xl font-bold text-emerald-800">
+                        <div key={index} className="bg-white p-5 rounded-[12px] border border-[#052326]/12 shadow-premium-light">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                                <div className="space-y-1">
+                                    <h3 className="text-sm font-bold text-[#052326] font-heading">
                                         {job.title}
                                     </h3>
-                                    <p className="text-gray-600">
+                                    <p className="text-xs text-[#052326]/50 font-light">
                                         {job.location} • {job.type}
                                     </p>
                                 </div>
-
                                 <a
-                                    href="https://forms.gle/KpVT9Example"
-                                    className="px-6 py-2 bg-emerald-600 text-white rounded-lg border font-semibold hover:bg-emerald-700 transition"
+                                    href="mailto:careers@cureza.in"
+                                    className="w-full sm:w-auto text-center bg-[#052326] text-[#F8F3EF] hover:bg-[#052326]/90 px-5 py-2 rounded-[10px] text-xs font-bold uppercase tracking-wider transition"
                                 >
-                                    Apply Now
+                                    Apply
                                 </a>
                             </div>
                         </div>
                     ))}
                 </div>
-
-                <div className="text-center mt-10">
-                    <button className="px-8 py-4 bg-emerald-700 text-white rounded-lg border hover:bg-emerald-800">
-                        Load More
-                    </button>
-                </div>
             </section>
-
-
-            {/* NO ROLE MATCH */}
-
-
 
             {/* CULTURE */}
-            <section className="container mx-auto px-6 mt-20">
-                <h2 className="text-3xl font-bold text-emerald-900 text-center mb-10">
-                    What Makes Cureza a Special Place to Work?
+            <section className="container mx-auto px-6 mt-16 max-w-4xl space-y-6">
+                <h2 className="text-xl font-bold font-heading text-center text-[#052326]">
+                    What Makes Cureza Special?
                 </h2>
 
-                <div className="grid md:grid-cols-2 gap-10">
+                <div className="grid md:grid-cols-2 gap-6">
                     {CULTURE.map((item, i) => (
-                        <div key={i} className="bg-white p-8 rounded-lg border">
-                            <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                            <p className="text-gray-600">{item.desc}</p>
+                        <div key={i} className="bg-white p-6 rounded-[12px] border border-[#052326]/12 shadow-premium-light space-y-2">
+                            <h3 className="text-xs font-bold uppercase tracking-wider text-[#052326]">{item.title}</h3>
+                            <p className="text-xs text-[#052326]/60 font-light leading-relaxed">{item.desc}</p>
                         </div>
                     ))}
                 </div>
             </section>
-
 
             {/* PERKS */}
-            <section className="container mx-auto px-6 mt-20 mb-20">
-                <h2 className="text-3xl font-bold text-emerald-900 text-center mb-10">
-                    Perks @ Cureza
+            <section className="container mx-auto px-6 mt-16 max-w-4xl space-y-6">
+                <h2 className="text-xl font-bold font-heading text-center text-[#052326]">
+                    Perks & Benefits
                 </h2>
 
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {PERKS.map((perk, i) => (
-                        <div key={i} className="bg-white p-6 rounded-lg border text-center">
-                            <p className="font-semibold text-gray-700">{perk}</p>
+                        <div key={i} className="bg-white p-4 rounded-[10px] border border-[#052326]/8 text-center shadow-premium-light">
+                            <p className="text-xs font-semibold text-[#052326]/80">{perk}</p>
                         </div>
                     ))}
                 </div>
             </section>
 
-            <section className="container mx-auto px-6 mt-20 bg-white p-10 rounded-lg border">
-                <div className="px-6 py-8">
-                    <h2 className="text-3xl font-bold text-emerald-900 mb-4">
-                        Didn’t Find a Role That Matches You?
-                    </h2>
-                    <p className="text-gray-700 text-lg mb-6">
-                        We are always growing! If you think you can bring something valuable to Cureza,
-                        share your CV and ideas with us.
-                    </p>
-
-                    <p className="text-lg font-semibold text-emerald-700">
-                        Email: careers@cureza.in
-                    </p>
-                    <a
-                        href="https://forms.gle/KpVT9Example"
-                        className="inline-block mt-8 px-10 py-4 bg-white text-white rounded-lg bg-gradient-to-br from-emerald-600 via-emerald-700 to-emerald-900 font-semibold hover:bg-gray-100 transition"
-                    >
-                        Apply Now
-                    </a>
-
-                </div>
-
+            {/* NO ROLE MATCH */}
+            <section className="container mx-auto px-6 mt-16 max-w-4xl bg-white p-8 md:p-10 rounded-[14px] border border-[#052326]/12 shadow-premium-light text-center space-y-4">
+                <h2 className="text-lg font-bold font-heading text-[#052326]">
+                    Didn’t Find a Role That Matches You?
+                </h2>
+                <p className="text-xs text-[#052326]/60 font-light max-w-md mx-auto leading-relaxed">
+                    We are always growing! If you think you can bring something valuable to Cureza,
+                    share your CV and ideas with us.
+                </p>
+                <p className="text-sm font-extrabold text-[#052326]">
+                    Email: careers@cureza.in
+                </p>
             </section>
 
         </div>

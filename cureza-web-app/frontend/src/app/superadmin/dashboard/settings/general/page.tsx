@@ -16,7 +16,12 @@ import {
     EyeOff, 
     Loader2, 
     CheckCircle, 
-    AlertCircle 
+    AlertCircle,
+    ArrowUp,
+    ArrowDown,
+    Palette,
+    Type,
+    LayoutGrid
 } from 'lucide-react';
 
 export default function AdminGeneralSettingsPage() {
@@ -51,6 +56,14 @@ export default function AdminGeneralSettingsPage() {
         order_number_format: { value: 'custom', is_secret: false, group: 'general' },
         order_number_prefix: { value: 'CZ', is_secret: false, group: 'general' },
         order_number_year: { value: 'auto', is_secret: false, group: 'general' },
+
+        // Theme Styling Settings
+        theme_primary_color: { value: '#052326', is_secret: false, group: 'styling' },
+        theme_background_color: { value: '#F8F3EF', is_secret: false, group: 'styling' },
+        theme_border_radius: { value: '12px', is_secret: false, group: 'styling' },
+        theme_font_heading: { value: 'Manrope', is_secret: false, group: 'styling' },
+        theme_font_body: { value: 'Inter', is_secret: false, group: 'styling' },
+        homepage_section_order: { value: 'hero,stats,purpose,partners,consultation,testimonials,marquee', is_secret: false, group: 'styling' },
     });
 
     // Secret toggles for password fields
@@ -272,6 +285,186 @@ export default function AdminGeneralSettingsPage() {
                                         <option value="34">2034 (34)</option>
                                         <option value="35">2035 (35)</option>
                                     </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Theme Styling & Reordering Section */}
+                        <div className="border-t border-gray-100 pt-6 mt-6">
+                            <div className="flex items-center gap-2 mb-4">
+                                <Palette className="text-cureza-green" size={20} />
+                                <div>
+                                    <h4 className="font-bold text-gray-[#052326] text-base">BOHECO Theme Visual Engine</h4>
+                                    <p className="text-gray-500 text-xs">Configure theme styles, custom fonts, strict border-radius limits (10px–14px), and page layouts.</p>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                {/* Left column: style controls */}
+                                <div className="space-y-6">
+                                    <div className="bg-[#F8F3EF]/50 p-5 rounded-[12px] border border-gray-100 space-y-4">
+                                        <h5 className="font-bold text-sm text-[#052326] flex items-center gap-2">
+                                            <Palette size={16} /> Color & Border Settings
+                                        </h5>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-xs font-semibold text-gray-700 mb-1">Primary Theme Color</label>
+                                                <div className="flex gap-2">
+                                                    <input 
+                                                        type="color" 
+                                                        value={settings.theme_primary_color.value} 
+                                                        onChange={(e) => handleInputChange('theme_primary_color', e.target.value)}
+                                                        className="w-10 h-10 border border-gray-300 rounded-[10px] cursor-pointer"
+                                                    />
+                                                    <input 
+                                                        type="text" 
+                                                        value={settings.theme_primary_color.value} 
+                                                        onChange={(e) => handleInputChange('theme_primary_color', e.target.value)}
+                                                        placeholder="#052326"
+                                                        className="w-full px-3 py-1.5 border border-gray-300 rounded-[10px] text-xs font-mono outline-none focus:ring-2 focus:ring-cureza-green"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-semibold text-gray-700 mb-1">Theme Background Color</label>
+                                                <div className="flex gap-2">
+                                                    <input 
+                                                        type="color" 
+                                                        value={settings.theme_background_color.value} 
+                                                        onChange={(e) => handleInputChange('theme_background_color', e.target.value)}
+                                                        className="w-10 h-10 border border-gray-300 rounded-[10px] cursor-pointer"
+                                                    />
+                                                    <input 
+                                                        type="text" 
+                                                        value={settings.theme_background_color.value} 
+                                                        onChange={(e) => handleInputChange('theme_background_color', e.target.value)}
+                                                        placeholder="#F8F3EF"
+                                                        className="w-full px-3 py-1.5 border border-gray-300 rounded-[10px] text-xs font-mono outline-none focus:ring-2 focus:ring-cureza-green"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-semibold text-gray-700 mb-1">Border Radius (Strictly 10px–14px)</label>
+                                            <select 
+                                                value={settings.theme_border_radius.value} 
+                                                onChange={(e) => handleInputChange('theme_border_radius', e.target.value)}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-[10px] text-xs outline-none bg-white focus:ring-2 focus:ring-cureza-green"
+                                            >
+                                                <option value="10px">10px (Slim Accent Corners)</option>
+                                                <option value="12px">12px (Standard Soft Corners)</option>
+                                                <option value="14px">14px (Comfort Extra Rounded Corners)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-[#F8F3EF]/50 p-5 rounded-[12px] border border-gray-100 space-y-4">
+                                        <h5 className="font-bold text-sm text-[#052326] flex items-center gap-2">
+                                            <Type size={16} /> Font Configurations
+                                        </h5>
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label className="block text-xs font-semibold text-gray-700 mb-1">Heading Font Family</label>
+                                                <select 
+                                                    value={settings.theme_font_heading.value} 
+                                                    onChange={(e) => handleInputChange('theme_font_heading', e.target.value)}
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded-[10px] text-xs outline-none bg-white focus:ring-2 focus:ring-cureza-green"
+                                                >
+                                                    <option value="Manrope">Manrope (Modern Clinic Bold)</option>
+                                                    <option value="Instrument Sans">Instrument Sans (Premium Editorial Sans)</option>
+                                                    <option value="Outfit">Outfit (Clean Geometric Sans)</option>
+                                                    <option value="Playfair Display">Playfair Display (Classic Serif Luxury)</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-semibold text-gray-700 mb-1">Body/Paragraph Font Family</label>
+                                                <select 
+                                                    value={settings.theme_font_body.value} 
+                                                    onChange={(e) => handleInputChange('theme_font_body', e.target.value)}
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded-[10px] text-xs outline-none bg-white focus:ring-2 focus:ring-cureza-green"
+                                                >
+                                                    <option value="Inter">Inter (High-legibility Default)</option>
+                                                    <option value="Instrument Sans">Instrument Sans (Cohesive Editorial Sans)</option>
+                                                    <option value="Roboto">Roboto (Sleek Geometric Body)</option>
+                                                    <option value="Open Sans">Open Sans (Warm & Accessible Sans)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Right column: Section Reordering */}
+                                <div className="space-y-4">
+                                    <h5 className="font-bold text-sm text-[#052326] flex items-center gap-2">
+                                        <LayoutGrid size={16} /> Homepage Sections Hierarchy Order
+                                    </h5>
+                                    <p className="text-gray-500 text-xs">
+                                        Control the sequence layout of sections rendered on the landing page. Use Up / Down actions to reorder blocks.
+                                    </p>
+                                    
+                                    <div className="space-y-2 max-h-[350px] overflow-y-auto pr-1">
+                                        {(() => {
+                                            const sectionLabels: { [key: string]: { title: string; desc: string } } = {
+                                                hero: { title: 'Hero Cinematic Slider', desc: 'Featured slide banners and storytelling introductions' },
+                                                stats: { title: 'Pioneering Statistics Banner', desc: 'Displays 100k+ Patient details and medical experience' },
+                                                purpose: { title: 'Formulated with Purpose Grid', desc: 'Botanical extraction details and lab research highlights' },
+                                                partners: { title: 'Seller Partner Showcase', desc: 'AYUSH, zero listing structures, and onboarding steps' },
+                                                consultation: { title: 'Doctor Consultation Pathway', desc: 'Rx workflow calendar and patient medical logs' },
+                                                testimonials: { title: 'Customer Testimonial Carousel', desc: 'Verified clinical feedback and slider statements' },
+                                                marquee: { title: 'Shoppable Video & Press Reels', desc: 'Short reels alongside recognized publication logos' }
+                                            };
+                                            const homepageSections = (settings.homepage_section_order?.value || 'hero,stats,purpose,partners,consultation,testimonials,marquee').split(',');
+                                            
+                                            const moveSection = (index: number, direction: 'up' | 'down') => {
+                                                const newSections = [...homepageSections];
+                                                const newIndex = direction === 'up' ? index - 1 : index + 1;
+                                                if (newIndex >= 0 && newIndex < newSections.length) {
+                                                    const temp = newSections[index];
+                                                    newSections[index] = newSections[newIndex];
+                                                    newSections[newIndex] = temp;
+                                                    handleInputChange('homepage_section_order', newSections.join(','));
+                                                }
+                                            };
+
+                                            return homepageSections.map((secKey, index) => {
+                                                const details = sectionLabels[secKey] || { title: secKey, desc: 'Dynamic Landing Block' };
+                                                return (
+                                                    <div 
+                                                        key={secKey}
+                                                        className="flex items-center justify-between p-3 border border-gray-150 bg-white hover:border-[#052326]/30 transition-all rounded-[10px] shadow-sm"
+                                                    >
+                                                        <div className="flex-1 min-w-0 pr-4">
+                                                            <div className="flex items-center gap-2">
+                                                                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#052326]/10 text-[#052326]">
+                                                                    Rank {index + 1}
+                                                                </span>
+                                                                <span className="font-bold text-xs text-gray-900 truncate">{details.title}</span>
+                                                            </div>
+                                                            <p className="text-[10px] text-gray-500 mt-0.5 truncate">{details.desc}</p>
+                                                        </div>
+                                                        <div className="flex items-center gap-1.5">
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => moveSection(index, 'up')}
+                                                                disabled={index === 0}
+                                                                className="p-1.5 rounded-full border border-gray-200 text-gray-600 hover:bg-[#F8F3EF] hover:border-[#052326]/20 transition-all disabled:opacity-30 disabled:hover:bg-transparent"
+                                                            >
+                                                                <ArrowUp size={12} />
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => moveSection(index, 'down')}
+                                                                disabled={index === homepageSections.length - 1}
+                                                                className="p-1.5 rounded-full border border-gray-200 text-gray-600 hover:bg-[#F8F3EF] hover:border-[#052326]/20 transition-all disabled:opacity-30 disabled:hover:bg-transparent"
+                                                            >
+                                                                <ArrowDown size={12} />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            });
+                                        })()}
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import api from '@/lib/api';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, ArrowLeft, Download, FileText, User, Calendar, Activity, Pill, Stethoscope, FileCheck } from 'lucide-react';
 import { useToast } from '@/contexts/ToastContext';
@@ -19,9 +19,6 @@ export default function PrescriptionDetailPage() {
     useEffect(() => {
         const fetchPrescription = async () => {
             try {
-                // Determine API endpoint based on role or context, but for now /user/prescriptions/:id works if controller allows
-                // But wait, the controller 'show' method checks if user is doctor or patient.
-                // We'll use the generic show endpoint.
                 const response = await api.get(`/user/prescriptions/${id}`);
                 setPrescription(response.data);
             } catch (error) {
@@ -39,24 +36,23 @@ export default function PrescriptionDetailPage() {
 
     if (loading) {
         return (
-            <div className="flex h-[80vh] items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <div className="flex h-[80vh] items-center justify-center bg-[#F8F3EF]">
+                <Loader2 className="h-8 w-8 animate-spin text-[#052326]" />
             </div>
         );
     }
 
     if (!prescription) {
         return (
-            <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
-                <h2 className="text-xl font-semibold text-muted-foreground">Prescription not found</h2>
-                <Button variant="outline" onClick={() => router.back()}>
+            <div className="flex flex-col items-center justify-center h-[60vh] gap-4 bg-[#F8F3EF] text-[#052326]">
+                <h2 className="text-sm font-semibold text-[#052326]/50">Prescription not found</h2>
+                <Button variant="outline" onClick={() => router.back()} className="rounded-[10px] text-xs font-bold uppercase tracking-wider border-[#052326]/12">
                     <ArrowLeft className="mr-2 h-4 w-4" /> Go Back
                 </Button>
             </div>
         );
     }
 
-    // Helper to format date
     const formatDate = (dateString: string) => {
         if (!dateString) return '-';
         return new Date(dateString).toLocaleDateString('en-US', {
@@ -73,7 +69,6 @@ export default function PrescriptionDetailPage() {
                 responseType: 'blob'
             });
 
-            // Create a blob URL and trigger download
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
@@ -94,21 +89,24 @@ export default function PrescriptionDetailPage() {
     return (
         <div className="max-w-4xl mx-auto space-y-6 pb-10">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between border-b border-[#052326]/12 pb-4">
                 <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon" onClick={() => router.back()}>
+                    <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-[10px] text-[#052326]">
                         <ArrowLeft className="h-5 w-5" />
                     </Button>
                     <div>
-                        <h1 className="text-base font-bold text-gray-800 tracking-tight">Rx: {prescription.prescription_number}</h1>
-                        <p className="text-sm text-muted-foreground flex items-center gap-2">
-                            <Calendar size={14} /> Created on {formatDate(prescription.date)}
+                        <h1 className="text-base font-bold text-[#052326] tracking-tight font-heading">Rx: {prescription.prescription_number}</h1>
+                        <p className="text-xs text-[#052326]/50 flex items-center gap-1.5 mt-0.5">
+                            <Calendar size={13} className="text-[#052326]/30" /> Issued on {formatDate(prescription.date)}
                         </p>
                     </div>
                 </div>
-                <div className="flex gap-2">
-                    <Button variant="outline" onClick={handleDownload} className="border-trust-blue text-trust-blue hover:bg-blue-50">
-                        <Download className="mr-2 h-4 w-4" /> Download PDF
+                <div>
+                    <Button 
+                        onClick={handleDownload} 
+                        className="bg-[#052326] text-[#F8F3EF] hover:bg-[#052326]/90 rounded-[10px] text-xs font-bold uppercase tracking-wider h-10 px-5 flex items-center gap-2 border border-[#052326]/12"
+                    >
+                        <Download className="h-4 w-4" /> Download PDF
                     </Button>
                 </div>
             </div>
@@ -119,28 +117,28 @@ export default function PrescriptionDetailPage() {
                 {/* Left Column: Patient & Vitals */}
                 <div className="space-y-6">
                     {/* Patient Card */}
-                    <Card>
-                        <CardHeader className="bg-slate-50 border-b pb-3">
-                            <CardTitle className="text-sm font-bold uppercase tracking-wide text-muted-foreground flex items-center gap-2">
-                                <User size={16} /> Patient Details
+                    <Card className="rounded-[12px] border border-[#052326]/12 bg-white shadow-premium-light">
+                        <CardHeader className="bg-[#052326]/5 border-b pb-3 pt-4 px-5">
+                            <CardTitle className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/50 flex items-center gap-1.5 font-sans">
+                                <User size={14} /> Patient Details
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="pt-4 space-y-3">
+                        <CardContent className="pt-4 px-5 pb-5 space-y-3">
                             <div>
-                                <span className="text-xs text-muted-foreground block">Name</span>
-                                <span className="font-medium text-lg">{prescription.patient_details?.name || prescription.user?.name || 'Unknown'}</span>
+                                <span className="text-[10px] text-[#052326]/40 uppercase font-semibold block mb-0.5">Name</span>
+                                <span className="font-semibold text-base text-[#052326]">{prescription.patient_details?.name || prescription.user?.name || 'Unknown'}</span>
                             </div>
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-2 gap-4 pt-1 border-t border-[#052326]/6">
                                 <div>
-                                    <span className="text-xs text-muted-foreground block">Age/Gender</span>
-                                    <span className="text-sm">
+                                    <span className="text-[10px] text-[#052326]/40 uppercase font-semibold block mb-0.5">Age/Gender</span>
+                                    <span className="text-xs font-semibold text-[#052326]/80">
                                         {prescription.patient_details?.age ? `${prescription.patient_details.age} Yrs` : '-'}
                                         {prescription.patient_details?.gender ? ` / ${prescription.patient_details.gender}` : ''}
                                     </span>
                                 </div>
                                 <div>
-                                    <span className="text-xs text-muted-foreground block">Contact</span>
-                                    <span className="text-sm">{prescription.patient_details?.phone || prescription.user?.phone || '-'}</span>
+                                    <span className="text-[10px] text-[#052326]/40 uppercase font-semibold block mb-0.5">Contact</span>
+                                    <span className="text-xs font-semibold text-[#052326]/80 truncate block">{prescription.patient_details?.phone || prescription.user?.phone || '-'}</span>
                                 </div>
                             </div>
                         </CardContent>
@@ -148,18 +146,18 @@ export default function PrescriptionDetailPage() {
 
                     {/* Vitals Card */}
                     {prescription.vitals && Object.keys(prescription.vitals).length > 0 && (
-                        <Card>
-                            <CardHeader className="bg-slate-50 border-b pb-3">
-                                <CardTitle className="text-sm font-bold uppercase tracking-wide text-muted-foreground flex items-center gap-2">
-                                    <Activity size={16} /> Vitals Recorded
+                        <Card className="rounded-[12px] border border-[#052326]/12 bg-white shadow-premium-light">
+                            <CardHeader className="bg-[#052326]/5 border-b pb-3 pt-4 px-5">
+                                <CardTitle className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/50 flex items-center gap-1.5 font-sans">
+                                    <Activity size={14} /> Vitals Recorded
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className="pt-4 grid grid-cols-2 gap-4">
+                            <CardContent className="pt-4 px-5 pb-5 grid grid-cols-2 gap-4">
                                 {Object.entries(prescription.vitals).map(([key, value]) => 
                                     value ? (
                                         <div key={key}>
-                                            <span className="text-xs text-muted-foreground block capitalize">{key.replace('_', ' ')}</span>
-                                            <span className="font-semibold text-slate-800">{(value as string)}</span>
+                                            <span className="text-[10px] text-[#052326]/40 uppercase font-semibold block capitalize mb-0.5">{key.replace('_', ' ')}</span>
+                                            <span className="font-bold text-xs text-[#052326]">{value as string}</span>
                                         </div>
                                     ) : null
                                 )}
@@ -171,61 +169,61 @@ export default function PrescriptionDetailPage() {
                 {/* Right Column: Clinical Details */}
                 <div className="md:col-span-2 space-y-6">
                     {/* Diagnosis Section */}
-                    <Card className="border-l-4 border-l-trust-blue">
-                        <CardContent className="pt-6">
+                    <Card className="border-l-4 border-l-[#052326] rounded-[12px] border border-[#052326]/12 bg-white shadow-premium-light">
+                        <CardContent className="p-6">
                             <div className="grid md:grid-cols-2 gap-6">
                                 <div>
-                                    <h3 className="text-sm font-bold text-muted-foreground uppercase flex items-center gap-2 mb-2">
-                                        <Stethoscope size={16} className="text-trust-blue" /> Clinical Diagnosis
+                                    <h3 className="text-[10px] font-bold text-[#052326]/50 uppercase tracking-wider flex items-center gap-1.5 mb-2 font-sans">
+                                        <Stethoscope size={14} className="text-[#052326]/40" /> Clinical Diagnosis
                                     </h3>
-                                    <p className="text-lg font-medium text-slate-900">{prescription.diagnosis}</p>
+                                    <p className="text-base font-bold text-[#052326]">{prescription.diagnosis}</p>
                                 </div>
                                 <div>
-                                    <h3 className="text-sm font-bold text-muted-foreground uppercase flex items-center gap-2 mb-2">
-                                        <FileCheck size={16} className="text-trust-blue" /> Chief Complaints
+                                    <h3 className="text-[10px] font-bold text-[#052326]/50 uppercase tracking-wider flex items-center gap-1.5 mb-2 font-sans">
+                                        <FileCheck size={14} className="text-[#052326]/40" /> Chief Complaints
                                     </h3>
-                                    <p className="text-sm text-slate-700">{prescription.chief_complaints}</p>
+                                    <p className="text-xs text-[#052326]/80 font-light leading-relaxed">{prescription.chief_complaints}</p>
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Medicines List */}
-                    <Card>
-                        <CardHeader className="bg-emerald-50/50 border-b pb-3">
-                            <CardTitle className="flex items-center gap-2 text-emerald-800">
-                                <Pill size={20} /> Prescribed Medications
+                    <Card className="rounded-[12px] border border-[#052326]/12 bg-white shadow-premium-light overflow-hidden">
+                        <CardHeader className="bg-[#052326]/5 border-b pb-3 pt-4 px-5">
+                            <CardTitle className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/50 flex items-center gap-1.5 font-sans">
+                                <Pill size={14} /> Prescribed Medications
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="p-0">
                             <div className="overflow-x-auto">
-                                <table className="w-full text-left text-sm">
-                                    <thead className="bg-slate-50 border-b">
+                                <table className="w-full text-left text-xs">
+                                    <thead className="bg-[#F8F3EF]/30 border-b border-[#052326]/10 text-[#052326]/60">
                                         <tr>
-                                            <th className="px-4 py-3 font-semibold text-slate-600">Medicine Name</th>
-                                            <th className="px-4 py-3 font-semibold text-slate-600">Dosage</th>
-                                            <th className="px-4 py-3 font-semibold text-slate-600">Frequency</th>
-                                            <th className="px-4 py-3 font-semibold text-slate-600">Duration</th>
+                                            <th className="px-5 py-3 font-bold uppercase tracking-wider text-[9px]">Medicine Name</th>
+                                            <th className="px-5 py-3 font-bold uppercase tracking-wider text-[9px]">Dosage</th>
+                                            <th className="px-5 py-3 font-bold uppercase tracking-wider text-[9px]">Frequency</th>
+                                            <th className="px-5 py-3 font-bold uppercase tracking-wider text-[9px]">Duration</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y">
+                                    <tbody className="divide-y divide-[#052326]/8">
                                         {prescription.medicines?.map((med: any, i: number) => (
-                                            <tr key={i} className="hover:bg-slate-50/50">
-                                                <td className="px-4 py-3 font-medium text-slate-900">
+                                            <tr key={i} className="hover:bg-[#F8F3EF]/20 transition-colors">
+                                                <td className="px-5 py-4 font-semibold text-[#052326]">
                                                     <div>{med.name}</div>
                                                     {med.instruction && (
-                                                        <div className="text-xs text-gray-400 font-normal italic mt-0.5">
+                                                        <div className="text-[10px] text-[#052326]/50 font-normal italic mt-0.5">
                                                             Note: {med.instruction}
                                                         </div>
                                                     )}
                                                 </td>
-                                                <td className="px-4 py-3 text-slate-600">{med.dosage}</td>
-                                                <td className="px-4 py-3 text-slate-600">
-                                                    <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                                                <td className="px-5 py-4 text-[#052326]/70">{med.dosage || med.dose}</td>
+                                                <td className="px-5 py-4">
+                                                    <Badge variant="outline" className="bg-[#052326]/5 text-[#052326] border-[#052326]/12 rounded-[6px] text-[10px] px-2 py-0.5 font-semibold">
                                                         {med.frequency}
                                                     </Badge>
                                                 </td>
-                                                <td className="px-4 py-3 text-slate-600">{med.duration}</td>
+                                                <td className="px-5 py-4 text-[#052326]/70">{med.duration || `${med.days} Days`}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -236,22 +234,22 @@ export default function PrescriptionDetailPage() {
 
                     {/* Advice & Notes */}
                     {(prescription.advice || prescription.notes) && (
-                        <Card className="bg-amber-50/30 border-amber-100">
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-base font-bold text-amber-900 flex items-center gap-2">
-                                    <FileText size={18} /> Doctor's Advice
+                        <Card className="bg-[#F0C417]/5 border-[#052326]/12 rounded-[12px] shadow-premium-light">
+                            <CardHeader className="pb-2 pt-4 px-5">
+                                <CardTitle className="text-xs font-bold text-[#052326] uppercase tracking-wider flex items-center gap-1.5 font-sans">
+                                    <FileText size={14} className="text-[#052326]/40" /> Doctor's Guidance
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-4">
+                            <CardContent className="space-y-4 px-5 pb-5">
                                 {prescription.advice && (
                                     <div>
-                                        <p className="text-sm leading-relaxed text-slate-800 whitespace-pre-wrap">{prescription.advice}</p>
+                                        <p className="text-xs leading-relaxed text-[#052326]/80 font-light whitespace-pre-wrap">{prescription.advice}</p>
                                     </div>
                                 )}
                                 {prescription.notes && (
-                                    <div className="bg-white p-3 rounded border border-amber-100 mt-2">
-                                        <span className="text-xs font-bold text-muted-foreground uppercase mb-1 block">Private Notes</span>
-                                        <p className="text-xs text-slate-600 italic">"{prescription.notes}"</p>
+                                    <div className="bg-white p-3.5 rounded-[10px] border border-[#052326]/10 mt-2">
+                                        <span className="text-[9px] font-bold text-[#052326]/40 uppercase mb-1 block">Private Clinical Notes</span>
+                                        <p className="text-xs text-[#052326]/70 italic leading-relaxed">"{prescription.notes}"</p>
                                     </div>
                                 )}
                             </CardContent>

@@ -82,6 +82,8 @@ class PublicDoctorController extends Controller
             'clinic_address' => $doctor->clinic_address,
             'clinic_city' => $doctor->clinic_city,
             'google_map_link' => $doctor->google_map_link,
+            'medical_license_number' => $doctor->medical_license_number,
+            'medical_council_name' => $doctor->medical_council_name,
             'rating' => $ratingAggregate ? $ratingAggregate->average_rating : 0.0,
             'reviews_count' => $ratingAggregate ? $ratingAggregate->total_reviews : 0,
         ]);

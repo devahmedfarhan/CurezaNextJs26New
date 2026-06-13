@@ -6,18 +6,8 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import api from '@/lib/api';
 import { useToast } from '@/contexts/ToastContext';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 
 export default function DoctorPage() {
     const router = useRouter();
@@ -25,14 +15,7 @@ export default function DoctorPage() {
     const [doctors, setDoctors] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
-
-    // Booking Modal State
-    const [selectedDoctor, setSelectedDoctor] = useState<any>(null);
-    const [bookingData, setBookingData] = useState({
-        appointment_date: '',
-        notes: ''
-    });
-    const [bookingLoading, setBookingLoading] = useState(false);
+    const [activeSpecialty, setActiveSpecialty] = useState('All Specialists');
 
     useEffect(() => {
         fetchDoctors();
@@ -53,98 +36,189 @@ export default function DoctorPage() {
         router.push(`/consultation/book/${doctor.id}`);
     };
 
-    const filteredDoctors = doctors.filter(doctor =>
-        doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        doctor.specialization.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredDoctors = doctors.filter(doctor => {
+        const matchesSearch = doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            doctor.specialization.toLowerCase().includes(searchTerm.toLowerCase());
+        
+        if (activeSpecialty === 'All Specialists') {
+            return matchesSearch;
+        }
+        
+        // Custom matching logic for specialty filters
+        const spec = doctor.specialization.toLowerCase();
+        const active = activeSpecialty.toLowerCase();
+        
+        if (active === 'general physician') {
+            return matchesSearch && (spec.includes('general') || spec.includes('physician'));
+        }
+        if (active === 'skin & hair') {
+            return matchesSearch && (spec.includes('skin') || spec.includes('hair') || spec.includes('dermat'));
+        }
+        if (active === 'digestion') {
+            return matchesSearch && (spec.includes('digest') || spec.includes('gut') || spec.includes('gastro'));
+        }
+        if (active === 'stress') {
+            return matchesSearch && (spec.includes('stress') || spec.includes('anxiety') || spec.includes('mental'));
+        }
+        if (active === "women's health") {
+            return matchesSearch && (spec.includes('women') || spec.includes('gynae'));
+        }
+        
+        return matchesSearch && spec.includes(active);
+    });
+
+    const specialties = [
+        'All Specialists',
+        'General Physician',
+        'Skin & Hair',
+        'Digestion',
+        'Stress',
+        "Women's Health"
+    ];
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            {/* ... hero and filters remain same ... */}
-            <section className="bg-trust-blue text-white rounded-2xl p-8 md:p-16 mb-12 text-center relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-4 opacity-10">
-                    <Video size={120} />
+        <div className="min-h-screen bg-[#F8F3EF] text-[#052326] py-12 px-4 md:px-8 lg:px-12">
+            {/* Editorial Header Section */}
+            <section className="bg-[#052326] text-[#F8F3EF] rounded-[14px] p-8 md:p-16 mb-12 text-center relative overflow-hidden shadow-premium-deep border border-[#F8F3EF]/10">
+                <div className="absolute top-0 right-0 p-4 opacity-5">
+                    <Video size={160} />
                 </div>
-                <h1 className="text-3xl md:text-5xl font-bold mb-6">Consult Top Ayurvedic Doctors</h1>
-                <p className="text-blue-100 text-lg md:text-xl max-w-2xl mx-auto mb-8">
-                    Get personalized health advice, diet plans, and prescriptions from verified practitioners via video call.
+                <span className="text-[10px] font-bold tracking-[0.25em] text-[#F0C417] uppercase block mb-3">
+                    Premium Telehealth Platform
+                </span>
+                <h1 className="text-3xl md:text-5xl font-bold font-heading mb-6 tracking-tight max-w-3xl mx-auto">
+                    Consult Top Certified Ayurvedic Doctors
+                </h1>
+                <p className="text-[#F8F3EF]/80 text-sm md:text-base max-w-xl mx-auto mb-8 font-light leading-relaxed">
+                    Receive personalized clinical wellness evaluations, customized dosage guidelines, and certified digital prescriptions from vetted practitioners via secure video consultations.
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
-                    <Button variant="secondary" size="lg" className="font-bold">
+                    <Button 
+                        onClick={() => {
+                            const el = document.getElementById('doctor-grid');
+                            el?.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                        className="bg-[#F0C417] text-[#052326] hover:bg-[#F0C417]/90 font-bold px-8 h-12 rounded-[10px] text-xs uppercase tracking-wider transition-all"
+                    >
                         Find a Doctor
                     </Button>
-                    <Button variant="outline" size="lg" className="bg-blue-700/50 text-white border-blue-500 font-bold hover:bg-blue-600">
+                    <Button 
+                        variant="outline" 
+                        onClick={() => router.push('/about')}
+                        className="bg-transparent text-[#F8F3EF] border-[#F8F3EF]/30 hover:bg-[#F8F3EF]/10 font-bold px-8 h-12 rounded-[10px] text-xs uppercase tracking-wider transition-all"
+                    >
                         How it Works
                     </Button>
                 </div>
             </section>
 
-            <div className="mb-8 space-y-4">
-                <div className="relative max-w-xl mx-auto">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            {/* Filter & Search Bar Section */}
+            <div className="mb-12 space-y-6 max-w-4xl mx-auto">
+                <div className="relative">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#052326]/50 h-5 w-5" />
                     <Input
-                        placeholder="Search by name or specialty..."
-                        className="pl-10 h-12 rounded-full"
+                        placeholder="Search by practitioner name or medical specialty..."
+                        className="pl-12 h-14 rounded-[12px] border-[#052326]/12 bg-white text-sm focus:ring-2 focus:ring-[#052326]/20 placeholder-[#052326]/40 shadow-premium-light"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
-                <div className="flex gap-4 overflow-x-auto pb-2 justify-center">
-                    {['All Specialists', 'General Physician', 'Skin & Hair', 'Digestion', 'Stress', 'Women\'s Health'].map((filter, idx) => (
-                        <button key={idx} className={`px-6 py-2 rounded-full whitespace-nowrap border text-sm font-medium transition ${idx === 0 ? 'bg-trust-blue text-white border-trust-blue' : 'bg-background text-muted-foreground border-border hover:border-trust-blue'}`}>
-                            {filter}
-                        </button>
-                    ))}
+                
+                {/* Horizontal Specialty Filter Buttons */}
+                <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide justify-start md:justify-center">
+                    {specialties.map((filter) => {
+                        const isActive = activeSpecialty === filter;
+                        return (
+                            <button
+                                key={filter}
+                                onClick={() => setActiveSpecialty(filter)}
+                                className={`px-5 py-2.5 rounded-[10px] whitespace-nowrap border text-xs font-semibold uppercase tracking-wider transition-all duration-200 select-none ${
+                                    isActive
+                                        ? 'bg-[#052326] text-[#F8F3EF] border-[#052326] shadow-sm'
+                                        : 'bg-white text-[#052326]/70 border-[#052326]/12 hover:border-[#052326]/30 hover:bg-[#F8F3EF]/30'
+                                }`}
+                            >
+                                {filter}
+                            </button>
+                        );
+                    })}
                 </div>
             </div>
 
-            {loading ? (
-                <div className="text-center py-20 text-muted-foreground">Loading doctors...</div>
-            ) : filteredDoctors.length === 0 ? (
-                <div className="text-center py-20 text-muted-foreground border rounded-xl bg-muted/20">No doctors found matching your criteria.</div>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredDoctors.map((doctor) => (
-                        <div key={doctor.id} className="bg-card rounded-xl border border-border shadow-sm hover:shadow-md transition-all p-6 flex flex-col">
-                            <div className="flex items-start gap-4 mb-4">
-                                <div className="w-20 h-20 bg-muted rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center text-3xl border">
-                                    {doctor.profile_photo_url ? (
-                                        <Image src={doctor.profile_photo_url} alt={doctor.name} width={80} height={80} className="object-cover h-full w-full" />
-                                    ) : '👨‍⚕️'}
+            {/* Doctor Cards Grid */}
+            <div id="doctor-grid" className="max-w-6xl mx-auto">
+                {loading ? (
+                    <div className="text-center py-24 text-sm text-[#052326]/50 font-light">Loading clinical practitioners...</div>
+                ) : filteredDoctors.length === 0 ? (
+                    <div className="text-center py-20 border border-[#052326]/12 rounded-[14px] bg-white shadow-premium-light max-w-2xl mx-auto">
+                        <p className="text-sm text-[#052326]/60 font-light">No doctors found matching your search criteria.</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {filteredDoctors.map((doctor) => (
+                            <div 
+                                key={doctor.id} 
+                                className="bg-white rounded-[12px] border border-[#052326]/12 shadow-premium-light hover:shadow-premium-hover transition-all duration-300 p-6 flex flex-col justify-between"
+                            >
+                                <div>
+                                    <div className="flex items-start gap-4 mb-4">
+                                        <div className="w-16 h-16 bg-[#052326]/5 rounded-[12px] overflow-hidden flex-shrink-0 flex items-center justify-center border border-[#052326]/12">
+                                            {doctor.profile_photo_url ? (
+                                                <Image src={doctor.profile_photo_url} alt={doctor.name} width={64} height={64} className="object-cover h-full w-full" />
+                                            ) : (
+                                                <span className="text-2xl">👨‍⚕️</span>
+                                            )}
+                                        </div>
+                                        <div className="min-w-0">
+                                            <h3 className="font-bold text-base text-[#052326] truncate">{doctor.name}</h3>
+                                            <p className="text-[#052326]/60 text-xs font-medium uppercase tracking-wider mt-0.5">{doctor.specialization}</p>
+                                            <p className="text-[#052326]/40 text-[10px] mt-1 font-light">{doctor.years_of_experience}+ Years Experience</p>
+                                        </div>
+                                    </div>
+
+                                    {/* Rating badge */}
+                                    <div className="flex items-center gap-1.5 bg-emerald-50 text-emerald-800 px-2.5 py-1 rounded-[6px] text-xs font-bold w-max mb-4">
+                                        <span>{doctor.rating ? Number(doctor.rating).toFixed(1) : '0.0'}</span>
+                                        <Star size={11} fill="currentColor" className="text-emerald-700" />
+                                        <span className="text-[#052326]/40 text-[10px] font-normal ml-1">({doctor.reviews_count || 0} reviews)</span>
+                                    </div>
+
+                                    {/* Languages Spoken */}
+                                    <div className="flex flex-wrap gap-1.5 mb-6">
+                                        {(doctor.languages_spoken || []).slice(0, 3).map((lang: string) => (
+                                            <span key={lang} className="text-[9px] font-bold uppercase tracking-wider bg-[#052326]/5 text-[#052326]/60 px-2 py-0.5 rounded-[4px]">
+                                                {lang}
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
-                                <div className="flex-1">
-                                    <h3 className="font-bold text-lg text-foreground">{doctor.name}</h3>
-                                    <p className="text-primary text-sm font-medium mb-1">{doctor.specialization}</p>
-                                    <p className="text-muted-foreground text-xs mb-2">{doctor.years_of_experience}+ Years Experience</p>
-                                    <div className="flex items-center gap-1 bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded text-xs font-bold w-max">
-                                        {doctor.rating ? Number(doctor.rating).toFixed(1) : '0.0'} <Star size={10} fill="currentColor" className="inline ml-0.5" />
-                                        <span className="text-slate-400 text-[10px] font-normal ml-1">({doctor.reviews_count || 0})</span>
+
+                                <div className="flex items-center justify-between border-t border-[#052326]/8 pt-4 gap-3">
+                                    <div>
+                                        <p className="text-[9px] text-[#052326]/40 uppercase font-bold tracking-wider">Fee</p>
+                                        <p className="font-bold text-sm text-[#052326]">₹{doctor.consultation_fee || '499'}</p>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <Button 
+                                            variant="outline"
+                                            onClick={() => router.push(`/doctor/${doctor.id}`)}
+                                            className="border-[#052326]/20 text-[#052326] hover:bg-[#052326]/5 px-3 h-9 rounded-[10px] text-[10px] font-bold uppercase tracking-wider transition-all"
+                                        >
+                                            View Profile
+                                        </Button>
+                                        <Button 
+                                            onClick={() => handleBookNow(doctor)}
+                                            className="bg-[#052326] text-[#F8F3EF] hover:bg-[#052326]/90 gap-1.5 px-3 h-9 rounded-[10px] text-[10px] font-bold uppercase tracking-wider transition-all"
+                                        >
+                                            <Calendar size={11} /> Book
+                                        </Button>
                                     </div>
                                 </div>
                             </div>
-
-                            <div className="flex flex-wrap gap-2 mb-6 flex-1">
-                                {(doctor.languages_spoken || []).slice(0, 3).map((lang: string) => (
-                                    <span key={lang} className="text-[10px] bg-muted text-muted-foreground px-2 py-0.5 rounded uppercase font-bold tracking-tight">
-                                        {lang}
-                                    </span>
-                                ))}
-                            </div>
-
-                            <div className="flex items-center justify-between border-t pt-4">
-                                <div>
-                                    <p className="text-[10px] text-muted-foreground uppercase font-bold">Consultation Fee</p>
-                                    <p className="font-bold text-lg">₹{doctor.consultation_fee || '499'}</p>
-                                </div>
-                                <Button className="bg-trust-blue hover:bg-blue-700 gap-2" onClick={() => handleBookNow(doctor)}>
-                                    <Calendar size={16} /> Book Now
-                                </Button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
-

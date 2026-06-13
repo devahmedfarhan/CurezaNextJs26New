@@ -1,210 +1,244 @@
 'use client';
 
-import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import { useEffect, useState } from 'react';
+import { ArrowRight, Star, ShieldCheck, Heart } from 'lucide-react';
+import Link from 'next/link';
 
-const SLIDES = [
-    {
-        id: 1,
-        tag: "AYURVEDA · WELLNESS",
-        title: "Healing Evolved.",
-        subtitle: "Pure, potent, and trusted products crafted to elevate your everyday wellness",
-        image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=1920&q=80",
-        color: "from-emerald-600/20 to-teal-600/20"
-    },
-    {
-        id: 2,
-        tag: "HOLISTIC LIVING",
-        title: "Nature Meets Science.",
-        subtitle: "Experience the perfect blend of ancient Ayurveda and modern therapy.",
-        image: "https://images.unsplash.com/photo-1612158333882-0a433d725a4c?w=1920&q=80",
-        color: "from-purple-600/20 to-pink-600/20"
-    },
-    {
-        id: 3,
-        tag: "NATURAL WELLNESS",
-        title: "Elevate Your Mind & Body.",
-        subtitle: "Carefully curated essentials for energy, balance and a vibrant lifestyle.",
-        image: "https://images.unsplash.com/photo-1600718370331-3f0cbdc07e8b?w=1920&q=80",
-        color: "from-orange-600/20 to-amber-600/20"
-    }
+interface Slide {
+  id: number;
+  tag: string;
+  title: string;
+  subtitle: string;
+  productName: string;
+  productCategory: string;
+  productPrice: string;
+  productImage: string;
+  rating: number;
+  badge: string;
+  ingredients: string[];
+}
+
+const SLIDES: Slide[] = [
+  {
+    id: 1,
+    tag: "AYURVEDA · WELLNESS",
+    title: "Healing Evolved through Science & Nature.",
+    subtitle: "Pure, clinical-grade wellness extracts crafted to restore balance, soothe discomfort, and elevate your everyday lifestyle.",
+    productName: "Cureza Rest & Sleep Oil",
+    productCategory: "Sleep & Anxiety Relief",
+    productPrice: "₹1,899",
+    productImage: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=600&q=80",
+    rating: 4.9,
+    badge: "Doctor Recommended",
+    ingredients: ["Hemp Seed Extract", "Valerian Root", "Chamomile"]
+  },
+  {
+    id: 2,
+    tag: "CLINICAL THERAPY",
+    title: "Advanced Relief. Targeted Recovery.",
+    subtitle: "Say goodbye to chronic pain and inflammation with our fast-acting, botanical formulations approved by certified doctors.",
+    productName: "Cureza Active Pain Balm",
+    productCategory: "Joint & Muscle Recovery",
+    productPrice: "₹849",
+    productImage: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=600&q=80",
+    rating: 4.8,
+    badge: "100% Ayurvedic",
+    ingredients: ["CBD Extract", "Eucalyptus", "Menthol"]
+  },
+  {
+    id: 3,
+    tag: "HOLISTIC NUTRITION",
+    title: "Nourish from Within. Live Unbounded.",
+    subtitle: "Harness the power of adaptogenic herbs and premium superfoods to supercharge your immunity, energy, and cognitive focus.",
+    productName: "Cureza Focus Capsules",
+    productCategory: "Brain Health & Energy",
+    productPrice: "₹1,249",
+    productImage: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=600&q=80",
+    rating: 4.7,
+    badge: "Lab Certified",
+    ingredients: ["Ashwagandha", "Brahmi", "Ginkgo Biloba"]
+  }
 ];
 
-export default function HeroSliderUltra() {
-    const [current, setCurrent] = useState(0);
-    const [isAnimating, setIsAnimating] = useState(false);
-    const [direction, setDirection] = useState(0);
+export default function HeroSlider() {
+  const [current, setCurrent] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            handleNext();
-        }, 6000);
-        return () => clearInterval(timer);
-    }, [current]);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      handleNext();
+    }, 8000);
+    return () => clearInterval(timer);
+  }, [current]);
 
-    const handleNext = () => {
-        if (isAnimating) return;
-        setIsAnimating(true);
-        setDirection(1);
-        setCurrent((prev) => (prev + 1) % SLIDES.length);
-        setTimeout(() => setIsAnimating(false), 1000);
-    };
+  const handleNext = () => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setCurrent((prev) => (prev + 1) % SLIDES.length);
+    setTimeout(() => setIsAnimating(false), 800);
+  };
 
-    const handlePrev = () => {
-        if (isAnimating) return;
-        setIsAnimating(true);
-        setDirection(-1);
-        setCurrent((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
-        setTimeout(() => setIsAnimating(false), 1000);
-    };
+  const handlePrev = () => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setCurrent((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
+    setTimeout(() => setIsAnimating(false), 800);
+  };
 
-    const goToSlide = (index: number) => {
-        if (isAnimating || index === current) return;
-        setIsAnimating(true);
-        setDirection(index > current ? 1 : -1);
-        setCurrent(index);
-        setTimeout(() => setIsAnimating(false), 1000);
-    };
+  const goToSlide = (index: number) => {
+    if (isAnimating || index === current) return;
+    setIsAnimating(true);
+    setCurrent(index);
+    setTimeout(() => setIsAnimating(false), 800);
+  };
 
-    return (
-        <div className="relative bg-gradient-to-r from-emerald-700 via-emerald-800 to-emerald-900 p-4 md:p-6 lg:p-8 flex items-center overflow-hidden">
+  const currentSlide = SLIDES[current];
 
+  return (
+    <section className="relative w-full min-h-[85vh] bg-[#052326] flex items-center overflow-hidden py-16 text-[#F8F3EF]">
+      {/* Decorative background vectors */}
+      <div className="absolute inset-0 pointer-events-none opacity-5">
+        <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#F0C417] to-transparent blur-[150px]" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-emerald-500 to-transparent blur-[150px]" />
+        {/* Subtle grid layout */}
+        <div className="absolute inset-0" style={{
+          backgroundImage: 'radial-gradient(circle, rgba(248, 243, 239, 0.05) 1px, transparent 1px)',
+          backgroundSize: '40px 40px'
+        }} />
+      </div>
 
-            {/* Main Container with Premium Rounded Corners */}
-            <div className="relative w-full h-[85vh] md:h-[90vh] rounded-[20px] overflow-hidden">
+      <div className="container mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+        
+        {/* EDITORIAL LEFT COLUMN */}
+        <div className="lg:col-span-6 flex flex-col justify-center text-left">
+          {/* Animated Slide Tag */}
+          <div className="overflow-hidden mb-4 h-8">
+            <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.25em] text-[#F0C417] bg-[#F8F3EF]/10 border border-[#F8F3EF]/20 rounded-md">
+              {currentSlide.tag}
+            </span>
+          </div>
 
-                {/* Background Images with Ken Burns Effect */}
-                {SLIDES.map((slide, index) => (
-                    <div
-                        key={slide.id}
-                        className={`absolute inset-0 transition-all duration-1000 ${index === current ? 'opacity-100 scale-100' : 'opacity-0 scale-110'
-                            }`}
-                    >
-                        <img
-                            src={slide.image}
-                            alt={slide.title}
-                            className={`w-full h-full object-cover transition-transform duration-[8000ms] ${index === current ? 'scale-110' : 'scale-100'
-                                }`}
-                        />
+          {/* Hero Title */}
+          <div className="overflow-hidden mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.15] text-[#F8F3EF] tracking-tight transition-transform duration-700">
+              {currentSlide.title}
+            </h1>
+          </div>
 
-                        {/* Dynamic Color Overlay */}
-                        <div className={`absolute inset-0 bg-gradient-to-br ${slide.color} mix-blend-overlay`} />
+          {/* Hero Subtitle */}
+          <p className="text-base md:text-lg text-[#F8F3EF]/80 max-w-xl font-light mb-8 leading-relaxed">
+            {currentSlide.subtitle}
+          </p>
 
-                        {/* Premium Gradient Overlays */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-transparent" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
-                    </div>
-                ))}
+          {/* CTA Buttons */}
+          <div className="flex flex-wrap items-center gap-4 mb-10">
+            <Link 
+              href="/shop" 
+              className="group inline-flex items-center justify-center px-7 py-3.5 bg-[#F0C417] text-[#052326] font-semibold text-sm rounded-[12px] shadow-lg shadow-[#F0C417]/10 hover:shadow-[#F0C417]/20 hover:scale-[1.02] transition-all duration-300"
+            >
+              Shop Curated Products
+              <ArrowRight className="w-4 h-4 ml-2.5 group-hover:translate-x-1 transition-transform" />
+            </Link>
 
-                {/* Animated Grid Pattern */}
-                <div className="absolute inset-0 opacity-10" style={{
-                    backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
-                    backgroundSize: '50px 50px'
-                }} />
+            <Link 
+              href="/consultation" 
+              className="inline-flex items-center justify-center px-7 py-3.5 bg-transparent border border-[#F8F3EF]/30 text-[#F8F3EF] hover:bg-[#F8F3EF]/10 font-semibold text-sm rounded-[12px] transition-all duration-300"
+            >
+              Book Consultation
+            </Link>
+          </div>
 
-                {/* Content Container */}
-                <div className="relative z-10 h-full flex items-center">
-                    <div className="container mx-auto px-10 md:px-3 ">
-                        {SLIDES.map((slide, index) => (
-                            <div
-                                key={slide.id}
-                                className={`max-w-5xl transition-all duration-1000 ease-out ${index === current
-                                    ? 'opacity-100 translate-x-0 scale-100'
-                                    : `opacity-0 ${direction > 0 ? 'translate-x-20' : '-translate-x-20'} scale-95 absolute`
-                                    }`}
-                            >
-                                {/* Premium Tag with Icon */}
-                                <div className={`inline-flex items-center gap-2 mb-4 transition-all duration-700 delay-100 ${index === current ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-                                    }`}>
-                                    {/* <Sparkles className="w-4 h-4 text-white animate-pulse" /> */}
-                                    <span className="px-6 py-2.5  text-[10px] font-semibold tracking-[0.35em] text-white uppercase bg-white/20 backdrop-blur-2xl rounded-full border border-white/30 shadow-xl shadow-white/10">
-                                        {slide.tag}
-                                    </span>
-                                </div>
-
-                                {/* Title with Character Animation */}
-                                <h1 className={`text-3xl md:text-4xl lg:text-6xl font-bold text-white leading-[0.9] tracking-tighter mb-3 transition-all duration-700 delay-200 ${index === current ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-                                    }`}>
-                                    <span className="inline-block bg-gradient-to-r from-white md:from-primary to-white text-transparent bg-clip-text text-transparent animate-pulse">
-                                        {slide.title}
-                                    </span>
-                                </h1>
-
-                                {/* Subtitle */}
-                                <p className={`text-l md:text-xl lg:text-xl text-gray-100 leading-relaxed max-w-3xl font-light   mb-6 md:mb-6 transition-all duration-700 delay-300 ${index === current ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-                                    }`}>
-                                    {slide.subtitle}
-                                </p>
-
-                                {/* CTA Buttons with Advanced Hover */}
-                                <div className={`flex flex-wrap gap-5 transition-all duration-700 delay-400 ${index === current ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-                                    }`}>
-                                    <button className="group relative px-5 py-2 md:px-8 md:py-3 bg-white text-black font-medium text-[14px] rounded-lg overflow-hidden transition-all duration-500 shadow-2xl hover:shadow-white/20 hover:scale-105 hover:-translate-y-1">
-                                        <span className="relative z-10 flex items-center gap-3">
-                                            Shop Now
-                                            <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-300" />
-                                        </span>
-                                        <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                    </button>
-
-                                    <button className="group relative px-5 py-2 md:px-8 md:py-3 bg-white/15 backdrop-blur-2xl border-2 border-white/40 text-white font-medium text-[14px] rounded-lg overflow-hidden transition-all duration-500 shadow-2xl hover:scale-105 hover:-translate-y-1">
-                                        <span className="relative z-10">Learn More</span>
-                                        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                        <div className="absolute inset-0 border-2 border-white/60 rounded-2xl scale-0 group-hover:scale-100 transition-transform duration-500" />
-                                    </button>
-                                </div>
-
-                                {/* Floating Stats/Features */}
-                                <div className={`flex gap-2 mt-10 transition-all duration-700 delay-500 ${index === current ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-                                    }`}>
-                                    {['100% Natural', 'Certified', 'Trusted'].map((item, i) => (
-                                        <div key={i} className="group cursor-pointer">
-                                            <div className="px-3 py-2 bg-white/10 backdrop-blur-xl rounded-lg border border-white/20 hover:bg-white/20 hover:scale-110 transition-all duration-300">
-                                                <p className="text-white font-semibold text-[10px] md:text-[14px]">{item}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-
-                {/* Progress Indicators with Animation */}
-                <div className=" relative bottom-10 justify-center left-1/2 -translate-x-1/2 flex gap-4 z-20">
-                    {SLIDES.map((_, index) => (
-                        <button
-                            key={index}
-                            onClick={() => goToSlide(index)}
-                            className="relative group"
-                            disabled={isAnimating}
-                        >
-                            <div className={`h-2 rounded-full transition-all duration-700 ${index === current
-                                ? "w-16 bg-white shadow-xl shadow-white/60"
-                                : "w-10 bg-white/30 group-hover:bg-white/60 group-hover:w-12"
-                                }`}>
-                                {index === current && (
-                                    <div className="h-full bg-gradient-to-r from-white via-gray-200 to-white rounded-full animate-pulse" />
-                                )}
-                            </div>
-
-                            {/* Hover Tooltip */}
-                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1 bg-black/80 backdrop-blur-xl text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none">
-                                Slide {index + 1}
-                            </div>
-                        </button>
-                    ))}
-                </div>
-
-                {/* Slide Counter */}
-                {/* <div className="absolute top-8 right-8 z-20 px-6 py-3 bg-black/40 backdrop-blur-2xl rounded-full border border-white/20">
-                    <span className="text-white font-bold text-sm">
-                        {String(current + 1).padStart(2, '0')} / {String(SLIDES.length).padStart(2, '0')}
-                    </span>
-                </div> */}
+          {/* Bottom Trust Info */}
+          <div className="flex items-center gap-6 border-t border-[#F8F3EF]/10 pt-6">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5 text-[#F0C417]" />
+              <span className="text-xs tracking-wider text-[#F8F3EF]/80 font-medium">AYUSH CERTIFIED</span>
             </div>
+            <div className="h-4 w-[1px] bg-[#F8F3EF]/20" />
+            <div className="flex items-center gap-2">
+              <Star className="w-5 h-5 text-[#F0C417] fill-[#F0C417]" />
+              <span className="text-xs tracking-wider text-[#F8F3EF]/80 font-medium">4.9/5 RATED DIRECTORY</span>
+            </div>
+          </div>
         </div>
-    );
+
+        {/* FLOATING GLASS MOCKUPS COLUMN */}
+        <div className="lg:col-span-6 relative flex items-center justify-center h-[450px] md:h-[500px]">
+          {/* Central Glow Background behind cards */}
+          <div className="absolute w-[350px] h-[350px] rounded-full bg-[#F0C417]/10 blur-[80px] z-0" />
+
+          {/* Card 1: Main Product Card */}
+          <div className="absolute z-10 w-[280px] md:w-[320px] bg-white/5 backdrop-blur-xl border border-white/10 rounded-[14px] p-4 shadow-2xl transition-all duration-700 hover:border-white/20 transform -translate-x-6 md:-translate-x-12 translate-y-4 hover:-translate-y-2">
+            <div className="relative w-full aspect-square rounded-[10px] overflow-hidden mb-4 bg-white/5">
+              <img 
+                src={currentSlide.productImage} 
+                alt={currentSlide.productName}
+                className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+              />
+              <span className="absolute top-2 left-2 px-2.5 py-1 text-[9px] font-bold bg-[#052326] text-[#F8F3EF] rounded-md tracking-wider">
+                {currentSlide.badge}
+              </span>
+              <button className="absolute top-2 right-2 p-1.5 rounded-full bg-white/10 backdrop-blur-md text-[#F8F3EF] hover:bg-white/20 transition-all">
+                <Heart className="w-3.5 h-3.5" />
+              </button>
+            </div>
+            <div className="flex justify-between items-start mb-2">
+              <div>
+                <span className="text-[10px] uppercase tracking-wider text-[#F0C417] font-semibold">{currentSlide.productCategory}</span>
+                <h3 className="text-sm font-semibold text-[#F8F3EF] mt-0.5">{currentSlide.productName}</h3>
+              </div>
+              <span className="text-sm font-bold text-[#F8F3EF]">{currentSlide.productPrice}</span>
+            </div>
+            <div className="flex items-center gap-1 mt-2">
+              <div className="flex text-[#F0C417]">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-3.5 h-3.5 fill-[#F0C417]" />
+                ))}
+              </div>
+              <span className="text-[11px] text-[#F8F3EF]/70 ml-1 font-medium">{currentSlide.rating} Rating</span>
+            </div>
+          </div>
+
+          {/* Card 2: Floating Active Ingredients Card */}
+          <div className="absolute z-20 top-8 right-4 md:right-8 w-[160px] md:w-[190px] bg-white/10 backdrop-blur-2xl border border-white/10 rounded-[12px] p-3 shadow-xl transform translate-x-2 md:translate-x-6 -translate-y-8 hover:scale-[1.05] transition-transform duration-300">
+            <span className="text-[9px] text-[#F8F3EF]/60 tracking-widest uppercase block mb-1">Key Actives</span>
+            <div className="space-y-1.5 mt-2">
+              {currentSlide.ingredients.map((ing, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#F0C417]" />
+                  <span className="text-xs text-[#F8F3EF]/90 font-medium">{ing}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Card 3: Doctor Endorsement / Certified Stamp */}
+          <div className="absolute z-20 bottom-12 right-2 md:right-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-[12px] p-3 shadow-xl flex items-center gap-3 transform translate-y-8 hover:translate-y-6 transition-all duration-300">
+            <div className="w-10 h-10 rounded-[10px] bg-[#052326] flex items-center justify-center border border-[#F8F3EF]/20">
+              <span className="text-xs font-bold text-[#F0C417]">Rx</span>
+            </div>
+            <div>
+              <p className="text-[10px] text-[#F8F3EF]/60 tracking-wider uppercase">Consult Clinic</p>
+              <p className="text-[11px] font-bold text-[#F8F3EF]">Free Consultation</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Navigation Indicators */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-30">
+        {SLIDES.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => goToSlide(index)}
+            className={`h-2.5 rounded-full transition-all duration-500 ${
+              index === current ? "w-10 bg-[#F0C417]" : "w-2.5 bg-[#F8F3EF]/20 hover:bg-[#F8F3EF]/40"
+            }`}
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
+      </div>
+    </section>
+  );
 }

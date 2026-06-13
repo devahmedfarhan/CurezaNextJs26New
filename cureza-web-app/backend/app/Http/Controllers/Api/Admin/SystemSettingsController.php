@@ -129,7 +129,13 @@ class SystemSettingsController extends Controller
             'cart_coins_earn_percentage',
             'cart_coins_max_earn_limit',
             'cart_coins_conversion_rate',
-            'cart_drawer_pinned_upsells'
+            'cart_drawer_pinned_upsells',
+            'theme_primary_color',
+            'theme_background_color',
+            'theme_border_radius',
+            'theme_font_heading',
+            'theme_font_body',
+            'homepage_section_order'
         ];
 
         $settings = SystemSetting::whereIn('key', $publicKeys)->get();
@@ -200,6 +206,12 @@ class SystemSettingsController extends Controller
         if (!isset($publicSettings['cart_coins_max_earn_limit'])) $publicSettings['cart_coins_max_earn_limit'] = 500.00;
         if (!isset($publicSettings['cart_coins_conversion_rate'])) $publicSettings['cart_coins_conversion_rate'] = 1.0;
         if (!isset($publicSettings['cart_drawer_pinned_upsells'])) $publicSettings['cart_drawer_pinned_upsells'] = '[]';
+        if (!isset($publicSettings['theme_primary_color'])) $publicSettings['theme_primary_color'] = '#052326';
+        if (!isset($publicSettings['theme_background_color'])) $publicSettings['theme_background_color'] = '#F8F3EF';
+        if (!isset($publicSettings['theme_border_radius'])) $publicSettings['theme_border_radius'] = '12px';
+        if (!isset($publicSettings['theme_font_heading'])) $publicSettings['theme_font_heading'] = 'Manrope';
+        if (!isset($publicSettings['theme_font_body'])) $publicSettings['theme_font_body'] = 'Inter';
+        if (!isset($publicSettings['homepage_section_order'])) $publicSettings['homepage_section_order'] = 'hero,stats,purpose,partners,consultation,testimonials,marquee';
 
         return response()->json($publicSettings);
     }
