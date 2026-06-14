@@ -23,3 +23,5 @@ php artisan serve
 
 cd d:\Cureza\cureza-web-app\frontend
 npm run dev
+
+

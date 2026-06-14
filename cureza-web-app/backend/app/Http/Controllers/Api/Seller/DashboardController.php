@@ -20,7 +20,7 @@ class DashboardController extends Controller
         $sellerId = auth()->id();
         $dateRange = $this->getDateRange($request);
 
-        // 1. Total Sales (Revenue) - CHANGED: Include all non-cancelled orders (handling COD)
+        // 1. Total Sales (Revenue) - Include all non-cancelled orders (handling COD)
         $totalSales = OrderItem::where('seller_id', $sellerId)
             ->whereHas('order', function ($q) use ($dateRange) {
                 if ($dateRange['start'] && $dateRange['end']) {
@@ -67,53 +67,187 @@ class DashboardController extends Controller
             
         $ordersChange = $previousOrders > 0 ? (($totalOrders - $previousOrders) / $previousOrders) * 100 : ($totalOrders > 0 ? 100 : 0);
 
-
         // 3. Average Order Value
         $avgOrderValue = $totalOrders > 0 ? $totalSales / $totalOrders : 0;
         
         // 4. Products Count (Active)
+        $totalProducts = Product::where('seller_id', $sellerId)->count();
+
         $activeProducts = Product::where('seller_id', $sellerId)
             ->where('status', 'published')
             ->count();
+            
+        $pendingProducts = Product::where('seller_id', $sellerId)
+            ->whereIn('status', ['pending_approval', 'pending_update', 'delete_requested'])
+            ->count();
         
-        // 5. Out of Stock
+        // 5. Out of Stock / Low Stock
         $outOfStock = Product::where('seller_id', $sellerId)
             ->where('stock', '<=', 0)
             ->count();
 
+        $lowStock = Product::where('seller_id', $sellerId)
+            ->where('stock', '<=', 10)
+            ->count();
+
         // 6. Payouts Section
-        $pendingPayout = \App\Models\Payout::where('user_id', $sellerId)
+        $pendingPayout = \App\Models\Payout::where('seller_id', $sellerId)
             ->where('status', 'pending')
-            ->sum('amount');
+            ->sum('requested_amount');
 
-        $paidPayout = \App\Models\Payout::where('user_id', $sellerId)
-            ->where('status', 'processed')
-            ->sum('amount');
-            
-        // 7. Refunds (New)
-        $refundedAmount = OrderItem::where('seller_id', $sellerId)
-             ->whereHas('order', function ($q) use ($dateRange) {
-                if ($dateRange['start'] && $dateRange['end']) {
-                    $q->whereBetween('created_at', [$dateRange['start'], $dateRange['end']]);
-                }
-             })
-             ->where('status', 'refunded')
-             ->sum('total');
+        $paidPayout = \App\Models\Payout::where('seller_id', $sellerId)
+            ->where('status', 'approved')
+            ->sum('approved_amount');
 
-        $totalCommission = OrderItem::where('seller_id', $sellerId)
-            ->whereHas('order', function($q) use ($dateRange) { // Apply date range filtering to commission too
-                 if ($dateRange['start'] && $dateRange['end']) {
-                    $q->whereBetween('created_at', [$dateRange['start'], $dateRange['end']]);
-                }
-                $q->where('status', '!=', 'cancelled');
+        // Let's use Wallet details for available balance
+        $wallet = \App\Models\SellerWallet::where('seller_id', $sellerId)->first();
+        $availableBalance = $wallet ? $wallet->available_balance : 0;
+
+        // Use CommissionService
+        $commissionService = new \App\Services\CommissionService();
+        $commissionSummary = $commissionService->getSellerCommissionSummary($sellerId, $dateRange['start'], $dateRange['end']);
+
+        $totalCommission = $commissionSummary['total_platform_commission'];
+        $gatewayFee = $commissionSummary['total_gateway_fee'];
+        $tcs = $totalSales * 0.01;
+        $tds = $totalSales * 0.01;
+
+        // 7. Orders Breakdown by Status
+        $orderStats = OrderItem::where('seller_id', $sellerId)
+            ->join('orders', 'order_items.order_id', '=', 'orders.id')
+            ->select('orders.status as order_status', DB::raw('count(distinct orders.id) as count'))
+            ->groupBy('orders.status')
+            ->get()
+            ->pluck('count', 'order_status')
+            ->toArray();
+
+        $ordersBreakdown = [
+            'pending' => $orderStats['pending'] ?? 0,
+            'processing' => ($orderStats['confirmed'] ?? 0) + ($orderStats['processing'] ?? 0),
+            'shipped' => $orderStats['shipped'] ?? 0,
+            'delivered' => $orderStats['delivered'] ?? 0,
+            'cancelled' => $orderStats['cancelled'] ?? 0,
+        ];
+
+        // 8. Coupons Summary
+        $activeCouponsCount = \App\Models\Coupon::where('is_active', true)
+            ->where(function($q) {
+                $q->whereNull('expires_at')->orWhere('expires_at', '>', now());
             })
-            ->sum(DB::raw('total * 0.10')); // Example fixed 10%
+            ->count();
 
-        $netEarnings = $totalSales - $totalCommission - $refundedAmount;
+        $totalRedeemed = Order::whereHas('items', function ($q) use ($sellerId) {
+                $q->where('seller_id', $sellerId);
+            })
+            ->whereNotNull('coupon_code')
+            ->where('status', '!=', 'cancelled')
+            ->count();
+
+        $totalDiscount = Order::whereHas('items', function ($q) use ($sellerId) {
+                $q->where('seller_id', $sellerId);
+            })
+            ->whereNotNull('coupon_code')
+            ->where('status', '!=', 'cancelled')
+            ->sum('discount_amount');
+
+        $couponsList = \App\Models\Coupon::where('is_active', true)
+            ->where(function($q) {
+                $q->whereNull('expires_at')->orWhere('expires_at', '>', now());
+            })
+            ->limit(5)
+            ->get()
+            ->map(function ($c) {
+                return [
+                    'code' => $c->code,
+                    'value' => (float)$c->value,
+                    'type' => $c->type === 'percent' ? 'percentage' : 'fixed'
+                ];
+            });
+
+        $couponsSummary = [
+            'active_count' => $activeCouponsCount,
+            'total_redeemed' => $totalRedeemed,
+            'total_discount' => round($totalDiscount, 2),
+            'list' => $couponsList
+        ];
+
+        // 9. Reviews Summary
+        $reviews = \App\Models\Review::where('seller_id', $sellerId);
+        $totalReviewsCount = $reviews->count();
+        $avgRating = $reviews->avg('rating') ?? 0;
+        $positiveReviewsCount = \App\Models\Review::where('seller_id', $sellerId)->where('rating', '>=', 4)->count();
+        $positivePercentage = $totalReviewsCount > 0 ? ($positiveReviewsCount / $totalReviewsCount) * 100 : 0;
+        $pendingReply = \App\Models\Review::where('seller_id', $sellerId)->doesntHave('reply')->count();
+
+        $latestReviews = \App\Models\Review::where('seller_id', $sellerId)
+            ->with('customer:id,name')
+            ->latest()
+            ->limit(2)
+            ->get()
+            ->map(function ($rev) {
+                return [
+                    'customer_name' => $rev->customer ? $rev->customer->name : ($rev->full_name ?? 'Anonymous'),
+                    'rating' => $rev->rating,
+                    'review_text' => $rev->review_text ?? $rev->description ?? '',
+                    'date' => $rev->created_at->toDateString()
+                ];
+            });
+
+        $reviewsSummary = [
+            'avg_rating' => round($avgRating, 1),
+            'total_count' => $totalReviewsCount,
+            'positive_percentage' => round($positivePercentage, 1),
+            'pending_reply' => $pendingReply,
+            'latest' => $latestReviews
+        ];
+
+        // 10. Support Summary
+        $openTickets = \App\Models\Ticket::where('created_by_id', $sellerId)
+            ->whereNotIn('status', ['resolved', 'closed'])
+            ->count();
+
+        $resolvedTickets = \App\Models\Ticket::where('created_by_id', $sellerId)
+            ->whereIn('status', ['resolved', 'closed'])
+            ->count();
+
+        $latestTicket = \App\Models\Ticket::where('created_by_id', $sellerId)
+            ->latest()
+            ->first();
+
+        $latestTicketData = null;
+        if ($latestTicket) {
+            $latestTicketData = [
+                'ticket_number' => 'CRZ-T-' . $latestTicket->id,
+                'subject' => $latestTicket->subject,
+                'status' => $latestTicket->status
+            ];
+        }
+
+        $supportSummary = [
+            'open_count' => $openTickets,
+            'resolved_count' => $resolvedTickets,
+            'latest' => $latestTicketData
+        ];
+
+        // 11. Settings Summary (Store profile, bank, notifications)
+        $profile = \App\Models\SellerProfile::where('user_id', $sellerId)->first();
+        $brand = \App\Models\Brand::where('user_id', $sellerId)->first();
+        $notifications = \App\Models\SellerNotificationSetting::where('seller_id', $sellerId)->first();
+
+        $settingsSummary = [
+            'brand_name' => $brand ? $brand->name : 'N/A',
+            'brand_slug' => $brand ? $brand->slug : 'n/a',
+            'brand_desc' => $brand ? ($brand->short_description ?? $brand->description ?? 'No description provided') : 'No description provided',
+            'bank_name' => $profile ? $profile->bank_name : '',
+            'bank_account' => $profile ? $profile->bank_account_number : '',
+            'gst_number' => $profile ? $profile->gst_number : '',
+            'notifications_enabled' => $notifications ? (bool)($notifications->email_notifications || $notifications->order_notifications) : false,
+            'two_factor_enabled' => false
+        ];
 
         return response()->json([
             'sales' => [
-                'value' => $totalSales,
+                'value' => round($totalSales, 2),
                 'change' => round($salesChange, 1),
                 'trend' => $salesChange >= 0 ? 'up' : 'down'
             ],
@@ -128,17 +262,27 @@ class DashboardController extends Controller
                 'trend' => 'up'
             ],
             'products' => [
+                'total' => $totalProducts,
                 'active' => $activeProducts,
-                'out_of_stock' => $outOfStock
+                'pending' => $pendingProducts,
+                'out_of_stock' => $outOfStock,
+                'low_stock' => $lowStock
             ],
             'revenue' => [
-                'gross' => $totalSales,
-                'commission' => $totalCommission,
-                'refunds' => $refundedAmount,
-                'net' => $netEarnings,
-                'pending_payout' => $pendingPayout,
-                'paid_payout' => $paidPayout
-            ]
+                'gross' => round($totalSales, 2),
+                'commission' => round($totalCommission, 2),
+                'gateway_fee' => round($gatewayFee, 2),
+                'tcs' => round($tcs, 2),
+                'tds' => round($tds, 2),
+                'net' => round($availableBalance, 2),
+                'pending_payout' => round($pendingPayout, 2),
+                'paid_payout' => round($paidPayout, 2)
+            ],
+            'orders_breakdown' => $ordersBreakdown,
+            'coupons_summary' => $couponsSummary,
+            'reviews_summary' => $reviewsSummary,
+            'support_summary' => $supportSummary,
+            'settings_summary' => $settingsSummary
         ]);
     }
 
@@ -153,7 +297,7 @@ class DashboardController extends Controller
 
         $query = OrderItem::where('seller_id', $sellerId)
             ->join('orders', 'order_items.order_id', '=', 'orders.id')
-            ->where('orders.status', '!=', 'cancelled') // CHANGED
+            ->where('orders.status', '!=', 'cancelled')
             ->select(
                 DB::raw('DATE(orders.created_at) as date'),
                 DB::raw('SUM(order_items.total) as total_sales')
@@ -168,10 +312,10 @@ class DashboardController extends Controller
             ->get()
             ->keyBy('date');
 
-        // Fill missing dates (Only if not all_time, or determine range for all_time)
+        // Fill missing dates if the range is within 95 days to avoid memory/loop issues
         $finalData = [];
         
-        if ($dateRange['start'] && $dateRange['end']) {
+        if ($dateRange['start'] && $dateRange['end'] && $dateRange['start']->diffInDays($dateRange['end']) <= 95) {
             $currentDate = $dateRange['start']->copy();
             $endDate = $dateRange['end']->copy();
             
@@ -184,8 +328,13 @@ class DashboardController extends Controller
                 $currentDate->addDay();
             }
         } else {
-            // For All Time, just return what we have (or gap fill between min and max if needed, but simple is better)
-            $finalData = $salesData->values();
+            // For longer ranges or all_time, return existing data points mapped cleanly
+            foreach ($salesData as $row) {
+                $finalData[] = [
+                    'date' => $row->date,
+                    'total_sales' => (float)$row->total_sales
+                ];
+            }
         }
         
         return response()->json($finalData);

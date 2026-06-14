@@ -62,9 +62,7 @@ export default function BrandPage({ params }: { params: { slug: string } }) {
     // Dynamic SEO update based on brand settings
     useEffect(() => {
         if (brand) {
-            document.title = brand.meta_title || (brand.short_description 
-                ? `${brand.name} | ${brand.short_description} | Cureza` 
-                : `${brand.name} | Cureza`);
+            document.title = `${brand.name} | Cureza - The Store Of Wellness`;
             
             // Meta Description
             let metaDesc = document.querySelector('meta[name="description"]');

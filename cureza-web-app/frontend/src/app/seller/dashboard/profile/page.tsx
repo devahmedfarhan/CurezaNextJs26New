@@ -30,9 +30,7 @@ export default function SellerProfilePage() {
     const brandTagline = watch('short_description') || '';
     const metaKeywords = watch('meta_keywords') || '';
 
-    const fullMetaTitle = brandTagline 
-        ? `${brandName} | ${brandTagline} | Cureza` 
-        : `${brandName} | Cureza`;
+    const fullMetaTitle = `${brandName} | Cureza - The Store Of Wellness`;
 
     const currentKeywordsList = metaKeywords
         ? metaKeywords.split(',').map((k: string) => k.trim()).filter((k: string) => k.length > 0)
@@ -147,9 +145,7 @@ export default function SellerProfilePage() {
             });
 
             // Append SEO fields
-            const compiledMetaTitle = data.short_description 
-                ? `${data.name} | ${data.short_description} | Cureza` 
-                : `${data.name} | Cureza`;
+            const compiledMetaTitle = `${data.name} | Cureza - The Store Of Wellness`;
             formData.append('meta_title', compiledMetaTitle);
             formData.append('meta_description', data.meta_description || '');
             formData.append('meta_keywords', data.meta_keywords || '');

@@ -85,14 +85,15 @@ class CommissionService
             $commission = $this->getSellerCommissionRate($sellerId, $order->created_at);
 
             $platformCommission = $sellerTotal * ($commission->base_commission_percentage / 100);
-            $gatewayFee = $sellerTotal * ($commission->payment_gateway_percentage / 100);
+            $isCOD = strtolower($order->payment_method ?? '') === 'cod';
+            $gatewayFee = $isCOD ? 0 : ($sellerTotal * ($commission->payment_gateway_percentage / 100));
             $sellerEarnings = $sellerTotal - $platformCommission - $gatewayFee;
 
             $breakdown[$sellerId] = [
                 'seller_id' => $sellerId,
                 'order_total' => round($sellerTotal, 2),
                 'platform_commission_percentage' => $commission->base_commission_percentage,
-                'payment_gateway_percentage' => $commission->payment_gateway_percentage,
+                'payment_gateway_percentage' => $isCOD ? 0 : $commission->payment_gateway_percentage,
                 'platform_commission_amount' => round($platformCommission, 2),
                 'payment_gateway_fee' => round($gatewayFee, 2),
                 'total_deduction' => round($platformCommission + $gatewayFee, 2),
@@ -197,7 +198,8 @@ class CommissionService
                 $commission = $this->getSellerCommissionRate($sellerId, $order->created_at);
 
                 $platformCommission = $sellerTotal * ($commission->base_commission_percentage / 100);
-                $gatewayFee = $sellerTotal * ($commission->payment_gateway_percentage / 100);
+                $isCOD = strtolower($order->payment_method ?? '') === 'cod';
+                $gatewayFee = $isCOD ? 0 : ($sellerTotal * ($commission->payment_gateway_percentage / 100));
                 $sellerEarnings = $sellerTotal - $platformCommission - $gatewayFee;
 
                 // Reverse the earnings
@@ -263,7 +265,8 @@ class CommissionService
             
             $commission = $this->getSellerCommissionRate($sellerId, $order->created_at);
             $platformCommission = $sellerTotal * ($commission->base_commission_percentage / 100);
-            $gatewayFee = $sellerTotal * ($commission->payment_gateway_percentage / 100);
+            $isCOD = strtolower($order->payment_method ?? '') === 'cod';
+            $gatewayFee = $isCOD ? 0 : ($sellerTotal * ($commission->payment_gateway_percentage / 100));
             $earnings = $sellerTotal - $platformCommission - $gatewayFee;
 
             $totalSales += $sellerTotal;

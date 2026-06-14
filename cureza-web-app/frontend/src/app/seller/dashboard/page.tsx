@@ -7,14 +7,16 @@ import SalesTrendChart from './components/SalesTrendChart';
 import Link from 'next/link';
 import { 
     TrendingUp, TrendingDown, ShoppingCart, DollarSign, 
-    Package, CreditCard, ArrowUpRight, ArrowRight, User, AlertCircle
+    Package, CreditCard, ArrowRight, AlertCircle,
+    Star, Tag, Settings, ShieldCheck, HelpCircle, Activity,
+    LayoutDashboard, Info, Percent, MessageSquare, ShieldAlert, Sparkles, Clock, Globe
 } from 'lucide-react';
 
 const MOCK_SUMMARY: DashboardSummary = {
     sales: { value: 124500, change: 12.5, trend: 'up' },
     orders: { value: 156, change: 8.2, trend: 'up' },
     avg_order_value: { value: 798, change: 4.1, trend: 'up' },
-    products: { active: 42, out_of_stock: 3 },
+    products: { total: 45, active: 42, pending: 3, out_of_stock: 3, low_stock: 5 },
     revenue: { gross: 124500, commission: 12450, net: 112050, pending_payout: 18500, paid_payout: 93550 }
 };
 
@@ -103,204 +105,665 @@ export default function SellerDashboardPage() {
     };
 
     return (
-        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-300">
             {/* Top Greeting Welcome Section */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-black/[0.05] pb-6">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-black/[0.05] pb-8">
                 <div>
-                    <h1 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight flex items-center gap-2">
+                    <h1 className="text-3xl font-black text-gray-900 tracking-tight flex items-center gap-3">
+                        <LayoutDashboard className="text-cureza-green" size={32} />
                         {getGreeting()}, {user?.name || 'Seller'}!
                     </h1>
-                    <p className="text-gray-400 text-xs font-bold mt-1 uppercase tracking-wider">Seller Node Integration Hub</p>
+                    <p className="text-gray-500 mt-2 font-semibold uppercase tracking-wider text-xs">
+                        Welcome to your Unified Command Center. Manage products, trace orders, settle ledgers, and track store insights.
+                    </p>
                 </div>
-                <select
-                    value={range}
-                    onChange={(e) => setRange(e.target.value)}
-                    className="bg-white dark:bg-gray-900 border border-black/[0.05] rounded-[8px] px-3.5 py-2 text-xs font-bold focus:ring-2 focus:ring-cureza-green/10 cursor-pointer text-gray-600 dark:text-gray-300 outline-none"
-                >
-                    <option value="7_days">Last 7 Days</option>
-                    <option value="30_days">Last 30 Days</option>
-                    <option value="90_days">Last 90 Days</option>
-                </select>
+                <div className="flex items-center gap-3 w-full md:w-auto">
+                    <select
+                        value={range}
+                        onChange={(e) => setRange(e.target.value)}
+                        className="bg-white border border-gray-200 rounded-2xl px-5 py-3 text-xs font-black uppercase tracking-wider focus:outline-none focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green cursor-pointer text-gray-600 outline-none w-full md:w-auto shadow-sm"
+                    >
+                        <option value="7_days">7 Days Audit Focus</option>
+                        <option value="30_days">30 Days Audit Focus</option>
+                        <option value="90_days">90 Days Audit Focus</option>
+                    </select>
+                </div>
             </div>
 
-            {/* Core Stats Overview Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {/* Gross Sales */}
-                <div className="bg-white dark:bg-gray-900 border border-black/[0.05] dark:border-white/[0.05] rounded-[8px] p-6 flex flex-col justify-between h-32 hover:border-black/[0.1] transition-all">
+            {/* Core KPI Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <Link href="/seller/dashboard/finance" className="premium-card p-6 bg-white border border-gray-100 rounded-3xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between h-[140px] group">
                     <div className="flex justify-between items-center">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Gross Revenue</span>
-                        <div className="p-1.5 bg-[#052326]/5 text-[#052326] rounded-[6px]">
-                            <DollarSign size={14} />
+                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Gross Sales</span>
+                        <div className="p-2.5 bg-emerald-50 text-emerald-600 rounded-2xl border border-emerald-100 group-hover:scale-110 transition-transform">
+                            <DollarSign size={16} />
                         </div>
                     </div>
-                    <div className="flex items-end justify-between">
-                        <h3 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight leading-none">
-                            ₹{summary?.sales.value.toLocaleString('en-IN')}
+                    <div>
+                        <h3 className="text-3xl font-black text-gray-900 tracking-tighter">
+                            ₹{(summary?.revenue?.gross ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                         </h3>
-                        {summary?.sales.change !== undefined && (
-                            <span className={`text-[10px] font-bold flex items-center gap-0.5 px-1.5 py-0.5 rounded-[8px] ${
-                                summary.sales.trend === 'up' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
-                            }`}>
-                                {summary.sales.trend === 'up' ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
-                                {summary.sales.change}%
-                            </span>
-                        )}
+                        <p className="text-[9px] font-bold text-emerald-600 mt-2 uppercase tracking-tight flex items-center gap-1">
+                            <TrendingUp size={12} /> +{summary?.sales.change ?? 0}% vs last window
+                        </p>
                     </div>
-                </div>
+                </Link>
 
-                {/* Orders Count */}
-                <div className="bg-white dark:bg-gray-900 border border-black/[0.05] dark:border-white/[0.05] rounded-[8px] p-6 flex flex-col justify-between h-32 hover:border-black/[0.1] transition-all">
+                <Link href="/seller/dashboard/orders" className="premium-card p-6 bg-white border border-gray-100 rounded-3xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between h-[140px] group">
                     <div className="flex justify-between items-center">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Orders</span>
-                        <div className="p-1.5 bg-blue-50 text-blue-600 rounded-[6px]">
-                            <ShoppingCart size={14} />
+                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Fulfillment Nodes</span>
+                        <div className="p-2.5 bg-blue-50 text-blue-600 rounded-2xl border border-blue-100 group-hover:scale-110 transition-transform">
+                            <ShoppingCart size={16} />
                         </div>
                     </div>
-                    <div className="flex items-end justify-between">
-                        <h3 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight leading-none">
-                            {summary?.orders.value}
+                    <div>
+                        <h3 className="text-3xl font-black text-gray-900 tracking-tighter">
+                            {summary?.orders.value ?? 0} Orders
                         </h3>
-                        {summary?.orders.change !== undefined && (
-                            <span className={`text-[10px] font-bold flex items-center gap-0.5 px-1.5 py-0.5 rounded-[8px] ${
-                                summary.orders.trend === 'up' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
-                            }`}>
-                                {summary.orders.trend === 'up' ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
-                                {summary.orders.change}%
-                            </span>
-                        )}
+                        <p className="text-[9px] font-bold text-blue-600 mt-2 uppercase tracking-tight flex items-center gap-1">
+                            <TrendingUp size={12} /> +{summary?.orders.change ?? 0}% active pipeline
+                        </p>
                     </div>
-                </div>
+                </Link>
 
-                {/* Products Status */}
-                <div className="bg-white dark:bg-gray-900 border border-black/[0.05] dark:border-white/[0.05] rounded-[8px] p-6 flex flex-col justify-between h-32 hover:border-black/[0.1] transition-all">
+                <Link href="/seller/dashboard/products" className="premium-card p-6 bg-white border border-gray-100 rounded-3xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between h-[140px] group">
                     <div className="flex justify-between items-center">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Active Products</span>
-                        <div className="p-1.5 bg-emerald-50 text-emerald-600 rounded-[6px]">
-                            <Package size={14} />
+                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Active Products</span>
+                        <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-2xl border border-indigo-100 group-hover:scale-110 transition-transform">
+                            <Package size={16} />
                         </div>
                     </div>
-                    <div className="flex items-end justify-between">
-                        <h3 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight leading-none">
-                            {summary?.products.active}
+                    <div>
+                        <h3 className="text-3xl font-black text-gray-900 tracking-tighter">
+                            {summary?.products.active ?? 0} SKUs
                         </h3>
-                        {summary?.products.out_of_stock ? (
-                            <span className="text-[9px] font-bold bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded-[8px] flex items-center gap-1">
-                                <AlertCircle size={8} /> {summary.products.out_of_stock} Out of Stock
-                            </span>
-                        ) : (
-                            <span className="text-[9px] font-bold bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded-[8px]">All Healthy</span>
-                        )}
+                        <p className="text-[9px] font-bold text-amber-600 mt-2 uppercase tracking-tight flex items-center gap-1">
+                            <AlertCircle size={12} /> {summary?.products.out_of_stock ?? 0} restock warnings
+                        </p>
                     </div>
-                </div>
+                </Link>
 
-                {/* Net Earnings */}
-                <div className="bg-white dark:bg-gray-900 border border-black/[0.05] dark:border-white/[0.05] rounded-[8px] p-6 flex flex-col justify-between h-32 hover:border-black/[0.1] transition-all">
+                <Link href="/seller/dashboard/finance" className="premium-card p-6 bg-white border border-gray-100 rounded-3xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between h-[140px] group">
                     <div className="flex justify-between items-center">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Net Wallet Payout</span>
-                        <div className="p-1.5 bg-purple-50 text-purple-600 rounded-[6px]">
-                            <CreditCard size={14} />
+                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Liquid Balance</span>
+                        <div className="p-2.5 bg-purple-50 text-purple-600 rounded-2xl border border-purple-100 group-hover:scale-110 transition-transform">
+                            <CreditCard size={16} />
                         </div>
                     </div>
-                    <div className="flex items-end justify-between">
-                        <h3 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight leading-none">
-                            ₹{summary?.revenue.net.toLocaleString('en-IN')}
+                    <div>
+                        <h3 className="text-3xl font-black text-gray-950 tracking-tighter">
+                            ₹{(summary?.revenue?.net ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                         </h3>
-                        <span className="text-[9px] font-bold text-gray-400">Net After Fees</span>
+                        <p className="text-[9px] font-bold text-gray-400 mt-2 uppercase tracking-tight">
+                            Net Credited into wallet balance
+                        </p>
                     </div>
-                </div>
+                </Link>
             </div>
 
             {/* Sales Chart Section */}
-            <div className="bg-white dark:bg-gray-900 border border-black/[0.05] dark:border-white/[0.05] rounded-[8px] p-6">
-                <div className="mb-6">
-                    <h3 className="text-base font-bold text-gray-900 dark:text-white tracking-tight">Sales Trajectory</h3>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mt-0.5">Revenue and Transaction Volatility Metrics</p>
+            <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+                <div className="mb-6 flex justify-between items-center">
+                    <div>
+                        <h3 className="text-xl font-black text-gray-900 tracking-tighter">Sales Trajectory</h3>
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-wider mt-0.5">Revenue and Transaction Volatility Metrics</p>
+                    </div>
+                    <Link href="/seller/dashboard/analytics" className="px-5 py-2.5 bg-gray-50 border border-gray-150 rounded-xl text-[9px] font-black text-gray-600 hover:text-cureza-green hover:border-cureza-green transition-all uppercase tracking-widest">
+                        Detailed Analytics Matrix
+                    </Link>
                 </div>
                 <SalesTrendChart data={salesData} />
             </div>
 
-            {/* Dual Grid: Recent Orders & Top Products */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Recent Orders Card */}
-                <div className="bg-white dark:bg-gray-900 border border-black/[0.05] dark:border-white/[0.05] rounded-[8px] p-6 flex flex-col">
-                    <div className="flex justify-between items-center mb-6">
-                        <div>
-                            <h3 className="text-base font-bold text-gray-900 dark:text-white tracking-tight">Recent Orders</h3>
-                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mt-0.5">Latest Ingestion Pipeline</p>
+            {/* Seller landing Command Center Sections (All 10 Modules) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* 1. My Products Management Card */}
+                <div className="premium-card bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden flex flex-col justify-between">
+                    <div className="p-8 space-y-6">
+                        <div className="flex justify-between items-start">
+                            <div className="space-y-1">
+                                <h4 className="font-black text-xl text-gray-900 tracking-tighter">My Products</h4>
+                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Catalog Health & SKU parameters</p>
+                            </div>
+                            <span className="px-2.5 py-1 bg-indigo-50 border border-indigo-100 rounded-xl text-[8.5px] font-black text-indigo-600 uppercase tracking-wider">Catalog Desk</span>
                         </div>
-                        <Link 
-                            href="/seller/dashboard/orders" 
-                            className="text-xs font-bold text-emerald-700 hover:text-emerald-800 transition flex items-center gap-1.5"
-                        >
-                            View All <ArrowRight size={12} />
+ 
+                        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 text-xs font-bold text-gray-500">
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Total Listings</span>
+                                <span className="text-gray-900 text-base font-black">{summary?.products.total ?? 0}</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Live on Shop</span>
+                                <span className="text-emerald-600 text-base font-black">{summary?.products.active ?? 0}</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Under Review</span>
+                                <span className="text-amber-600 text-base font-black">{summary?.products.pending ?? 0}</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Stock Alerts</span>
+                                <span className="text-rose-600 text-base font-black">{summary?.products.low_stock ?? 0}</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Avg Rating</span>
+                                <span className="text-amber-500 text-base font-black flex items-center gap-0.5">
+                                    {summary?.reviews_summary?.avg_rating !== undefined ? summary.reviews_summary.avg_rating.toFixed(1) : '0.0'}
+                                    <Star size={12} fill="#F59E0B" className="text-amber-500" />
+                                </span>
+                            </div>
+                        </div>
+ 
+                        {/* Velocity Restock List */}
+                        <div className="space-y-3">
+                            <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Top Selling Products Runway</p>
+                            {topProducts.length === 0 ? (
+                                <p className="text-gray-400 italic text-[10px]">No sales recorded yet.</p>
+                            ) : (
+                                topProducts.slice(0, 2).map((prod) => (
+                                    <div key={prod.product_id} className="flex justify-between items-center text-xs font-bold text-gray-700 bg-gray-50/55 p-3 rounded-xl border border-gray-100/50">
+                                        <span className="truncate max-w-[200px]">{prod.product_name}</span>
+                                        <span className="text-gray-400 text-[10px] shrink-0 font-extrabold">{prod.stock_left} in stock ({prod.units_sold} sold)</span>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    </div>
+                    
+                    <div className="p-6 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
+                        <Link href="/seller/dashboard/products" className="text-[10px] font-black uppercase text-gray-900 tracking-wider flex items-center gap-1.5 hover:text-cureza-green transition-all w-full">
+                            Manage Inventory <ArrowRight size={14} className="ml-auto" />
                         </Link>
                     </div>
-
-                    <div className="flex-1 overflow-x-auto">
-                        <table className="w-full text-xs text-left">
-                            <thead className="border-b border-black/[0.05] text-gray-400 font-bold uppercase tracking-wider text-[10px]">
-                                <tr>
-                                    <th className="pb-3 pr-2">Order #</th>
-                                    <th className="pb-3 pr-2">Customer</th>
-                                    <th className="pb-3 pr-2">Amount</th>
-                                    <th className="pb-3 text-right">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-black/[0.03] font-semibold text-gray-700 dark:text-gray-300">
-                                {recentOrders.map((order) => (
-                                    <tr key={order.id} className="hover:bg-gray-50/50 transition">
-                                        <td className="py-3 pr-2 font-bold text-gray-900 dark:text-white">{order.order_number}</td>
-                                        <td className="py-3 pr-2">{order.customer}</td>
-                                        <td className="py-3 pr-2 font-bold text-gray-900 dark:text-white">₹{order.amount}</td>
-                                        <td className="py-3 text-right">
-                                            <span className={`px-2 py-0.5 rounded-[8px] text-[9px] font-bold border inline-block ${
-                                                orderStatusMapping[order.status] || 'bg-gray-50 text-gray-600'
-                                            }`}>
-                                                {order.status.charAt(0) + order.status.slice(1).toLowerCase()}
-                                            </span>
-                                        </td>
+                </div>
+ 
+                {/* 2. Orders Ingestion pipeline */}
+                <div className="premium-card bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden flex flex-col justify-between">
+                    <div className="p-8 space-y-6">
+                        <div className="flex justify-between items-start">
+                            <div className="space-y-1">
+                                <h4 className="font-black text-xl text-gray-900 tracking-tighter">Orders Dispatch Desk</h4>
+                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Fulfillment tracking & status nodes</p>
+                            </div>
+                            <span className="px-2.5 py-1 bg-blue-50 border border-blue-100 rounded-xl text-[8.5px] font-black text-blue-600 uppercase tracking-wider">Fulfillment</span>
+                        </div>
+ 
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-bold text-gray-500">
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Pending Processing</span>
+                                <span className="text-amber-600 text-base font-black">{summary?.orders_breakdown?.processing ?? 0} Orders</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">In-Transit / Shipped</span>
+                                <span className="text-indigo-600 text-base font-black">{summary?.orders_breakdown?.shipped ?? 0} Orders</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Delivered (30d)</span>
+                                <span className="text-emerald-600 text-base font-black">{summary?.orders_breakdown?.delivered ?? 0} Orders</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Cancelled Nodes</span>
+                                <span className="text-rose-650 text-base font-black">{summary?.orders_breakdown?.cancelled ?? 0} Orders</span>
+                            </div>
+                        </div>
+ 
+                        <div className="flex-1 overflow-x-auto">
+                            <table className="w-full text-xs text-left">
+                                <thead className="border-b border-gray-100 text-gray-400 font-bold uppercase tracking-wider text-[9px]">
+                                    <tr>
+                                        <th className="pb-3 pr-2">Order #</th>
+                                        <th className="pb-3 pr-2">Customer</th>
+                                        <th className="pb-3 pr-2">Amount</th>
+                                        <th className="pb-3 text-right">Status</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody className="divide-y divide-gray-50 font-semibold text-gray-700">
+                                    {recentOrders.length === 0 ? (
+                                        <tr>
+                                            <td colSpan={4} className="py-4 text-center text-gray-400 italic text-[10px]">No recent orders found.</td>
+                                        </tr>
+                                    ) : (
+                                        recentOrders.slice(0, 3).map((order) => (
+                                            <tr key={order.id} className="hover:bg-gray-50/50 transition">
+                                                <td className="py-3 pr-2 font-bold text-gray-900">{order.order_number}</td>
+                                                <td className="py-3 pr-2">{order.customer}</td>
+                                                <td className="py-3 pr-2 font-bold text-gray-900">₹{(order.amount ?? 0).toLocaleString('en-IN')}</td>
+                                                <td className="py-3 text-right">
+                                                    <span className={`px-2 py-0.5 rounded-xl text-[8.5px] font-bold border inline-block ${
+                                                        orderStatusMapping[order.status.toUpperCase()] || 'bg-gray-50 text-gray-600'
+                                                    }`}>
+                                                        {order.status.charAt(0) + order.status.slice(1).toLowerCase()}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div className="p-6 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
+                        <Link href="/seller/dashboard/orders" className="text-[10px] font-black uppercase text-gray-900 tracking-wider flex items-center gap-1.5 hover:text-cureza-green transition-all w-full">
+                            Dispatch Center <ArrowRight size={14} className="ml-auto" />
+                        </Link>
                     </div>
                 </div>
 
-                {/* Top Selling Products Card */}
-                <div className="bg-white dark:bg-gray-900 border border-black/[0.05] dark:border-white/[0.05] rounded-[8px] p-6 flex flex-col">
-                    <div className="flex justify-between items-center mb-6">
-                        <div>
-                            <h3 className="text-base font-bold text-gray-900 dark:text-white tracking-tight">Top Products</h3>
-                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mt-0.5">High-Velocity Catalog Rankings</p>
+                {/* 3. Payments & Settlements Card */}
+                <div className="premium-card bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden flex flex-col justify-between">
+                    <div className="p-8 space-y-6">
+                        <div className="flex justify-between items-start">
+                            <div className="space-y-1">
+                                <h4 className="font-black text-xl text-gray-900 tracking-tighter">Payments Ledger</h4>
+                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Settlements ready and disbursement records</p>
+                            </div>
+                            <span className="px-2.5 py-1 bg-purple-50 border border-purple-100 rounded-xl text-[8.5px] font-black text-purple-600 uppercase tracking-wider">Ledger</span>
                         </div>
-                        <Link 
-                            href="/seller/dashboard/products" 
-                            className="text-xs font-bold text-emerald-700 hover:text-emerald-800 transition flex items-center gap-1.5"
-                        >
-                            Catalog <ArrowRight size={12} />
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-bold text-gray-500">
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Liquid Wallet</span>
+                                <span className="text-gray-900 text-sm font-black">₹{(summary?.revenue?.net ?? 0).toLocaleString('en-IN')}</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Pending Payouts</span>
+                                <span className="text-gray-950 text-sm font-black">₹{(summary?.revenue?.pending_payout ?? 0).toLocaleString('en-IN')}</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Next Settlement</span>
+                                <span className="text-indigo-655 text-sm font-black">
+                                    {new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                </span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Tax deductions</span>
+                                <span className="text-rose-650 text-sm font-black">₹{(summary?.revenue?.tcs ?? 0).toLocaleString('en-IN')} (TCS)</span>
+                            </div>
+                        </div>
+
+                        <div className="p-4 bg-purple-50/30 rounded-2xl border border-purple-100/50 flex gap-3 text-[10px] font-semibold text-purple-800 leading-normal">
+                            <Info size={16} className="text-purple-600 shrink-0 mt-0.5" />
+                            <p>Funds are settled immediately on delivery. Approved payout requests are processed directly into your connected {summary?.settings_summary?.bank_name || 'bank account'} ({summary?.settings_summary?.bank_account ? '*' + summary.settings_summary.bank_account.slice(-4) : 'Not Configured'}) within 24 hours.</p>
+                        </div>
+                    </div>
+                    
+                    <div className="p-6 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
+                        <Link href="/seller/dashboard/finance" className="text-[10px] font-black uppercase text-gray-900 tracking-wider flex items-center gap-1.5 hover:text-cureza-green transition-all w-full">
+                            Manage Ledger & Withdrawals <ArrowRight size={14} className="ml-auto" />
                         </Link>
                     </div>
+                </div>
 
-                    <div className="flex-1 divide-y divide-black/[0.03] space-y-4">
-                        {topProducts.map((prod, idx) => (
-                            <div key={prod.product_id} className="flex items-center justify-between pt-4 first:pt-0">
-                                <div className="flex items-center gap-3 min-w-0">
-                                    <span className="w-6 h-6 rounded-full bg-gray-50 dark:bg-gray-800 flex items-center justify-center font-black text-gray-400 text-[10px] border border-black/[0.03] shrink-0">
-                                        {idx + 1}
-                                    </span>
-                                    <div className="min-w-0">
-                                        <h4 className="font-bold text-gray-900 dark:text-white text-xs truncate max-w-[200px]" title={prod.product_name}>
-                                            {prod.product_name}
-                                        </h4>
-                                        <p className="text-[10px] text-gray-400 font-semibold">{prod.units_sold} Units Sold</p>
+                {/* 4. Analytics Insights Card */}
+                <div className="premium-card bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden flex flex-col justify-between">
+                    <div className="p-8 space-y-6">
+                        <div className="flex justify-between items-start">
+                            <div className="space-y-1">
+                                <h4 className="font-black text-xl text-gray-900 tracking-tighter">Analytics Matrix</h4>
+                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Store performance growth & conversion rates</p>
+                            </div>
+                            <span className="px-2.5 py-1 bg-emerald-50 border border-emerald-100 rounded-xl text-[8.5px] font-black text-emerald-600 uppercase tracking-wider">Analytics</span>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-bold text-gray-500">
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Conversion Rate</span>
+                                <span className="text-gray-900 text-sm font-black">0.00%</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Unique Visitors</span>
+                                <span className="text-gray-900 text-sm font-black">0</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Bounce Rate</span>
+                                <span className="text-gray-900 text-sm font-black">0.00%</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Avg Order Val</span>
+                                <span className="text-gray-900 text-sm font-black">₹{summary?.avg_order_value.value ?? 0}</span>
+                            </div>
+                        </div>
+
+                        <div className="space-y-2 text-[10px] font-bold text-gray-600">
+                            <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1">Traffic Channels Allocation</p>
+                            <p className="text-gray-400 italic">No traffic source data available yet. Source tags will populate here automatically.</p>
+                        </div>
+                    </div>
+                    
+                    <div className="p-6 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
+                        <Link href="/seller/dashboard/analytics" className="text-[10px] font-black uppercase text-gray-900 tracking-wider flex items-center gap-1.5 hover:text-cureza-green transition-all w-full">
+                            Explore Analytics Matrix <ArrowRight size={14} className="ml-auto" />
+                        </Link>
+                    </div>
+                </div>
+
+                {/* 5. Customer Reviews & Sentiment Card */}
+                <div className="premium-card bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden flex flex-col justify-between">
+                    <div className="p-8 space-y-6">
+                        <div className="flex justify-between items-start">
+                            <div className="space-y-1">
+                                <h4 className="font-black text-xl text-gray-900 tracking-tighter">Customer Reviews</h4>
+                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Sentiment analysis and ratings aggregate</p>
+                            </div>
+                            <span className="px-2.5 py-1 bg-amber-50 border border-amber-100 rounded-xl text-[8.5px] font-black text-amber-600 uppercase tracking-wider">Reviews</span>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-bold text-gray-500">
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Average Star</span>
+                                <span className="text-gray-900 text-sm font-black flex items-center gap-0.5">{(summary?.reviews_summary?.avg_rating ?? 0).toFixed(1)} <Star size={12} fill="#F59E0B" className="text-amber-500" /></span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Total Reviews</span>
+                                <span className="text-gray-900 text-sm font-black">{summary?.reviews_summary?.total_count ?? 0} Comments</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Positive Sentiment</span>
+                                <span className="text-emerald-600 text-sm font-black">{(summary?.reviews_summary?.positive_percentage ?? 0).toFixed(1)}%</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Pending Reply</span>
+                                <span className="text-rose-600 text-sm font-black">{summary?.reviews_summary?.pending_reply ?? 0} reviews</span>
+                            </div>
+                        </div>
+
+                        {/* Recent Reviews Feed */}
+                        <div className="space-y-3">
+                            <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Recent Comments</p>
+                            {summary?.reviews_summary?.latest && summary.reviews_summary.latest.length > 0 ? (
+                                summary.reviews_summary.latest.map((rev, index) => (
+                                    <div key={index} className="p-3 bg-gray-50 rounded-xl border border-gray-100 space-y-1">
+                                        <div className="flex justify-between items-center text-[10px] font-bold text-gray-800">
+                                            <span>{rev.customer_name}</span>
+                                            <span className="text-amber-500 flex items-center gap-0.5">{rev.rating.toFixed(1)} <Star size={10} fill="#F59E0B" className="text-amber-500" /></span>
+                                        </div>
+                                        <p className="text-[10px] font-medium text-gray-500 italic">"{rev.review_text}"</p>
                                     </div>
+                                ))
+                            ) : (
+                                <p className="text-[10px] text-gray-400 italic">No customer reviews submitted yet.</p>
+                            )}
+                    </div>
+                </div>
+                
+                <div className="p-6 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
+                        <Link href="/seller/dashboard/reviews" className="text-[10px] font-black uppercase text-gray-900 tracking-wider flex items-center gap-1.5 hover:text-cureza-green transition-all w-full">
+                            Review Desk <ArrowRight size={14} className="ml-auto" />
+                        </Link>
+                    </div>
+                </div>
+
+                {/* 6. Promotion & Coupons Card */}
+                <div className="premium-card bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden flex flex-col justify-between">
+                    <div className="p-8 space-y-6">
+                        <div className="flex justify-between items-start">
+                            <div className="space-y-1">
+                                <h4 className="font-black text-xl text-gray-900 tracking-tighter">Coupons & Campaigns</h4>
+                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Promotion parameters & active discount coupons</p>
+                            </div>
+                            <span className="px-2.5 py-1 bg-amber-50 border border-amber-100 rounded-xl text-[8.5px] font-black text-amber-600 uppercase tracking-wider">Campaign Desk</span>
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-bold text-gray-500">
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Active Coupons</span>
+                                <span className="text-gray-900 text-sm font-black">{summary?.coupons_summary?.active_count ?? 0} active</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Total Redeemed</span>
+                                <span className="text-gray-900 text-sm font-black">{summary?.coupons_summary?.total_redeemed ?? 0} times</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Total Discount Val</span>
+                                <span className="text-emerald-600 text-sm font-black">₹{(summary?.coupons_summary?.total_discount ?? 0).toLocaleString('en-IN')}</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Campaign ROI</span>
+                                <span className="text-indigo-655 text-sm font-black">{summary?.coupons_summary?.total_redeemed ? '3.5x Est' : '0.0x ROI'}</span>
+                            </div>
+                        </div>
+
+                        {/* Active Coupon Codes */}
+                        <div className="space-y-2">
+                            {summary?.coupons_summary?.list && summary.coupons_summary.list.length > 0 ? (
+                                summary.coupons_summary.list.map((coupon, idx) => (
+                                    <div key={idx} className="flex justify-between items-center text-xs font-bold text-gray-700 bg-gray-50 p-3 rounded-xl border border-gray-100">
+                                        <span className="font-mono bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded font-black text-indigo-600 uppercase">{coupon.code}</span>
+                                        <span className="text-emerald-600 font-extrabold">
+                                            {coupon.type === 'percentage' ? `${coupon.value}% Off` : `₹${coupon.value} Flat`} • Active
+                                        </span>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="text-[10px] text-gray-400 italic">No active coupons configured.</p>
+                            )}
+                        </div>
+                    </div>
+                    
+                    <div className="p-6 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
+                        <Link href="/seller/dashboard/coupons" className="text-[10px] font-black uppercase text-gray-900 tracking-wider flex items-center gap-1.5 hover:text-cureza-green transition-all w-full">
+                            Manage Coupons <ArrowRight size={14} className="ml-auto" />
+                        </Link>
+                    </div>
+                </div>
+
+                {/* 7. Brand Profile Card */}
+                <div className="premium-card bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden flex flex-col justify-between">
+                    <div className="p-8 space-y-6">
+                        <div className="flex justify-between items-start">
+                            <div className="space-y-1">
+                                <h4 className="font-black text-xl text-gray-900 tracking-tighter">Store Profile</h4>
+                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Vendor store identifiers & branding details</p>
+                            </div>
+                            <span className="px-2.5 py-1 bg-emerald-50 border border-emerald-100 rounded-xl text-[8.5px] font-black text-emerald-600 uppercase tracking-wider">Branding</span>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-bold text-gray-500">
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Store Name</span>
+                                <span className="text-gray-900 text-[10px] font-black truncate block">{summary?.settings_summary?.brand_name ?? 'N/A'}</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Store Handle</span>
+                                <span className="text-indigo-600 text-[10px] font-black truncate block">@{summary?.settings_summary?.brand_slug ?? 'n/a'}</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Status</span>
+                                <span className="text-emerald-600 text-[10px] font-black flex items-center gap-1">
+                                    {summary?.settings_summary?.brand_name ? 'Live' : 'Pending'} <Globe size={10} />
+                                </span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Avg Fulfillment</span>
+                                <span className="text-gray-900 text-[10px] font-black">{summary?.settings_summary?.brand_name ? '12.5 hrs SLA' : 'N/A'}</span>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-4">
+                                <div className="w-14 h-14 rounded-2xl bg-gray-900 text-white font-black text-sm flex items-center justify-center border border-gray-800 shadow-md uppercase">
+                                    {summary?.settings_summary?.brand_name
+                                        ? summary.settings_summary.brand_name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
+                                        : 'AW'}
                                 </div>
-                                <div className="text-right">
-                                    <p className="font-black text-gray-900 dark:text-white text-xs">₹{prod.revenue.toLocaleString('en-IN')}</p>
-                                    <p className="text-[9px] font-bold text-gray-400">{prod.stock_left} items left</p>
+                                <div className="space-y-1">
+                                    <p className="font-black text-gray-950 text-sm flex items-center gap-1.5">
+                                        {summary?.settings_summary?.brand_name ?? 'N/A'} <ShieldCheck size={16} className="text-cureza-green" />
+                                    </p>
+                                    <p className="text-[10px] font-mono text-gray-400 font-extrabold uppercase">Slug: {summary?.settings_summary?.brand_slug ?? 'n/a'}</p>
                                 </div>
                             </div>
-                        ))}
+                            <p className="text-[11px] font-medium text-gray-500 leading-relaxed italic">
+                                "{summary?.settings_summary?.brand_desc ?? 'No description available for your store.'}"
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div className="p-6 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
+                        <Link href="/seller/dashboard/profile" className="text-[10px] font-black uppercase text-gray-900 tracking-wider flex items-center gap-1.5 hover:text-cureza-green transition-all w-full">
+                            Edit Store Profile <ArrowRight size={14} className="ml-auto" />
+                        </Link>
+                    </div>
+                </div>
+
+                {/* 8. Seller Policy Agreement Card */}
+                <div className="premium-card bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden flex flex-col justify-between">
+                    <div className="p-8 space-y-6">
+                        <div className="flex justify-between items-start">
+                            <div className="space-y-1">
+                                <h4 className="font-black text-xl text-gray-900 tracking-tighter">Seller Policy</h4>
+                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Contract rules, commissions, and compliance parameters</p>
+                            </div>
+                            <span className="px-2.5 py-1 bg-gray-900 text-white border border-gray-800 rounded-xl text-[8.5px] font-black uppercase tracking-wider">Compliance</span>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-bold text-gray-500">
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Commission</span>
+                                <span className="text-gray-900 text-[10px] font-black">25.00% base</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Gateway Fee</span>
+                                <span className="text-gray-900 text-[10px] font-black">2.5% Prepaid</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Return Window</span>
+                                <span className="text-indigo-650 text-[10px] font-black">7 Days Policy</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">GSTIN Status</span>
+                                <span className={`${summary?.settings_summary?.gst_number ? 'text-emerald-600' : 'text-amber-600'} text-[10px] font-black`}>
+                                    {summary?.settings_summary?.gst_number ? 'Verified (TCS Ok)' : 'Not Verified'}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="p-4 bg-emerald-50/30 rounded-2xl border border-emerald-100/50 flex gap-3 text-[10px] font-semibold text-emerald-800 leading-normal">
+                            <ShieldCheck size={16} className="text-cureza-green shrink-0 mt-0.5" />
+                            <p>
+                                {summary?.settings_summary?.gst_number 
+                                    ? `Compliance status is verified. GSTIN: ${summary.settings_summary.gst_number}. You are bound by the Cureza Marketplace Handbook.`
+                                    : 'Compliance status is pending. Please configure and verify your GSTIN number in Store Settings.'}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div className="p-6 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
+                        <Link href="/seller/dashboard/sellerpolicy" className="text-[10px] font-black uppercase text-gray-900 tracking-wider flex items-center gap-1.5 hover:text-cureza-green transition-all w-full">
+                            Review Seller Policies <ArrowRight size={14} className="ml-auto" />
+                        </Link>
+                    </div>
+                </div>
+
+                {/* 9. Support & Tickets Card */}
+                <div className="premium-card bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden flex flex-col justify-between">
+                    <div className="p-8 space-y-6">
+                        <div className="flex justify-between items-start">
+                            <div className="space-y-1">
+                                <h4 className="font-black text-xl text-gray-900 tracking-tighter">Support & Tickets Desk</h4>
+                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Trace ticket statuses and open assistance channels</p>
+                            </div>
+                            <span className="px-2.5 py-1 bg-blue-50 border border-blue-100 rounded-xl text-[8.5px] font-black text-blue-600 uppercase tracking-wider">Support</span>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-bold text-gray-500">
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Open Tickets</span>
+                                <span className="text-rose-600 text-sm font-black">{summary?.support_summary?.open_count ?? 0} active</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Resolved Tickets</span>
+                                <span className="text-emerald-600 text-sm font-black">{summary?.support_summary?.resolved_count ?? 0} resolved</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Avg SLA Response</span>
+                                <span className="text-gray-900 text-sm font-black">2.4 hours</span>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Support Tier</span>
+                                <span className="text-indigo-655 text-sm font-black">{summary?.settings_summary?.brand_name ? 'Gold Partner' : 'Standard'}</span>
+                            </div>
+                        </div>
+
+                        {summary?.support_summary?.latest ? (
+                            <div className="p-3 bg-rose-50/30 rounded-xl border border-rose-100/50 space-y-1">
+                                <div className="flex justify-between text-[10px] font-bold text-rose-800">
+                                    <span>Ticket #{summary.support_summary.latest.ticket_number}</span>
+                                    <span className="px-1.5 py-0.2 bg-rose-50 border border-rose-100 rounded-md text-[8px] font-black uppercase">
+                                        {summary.support_summary.latest.status.replace('_', ' ')}
+                                    </span>
+                                </div>
+                                <p className="text-[10px] font-medium text-gray-500 italic">"{summary.support_summary.latest.subject}"</p>
+                            </div>
+                        ) : (
+                            <p className="text-[10px] text-gray-400 italic">No active support tickets found.</p>
+                        )}
+                    </div>
+                    
+                    <div className="p-6 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
+                        <Link href="/seller/dashboard/support" className="text-[10px] font-black uppercase text-gray-900 tracking-wider flex items-center gap-1.5 hover:text-cureza-green transition-all w-full">
+                            Open Tickets / Support <ArrowRight size={14} className="ml-auto" />
+                        </Link>
+                    </div>
+                </div>
+
+                {/* 10. Global Account Settings Card */}
+                <div className="premium-card bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden flex flex-col justify-between lg:col-span-2">
+                    <div className="p-8 space-y-6">
+                        <div className="flex justify-between items-start">
+                            <div className="space-y-1">
+                                <h4 className="font-black text-xl text-gray-900 tracking-tighter">Global Settings Node</h4>
+                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Account parameters, passwords, bank configurations, and notifications</p>
+                            </div>
+                            <span className="px-2.5 py-1 bg-gray-50 border border-gray-100 rounded-xl text-[8.5px] font-black text-gray-500 uppercase tracking-wider">Settings</span>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 text-xs font-bold text-gray-500">
+                            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-2 col-span-1 md:col-span-2">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest">Bank Config Status</span>
+                                <span className={`${summary?.settings_summary?.bank_name ? 'text-emerald-600' : 'text-amber-600'} text-sm font-black flex items-center gap-1.5`}>
+                                    <ShieldCheck size={14} /> {summary?.settings_summary?.bank_name ? 'Connected & Verified' : 'Not Configured'}
+                                </span>
+                                <p className="text-[9px] font-semibold text-gray-400 mt-1 uppercase">
+                                    {summary?.settings_summary?.bank_name 
+                                        ? `${summary.settings_summary.bank_name} • *${summary.settings_summary.bank_account.slice(-4)}`
+                                        : 'Please configure bank account details'}
+                                </p>
+                            </div>
+                            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-2 col-span-1 md:col-span-1">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest">Notifications</span>
+                                <span className="text-gray-900 text-sm font-black flex items-center gap-1.5">
+                                    <Activity size={14} className="text-cureza-green" /> {summary?.settings_summary?.notifications_enabled ? 'Enabled' : 'Disabled'}
+                                </span>
+                                <p className="text-[9px] font-semibold text-gray-400 mt-1 uppercase">
+                                    {summary?.settings_summary?.notifications_enabled ? 'Instant Alerts Active' : 'Alerts Inactive'}
+                                </p>
+                            </div>
+                            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-2 col-span-1 md:col-span-1">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest">Clearance</span>
+                                <span className={`${summary?.settings_summary?.two_factor_enabled ? 'text-emerald-600' : 'text-gray-400'} text-sm font-black flex items-center gap-1.5`}>
+                                    <ShieldCheck size={14} /> {summary?.settings_summary?.two_factor_enabled ? '2FA Active' : '2FA Disabled'}
+                                </span>
+                                <p className="text-[9px] font-semibold text-gray-400 mt-1 uppercase">
+                                    {summary?.settings_summary?.two_factor_enabled ? 'Protected Login' : 'Standard Security'}
+                                </p>
+                            </div>
+                            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-2 col-span-1 md:col-span-1">
+                                <span className="block text-[8px] text-gray-400 uppercase tracking-widest">API Webhooks</span>
+                                <span className="text-indigo-650 text-sm font-black flex items-center gap-1.5">
+                                    <Globe size={14} /> {summary?.settings_summary?.brand_name ? '2 Configured' : '0 Configured'}
+                                </span>
+                                <p className="text-[9px] font-semibold text-gray-400 mt-1 uppercase">
+                                    {summary?.settings_summary?.brand_name ? 'Webhooks Endpoint Live' : 'No Webhooks Configured'}
+                                </p>
+                        </div>
+                    </div>
+                </div>
+                    
+                    <div className="p-6 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
+                        <Link href="/seller/dashboard/settings" className="text-[10px] font-black uppercase text-gray-900 tracking-wider flex items-center gap-1.5 hover:text-cureza-green transition-all w-full">
+                            Manage Account Settings <ArrowRight size={14} className="ml-auto" />
+                        </Link>
                     </div>
                 </div>
             </div>

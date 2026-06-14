@@ -110,7 +110,8 @@ class AdminFinanceController extends Controller
                 
                 $commission = $this->commissionService->getSellerCommissionRate($seller->id, $order->created_at);
                 $commAmount = $sellerTotal * ($commission->base_commission_percentage / 100);
-                $gwFee = $sellerTotal * ($commission->payment_gateway_percentage / 100);
+                $isCOD = strtolower($order->payment_method ?? '') === 'cod';
+                $gwFee = $isCOD ? 0 : ($sellerTotal * ($commission->payment_gateway_percentage / 100));
                 
                 $totalSales += $sellerTotal;
                 $platformCommission += $commAmount;
@@ -190,7 +191,8 @@ class AdminFinanceController extends Controller
                 
                 $sellerTotal = $items->sum('total');
                 $commAmount = $sellerTotal * ($commission->base_commission_percentage / 100);
-                $gwFee = $sellerTotal * ($commission->payment_gateway_percentage / 100);
+                $isCOD = strtolower($order->payment_method ?? '') === 'cod';
+                $gwFee = $isCOD ? 0 : ($sellerTotal * ($commission->payment_gateway_percentage / 100));
                 
                 $breakdown[$rate]['total_sales'] += $sellerTotal;
                 $breakdown[$rate]['total_commission'] += ($commAmount + $gwFee);

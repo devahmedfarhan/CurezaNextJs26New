@@ -1,0 +1,92 @@
+{
+    "seller": {
+        "id": 5,
+        "name": "Aura Wellness",
+        "email": "aurawellness@cureza-seller.com"
+    },
+    "wallet": {
+        "total_earnings": "8198.54",
+        "available_balance": "8198.54",
+        "pending_amount": "0.00",
+        "paid_amount": "7973.56",
+        "on_hold_amount": "0.00"
+    },
+    "transactions": [
+        {
+            "id": 15,
+            "order_id": 11,
+            "payout_id": null,
+            "type": "earning",
+            "amount": "6749.26",
+            "balance_before": "0.00",
+            "balance_after": "6749.26",
+            "description": "Earnings from Order #CZ15260001",
+            "metadata": {
+                "order_total": 8999,
+                "platform_commission": 2249.75,
+                "gateway_fee": 0,
+                "commission_percentage": "25.00",
+                "gateway_percentage": 0
+            }
+        },
+        {
+            "id": 16,
+            "order_id": 14,
+            "payout_id": null,
+            "type": "earning",
+            "amount": "1449.28",
+            "balance_before": "6749.26",
+            "balance_after": "8198.54",
+            "description": "Earnings from Order #CZ05260001",
+            "metadata": {
+                "order_total": 1999,
+                "platform_commission": 499.75,
+                "gateway_fee": 49.98,
+                "commission_percentage": "25.00",
+                "gateway_percentage": "2.50"
+            }
+        }
+    ],
+    "payouts": [
+        {
+            "id": 3,
+            "requested_amount": "7973.56",
+            "approved_amount": "7973.56",
+            "status": "approved"
+        }
+    ],
+    "orders": [
+        {
+            "id": 11,
+            "order_number": "CZ15260001",
+            "payment_method": "cod",
+            "payment_gateway_fee": 0,
+            "seller_earnings": 7423.5,
+            "commission_calculated_at": "2026-06-13T17:03:49.000000Z",
+            "items": [
+                {
+                    "product_name": "CANNARONIL NANO   - PURE CBD PASTE (THC - FREE) - WATER SOLUBLE \/ NEBULIZATION SOL.",
+                    "price": 8999,
+                    "quantity": 1,
+                    "total": 8999
+                }
+            ]
+        },
+        {
+            "id": 14,
+            "order_number": "CZ05260001",
+            "payment_method": "stripe",
+            "payment_gateway_fee": 49.98,
+            "seller_earnings": 1449.28,
+            "commission_calculated_at": "2026-06-13T21:40:13.000000Z",
+            "items": [
+                {
+                    "product_name": "De-Addiction Bundle",
+                    "price": 1999,
+                    "quantity": 1,
+                    "total": 1999
+                }
+            ]
+        }
+    ]
+}

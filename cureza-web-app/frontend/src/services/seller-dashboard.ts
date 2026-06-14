@@ -4,8 +4,58 @@ export interface DashboardSummary {
     sales: { value: number; change: number; trend: 'up' | 'down' };
     orders: { value: number; change: number; trend: 'up' | 'down' };
     avg_order_value: { value: number; change: number; trend: 'up' | 'down' };
-    products: { active: number; out_of_stock: number };
-    revenue: { gross: number; commission: number; net: number; pending_payout: number; paid_payout: number };
+    products: { 
+        total: number;
+        active: number; 
+        pending: number;
+        out_of_stock: number;
+        low_stock: number;
+    };
+    revenue: { 
+        gross: number; 
+        commission: number; 
+        gateway_fee?: number;
+        tcs?: number;
+        tds?: number;
+        net: number; 
+        pending_payout: number; 
+        paid_payout: number; 
+    };
+    orders_breakdown?: {
+        pending: number;
+        processing: number;
+        shipped: number;
+        delivered: number;
+        cancelled: number;
+    };
+    coupons_summary?: {
+        active_count: number;
+        total_redeemed: number;
+        total_discount: number;
+        list: Array<{ code: string; value: number; type: string }>;
+    };
+    reviews_summary?: {
+        avg_rating: number;
+        total_count: number;
+        positive_percentage: number;
+        pending_reply: number;
+        latest: Array<{ customer_name: string; rating: number; review_text: string; date: string }>;
+    };
+    support_summary?: {
+        open_count: number;
+        resolved_count: number;
+        latest: { ticket_number: string; subject: string; status: string } | null;
+    };
+    settings_summary?: {
+        brand_name: string;
+        brand_slug: string;
+        brand_desc: string;
+        bank_name: string;
+        bank_account: string;
+        gst_number: string;
+        notifications_enabled: boolean;
+        two_factor_enabled: boolean;
+    };
 }
 
 export interface SalesDataPoint {

@@ -39,9 +39,101 @@ class SellerOrderController extends Controller
             $query->where('status', strtolower($request->status));
         }
 
-        $orders = $query->latest()->paginate(10);
+        $perPage = $request->input('per_page', 10);
+        if ($perPage === 'all') {
+            $orders = $query->latest()->get();
+        } else {
+            $orders = $query->latest()->paginate(is_numeric($perPage) ? (int)$perPage : 10);
+        }
 
-        return response()->json($orders);
+        // FIFO Settlement Allocation Logic based on wallet's paid_amount
+        $wallet = \App\Models\SellerWallet::where('seller_id', $sellerId)->first();
+        $totalPaidOut = $wallet ? (float)$wallet->paid_amount : 0.0;
+
+        // Fetch all delivered order items of this seller, sorted by the order's created_at ascending (oldest first)
+        $allDeliveredItems = \App\Models\OrderItem::where('order_items.seller_id', $sellerId)
+            ->join('orders', 'order_items.order_id', '=', 'orders.id')
+            ->where('orders.status', 'delivered')
+            ->select('order_items.*', 'orders.created_at as order_created_at', 'orders.payment_method')
+            ->orderBy('orders.created_at', 'asc')
+            ->get();
+
+        $itemSettlements = [];
+        $runningPaidOut = $totalPaidOut;
+
+        foreach ($allDeliveredItems as $item) {
+            $commission = (new \App\Services\CommissionService())->getSellerCommissionRate($sellerId, $item->order_created_at);
+            $platRate = $commission->base_commission_percentage;
+            $gateRate = $commission->payment_gateway_percentage;
+
+            $isCOD = strtolower($item->payment_method ?? '') === 'cod';
+
+            $lineTotal = (float)$item->total;
+            $comm = floor(($lineTotal * ($platRate / 100)) * 100) / 100;
+            $gst = floor(($comm * 0.18) * 100) / 100;
+            $tcs = floor(($lineTotal * 0.01) * 100) / 100;
+            $tds = floor(($lineTotal * 0.01) * 100) / 100;
+            $gate = $isCOD ? 0.0 : floor(($lineTotal * ($gateRate / 100)) * 100) / 100;
+            
+            $itemPayable = floor(($lineTotal - $comm - $gst - $tcs - $tds - $gate) * 100) / 100;
+
+            if ($runningPaidOut >= $itemPayable) {
+                $itemPaid = $itemPayable;
+                $runningPaidOut -= $itemPayable;
+            } else {
+                $itemPaid = $runningPaidOut;
+                $runningPaidOut = 0.0;
+            }
+            $itemBalance = max(0.0, floor(($itemPayable - $itemPaid) * 100) / 100);
+
+            $itemSettlements[$item->id] = [
+                'paid' => $itemPaid,
+                'balance' => $itemBalance
+            ];
+        }
+
+        $attachSettlements = function ($order) use ($itemSettlements, $sellerId) {
+            foreach ($order->items as $item) {
+                if (isset($itemSettlements[$item->id])) {
+                    $item->settled_paid = $itemSettlements[$item->id]['paid'];
+                    $item->settled_balance = $itemSettlements[$item->id]['balance'];
+                } else {
+                    // Not delivered yet, calculate expected amountPayable
+                    $commission = (new \App\Services\CommissionService())->getSellerCommissionRate($sellerId, $order->created_at);
+                    $platRate = $commission->base_commission_percentage;
+                    $gateRate = $commission->payment_gateway_percentage;
+
+                    $isCOD = strtolower($order->payment_method ?? '') === 'cod';
+
+                    $lineTotal = (float)$item->total;
+                    $comm = floor(($lineTotal * ($platRate / 100)) * 100) / 100;
+                    $gst = floor(($comm * 0.18) * 100) / 100;
+                    $tcs = floor(($lineTotal * 0.01) * 100) / 100;
+                    $tds = floor(($lineTotal * 0.01) * 100) / 100;
+                    $gate = $isCOD ? 0.0 : floor(($lineTotal * ($gateRate / 100)) * 100) / 100;
+                    
+                    $itemPayable = floor(($lineTotal - $comm - $gst - $tcs - $tds - $gate) * 100) / 100;
+
+                    $item->settled_paid = 0.0;
+                    $item->settled_balance = $itemPayable;
+                }
+            }
+            return $order;
+        };
+
+        if ($perPage === 'all') {
+            $orders->transform($attachSettlements);
+            return response()->json([
+                'data' => $orders,
+                'total' => $orders->count(),
+                'current_page' => 1,
+                'last_page' => 1,
+                'per_page' => $orders->count()
+            ]);
+        } else {
+            $orders->getCollection()->transform($attachSettlements);
+            return response()->json($orders);
+        }
     }
 
     /**

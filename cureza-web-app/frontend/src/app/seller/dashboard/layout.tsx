@@ -23,7 +23,8 @@ import {
     User,
     AlertCircle,
     ArrowRight,
-    Menu
+    Menu,
+    Sparkles
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -69,6 +70,21 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
     const [unreadCount, setUnreadCount] = useState(0);
     const [fullProfile, setFullProfile] = useState<any>(null);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+    const getBrandName = () => {
+        if (user?.brand?.name) return user.brand.name;
+        if (fullProfile?.brand?.name) return fullProfile.brand.name;
+        if ((user as any)?.seller_profile?.brand_name) return (user as any).seller_profile.brand_name;
+        if (fullProfile?.brand_name) return fullProfile.brand_name;
+        if ((user as any)?.seller_profile?.company_name) return (user as any).seller_profile.company_name;
+        if ((user as any)?.sellerProfile?.brand_name) return (user as any).sellerProfile.brand_name;
+        if (user?.name) return user.name;
+        return 'Brand';
+    };
+    const sellerBrandName = getBrandName();
+    const dynamicReportTabName = `${sellerBrandName.toUpperCase()} X CUREZA`;
+    const brandSlug = user?.brand?.slug || (user as any)?.seller_profile?.brand_name?.toLowerCase().replace(/\s+/g, '-') || 'brand';
+
 
     useEffect(() => {
         if (user && (user as any).seller_profile?.status === 'pending') {
@@ -643,21 +659,22 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
                 w-64 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 fixed h-full z-40
                 transform md:transform-none transition-transform duration-200 ease-out
                 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-                md:block premium-shadow
+                md:block premium-shadow flex flex-col justify-between
             `}>
-                <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex flex-col items-center">
+                <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex flex-col items-center shrink-0">
                     <Link href="/" className="flex flex-col items-center gap-1 group w-full text-center">
                         <img src="/logo-black-no-tagline.svg" alt="Cureza Logo" className="h-6.5 w-auto object-contain dark:invert transition-transform group-hover:scale-105" />
                         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-cureza-green mt-2 bg-green-50/50 px-2.5 py-0.5 rounded-full border border-green-100">Seller Hub</span>
                     </Link>
                 </div>
 
-                <nav className="p-4 space-y-1 overflow-y-auto h-[calc(100vh-80px)]">
+                <nav className="p-4 space-y-1 overflow-y-auto flex-1">
                     {SELLER_LINKS.map((link) => {
                         const Icon = link.icon;
                         const isActive = link.href === '/seller/dashboard'
                             ? pathname === link.href
                             : pathname === link.href || pathname.startsWith(`${link.href}/`);
+                        const linkName = link.href === '/seller/dashboard/divsoma' ? dynamicReportTabName : link.name;
 
                         return (
                             <Link
@@ -670,11 +687,40 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
                                     }`}
                             >
                                 <Icon size={16} className={`${isActive ? 'text-cureza-green' : 'text-gray-400 group-hover:text-gray-600'}`} />
-                                {link.name}
+                                {linkName}
                             </Link>
                         );
                     })}
                 </nav>
+
+                <div className="p-4 border-t border-gray-100 dark:border-gray-800 shrink-0">
+                    {/* Dynamic verified brand banner */}
+                    <Link href={`/seller/dashboard/${brandSlug}`} onClick={() => setMobileMenuOpen(false)}>
+                        <div className="bg-gradient-to-br from-[#0c1f20] to-[#040e0f] border border-[#143d41]/45 rounded-2xl p-4 relative overflow-hidden shadow-lg shadow-green-950/20 hover:border-cureza-green/50 hover:shadow-green-950/30 transition-all cursor-pointer group">
+                            <div className="absolute top-0 right-0 w-24 h-24 bg-cureza-green/10 rounded-full blur-2xl -mr-8 -mt-8 pointer-events-none" />
+                            
+                            <div className="flex items-center justify-between">
+                                <div className="w-8 h-8 rounded-xl bg-cureza-green/20 border border-cureza-green/30 flex items-center justify-center text-cureza-green group-hover:scale-105 transition-transform">
+                                    <Sparkles size={16} className="animate-pulse" />
+                                </div>
+                                <div className="flex items-center gap-1 bg-emerald-500/10 text-emerald-450 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                    <span className="text-[8px] font-black uppercase tracking-wider">Verified</span>
+                                </div>
+                            </div>
+
+                            <div className="mt-4">
+                                <span className="text-[8px] font-black text-cureza-green uppercase tracking-widest block">Authorized Partner</span>
+                                <h4 className="text-xs font-black text-white mt-1 leading-tight tracking-tight uppercase break-words" title={`${sellerBrandName} X CUREZA`}>
+                                    {sellerBrandName} X CUREZA
+                                </h4>
+                                <p className="text-[9px] text-gray-400 mt-2 font-medium leading-relaxed">
+                                    Managed node with direct billing reconciliation and automatic settlement protocol.
+                                </p>
+                            </div>
+                        </div>
+                    </Link>
+                </div>
             </aside>
 
             {/* Main Content */}
@@ -687,7 +733,9 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
                             </div>
                             <div>
                                 <h2 className="font-bold text-gray-900 text-lg">
-                                    {SELLER_LINKS.find(l => l.href === pathname)?.name || 'Dashboard'}
+                                    {pathname.startsWith('/seller/dashboard/') && pathname !== '/seller/dashboard' && !SELLER_LINKS.some(l => l.href === pathname)
+                                        ? dynamicReportTabName
+                                        : (SELLER_LINKS.find(l => l.href === pathname)?.name || 'Dashboard')}
                                 </h2>
                             </div>
                         </div>

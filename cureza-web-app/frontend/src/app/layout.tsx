@@ -24,9 +24,9 @@ export const metadata: Metadata = {
   title: "Cureza | Multi-Vendor Wellness Marketplace",
   description: "Authentic Ayurvedic, Herbal, and Wellness products verified by doctors.",
   icons: {
-    icon: "/logo-black.svg",
-    shortcut: "/logo-black.svg",
-    apple: "/logo-black.svg",
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
   }
 };
 
