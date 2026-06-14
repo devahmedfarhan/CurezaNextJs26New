@@ -176,15 +176,27 @@ class SellerController extends Controller
             'aadhaar' => ['status' => 'aadhaar_status', 'updated' => 'aadhaar_updated_at'],
         ];
 
+        $typesToSync = [];
+        if ($type === 'license_ayush_license' || $type === 'license_ayush') {
+            $typesToSync = ['license_ayush_license', 'license_ayush'];
+        } elseif ($type === 'license_fssai_license' || $type === 'license_fssai') {
+            $typesToSync = ['license_fssai_license', 'license_fssai'];
+        } elseif ($type === 'license_drug_license' || $type === 'license_drug') {
+            $typesToSync = ['license_drug_license', 'license_drug'];
+        } else {
+            $typesToSync = [$type];
+        }
+
         // Store reason if provided or rejected
         $reasons = $sellerProfile->kyc_document_reasons ?? [];
-        if ($request->has('reason') || $request->status === 'rejected') {
-            $reasons[$type] = $request->reason ?? '';
-            $sellerProfile->kyc_document_reasons = $reasons;
-        } else if ($request->status === 'approved') {
-            unset($reasons[$type]);
-            $sellerProfile->kyc_document_reasons = $reasons;
+        foreach ($typesToSync as $t) {
+            if ($request->has('reason') || $request->status === 'rejected') {
+                $reasons[$t] = $request->reason ?? '';
+            } else if ($request->status === 'approved') {
+                unset($reasons[$t]);
+            }
         }
+        $sellerProfile->kyc_document_reasons = $reasons;
 
         // Normalize type to standard keys to update both dedicated columns and JSON for full backward compatibility
         $normalizedType = $type;
@@ -211,7 +223,9 @@ class SellerController extends Controller
 
         // Always store status in kyc_document_statuses as well for dual-read capability
         $statuses = $sellerProfile->kyc_document_statuses ?? [];
-        $statuses[$type] = $request->status;
+        foreach ($typesToSync as $t) {
+            $statuses[$t] = $request->status;
+        }
         $sellerProfile->kyc_document_statuses = $statuses;
 
         $sellerProfile->save();
@@ -259,19 +273,32 @@ class SellerController extends Controller
             $sellerProfile->$updatedCol = now();
         } else {
             // Save to kyc_docs JSON for dynamic type!
-            $kycDocs = $sellerProfile->kyc_docs ?? [];
-            if (isset($kycDocs[$type])) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($kycDocs[$type]);
+            $typesToSync = [];
+            if ($type === 'license_ayush_license' || $type === 'license_ayush') {
+                $typesToSync = ['license_ayush_license', 'license_ayush'];
+            } elseif ($type === 'license_fssai_license' || $type === 'license_fssai') {
+                $typesToSync = ['license_fssai_license', 'license_fssai'];
+            } elseif ($type === 'license_drug_license' || $type === 'license_drug') {
+                $typesToSync = ['license_drug_license', 'license_drug'];
+            } else {
+                $typesToSync = [$type];
             }
-            $kycDocs[$type] = $path;
+
+            $kycDocs = $sellerProfile->kyc_docs ?? [];
+            $deletedAny = false;
+            foreach ($typesToSync as $t) {
+                if (isset($kycDocs[$t]) && !$deletedAny) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($kycDocs[$t]);
+                    $deletedAny = true;
+                }
+                $kycDocs[$t] = $path;
+            }
             $sellerProfile->kyc_docs = $kycDocs;
             
             // Also store individual direct columns if it matches one of our dynamic mapping keys:
-            if ($type === 'license_drug_license') {
+            if ($type === 'license_drug_license' || $type === 'license_drug') {
                 $sellerProfile->drug_license_image_path = '/storage/' . $path;
-            } elseif ($type === 'license_ayush_license') {
-                $sellerProfile->ayush_document_path = '/storage/' . $path;
-            } elseif ($type === 'license_fssai_license') {
+            } elseif ($type === 'license_fssai_license' || $type === 'license_fssai') {
                 $sellerProfile->trade_license_image_path = '/storage/' . $path;
             }
         }
@@ -309,19 +336,44 @@ class SellerController extends Controller
             }
         } else {
             // Delete from kyc_docs JSON for dynamic type!
-            $kycDocs = $sellerProfile->kyc_docs ?? [];
-            if (isset($kycDocs[$type])) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($kycDocs[$type]);
-                unset($kycDocs[$type]);
-                $sellerProfile->kyc_docs = $kycDocs;
+            $typesToSync = [];
+            if ($type === 'license_ayush_license' || $type === 'license_ayush') {
+                $typesToSync = ['license_ayush_license', 'license_ayush'];
+            } elseif ($type === 'license_fssai_license' || $type === 'license_fssai') {
+                $typesToSync = ['license_fssai_license', 'license_fssai'];
+            } elseif ($type === 'license_drug_license' || $type === 'license_drug') {
+                $typesToSync = ['license_drug_license', 'license_drug'];
+            } else {
+                $typesToSync = [$type];
             }
 
+            $kycDocs = $sellerProfile->kyc_docs ?? [];
+            $deletedAny = false;
+            foreach ($typesToSync as $t) {
+                if (isset($kycDocs[$t])) {
+                    if (!$deletedAny) {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete($kycDocs[$t]);
+                        $deletedAny = true;
+                    }
+                    unset($kycDocs[$t]);
+                }
+            }
+            $sellerProfile->kyc_docs = $kycDocs;
+
+            // Also clear statuses and reasons when deleted
+            $statuses = $sellerProfile->kyc_document_statuses ?? [];
+            $reasons = $sellerProfile->kyc_document_reasons ?? [];
+            foreach ($typesToSync as $t) {
+                unset($statuses[$t]);
+                unset($reasons[$t]);
+            }
+            $sellerProfile->kyc_document_statuses = $statuses;
+            $sellerProfile->kyc_document_reasons = $reasons;
+
             // Also clear individual direct columns if it matches one of our dynamic mapping keys:
-            if ($type === 'license_drug_license') {
+            if ($type === 'license_drug_license' || $type === 'license_drug') {
                 $sellerProfile->drug_license_image_path = null;
-            } elseif ($type === 'license_ayush_license') {
-                $sellerProfile->ayush_document_path = null;
-            } elseif ($type === 'license_fssai_license') {
+            } elseif ($type === 'license_fssai_license' || $type === 'license_fssai') {
                 $sellerProfile->trade_license_image_path = null;
             }
         }

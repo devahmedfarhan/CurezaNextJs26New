@@ -172,9 +172,6 @@ class AdminSellerRequestController extends Controller
                     if (isset($mergedKycDocs['license_drug_license'])) {
                         $kycUpdates['drug_license_image_path'] = $mergedKycDocs['license_drug_license'];
                     }
-                    if (isset($mergedKycDocs['license_ayush_license'])) {
-                        $kycUpdates['ayush_document_path'] = $mergedKycDocs['license_ayush_license'];
-                    }
                     if (isset($mergedKycDocs['license_fssai_license'])) {
                         $kycUpdates['trade_license_image_path'] = $mergedKycDocs['license_fssai_license'];
                     }

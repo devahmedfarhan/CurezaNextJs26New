@@ -20,9 +20,36 @@ export default function SellerProfilePage() {
     const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
     const [selectedConcerns, setSelectedConcerns] = useState<number[]>([]);
     const [faqs, setFaqs] = useState<{ question: string; answer: string }[]>([]);
+    const [purityStandards, setPurityStandards] = useState<string[]>(['', '', '']);
 
     // Form handling
     const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm();
+
+    const metaDescription = watch('meta_description') || '';
+    const brandName = watch('name') || 'Brand Name';
+    const brandTagline = watch('short_description') || '';
+    const metaKeywords = watch('meta_keywords') || '';
+
+    const fullMetaTitle = brandTagline 
+        ? `${brandName} | ${brandTagline} | Cureza` 
+        : `${brandName} | Cureza`;
+
+    const currentKeywordsList = metaKeywords
+        ? metaKeywords.split(',').map((k: string) => k.trim()).filter((k: string) => k.length > 0)
+        : [];
+
+    const toggleKeyword = (keywordName: string) => {
+        let list = [...currentKeywordsList];
+        const index = list.findIndex(k => k.toLowerCase() === keywordName.toLowerCase());
+        if (index >= 0) {
+            list.splice(index, 1);
+        } else {
+            list.push(keywordName);
+        }
+        setValue('meta_keywords', list.join(', '));
+    };
+
+
 
     // File previews
     const [logoPreview, setLogoPreview] = useState<string | null>(null);
@@ -51,7 +78,8 @@ export default function SellerProfilePage() {
 
             if (data.brand) {
                 setValue('name', data.brand.name);
-                setValue('short_description', data.brand.short_description);
+                setValue('short_description', data.brand.short_description || "Welcome to our official store on Cureza. Discover our latest products and deals.");
+                setValue('brand_vision', data.brand.brand_vision || "Healing from the roots. We bring you pure formulations compiled with ancient Ayurvedic wisdom, modern standards, and absolute transparency.");
                 setValue('keywords', Array.isArray(data.brand.keywords) ? data.brand.keywords.join(', ') : '');
                 setValue('description', data.brand.description);
 
@@ -71,6 +99,12 @@ export default function SellerProfilePage() {
 
                 // Populate FAQs
                 setFaqs(Array.isArray(data.brand.faqs) ? data.brand.faqs : []);
+
+                setValue('genuine_badge_text', data.brand.genuine_badge_text || '100% Genuine');
+                const standards = Array.isArray(data.brand.purity_standards) && data.brand.purity_standards.length === 3
+                    ? data.brand.purity_standards
+                    : ["100% Organic & Ayurvedic", "Toxin & Heavy Metal Free", "Cruelty Free & Vegan Friendly"];
+                setPurityStandards(standards);
             }
         } catch (err) {
             console.error(err);
@@ -113,7 +147,10 @@ export default function SellerProfilePage() {
             });
 
             // Append SEO fields
-            formData.append('meta_title', data.meta_title || '');
+            const compiledMetaTitle = data.short_description 
+                ? `${data.name} | ${data.short_description} | Cureza` 
+                : `${data.name} | Cureza`;
+            formData.append('meta_title', compiledMetaTitle);
             formData.append('meta_description', data.meta_description || '');
             formData.append('meta_keywords', data.meta_keywords || '');
 
@@ -121,6 +158,12 @@ export default function SellerProfilePage() {
             faqs.forEach((faq: any, index: number) => {
                 formData.append(`faqs[${index}][question]`, faq.question || '');
                 formData.append(`faqs[${index}][answer]`, faq.answer || '');
+            });
+
+            formData.append('genuine_badge_text', data.genuine_badge_text || '');
+            formData.append('brand_vision', data.brand_vision || '');
+            purityStandards.forEach((std: string, index: number) => {
+                formData.append(`purity_standards[${index}]`, std || '');
             });
 
             // Append Category/Concern IDs
@@ -299,13 +342,22 @@ export default function SellerProfilePage() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Brand Axiom (Tagline)</label>
+                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Brand Tagline (Shown in Header)</label>
                         <input
                             {...register('short_description', { required: "Short description is required", maxLength: 255 })}
                             className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
-                            placeholder="A concise mission statement for your brand..."
+                            placeholder="A concise mission statement or tagline shown in the store header..."
                         />
                         {errors.short_description && <p className="text-xs text-rose-500 font-bold mt-1 px-1">▲ {errors.short_description.message as string}</p>}
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Brand Vision (Quote / Slogan - Shown in Our Story)</label>
+                        <textarea
+                            {...register('brand_vision')}
+                            className="w-full h-24 p-6 rounded-3xl bg-gray-50 border border-gray-100 text-sm font-medium focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all resize-none leading-relaxed"
+                            placeholder="A 2-3 line inspiring quote or vision statement shown in your 'Our Story' section..."
+                        />
                     </div>
 
                     <div className="space-y-2">
@@ -331,12 +383,35 @@ export default function SellerProfilePage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-2">
-                            <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Google Search Title (Meta Title)</label>
+                            <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Google Search Title (Meta Title - Auto Generated)</label>
                             <input
-                                {...register('meta_title', { maxLength: 255 })}
-                                className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
-                                placeholder="Recommended: 50-60 characters"
+                                value={fullMetaTitle}
+                                readOnly
+                                disabled
+                                className="w-full h-14 px-6 rounded-2xl bg-gray-100 border border-gray-200 text-sm font-bold text-gray-500 cursor-not-allowed outline-none select-none"
                             />
+                            {/* Title Length Meter */}
+                            <div className="mt-2 space-y-1">
+                                <div className="flex justify-between items-center text-[10px] font-bold">
+                                    <span className={
+                                        fullMetaTitle.length < 50 ? 'text-amber-600' :
+                                        fullMetaTitle.length <= 60 ? 'text-emerald-600' : 'text-rose-600'
+                                    }>
+                                        {fullMetaTitle.length < 50 ? 'Too Short' :
+                                         fullMetaTitle.length <= 60 ? 'Perfect Length' : 'Too Long (Google will truncate)'}
+                                    </span>
+                                    <span className="text-gray-400">{fullMetaTitle.length} / 60 chars</span>
+                                </div>
+                                <div className="h-1 w-full bg-gray-100 rounded-full overflow-hidden">
+                                    <div 
+                                        className={`h-full transition-all duration-300 ${
+                                            fullMetaTitle.length < 50 ? 'bg-amber-400' :
+                                            fullMetaTitle.length <= 60 ? 'bg-emerald-500' : 'bg-rose-500'
+                                        }`}
+                                        style={{ width: `${Math.min(100, (fullMetaTitle.length / 60) * 100)}%` }}
+                                    ></div>
+                                </div>
+                            </div>
                         </div>
 
                         <div className="space-y-2">
@@ -346,6 +421,63 @@ export default function SellerProfilePage() {
                                 className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
                                 placeholder="e.g. Wellness, health, premium organic"
                             />
+                            <div className="text-[10px] text-gray-300 font-bold text-right px-1 mt-1">Comma separated keywords</div>
+                            
+                            <div className="mt-4 p-5 bg-gray-50/50 rounded-2xl border border-gray-100/50 space-y-4">
+                                <span className="block text-[9px] font-extrabold text-gray-400 uppercase tracking-wider">Select Categories & Concerns as Keywords</span>
+                                
+                                {allCategories.length > 0 && (
+                                    <div className="space-y-2">
+                                        <span className="block text-[9px] font-bold text-gray-400 uppercase tracking-tight">Categories</span>
+                                        <div className="flex flex-wrap gap-2">
+                                            {allCategories.map(cat => {
+                                                const isActive = currentKeywordsList.some(k => k.toLowerCase() === cat.name.toLowerCase());
+                                                return (
+                                                    <button
+                                                        key={cat.id}
+                                                        type="button"
+                                                        disabled={isLocked}
+                                                        onClick={() => toggleKeyword(cat.name)}
+                                                        className={`px-3 py-1.5 rounded-full text-[11px] font-bold transition-all border ${
+                                                            isActive
+                                                                ? 'bg-emerald-505 bg-emerald-500 border-emerald-500 text-white shadow-sm shadow-emerald-100'
+                                                                : 'bg-white border-gray-200 text-gray-600 hover:border-emerald-500 hover:text-emerald-600'
+                                                        }`}
+                                                    >
+                                                        {cat.name}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {allConcerns.length > 0 && (
+                                    <div className="space-y-2">
+                                        <span className="block text-[9px] font-bold text-gray-400 uppercase tracking-tight">Concerns</span>
+                                        <div className="flex flex-wrap gap-2">
+                                            {allConcerns.map(con => {
+                                                const isActive = currentKeywordsList.some(k => k.toLowerCase() === con.name.toLowerCase());
+                                                return (
+                                                    <button
+                                                        key={con.id}
+                                                        type="button"
+                                                        disabled={isLocked}
+                                                        onClick={() => toggleKeyword(con.name)}
+                                                        className={`px-3 py-1.5 rounded-full text-[11px] font-bold transition-all border ${
+                                                            isActive
+                                                                ? 'bg-emerald-505 bg-emerald-500 border-emerald-500 text-white shadow-sm shadow-emerald-100'
+                                                                : 'bg-white border-gray-200 text-gray-600 hover:border-emerald-500 hover:text-emerald-600'
+                                                        }`}
+                                                    >
+                                                        {con.name}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
 
@@ -356,6 +488,89 @@ export default function SellerProfilePage() {
                             className="w-full h-28 p-6 rounded-3xl bg-gray-50 border border-gray-100 text-sm font-medium focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all resize-none leading-relaxed"
                             placeholder="Recommended: 150-160 characters describing your brand for Google search results snippet..."
                         />
+                        {/* Description Length Meter */}
+                        <div className="mt-2 space-y-1">
+                            <div className="flex justify-between items-center text-[10px] font-bold">
+                                <span className={
+                                    metaDescription.length === 0 ? 'text-gray-405' :
+                                    metaDescription.length < 120 ? 'text-amber-600' :
+                                    metaDescription.length <= 160 ? 'text-emerald-600' : 'text-rose-600'
+                                }>
+                                    {metaDescription.length === 0 ? 'Not entered' :
+                                     metaDescription.length < 120 ? 'Too Short' :
+                                     metaDescription.length <= 160 ? 'Perfect Length' : 'Too Long (Google will truncate)'}
+                                </span>
+                                <span className="text-gray-400">{metaDescription.length} / 160 chars</span>
+                            </div>
+                            <div className="h-1 w-full bg-gray-100 rounded-full overflow-hidden">
+                                <div 
+                                    className={`h-full transition-all duration-300 ${
+                                        metaDescription.length === 0 ? 'bg-gray-200' :
+                                        metaDescription.length < 120 ? 'bg-amber-400' :
+                                        metaDescription.length <= 160 ? 'bg-emerald-500' : 'bg-rose-500'
+                                    }`}
+                                    style={{ width: `${Math.min(100, (metaDescription.length / 160) * 100)}%` }}
+                                ></div>
+                                </div>
+                            </div>
+                    </div>
+
+                    {/* Google SERP Live Preview */}
+                    <div className="mt-6 p-6 bg-gray-50 rounded-2xl border border-gray-100 space-y-3">
+                        <span className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">Google Search Result Preview</span>
+                        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm font-sans max-w-xl">
+                            <div className="text-xs text-gray-500 flex items-center gap-1.5 mb-1.5 select-none">
+                                <span className="bg-[#f1f3f4] px-1.5 py-0.5 rounded text-[10px] font-semibold text-[#3c4043]">Cureza</span>
+                                <span className="text-[#3c4043]">https://www.cureza.com &gt; brand &gt; {profile?.slug || 'aura-wellness'}</span>
+                            </div>
+                            <h4 className="text-xl text-[#1a0dab] hover:underline cursor-pointer font-normal leading-tight mb-1">
+                                {fullMetaTitle}
+                            </h4>
+                            <p className="text-sm text-[#4d5156] leading-normal line-clamp-2">
+                                {metaDescription || brandTagline || "Discover the official store on Cureza. Explore premium, pure formulations and deals from this brand."}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Purity & Verification Settings Card */}
+                <div className="grid grid-cols-1 gap-8 premium-card p-10">
+                    <div className="border-b border-gray-100 pb-4">
+                        <h3 className="text-lg font-extrabold text-gray-900 tracking-tight">Purity & Verification Standards</h3>
+                        <p className="text-xs text-gray-400 font-medium mt-1">Configure your brand trust badges and purity parameters displayed on the storefront.</p>
+                    </div>
+
+                    <div className="space-y-4">
+                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Genuine Verification Text</label>
+                        <input
+                            {...register('genuine_badge_text')}
+                            disabled={isLocked}
+                            className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
+                            placeholder="e.g. 100% Genuine (Default: 100% Genuine)"
+                        />
+                    </div>
+
+                    <div className="space-y-4">
+                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Purity & Trust Standards (3 points)</label>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {[0, 1, 2].map((idx) => (
+                                <div key={idx} className="space-y-2">
+                                    <span className="text-[10px] font-bold text-gray-500 uppercase">Standard Point #{idx + 1}</span>
+                                    <input
+                                        type="text"
+                                        value={purityStandards[idx] || ''}
+                                        disabled={isLocked}
+                                        onChange={(e) => {
+                                            const updated = [...purityStandards];
+                                            updated[idx] = e.target.value;
+                                            setPurityStandards(updated);
+                                        }}
+                                        placeholder={`Point #${idx + 1} (e.g. ${idx === 0 ? "100% Organic & Ayurvedic" : idx === 1 ? "Toxin & Heavy Metal Free" : "Cruelty Free & Vegan Friendly"})`}
+                                        className="w-full h-12 px-4 rounded-xl bg-gray-50 border border-gray-100 text-xs font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
+                                    />
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
 

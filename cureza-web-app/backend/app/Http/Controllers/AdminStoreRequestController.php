@@ -52,6 +52,9 @@ class AdminStoreRequestController extends Controller
             'meta_description' => $proposed['meta_description'] ?? $brand->meta_description,
             'meta_keywords' => $proposed['meta_keywords'] ?? $brand->meta_keywords,
             'faqs' => $proposed['faqs'] ?? $brand->faqs,
+            'purity_standards' => $proposed['purity_standards'] ?? $brand->purity_standards,
+            'genuine_badge_text' => $proposed['genuine_badge_text'] ?? $brand->genuine_badge_text,
+            'brand_vision' => $proposed['brand_vision'] ?? $brand->brand_vision,
         ]);
 
         // Sync brand categories & concerns
@@ -111,6 +114,9 @@ class AdminStoreRequestController extends Controller
             'categories.*' => 'integer|exists:categories,id',
             'concerns' => 'nullable|array',
             'concerns.*' => 'integer|exists:categories,id',
+            'purity_standards' => 'nullable|array',
+            'genuine_badge_text' => 'nullable|string|max:255',
+            'brand_vision' => 'nullable|string',
         ]);
 
         $brand->update([
@@ -124,6 +130,9 @@ class AdminStoreRequestController extends Controller
             'meta_description' => $validated['meta_description'] ?? null,
             'meta_keywords' => $validated['meta_keywords'] ?? null,
             'faqs' => $validated['faqs'] ?? null,
+            'purity_standards' => $validated['purity_standards'] ?? null,
+            'genuine_badge_text' => $validated['genuine_badge_text'] ?? null,
+            'brand_vision' => $validated['brand_vision'] ?? null,
         ]);
 
         // Handle File Uploads for direct edits if files provided

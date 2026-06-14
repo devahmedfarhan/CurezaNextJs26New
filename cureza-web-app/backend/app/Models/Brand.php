@@ -19,13 +19,17 @@ class Brand extends Model
         'meta_title',
         'meta_description',
         'meta_keywords',
-        'faqs'
+        'faqs',
+        'purity_standards',
+        'genuine_badge_text',
+        'brand_vision'
     ];
 
     protected $casts = [
         'keywords' => 'array',
         'faqs' => 'array',
         'is_active' => 'boolean',
+        'purity_standards' => 'array',
     ];
 
     public function user()

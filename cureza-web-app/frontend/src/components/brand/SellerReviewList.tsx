@@ -70,11 +70,13 @@ export default function SellerReviewList({ sellerId, refreshTrigger }: SellerRev
     return (
         <div className="space-y-6">
             {reviews.map((review) => {
-                const displayName = review.full_name || review.customer?.name || 'Customer';
+                const displayName = review.customer?.name || review.full_name || 'Customer';
                 const displayInitial = displayName.charAt(0);
                 const displayRating = review.rating || review.stars || 5;
                 const displayContent = review.review_text || review.description;
                 const createdDate = review.created_at || review.reviewed_at || new Date().toISOString();
+                const sellerBrandName = review.reply?.seller?.brand?.name || review.reply?.seller?.name || 'Seller Response';
+                const sellerBrandInitial = sellerBrandName.charAt(0).toUpperCase();
 
                 return (
                     <div key={review.id} className="bg-white p-4 rounded-[10px] border-[0.5px] border-[#052326]/12 transition-all hover:bg-[#F8F3EF]/30">
@@ -145,11 +147,11 @@ export default function SellerReviewList({ sellerId, refreshTrigger }: SellerRev
                                     Seller Response
                                 </div>
                                 <div className="flex items-center gap-3 mb-2">
-                                    <div className="w-7 h-7 bg-[#052326] rounded-full flex items-center justify-center text-white text-xs font-extrabold">
-                                        S
+                                    <div className="w-7 h-7 bg-[#052326] rounded-full flex items-center justify-center text-white text-xs font-extrabold uppercase">
+                                        {sellerBrandInitial}
                                     </div>
                                     <div>
-                                        <p className="font-bold text-gray-900 text-sm">Seller Response</p>
+                                        <p className="font-bold text-gray-900 text-sm">{sellerBrandName}</p>
                                         <p className="text-xs text-gray-500">{new Date(review.reply.created_at).toLocaleDateString()}</p>
                                     </div>
                                 </div>

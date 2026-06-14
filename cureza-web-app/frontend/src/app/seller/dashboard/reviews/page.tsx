@@ -269,11 +269,11 @@ export default function SellerReviewsPage() {
                                     <div className="flex items-start justify-between mb-4">
                                         <div className="flex items-center gap-4">
                                             <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-extrabold text-lg">
-                                                {review.customer?.name?.charAt(0) || 'G'}
+                                                {(review.customer?.name || review.full_name || 'Anonymous').charAt(0)}
                                             </div>
                                             <div>
                                                 <h4 className="font-extrabold text-gray-900 text-base">
-                                                    {review.customer?.name || 'Anonymous Customer'}
+                                                    {review.customer?.name || review.full_name || 'Anonymous Customer'}
                                                 </h4>
                                                 <div className="flex items-center gap-3 mt-1">
                                                     <div className="flex gap-0.5">

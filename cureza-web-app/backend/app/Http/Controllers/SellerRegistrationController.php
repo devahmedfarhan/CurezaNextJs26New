@@ -269,7 +269,6 @@ class SellerRegistrationController extends Controller
 
             // Other dynamic document paths
             $filePaths['drug_license_image_path'] = isset($mergedKycDocs['license_drug_license']) ? ('/storage/' . $mergedKycDocs['license_drug_license']) : null;
-            $filePaths['ayush_document_path'] = isset($mergedKycDocs['license_ayush_license']) ? ('/storage/' . $mergedKycDocs['license_ayush_license']) : null;
             $filePaths['trade_license_image_path'] = isset($mergedKycDocs['license_fssai_license']) ? ('/storage/' . $mergedKycDocs['license_fssai_license']) : null;
 
             // Extract Aadhaar number to direct column
@@ -482,7 +481,6 @@ class SellerRegistrationController extends Controller
 
             // Other dynamic document paths
             $filePaths['drug_license_image_path'] = isset($mergedKycDocs['license_drug_license']) ? ('/storage/' . $mergedKycDocs['license_drug_license']) : null;
-            $filePaths['ayush_document_path'] = isset($mergedKycDocs['license_ayush_license']) ? ('/storage/' . $mergedKycDocs['license_ayush_license']) : null;
             $filePaths['trade_license_image_path'] = isset($mergedKycDocs['license_fssai_license']) ? ('/storage/' . $mergedKycDocs['license_fssai_license']) : null;
 
             // Extract Aadhaar number to direct column

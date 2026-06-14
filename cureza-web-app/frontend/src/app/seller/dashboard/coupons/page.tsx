@@ -16,9 +16,6 @@ export default function SellerCouponsPage() {
                     <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Promotional Intelligence</h1>
                     <p className="text-gray-500 text-sm font-medium mt-1">Deploy and monitor strategic marketing incentives.</p>
                 </div>
-                <button className="flex items-center gap-3 px-8 py-4 bg-gray-900 text-white rounded-[2rem] text-[10px] font-extrabold uppercase tracking-widest shadow-2xl shadow-gray-200 hover:bg-black hover:-translate-y-1 active:scale-95 transition-all">
-                    <Plus size={18} className="text-cureza-green" /> Force Deploy New Coupon
-                </button>
             </div>
 
             <div className="premium-card overflow-hidden">
@@ -31,7 +28,6 @@ export default function SellerCouponsPage() {
                                 <th className="px-8 py-5">Logic Category</th>
                                 <th className="px-8 py-5">Activation Count</th>
                                 <th className="px-8 py-5">Registry Status</th>
-                                <th className="px-8 py-5 text-right">Control</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-50">
@@ -63,11 +59,6 @@ export default function SellerCouponsPage() {
                                             }`}>
                                             {coupon.status}
                                         </span>
-                                    </td>
-                                    <td className="px-8 py-6 text-right">
-                                        <button className="p-3 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-2xl transition-all hover:scale-110 active:scale-90">
-                                            <Trash2 size={18} />
-                                        </button>
                                     </td>
                                 </tr>
                             ))}

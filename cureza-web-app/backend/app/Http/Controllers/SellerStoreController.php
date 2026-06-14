@@ -66,6 +66,9 @@ class SellerStoreController extends Controller
             'categories.*' => 'integer|exists:categories,id',
             'concerns' => 'nullable|array',
             'concerns.*' => 'integer|exists:categories,id',
+            'purity_standards' => 'nullable|array',
+            'genuine_badge_text' => 'nullable|string|max:255',
+            'brand_vision' => 'nullable|string',
         ]);
 
         $proposedData = [
@@ -83,6 +86,9 @@ class SellerStoreController extends Controller
             'faqs' => $validated['faqs'] ?? [],
             'categories' => $validated['categories'] ?? [],
             'concerns' => $validated['concerns'] ?? [],
+            'purity_standards' => $validated['purity_standards'] ?? [],
+            'genuine_badge_text' => $validated['genuine_badge_text'] ?? null,
+            'brand_vision' => $validated['brand_vision'] ?? null,
         ];
 
         // Handle File Uploads

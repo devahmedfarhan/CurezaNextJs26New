@@ -216,16 +216,24 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
         };
 
         // 1. Add Dynamic Selected Licenses
-        const selectedLicenses = profile.selected_licenses || [];
-        selectedLicenses.forEach((lic: string) => {
+        const dbLicenses = profile.selected_licenses || [];
+        const normalizedLicenses = dbLicenses.map((l: string) => {
+            if (l === 'AYUSH') return 'AYUSH License';
+            if (l === 'FSSAI') return 'FSSAI License';
+            if (l === 'Drug') return 'Drug License';
+            return l;
+        });
+
+        normalizedLicenses.forEach((lic: string) => {
             if (lic !== 'Upload Later') {
+                const cleanName = lic.replace(/\s*license\s*$/i, '').trim();
                 const licId = `license_${lic.toLowerCase().replace(/ /g, '_').replace(/\//g, '')}`;
                 categories.licenses.docs.push({
                     id: licId,
-                    label: `${lic} License`,
+                    label: `${cleanName} License`,
                     required: true,
                     hasNumber: true,
-                    placeholder: `Enter ${lic} Number`
+                    placeholder: `Enter ${cleanName} Number`
                 });
             }
         });
@@ -281,10 +289,21 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
             cat.docs.forEach(doc => listedIds.add(doc.id));
         });
 
-        const allUploadedDocIds = new Set<string>([
-            ...Object.keys(profile.kyc_docs || {}),
-            ...Object.keys(profile.kyc_numbers || {})
-        ]);
+        const allUploadedDocIds = new Set<string>();
+        Object.keys(profile.kyc_docs || {}).forEach(k => {
+            let normalizedKey = k;
+            if (k === 'license_ayush') normalizedKey = 'license_ayush_license';
+            if (k === 'license_fssai') normalizedKey = 'license_fssai_license';
+            if (k === 'license_drug') normalizedKey = 'license_drug_license';
+            allUploadedDocIds.add(normalizedKey);
+        });
+        Object.keys(profile.kyc_numbers || {}).forEach(k => {
+            let normalizedKey = k;
+            if (k === 'license_ayush') normalizedKey = 'license_ayush_license';
+            if (k === 'license_fssai') normalizedKey = 'license_fssai_license';
+            if (k === 'license_drug') normalizedKey = 'license_drug_license';
+            allUploadedDocIds.add(normalizedKey);
+        });
 
         allUploadedDocIds.forEach(id => {
             if (!listedIds.has(id)) {
@@ -398,7 +417,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                             {isEditing ? (
                                 <input
                                     type="text"
-                                    value={editForm.name}
+                                    value={editForm?.name || ''}
                                     onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
                                     className="text-2xl font-black bg-transparent border-b-2 border-emerald-500 focus:outline-none text-gray-900 dark:text-white pb-1 font-sans"
                                 />
@@ -957,7 +976,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                                             <span className="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Question #{idx + 1}</span>
                                                             <input
                                                                 type="text"
-                                                                value={faq.question}
+                                                                value={faq.question || ''}
                                                                 onChange={(e) => {
                                                                     const currentFaqs = [...(editForm?.brand?.faqs || [])];
                                                                     currentFaqs[idx].question = e.target.value;
@@ -969,7 +988,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                                         <div className="space-y-1">
                                                             <span className="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Answer #{idx + 1}</span>
                                                             <textarea
-                                                                value={faq.answer}
+                                                                value={faq.answer || ''}
                                                                 onChange={(e) => {
                                                                     const currentFaqs = [...(editForm?.brand?.faqs || [])];
                                                                     currentFaqs[idx].answer = e.target.value;
@@ -1050,7 +1069,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                             <div className="space-y-2">
                                 <span className="text-[10px] font-black uppercase text-gray-400">General Audit & Rejection Feedback</span>
                                 <textarea
-                                    value={isEditing ? editForm.profile.rejection_reason : (profile.rejection_reason || '')}
+                                    value={isEditing ? (editForm?.profile?.rejection_reason || '') : (profile.rejection_reason || '')}
                                     disabled={!isEditing}
                                     onChange={(e) => setEditForm({
                                         ...editForm,
@@ -1277,6 +1296,11 @@ function KYCCard({ docType, sellerId, profile, onUpdate, showToast, labelOverrid
 
     let status = profile.kyc_document_statuses?.[docType];
     if (!status) {
+        if (docType === 'license_ayush_license') status = profile.kyc_document_statuses?.['license_ayush'];
+        else if (docType === 'license_fssai_license') status = profile.kyc_document_statuses?.['license_fssai'];
+        else if (docType === 'license_drug_license') status = profile.kyc_document_statuses?.['license_drug'];
+    }
+    if (!status) {
         if (docType === 'bank_proof') {
             status = profile.cheque_status;
         } else if (docType === 'gst_cert') {
@@ -1296,6 +1320,11 @@ function KYCCard({ docType, sellerId, profile, onUpdate, showToast, labelOverrid
     }
 
     let filePath = profile.kyc_docs?.[docType] || '';
+    if (!filePath) {
+        if (docType === 'license_ayush_license') filePath = profile.kyc_docs?.['license_ayush'] || '';
+        else if (docType === 'license_fssai_license') filePath = profile.kyc_docs?.['license_fssai'] || '';
+        else if (docType === 'license_drug_license') filePath = profile.kyc_docs?.['license_drug'] || '';
+    }
     if (docType === 'bank_proof' && !filePath) {
         filePath = profile.cheque_image_path || '';
     }
@@ -1323,7 +1352,12 @@ function KYCCard({ docType, sellerId, profile, onUpdate, showToast, labelOverrid
         imagePath = `${backendUrl}/storage/${imagePath}`;
     }
 
-    const number = profile[`${docType}_number`] || profile.kyc_numbers?.[docType] || null;
+    let number = profile[`${docType}_number`] || profile.kyc_numbers?.[docType] || null;
+    if (!number) {
+        if (docType === 'license_ayush_license') number = profile.kyc_numbers?.['license_ayush'] || null;
+        else if (docType === 'license_fssai_license') number = profile.kyc_numbers?.['license_fssai'] || null;
+        else if (docType === 'license_drug_license') number = profile.kyc_numbers?.['license_drug'] || null;
+    }
     const updatedAt = profile[`${docType}_updated_at`];
     
     // Label prettifier
@@ -1376,7 +1410,12 @@ function KYCCard({ docType, sellerId, profile, onUpdate, showToast, labelOverrid
         }
     };
 
-    const documentReason = profile.kyc_document_reasons?.[docType] || '';
+    let documentReason = profile.kyc_document_reasons?.[docType] || '';
+    if (!documentReason) {
+        if (docType === 'license_ayush_license') documentReason = profile.kyc_document_reasons?.['license_ayush'] || '';
+        else if (docType === 'license_fssai_license') documentReason = profile.kyc_document_reasons?.['license_fssai'] || '';
+        else if (docType === 'license_drug_license') documentReason = profile.kyc_document_reasons?.['license_drug'] || '';
+    }
 
     return (
         <div className="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden flex flex-col group relative hover:border-gray-200/60 transition-all">

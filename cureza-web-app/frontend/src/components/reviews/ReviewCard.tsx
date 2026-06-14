@@ -23,6 +23,9 @@ interface Review {
   reply?: {
     seller: {
       name: string;
+      brand?: {
+        name: string;
+      };
     };
     reply_text: string;
     created_at: string;
@@ -147,28 +150,32 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
       )}
 
       {/* Seller reply */}
-      {review.reply && (
-        <div className="mt-4 pt-4 border-t border-[#052326]/10">
-          <div className="bg-[#F8F3EF]/60 rounded-[10px] border border-[#052326]/5 p-3.5 space-y-2">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-[6px] bg-[#052326] text-[#F8F3EF] flex items-center justify-center text-[10px] font-bold">
-                C
+      {review.reply && (() => {
+        const sellerBrandName = review.reply.seller?.brand?.name || review.reply.seller?.name || 'Cureza Team';
+        const sellerBrandInitial = sellerBrandName.charAt(0).toUpperCase();
+        return (
+          <div className="mt-4 pt-4 border-t border-[#052326]/10">
+            <div className="bg-[#F8F3EF]/60 rounded-[10px] border border-[#052326]/5 p-3.5 space-y-2">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-[6px] bg-[#052326] text-[#F8F3EF] flex items-center justify-center text-[10px] font-bold uppercase">
+                  {sellerBrandInitial}
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-[#052326]">
+                    {sellerBrandName}
+                  </p>
+                  <p className="text-[10px] text-[#052326]/50">
+                    {formatDate(review.reply.created_at)}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs font-semibold text-[#052326]">
-                  {review.reply.seller?.name || 'Cureza Team'}
-                </p>
-                <p className="text-[10px] text-[#052326]/50">
-                  {formatDate(review.reply.created_at)}
-                </p>
-              </div>
+              <p className="text-xs text-[#052326]/80 leading-relaxed font-light">
+                {review.reply.reply_text}
+              </p>
             </div>
-            <p className="text-xs text-[#052326]/80 leading-relaxed font-light">
-              {review.reply.reply_text}
-            </p>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 };

@@ -25,7 +25,7 @@ class ReviewController extends Controller
         $reviews = Review::active()
             ->product()
             ->where('product_id', $productId)
-            ->with(['customer', 'reply.seller', 'mediaItems'])
+            ->with(['customer', 'reply.seller.brand', 'mediaItems'])
             ->when($request->rating, function ($query, $rating) {
                 $query->where('rating', $rating);
             })
@@ -60,7 +60,7 @@ class ReviewController extends Controller
     {
         $reviews = Review::active()
             ->where('seller_id', $sellerId)
-            ->with(['customer', 'product', 'reply', 'mediaItems'])
+            ->with(['customer', 'product', 'reply.seller.brand', 'mediaItems'])
             ->when($request->type, function ($query, $type) {
                 $query->where('review_type', $type);
             })

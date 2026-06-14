@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { useToast } from '@/contexts/ToastContext';
 import {
     Loader2, Shield, Bell, Landmark, User, Save, AlertCircle,
-    CheckCircle2, Info, Upload, Eye, EyeOff, Building2, MapPin, Globe, Phone, Clock, FileText, X
+    CheckCircle2, Info, Upload, Eye, EyeOff, Building2, MapPin, Globe, Phone, Clock, FileText, X, CreditCard, Check
 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { indianLocations } from '@/data/indianLocations';
@@ -653,27 +653,28 @@ function ProfileTab({ settings, refresh }: any) {
                             </div>
                         </div>
 
-                        {/* Enterprise Category with checkboxes */}
-                        <div className="space-y-3">
+                        {/* Enterprise Category with buttons */}
+                        <div className="space-y-2">
                             <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Business Categories</label>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {[
-                                    { value: 'Brand', label: 'Established Brand' },
-                                    { value: 'Manufacturer', label: 'Primary Manufacturer' },
-                                    { value: 'Wholesale', label: 'Wholesale Partner' },
-                                    { value: 'Reseller', label: 'Authorized Reseller' }
-                                ].map(opt => (
-                                    <label key={opt.value} className="flex items-center gap-3 p-4 bg-gray-50 border border-gray-100 rounded-2xl cursor-pointer hover:bg-gray-100/30 transition-all select-none">
-                                        <input
-                                            type="checkbox"
-                                            value={opt.value}
-                                            checked={selectedBusinessTypes.includes(opt.value)}
-                                            onChange={(e) => handleBusinessTypeChange(opt.value, e.target.checked)}
-                                            className="w-4 h-4 rounded text-cureza-green focus:ring-cureza-green cursor-pointer"
-                                        />
-                                        <span className="text-xs font-bold text-gray-900">{opt.label}</span>
-                                    </label>
-                                ))}
+                            <div className="flex flex-wrap gap-1.5">
+                                {['Brand', 'Manufacturer', 'Wholesale', 'Reseller'].map(type => {
+                                    const isSelected = selectedBusinessTypes.includes(type);
+                                    return (
+                                        <button
+                                            key={type}
+                                            type="button"
+                                            disabled={!!pending}
+                                            onClick={() => handleBusinessTypeChange(type, !isSelected)}
+                                            className={`px-3 py-1.5 rounded-md text-[11px] font-medium border transition-all ${
+                                                isSelected
+                                                    ? 'bg-gray-900 text-white border-gray-900 shadow-sm'
+                                                    : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
+                                            }`}
+                                        >
+                                            {type}
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
 
@@ -840,8 +841,36 @@ function KYCTab({ settings, refresh }: any) {
         if (settings?.profile?.company_type) {
             setCompanyType(settings.profile.company_type);
         }
-        if (settings?.profile?.selected_licenses) {
-            setSelectedLicenses(settings.profile.selected_licenses);
+        if (settings?.profile) {
+            const dbLicenses = settings.profile.selected_licenses || [];
+            const normalized = dbLicenses.map((l: string) => {
+                if (l === 'AYUSH') return 'AYUSH License';
+                if (l === 'FSSAI') return 'FSSAI License';
+                if (l === 'Drug') return 'Drug License';
+                return l;
+            });
+
+            // Auto-detect any licenses that already have uploaded documents or numbers
+            const kycDocs = settings.profile.kyc_docs || {};
+            const kycNums = settings.profile.kyc_numbers || {};
+            const docKeys = new Set([...Object.keys(kycDocs), ...Object.keys(kycNums)]);
+            
+            docKeys.forEach(k => {
+                if (k.startsWith('license_')) {
+                    let licenseName = '';
+                    if (k === 'license_ayush_license' || k === 'license_ayush') licenseName = 'AYUSH License';
+                    else if (k === 'license_fssai_license' || k === 'license_fssai') licenseName = 'FSSAI License';
+                    else if (k === 'license_drug_license' || k === 'license_drug') licenseName = 'Drug License';
+                    else if (k === 'license_cbd__hemp_noc') licenseName = 'CBD / Hemp NOC';
+                    else if (k === 'license_coa__lab_reports') licenseName = 'COA / Lab Reports';
+                    
+                    if (licenseName && !normalized.includes(licenseName)) {
+                        normalized.push(licenseName);
+                    }
+                }
+            });
+
+            setSelectedLicenses(normalized);
         }
         if (settings?.profile?.kyc_numbers) {
             setKycNumbers(settings.profile.kyc_numbers);
@@ -906,10 +935,21 @@ function KYCTab({ settings, refresh }: any) {
         return path.startsWith('/') ? `${backendUrl}${path}` : `${backendUrl}/storage/${path}`;
     };
 
+    const getLegacyKey = (key: string) => {
+        if (key === 'license_ayush_license') return 'license_ayush';
+        if (key === 'license_fssai_license') return 'license_fssai';
+        if (key === 'license_drug_license') return 'license_drug';
+        return null;
+    };
+
     const getDocInfo = (docId: string) => {
+        const legacyId = getLegacyKey(docId);
         // Check if there is a pending request for this document
         const pendingKyc = settings?.pending_requests?.kyc?.[0];
-        const pendingPath = pendingKyc?.new_data?.kyc_docs?.[docId] || pendingKyc?.new_data?.[docId];
+        let pendingPath = pendingKyc?.new_data?.kyc_docs?.[docId] || pendingKyc?.new_data?.[docId];
+        if (!pendingPath && legacyId) {
+            pendingPath = pendingKyc?.new_data?.kyc_docs?.[legacyId] || pendingKyc?.new_data?.[legacyId];
+        }
         if (pendingPath) {
             return {
                 status: 'pending',
@@ -917,8 +957,18 @@ function KYCTab({ settings, refresh }: any) {
             };
         }
 
-        const dbPath = profile.kyc_docs?.[docId] || profile[`${docId}_image_path`] || profile[`${docId}_path`] || profile[docId];
-        const dbStatus = dbPath ? (profile.kyc_document_statuses?.[docId] || profile[`${docId}_status`] || 'pending') : 'not_uploaded';
+        let dbPath = profile.kyc_docs?.[docId] || profile[`${docId}_image_path`] || profile[`${docId}_path`] || profile[docId];
+        if (!dbPath && legacyId) {
+            dbPath = profile.kyc_docs?.[legacyId] || profile[`${legacyId}_image_path`] || profile[`${legacyId}_path`] || profile[legacyId];
+        }
+        
+        let dbStatus = 'not_uploaded';
+        if (dbPath) {
+            dbStatus = profile.kyc_document_statuses?.[docId] || profile[`${docId}_status`] || 'pending';
+            if (legacyId && (!profile.kyc_document_statuses?.[docId] && !profile[`${docId}_status`])) {
+                dbStatus = profile.kyc_document_statuses?.[legacyId] || profile[`${legacyId}_status`] || dbStatus;
+            }
+        }
         
         return {
             status: dbStatus,
@@ -965,100 +1015,103 @@ function KYCTab({ settings, refresh }: any) {
         }
     };
 
-    const renderDocCard = (doc: any) => {
+    const renderDocRow = (doc: any) => {
         const { status, path } = getDocInfo(doc.id);
         const isSelectedNewFile = !!previews[doc.id];
         
         let previewUrl = previews[doc.id] || getImageUrl(path);
         const isPdf = previewUrl === 'pdf' || previewUrl.toLowerCase().endsWith('.pdf') || (typeof previews[doc.id] === 'string' && previews[doc.id] === 'pdf');
 
-        return (
-            <div key={doc.id} className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between min-h-[350px] group transition-all hover:shadow-md">
-                <div>
-                    <div className="flex justify-between items-start gap-2 mb-4">
-                        <div className="min-w-0">
-                            <p className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider leading-none mt-1 truncate" title={doc.label}>
-                                {doc.label} {doc.required && <span className="text-red-500">*</span>}
-                            </p>
-                            <p className="text-[8px] text-gray-400 font-mono mt-1 uppercase">ID: {doc.id}</p>
-                        </div>
-                        <span className={`text-[8px] px-2 py-0.5 rounded-lg font-extrabold uppercase tracking-wider border shrink-0 ${
-                            status === 'approved' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' :
-                            status === 'rejected' ? 'bg-rose-50 text-rose-700 border-rose-100' :
-                            status === 'pending' ? 'bg-amber-50 text-amber-700 border-amber-100' :
-                            'bg-gray-50 text-gray-400 border-gray-100'
-                        }`}>
-                            {status === 'not_uploaded' ? 'Not Uploaded' : status === 'pending' ? 'Under Review' : status}
-                        </span>
-                    </div>
+        // Choose icon based on document type
+        let DocIcon = FileText;
+        if (doc.id.includes('pan')) DocIcon = CreditCard;
+        else if (doc.id.includes('gst')) DocIcon = Building2;
+        else if (doc.id.includes('bank') || doc.id.includes('cheque') || doc.id.includes('proof')) DocIcon = Landmark;
+        else if (doc.id.includes('signature')) DocIcon = CheckCircle2;
 
-                    {/* Preview Block */}
-                    <div className="aspect-[4/3] bg-gray-50 rounded-2xl flex items-center justify-center overflow-hidden border border-gray-100/50 relative mb-4">
-                        {previewUrl ? (
-                            isPdf ? (
-                                <div className="flex flex-col items-center p-4">
-                                    <div className="p-2.5 bg-rose-50 rounded-xl mb-2">
-                                        <FileText size={24} className="text-rose-500" />
-                                    </div>
-                                    <span className="text-[8px] font-extrabold text-gray-400 uppercase tracking-wider">PDF Document</span>
-                                    {previewUrl !== 'pdf' && (
-                                        <a 
-                                            href={previewUrl} 
-                                            target="_blank" 
-                                            rel="noopener noreferrer" 
-                                            className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-bold gap-2"
-                                        >
-                                            <Eye size={16} /> View PDF
-                                        </a>
-                                    )}
-                                </div>
-                            ) : (
-                                <>
-                                    <img src={previewUrl} alt={doc.label} className="w-full h-full object-cover" />
-                                    <a 
-                                        href={previewUrl} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer" 
-                                        className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-bold gap-2"
-                                    >
-                                        <Eye size={16} /> View Image
-                                    </a>
-                                </>
-                            )
-                        ) : (
-                            <div className="flex flex-col items-center text-gray-400">
-                                <Upload size={20} className="text-gray-300 mb-2" />
-                                <span className="text-[9px] font-extrabold uppercase tracking-widest text-gray-400">Not Uploaded</span>
-                            </div>
+        return (
+            <div key={doc.id} className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-3 hover:bg-gray-50/40 px-2 rounded-xl transition-all duration-200">
+                
+                {/* Left Section: Icon, Label, and Status Badge */}
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
+                        status === 'approved' ? 'bg-emerald-50 text-emerald-600' :
+                        status === 'rejected' ? 'bg-rose-50 text-rose-600' :
+                        status === 'pending' ? 'bg-amber-50 text-amber-600' :
+                        'bg-gray-50 text-gray-400'
+                    }`}>
+                        <DocIcon size={16} />
+                    </div>
+                    <div className="space-y-0.5 min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold text-gray-900 truncate">{doc.label}</span>
+                            {doc.required && (
+                                <span className="text-[8px] font-extrabold uppercase px-1.5 py-0.5 bg-red-50 text-red-600 rounded">
+                                    Required
+                                </span>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className={`text-[8px] font-extrabold uppercase tracking-wider ${
+                                status === 'approved' ? 'text-emerald-600' :
+                                status === 'rejected' ? 'text-rose-600' :
+                                status === 'pending' ? 'text-amber-600' :
+                                'text-gray-400'
+                            }`}>
+                                {status === 'not_uploaded' ? 'Not Uploaded' : status === 'pending' ? 'Under Review' : status}
+                            </span>
+                            {previewUrl && (
+                                <a 
+                                    href={previewUrl} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="text-[9px] text-emerald-600 hover:underline flex items-center gap-0.5 font-bold"
+                                >
+                                    <Eye size={10} /> View
+                                </a>
+                            )}
+                        </div>
+                        {status === 'rejected' && (settings?.profile?.kyc_document_reasons?.[doc.id] || (getLegacyKey(doc.id) && settings?.profile?.kyc_document_reasons?.[getLegacyKey(doc.id)!])) && (
+                            <p className="text-[9px] text-red-500 font-medium bg-red-50/50 border border-red-100/50 rounded p-1.5 mt-0.5 max-w-md">
+                                {settings.profile.kyc_document_reasons[doc.id] || settings.profile.kyc_document_reasons[getLegacyKey(doc.id)!]}
+                            </p>
                         )}
                     </div>
-
-                    {/* Number Input if applicable */}
-                    {doc.hasNumber && (
-                        <div className="space-y-1 mb-4">
-                            <label className="text-[9px] font-bold text-gray-400 uppercase">Document Number</label>
-                            <input
-                                type="text"
-                                placeholder={doc.placeholder || 'Enter Document ID'}
-                                value={kycNumbers[doc.id] || ''}
-                                disabled={status === 'approved' || !!pending}
-                                onChange={(e) => {
-                                    setKycNumbers((prev: any) => ({
-                                        ...prev,
-                                        [doc.id]: e.target.value
-                                    }));
-                                }}
-                                className="w-full h-10 px-4 rounded-xl border border-gray-200 bg-gray-50/50 text-xs font-bold focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green outline-none transition-all uppercase placeholder:normal-case disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
-                            />
-                        </div>
-                    )}
                 </div>
 
-                {/* Upload Action Footer */}
-                <div>
+                {/* Middle Section: Document Number Input */}
+                {doc.hasNumber ? (
+                    <div className="w-full md:w-44 shrink-0">
+                        <input
+                            type="text"
+                            placeholder={doc.placeholder || 'Enter ID'}
+                            value={kycNumbers[doc.id] || (getLegacyKey(doc.id) ? kycNumbers[getLegacyKey(doc.id)!] : '') || ''}
+                            disabled={status === 'approved' || !!pending}
+                            onChange={(e) => {
+                                setKycNumbers((prev: any) => {
+                                    const next = {
+                                        ...prev,
+                                        [doc.id]: e.target.value
+                                    };
+                                    const legacyId = getLegacyKey(doc.id);
+                                    if (legacyId) {
+                                        next[legacyId] = e.target.value;
+                                    }
+                                    return next;
+                                });
+                            }}
+                            className="w-full h-8 px-3 rounded-lg border border-gray-200 bg-gray-50/30 text-xs font-bold focus:ring-2 focus:ring-cureza-green/10 focus:border-cureza-green outline-none transition-all uppercase placeholder:normal-case disabled:bg-gray-100/50 disabled:text-gray-400"
+                        />
+                    </div>
+                ) : (
+                    <div className="hidden md:block w-44 shrink-0"></div>
+                )}
+
+                {/* Right Section: Upload Action */}
+                <div className="w-full md:w-36 shrink-0 flex items-center justify-end">
                     {isSelectedNewFile ? (
-                        <div className="flex items-center justify-between bg-emerald-50/50 border border-emerald-100 px-3 py-2 rounded-xl text-xs font-extrabold text-emerald-800">
-                            <span className="truncate flex-1 pr-2 text-[10px]">New File Selected</span>
+                        <div className="flex items-center justify-between bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-lg text-xs font-bold text-emerald-800 w-full">
+                            <span className="truncate flex-1 pr-2 text-[9px]">Ready</span>
                             <button
                                 type="button"
                                 onClick={() => {
@@ -1075,12 +1128,12 @@ function KYCTab({ settings, refresh }: any) {
                                 }}
                                 className="text-rose-500 hover:text-rose-700 shrink-0"
                             >
-                                <X size={14} />
+                                <X size={12} />
                             </button>
                         </div>
                     ) : (
                         status !== 'pending' && !pending ? (
-                            <div>
+                            <div className="w-full">
                                 <input
                                     type="file"
                                     accept="image/*,application/pdf"
@@ -1105,14 +1158,14 @@ function KYCTab({ settings, refresh }: any) {
                                 />
                                 <label
                                     htmlFor={`file-${doc.id}`}
-                                    className="w-full py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl text-[10px] font-extrabold transition-all border border-gray-200 cursor-pointer flex items-center justify-center gap-1.5"
+                                    className="w-full py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg text-[9px] font-extrabold transition-all border border-gray-200 cursor-pointer flex items-center justify-center gap-1"
                                 >
-                                    <Upload size={12} />
-                                    {status === 'not_uploaded' ? 'Upload File' : 'Reupload / Change'}
+                                    <Upload size={10} />
+                                    {status === 'not_uploaded' ? 'Upload' : 'Replace'}
                                 </label>
                             </div>
                         ) : (
-                            <div className="w-full py-2 bg-amber-50/40 text-amber-800 border border-amber-100/50 rounded-xl text-[10px] font-extrabold text-center">
+                            <div className="w-full py-1.5 bg-amber-50/40 text-amber-800 border border-amber-100/50 rounded-lg text-[9px] font-extrabold text-center">
                                 Under Review
                             </div>
                         )
@@ -1122,34 +1175,62 @@ function KYCTab({ settings, refresh }: any) {
         );
     };
 
-    const hasChanges = Object.keys(files).length > 0 || 
-                       JSON.stringify(kycNumbers) !== JSON.stringify(settings?.profile?.kyc_numbers || {}) ||
-                       companyType !== (settings?.profile?.company_type || 'Sole Proprietorship') ||
-                       JSON.stringify(selectedLicenses) !== JSON.stringify(settings?.profile?.selected_licenses || []);
+    const dbLicensesNormalized = (settings?.profile?.selected_licenses || []).map((l: string) => {
+        if (l === 'AYUSH') return 'AYUSH License';
+        if (l === 'FSSAI') return 'FSSAI License';
+        if (l === 'Drug') return 'Drug License';
+        return l;
+    });
 
-    const activeLicenses = selectedLicenses.filter(l => l !== 'Upload Later').map(l => ({
-        id: `license_${l.toLowerCase().replace(/ /g, '_').replace(/\//g, '')}`,
-        label: `${l} License`,
-        required: true,
-        hasNumber: true,
-        placeholder: `Enter ${l} Number`
-    }));
+    const activeLicenses = selectedLicenses.filter(l => l !== 'Upload Later').map(l => {
+        const cleanName = l.replace(/\s*license\s*$/i, '').trim();
+        let sanitizedIdPart = l.toLowerCase().replace(/ /g, '_').replace(/\//g, '');
+        if (!sanitizedIdPart.endsWith('_license') && (sanitizedIdPart === 'ayush' || sanitizedIdPart === 'fssai' || sanitizedIdPart === 'drug')) {
+            sanitizedIdPart = `${sanitizedIdPart}_license`;
+        }
+        const id = `license_${sanitizedIdPart}`;
+        return {
+            id,
+            label: `${cleanName} License`,
+            required: true,
+            hasNumber: true,
+            placeholder: `Enter ${cleanName} Number`
+        };
+    });
+
+    const allDocs = [
+        ...commonDocs,
+        ...activeLicenses,
+        ...getSpecificDocs(companyType)
+    ];
+
+    const hasChanges = Object.keys(files).length > 0 || 
+                       allDocs.some(d => {
+                           const currentVal = kycNumbers[d.id] || (getLegacyKey(d.id) ? kycNumbers[getLegacyKey(d.id)!] : '');
+                           const originalVal = settings?.profile?.kyc_numbers?.[d.id] || (getLegacyKey(d.id) ? settings?.profile?.kyc_numbers?.[getLegacyKey(d.id)!] : '');
+                           return (currentVal || '') !== (originalVal || '');
+                       }) ||
+                       companyType !== (settings?.profile?.company_type || 'Sole Proprietorship') ||
+                       JSON.stringify(selectedLicenses) !== JSON.stringify(dbLicensesNormalized);
+
+    const mandatoryDocs = allDocs.filter(d => d.required);
+    const optionalDocs = allDocs.filter(d => !d.required);
 
     return (
-        <div className="p-10 space-y-10">
-            <div className="border-b border-gray-50 pb-6">
-                <h2 className="text-xl font-extrabold text-gray-900 tracking-tight">KYC Documents</h2>
-                <p className="text-gray-500 text-sm font-medium">Upload verified documents required for compliance approval.</p>
+        <div className="p-6 space-y-6 animate-in fade-in duration-300">
+            <div className="border-b border-gray-50 pb-4">
+                <h2 className="text-lg font-extrabold text-gray-900 tracking-tight">KYC Documents</h2>
+                <p className="text-gray-500 text-xs font-medium">Upload verified documents required for compliance approval.</p>
             </div>
 
             {pending && (
-                <div className="bg-amber-50/50 border border-amber-100 rounded-3xl p-8 flex gap-6 items-start animate-in fade-in slide-in-from-top-4 duration-500 shadow-sm shadow-amber-100/20">
-                    <div className="p-3 bg-amber-500 text-white rounded-2xl shadow-lg shadow-amber-200">
-                        <Clock size={24} />
+                <div className="bg-amber-50/50 border border-amber-100 rounded-3xl p-6 flex gap-4 items-start animate-in fade-in slide-in-from-top-4 duration-500 shadow-sm shadow-amber-100/20">
+                    <div className="p-2.5 bg-amber-500 text-white rounded-xl shadow-lg shadow-amber-200">
+                        <Clock size={20} />
                     </div>
                     <div>
-                        <h3 className="text-amber-900 font-extrabold text-lg tracking-tight mb-2">Compliance Review in Progress</h3>
-                        <p className="text-amber-800/80 font-medium leading-relaxed text-sm">
+                        <h3 className="text-amber-900 font-extrabold text-base tracking-tight mb-1">Compliance Review in Progress</h3>
+                        <p className="text-amber-800/80 font-medium leading-relaxed text-xs">
                             A verification request was initiated on <strong>{new Date(pending.created_at).toLocaleDateString()}</strong>.
                             You cannot make new updates until this review is completed by the superadmin.
                         </p>
@@ -1157,92 +1238,108 @@ function KYCTab({ settings, refresh }: any) {
                 </div>
             )}
 
-            <form onSubmit={onSubmit} className="space-y-10">
+            <form onSubmit={onSubmit} className="space-y-6">
                 
                 {/* Product / Regulatory Licenses selection */}
-                <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm space-y-5">
-                    <div className="flex items-center gap-3 border-b border-gray-50 pb-4">
-                        <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
-                            <FileText size={20} />
+                <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-4">
+                    <div className="flex items-center gap-2.5 border-b border-gray-50 pb-3">
+                        <div className="w-9 h-9 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+                            <FileText size={18} />
                         </div>
                         <div>
-                            <h4 className="text-xs font-bold text-emerald-950 uppercase tracking-widest">Product / Regulatory Licenses *</h4>
+                            <h4 className="text-xs font-bold text-emerald-955 uppercase tracking-widest">Product / Regulatory Licenses *</h4>
                             <p className="text-[10px] text-gray-500 font-medium">Select available licenses or choose "Upload Later"</p>
                         </div>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div className="flex flex-wrap gap-2">
                         {['Drug License', 'AYUSH License', 'FSSAI License', 'CBD / Hemp NOC', 'COA / Lab Reports'].map(license => {
                             const isChecked = selectedLicenses.includes(license);
                             return (
-                                <label key={license} className={`flex items-center gap-3 p-3 bg-white border rounded-xl cursor-pointer transition-all select-none group ${isChecked ? 'border-emerald-500 bg-emerald-50/10' : 'border-gray-100 hover:border-emerald-300'}`}>
-                                    <input
-                                        type="checkbox"
-                                        checked={isChecked}
-                                        disabled={!!pending}
-                                        onChange={() => {
-                                            let newSelected: string[];
-                                            if (isChecked) {
-                                                newSelected = selectedLicenses.filter(l => l !== license);
-                                            } else {
-                                                newSelected = [...selectedLicenses.filter(l => l !== 'Upload Later'), license];
-                                            }
-                                            setSelectedLicenses(newSelected);
-                                        }}
-                                        className="w-4 h-4 rounded border-gray-200 text-emerald-600 focus:ring-emerald-500"
-                                    />
-                                    <span className={`text-[11px] font-bold transition-colors ${isChecked ? 'text-emerald-900' : 'text-gray-700 group-hover:text-emerald-900'}`}>{license}</span>
-                                </label>
+                                <button
+                                    key={license}
+                                    type="button"
+                                    disabled={!!pending}
+                                    onClick={() => {
+                                        let newSelected: string[];
+                                        if (isChecked) {
+                                            newSelected = selectedLicenses.filter(l => l !== license);
+                                        } else {
+                                            newSelected = [...selectedLicenses.filter(l => l !== 'Upload Later'), license];
+                                        }
+                                        setSelectedLicenses(newSelected);
+                                    }}
+                                    className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all flex items-center gap-1.5 select-none cursor-pointer ${
+                                        isChecked 
+                                            ? 'bg-emerald-50 border-emerald-500 text-emerald-700 font-extrabold' 
+                                            : 'bg-white border-gray-200 text-gray-600 hover:border-emerald-300 hover:text-emerald-700'
+                                    }`}
+                                >
+                                    {isChecked && <Check size={12} strokeWidth={3} className="text-emerald-600 shrink-0" />}
+                                    {license}
+                                </button>
                             );
                         })}
-                        <label className={`flex items-center gap-3 p-3 bg-white border rounded-xl cursor-pointer transition-all select-none group ${selectedLicenses.includes('Upload Later') ? 'border-amber-500 bg-amber-50/10' : 'border-gray-100 hover:border-amber-300'}`}>
-                            <input
-                                type="checkbox"
-                                checked={selectedLicenses.includes('Upload Later')}
-                                disabled={!!pending}
-                                onChange={() => {
-                                    const newSelected = selectedLicenses.includes('Upload Later') ? [] : ['Upload Later'];
-                                    setSelectedLicenses(newSelected);
-                                }}
-                                className="w-4 h-4 rounded border-gray-200 text-amber-600 focus:ring-amber-500"
-                            />
-                            <span className={`text-[11px] font-bold transition-colors ${selectedLicenses.includes('Upload Later') ? 'text-amber-900' : 'text-gray-700 group-hover:text-amber-900'}`}>Upload Later</span>
-                        </label>
+                        <button
+                            type="button"
+                            disabled={!!pending}
+                            onClick={() => {
+                                const newSelected = selectedLicenses.includes('Upload Later') ? [] : ['Upload Later'];
+                                setSelectedLicenses(newSelected);
+                            }}
+                            className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all flex items-center gap-1.5 select-none cursor-pointer ${
+                                selectedLicenses.includes('Upload Later')
+                                    ? 'bg-amber-50 border-amber-500 text-amber-700 font-extrabold'
+                                    : 'bg-white border-gray-200 text-gray-600 hover:border-amber-300 hover:text-amber-700'
+                            }`}
+                        >
+                            {selectedLicenses.includes('Upload Later') && <Check size={12} strokeWidth={3} className="text-amber-600 shrink-0" />}
+                            Upload Later
+                        </button>
                     </div>
                 </div>
 
-                {/* Common Documents Grid */}
-                <div className="space-y-4">
-                    <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-gray-100 pb-2">Common Documents</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {commonDocs.map(renderDocCard)}
-                        {activeLicenses.map(renderDocCard)}
+                {/* Mandatory Compliance Documents Section */}
+                <div className="space-y-4 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                    <div className="flex items-center gap-2.5 border-b border-gray-50 pb-3">
+                        <div className="w-9 h-9 bg-red-50 text-red-600 rounded-xl flex items-center justify-center">
+                            <Shield size={18} />
+                        </div>
+                        <div>
+                            <h3 className="text-xs font-extrabold text-gray-900 uppercase tracking-wider">Mandatory Compliance Documents</h3>
+                            <p className="text-[9px] text-gray-500 font-medium">These documents are strictly required for compliance clearance.</p>
+                        </div>
+                    </div>
+                    
+                    <div className="divide-y divide-gray-50 flex flex-col">
+                        {mandatoryDocs.map(renderDocRow)}
                     </div>
                 </div>
 
                 {/* Specific Documents Constitution type selection */}
-                <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
-                    <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-200 italic font-black">
+                <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-4">
+                    <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 bg-gray-900 rounded-xl flex items-center justify-center text-white font-extrabold text-sm">
                             ?
                         </div>
                         <div>
-                            <h3 className="text-lg font-bold text-gray-900">Documents – Company Specific</h3>
-                            <p className="text-xs text-gray-500 font-medium">Choose your legal entity status to unveil required documents</p>
+                            <h3 className="text-xs font-bold text-gray-955 uppercase tracking-wider">Company Constitution Type</h3>
+                            <p className="text-[10px] text-gray-500 font-medium">Verify or adjust your legal entity type to ensure matching requirements.</p>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div className="bg-gray-50/60 p-1 rounded-2xl border border-gray-150 flex flex-col md:flex-row gap-1">
                         {['Sole Proprietorship', 'Partnership Firm', 'Private Limited Company', 'LLP'].map(type => (
                             <button
                                 key={type}
                                 type="button"
                                 disabled={!!pending}
                                 onClick={() => setCompanyType(type)}
-                                className={`px-2 py-4 rounded-2xl text-[10px] font-black border transition-all uppercase tracking-[0.1em] text-center flex items-center justify-center h-full min-h-[60px] ${companyType === type
-                                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-xl shadow-emerald-200 scale-[1.02]'
-                                    : 'bg-white text-gray-500 border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/30'
-                                    }`}
+                                className={`flex-1 py-2 rounded-xl text-[10px] font-extrabold transition-all text-center uppercase tracking-wider select-none cursor-pointer ${
+                                    companyType === type
+                                        ? 'bg-gray-900 text-white shadow-sm'
+                                        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/40'
+                                }`}
                             >
                                 {type}
                             </button>
@@ -1250,11 +1347,20 @@ function KYCTab({ settings, refresh }: any) {
                     </div>
                 </div>
 
-                {/* Constitution type documents Grid */}
-                <div className="space-y-4 pt-4">
-                    <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-gray-100 pb-2">{companyType} Documents</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {getSpecificDocs(companyType).map(renderDocCard)}
+                {/* Optional Documents Section */}
+                <div className="space-y-4 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                    <div className="flex items-center gap-2.5 border-b border-gray-50 pb-3">
+                        <div className="w-9 h-9 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
+                            <Info size={18} />
+                        </div>
+                        <div>
+                            <h3 className="text-xs font-extrabold text-gray-900 uppercase tracking-wider">Optional Documents & Registrations</h3>
+                            <p className="text-[9px] text-gray-500 font-medium">Provide additional optional certificates if available.</p>
+                        </div>
+                    </div>
+                    
+                    <div className="divide-y divide-gray-50 flex flex-col">
+                        {optionalDocs.map(renderDocRow)}
                     </div>
                 </div>
 

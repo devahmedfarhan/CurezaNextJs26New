@@ -89,20 +89,36 @@ interface KYCDocumentRowProps {
     profile: any;
 }
 
+const getLegacyKey = (key: string) => {
+    if (key === 'license_ayush_license') return 'license_ayush';
+    if (key === 'license_fssai_license') return 'license_fssai';
+    if (key === 'license_drug_license') return 'license_drug';
+    return null;
+};
+
 const KYCDocumentRow = ({ doc, files, savedDocs, setSavedDocs, uploadProgress, formData, setFormData, setFiles, showToast, profile }: KYCDocumentRowProps) => {
-    const file = files[doc.id];
-    const serverPath = savedDocs[doc.id];
+    const legacyId = getLegacyKey(doc.id);
+    const file = files[doc.id] || (legacyId ? files[legacyId] : null);
+    const serverPath = savedDocs[doc.id] || (legacyId ? savedDocs[legacyId] : '');
     const isOnServer = !!serverPath;
-    const progress = uploadProgress[doc.id];
+    const progress = uploadProgress[doc.id] || (legacyId ? uploadProgress[legacyId] : undefined);
     const isUploaded = !!file || isOnServer;
 
-    const docStatus = profile 
-        ? (profile[`${doc.id}_status`] || profile.kyc_document_statuses?.[doc.id] || 'pending')
-        : 'pending';
+    let docStatus = 'pending';
+    if (profile) {
+        docStatus = profile[`${doc.id}_status`] || profile.kyc_document_statuses?.[doc.id] || 'pending';
+        if (legacyId && (!profile[`${doc.id}_status`] && !profile.kyc_document_statuses?.[doc.id])) {
+            docStatus = profile[`${legacyId}_status`] || profile.kyc_document_statuses?.[legacyId] || docStatus;
+        }
+    }
     
-    const docReason = profile
-        ? (profile.kyc_document_reasons?.[doc.id] || '')
-        : '';
+    let docReason = '';
+    if (profile) {
+        docReason = profile.kyc_document_reasons?.[doc.id] || '';
+        if (legacyId && !profile.kyc_document_reasons?.[doc.id]) {
+            docReason = profile.kyc_document_reasons?.[legacyId] || '';
+        }
+    }
 
     return (
         <div className={`group relative p-5 bg-white border rounded-2xl transition-all duration-300 ${docStatus === 'rejected'
@@ -171,12 +187,18 @@ const KYCDocumentRow = ({ doc, files, savedDocs, setSavedDocs, uploadProgress, f
                             <input
                                 type="text"
                                 placeholder={doc.placeholder || 'Enter Document ID Number'}
-                                value={formData.kyc_numbers[doc.id] || ''}
+                                value={formData.kyc_numbers[doc.id] || (legacyId ? formData.kyc_numbers[legacyId] : '') || ''}
                                 disabled={docStatus === 'approved'}
-                                onChange={(e) => setFormData((prev: any) => ({
-                                    ...prev,
-                                    kyc_numbers: { ...(prev.kyc_numbers || {}), [String(doc.id)]: e.target.value }
-                                }))}
+                                onChange={(e) => setFormData((prev: any) => {
+                                    const next = {
+                                        ...prev,
+                                        kyc_numbers: { ...(prev.kyc_numbers || {}), [String(doc.id)]: e.target.value }
+                                    };
+                                    if (legacyId) {
+                                        next.kyc_numbers[legacyId] = e.target.value;
+                                    }
+                                    return next;
+                                })}
                                 className="w-full h-11 px-4 rounded-xl border border-gray-200 bg-gray-50/50 text-xs font-semibold focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:bg-white transition-all uppercase placeholder:normal-case disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
                             />
                             <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover/input:opacity-100 transition-opacity">
@@ -201,7 +223,13 @@ const KYCDocumentRow = ({ doc, files, savedDocs, setSavedDocs, uploadProgress, f
                                                 e.target.value = '';
                                                 return;
                                             }
-                                            setFiles(prev => ({ ...prev, [doc.id]: file }));
+                                            setFiles(prev => {
+                                                const next = { ...prev, [doc.id]: file };
+                                                if (legacyId) {
+                                                    next[legacyId] = file;
+                                                }
+                                                return next;
+                                            });
                                         }
                                     }}
                                     className="hidden"
@@ -255,12 +283,18 @@ const KYCDocumentRow = ({ doc, files, savedDocs, setSavedDocs, uploadProgress, f
                                                 setFiles(prev => {
                                                     const newFiles = { ...prev };
                                                     delete newFiles[doc.id];
+                                                    if (legacyId) {
+                                                        delete newFiles[legacyId];
+                                                    }
                                                     return newFiles;
                                                 });
-                                                if (savedDocs[doc.id]) {
+                                                if (savedDocs[doc.id] || (legacyId && savedDocs[legacyId])) {
                                                     setSavedDocs(prev => {
                                                         const newSavedDocs = { ...prev };
                                                         delete newSavedDocs[doc.id];
+                                                        if (legacyId) {
+                                                            delete newSavedDocs[legacyId];
+                                                        }
                                                         return newSavedDocs;
                                                     });
                                                     showToast('Document removed. Click Save Progress to apply.', 'info');
@@ -334,6 +368,35 @@ export default function SellerRegisterPage() {
 
                         setProfile(sellerProf);
                         setSavedDocs(sellerProf.kyc_docs || {});
+
+                        const dbLicenses = sellerProf.selected_licenses || [];
+                        const normalized = dbLicenses.map((l: string) => {
+                            if (l === 'AYUSH') return 'AYUSH License';
+                            if (l === 'FSSAI') return 'FSSAI License';
+                            if (l === 'Drug') return 'Drug License';
+                            return l;
+                        });
+
+                        // Auto-detect any licenses that already have uploaded documents or numbers
+                        const kycDocs = sellerProf.kyc_docs || {};
+                        const kycNums = sellerProf.kyc_numbers || {};
+                        const docKeys = new Set([...Object.keys(kycDocs), ...Object.keys(kycNums)]);
+                        
+                        docKeys.forEach(k => {
+                            if (k.startsWith('license_')) {
+                                let licenseName = '';
+                                if (k === 'license_ayush_license' || k === 'license_ayush') licenseName = 'AYUSH License';
+                                else if (k === 'license_fssai_license' || k === 'license_fssai') licenseName = 'FSSAI License';
+                                else if (k === 'license_drug_license' || k === 'license_drug') licenseName = 'Drug License';
+                                else if (k === 'license_cbd__hemp_noc') licenseName = 'CBD / Hemp NOC';
+                                else if (k === 'license_coa__lab_reports') licenseName = 'COA / Lab Reports';
+                                
+                                if (licenseName && !normalized.includes(licenseName)) {
+                                    normalized.push(licenseName);
+                                }
+                            }
+                        });
+
                         // Populate form with saved data from SERVER (Source of Truth)
                         setFormData((prev: any) => ({
                             ...prev,
@@ -344,7 +407,7 @@ export default function SellerRegisterPage() {
                             gst_number: sellerProf.gst_number || prev.gst_number,
                             pan_number: sellerProf.pan_number || prev.pan_number,
                             website: sellerProf.website || prev.website,
-                            selected_licenses: sellerProf.selected_licenses || prev.selected_licenses || [],
+                            selected_licenses: normalized,
                             kyc_numbers: sellerProf.kyc_numbers || prev.kyc_numbers || {},
 
                             // Bank Details
@@ -657,12 +720,18 @@ export default function SellerRegisterPage() {
     const isKycComplete = () => {
         const requiredDocs = getRequiredDocs().filter(d => d.required);
         // Check if all required files are present (either locally or on server)
-        const allFilesUploaded = requiredDocs.every(d => !!files[d.id] || !!savedDocs[d.id]);
+        const allFilesUploaded = requiredDocs.every(d => {
+            const legacyId = getLegacyKey(d.id);
+            return !!files[d.id] || !!savedDocs[d.id] || (legacyId && (!!files[legacyId] || !!savedDocs[legacyId]));
+        });
 
         // Check if all required numbers are present
         const allNumbersFilled = requiredDocs
             .filter(d => d.hasNumber)
-            .every(d => !!formData.kyc_numbers[d.id]);
+            .every(d => {
+                const legacyId = getLegacyKey(d.id);
+                return !!formData.kyc_numbers[d.id] || (legacyId && !!formData.kyc_numbers[legacyId]);
+            });
 
         // Check Bank Details
         const bankDetailsFilled = !!formData.bank_name &&
@@ -845,12 +914,17 @@ export default function SellerRegisterPage() {
         // Add selected licenses
         formData.selected_licenses.forEach(license => {
             if (license !== 'Upload Later') {
+                const cleanName = license.replace(/\s*license\s*$/i, '').trim();
+                let sanitizedIdPart = license.toLowerCase().replace(/ /g, '_').replace(/\//g, '');
+                if (!sanitizedIdPart.endsWith('_license') && (sanitizedIdPart === 'ayush' || sanitizedIdPart === 'fssai' || sanitizedIdPart === 'drug')) {
+                    sanitizedIdPart = `${sanitizedIdPart}_license`;
+                }
                 docs.push({
-                    id: `license_${license.toLowerCase().replace(/ /g, '_').replace(/\//g, '')}`, // Sanitize ID for licenses
-                    label: `${license} License`,
+                    id: `license_${sanitizedIdPart}`, // Sanitize ID for licenses
+                    label: `${cleanName} License`,
                     required: true,
                     hasNumber: true,
-                    placeholder: `Enter ${license} Number`
+                    placeholder: `Enter ${cleanName} Number`
                 });
             }
         });

@@ -26,6 +26,8 @@ interface Brand {
     faqs: { question: string; answer: string }[] | null;
     categories: any[] | null;
     concerns: any[] | null;
+    purity_standards: string[] | null;
+    genuine_badge_text: string | null;
 }
 
 interface Product {
@@ -60,7 +62,9 @@ export default function BrandPage({ params }: { params: { slug: string } }) {
     // Dynamic SEO update based on brand settings
     useEffect(() => {
         if (brand) {
-            document.title = brand.meta_title || `${brand.name} | Cureza`;
+            document.title = brand.meta_title || (brand.short_description 
+                ? `${brand.name} | ${brand.short_description} | Cureza` 
+                : `${brand.name} | Cureza`);
             
             // Meta Description
             let metaDesc = document.querySelector('meta[name="description"]');
@@ -188,18 +192,29 @@ export default function BrandPage({ params }: { params: { slug: string } }) {
                 <div className="pt-3 md:pt-4 border-t border-gray-100">
                     <span className="text-[10px] md:text-xs uppercase font-extrabold tracking-wider text-gray-400 block mb-1.5 md:mb-2">Purity & Trust Standards</span>
                     <div className="flex flex-wrap gap-x-3 gap-y-1.5 md:flex-col md:gap-0 md:space-y-2 text-[10.5px] md:text-xs font-bold text-gray-700">
-                        <div className="flex items-center gap-1.5">
-                            <CheckCircle className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
-                            <span>100% Organic & Ayurvedic</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                            <CheckCircle className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
-                            <span>Toxin & Heavy Metal Free</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                            <CheckCircle className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
-                            <span>Cruelty Free & Vegan Friendly</span>
-                        </div>
+                        {Array.isArray(brand?.purity_standards) && brand.purity_standards.filter(Boolean).length > 0 ? (
+                            brand.purity_standards.filter(Boolean).map((standard, index) => (
+                                <div key={index} className="flex items-center gap-1.5">
+                                    <CheckCircle className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+                                    <span>{standard}</span>
+                                </div>
+                            ))
+                        ) : (
+                            <>
+                                <div className="flex items-center gap-1.5">
+                                    <CheckCircle className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+                                    <span>100% Organic & Ayurvedic</span>
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                    <CheckCircle className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+                                    <span>Toxin & Heavy Metal Free</span>
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                    <CheckCircle className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+                                    <span>Cruelty Free & Vegan Friendly</span>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
@@ -302,7 +317,7 @@ export default function BrandPage({ params }: { params: { slug: string } }) {
                                         </div>
                                         <div className="flex items-center px-3 py-1 bg-white/10 text-emerald-100 rounded-lg font-bold text-xs border border-white/10">
                                             <ShieldCheck className="w-3.5 h-3.5 mr-1 text-emerald-300" />
-                                            <span>100% Genuine</span>
+                                            <span>{brand.genuine_badge_text || "100% Genuine"}</span>
                                         </div>
                                     </div>
 
@@ -340,7 +355,7 @@ export default function BrandPage({ params }: { params: { slug: string } }) {
                                 {/* Editorial Brand Slogan Quote */}
                                 <div className="border-l-4 border-emerald-700 pl-4 py-1.5 mb-6 bg-emerald-50/20 rounded-r-lg">
                                     <p className="text-xs md:text-sm font-semibold text-[#052326]/90 italic leading-relaxed">
-                                        "Healing from the roots. We bring you pure formulations compiled with ancient Ayurvedic wisdom, modern standards, and absolute transparency."
+                                        "{brand.brand_vision || "Healing from the roots. We bring you pure formulations compiled with ancient Ayurvedic wisdom, modern standards, and absolute transparency."}"
                                     </p>
                                 </div>
 

@@ -49,11 +49,13 @@ export default function ReviewList({ productId, refreshTrigger }: ReviewListProp
         <div className="space-y-8">
             {reviews.map((review) => {
                 // Determine name to display (legacy full_name or eager loaded customer.name)
-                const displayName = review.full_name || review.customer?.name || 'Customer';
+                const displayName = review.customer?.name || review.full_name || 'Customer';
                 const displayInitial = displayName.charAt(0);
                 const displayRating = review.rating || review.stars || 5;
                 const displayContent = review.review_text || review.description;
                 const createdDate = review.created_at || review.reviewed_at || new Date().toISOString();
+                const sellerBrandName = review.reply?.seller?.brand?.name || review.reply?.seller?.name || 'Seller Response';
+                const sellerBrandInitial = sellerBrandName.charAt(0).toUpperCase();
 
                 // Merge legacy images and new media items
                 const legacyImages = typeof review.images === 'string' ? JSON.parse(review.images) : (review.images || []);
@@ -87,7 +89,7 @@ export default function ReviewList({ productId, refreshTrigger }: ReviewListProp
                             </div>
                         </div>
 
-                        <p className="text-gray-700 leading-relaxed mb-4">{displayContent}</p>
+                        <p className="text-gray-750 leading-relaxed mb-4">{displayContent}</p>
 
                         {/* Review Media (Images & Videos) */}
                         <div className="flex gap-3 mb-4 overflow-x-auto pb-2">
@@ -120,7 +122,7 @@ export default function ReviewList({ productId, refreshTrigger }: ReviewListProp
                                         />
                                     </div>
                                 )
-                            })}
+                             })}
 
                             {/* Legacy Video Link */}
                             {review.video_url && (
@@ -134,10 +136,10 @@ export default function ReviewList({ productId, refreshTrigger }: ReviewListProp
                         {review.reply && (
                             <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 mt-4">
                                 <div className="flex items-center gap-2 mb-2">
-                                    <div className="w-6 h-6 bg-cureza-green rounded-full flex items-center justify-center text-white text-xs font-bold">
-                                        S
+                                    <div className="w-6 h-6 bg-cureza-green rounded-full flex items-center justify-center text-white text-xs font-bold uppercase">
+                                        {sellerBrandInitial}
                                     </div>
-                                    <span className="font-bold text-gray-900 text-sm">Seller Response</span>
+                                    <span className="font-bold text-gray-900 text-sm">{sellerBrandName}</span>
                                     <span className="text-xs text-gray-500">• {new Date(review.reply.created_at).toLocaleDateString()}</span>
                                 </div>
                                 <p className="text-gray-700 text-sm leading-relaxed">{review.reply.reply_text}</p>

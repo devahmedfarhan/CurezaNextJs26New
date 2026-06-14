@@ -181,6 +181,13 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
     if (isPending) {
         const profile = fullProfile || (user as any).seller_profile || {};
         
+        const getLegacyKey = (key: string) => {
+            if (key === 'license_ayush_license') return 'license_ayush';
+            if (key === 'license_fssai_license') return 'license_fssai';
+            if (key === 'license_drug_license') return 'license_drug';
+            return null;
+        };
+
         // Define dynamic document types based on selected company type
         const companyType = profile.company_type || 'Sole Proprietorship';
         const getDocsList = () => {
@@ -234,8 +241,13 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
             const selectedLicenses = profile.selected_licenses || [];
             selectedLicenses.forEach((lic: string) => {
                 if (lic !== 'Upload Later') {
-                    const licId = `license_${lic.toLowerCase().replace(/ /g, '_').replace(/\//g, '')}`;
-                    docs.push({ id: licId, label: `${lic} License` });
+                    const cleanName = lic.replace(/\s*license\s*$/i, '').trim();
+                    let sanitizedIdPart = lic.toLowerCase().replace(/ /g, '_').replace(/\//g, '');
+                    if (!sanitizedIdPart.endsWith('_license') && (sanitizedIdPart === 'ayush' || sanitizedIdPart === 'fssai' || sanitizedIdPart === 'drug')) {
+                        sanitizedIdPart = `${sanitizedIdPart}_license`;
+                    }
+                    const licId = `license_${sanitizedIdPart}`;
+                    docs.push({ id: licId, label: `${cleanName} License` });
                 }
             });
 
@@ -243,12 +255,18 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
             const listedIds = new Set(docs.map(d => d.id));
             if (profile.kyc_docs) {
                 Object.keys(profile.kyc_docs).forEach(k => {
-                    if (!listedIds.has(k)) {
-                        const prettyLabel = k
+                    let normalizedKey = k;
+                    if (k === 'license_ayush') normalizedKey = 'license_ayush_license';
+                    if (k === 'license_fssai') normalizedKey = 'license_fssai_license';
+                    if (k === 'license_drug') normalizedKey = 'license_drug_license';
+                    
+                    if (!listedIds.has(normalizedKey)) {
+                        const prettyLabel = normalizedKey
                             .replace(/_/g, ' ')
                             .replace('license ', '')
                             .toUpperCase();
-                        docs.push({ id: k, label: prettyLabel });
+                        docs.push({ id: normalizedKey, label: prettyLabel });
+                        listedIds.add(normalizedKey);
                     }
                 });
             }
@@ -257,8 +275,12 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
             // 1. Are required for this company type OR
             // 2. Have been uploaded (exists in kyc_docs or legacy image path)
             return docs.filter(doc => {
+                const legacyId = getLegacyKey(doc.id);
                 // Check if uploaded
                 let filePath = profile.kyc_docs?.[doc.id] || '';
+                if (!filePath && legacyId) {
+                    filePath = profile.kyc_docs?.[legacyId] || '';
+                }
                 if (doc.id === 'bank_proof' && !filePath) {
                     filePath = profile.cheque_image_path || '';
                 }
@@ -303,7 +325,11 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
             profile.cheque_status === 'rejected' ||
             profile.signature_status === 'rejected' ||
             profile.aadhaar_status === 'rejected' ||
-            activeDocs.some(d => (profile[`${d.id}_status`] || profile.kyc_document_statuses?.[d.id]) === 'rejected') ||
+            activeDocs.some(d => {
+                const legacyId = getLegacyKey(d.id);
+                const status = profile[`${d.id}_status`] || profile.kyc_document_statuses?.[d.id] || (legacyId ? (profile[`${legacyId}_status`] || profile.kyc_document_statuses?.[legacyId]) : null);
+                return status === 'rejected';
+            }) ||
             Object.values(profile.kyc_document_statuses || {}).includes('rejected');
 
         return (
@@ -387,8 +413,12 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
                                     </h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         {activeDocs.map((doc) => {
+                                            const legacyId = getLegacyKey(doc.id);
                                             // PRIORITIZE SPECIFIC STATUS IN JSON ARRAY
                                             let docStatus = profile.kyc_document_statuses?.[doc.id];
+                                            if (!docStatus && legacyId) {
+                                                docStatus = profile.kyc_document_statuses?.[legacyId];
+                                            }
                                             if (!docStatus) {
                                                 if (doc.id === 'bank_proof') {
                                                     docStatus = profile.cheque_status;
@@ -402,6 +432,9 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
                                                     docStatus = profile.signature_status;
                                                 } else {
                                                     docStatus = profile[`${doc.id}_status`];
+                                                    if (!docStatus && legacyId) {
+                                                        docStatus = profile[`${legacyId}_status`];
+                                                    }
                                                 }
                                             }
                                             if (!docStatus) {
@@ -410,6 +443,9 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
 
                                             // PRIORITIZE SPECIFIC REASON IN JSON ARRAY
                                             let docReason = profile.kyc_document_reasons?.[doc.id];
+                                            if (!docReason && legacyId) {
+                                                docReason = profile.kyc_document_reasons?.[legacyId];
+                                            }
                                             if (!docReason) {
                                                 if (doc.id === 'bank_proof') {
                                                     docReason = profile.kyc_document_reasons?.['cheque'];
@@ -429,6 +465,9 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
 
                                             // File preview link resolution
                                             let filePath = profile.kyc_docs?.[doc.id] || '';
+                                            if (!filePath && legacyId) {
+                                                filePath = profile.kyc_docs?.[legacyId] || '';
+                                            }
                                             if (doc.id === 'bank_proof' && !filePath) {
                                                 filePath = profile.cheque_image_path || '';
                                             }
