@@ -178,67 +178,69 @@ export default function Footer() {
           {/* Links Categories Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
             
-            {/* Shop by Concern */}
+            {/* Shop & Concerns */}
             <div>
               <h4 className="font-extrabold text-[10px] tracking-[0.15em] text-[#F8F3EF]/40 uppercase mb-4 pb-1 border-b border-[#F8F3EF]/5">
-                Shop by Concern
+                Shop & Concerns
               </h4>
               <ul className="space-y-2.5 text-[12px] font-semibold text-[#F8F3EF]/90">
-                <li><Link href="/shop/pain-relief" className="hover:text-[#F0C417] transition-colors">Pain Relief</Link></li>
-                <li><Link href="/shop/stress-anxiety" className="hover:text-[#F0C417] transition-colors">Stress & Anxiety</Link></li>
-                <li><Link href="/shop/sleep-issues" className="hover:text-[#F0C417] transition-colors">Sleep Issues</Link></li>
-                <li><Link href="/shop/skin-hair" className="hover:text-[#F0C417] transition-colors">Skin & Hair</Link></li>
-                <li><Link href="/shop/daily-wellness" className="hover:text-[#F0C417] transition-colors">Daily Wellness</Link></li>
-                <li><Link href="/shop/womens-health" className="hover:text-[#F0C417] transition-colors">Women's Health</Link></li>
+                <li><Link href="/shop" className="hover:text-[#F0C417] transition-colors">Shop All Products</Link></li>
+                <li><Link href="/bestsellers" className="hover:text-[#F0C417] transition-colors">Bestsellers</Link></li>
+                <li><Link href="/new-launches" className="hover:text-[#F0C417] transition-colors">New Launches</Link></li>
+                <li><Link href="/offers" className="hover:text-[#F0C417] transition-colors">Offers & Coupons</Link></li>
+                <li><Link href="/brands" className="hover:text-[#F0C417] transition-colors">Our Brands</Link></li>
+                <li className="pt-1 border-t border-[#F8F3EF]/5">
+                  <span className="text-[10px] text-[#F8F3EF]/35 block mb-1">Shop by Concern:</span>
+                </li>
+                <li><Link href="/concern/pain-inflammation" className="hover:text-[#F0C417] transition-colors">Pain & Inflammation</Link></li>
+                <li><Link href="/concern/stress-anxiety" className="hover:text-[#F0C417] transition-colors">Stress & Anxiety</Link></li>
+                <li><Link href="/concern/sleep-issues" className="hover:text-[#F0C417] transition-colors">Sleep Issues</Link></li>
+                <li><Link href="/concern/skin-hair" className="hover:text-[#F0C417] transition-colors">Skin & Hair</Link></li>
               </ul>
             </div>
 
-            {/* Shop by Type */}
+            {/* Support & Services */}
             <div>
               <h4 className="font-extrabold text-[10px] tracking-[0.15em] text-[#F8F3EF]/40 uppercase mb-4 pb-1 border-b border-[#F8F3EF]/5">
-                Shop by Type
+                Support & Services
               </h4>
               <ul className="space-y-2.5 text-[12px] font-semibold text-[#F8F3EF]/90">
-                <li><Link href="/shop/tinctures" className="hover:text-[#F0C417] transition-colors">Tinctures & Capsules</Link></li>
-                <li><Link href="/shop/mints" className="hover:text-[#F0C417] transition-colors">Mints & Tea Bag</Link></li>
-                <li><Link href="/shop/oils" className="hover:text-[#F0C417] transition-colors">Oil, Spray & Gel</Link></li>
-                <li><Link href="/shop/balms" className="hover:text-[#F0C417] transition-colors">Balm & Roll-on</Link></li>
-                <li><Link href="/shop/creams" className="hover:text-[#F0C417] transition-colors">Cream & Serum</Link></li>
-                <li><Link href="/shop/seeds" className="hover:text-[#F0C417] transition-colors">Seed & Powder</Link></li>
+                <li><Link href="/consultation" className="hover:text-[#F0C417] transition-colors">Book Consultation</Link></li>
+                <li><Link href="/track-order" className="hover:text-[#F0C417] transition-colors">Track Your Order</Link></li>
+                <li><Link href="/faq" className="hover:text-[#F0C417] transition-colors">Help Center / FAQs</Link></li>
+                <li><Link href="/contact" className="hover:text-[#F0C417] transition-colors">Contact Support</Link></li>
+                <li><Link href="/compare" className="hover:text-[#F0C417] transition-colors">Compare Products</Link></li>
               </ul>
             </div>
 
-            {/* About Us */}
+            {/* Partnerships & Careers */}
             <div>
               <h4 className="font-extrabold text-[10px] tracking-[0.15em] text-[#F8F3EF]/40 uppercase mb-4 pb-1 border-b border-[#F8F3EF]/5">
-                About Us
+                Partnerships
+              </h4>
+              <ul className="space-y-2.5 text-[12px] font-semibold text-[#F8F3EF]/90">
+                <li><Link href="/doctor" className="hover:text-[#F0C417] transition-colors">For Doctors / Prescribers</Link></li>
+                <li><Link href="/seller" className="hover:text-[#F0C417] transition-colors">Sell on Cureza</Link></li>
+                <li><Link href="/affiliate" className="hover:text-[#F0C417] transition-colors">Affiliate & Ambassador</Link></li>
+                <li><Link href="/careers" className="hover:text-[#F0C417] transition-colors">Careers</Link></li>
+                <li><Link href="/community" className="hover:text-[#F0C417] transition-colors">Community Hub</Link></li>
+              </ul>
+            </div>
+
+            {/* Company & Policies */}
+            <div>
+              <h4 className="font-extrabold text-[10px] tracking-[0.15em] text-[#F8F3EF]/40 uppercase mb-4 pb-1 border-b border-[#F8F3EF]/5">
+                Company & Policies
               </h4>
               <ul className="space-y-2.5 text-[12px] font-semibold text-[#F8F3EF]/90">
                 <li><Link href="/about" className="hover:text-[#F0C417] transition-colors">Our Story</Link></li>
-                <li><Link href="/pharmacy" className="hover:text-[#F0C417] transition-colors">Farm to Pharmacy</Link></li>
-                <li><Link href="/team" className="hover:text-[#F0C417] transition-colors">Meet the Team</Link></li>
-                <li><Link href="/press" className="hover:text-[#F0C417] transition-colors">Press</Link></li>
-                <li><Link href="/faq" className="hover:text-[#F0C417] transition-colors">FAQs</Link></li>
-                <li><Link href="/contact" className="hover:text-[#F0C417] transition-colors">Contact Us</Link></li>
-                <li><Link href="/prescriber" className="hover:text-[#F0C417] transition-colors">Become a Cureza Prescriber</Link></li>
-                <li><Link href="/affiliate" className="hover:text-[#F0C417] transition-colors">Affiliate & Ambassador</Link></li>
-              </ul>
-            </div>
-
-            {/* Policies */}
-            <div>
-              <h4 className="font-extrabold text-[10px] tracking-[0.15em] text-[#F8F3EF]/40 uppercase mb-4 pb-1 border-b border-[#F8F3EF]/5">
-                Policies
-              </h4>
-              <ul className="space-y-2.5 text-[12px] font-semibold text-[#F8F3EF]/90">
-                <li><Link href="/shipping" className="hover:text-[#F0C417] transition-colors">Shipping Policy</Link></li>
-                <li><Link href="/returns" className="hover:text-[#F0C417] transition-colors">Return & Exchange Policy</Link></li>
+                <li><Link href="/blog" className="hover:text-[#F0C417] transition-colors">Wellness Library</Link></li>
+                <li><Link href="/press" className="hover:text-[#F0C417] transition-colors">Press & Media</Link></li>
                 <li><Link href="/medical-policy" className="hover:text-[#F0C417] transition-colors">Medical Product Policy</Link></li>
                 <li><Link href="/lab-reports" className="hover:text-[#F0C417] transition-colors">Lab Reports & COA</Link></li>
+                <li><Link href="/returns" className="hover:text-[#F0C417] transition-colors">Cancellation & Returns</Link></li>
                 <li><Link href="/legal/privacy-policy" className="hover:text-[#F0C417] transition-colors">Privacy Policy</Link></li>
-                <li><Link href="/legal/terms-of-service" className="hover:text-[#F0C417] transition-colors">Terms & Conditions</Link></li>
-                <li><Link href="/consultancy" className="hover:text-[#F0C417] transition-colors">Online Consultancy</Link></li>
-                <li><Link href="/refund-policy" className="hover:text-[#F0C417] transition-colors">Refund Policy</Link></li>
+                <li><Link href="/legal/terms-of-service" className="hover:text-[#F0C417] transition-colors">Terms of Service</Link></li>
                 <li><Link href="/site-map" className="hover:text-[#F0C417] transition-colors">Sitemap</Link></li>
               </ul>
             </div>

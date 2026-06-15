@@ -1,5 +1,26 @@
 import React from "react";
 import { Metadata } from 'next';
+import Link from 'next/link';
+import { 
+    Trophy, 
+    Sparkles, 
+    TrendingUp, 
+    Gift, 
+    Medal, 
+    Users, 
+    CheckCircle2, 
+    Calendar, 
+    ChevronRight, 
+    UserPlus, 
+    ArrowRight, 
+    Coins, 
+    Heart, 
+    Activity, 
+    HelpCircle,
+    UserCheck,
+    MessageSquare,
+    Store
+} from 'lucide-react';
 
 export const metadata: Metadata = {
     title: 'Cureza Circle - Loyalty Rewards, Community & Gamification',
@@ -7,394 +28,459 @@ export const metadata: Metadata = {
 };
 
 const earnRules = [
-    { action: "Purchase", xp: 100, points: "10 pts / ₹100" },
-    { action: "Write Review", xp: 50, points: 20 },
-    { action: "UGC Photo Upload", xp: 100, points: 40 },
-    { action: "Friend Referral", xp: 200, points: 100 },
-    { action: "Prescription Upload", xp: 150, points: "—" },
-    { action: "Live Event Join", xp: 250, points: 50 },
-    { action: "Daily Login Streak", xp: 20, points: "—" },
+    { action: "Product Purchase", xp: 100, points: "10 pts / ₹100", icon: Coins },
+    { action: "Write Honest Review", xp: 50, points: "20 pts", icon: MessageSquare },
+    { action: "UGC Photo/Video Upload", xp: 100, points: "40 pts", icon: Sparkles },
+    { action: "Refer a Friend", xp: 200, points: "100 pts", icon: UserPlus },
+    { action: "Upload Valid Prescription", xp: 150, points: "—", icon: UserCheck },
+    { action: "Join Live Wellness Event", xp: 250, points: "50 pts", icon: Calendar },
+    { action: "Daily Check-in Streak", xp: 20, points: "—", icon: Activity },
 ];
 
 const tiers = [
-    { name: "Explorer", range: "0–499 XP", perks: ["Basic access", "Welcome bonus"] },
-    { name: "Creator", range: "500–1,999 XP", perks: ["Extra discounts", "Event invites"] },
-    { name: "Ambassador", range: "2,000–4,999 XP", perks: ["Higher cashback", "Influencer perks"] },
-    { name: "Partner", range: "5,000+ XP", perks: ["Paid collaborations", "Commissions"] },
+    { name: "Explorer", range: "0–499 XP", perks: ["Basic platform access", "Welcome bonus points", "Community general chats"], badgeColor: "from-slate-400 to-slate-500" },
+    { name: "Creator", range: "500–1,999 XP", perks: ["Extra 5% off sitewide", "Exclusive webinar invites", "Priority customer support"], badgeColor: "from-emerald-400 to-emerald-600" },
+    { name: "Ambassador", range: "2,000–4,999 XP", perks: ["10% cashback coupons", "Early product launches", "Creator program sponsorship"], badgeColor: "from-amber-400 to-amber-600" },
+    { name: "Partner", range: "5,000+ XP", perks: ["Paid collaborations", "Custom referral commissions", "VIP retreat invitations"], badgeColor: "from-yellow-400 to-amber-500" },
 ];
 
 const rewards = [
-    { title: "10% Discount", subtitle: "On wellness & supplements", cost: "500 pts" },
-    { title: "Free Sample Pack", subtitle: "Mini wellness kit", cost: "300 pts" },
-    { title: "Cureza T-shirt", subtitle: "Limited edition merch", cost: "1500 pts" },
-    { title: "Event Pass", subtitle: "Local meetup / workshop", cost: "1000 pts" },
-    { title: "Doctor Consultation", subtitle: "15-min online", cost: "2000 pts" },
-    { title: "Seller Coupon", subtitle: "Extra 5% off (vendor)", cost: "800 pts" },
+    { title: "Flat 10% Discount", subtitle: "Wellness & Supplements", cost: "500 pts", category: "Discounts" },
+    { title: "Free Mini Sample Pack", subtitle: "Curated wellness kit", cost: "300 pts", category: "Products" },
+    { title: "Exclusive Merch T-shirt", subtitle: "Limited edition print", cost: "1500 pts", category: "Merchandise" },
+    { title: "Live Event Pass", subtitle: "Local healing workshops", cost: "1000 pts", category: "Events" },
+    { title: "Doctor Video Consultation", subtitle: "15-min live session", cost: "2000 pts", category: "Consultation" },
+    { title: "Exclusive Vendor Coupon", subtitle: "Extra 5% discount", cost: "800 pts", category: "Discounts" },
 ];
 
 const badges = [
-    "Top Influencer",
-    "Top Reviewer",
-    "Wellness Achiever",
-    "7-Day Meditator",
-    "UGC Star",
-    "Event Champion",
+    { name: "Top Influencer", desc: "Shared 5+ helpful UGC reviews" },
+    { name: "Top Reviewer", desc: "Had 10 helpful review upvotes" },
+    { name: "Wellness Achiever", desc: "Completed 3 consecutive challenges" },
+    { name: "7-Day Meditator", desc: "Tracked daily streak for a week" },
+    { name: "UGC Star", desc: "Video review selected by editors" },
+    { name: "Event Champion", desc: "Attended 3 live wellness webinars" },
 ];
 
 export default function CurezaCircle() {
     return (
-        <div className="min-h-screen bg-[#F8F3EF] text-[#052326]">
-            <header className="bg-white/40 border-b border-[#052326]/10 px-4 py-10 mb-8">
-                <div className="flex flex-col md:flex-row items-start gap-8 md:py-12 md:px-4 w-full container mx-auto">
-                    <div className="flex-1">
-                        <h1 className="text-3xl md:text-4xl font-bold text-[#052326] leading-tight font-serif">
-                            Cureza Circle — Loyalty • Community • Gamification • Rewards
-                        </h1>
-                        <p className="mt-4 text-gray-700 text-md max-w-2xl leading-relaxed">
-                            Cureza Circle is the heart of the Cureza Marketplace — a reward-driven community that connects customers,
-                            influencers, sellers and doctors. Earn XP, collect points, unlock tiers, join events and redeem rewards.
-                        </p>
-
-                        <div className="mt-6 flex flex-wrap gap-3">
-                            <a
-                                href="#join"
-                                className="inline-flex items-center gap-2 px-5 py-3 bg-[#052326] text-white rounded-[10px] hover:bg-[#052326]/90 transition-all font-semibold shadow-sm"
-                            >
-                                Join Cureza Circle
-                            </a>
-                            <a
-                                href="#rewards"
-                                className="inline-flex items-center gap-2 px-5 py-3 border border-[#052326]/20 rounded-[10px] text-[#052326] hover:bg-[#F8F3EF] transition-all font-semibold"
-                            >
-                                View Rewards
-                            </a>
-                        </div>
-                    </div>
-
-                    <div className="w-full md:w-96 bg-white rounded-[12px] p-6 border border-[#052326]/12 shadow-sm">
-                        <div className="text-xs text-gray-500 font-bold uppercase tracking-wider">Your Circle Snapshot</div>
-                        <div className="mt-4">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <div className="text-xs text-gray-400">Tier</div>
-                                    <div className="text-lg font-bold text-[#052326]">Explorer</div>
-                                </div>
-                                <div className="text-right">
-                                    <div className="text-xs text-gray-400">XP</div>
-                                    <div className="text-lg font-bold text-[#052326]">120 XP</div>
+        <div className="min-h-screen bg-[#F8F3EF] text-[#052326] pt-8">
+            
+            {/* HERO SECTION */}
+            <div className="container mx-auto px-4 md:px-6">
+                <header className="relative overflow-hidden bg-gradient-to-br from-[#052326] via-[#093539] to-[#0e444b] text-white py-20 px-6 rounded-3xl shadow-md">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(240,196,23,0.1),transparent_50%)]" />
+                    <div className="relative z-10">
+                        <div className="container mx-auto max-w-5xl">
+                        <div className="grid lg:grid-cols-12 gap-12 items-center">
+                            
+                            {/* Hero Intro */}
+                            <div className="lg:col-span-7 space-y-6">
+                                <span className="inline-flex items-center gap-1.5 bg-[#F0C417] text-[#052326] px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                                    <Trophy size={12} className="animate-bounce" />
+                                    Cureza Circle Loyalty Hub
+                                </span>
+                                <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-[1.15]">
+                                    Connect. Engage. <br />
+                                    <span className="text-[#F0C417]">Earn Real Rewards.</span>
+                                </h1>
+                                <p className="text-sm md:text-base text-white/80 max-w-xl leading-relaxed font-light">
+                                    Join a reward-driven wellness community that connects health enthusiasts, creators, trusted sellers, and certified doctors. Earn XP, rank up, and claim exclusive perks.
+                                </p>
+                                <div className="flex flex-wrap gap-4 pt-2">
+                                    <Link
+                                        href="/register"
+                                        className="px-6 py-3 bg-[#F0C417] text-[#052326] rounded-xl hover:bg-[#F0C417]/90 transition-all font-bold shadow-md hover:shadow-lg flex items-center gap-2 group text-sm"
+                                    >
+                                        Start Earning Today
+                                        <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                    </Link>
+                                    <a
+                                        href="#rewards"
+                                        className="px-6 py-3 border border-white/20 rounded-xl text-white hover:bg-white/10 transition-all font-bold text-sm"
+                                    >
+                                        Explore Rewards
+                                    </a>
                                 </div>
                             </div>
 
-                            <div className="mt-4">
-                                <div className="w-full bg-[#052326]/10 rounded-full h-3 overflow-hidden">
-                                    <div className="bg-[#052326] h-3 rounded-full" style={{ width: "24%" }} />
-                                </div>
-                                <div className="mt-2 text-xs text-gray-500">24% to Creator</div>
-                            </div>
-
-                            <div className="mt-4 grid grid-cols-2 gap-2">
-                                <div className="bg-[#F8F3EF] p-3 rounded-[8px] border border-[#052326]/5">
-                                    <div className="text-xs text-gray-500">Points</div>
-                                    <div className="font-bold text-[#052326]">320</div>
-                                </div>
-                                <div className="bg-[#F8F3EF] p-3 rounded-[8px] border border-[#052326]/5">
-                                    <div className="text-xs text-gray-500">Badges</div>
-                                    <div className="font-bold text-[#052326]">1</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-            <div className="container mx-auto py-2 px-4">
-                {/* PURPOSE & BENEFITS */}
-                <section className="grid md:grid-cols-3 gap-6 mb-10">
-                    <div className="bg-white p-6 border border-[#052326]/12 rounded-[12px] shadow-sm">
-                        <h3 className="font-bold text-lg text-[#052326]">Purpose</h3>
-                        <p className="text-gray-600 mt-2 text-sm leading-relaxed">Create retention, community, and a powerful referral engine with gamification at its core.</p>
-                        <ul className="mt-3 text-sm text-gray-600 space-y-1">
-                            <li>• Retention via XP & tiers</li>
-                            <li>• Community for UGC & events</li>
-                            <li>• Organic marketing via referrals</li>
-                        </ul>
-                    </div>
-
-                    <div className="bg-white p-6 border border-[#052326]/12 rounded-[12px] shadow-sm">
-                        <h3 className="font-bold text-lg text-[#052326]">How it helps Cureza</h3>
-                        <ul className="mt-2 text-gray-600 space-y-1 text-sm leading-relaxed">
-                            <li>✔ Increases retention</li>
-                            <li>✔ Lowers CAC via referrals</li>
-                            <li>✔ Boosts repeat purchases</li>
-                            <li>✔ Creates brand love</li>
-                        </ul>
-                    </div>
-
-                    <div className="bg-white p-6 border border-[#052326]/12 rounded-[12px] shadow-sm">
-                        <h3 className="font-bold text-lg text-[#052326]">Who joins</h3>
-                        <p className="text-gray-600 mt-2 text-sm leading-relaxed">Customers, influencers, sellers, doctors — everyone becomes Cureza Family.</p>
-                        <div className="mt-3 text-xs text-gray-500">Badges, leaderboards, events and real rewards keep them engaged.</div>
-                    </div>
-                </section>
-
-                {/* SYSTEM FLOW */}
-                <section className="mb-10">
-                    <h2 className="text-2xl font-bold text-[#052326] mb-6 font-serif">Cureza Circle — Full System Flow</h2>
-
-                    <ol className="space-y-4">
-                        <li className="bg-white p-6 border border-[#052326]/12 rounded-[12px] shadow-sm">
-                            <div className="flex items-start gap-4">
-                                <div className="w-10 h-10 rounded-full bg-[#052326]/10 flex items-center justify-center font-bold text-[#052326] flex-shrink-0">1</div>
-                                <div>
-                                    <h4 className="font-bold text-[#052326]">Step 1 — User Joins</h4>
-                                    <p className="text-gray-600 mt-1 text-sm">New accounts start as <strong>Explorer</strong> automatically. Verification or onboarding tasks can grant starter bonuses.</p>
-                                </div>
-                            </div>
-                        </li>
-
-                        <li className="bg-white p-6 border border-[#052326]/12 rounded-[12px] shadow-sm">
-                            <div className="flex items-start gap-4">
-                                <div className="w-10 h-10 rounded-full bg-[#052326]/10 flex items-center justify-center font-bold text-[#052326] flex-shrink-0">2</div>
-                                <div>
-                                    <h4 className="font-bold text-[#052326]">Step 2 — Earn XP & Points</h4>
-                                    <p className="text-gray-600 mt-1 text-sm">Every meaningful action in Cureza (purchase, review, UGC, referral) earns XP and/or points.</p>
-                                </div>
-                            </div>
-                        </li>
-
-                        <li className="bg-white p-6 border border-[#052326]/12 rounded-[12px] shadow-sm">
-                            <div className="flex items-start gap-4">
-                                <div className="w-10 h-10 rounded-full bg-[#052326]/10 flex items-center justify-center font-bold text-[#052326] flex-shrink-0">3</div>
-                                <div>
-                                    <h4 className="font-bold text-[#052326]">Step 3 — Tier & Perks</h4>
-                                    <p className="text-gray-600 mt-1 text-sm">XP unlocks tiers — each tier unlocks benefits like discounts, priority access and paid collaborations.</p>
-                                </div>
-                            </div>
-                        </li>
-
-                        <li className="bg-white p-6 border border-[#052326]/12 rounded-[12px] shadow-sm">
-                            <div className="flex items-start gap-4">
-                                <div className="w-10 h-10 rounded-full bg-[#052326]/10 flex items-center justify-center font-bold text-[#052326] flex-shrink-0">4</div>
-                                <div>
-                                    <h4 className="font-bold text-[#052326]">Step 4 — Rewards & Community</h4>
-                                    <p className="text-gray-600 mt-1 text-sm">Points are redeemed in Rewards Center. Community activities and events keep members active.</p>
-                                </div>
-                            </div>
-                        </li>
-                    </ol>
-                </section>
-
-                {/* EARN RULES & TIERS */}
-                <section className="grid md:grid-cols-2 gap-6 mb-10">
-                    <div className="bg-white p-6 border border-[#052326]/12 rounded-[12px] shadow-sm">
-                        <h3 className="text-lg font-bold mb-4 text-[#052326]">Earn Rules — XP & Points</h3>
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left">
-                                <thead>
-                                    <tr className="text-xs text-gray-500 border-b">
-                                        <th className="py-2 font-bold uppercase">Action</th>
-                                        <th className="py-2 font-bold uppercase">XP</th>
-                                        <th className="py-2 font-bold uppercase">Points</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {earnRules.map((r) => (
-                                        <tr key={r.action} className="text-sm text-gray-700 border-b border-gray-50">
-                                            <td className="py-3 font-medium">{r.action}</td>
-                                            <td className="py-3">{r.xp}</td>
-                                            <td className="py-3">{r.points}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className="mt-4 text-xs text-gray-400">Note: Points & XP rules are configurable per vendor/product and during promotions.</div>
-                    </div>
-
-                    <div className="bg-white p-6 border border-[#052326]/12 rounded-[12px] shadow-sm">
-                        <h3 className="text-lg font-bold mb-4 text-[#052326]">Tiers & Benefits</h3>
-                        <div className="grid grid-cols-1 gap-3">
-                            {tiers.map((t) => (
-                                <div key={t.name} className="p-4 border border-[#052326]/12 rounded-[10px] bg-[#F8F3EF]/30">
-                                    <div className="flex items-center justify-between">
+                            {/* Interactive Circle Snapshot */}
+                            <div className="lg:col-span-5">
+                                <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-3xl p-8 text-white shadow-md relative overflow-hidden">
+                                    <div className="absolute right-0 top-0 w-24 h-24 bg-[#F0C417]/10 rounded-full blur-xl pointer-events-none" />
+                                    
+                                    <div className="flex justify-between items-center pb-6 border-b border-white/10">
                                         <div>
-                                            <div className="text-xs text-gray-400 font-bold">{t.range}</div>
-                                            <div className="font-bold text-[#052326]">{t.name}</div>
+                                            <p className="text-[10px] uppercase font-bold tracking-wider text-white/50">Your Status</p>
+                                            <h3 className="text-xl font-bold flex items-center gap-2 mt-0.5">
+                                                <Medal className="text-[#F0C417]" size={20} /> Explorer Tier
+                                            </h3>
                                         </div>
-                                        <div className="text-xs text-[#052326]/60 uppercase tracking-wider font-semibold">Unlocks perks</div>
+                                        <div className="text-right">
+                                            <p className="text-[10px] uppercase font-bold tracking-wider text-white/50">XP Earned</p>
+                                            <p className="text-xl font-black text-[#F0C417]">120 XP</p>
+                                        </div>
                                     </div>
-                                    <ul className="mt-3 text-gray-600 list-disc ml-5 text-sm">
-                                        {t.perks.map((p) => (
-                                            <li key={p}>{p}</li>
+
+                                    <div className="py-6">
+                                        <div className="flex justify-between text-xs text-white/75 mb-2 font-medium">
+                                            <span>Explorer</span>
+                                            <span>Creator (500 XP)</span>
+                                        </div>
+                                        <div className="w-full bg-white/20 rounded-full h-3 overflow-hidden">
+                                            <div className="bg-[#F0C417] h-3 rounded-full transition-all duration-500" style={{ width: "24%" }} />
+                                        </div>
+                                        <p className="text-[11px] text-white/60 mt-2 text-right">380 XP needed to unlock next tier</p>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="bg-white/5 rounded-2xl p-4 border border-white/5 hover:bg-white/10 transition-colors">
+                                            <span className="text-[10px] font-bold text-white/40 block uppercase tracking-wider">Redeemable Points</span>
+                                            <span className="text-2xl font-black text-[#F0C417] block mt-1">320 pts</span>
+                                        </div>
+                                        <div className="bg-white/5 rounded-2xl p-4 border border-white/5 hover:bg-white/10 transition-colors">
+                                            <span className="text-[10px] font-bold text-white/40 block uppercase tracking-wider">Unlocked Badges</span>
+                                            <span className="text-2xl font-black text-[#F0C417] block mt-1">1 Badge</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        </div>
+                    </div>
+                </header>
+            </div>
+
+            {/* PURPOSE & VALUE-PROPS */}
+            <main className="container mx-auto px-6 py-16 space-y-20">
+                
+                <section className="grid md:grid-cols-3 gap-8">
+                    <div className="bg-white p-8 border border-[#052326]/8 rounded-2xl shadow-sm hover:shadow-md transition-shadow space-y-4">
+                        <div className="p-3 bg-[#052326]/5 rounded-xl w-fit text-[#052326]">
+                            <TrendingUp size={24} />
+                        </div>
+                        <h3 className="font-extrabold text-xl">Retention & Streaks</h3>
+                        <p className="text-gray-600 text-sm leading-relaxed">
+                            Stay active and build consistency. Earn compounding XP multipliers and point boosts by checking in daily or taking daily streaks.
+                        </p>
+                    </div>
+
+                    <div className="bg-white p-8 border border-[#052326]/8 rounded-2xl shadow-sm hover:shadow-md transition-shadow space-y-4">
+                        <div className="p-3 bg-[#052326]/5 rounded-xl w-fit text-[#052326]">
+                            <Users size={24} />
+                        </div>
+                        <h3 className="font-extrabold text-xl">Interactive Community</h3>
+                        <p className="text-gray-600 text-sm leading-relaxed">
+                            Share user-generated content (UGC), participate in AMA discussions, ask questions to panel doctors, and unlock collaborative rewards.
+                        </p>
+                    </div>
+
+                    <div className="bg-white p-8 border border-[#052326]/8 rounded-2xl shadow-sm hover:shadow-md transition-shadow space-y-4">
+                        <div className="p-3 bg-[#052326]/5 rounded-xl w-fit text-[#052326]">
+                            <Gift size={24} />
+                        </div>
+                        <h3 className="font-extrabold text-xl">Premium Rewards</h3>
+                        <p className="text-gray-600 text-sm leading-relaxed">
+                            Redeem points for real store credits, custom consultations, premium products, merchandise, or exclusive brand coupon codes.
+                        </p>
+                    </div>
+                </section>
+
+                {/* EARNING & TIERS TABBED/GRID SECTION */}
+                <section className="grid lg:grid-cols-12 gap-12">
+                    
+                    {/* Earn Rules Table */}
+                    <div className="lg:col-span-6 bg-white p-8 border border-[#052326]/8 rounded-3xl shadow-sm space-y-6">
+                        <div>
+                            <h2 className="text-2xl font-black">How to Earn Points & XP</h2>
+                            <p className="text-sm text-gray-500 mt-1">Every positive contribution is recognized. Start doing simple tasks to grow your points bank.</p>
+                        </div>
+                        
+                        <div className="divide-y divide-[#052326]/5">
+                            {earnRules.map((rule) => {
+                                const IconComponent = rule.icon;
+                                return (
+                                    <div key={rule.action} className="py-4 flex items-center justify-between gap-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 bg-[#F8F3EF] rounded-lg text-[#052326]/75">
+                                                <IconComponent size={18} />
+                                            </div>
+                                            <span className="font-bold text-sm">{rule.action}</span>
+                                        </div>
+                                        <div className="flex items-center gap-4 text-right">
+                                            <div>
+                                                <span className="text-xs text-gray-400 block">XP</span>
+                                                <span className="font-extrabold text-sm text-[#052326]">+{rule.xp}</span>
+                                            </div>
+                                            <div>
+                                                <span className="text-xs text-gray-400 block">Points</span>
+                                                <span className="font-extrabold text-sm text-[#F0C417] bg-[#052326] px-2 py-0.5 rounded text-[11px]">{rule.points}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* Tier Benefits */}
+                    <div className="lg:col-span-6 space-y-6">
+                        <div>
+                            <h2 className="text-2xl font-black">Circle Tiers & Exclusive Benefits</h2>
+                            <p className="text-sm text-gray-500 mt-1">Unlock new tiers as you gather XP. Higher tiers give compounding shopping advantages.</p>
+                        </div>
+
+                        <div className="grid gap-4">
+                            {tiers.map((tier) => (
+                                <div key={tier.name} className="bg-white p-6 border border-[#052326]/8 rounded-2xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 hover:border-[#052326]/20 transition-all">
+                                    <div className="space-y-1">
+                                        <div className="flex items-center gap-2">
+                                            <span className={`w-3 h-3 rounded-full bg-gradient-to-r ${tier.badgeColor}`} />
+                                            <span className="font-black text-[#052326] text-lg">{tier.name}</span>
+                                        </div>
+                                        <span className="text-xs font-bold text-[#F0C417] bg-[#052326] px-2 py-0.5 rounded">{tier.range}</span>
+                                    </div>
+                                    <ul className="text-xs text-gray-600 space-y-1 md:max-w-xs font-medium list-disc pl-4 md:pl-0 list-inside md:list-none">
+                                        {tier.perks.map((perk) => (
+                                            <li key={perk} className="flex items-center gap-1.5">
+                                                <CheckCircle2 size={12} className="text-[#052326]/60 shrink-0" />
+                                                <span>{perk}</span>
+                                            </li>
                                         ))}
                                     </ul>
                                 </div>
                             ))}
                         </div>
-                        <div className="mt-4 text-xs text-gray-400">Higher tier = more exclusive events, visibility and monetisation options.</div>
                     </div>
+
                 </section>
 
-                {/* REWARDS CENTER */}
-                <section id="rewards" className="mb-10">
-                    <h2 className="text-2xl font-bold text-[#052326] mb-6 font-serif">Rewards Center — Redeem Your Points</h2>
+                {/* REWARDS CENTER GRID */}
+                <section id="rewards" className="space-y-8 pt-8">
+                    <div className="text-center max-w-xl mx-auto space-y-2">
+                        <h2 className="text-3xl font-black">Points Redemption Store</h2>
+                        <p className="text-gray-500 text-sm">Exchange your earned points balance for premium rewards, exclusive discount coupons, or consultation vouchers.</p>
+                    </div>
 
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {rewards.map((r) => (
-                            <div key={r.title} className="bg-white p-5 border border-[#052326]/12 rounded-[12px] shadow-sm flex flex-col justify-between">
-                                <div>
-                                    <div className="text-xs text-gray-400 uppercase tracking-wider font-semibold">{r.subtitle}</div>
-                                    <div className="font-bold text-lg mt-2 text-[#052326]">{r.title}</div>
+                        {rewards.map((reward) => (
+                            <div key={reward.title} className="bg-white border border-[#052326]/8 rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden group">
+                                <div className="absolute right-0 top-0 bg-[#052326]/5 text-[#052326] font-bold text-[10px] px-3 py-1 rounded-bl-xl uppercase tracking-wider">
+                                    {reward.category}
+                                </div>
+                                <div className="space-y-2 pt-2">
+                                    <p className="text-xs text-[#F0C417] font-extrabold uppercase tracking-wide">{reward.subtitle}</p>
+                                    <h4 className="font-black text-xl text-[#052326]">{reward.title}</h4>
                                 </div>
 
-                                <div className="mt-4 flex items-center justify-between border-t border-gray-50 pt-3">
-                                    <div className="text-xs text-gray-400">Cost</div>
-                                    <div className="font-bold text-sm text-[#052326]">{r.cost}</div>
-                                </div>
-
-                                <div className="mt-4">
-                                    <button className="w-full px-4 py-2 bg-[#052326] hover:bg-[#052326]/90 transition-all text-white font-semibold rounded-[10px] text-xs uppercase tracking-wider">Redeem</button>
+                                <div className="mt-8 pt-4 border-t border-[#052326]/5 flex items-center justify-between gap-4">
+                                    <div>
+                                        <span className="text-[10px] text-gray-400 block uppercase font-bold tracking-wider">Required Points</span>
+                                        <span className="font-black text-lg text-[#052326]">{reward.cost}</span>
+                                    </div>
+                                    <button className="px-5 py-2.5 bg-[#052326] hover:bg-[#F0C417] hover:text-[#052326] text-white font-extrabold rounded-xl text-xs uppercase tracking-wider transition-colors shadow-sm">
+                                        Redeem
+                                    </button>
                                 </div>
                             </div>
                         ))}
                     </div>
                 </section>
 
-                {/* LEADERBOARD & BADGES */}
-                <section className="mb-10">
-                    <div className="grid md:grid-cols-2 gap-6">
-                        <div className="bg-white p-6 border border-[#052326]/12 rounded-[12px] shadow-sm">
-                            <h3 className="font-bold text-lg text-[#052326] mb-4">Leaderboard — Top Circle Members</h3>
-                            <ol className="space-y-3">
-                                <li className="flex items-center justify-between p-2 rounded-[8px] bg-[#F8F3EF]/40">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-[#052326]/10 flex items-center justify-center font-bold text-[#052326]">A</div>
-                                        <div>
-                                            <div className="font-bold text-sm">Aisha</div>
-                                            <div className="text-[10px] text-gray-500">Ambassador — 4,120 XP</div>
-                                        </div>
-                                    </div>
-                                    <div className="text-xs font-bold text-[#052326]">4120 XP</div>
-                                </li>
-
-                                <li className="flex items-center justify-between p-2 rounded-[8px] bg-[#F8F3EF]/40">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-[#052326]/10 flex items-center justify-center font-bold text-[#052326]">R</div>
-                                        <div>
-                                            <div className="font-bold text-sm">Rahul</div>
-                                            <div className="text-[10px] text-gray-500">Creator — 1,840 XP</div>
-                                        </div>
-                                    </div>
-                                    <div className="text-xs font-bold text-[#052326]">1840 XP</div>
-                                </li>
-                            </ol>
-                            <div className="mt-4 text-xs text-gray-400">Leaderboards reset monthly or for special campaigns.</div>
+                {/* BADGES & LEADERBOARD */}
+                <section className="grid md:grid-cols-2 gap-12">
+                    
+                    {/* Badge System */}
+                    <div className="bg-white border border-[#052326]/8 rounded-3xl p-8 shadow-sm space-y-6">
+                        <div>
+                            <h3 className="text-2xl font-black flex items-center gap-2">
+                                <Medal className="text-[#F0C417]" /> Circle Achievement Badges
+                            </h3>
+                            <p className="text-sm text-gray-500 mt-1">Unlock badges by achieving milestones. Badges showcase credibility and trust on your profile.</p>
                         </div>
 
-                        <div className="bg-white p-6 border border-[#052326]/12 rounded-[12px] shadow-sm">
-                            <h3 className="font-bold text-lg text-[#052326] mb-4">Badges — Earn & Collect</h3>
-                            <div className="grid grid-cols-2 gap-3">
-                                {badges.map((b) => (
-                                    <div key={b} className="p-3 rounded-[8px] bg-[#052326]/5 border border-[#052326]/10 text-[#052326] font-bold text-xs text-center">
-                                        {b}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {badges.map((badge) => (
+                                <div key={badge.name} className="p-4 rounded-xl bg-[#F8F3EF]/60 border border-[#052326]/5 space-y-1">
+                                    <span className="font-extrabold text-sm text-[#052326] block">{badge.name}</span>
+                                    <span className="text-xs text-gray-500 font-medium block leading-relaxed">{badge.desc}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Monthly Leaderboard */}
+                    <div className="bg-white border border-[#052326]/8 rounded-3xl p-8 shadow-sm space-y-6">
+                        <div>
+                            <h3 className="text-2xl font-black flex items-center gap-2">
+                                <Trophy className="text-[#F0C417]" /> Monthly Top Members
+                            </h3>
+                            <p className="text-sm text-gray-500 mt-1">Climb the community leaderboards. Top monthly members receive bonus boxes and shopping credits.</p>
+                        </div>
+
+                        <div className="space-y-3">
+                            <div className="flex items-center justify-between p-3.5 rounded-xl bg-[#F8F3EF]/40 border border-[#052326]/5 hover:bg-[#F8F3EF] transition-colors">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-[#052326] text-white flex items-center justify-center font-black text-sm">A</div>
+                                    <div>
+                                        <div className="font-extrabold text-sm">Aisha Sharma</div>
+                                        <div className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">Ambassador Tier</div>
                                     </div>
-                                ))}
+                                </div>
+                                <span className="font-black text-sm text-[#052326] bg-[#F0C417] px-3 py-1 rounded-lg">4,120 XP</span>
                             </div>
-                            <div className="mt-4 text-xs text-gray-500">Badges are shareable to social and boost discoverability & trust.</div>
+
+                            <div className="flex items-center justify-between p-3.5 rounded-xl bg-[#F8F3EF]/40 border border-[#052326]/5 hover:bg-[#F8F3EF] transition-colors">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-[#052326] text-white flex items-center justify-center font-black text-sm">R</div>
+                                    <div>
+                                        <div className="font-extrabold text-sm">Rahul Verma</div>
+                                        <div className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">Creator Tier</div>
+                                    </div>
+                                </div>
+                                <span className="font-black text-sm text-[#052326] bg-[#F0C417] px-3 py-1 rounded-lg">1,840 XP</span>
+                            </div>
                         </div>
+                        <p className="text-xs text-gray-400 italic">Leaderboards reset at midnight on the 1st of every month.</p>
                     </div>
+
                 </section>
 
-                {/* COMMUNITY ZONE */}
-                <section className="mb-10 bg-white p-6 border border-[#052326]/12 rounded-[12px] shadow-sm">
-                    <h3 className="text-lg font-bold text-[#052326] mb-2">Community Engagement Zone</h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                        Monthly wellness challenges, UGC campaigns, Doctor AMAs, influencer sessions and city meetups — all discoverable inside Circle.
-                    </p>
-
-                    <div className="mt-4 grid sm:grid-cols-2 gap-4">
-                        <div className="p-4 border border-[#052326]/12 rounded-[10px] bg-[#F8F3EF]/30">
-                            <div className="font-bold text-sm text-[#052326]">Monthly Challenge</div>
-                            <div className="text-xs text-gray-600 mt-1">Complete 10 wellness tasks — earn bonus 500 XP + badge.</div>
-                        </div>
-
-                        <div className="p-4 border border-[#052326]/12 rounded-[10px] bg-[#F8F3EF]/30">
-                            <div className="font-bold text-sm text-[#052326]">Doctor AMA</div>
-                            <div className="text-xs text-gray-600 mt-1">Join live Q&A — earn XP and get discounted consultation vouchers.</div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* REFERRAL & AFFILIATE */}
-                <section className="mb-10 grid md:grid-cols-2 gap-6">
-                    <div className="bg-white p-6 border border-[#052326]/12 rounded-[12px] shadow-sm">
-                        <h3 className="font-bold text-lg text-[#052326] mb-2">Referral & Affiliate</h3>
-                        <p className="text-gray-600 text-sm leading-relaxed">
-                            Invite friends — get points when they order. Influencers and Ambassadors can activate affiliate links and earn commissions.
+                {/* CHALLENGES & AMAs */}
+                <section className="bg-gradient-to-r from-[#052326] to-[#0d454a] text-white rounded-3xl p-8 md:p-12 shadow-xl grid md:grid-cols-12 gap-8 items-center">
+                    <div className="md:col-span-7 space-y-4">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-[#F0C417] bg-white/10 px-3 py-1 rounded-full">Active Campaigns</span>
+                        <h3 className="text-3xl font-black">Circle Engagement Zone</h3>
+                        <p className="text-sm text-white/80 leading-relaxed font-light">
+                            Participate in ongoing monthly challenges, take part in Doctor AMAs, or contribute UGC content to double your current earning multipliers.
                         </p>
-                        <ul className="mt-3 text-xs text-gray-500 space-y-1">
-                            <li>• Share referral link → friend places order → both earn points</li>
-                            <li>• Influencers in Ambassador/Partner tier get commission tracking</li>
-                            <li>• Referral campaigns can have bonus multipliers during launches</li>
-                        </ul>
                     </div>
+                    <div className="md:col-span-5 grid gap-4">
+                        <div className="p-5 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors">
+                            <span className="font-bold text-sm text-[#F0C417]">Monthly Earning Challenge</span>
+                            <p className="text-xs text-white/75 mt-1">Submit 3 product reviews with photos to get an extra 200 points bonus.</p>
+                        </div>
+                        <div className="p-5 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors">
+                            <span className="font-bold text-sm text-[#F0C417]">Doctor Live Q&A Sessions</span>
+                            <p className="text-xs text-white/75 mt-1">Submit questions for our Ayurveda panel AMA and earn 50 XP automatically.</p>
+                        </div>
+                    </div>
+                </section>
 
-                    <div className="bg-white p-6 border border-[#052326]/12 rounded-[12px] shadow-sm">
-                        <h3 className="font-bold text-lg text-[#052326] mb-2">Seller & Doctor Benefits</h3>
-                        <p className="text-gray-600 text-sm leading-relaxed">
-                            Doctors earn XP for consultations and high engagement. Sellers earn XP for strong performance metrics (on-time delivery, low cancellations).
+                {/* DOCTORS, SELLERS & AFFILIATES TRIPLE GRID */}
+                <section className="grid md:grid-cols-3 gap-8">
+                    <div className="bg-white p-8 border border-[#052326]/8 rounded-2xl shadow-sm space-y-4">
+                        <div className="p-3 bg-[#052326]/5 rounded-xl w-fit text-[#052326]">
+                            <Store size={24} />
+                        </div>
+                        <h4 className="font-extrabold text-lg">Seller / Brand Perks</h4>
+                        <p className="text-gray-600 text-xs leading-relaxed">
+                            Sellers with high review ratings and fast order dispatch times earn circle XP, unlocking reduced platform commissions and banner promotions.
                         </p>
-                        <ul className="mt-3 text-xs text-gray-500 space-y-1">
-                            <li>• Top sellers get featured & lower commission windows</li>
-                            <li>• Top doctors get higher visibility and booking priority</li>
-                            <li>• Performance gamification encourages quality & reliability</li>
-                        </ul>
+                    </div>
+
+                    <div className="bg-white p-8 border border-[#052326]/8 rounded-2xl shadow-sm space-y-4">
+                        <div className="p-3 bg-[#052326]/5 rounded-xl w-fit text-[#052326]">
+                            <UserCheck size={24} />
+                        </div>
+                        <h4 className="font-extrabold text-lg">Prescriber Benefits</h4>
+                        <p className="text-gray-600 text-xs leading-relaxed">
+                            Certified practitioners who actively reply to community Q&A forums earn spotlight badges, boosting their booking volumes and dashboard visibility.
+                        </p>
+                    </div>
+
+                    <div className="bg-white p-8 border border-[#052326]/8 rounded-2xl shadow-sm space-y-4">
+                        <div className="p-3 bg-[#052326]/5 rounded-xl w-fit text-[#052326]">
+                            <UserPlus size={24} />
+                        </div>
+                        <h4 className="font-extrabold text-lg">Affiliate Bonuses</h4>
+                        <p className="text-gray-600 text-xs leading-relaxed">
+                            Generate custom referral links from your circle profile. Get cash-convertible commissions as friends purchase through your links.
+                        </p>
                     </div>
                 </section>
 
-                {/* FAQ */}
-                <section className="mb-10">
-                    <h2 className="text-2xl font-bold text-[#052326] mb-4 font-serif">FAQ</h2>
+                {/* FAQ DETAIL TABS */}
+                <section className="space-y-6">
+                    <div className="text-center max-w-xl mx-auto space-y-2">
+                        <h3 className="text-2xl font-black flex items-center justify-center gap-2">
+                            <HelpCircle /> Frequently Asked Questions
+                        </h3>
+                    </div>
 
-                    <div className="space-y-3">
-                        <details className="bg-white p-4 border border-[#052326]/12 rounded-[12px] shadow-sm">
-                            <summary className="font-bold cursor-pointer text-sm">How do I join Cureza Circle?</summary>
-                            <div className="mt-2 text-xs text-gray-600">Create a Cureza account — you will automatically join as an Explorer. Complete profile tasks for bonuses.</div>
+                    <div className="max-w-3xl mx-auto space-y-4">
+                        <details className="bg-white border border-[#052326]/8 rounded-xl p-5 group [&_summary::-webkit-details-marker]:hidden">
+                            <summary className="flex items-center justify-between cursor-pointer font-bold text-sm text-[#052326]">
+                                <span>How do I join Cureza Circle?</span>
+                                <ChevronRight size={16} className="group-open:rotate-90 transition-transform" />
+                            </summary>
+                            <p className="mt-3 text-xs text-gray-500 leading-relaxed pl-1">
+                                Simply create a customer, seller, or prescriber account on Cureza. You are automatically enrolled under the Explorer tier with immediate access to points accumulation.
+                            </p>
                         </details>
 
-                        <details className="bg-white p-4 border border-[#052326]/12 rounded-[12px] shadow-sm">
-                            <summary className="font-bold cursor-pointer text-sm">How do I redeem points?</summary>
-                            <div className="mt-2 text-xs text-gray-600">Open Rewards Center, choose a reward and click Redeem. Some rewards may require extra verification.</div>
+                        <details className="bg-white border border-[#052326]/8 rounded-xl p-5 group [&_summary::-webkit-details-marker]:hidden">
+                            <summary className="flex items-center justify-between cursor-pointer font-bold text-sm text-[#052326]">
+                                <span>How can I redeem my accumulated points?</span>
+                                <ChevronRight size={16} className="group-open:rotate-90 transition-transform" />
+                            </summary>
+                            <p className="mt-3 text-xs text-gray-500 leading-relaxed pl-1">
+                                Navigate to the Points Redemption Store section above or your Account Dashboard, choose any active reward, and click Redeem. A unique discount code or voucher will be issued immediately.
+                            </p>
                         </details>
 
-                        <details className="bg-white p-4 border border-[#052326]/12 rounded-[12px] shadow-sm">
-                            <summary className="font-bold cursor-pointer text-sm">Do points expire?</summary>
-                            <div className="mt-2 text-xs text-gray-600">Points can have expiry depending on campaign rules. We notify you before expiry and via the Circle inbox.</div>
+                        <details className="bg-white border border-[#052326]/8 rounded-xl p-5 group [&_summary::-webkit-details-marker]:hidden">
+                            <summary className="flex items-center justify-between cursor-pointer font-bold text-sm text-[#052326]">
+                                <span>Do points or XP rank expire?</span>
+                                <ChevronRight size={16} className="group-open:rotate-90 transition-transform" />
+                            </summary>
+                            <p className="mt-3 text-xs text-gray-500 leading-relaxed pl-1">
+                                Points expire after 12 months of account inactivity. Your XP rank (Explorer, Creator, etc.) is permanent and does not decay, ensuring you always enjoy your unlocked tier status.
+                            </p>
                         </details>
                     </div>
                 </section>
 
-                {/* CTA FOOTER */}
-                <section id="join" className="mb-12">
-                    <div className="bg-[#052326] rounded-[12px] p-8 text-white shadow-sm">
-                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                            <div>
-                                <h3 className="text-2xl font-bold font-serif">Ready to join Cureza Circle?</h3>
-                                <p className="mt-1 text-[#F8F3EF]/85 text-sm font-light">Earn XP, climb tiers, collect badges & get real rewards.</p>
+                {/* BOTTOM CALL TO ACTION */}
+                <section id="join" className="pt-8">
+                    <div className="bg-[#052326] rounded-3xl p-8 md:p-12 text-white shadow-xl relative overflow-hidden">
+                        <div className="absolute right-0 bottom-0 w-64 h-64 bg-[#F0C417]/5 rounded-full blur-2xl pointer-events-none" />
+                        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+                            <div className="space-y-2">
+                                <h3 className="text-3xl font-black">Ready to unlock Cureza Circle?</h3>
+                                <p className="text-sm text-white/80 font-light max-w-xl">
+                                    Become part of our loyalty community today. Collect badges, claim rewards, and buy certified wellness products with premium member discounts.
+                                </p>
                             </div>
-
-                            <div className="flex gap-3">
-                                <a href="/signup" className="px-6 py-3 bg-white text-[#052326] font-bold rounded-[10px] text-xs uppercase tracking-wider hover:bg-[#F8F3EF] transition-all">Create Account</a>
-                                <a href="/circle" className="px-6 py-3 border border-[#F8F3EF]/30 rounded-[10px] text-white hover:bg-white/10 transition-all text-xs uppercase tracking-wider font-semibold">Open Circle Dashboard</a>
+                            <div className="flex flex-wrap gap-4 shrink-0">
+                                <Link 
+                                    href="/register" 
+                                    className="px-6 py-3 bg-white text-[#052326] font-bold rounded-xl text-xs uppercase tracking-wider hover:bg-[#F8F3EF] transition-all shadow-md"
+                                >
+                                    Create Account
+                                </Link>
+                                <Link 
+                                    href="/dashboard" 
+                                    className="px-6 py-3 border border-white/30 rounded-xl text-white hover:bg-white/10 transition-all text-xs uppercase tracking-wider font-semibold"
+                                >
+                                    Open Circle Dashboard
+                                </Link>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <footer className="text-center text-xs text-gray-500">
-                    © {new Date().getFullYear()} Cureza • Built for community-driven growth
-                </footer>
-            </div>
+            </main>
+
+            {/* Subfooter */}
+            <footer className="border-t border-[#052326]/5 py-8 text-center text-xs text-gray-400">
+                <div className="container mx-auto px-4">
+                    © {new Date().getFullYear()} Cureza Wellness Pvt Ltd. All rights reserved. • Built for community-driven growth
+                </div>
+            </footer>
+
         </div>
     );
 }
+
