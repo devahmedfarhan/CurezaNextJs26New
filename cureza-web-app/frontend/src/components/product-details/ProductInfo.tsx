@@ -8,6 +8,7 @@ import { useToast } from '@/contexts/ToastContext';
 import Link from 'next/link';
 import InlineUpsell from '@/components/product/InlineUpsell';
 import axios from '@/lib/api';
+import { useAuth } from '@/context/AuthContext';
 
 interface ProductInfoProps {
   product: any;
@@ -17,6 +18,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
   const { addToCart, isLoading } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { showToast } = useToast();
+  const { user } = useAuth();
 
   const activeVariants = product.variants || [];
 
@@ -95,6 +97,14 @@ export default function ProductInfo({ product }: ProductInfoProps) {
     } catch (error) {
       showToast("Failed to process buy now", "error");
     }
+  };
+
+  const handleWishlist = () => {
+    if (!user) {
+      window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+      return;
+    }
+    toggleWishlist(product.id);
   };
 
   const attributeTypes = selectedVariant ? Object.keys(selectedVariant.attributes).filter(k => !k.endsWith('_name')) : [];
@@ -366,7 +376,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
 
           {/* Wishlist Button (10-14px border radius) */}
           <button
-            onClick={() => toggleWishlist(product.id)}
+            onClick={handleWishlist}
             className={`h-12 w-12 flex items-center justify-center rounded-[10px] border transition-all ${
               isInWishlist(product.id)
                 ? 'border-[#D32F2F]/20 bg-[#D32F2F]/5 text-[#D32F2F]'

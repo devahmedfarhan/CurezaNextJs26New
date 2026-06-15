@@ -88,6 +88,7 @@ Route::get('/products/recently-viewed', [ProductController::class, 'getRecentlyV
 Route::get('/products/{id}/reviews', [ReviewController::class, 'index']);
 Route::post('/reviews', [ReviewController::class, 'store']);
 Route::get('/categories', [CategoryController::class, 'publicIndex']);
+Route::get('/collections/{slug}', [\App\Http\Controllers\CollectionController::class, 'showPublic']);
 Route::get('/menu-items', [MenuItemController::class, 'index']);
 Route::get('/attributes', [AttributeController::class, 'index']);
 Route::get('/tags', [TagController::class, 'index']); // Public tags listing for sellers
@@ -374,6 +375,31 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/categories', [CategoryController::class, 'store']);
         Route::put('/categories/{id}', [CategoryController::class, 'update']);
         Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+
+        // Collections
+        Route::get('/collections', [\App\Http\Controllers\CollectionController::class, 'index']);
+        Route::post('/collections', [\App\Http\Controllers\CollectionController::class, 'store']);
+        Route::put('/collections/{id}', [\App\Http\Controllers\CollectionController::class, 'update']);
+        Route::delete('/collections/{id}', [\App\Http\Controllers\CollectionController::class, 'destroy']);
+        Route::get('/init-collections-db', function() {
+            try {
+                \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+                \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\CategoryConcernSeeder']);
+                if (\App\Models\Collection::count() === 0) {
+                    $collection = \App\Models\Collection::create([
+                        'name' => 'Summer Sale',
+                        'slug' => 'summer-sale',
+                        'description' => 'Exclusive hot summer deals on wellness and supplements.',
+                        'is_active' => true
+                    ]);
+                    $products = \App\Models\Product::where('status', 'published')->take(3)->pluck('id');
+                    $collection->products()->sync($products);
+                }
+                return response()->json(['success' => true, 'message' => 'Database tables initialized and seeded successfully.']);
+            } catch (\Exception $e) {
+                return response()->json(['success' => false, 'error' => $e->getMessage()]);
+            }
+        });
 
         // Menu Items
         Route::get('/menu-items', [MenuItemController::class, 'adminIndex']);

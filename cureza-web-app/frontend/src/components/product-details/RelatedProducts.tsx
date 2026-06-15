@@ -46,7 +46,7 @@ export default function RelatedProducts({ categoryId, currentProductId }: Relate
                 {products.map((product) => (
                     <Link
                         key={product.id}
-                        href={`/product/${product.id}`}
+                        href={`/shop/${product.category?.slug || 'general'}/${product.slug}`}
                         className="group bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-all duration-300"
                     >
                         <div className="aspect-[4/5] bg-gray-50 dark:bg-gray-900 relative">

@@ -22,9 +22,9 @@ const VIDEOS: VideoStory[] = [
     category: "Mental Wellness",
     videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-oil-dripping-from-a-dropper-34509-large.mp4",
     thumbnail: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=500&q=80",
-    productName: "Cureza Rest Oil",
-    productPrice: "₹1,899",
-    productSlug: "cureza-rest-sleep-oil"
+    productName: "Calm & Focus CBD Oil",
+    productPrice: "₹899",
+    productSlug: "2"
   },
   {
     id: 2,
@@ -32,9 +32,9 @@ const VIDEOS: VideoStory[] = [
     category: "Science & Education",
     videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-pouring-massage-oil-into-hand-42095-large.mp4",
     thumbnail: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=500&q=80",
-    productName: "Active Pain Balm",
-    productPrice: "₹849",
-    productSlug: "cureza-active-pain-balm"
+    productName: "Cold Pressed Neem Oil",
+    productPrice: "₹250",
+    productSlug: "7"
   },
   {
     id: 3,
@@ -42,9 +42,9 @@ const VIDEOS: VideoStory[] = [
     category: "Physio Therapy",
     videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-woman-doing-yoga-on-a-beach-at-sunset-1040-large.mp4",
     thumbnail: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=500&q=80",
-    productName: "Focus Capsules",
-    productPrice: "₹1,249",
-    productSlug: "cureza-focus-capsules"
+    productName: "Brahmi Capsules",
+    productPrice: "₹599",
+    productSlug: "6"
   }
 ];
 

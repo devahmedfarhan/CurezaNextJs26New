@@ -15,8 +15,15 @@ import {
   AlertCircle,
   FileText,
   X,
-  VolumeX,
-  Volume2
+  Volume2,
+  Video,
+  Languages,
+  MapPin,
+  Star,
+  Award,
+  ChevronRight,
+  ShieldCheck,
+  Check
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,7 +39,6 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import api from '@/lib/api';
 import { useToast } from '@/contexts/ToastContext';
 
@@ -41,7 +47,7 @@ export default function ConsultationFormPage() {
   const router = useRouter();
   const { showToast } = useToast();
 
-  const [activeTab, setActiveTab] = useState("patient");
+  const [activeTab, setActiveTab] = useState<"patient" | "consultation" | "payment">("patient");
   const [loading, setLoading] = useState(false);
   const [doctor, setDoctor] = useState<any>(null);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -139,7 +145,7 @@ export default function ConsultationFormPage() {
       return false;
     }
     if (!formData.primary_concern || formData.description.length < 10) {
-      showToast('Please provide adequate details about your health concern', 'error');
+      showToast('Please provide adequate details (min 10 characters) about your health concern', 'error');
       return false;
     }
     return true;
@@ -157,12 +163,12 @@ export default function ConsultationFormPage() {
     if (activeTab === "patient") {
       if (validateTab1()) {
         setActiveTab("consultation");
-        window.scrollTo(0, 0);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     } else if (activeTab === "consultation") {
       if (validateTab2()) {
         setActiveTab("payment");
-        window.scrollTo(0, 0);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
   };
@@ -170,7 +176,7 @@ export default function ConsultationFormPage() {
   const handleBack = () => {
     if (activeTab === "payment") setActiveTab("consultation");
     else if (activeTab === "consultation") setActiveTab("patient");
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSubmit = async () => {
@@ -214,7 +220,7 @@ export default function ConsultationFormPage() {
       });
 
       setIsSuccess(true);
-      showToast('Appointment booked successfully! (Payment Bypassed)', 'success');
+      showToast('Appointment booked successfully!', 'success');
       setLoading(false);
 
     } catch (error: any) {
@@ -226,425 +232,599 @@ export default function ConsultationFormPage() {
   if (isSuccess) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-[#F8F3EF] text-[#052326]">
-        <Card className="w-full max-w-lg text-center p-8 bg-white border border-[#052326]/10 rounded-[14px] shadow-premium-light space-y-6">
-          <div className="mx-auto w-16 h-16 bg-[#052326]/5 text-[#F0C417] border border-[#052326]/10 rounded-[12px] flex items-center justify-center">
-            <CheckCircle2 size={32} />
+        <Card className="w-full max-w-lg text-center p-8 bg-white border border-[#052326]/10 rounded-2xl shadow-xl space-y-6 animate-in fade-in zoom-in duration-300">
+          <div className="mx-auto w-20 h-20 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-full flex items-center justify-center shadow-inner">
+            <CheckCircle2 size={40} className="stroke-[2.5]" />
           </div>
           <div>
-            <CardTitle className="text-xl md:text-2xl font-bold">Booking Successful! 🎉</CardTitle>
-            <CardDescription className="text-xs md:text-sm text-[#052326]/60 mt-2">
-              Your consultation query has been registered with Dr. {doctor?.name}.
+            <CardTitle className="text-2xl font-bold font-serif text-[#052326]">Consultation Scheduled!</CardTitle>
+            <CardDescription className="text-sm text-[#052326]/60 mt-2">
+              Your appointment booking request has been registered with Dr. {doctor?.name}.
             </CardDescription>
           </div>
-          <p className="text-xs md:text-sm text-[#052326]/70 leading-relaxed font-light">
-            An email validation and schedule link has been sent to your registered address. You can manage clinical notes in your dashboard.
+          <p className="text-xs text-[#052326]/75 leading-relaxed font-normal bg-[#F8F3EF]/50 p-4 rounded-xl border border-[#052326]/5">
+            A validation link and appointment dashboard access link have been dispatched to your email address ({formData.email}).
           </p>
           <Button 
-            className="w-full h-11 bg-[#052326] text-[#F8F3EF] hover:bg-[#052326]/90 rounded-[10px] text-xs font-bold uppercase tracking-wider transition-all" 
+            className="w-full h-12 bg-[#052326] text-[#F8F3EF] hover:bg-[#052326]/90 rounded-xl text-xs font-bold uppercase tracking-wider transition-all" 
             onClick={() => router.push('/dashboard')}
           >
-            Go to User Dashboard
+            Go to My Dashboard
           </Button>
         </Card>
       </div>
     );
   }
 
+  const steps = [
+    { id: 'patient', label: 'Patient Info' },
+    { id: 'consultation', label: 'Schedule Slot' },
+    { id: 'payment', label: 'Confirm Booking' }
+  ];
+
   return (
-    <div className="min-h-screen bg-[#F8F3EF] text-[#052326] py-12 px-6 md:px-12 lg:px-20">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-[#F8F3EF] text-[#052326] py-12 px-4 md:px-8 lg:px-16">
+      <div className="max-w-6xl mx-auto space-y-8">
         
-        {/* Breadcrumb & Header */}
-        <div className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between border-b border-[#052326]/10 pb-6 gap-4">
+        {/* Navigation & Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#052326]/10 pb-6">
           <div>
-            <span className="text-[10px] font-bold tracking-[0.25em] text-[#052326]/50 uppercase block mb-2">
-              Clinical Booking Wizard
+            <span className="text-[10px] font-bold tracking-[0.25em] text-[#052326]/60 uppercase block mb-1">
+              Onboarding Clinic Portal
             </span>
-            <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Book Rx Consultation</h1>
-            <p className="text-xs text-[#052326]/60 mt-1 font-light">Schedule medical onboarding with Dr. {doctor?.name}</p>
+            <h1 className="text-3xl font-bold font-serif tracking-tight">Book a Consultation</h1>
+            <p className="text-xs text-[#052326]/60 mt-1 font-light">Confirm clinical onboarding and reserve your direct session</p>
           </div>
-          {doctor && (
-            <div className="bg-[#052326]/5 border border-[#052326]/10 px-4 py-2 rounded-[8px] self-start sm:self-end">
-              <span className="text-[9px] font-bold tracking-widest text-[#052326]/50 uppercase block">Consultation Fee</span>
-              <span className="text-lg font-bold">₹{doctor.consultation_fee || 500}</span>
-            </div>
-          )}
+
+          {/* Step Indicator */}
+          <div className="flex items-center gap-2 bg-white px-4 py-2.5 rounded-full border border-[#052326]/5 shadow-sm">
+            {steps.map((step, idx) => {
+              const isActive = activeTab === step.id;
+              const isCompleted = 
+                (activeTab === 'consultation' && step.id === 'patient') ||
+                (activeTab === 'payment' && (step.id === 'patient' || step.id === 'consultation'));
+              
+              return (
+                <div key={step.id} className="flex items-center gap-1.5">
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold transition-all ${
+                    isActive 
+                      ? 'bg-[#052326] text-[#F8F3EF]' 
+                      : isCompleted 
+                        ? 'bg-emerald-600 text-white' 
+                        : 'bg-gray-100 text-gray-400'
+                  }`}>
+                    {isCompleted ? <Check size={10} className="stroke-[3]" /> : idx + 1}
+                  </div>
+                  <span className={`text-[10px] font-bold uppercase tracking-wider hidden sm:inline ${
+                    isActive ? 'text-[#052326]' : 'text-[#052326]/40'
+                  }`}>
+                    {step.label}
+                  </span>
+                  {idx < steps.length - 1 && <ChevronRight size={10} className="text-[#052326]/20 hidden sm:inline" />}
+                </div>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Central Booking Card container */}
-        <div className="bg-white rounded-[14px] border border-[#052326]/10 shadow-premium-light overflow-hidden flex flex-col">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full flex flex-col">
+        {/* Outer Split Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          {/* Main Booking Container */}
+          <div className="lg:col-span-8 bg-white rounded-2xl border border-[#052326]/10 shadow-lg overflow-hidden flex flex-col transition-all">
             
-            {/* Tabs Header bar */}
-            <div className="border-b border-[#052326]/10 bg-[#F8F3EF]/30 p-4">
-              <TabsList className="w-full grid grid-cols-3 bg-[#052326]/5 p-1 rounded-[12px]">
-                <TabsTrigger
-                  value="patient"
-                  className={`py-3 text-xs font-bold uppercase tracking-wider rounded-[10px] transition-all ring-offset-transparent ${
-                    activeTab === 'patient' ? 'bg-[#052326] text-[#F8F3EF] shadow-sm' : 'text-[#052326]/60'
-                  }`}
-                  onClick={() => {
-                    if (activeTab === 'consultation' || activeTab === 'payment') return;
-                  }}
-                >
-                  Patient Details
-                </TabsTrigger>
-                <TabsTrigger
-                  value="consultation"
-                  className={`py-3 text-xs font-bold uppercase tracking-wider rounded-[10px] transition-all ring-offset-transparent ${
-                    activeTab === 'consultation' ? 'bg-[#052326] text-[#F8F3EF] shadow-sm' : 'text-[#052326]/60'
-                  }`}
-                  disabled={activeTab === 'patient'}
-                >
-                  Schedule Slot
-                </TabsTrigger>
-                <TabsTrigger
-                  value="payment"
-                  className={`py-3 text-xs font-bold uppercase tracking-wider rounded-[10px] transition-all ring-offset-transparent ${
-                    activeTab === 'payment' ? 'bg-[#052326] text-[#F8F3EF] shadow-sm' : 'text-[#052326]/60'
-                  }`}
-                  disabled={activeTab !== 'payment'}
-                >
-                  Review & Book
-                </TabsTrigger>
-              </TabsList>
-            </div>
-
-            {/* TAB CONTENT panels */}
+            {/* Step Content panels */}
             <div className="p-6 md:p-8">
 
-              {/* TAB 1: PATIENT DETAILS */}
-              <TabsContent value="patient" className="space-y-6 focus-visible:outline-none focus-visible:ring-0 animate-in fade-in duration-300">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div className="space-y-1.5">
-                    <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Full Name *</Label>
-                    <Input value={formData.full_name} onChange={(e) => handleInputChange('full_name', e.target.value)} placeholder="Rajesh Kumar" className="h-10 rounded-[10px] border-[#052326]/10" />
+              {/* STEP 1: PATIENT DETAILS */}
+              {activeTab === 'patient' && (
+                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  <div>
+                    <h2 className="text-lg font-bold font-serif border-b border-[#052326]/5 pb-3">Patient Profile & Symptoms</h2>
+                    <p className="text-xs text-[#052326]/60 mt-1">Provide contact details and health credentials for diagnosis prep.</p>
                   </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Age *</Label>
-                    <Input type="number" value={formData.age} onChange={(e) => handleInputChange('age', e.target.value)} placeholder="35" className="h-10 rounded-[10px] border-[#052326]/10" />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Gender *</Label>
-                    <Select value={formData.gender} onValueChange={(v) => handleInputChange('gender', v)}>
-                      <SelectTrigger className="h-10 rounded-[10px] border-[#052326]/10"><SelectValue placeholder="Select" /></SelectTrigger>
-                      <SelectContent className="rounded-[10px] border-[#052326]/10">
-                        <SelectItem value="male">Male</SelectItem>
-                        <SelectItem value="female">Female</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Mobile Number *</Label>
-                    <Input value={formData.mobile} onChange={(e) => handleInputChange('mobile', e.target.value)} placeholder="+91..." className="h-10 rounded-[10px] border-[#052326]/10" />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Email Address *</Label>
-                    <Input type="email" value={formData.email} onChange={(e) => handleInputChange('email', e.target.value)} placeholder="email@example.com" className="h-10 rounded-[10px] border-[#052326]/10" />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Preferred Language</Label>
-                    <Select value={formData.language} onValueChange={(v) => handleInputChange('language', v)}>
-                      <SelectTrigger className="h-10 rounded-[10px] border-[#052326]/10"><SelectValue /></SelectTrigger>
-                      <SelectContent className="rounded-[10px] border-[#052326]/10">
-                        <SelectItem value="English">English</SelectItem>
-                        <SelectItem value="Hindi">Hindi</SelectItem>
-                        <SelectItem value="Other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
 
-                <div className="h-[1px] bg-[#052326]/10 my-6" />
-
-                {/* Health concern details */}
-                <div className="space-y-4">
-                  <h3 className="text-sm font-semibold uppercase tracking-wider">Health Consultation Details</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div className="space-y-1.5">
-                      <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Primary Concern *</Label>
-                      <Select value={formData.primary_concern} onValueChange={(v) => handleInputChange('primary_concern', v)}>
-                        <SelectTrigger className="h-10 rounded-[10px] border-[#052326]/10"><SelectValue placeholder="Select primary concern" /></SelectTrigger>
-                        <SelectContent className="rounded-[10px] border-[#052326]/10">
-                          <SelectItem value="Skin Issues">Skin & Dermatological</SelectItem>
-                          <SelectItem value="Mental Health">Stress & Anxiety</SelectItem>
-                          <SelectItem value="Pain Management">Chronic Pain & Joints</SelectItem>
-                          <SelectItem value="Digestive">Digestive & Gut Health</SelectItem>
-                          <SelectItem value="Sexual Health">Sexual Wellness</SelectItem>
-                          <SelectItem value="General">General Physician</SelectItem>
+                      <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Full Name *</Label>
+                      <Input 
+                        value={formData.full_name} 
+                        onChange={(e) => handleInputChange('full_name', e.target.value)} 
+                        placeholder="e.g. Rajesh Kumar" 
+                        className="h-10 rounded-xl border-[#052326]/10 focus:ring-1 focus:ring-[#052326] transition-all bg-gray-50/20" 
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Age *</Label>
+                      <Input 
+                        type="number" 
+                        value={formData.age} 
+                        onChange={(e) => handleInputChange('age', e.target.value)} 
+                        placeholder="e.g. 35" 
+                        className="h-10 rounded-xl border-[#052326]/10 focus:ring-1 focus:ring-[#052326] transition-all bg-gray-50/20" 
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Gender *</Label>
+                      <Select value={formData.gender} onValueChange={(v) => handleInputChange('gender', v)}>
+                        <SelectTrigger className="h-10 rounded-xl border-[#052326]/10 focus:ring-1 focus:ring-[#052326] transition-all bg-gray-50/20">
+                          <SelectValue placeholder="Select Gender" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl border-[#052326]/10">
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Severity</Label>
-                      <Select value={formData.severity} onValueChange={(v) => handleInputChange('severity', v)}>
-                        <SelectTrigger className="h-10 rounded-[10px] border-[#052326]/10"><SelectValue /></SelectTrigger>
-                        <SelectContent className="rounded-[10px] border-[#052326]/10">
-                          <SelectItem value="mild">Mild (Bearable)</SelectItem>
-                          <SelectItem value="moderate">Moderate (Disturbing)</SelectItem>
-                          <SelectItem value="severe">Severe (Urgent)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="md:col-span-2 space-y-1.5">
-                      <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Detailed Description *</Label>
-                      <Textarea
-                        value={formData.description}
-                        onChange={(e) => handleInputChange('description', e.target.value)}
-                        placeholder="Please describe your symptoms, pain points, or previous diagnostic reviews in detail..."
-                        className="min-h-[90px] rounded-[10px] border-[#052326]/10"
+                      <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Mobile Number *</Label>
+                      <Input 
+                        value={formData.mobile} 
+                        onChange={(e) => handleInputChange('mobile', e.target.value)} 
+                        placeholder="+91..." 
+                        className="h-10 rounded-xl border-[#052326]/10 focus:ring-1 focus:ring-[#052326] transition-all bg-gray-50/20" 
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Duration of Symptoms</Label>
-                      <Input value={formData.since} onChange={(e) => handleInputChange('since', e.target.value)} placeholder="e.g. 3 weeks, 6 months" className="h-10 rounded-[10px] border-[#052326]/10" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="h-[1px] bg-[#052326]/10 my-6" />
-
-                {/* Medical background & report uploads */}
-                <div className="space-y-4">
-                  <h3 className="text-sm font-semibold uppercase tracking-wider">Medical History & Report Uploads</h3>
-                  <div className="p-4 bg-[#F8F3EF]/30 border border-[#052326]/10 rounded-[12px] space-y-3">
-                    <Label className="text-xs font-semibold">Mark any active pre-existing conditions:</Label>
-                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-                      {['Diabetes', 'BP Issues', 'Heart Issues', 'Thyroid', 'Allergies'].map(cond => (
-                        <div key={cond} className="flex items-center space-x-2 bg-white px-3 py-2 rounded-[8px] border border-[#052326]/10">
-                          <Checkbox id={cond} checked={formData.conditions.includes(cond)} onCheckedChange={(c) => handleConditionChange(cond, !!c)} className="rounded-[4px] border-[#052326]/20 text-[#052326]" />
-                          <Label htmlFor={cond} className="cursor-pointer font-medium text-xs text-[#052326]">{cond}</Label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Document upload dropzone */}
-                  <div className="space-y-2 pt-2">
-                    <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Upload Reports / Previous Prescriptions (Optional)</Label>
-                    <div className="border border-dashed border-[#052326]/20 bg-[#F8F3EF]/20 hover:bg-[#F8F3EF]/40 rounded-[12px] p-6 text-center transition-all relative">
-                      <input type="file" multiple className="absolute inset-0 opacity-0 cursor-pointer" onChange={handleFileChange} accept=".pdf,.png,.jpg,.jpeg" />
-                      <div className="flex flex-col items-center gap-2 text-[#052326]">
-                        <div className="w-10 h-10 bg-[#052326]/5 rounded-full flex items-center justify-center border border-[#052326]/10">
-                          <Upload size={18} />
-                        </div>
-                        <span className="text-xs font-bold uppercase tracking-wider mt-1">Select Document Files</span>
-                        <span className="text-[10px] text-[#052326]/50">PDF, JPG, PNG (Max 5MB per file)</span>
-                      </div>
-                    </div>
-
-                    {formData.files.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mt-3">
-                        {formData.files.map((file, i) => (
-                          <Badge key={i} variant="secondary" className="flex items-center gap-2 pl-3 pr-2 py-1.5 h-auto text-xs bg-[#052326]/5 border border-[#052326]/10 rounded-[6px]">
-                            <FileText size={12} className="text-[#052326]" />
-                            <span className="max-w-[150px] truncate text-[#052326] font-semibold">{file.name}</span>
-                            <button onClick={() => removeFile(i)} className="ml-2 text-[#D32F2F] font-bold p-0.5 hover:bg-red-50 rounded">
-                              <X size={12} />
-                            </button>
-                          </Badge>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex justify-end pt-6 border-t border-[#052326]/10">
-                  <Button onClick={handleNext} className="w-full md:w-auto h-11 px-8 bg-[#052326] text-[#F8F3EF] hover:bg-[#052326]/90 rounded-[10px] text-xs font-bold uppercase tracking-wider shadow">
-                    Continue to Schedule <ArrowRight className="ml-2" size={14} />
-                  </Button>
-                </div>
-              </TabsContent>
-
-              {/* TAB 2: CONSULTATION */}
-              <TabsContent value="consultation" className="space-y-6 focus-visible:outline-none focus-visible:ring-0 animate-in fade-in duration-300">
-                
-                {/* Consultation modes */}
-                <div className="space-y-4">
-                  <h3 className="text-sm font-semibold uppercase tracking-wider">Choose Consultation Channel</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {[
-                      { mode: 'video', label: 'Video Call', desc: 'Secure medical face-to-face review', icon: Stethoscope },
-                      { mode: 'audio', label: 'Audio Call', desc: 'Direct voice checkup & counseling', icon: Volume2 },
-                      { mode: 'chat', label: 'Chat Messaging', desc: 'Text-based symptom query', icon: FileText }
-                    ].map((item) => {
-                      const Icon = item.icon;
-                      const isSelected = formData.consultation_mode === item.mode;
-                      return (
-                        <div
-                          key={item.mode}
-                          onClick={() => handleInputChange('consultation_mode', item.mode)}
-                          className={`p-5 rounded-[12px] border-2 cursor-pointer transition-all flex flex-col items-center gap-3 relative overflow-hidden select-none ${
-                            isSelected
-                              ? 'border-[#052326] bg-[#052326]/5 shadow-sm'
-                              : 'border-[#052326]/10 bg-white hover:border-[#052326]/20'
-                          }`}
-                        >
-                          {isSelected && <div className="absolute top-2.5 right-2.5 text-[#F0C417]"><CheckCircle2 size={16} className="fill-white" /></div>}
-                          <div className={`w-11 h-11 rounded-full flex items-center justify-center border transition-colors ${
-                            isSelected ? 'bg-[#052326] text-[#F8F3EF] border-[#052326]' : 'bg-[#F8F3EF]/30 text-[#052326] border-[#052326]/10'
-                          }`}>
-                            <Icon size={18} />
-                          </div>
-                          <div className="text-center">
-                            <span className="font-bold text-xs uppercase tracking-wider block text-[#052326]">{item.label}</span>
-                            <span className="text-[10px] text-[#052326]/50 block mt-0.5">{item.desc}</span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Calendar Schedule selector */}
-                <div className="space-y-6">
-                  <h3 className="text-sm font-semibold uppercase tracking-wider">Preferred Booking Schedule</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-[#F8F3EF]/30 border border-[#052326]/10 rounded-[12px] p-6">
-                    <div className="space-y-2">
-                      <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Select Date</Label>
-                      <Input
-                        type="date"
-                        value={formData.date}
-                        onChange={(e) => handleInputChange('date', e.target.value)}
-                        min={new Date(Date.now() + 86400000).toISOString().split('T')[0]}
-                        className="h-11 rounded-[10px] border-[#052326]/10 bg-white"
+                      <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Email Address *</Label>
+                      <Input 
+                        type="email" 
+                        value={formData.email} 
+                        onChange={(e) => handleInputChange('email', e.target.value)} 
+                        placeholder="email@example.com" 
+                        className="h-10 rounded-xl border-[#052326]/10 focus:ring-1 focus:ring-[#052326] transition-all bg-gray-50/20" 
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Select Available Slot</Label>
-                      <div className="grid grid-cols-2 gap-2">
-                        {['10:00 AM', '11:30 AM', '02:00 PM', '04:30 PM'].map(slot => {
-                          const isSelected = formData.time_slot === slot;
-                          return (
-                            <div
-                              key={slot}
-                              onClick={() => handleInputChange('time_slot', slot)}
-                              className={`p-3 rounded-[8px] border text-center cursor-pointer text-xs font-bold transition-all ${
-                                isSelected
-                                  ? 'bg-[#052326] text-[#F8F3EF] border-[#052326]'
-                                  : 'bg-white border-[#052326]/10 hover:border-[#052326]/30 text-[#052326]/70'
-                              }`}
-                            >
-                              {slot}
-                            </div>
-                          );
-                        })}
+                    <div className="space-y-1.5">
+                      <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Preferred Language</Label>
+                      <Select value={formData.language} onValueChange={(v) => handleInputChange('language', v)}>
+                        <SelectTrigger className="h-10 rounded-xl border-[#052326]/10 bg-gray-50/20">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl border-[#052326]/10">
+                          <SelectItem value="English">English</SelectItem>
+                          <SelectItem value="Hindi">Hindi</SelectItem>
+                          <SelectItem value="Other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-[#052326]/5 pt-6 space-y-4">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#052326]/80">Health Consultation Details</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <div className="space-y-1.5">
+                        <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Primary Concern *</Label>
+                        <Select value={formData.primary_concern} onValueChange={(v) => handleInputChange('primary_concern', v)}>
+                          <SelectTrigger className="h-10 rounded-xl border-[#052326]/10 bg-gray-50/20">
+                            <SelectValue placeholder="Select primary concern" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl border-[#052326]/10">
+                            <SelectItem value="Skin Issues">Skin & Dermatological</SelectItem>
+                            <SelectItem value="Mental Health">Stress & Anxiety</SelectItem>
+                            <SelectItem value="Pain Management">Chronic Pain & Joints</SelectItem>
+                            <SelectItem value="Digestive">Digestive & Gut Health</SelectItem>
+                            <SelectItem value="Sexual Health">Sexual Wellness</SelectItem>
+                            <SelectItem value="General">General Physician</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Severity</Label>
+                        <Select value={formData.severity} onValueChange={(v) => handleInputChange('severity', v)}>
+                          <SelectTrigger className="h-10 rounded-xl border-[#052326]/10 bg-gray-50/20">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl border-[#052326]/10">
+                            <SelectItem value="mild">Mild (Bearable)</SelectItem>
+                            <SelectItem value="moderate">Moderate (Disturbing)</SelectItem>
+                            <SelectItem value="severe">Severe (Urgent)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="md:col-span-2 space-y-1.5">
+                        <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Detailed Description *</Label>
+                        <Textarea
+                          value={formData.description}
+                          onChange={(e) => handleInputChange('description', e.target.value)}
+                          placeholder="Describe your symptoms, pain points, or previous diagnoses in detail..."
+                          className="min-h-[100px] rounded-xl border-[#052326]/10 focus:ring-1 focus:ring-[#052326] bg-gray-50/20"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Duration of Symptoms</Label>
+                        <Input 
+                          value={formData.since} 
+                          onChange={(e) => handleInputChange('since', e.target.value)} 
+                          placeholder="e.g. 3 weeks, 6 months" 
+                          className="h-10 rounded-xl border-[#052326]/10 bg-gray-50/20" 
+                        />
                       </div>
                     </div>
                   </div>
 
-                  {/* Flexible schedule option */}
-                  <div className="bg-amber-50/50 border border-amber-200 rounded-[10px] p-4 flex items-start gap-3">
-                    <Checkbox id="resched" checked={formData.allow_reschedule} onCheckedChange={(c) => handleInputChange('allow_reschedule', !!c)} className="rounded-[4px] border-amber-300 text-amber-600 accent-amber-600 mt-0.5" />
-                    <div>
-                      <Label htmlFor="resched" className="cursor-pointer font-bold text-xs text-amber-900 block">Flexible Appointment Slot</Label>
-                      <span className="text-[10px] text-amber-800 leading-relaxed block mt-0.5">Check this box to allow the physician to suggest alternative consultation timings if the selected slot gets booked.</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex justify-between pt-6 border-t border-[#052326]/10">
-                  <Button variant="outline" onClick={handleBack} className="h-11 px-6 border-[#052326]/20 hover:bg-[#052326]/5 rounded-[10px] text-xs font-bold uppercase tracking-wider">
-                    <ArrowLeft className="mr-2" size={14} /> Back
-                  </Button>
-                  <Button onClick={handleNext} className="h-11 px-6 bg-[#052326] text-[#F8F3EF] hover:bg-[#052326]/90 rounded-[10px] text-xs font-bold uppercase tracking-wider">
-                    Summary & Book <ArrowRight className="ml-2" size={14} />
-                  </Button>
-                </div>
-              </TabsContent>
-
-              {/* TAB 3: REVIEW & PAYMENT */}
-              <TabsContent value="payment" className="space-y-6 focus-visible:outline-none focus-visible:ring-0 animate-in fade-in duration-300">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  {/* Left Column: Summary */}
-                  <div className="md:col-span-2 space-y-6">
-                    <div className="bg-[#F8F3EF]/30 p-6 rounded-[12px] border border-[#052326]/10 space-y-4">
-                      <h3 className="font-bold text-sm uppercase tracking-wider border-b border-[#052326]/10 pb-2">Onboarding Summary</h3>
-                      <div className="grid grid-cols-2 gap-y-4 text-xs">
-                        <div>
-                          <span className="text-[#052326]/50 block text-[9px] font-bold uppercase tracking-wider mb-0.5">Patient name</span>
-                          <span className="font-bold">{formData.full_name}</span>
-                        </div>
-                        <div>
-                          <span className="text-[#052326]/50 block text-[9px] font-bold uppercase tracking-wider mb-0.5">Mobile Contact</span>
-                          <span className="font-bold">{formData.mobile}</span>
-                        </div>
-                        <div>
-                          <span className="text-[#052326]/50 block text-[9px] font-bold uppercase tracking-wider mb-0.5">Date & Slot</span>
-                          <span className="font-bold">{formData.date} at {formData.time_slot}</span>
-                        </div>
-                        <div>
-                          <span className="text-[#052326]/50 block text-[9px] font-bold uppercase tracking-wider mb-0.5">Consultation Channel</span>
-                          <span className="font-bold capitalize">{formData.consultation_mode} Call</span>
-                        </div>
-                        <div className="col-span-2">
-                          <span className="text-[#052326]/50 block text-[9px] font-bold uppercase tracking-wider mb-0.5">Primary Concern description</span>
-                          <span className="font-bold">{formData.primary_concern}</span>
-                          <p className="text-[11px] text-[#052326]/60 mt-1 italic font-light">"{formData.description}"</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Consents list checklist */}
-                    <div className="space-y-2">
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-[#052326]/60">Legal Consents</h3>
-                      <div className="space-y-2">
-                        {[
-                          { id: 'confirm_accurate', label: 'I verify that the medical symptoms provided are complete & accurate.' },
-                          { id: 'consent_online', label: 'I consent to online telemedicine consultation guidelines.' },
-                          { id: 'understand_not_emergency', label: 'I understand this is NOT for medical emergencies.' },
-                          { id: 'agree_terms', label: 'I agree to the Seller and Patient consultation terms.' }
-                        ].map(item => (
-                          <div 
-                            key={item.id} 
-                            className="flex items-start gap-3 p-3 border border-[#052326]/10 rounded-[10px] bg-white hover:bg-[#F8F3EF]/20 cursor-pointer select-none" 
-                            onClick={() => handleInputChange(item.id, !(formData as any)[item.id])}
-                          >
-                            <Checkbox id={item.id} checked={(formData as any)[item.id]} className="rounded-[4px] border-[#052326]/20 text-[#052326]" />
-                            <Label htmlFor={item.id} className="cursor-pointer font-medium text-xs leading-relaxed">{item.label}</Label>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right Column: Checkout Pricing */}
-                  <div className="space-y-6">
-                    <Card className="border border-[#052326]/10 rounded-[14px] overflow-hidden bg-white shadow-premium-light">
-                      <CardHeader className="bg-[#F8F3EF]/50 border-b border-[#052326]/10 py-5">
-                        <CardTitle className="text-center text-xs font-bold uppercase tracking-widest text-[#052326]/50">Payable Fee</CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-6 text-center space-y-6">
-                        <div>
-                          <span className="text-4xl font-extrabold text-[#052326]">₹{doctor?.consultation_fee || 500}</span>
-                          <p className="text-[10px] font-semibold text-[#052326]/40 mt-1 uppercase tracking-wider">All Taxes Included</p>
-                        </div>
-
-                        <Button 
-                          onClick={handleSubmit} 
-                          disabled={loading} 
-                          className="w-full bg-[#052326] text-[#F8F3EF] hover:bg-[#052326]/90 h-12 text-xs font-bold uppercase tracking-wider rounded-[10px]"
-                        >
-                          {loading ? 'Compiling Query...' : 'Confirm Appointment'}
-                        </Button>
-                      </CardContent>
-                      <CardFooter className="bg-[#F8F3EF]/20 border-t border-[#052326]/10 py-3 text-center">
-                        <p className="text-[9px] font-semibold uppercase tracking-wider text-[#052326]/40 w-full flex items-center justify-center gap-1.5">
-                          <Shield size={12} /> Secure Tele-Health Booking
-                        </p>
-                      </CardFooter>
-                    </Card>
+                  <div className="border-t border-[#052326]/5 pt-6 space-y-5">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#052326]/80">Medical History & Reports</h3>
                     
-                    <Button variant="ghost" onClick={handleBack} className="w-full text-xs font-bold uppercase tracking-wider">
-                      Go Back
+                    <div className="p-4 bg-[#F8F3EF]/50 border border-[#052326]/5 rounded-xl space-y-3">
+                      <Label className="text-xs font-semibold text-[#052326]/80">Mark any active pre-existing conditions:</Label>
+                      <div className="flex flex-wrap gap-2.5">
+                        {['Diabetes', 'BP Issues', 'Heart Issues', 'Thyroid', 'Allergies'].map(cond => (
+                          <div key={cond} className="flex items-center space-x-2 bg-white px-3.5 py-2 rounded-lg border border-[#052326]/10 hover:border-[#052326]/30 transition-all select-none cursor-pointer">
+                            <Checkbox 
+                              id={cond} 
+                              checked={formData.conditions.includes(cond)} 
+                              onCheckedChange={(c) => handleConditionChange(cond, !!c)} 
+                              className="rounded border-[#052326]/20 text-[#052326]" 
+                            />
+                            <Label htmlFor={cond} className="cursor-pointer font-bold text-xs text-[#052326]">{cond}</Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Document Upload */}
+                    <div className="space-y-3">
+                      <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60 block">Upload Prescriptions / Diagnostic Reports (Optional)</Label>
+                      <div className="border border-dashed border-[#052326]/20 bg-[#F8F3EF]/20 hover:bg-[#F8F3EF]/40 rounded-2xl p-6 text-center transition-all relative">
+                        <input type="file" multiple className="absolute inset-0 opacity-0 cursor-pointer" onChange={handleFileChange} accept=".pdf,.png,.jpg,.jpeg" />
+                        <div className="flex flex-col items-center gap-2 text-[#052326]">
+                          <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center border border-[#052326]/10 shadow-sm text-[#052326]/70">
+                            <Upload size={20} />
+                          </div>
+                          <span className="text-xs font-bold uppercase tracking-wider mt-1">Select Document Files</span>
+                          <span className="text-[10px] text-[#052326]/50">PDF, JPG, PNG (Max 5MB per file, up to 5 files)</span>
+                        </div>
+                      </div>
+
+                      {formData.files.length > 0 && (
+                        <div className="flex flex-wrap gap-2.5 mt-3">
+                          {formData.files.map((file, i) => (
+                            <Badge key={i} variant="secondary" className="flex items-center gap-2 pl-3 pr-2 py-2 bg-[#052326]/5 border border-[#052326]/10 rounded-lg text-xs">
+                              <FileText size={13} className="text-[#052326]" />
+                              <span className="max-w-[150px] truncate text-[#052326] font-bold">{file.name}</span>
+                              <button onClick={() => removeFile(i)} className="ml-2 text-red-500 hover:bg-red-50 p-1 rounded-full transition-all">
+                                <X size={12} />
+                              </button>
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end pt-6 border-t border-[#052326]/10">
+                    <Button onClick={handleNext} className="w-full md:w-auto h-12 px-8 bg-[#052326] text-[#F8F3EF] hover:bg-[#052326]/90 rounded-xl text-xs font-bold uppercase tracking-wider shadow transition-all">
+                      Continue to Schedule <ArrowRight className="ml-2" size={14} />
                     </Button>
                   </div>
                 </div>
-              </TabsContent>
+              )}
+
+              {/* STEP 2: CONSULTATION */}
+              {activeTab === 'consultation' && (
+                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  <div>
+                    <h2 className="text-lg font-bold font-serif border-b border-[#052326]/5 pb-3">Consultation Medium & Scheduling</h2>
+                    <p className="text-xs text-[#052326]/60 mt-1">Select your preferred telemedicine channel and pick a free practitioner slot.</p>
+                  </div>
+
+                  {/* Consultation Channels */}
+                  <div className="space-y-4">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#052326]/80">Choose Channel</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {[
+                        { mode: 'video', label: 'Video Call', desc: 'Secure medical face-to-face review', icon: Video },
+                        { mode: 'audio', label: 'Voice Call', desc: 'Direct voice checkup & counseling', icon: Volume2 },
+                        { mode: 'chat', label: 'Chat Query', desc: 'Text-based clinical inquiry', icon: FileText }
+                      ].map((item) => {
+                        const Icon = item.icon;
+                        const isSelected = formData.consultation_mode === item.mode;
+                        return (
+                          <div
+                            key={item.mode}
+                            onClick={() => handleInputChange('consultation_mode', item.mode)}
+                            className={`p-5 rounded-xl border-2 cursor-pointer transition-all flex flex-col items-center gap-3 relative overflow-hidden select-none ${
+                              isSelected
+                                ? 'border-[#052326] bg-[#052326]/5 shadow-sm'
+                                : 'border-[#052326]/10 bg-white hover:border-[#052326]/20'
+                            }`}
+                          >
+                            {isSelected && (
+                              <div className="absolute top-2.5 right-2.5 bg-[#052326] text-[#F8F3EF] rounded-full p-0.5">
+                                <Check size={10} className="stroke-[3]" />
+                              </div>
+                            )}
+                            <div className={`w-12 h-12 rounded-full flex items-center justify-center border transition-colors ${
+                              isSelected ? 'bg-[#052326] text-[#F8F3EF] border-[#052326]' : 'bg-[#F8F3EF]/60 text-[#052326] border-[#052326]/10'
+                            }`}>
+                              <Icon size={20} />
+                            </div>
+                            <div className="text-center">
+                              <span className="font-bold text-xs uppercase tracking-wider block text-[#052326]">{item.label}</span>
+                              <span className="text-[10px] text-[#052326]/50 block mt-0.5 leading-relaxed">{item.desc}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Calendar Schedule Selector */}
+                  <div className="space-y-6">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#052326]/80">Preferred Slot Schedule</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-[#F8F3EF]/40 border border-[#052326]/5 rounded-xl p-6">
+                      <div className="space-y-2">
+                        <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Select Consultation Date</Label>
+                        <Input
+                          type="date"
+                          value={formData.date}
+                          onChange={(e) => handleInputChange('date', e.target.value)}
+                          min={new Date(Date.now() + 86400000).toISOString().split('T')[0]}
+                          className="h-11 rounded-xl border-[#052326]/10 bg-white focus:ring-1 focus:ring-[#052326]"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60">Select Available Slot</Label>
+                        <div className="grid grid-cols-2 gap-2">
+                          {['10:00 AM', '11:30 AM', '02:00 PM', '04:30 PM'].map(slot => {
+                            const isSelected = formData.time_slot === slot;
+                            return (
+                              <div
+                                key={slot}
+                                onClick={() => handleInputChange('time_slot', slot)}
+                                className={`p-3 rounded-lg border text-center cursor-pointer text-xs font-bold transition-all ${
+                                  isSelected
+                                    ? 'bg-[#052326] text-[#F8F3EF] border-[#052326] shadow-sm'
+                                    : 'bg-white border-[#052326]/10 hover:border-[#052326]/30 text-[#052326]/70'
+                                }`}
+                              >
+                                {slot}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Reschedule Checkbox */}
+                    <div className="bg-amber-50/60 border border-amber-100 rounded-xl p-4 flex items-start gap-3">
+                      <Checkbox 
+                        id="resched" 
+                        checked={formData.allow_reschedule} 
+                        onCheckedChange={(c) => handleInputChange('allow_reschedule', !!c)} 
+                        className="rounded border-amber-300 text-amber-600 accent-amber-600 mt-0.5" 
+                      />
+                      <div>
+                        <Label htmlFor="resched" className="cursor-pointer font-bold text-xs text-amber-900 block">Flexible Appointment Slot</Label>
+                        <span className="text-[10px] text-amber-800 leading-relaxed block mt-0.5">
+                          Checking this allows the practitioner to propose alternative slots if the selected hour becomes unavailable.
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between pt-6 border-t border-[#052326]/10">
+                    <Button variant="outline" onClick={handleBack} className="h-12 px-6 border-[#052326]/20 hover:bg-[#052326]/5 rounded-xl text-xs font-bold uppercase tracking-wider">
+                      <ArrowLeft className="mr-2" size={14} /> Back
+                    </Button>
+                    <Button onClick={handleNext} className="h-12 px-6 bg-[#052326] text-[#F8F3EF] hover:bg-[#052326]/90 rounded-xl text-xs font-bold uppercase tracking-wider shadow">
+                      Summary & Book <ArrowRight className="ml-2" size={14} />
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 3: REVIEW & PAYMENT */}
+              {activeTab === 'payment' && (
+                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  <div>
+                    <h2 className="text-lg font-bold font-serif border-b border-[#052326]/5 pb-3">Final Clinical Summary & Approvals</h2>
+                    <p className="text-xs text-[#052326]/60 mt-1">Review onboarding summary information and submit query requests.</p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Left Column: Summary */}
+                    <div className="md:col-span-2 space-y-6">
+                      <div className="bg-[#F8F3EF]/50 p-6 rounded-xl border border-[#052326]/10 space-y-4">
+                        <h3 className="font-bold text-xs uppercase tracking-wider border-b border-[#052326]/10 pb-2">Onboarding Session Summary</h3>
+                        <div className="grid grid-cols-2 gap-y-4 text-xs">
+                          <div>
+                            <span className="text-[#052326]/50 block text-[9px] font-bold uppercase tracking-wider mb-0.5">Patient Name</span>
+                            <span className="font-bold">{formData.full_name} ({formData.age} yrs, {formData.gender})</span>
+                          </div>
+                          <div>
+                            <span className="text-[#052326]/50 block text-[9px] font-bold uppercase tracking-wider mb-0.5">Mobile Contact</span>
+                            <span className="font-bold">{formData.mobile}</span>
+                          </div>
+                          <div>
+                            <span className="text-[#052326]/50 block text-[9px] font-bold uppercase tracking-wider mb-0.5">Date & Preferred Hour</span>
+                            <span className="font-bold text-emerald-700">{formData.date} at {formData.time_slot}</span>
+                          </div>
+                          <div>
+                            <span className="text-[#052326]/50 block text-[9px] font-bold uppercase tracking-wider mb-0.5">Consultation Channel</span>
+                            <span className="font-bold capitalize">{formData.consultation_mode} Session</span>
+                          </div>
+                          <div className="col-span-2">
+                            <span className="text-[#052326]/50 block text-[9px] font-bold uppercase tracking-wider mb-0.5">Primary Consultation Concern</span>
+                            <span className="font-bold">{formData.primary_concern}</span>
+                            <p className="text-[11px] text-[#052326]/70 mt-1 italic font-light">"{formData.description}"</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Legal Consents */}
+                      <div className="space-y-3">
+                        <h3 className="text-xs font-bold uppercase tracking-wider text-[#052326]/60">Legal Clinical Consents</h3>
+                        <div className="space-y-2">
+                          {[
+                            { id: 'confirm_accurate', label: 'I verify that the medical symptoms provided are complete & accurate.' },
+                            { id: 'consent_online', label: 'I consent to online telemedicine consultation guidelines.' },
+                            { id: 'understand_not_emergency', label: 'I understand this is NOT for medical emergencies.' },
+                            { id: 'agree_terms', label: 'I agree to the Seller and Patient consultation terms.' }
+                          ].map(item => (
+                            <div 
+                              key={item.id} 
+                              className="flex items-start gap-3 p-3.5 border border-[#052326]/10 rounded-xl bg-white hover:bg-[#F8F3EF]/20 cursor-pointer select-none transition-all" 
+                              onClick={() => handleInputChange(item.id, !(formData as any)[item.id])}
+                            >
+                              <Checkbox id={item.id} checked={(formData as any)[item.id]} className="rounded border-[#052326]/20 text-[#052326]" />
+                              <Label htmlFor={item.id} className="cursor-pointer font-bold text-xs leading-relaxed">{item.label}</Label>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Right Column: Checkout Pricing */}
+                    <div className="space-y-4">
+                      <Card className="border border-[#052326]/10 rounded-xl overflow-hidden bg-white shadow-md">
+                        <CardHeader className="bg-[#F8F3EF]/50 border-b border-[#052326]/10 py-4">
+                          <CardTitle className="text-center text-[10px] font-bold uppercase tracking-widest text-[#052326]/60">Consultation Fee</CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-6 text-center space-y-6">
+                          <div>
+                            <span className="text-4xl font-extrabold text-[#052326]">₹{doctor?.consultation_fee || 500}</span>
+                            <p className="text-[10px] font-semibold text-[#052326]/40 mt-1.5 uppercase tracking-wider">All Taxes Included</p>
+                          </div>
+
+                          <Button 
+                            onClick={handleSubmit} 
+                            disabled={loading} 
+                            className="w-full bg-[#052326] text-[#F8F3EF] hover:bg-[#052326]/90 h-12 text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-sm"
+                          >
+                            {loading ? 'Compiling Query...' : 'Confirm Appointment'}
+                          </Button>
+                        </CardContent>
+                        <CardFooter className="bg-[#F8F3EF]/10 border-t border-[#052326]/5 py-3 text-center">
+                          <p className="text-[9px] font-semibold uppercase tracking-wider text-[#052326]/40 w-full flex items-center justify-center gap-1.5">
+                            <Shield size={12} /> Secure Tele-Health Booking
+                          </p>
+                        </CardFooter>
+                      </Card>
+                      
+                      <Button variant="ghost" onClick={handleBack} className="w-full text-xs font-bold uppercase tracking-wider py-3.5 hover:bg-gray-100 rounded-xl">
+                        Go Back
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
             </div>
-          </Tabs>
+          </div>
+
+          {/* Right Sidebar: Doctor Info Profile Card */}
+          <div className="lg:col-span-4 space-y-6">
+            {doctor && (
+              <div className="bg-white border border-[#052326]/10 rounded-2xl shadow-lg p-6 space-y-6">
+                {/* Image & Basic Details */}
+                <div className="flex items-center gap-4 border-b border-[#052326]/5 pb-4">
+                  <div className="w-16 h-16 rounded-xl overflow-hidden border border-[#052326]/12 bg-[#052326]/5 flex items-center justify-center shrink-0">
+                    {doctor.profile_photo_url ? (
+                      <img src={doctor.profile_photo_url} alt={doctor.name} className="object-cover w-full h-full" />
+                    ) : (
+                      <span className="text-3xl">👨‍⚕️</span>
+                    )}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1">
+                      <h4 className="font-bold text-base text-[#052326] font-serif">{doctor.name}</h4>
+                      <ShieldCheck size={14} className="text-emerald-600 shrink-0" />
+                    </div>
+                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mt-0.5">{doctor.specialization}</span>
+                    <span className="text-[10px] text-gray-400 block font-light">{doctor.years_of_experience}+ Years Experience</span>
+                  </div>
+                </div>
+
+                {/* Star Rating & Price */}
+                <div className="grid grid-cols-2 gap-4 text-center bg-[#F8F3EF]/30 border border-[#052326]/5 p-3.5 rounded-xl">
+                  <div className="border-r border-[#052326]/10">
+                    <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">Rating</span>
+                    <div className="flex items-center justify-center gap-1 mt-1 text-xs font-bold text-[#052326]">
+                      <span>{doctor.rating ? Number(doctor.rating).toFixed(1) : '0.0'}</span>
+                      <Star size={11} fill="currentColor" className="text-[#F0C417] stroke-none" />
+                      <span className="text-[9px] text-gray-400 font-normal">({doctor.reviews_count || 0})</span>
+                    </div>
+                  </div>
+                  <div>
+                    <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">Fee</span>
+                    <span className="font-extrabold text-sm block mt-0.5 text-[#052326]">₹{doctor.consultation_fee}</span>
+                  </div>
+                </div>
+
+                {/* Additional Credentials */}
+                <div className="space-y-4 text-xs">
+                  {doctor.highest_qualification && (
+                    <div className="flex gap-2.5 items-start">
+                      <Award size={16} className="text-[#052326]/60 mt-0.5 shrink-0" />
+                      <div>
+                        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">Education & Credentials</span>
+                        <span className="font-bold text-gray-700">{doctor.highest_qualification}</span>
+                        {doctor.medical_school && <span className="block text-[10px] text-gray-400 leading-normal">{doctor.medical_school}</span>}
+                      </div>
+                    </div>
+                  )}
+
+                  {doctor.clinic_name && (
+                    <div className="flex gap-2.5 items-start">
+                      <MapPin size={16} className="text-[#052326]/60 mt-0.5 shrink-0" />
+                      <div>
+                        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">Clinic Location</span>
+                        <span className="font-semibold text-gray-700">{doctor.clinic_name}</span>
+                        <span className="block text-[10px] text-gray-400 leading-relaxed mt-0.5">{doctor.clinic_address}, {doctor.clinic_city}</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {doctor.languages_spoken && (
+                    <div className="flex gap-2.5 items-start">
+                      <Languages size={16} className="text-[#052326]/60 mt-0.5 shrink-0" />
+                      <div>
+                        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">Spoken Languages</span>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {doctor.languages_spoken.map((lang: string) => (
+                            <span key={lang} className="px-2 py-0.5 rounded bg-[#052326]/5 text-[#052326]/70 text-[9px] font-bold uppercase tracking-widest">
+                              {lang}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {doctor.bio && (
+                  <div className="border-t border-[#052326]/5 pt-4">
+                    <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">About Clinician</span>
+                    <p className="text-[11px] text-gray-600 leading-relaxed font-light mt-1.5 italic">"{doctor.bio.slice(0, 160)}..."</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Quick Consultation Instructions/Advise */}
+            <div className="bg-[#052326] text-white p-5 rounded-2xl shadow-md space-y-3">
+              <span className="text-[9px] font-bold uppercase tracking-widest text-white/50 block">Booking Guidelines</span>
+              <h5 className="font-bold font-serif text-sm">Clinical Checklist</h5>
+              <ul className="text-[10px] text-white/80 space-y-2 leading-relaxed font-light">
+                <li className="flex items-start gap-1.5">
+                  <span className="w-1.5 h-1.5 bg-[#F0C417] rounded-full mt-1.5 shrink-0"></span>
+                  Confirm that your symptoms and history reports are updated accurately.
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <span className="w-1.5 h-1.5 bg-[#F0C417] rounded-full mt-1.5 shrink-0"></span>
+                  Consultations are conducted online; prepare an active video feed.
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <span className="w-1.5 h-1.5 bg-[#F0C417] rounded-full mt-1.5 shrink-0"></span>
+                  You will receive secure link keys and clinical details post confirmation.
+                </li>
+              </ul>
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -652,40 +832,3 @@ export default function ConsultationFormPage() {
   );
 }
 
-function Phone(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-    </svg>
-  );
-}
-
-function Chat(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-    </svg>
-  );
-}

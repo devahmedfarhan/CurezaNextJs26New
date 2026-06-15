@@ -121,9 +121,36 @@ class CategoryController extends Controller
     public function publicIndex(Request $request)
     {
         $query = Category::where('is_active', true);
+        
         if ($request->has('type')) {
-            $query->where('type', $request->type);
+            $type = $request->type;
+            $query->where('type', $type);
+            
+            if ($type === 'category') {
+                $query->whereHas('products', function ($q) {
+                    $q->where('status', 'published');
+                });
+            } elseif ($type === 'concern') {
+                $query->whereHas('concernProducts', function ($q) {
+                    $q->where('status', 'published');
+                });
+            }
+        } else {
+            $query->where(function ($q) {
+                $q->where(function ($sub) {
+                    $sub->where('type', 'category')
+                        ->whereHas('products', function ($p) {
+                            $p->where('status', 'published');
+                        });
+                })->orWhere(function ($sub) {
+                    $sub->where('type', 'concern')
+                        ->whereHas('concernProducts', function ($p) {
+                            $p->where('status', 'published');
+                        });
+                });
+            });
         }
+        
         return response()->json($query->get());
     }
 }

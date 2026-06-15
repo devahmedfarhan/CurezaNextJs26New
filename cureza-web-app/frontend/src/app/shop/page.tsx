@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import ProductCard from '@/components/product/ProductCard';
 import api from '@/lib/api';
 import { SlidersHorizontal, ChevronDown, Check, X, ShieldAlert } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 
 interface APIProduct {
   id: number;
@@ -24,7 +25,8 @@ interface APIProduct {
   tags?: any[];
 }
 
-export default function ShopPage() {
+function ShopContent() {
+  const searchParams = useSearchParams();
   const [products, setProducts] = useState<any[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
@@ -41,6 +43,32 @@ export default function ShopPage() {
 
   // Mobile Filters Drawer
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+  // Sync state from query parameters on mount or when searchParams changes
+  useEffect(() => {
+    const cat = searchParams.get('category');
+    if (cat) {
+      setSelectedCategories([cat]);
+    } else {
+      setSelectedCategories([]);
+    }
+
+    const con = searchParams.get('concern');
+    if (con) {
+      setSelectedConcerns([con]);
+    } else {
+      setSelectedConcerns([]);
+    }
+
+    const rx = searchParams.get('requireRx');
+    if (rx === 'true') {
+      setRequireRx(true);
+    } else if (rx === 'false') {
+      setRequireRx(false);
+    } else {
+      setRequireRx(null);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     // Fetch categories and concerns
@@ -433,5 +461,17 @@ export default function ShopPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-6 py-24 flex justify-center items-center min-h-[50vh]">
+        <div className="animate-spin rounded-full h-10 w-10 border-2 border-[#052326] border-t-transparent"></div>
+      </div>
+    }>
+      <ShopContent />
+    </Suspense>
   );
 }

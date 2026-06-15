@@ -13,6 +13,7 @@ interface ProductGridProps {
   concernSlug?: string;
   tagSlug?: string;
   brandSlug?: string;
+  collectionSlug?: string;
   limit?: number;
   viewAllLink?: string;
   layout?: 'grid' | 'carousel';
@@ -30,6 +31,7 @@ export default function ProductGrid({
   concernSlug,
   tagSlug,
   brandSlug,
+  collectionSlug,
   limit = 8,
   viewAllLink,
   layout = 'grid',
@@ -59,6 +61,7 @@ export default function ProductGrid({
         if (concernSlug) params.concern = concernSlug;
         if (tagSlug) params.tag = tagSlug;
         if (brandSlug) params.brand = brandSlug;
+        if (collectionSlug) params.collection = collectionSlug;
 
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000';
         const url = `${backendUrl}/api/products`;
@@ -82,7 +85,7 @@ export default function ProductGrid({
     };
 
     fetchProducts();
-  }, [categorySlug, concernSlug, tagSlug, brandSlug, limit, initialProducts]);
+  }, [categorySlug, concernSlug, tagSlug, brandSlug, collectionSlug, limit, initialProducts]);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {

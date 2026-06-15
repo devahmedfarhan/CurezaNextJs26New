@@ -49,6 +49,17 @@ export default function Home() {
         />
       </div>
 
+      {/* 9.5 SPECIAL OFFERS (Dynamic Collection from DB) */}
+      <div className="bg-[#052326]/5 py-16 border-y border-[#052326]/5">
+        <ProductGrid
+          title="Special Offers & Sales"
+          subtitle="Featured collections and limited-time wellness deals"
+          collectionSlug="summer-sale"
+          columns={4}
+          layout="carousel"
+        />
+      </div>
+
       {/* 10. BEST SELLERS (Grid) */}
       <div className="bg-[#F8F3EF] py-16">
         <ProductGrid

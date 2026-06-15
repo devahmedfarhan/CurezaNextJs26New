@@ -3,14 +3,32 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
     title: 'Contact Cureza - Get 24/7 Wellness Support | Help Center',
-    description: 'Contact Cureza for customer support, doctor consultations, seller inquiries, and wellness guidance. Available 24/7 via email, phone, or contact form. Based in Jaipur, Rajasthan.',
+    description: 'Contact Cureza for customer support, doctor consultations, seller inquiries, and wellness guidance. Available 24/7 via email or contact form. Offices located in Jaipur and Ajmer, Rajasthan.',
 };
 
 const CONTACT_INFO = {
     email: "help@cureza.in",
-    phone: "+91 98765 43210",
-    address: "Jaipur, Rajasthan, India",
+    address: "Jaipur & Ajmer, Rajasthan, India",
 };
+
+const LOCATIONS = [
+    {
+        city: "Jaipur",
+        role: "Corporate Head Office",
+        address: "3rd Floor, Apex Tower, Lal Kothi, Tonk Road, Jaipur, Rajasthan - 302015",
+        email: "jaipur@cureza.in",
+        timing: "Mon - Sat: 9:00 AM - 7:00 PM",
+        description: "Our primary corporate hub hosting our core management, clinical advisory board, and customer success team."
+    },
+    {
+        city: "Ajmer",
+        role: "Regional Operations & Wellness Center",
+        address: "1st Floor, Cine Mall, Vaishali Nagar, Ajmer, Rajasthan - 305001",
+        email: "ajmer@cureza.in",
+        timing: "Mon - Sat: 10:00 AM - 6:00 PM",
+        description: "Our regional operations center facilitating logistics, merchant training, and walk-in consultation support."
+    }
+];
 
 const FAQS = [
     {
@@ -54,7 +72,7 @@ export default function ContactCureza() {
             </section>
 
             {/* =============== CONTACT FORM + INFO =============== */}
-            <section className="container mx-auto max-w-5xl grid md:grid-cols-2 gap-8 px-6 -mt-10">
+            <section className="container mx-auto max-w-7xl grid md:grid-cols-2 gap-8 px-6 -mt-10">
 
                 {/* LEFT SIDE: CONTACT INFO CARD */}
                 <div className="bg-white border border-[#052326]/12 rounded-[14px] p-8 md:p-10 shadow-premium-light flex flex-col justify-between space-y-8">
@@ -72,21 +90,8 @@ export default function ContactCureza() {
                                     </svg>
                                 </div>
                                 <div className="text-xs">
-                                    <p className="font-bold text-[#052326]/40 uppercase tracking-wider">Email</p>
+                                    <p className="font-bold text-[#052326]/40 uppercase tracking-wider">Email Support</p>
                                     <p className="font-bold text-[#052326] mt-0.5">{CONTACT_INFO.email}</p>
-                                </div>
-                            </div>
-
-                            {/* PHONE */}
-                            <div className="flex items-start gap-4 p-4 rounded-[10px] bg-[#F8F3EF]/40 border border-[#052326]/8">
-                                <div className="w-10 h-10 rounded-[8px] bg-[#052326]/5 flex items-center justify-center text-[#052326] shrink-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 4.5l2.955-.591a2.25 2.25 0 012.373 1.147l1.267 2.308a2.25 2.25 0 01-.287 2.622L6.53 12.47a17.94 17.94 0 008.999 8.999l2.484-2.029a2.25 2.25 0 012.622-.287l2.308 1.267a2.25 2.25 0 011.147 2.373L21 21.75" />
-                                    </svg>
-                                </div>
-                                <div className="text-xs">
-                                    <p className="font-bold text-[#052326]/40 uppercase tracking-wider">Phone</p>
-                                    <p className="font-bold text-[#052326] mt-0.5">{CONTACT_INFO.phone}</p>
                                 </div>
                             </div>
 
@@ -98,7 +103,7 @@ export default function ContactCureza() {
                                     </svg>
                                 </div>
                                 <div className="text-xs">
-                                    <p className="font-bold text-[#052326]/40 uppercase tracking-wider">Address</p>
+                                    <p className="font-bold text-[#052326]/40 uppercase tracking-wider">Presence</p>
                                     <p className="font-bold text-[#052326] mt-0.5">{CONTACT_INFO.address}</p>
                                 </div>
                             </div>
@@ -127,6 +132,7 @@ export default function ContactCureza() {
                                     type="text"
                                     placeholder="Enter your name"
                                     className="w-full px-4 py-2.5 rounded-[10px] border border-[#052326]/12 bg-white text-xs outline-none focus:border-[#052326]"
+                                    required
                                 />
                             </div>
                             <div className="space-y-1">
@@ -135,28 +141,19 @@ export default function ContactCureza() {
                                     type="email"
                                     placeholder="your@email.com"
                                     className="w-full px-4 py-2.5 rounded-[10px] border border-[#052326]/12 bg-white text-xs outline-none focus:border-[#052326]"
+                                    required
                                 />
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="space-y-1">
-                                <label className="text-[10px] text-[#052326]/50 uppercase tracking-wider block">Phone Number</label>
-                                <input
-                                    type="tel"
-                                    placeholder="+91 00000 00000"
-                                    className="w-full px-4 py-2.5 rounded-[10px] border border-[#052326]/12 bg-white text-xs outline-none focus:border-[#052326]"
-                                />
-                            </div>
-                            <div className="space-y-1">
-                                <label className="text-[10px] text-[#052326]/50 uppercase tracking-wider block">You Are</label>
-                                <select className="w-full px-4 py-2.5 rounded-[10px] border border-[#052326]/12 bg-white text-xs outline-none focus:border-[#052326] cursor-pointer">
-                                    <option>Customer</option>
-                                    <option>Seller</option>
-                                    <option>Doctor</option>
-                                    <option>Other</option>
-                                </select>
-                            </div>
+                        <div className="space-y-1">
+                            <label className="text-[10px] text-[#052326]/50 uppercase tracking-wider block">You Are</label>
+                            <select className="w-full px-4 py-2.5 rounded-[10px] border border-[#052326]/12 bg-white text-xs outline-none focus:border-[#052326] cursor-pointer">
+                                <option>Customer</option>
+                                <option>Seller</option>
+                                <option>Doctor</option>
+                                <option>Other</option>
+                            </select>
                         </div>
 
                         <div className="space-y-1">
@@ -165,6 +162,7 @@ export default function ContactCureza() {
                                 rows={4}
                                 placeholder="Write your message..."
                                 className="w-full px-4 py-2.5 rounded-[10px] border border-[#052326]/12 bg-white text-xs outline-none focus:border-[#052326]"
+                                required
                             ></textarea>
                         </div>
 
@@ -178,19 +176,101 @@ export default function ContactCureza() {
                 </div>
             </section>
 
-            {/* ================= MAP ================= */}
-            <section className="container mx-auto max-w-5xl px-6 mt-16">
-                <h2 className="text-lg font-bold font-heading text-[#052326] mb-4">Find Us on Map</h2>
-                <div className="rounded-[12px] border border-[#052326]/12 overflow-hidden shadow-premium-light">
-                    <iframe
-                        src="https://maps.google.com/maps?q=jaipur&t=&z=13&ie=UTF8&iwloc=&output=embed"
-                        className="w-full h-72 border-0 filter grayscale contrast-125 hover:grayscale-0 transition-all duration-500"
-                    ></iframe>
+            {/* ================= OFFICES / CENTERS (JAIPUR & AJMER) ================= */}
+            <section className="container mx-auto max-w-7xl px-6 mt-20">
+                <div className="text-center mb-12">
+                    <span className="text-[#052326]/60 font-bold tracking-wider uppercase text-[10px] px-3.5 py-1 bg-[#052326]/5 rounded-full border border-[#052326]/10">
+                        Our Locations
+                    </span>
+                    <h2 className="text-2xl md:text-3xl font-extrabold font-heading text-[#052326] mt-4">
+                        Visit Our Wellness Centers
+                    </h2>
+                    <p className="text-xs md:text-sm text-[#052326]/70 mt-2 max-w-lg mx-auto font-light">
+                        Explore our physical presence across Rajasthan. Drop by or reach out directly to our regional offices.
+                    </p>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-8">
+                    {LOCATIONS.map((loc, idx) => (
+                        <div key={idx} className="bg-white border border-[#052326]/12 rounded-[16px] p-8 shadow-premium-light hover:shadow-premium transition-all duration-300 flex flex-col justify-between group">
+                            <div>
+                                <div className="flex items-center justify-between mb-4">
+                                    <h3 className="text-2xl font-bold font-heading text-[#052326] tracking-tight">
+                                        {loc.city} Center
+                                    </h3>
+                                    <span className="text-[9px] font-bold tracking-wider uppercase bg-[#052326]/5 text-[#052326]/80 px-2.5 py-1 rounded-full border border-[#052326]/10">
+                                        {loc.city === "Jaipur" ? "HQ" : "Branch"}
+                                    </span>
+                                </div>
+                                <p className="text-[11px] text-[#052326]/60 font-medium uppercase tracking-wider mb-3">
+                                    {loc.role}
+                                </p>
+                                <p className="text-xs text-[#052326]/70 font-light leading-relaxed mb-6">
+                                    {loc.description}
+                                </p>
+
+                                <div className="space-y-4 border-t border-[#052326]/8 pt-5">
+                                    {/* ADDRESS */}
+                                    <div className="flex items-start gap-3">
+                                        <div className="w-8 h-8 rounded-[6px] bg-[#052326]/5 flex items-center justify-center text-[#052326] shrink-0 mt-0.5">
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                        </div>
+                                        <div className="text-xs">
+                                            <p className="font-bold text-[#052326]/40 uppercase tracking-wider text-[9px]">Address</p>
+                                            <p className="text-[#052326] font-medium mt-0.5 leading-relaxed">{loc.address}</p>
+                                        </div>
+                                    </div>
+
+                                    {/* EMAIL */}
+                                    <div className="flex items-start gap-3">
+                                        <div className="w-8 h-8 rounded-[6px] bg-[#052326]/5 flex items-center justify-center text-[#052326] shrink-0 mt-0.5">
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                            </svg>
+                                        </div>
+                                        <div className="text-xs">
+                                            <p className="font-bold text-[#052326]/40 uppercase tracking-wider text-[9px]">Email</p>
+                                            <p className="text-[#052326] font-semibold mt-0.5 hover:underline transition">
+                                                <a href={`mailto:${loc.email}`}>{loc.email}</a>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* TIMING */}
+                                    <div className="flex items-start gap-3">
+                                        <div className="w-8 h-8 rounded-[6px] bg-[#052326]/5 flex items-center justify-center text-[#052326] shrink-0 mt-0.5">
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                        <div className="text-xs">
+                                            <p className="font-bold text-[#052326]/40 uppercase tracking-wider text-[9px]">Working Hours</p>
+                                            <p className="text-[#052326] font-medium mt-0.5">{loc.timing}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="mt-8 pt-4 border-t border-[#052326]/6 flex gap-4">
+                                <a
+                                    href={`https://maps.google.com/?q=${encodeURIComponent(loc.address)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex-1 text-center py-2.5 rounded-[8px] bg-[#052326] text-[#F8F3EF] hover:bg-[#052326]/90 text-[11px] font-bold uppercase tracking-wider transition-all duration-300"
+                                >
+                                    Get Directions
+                                </a>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </section>
 
             {/* ================= FAQ ================= */}
-            <section className="container mx-auto max-w-4xl px-6 mt-16">
+            <section className="container mx-auto max-w-7xl px-6 mt-20">
                 <h2 className="text-xl font-bold font-heading text-center text-[#052326] mb-10">
                     Frequently Asked Questions
                 </h2>

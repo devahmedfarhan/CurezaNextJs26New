@@ -8,6 +8,9 @@ import { useCart } from '@/contexts/CartContext';
 interface CartItemProps {
     item: {
         id: number;
+        product_id: number;
+        product_slug: string;
+        category_slug: string;
         title: string;
         brand: string;
         price: number;
@@ -56,7 +59,7 @@ export default function CartItem({ item }: CartItemProps) {
                     <div className="flex justify-between items-start">
                         <div>
                             <p className="text-xs text-gray-500 dark:text-gray-400 font-medium mb-1">{item.brand}</p>
-                            <Link href={`/product/${item.id}`} className="font-semibold text-charcoal dark:text-gray-100 hover:text-cureza-green transition line-clamp-2">
+                            <Link href={`/shop/${item.category_slug}/${item.product_slug}`} className="font-semibold text-charcoal dark:text-gray-100 hover:text-cureza-green transition line-clamp-2">
                                 {item.title}
                             </Link>
 

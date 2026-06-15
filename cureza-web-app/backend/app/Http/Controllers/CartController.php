@@ -49,7 +49,7 @@ class CartController extends Controller
     public function index(Request $request)
     {
         $cart = $this->getCart($request);
-        $cart->load(['items.product.brand', 'items.product.seller']);
+        $cart->load(['items.product.brand', 'items.product.seller', 'items.product.category']);
 
         // Extract params for calculation (optional)
         $couponCode = $request->input('coupon_code') ?? $cart->coupon_code; // Prefer request param (preview), fallback to DB

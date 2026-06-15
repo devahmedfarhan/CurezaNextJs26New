@@ -16,6 +16,8 @@ export interface PatientDetails {
 export interface CartItem {
     id: number;
     product_id: number;
+    product_slug: string;
+    category_slug: string;
     title: string;
     brand: string;
     price: number;
@@ -114,6 +116,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 .map((item: any) => ({
                     id: item.id, // Cart Item ID
                     product_id: item.product.id,
+                    product_slug: item.product.slug,
+                    category_slug: item.product.category ? item.product.category.slug : 'general',
                     title: item.product.title,
                     brand: item.product.brand ? item.product.brand.name : (item.product.seller ? item.product.seller.name : 'Cureza'),
                     price: parseFloat(item.price), // Snapshot price

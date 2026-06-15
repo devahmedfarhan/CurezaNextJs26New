@@ -132,6 +132,42 @@ class CategoryConcernSeeder extends Seeder
                 'description' => 'Value bundles, starter kits, and curated wellness combos for comprehensive care.',
                 'icon' => '📦',
             ],
+            [
+                'name' => 'Sexual Wellness Supplements',
+                'description' => 'Supplements and formulations for libido, stamina, and overall sexual wellness.',
+                'icon' => '🔥',
+            ],
+            [
+                'name' => 'Mother & Baby Care',
+                'description' => 'Safe, gentle products for expectant mothers, new moms, and babies.',
+                'icon' => '👶',
+            ],
+            [
+                'name' => 'Classical Ayurvedic Medicines',
+                'description' => 'Traditional Ayurvedic formulations including Asavas, Arishtas, Churnas, and Bhasmas.',
+                'icon' => '🏺',
+            ],
+            [
+                'name' => 'Single Herb Supplements',
+                'description' => 'Pure single herb capsules and tablets like Ashwagandha, Shatavari, and Giloy.',
+                'icon' => '🌿',
+            ],
+            [
+                'name' => 'Organic Groceries & Pantry',
+                'description' => 'Healthy dietary essentials including organic ghee, honey, cold-pressed oils, and seeds.',
+                'icon' => '🍯',
+            ],
+            [
+                'name' => 'Pain Relief Oils & Ointments',
+                'description' => 'Natural pain relief oils, liniments, and ointments for joint and muscle discomfort.',
+                'icon' => '🧴',
+            ],
+            [
+                'name' => 'Wellness Devices & Diagnostics',
+                'description' => 'Essential health monitors and devices including BP monitors, nebulizers, and massagers.',
+                'icon' => '🩺',
+            ],
+
 
             // ── Keep existing categories that may already have products linked ──
             [
@@ -397,6 +433,56 @@ class CategoryConcernSeeder extends Seeder
                 'name' => 'Chronic Fatigue & Energy',
                 'description' => 'Energy-boosting supplements for chronic fatigue syndrome and low vitality.',
                 'icon' => '⚡',
+            ],
+            [
+                'name' => 'Kidney Stones & UTI',
+                'description' => 'Supportive care for kidney stones, urinary tract health, and urinary tract infections (UTI).',
+                'icon' => '🩺',
+            ],
+            [
+                'name' => 'Gout & High Uric Acid',
+                'description' => 'Natural remedies and supplements to manage gout, uric acid levels, and joint stiffness.',
+                'icon' => '🦴',
+            ],
+            [
+                'name' => 'Piles, Fissures & Fistula',
+                'description' => 'Herbal formulations and ointments for relief from hemorrhoids, fissures, and fistulas.',
+                'icon' => '🌱',
+            ],
+            [
+                'name' => 'Cough, Cold & Sore Throat',
+                'description' => 'Fast-acting remedies for seasonal cough, common cold, sore throat, and congestion.',
+                'icon' => '🤧',
+            ],
+            [
+                'name' => 'Allergy & Respiratory Wellness',
+                'description' => 'Products to manage seasonal allergies, sinus issues, and improve lung health.',
+                'icon' => '🫁',
+            ],
+            [
+                'name' => 'Liver Wellness & Fatty Liver',
+                'description' => 'Detoxifying supplements for liver protection, sluggish liver, and fatty liver management.',
+                'icon' => '🛡️',
+            ],
+            [
+                'name' => 'Brain Power & Memory Boost',
+                'description' => 'Natural cognitive enhancers to improve memory, alertness, and overall brain function.',
+                'icon' => '🧠',
+            ],
+            [
+                'name' => 'Hypertension & Stress',
+                'description' => 'Supplements for managing high blood pressure, vascular health, and chronic stress.',
+                'icon' => '❤️',
+            ],
+            [
+                'name' => 'Acid Reflux & Indigestion',
+                'description' => 'Remedies for acidity, heartburn, bloating, chronic indigestion, and gut discomfort.',
+                'icon' => '🧪',
+            ],
+            [
+                'name' => 'Dandruff & Scalp Care',
+                'description' => 'Treatments for dandruff, itchy scalp, and scalp psoriasis.',
+                'icon' => '💇',
             ],
         ];
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import axios from '@/lib/api';
 // Components
 import ProductDetail from '@/components/product/ProductDetail';
@@ -18,6 +18,7 @@ import { getRelatedProducts, getUpsellProducts, getRecentlyViewedProducts } from
 
 export default function ProductPage() {
     const params = useParams();
+    const router = useRouter();
     const [product, setProduct] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -31,11 +32,17 @@ export default function ProductPage() {
     const fetchProduct = async (id: string) => {
         try {
             const response = await axios.get(`/products/${id}`);
-            setProduct(response.data);
+            const prod = response.data;
+            if (prod && prod.category && prod.slug) {
+                const categorySlug = typeof prod.category === 'object' ? prod.category.slug : (prod.category.toLowerCase() || 'general');
+                router.replace(`/shop/${categorySlug}/${prod.slug}`);
+            } else {
+                setProduct(prod);
+                setIsLoading(false);
+            }
         } catch (err) {
             console.error('Failed to fetch product:', err);
             setError('Product not found');
-        } finally {
             setIsLoading(false);
         }
     };

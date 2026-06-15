@@ -9,13 +9,36 @@ use Illuminate\Http\Request;
 class PublicStoreController extends Controller
 {
     public function index(Request $request) {
-        $query = Brand::where('is_active', true);
+        // Only return active brands that have at least one published product
+        $query = Brand::where('is_active', true)
+            ->whereHas('products', function ($q) {
+                $q->where('status', 'published');
+            });
 
         if ($request->has('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
-        $brands = $query->paginate(20);
+        if ($request->boolean('featured') || $request->input('featured') === 'true') {
+            // Sort by sum of products sales_count
+            $query->withSum(['products as sales_sum' => function ($q) {
+                $q->where('status', 'published');
+            }], 'sales_count')
+            ->orderByDesc('sales_sum');
+            
+            if ($request->has('limit')) {
+                $brands = $query->take((int)$request->input('limit'))->get();
+                return response()->json($brands);
+            }
+        } else {
+            $query->orderBy('name');
+        }
+
+        if ($request->has('page') || $request->has('paginate')) {
+            $brands = $query->paginate(20);
+        } else {
+            $brands = $query->get();
+        }
 
         return response()->json($brands);
     }

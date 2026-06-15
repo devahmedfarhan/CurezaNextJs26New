@@ -99,12 +99,12 @@ function CompareContent() {
                                             <div className="w-24 h-24 rounded-xl overflow-hidden bg-gray-100">
                                                 <img src={getImageUrl(product.image)} alt={product.title} className="w-full h-full object-cover" />
                                             </div>
-                                            <Link href={`/shop/product/${product.slug}`} className="font-bold text-gray-900 hover:text-cureza-green line-clamp-2 h-10">
+                                            <Link href={`/shop/${product.category?.slug || 'general'}/${product.slug}`} className="font-bold text-gray-900 hover:text-cureza-green line-clamp-2 h-10">
                                                 {product.title}
                                             </Link>
                                             <div className="text-lg font-bold text-cureza-green">₹{product.price}</div>
                                             <Link
-                                                href={`/shop/product/${product.slug}`}
+                                                href={`/shop/${product.category?.slug || 'general'}/${product.slug}`}
                                                 className="w-full bg-black text-white py-2 rounded-full text-xs font-bold hover:bg-gray-800"
                                             >
                                                 View Details

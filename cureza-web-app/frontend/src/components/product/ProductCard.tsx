@@ -7,6 +7,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useToast } from "@/contexts/ToastContext";
 import { useCompareStore } from "@/store/useCompareStore";
+import { useAuth } from "@/context/AuthContext";
 
 export default function ProductCard({ product }: any) {
   const [imgSrc, setImgSrc] = useState(product.image);
@@ -16,6 +17,7 @@ export default function ProductCard({ product }: any) {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { showToast } = useToast();
   const { addItem, removeItem, isInCompare } = useCompareStore();
+  const { user } = useAuth();
 
   // Normalize data keys (API snake_case vs Mock camelCase)
   const originalPrice = product.original_price || product.originalPrice;
@@ -45,6 +47,10 @@ export default function ProductCard({ product }: any) {
 
   const handleWishlist = (e: any) => {
     e.preventDefault();
+    if (!user) {
+      window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+      return;
+    }
     toggleWishlist(product.id);
   };
 
