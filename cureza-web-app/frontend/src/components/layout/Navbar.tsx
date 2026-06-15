@@ -79,7 +79,7 @@ export default function Navbar() {
 
           {/* Primary Navigation links */}
           <nav className="hidden md:block">
-            <ul className="flex items-center gap-8 text-[13px] font-bold tracking-wider uppercase">
+            <ul className="flex items-center gap-8 text-[13px] font-bold tracking-wider">
               
               {/* MEGA MENU: Shop Product */}
               <li className="relative group py-2">
@@ -90,7 +90,7 @@ export default function Navbar() {
                 {/* Full Width Dropdown */}
                 <div className="absolute left-1/2 -translate-x-[45%] top-full mt-2 w-[850px] bg-white border border-[#052326]/10 shadow-[0_15px_40px_rgba(0,0,0,0.08)] rounded-2xl py-8 px-8 grid grid-cols-5 gap-6 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 transform origin-top z-50">
                   <div>
-                    <h4 className="font-extrabold text-[11px] tracking-widest text-[#052326]/40 uppercase mb-3 border-b border-[#052326]/5 pb-1">Mental Health</h4>
+                    <h4 className="font-extrabold text-[11px] tracking-wider text-[#052326]/40 mb-3 border-b border-[#052326]/5 pb-1">Mental Health</h4>
                     <ul className="space-y-2 text-[12px] font-semibold normal-case">
                       <li><Link href="/product/sleep-for-better-sleep" className="hover:text-[#F0C417] block transition-colors">SLEEP Tincture</Link></li>
                       <li><Link href="/product/relax-aromatherapy-roll-on-for-relaxation" className="hover:text-[#F0C417] block transition-colors">RELAX Roll-On</Link></li>
@@ -100,7 +100,7 @@ export default function Navbar() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-extrabold text-[11px] tracking-widest text-[#052326]/40 uppercase mb-3 border-b border-[#052326]/5 pb-1">Pain Relief</h4>
+                    <h4 className="font-extrabold text-[11px] tracking-wider text-[#052326]/40 mb-3 border-b border-[#052326]/5 pb-1">Pain Relief</h4>
                     <ul className="space-y-2 text-[12px] font-semibold normal-case">
                       <li><Link href="/product/combat-targeted-relief-for-severe-pain" className="hover:text-[#F0C417] block transition-colors">COMBAT Tincture</Link></li>
                       <li><Link href="/product/peace-plus-capsules-natural-pain-reliever" className="hover:text-[#F0C417] block transition-colors">PEACE+ Capsules</Link></li>
@@ -110,7 +110,7 @@ export default function Navbar() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-extrabold text-[11px] tracking-widest text-[#052326]/40 uppercase mb-3 border-b border-[#052326]/5 pb-1">Nutrition</h4>
+                    <h4 className="font-extrabold text-[11px] tracking-wider text-[#052326]/40 mb-3 border-b border-[#052326]/5 pb-1">Nutrition</h4>
                     <ul className="space-y-2 text-[12px] font-semibold normal-case">
                       <li><Link href="/product/hemp-hearts-shelled-hemp-seeds" className="hover:text-[#F0C417] block transition-colors">Hemp Hearts</Link></li>
                       <li><Link href="/product/hemp-seed-oil-cold-pressed-multipurpose-oil" className="hover:text-[#F0C417] block transition-colors">Hemp Seed Oil</Link></li>
@@ -118,7 +118,7 @@ export default function Navbar() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-extrabold text-[11px] tracking-widest text-[#052326]/40 uppercase mb-3 border-b border-[#052326]/5 pb-1">Skin & Hair</h4>
+                    <h4 className="font-extrabold text-[11px] tracking-wider text-[#052326]/40 mb-3 border-b border-[#052326]/5 pb-1">Skin & Hair</h4>
                     <ul className="space-y-2 text-[12px] font-semibold normal-case">
                       <li><Link href="/product/pristine-patented-skin-healing-cream" className="hover:text-[#F0C417] block transition-colors">PRISTINE Cream</Link></li>
                       <li><Link href="/product/revive-hair-regrowth-serum" className="hover:text-[#F0C417] block transition-colors">REVIVE Serum</Link></li>
@@ -126,7 +126,7 @@ export default function Navbar() {
                   </div>
                   <div className="bg-[#052326] text-white p-4 rounded-xl flex flex-col justify-between">
                     <div>
-                      <p className="text-[10px] uppercase tracking-widest font-extrabold text-white/50">Cureza Rx</p>
+                      <p className="text-[10px] tracking-wider font-extrabold text-white/50">Cureza Rx</p>
                       <h5 className="font-bold text-sm mt-1 leading-tight">Explore Certified Doctor Solutions</h5>
                     </div>
                     <Link href="/shop" className="text-xs text-[#F0C417] font-bold flex items-center gap-1 group mt-4">
@@ -145,7 +145,7 @@ export default function Navbar() {
                 {/* Full Width Dropdown */}
                 <div className="absolute left-1/2 -translate-x-[45%] top-full mt-2 w-[800px] bg-white border border-[#052326]/10 shadow-[0_15px_40px_rgba(0,0,0,0.08)] rounded-2xl py-8 px-8 grid grid-cols-4 gap-6 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 transform origin-top z-50">
                   <div>
-                    <h4 className="font-extrabold text-[11px] tracking-widest text-[#052326]/40 uppercase mb-3 border-b border-[#052326]/5 pb-1">Concerns</h4>
+                    <h4 className="font-extrabold text-[11px] tracking-wider text-[#052326]/40 mb-3 border-b border-[#052326]/5 pb-1">Concerns</h4>
                     <ul className="space-y-2 text-[12px] font-semibold normal-case">
                       <li><Link href="/concern/pain-inflammation" className="hover:text-[#F0C417] block transition-colors">Pain & Inflammation</Link></li>
                       <li><Link href="/concern/stress-anxiety" className="hover:text-[#F0C417] block transition-colors">Stress & Anxiety</Link></li>
@@ -154,7 +154,7 @@ export default function Navbar() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-extrabold text-[11px] tracking-widest text-[#052326]/40 uppercase mb-3 border-b border-[#052326]/5 pb-1">Product Formats</h4>
+                    <h4 className="font-extrabold text-[11px] tracking-wider text-[#052326]/40 mb-3 border-b border-[#052326]/5 pb-1">Product Formats</h4>
                     <ul className="space-y-2 text-[12px] font-semibold normal-case">
                       <li><Link href="/shop" className="hover:text-[#F0C417] block transition-colors">Tinctures & Capsules</Link></li>
                       <li><Link href="/shop" className="hover:text-[#F0C417] block transition-colors">Mints & Tea Bags</Link></li>
@@ -163,7 +163,7 @@ export default function Navbar() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-extrabold text-[11px] tracking-widest text-[#052326]/40 uppercase mb-3 border-b border-[#052326]/5 pb-1">Combos</h4>
+                    <h4 className="font-extrabold text-[11px] tracking-wider text-[#052326]/40 mb-3 border-b border-[#052326]/5 pb-1">Combos</h4>
                     <ul className="space-y-2 text-[12px] font-semibold normal-case">
                       <li><Link href="/product/mental-health-duo-for-anxiety-relief-and-better-sleep" className="hover:text-[#F0C417] block transition-colors">Mental Health Duo</Link></li>
                       <li><Link href="/product/all-day-focus-duo-daily-focus-support" className="hover:text-[#F0C417] block transition-colors">All Day Focus Duo</Link></li>
@@ -172,7 +172,7 @@ export default function Navbar() {
                   </div>
                   <div className="bg-[#F8F3EF] border border-[#052326]/10 p-4 rounded-xl flex flex-col justify-between">
                     <div>
-                      <p className="text-[10px] uppercase tracking-widest font-extrabold text-[#052326]/50">Need Help?</p>
+                      <p className="text-[10px] tracking-wider font-extrabold text-[#052326]/50">Need Help?</p>
                       <h5 className="font-bold text-xs mt-1 text-[#052326] leading-tight">Consult with our wellness experts.</h5>
                     </div>
                     <Link href="/consultation" className="px-4 py-2 bg-[#052326] text-white text-[10px] font-bold rounded-full uppercase text-center mt-3 hover:opacity-90 transition-opacity">
@@ -341,9 +341,9 @@ export default function Navbar() {
                 )}
               </div>
             ) : (
-              <Link href="/login" className="flex items-center gap-1.5 hover:text-[#F0C417] text-xs font-black uppercase tracking-wider transition-colors" title="Login / Register">
+              <Link href="/login" className="flex items-center gap-1.5 hover:text-[#F0C417] text-xs font-black tracking-wider transition-colors" title="Login / Register">
                 <User size={16} />
-                <span className="hidden sm:inline">LOGIN</span>
+                <span className="hidden sm:inline">Login</span>
               </Link>
             )}
 
@@ -372,7 +372,7 @@ export default function Navbar() {
           <div className="absolute right-0 top-0 bottom-0 w-[85%] max-w-sm bg-white shadow-2xl p-6 overflow-y-auto flex flex-col justify-between">
             <div>
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-lg font-extrabold text-[#052326]">MENU</h2>
+                <h2 className="text-lg font-extrabold text-[#052326]">Menu</h2>
                 <button onClick={() => setIsMobileMenuOpen(false)} className="p-1.5 text-gray-500 hover:bg-gray-100 rounded-full">
                   <X size={20} />
                 </button>
@@ -382,7 +382,7 @@ export default function Navbar() {
                 <SearchBar />
               </div>
 
-              <nav className="space-y-1 font-bold text-xs uppercase tracking-wider">
+              <nav className="space-y-1 font-bold text-xs tracking-wider">
                 <div className="border-b border-[#052326]/5 pb-3">
                   <button 
                     onClick={() => setActiveMobileTab(activeMobileTab === 'products' ? null : 'products')}
