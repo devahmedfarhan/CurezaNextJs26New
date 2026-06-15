@@ -221,6 +221,7 @@ export default function Footer() {
                 <li><Link href="/faq" className="hover:text-[#F0C417] transition-colors">FAQs</Link></li>
                 <li><Link href="/contact" className="hover:text-[#F0C417] transition-colors">Contact Us</Link></li>
                 <li><Link href="/prescriber" className="hover:text-[#F0C417] transition-colors">Become a Cureza Prescriber</Link></li>
+                <li><Link href="/affiliate" className="hover:text-[#F0C417] transition-colors">Affiliate & Ambassador</Link></li>
               </ul>
             </div>
 
@@ -233,6 +234,7 @@ export default function Footer() {
                 <li><Link href="/shipping" className="hover:text-[#F0C417] transition-colors">Shipping Policy</Link></li>
                 <li><Link href="/returns" className="hover:text-[#F0C417] transition-colors">Return & Exchange Policy</Link></li>
                 <li><Link href="/medical-policy" className="hover:text-[#F0C417] transition-colors">Medical Product Policy</Link></li>
+                <li><Link href="/lab-reports" className="hover:text-[#F0C417] transition-colors">Lab Reports & COA</Link></li>
                 <li><Link href="/legal/privacy-policy" className="hover:text-[#F0C417] transition-colors">Privacy Policy</Link></li>
                 <li><Link href="/legal/terms-of-service" className="hover:text-[#F0C417] transition-colors">Terms & Conditions</Link></li>
                 <li><Link href="/consultancy" className="hover:text-[#F0C417] transition-colors">Online Consultancy</Link></li>

@@ -30,7 +30,7 @@ export default function SellerLandingClient() {
         },
         {
             id: "payouts",
-            title: "Weekly Payments Ledger",
+            title: "Monthly Payments Ledger",
             description: "Full visibility over your earnings. Monitor net sales, track TCS/tax deductions, and request direct payout disbursements processed to your bank account within 24 hours.",
             icon: Landmark,
             color: "text-emerald-600 bg-emerald-50 border-emerald-100",
@@ -66,7 +66,7 @@ export default function SellerLandingClient() {
         { value: "World's First", label: "Doctor-Integrated Hub" },
         { value: "500+", label: "Verified Brands" },
         { value: "10,000+", label: "Registered Doctors" },
-        { value: "Weekly", label: "Payout Settlement" }
+        { value: "Monthly", label: "Payout Settlement" }
     ];
 
     return (
@@ -204,7 +204,7 @@ export default function SellerLandingClient() {
                                     <div className="col-span-9 space-y-4">
                                         <div className="grid grid-cols-2 gap-3">
                                             <div className="bg-white/5 p-3 rounded-lg border border-white/5">
-                                                <div className="text-[9px] text-white/50">Weekly Sales</div>
+                                                <div className="text-[9px] text-white/50">Monthly Sales</div>
                                                 <div className="text-sm font-bold text-white mt-1">₹42,500.00</div>
                                             </div>
                                             <div className="bg-white/5 p-3 rounded-lg border border-white/5">
@@ -265,7 +265,7 @@ export default function SellerLandingClient() {
                                 </div>
                                 <div>
                                     <div className="text-[8px] font-bold text-[#00bba7] uppercase tracking-wider">New Order Ingested</div>
-                                    <div className="text-xs font-bold">Payout Settled Weekly</div>
+                                    <div className="text-xs font-bold">Payout Settled Monthly</div>
                                 </div>
                             </div>
 
@@ -370,8 +370,122 @@ export default function SellerLandingClient() {
                 </div>
             </section>
 
+            {/* END-TO-END BRAND ENABLEMENT & OPERATIONAL SERVICES */}
+            <section className="py-24 bg-white border-t border-[#052326]/5">
+                <div className="container mx-auto px-6">
+                    <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
+                        <span className="text-[#00bba7] text-xs font-bold uppercase tracking-widest block">Launch & Grow With Us</span>
+                        <h2 className="text-3xl md:text-4xl font-extrabold text-[#052326] font-heading">
+                            Cureza Launchpad Services
+                        </h2>
+                        <p className="text-gray-500 text-base">
+                            An overview of the processes and operations we undertake to make your brand a major player in the world of Indian alternative health, CBD, and therapeutic wellness.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {/* 1. 24/6 Sales Team */}
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300">
+                            <h3 className="font-bold text-lg text-[#052326] font-heading">24/6 Sales Team</h3>
+                            <p className="text-gray-600 text-xs leading-relaxed font-light">
+                                Our highly trained sales team has over 2 years of experience managing customer expectations, legal compliance, doctor coordination, and shipping. We provide seamless 24/6 support (except Sundays).
+                            </p>
+                        </div>
+
+                        {/* 2. Inhouse SEO Services */}
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300">
+                            <h3 className="font-bold text-lg text-[#052326] font-heading">Inhouse SEO Services</h3>
+                            <p className="text-gray-600 text-xs leading-relaxed font-light">
+                                We regularly outperform established brands in Google rankings. Our dedicated SEO team handles backlinks, keyword optimization, blogs, and alt tags to place your products at the top.
+                            </p>
+                        </div>
+
+                        {/* 3. Inhouse Content Writers */}
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300">
+                            <h3 className="font-bold text-lg text-[#052326] font-heading">Inhouse Content Writers</h3>
+                            <p className="text-gray-600 text-xs leading-relaxed font-light">
+                                Our content writers build a seamless bridge between your product and the end user with engaging blogs, unique descriptions, and product reviews conforming to all search engine requirements.
+                            </p>
+                        </div>
+
+                        {/* 4. Inhouse Graphics & Photography */}
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300">
+                            <h3 className="font-bold text-lg text-[#052326] font-heading">Inhouse Graphics & Photography</h3>
+                            <p className="text-gray-600 text-xs leading-relaxed font-light">
+                                With four visual creators and two photographers, we secure talented models and beautiful locations to ensure your visual assets are premium, posting weekly across all social channels.
+                            </p>
+                        </div>
+
+                        {/* 5. Marketing & Influencer Management */}
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300">
+                            <h3 className="font-bold text-lg text-[#052326] font-heading">Marketing & Influencers</h3>
+                            <p className="text-gray-600 text-xs leading-relaxed font-light">
+                                Reach hundreds of thousands of buyers. We provide a range of 200+ influencers across YouTube and Instagram for reviews, reels, and posts to build maximum brand authority.
+                            </p>
+                        </div>
+
+                        {/* 6. Inhouse B2B Operations */}
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300">
+                            <h3 className="font-bold text-lg text-[#052326] font-heading">Inhouse B2B Operations</h3>
+                            <p className="text-gray-600 text-xs leading-relaxed font-light">
+                                Our dedicated B2B team manages direct database collection and outreach to clinics, wellness centers, and distributors looking to buy your products in bulk or via white-label partnerships.
+                            </p>
+                        </div>
+
+                        {/* 7. Product Development & White Labelling */}
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300">
+                            <h3 className="font-bold text-lg text-[#052326] font-heading">Product Development</h3>
+                            <p className="text-gray-600 text-xs leading-relaxed font-light">
+                                We formulate premium, high-quality products sourcing raw materials from Uttarakhand to Auroville. Our team handles complete formulation, R&D, and packaging design at highly affordable rates.
+                            </p>
+                        </div>
+
+                        {/* 8. Medical Team Integration */}
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300">
+                            <h3 className="font-bold text-lg text-[#052326] font-heading">Medical Team Integration</h3>
+                            <p className="text-gray-600 text-xs leading-relaxed font-light">
+                                We partner with certified doctors across Ayurveda, Homeopathy, and Allopathy. Vetted products are highlighted and celebrated directly on our medical panel for customer trust.
+                            </p>
+                        </div>
+
+                        {/* 9. Event & Physical Visibility */}
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300">
+                            <h3 className="font-bold text-lg text-[#052326] font-heading">Physical Locations & Events</h3>
+                            <p className="text-gray-600 text-xs leading-relaxed font-light">
+                                We drive offline visibility in hotspots like Kasardevi, Auroville, Goa, Pune, and Mumbai. From wall graffiti to pamphlet distribution, we establish your physical presence.
+                            </p>
+                        </div>
+
+                        {/* 10. International Expansion */}
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300 md:col-span-2 lg:col-span-3">
+                            <h3 className="font-bold text-lg text-[#052326] font-heading">International Expansion</h3>
+                            <p className="text-gray-600 text-xs leading-relaxed font-light">
+                                Our international division, supported by our sister company Featherscale (co-founded by Blake Luvon), manages relationships and compliance to easily import/export products between global markets.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* WhatsApp CTA */}
+                    <div className="mt-12 bg-[#052326] text-white p-8 rounded-2xl border border-white/10 text-center space-y-4">
+                        <h4 className="text-xl font-bold text-[#00bba7] font-heading">Manifest the Brand of Your Dreams</h4>
+                        <p className="text-sm text-white/80 max-w-xl mx-auto font-light">
+                            Want to discuss product development, white labelling, or launching your brand on Cureza? Speak directly with our partnership desk.
+                        </p>
+                        <a 
+                            href="https://wa.me/919887860015" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-[#00bba7] text-[#101828] font-bold rounded-xl text-xs uppercase tracking-wider hover:bg-emerald-600 transition-colors shadow-lg"
+                        >
+                            Connect on WhatsApp (+91 98878 60015)
+                        </a>
+                    </div>
+                </div>
+            </section>
+
             {/* SIMPLE PRICING */}
             <section className="py-24 bg-white border-t border-b border-[#052326]/5">
+
                 <div className="container mx-auto px-6">
                     <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
                         <span className="text-[#00bba7] text-xs font-bold uppercase tracking-widest block">Pricing & Payouts</span>

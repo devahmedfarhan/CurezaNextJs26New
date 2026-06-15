@@ -105,6 +105,7 @@ export default function SitemapContent() {
                             <li><Link href="/faq" className="hover:text-[#F0C417] flex items-center gap-1.5 transition-colors">Help & FAQ Center</Link></li>
                             <li><Link href="/doctor" className="hover:text-[#F0C417] flex items-center gap-1.5 transition-colors">Become a Cureza Prescriber</Link></li>
                             <li><Link href="/seller" className="hover:text-[#F0C417] flex items-center gap-1.5 transition-colors">Sell on Cureza</Link></li>
+                            <li><Link href="/affiliate" className="hover:text-[#F0C417] flex items-center gap-1.5 transition-colors">Affiliate & Ambassadors</Link></li>
                         </ul>
                     </div>
 
@@ -178,6 +179,7 @@ export default function SitemapContent() {
                         </h2>
                         <ul className="space-y-3.5 text-sm font-semibold text-[#052326]/80">
                             <li><Link href="/medical-policy" className="hover:text-[#F0C417] flex items-center gap-1.5 transition-colors">Medical Product Policy (Rx)</Link></li>
+                            <li><Link href="/lab-reports" className="hover:text-[#F0C417] flex items-center gap-1.5 transition-colors">Lab Reports & COA Documents</Link></li>
                             <li><Link href="/returns" className="hover:text-[#F0C417] flex items-center gap-1.5 transition-colors">Cancellation & Returns</Link></li>
                             <li><Link href="/legal/privacy-policy" className="hover:text-[#F0C417] flex items-center gap-1.5 transition-colors">Privacy Policy</Link></li>
                             <li><Link href="/legal/terms-of-service" className="hover:text-[#F0C417] flex items-center gap-1.5 transition-colors">Terms of Service</Link></li>
