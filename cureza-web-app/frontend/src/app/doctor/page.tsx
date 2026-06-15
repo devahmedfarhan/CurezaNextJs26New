@@ -110,6 +110,23 @@ export default function DoctorPage() {
                         How it Works
                     </Button>
                 </div>
+                
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-2 text-xs font-bold capitalize tracking-wider text-[#F8F3EF]/70">
+                    <span>Are you a clinical practitioner?</span>
+                    <button 
+                        onClick={() => router.push('/doctor/login')} 
+                        className="text-[#F0C417] hover:text-[#F0C417]/85 font-bold transition-colors underline underline-offset-4 capitalize tracking-wider"
+                    >
+                        Doctor Login
+                    </button>
+                    <span>•</span>
+                    <button 
+                        onClick={() => router.push('/doctor/register')} 
+                        className="text-[#F0C417] hover:text-[#F0C417]/85 font-bold transition-colors underline underline-offset-4 capitalize tracking-wider"
+                    >
+                        Register Now
+                    </button>
+                </div>
             </section>
 
             {/* Filter & Search Bar Section */}

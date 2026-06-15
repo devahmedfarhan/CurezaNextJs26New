@@ -16,17 +16,18 @@ export default function ConditionalFooter() {
     // Check if current path starts with any of the minimal footer paths
     const showMinimalFooter = minimalFooterPaths.some(path => pathname.startsWith(path));
 
-    // Completely hide footer for superadmin, doctor portal, and auth pages (50/50 layout)
+    // Completely hide footer for superadmin, doctor/seller auth pages, and customer auth pages (50/50 layout)
     if (
         pathname.startsWith('/superadmin') || 
-        pathname.startsWith('/doctor') || 
         pathname.startsWith('/login') || 
         pathname.startsWith('/register') || 
         pathname.startsWith('/forgot-password') ||
         pathname.startsWith('/login-otp') ||
         pathname.startsWith('/seller/login') ||
         pathname.startsWith('/seller/register') ||
-        pathname.startsWith('/seller/forgot-password')
+        pathname.startsWith('/seller/forgot-password') ||
+        pathname.startsWith('/doctor/login') ||
+        pathname.startsWith('/doctor/register')
     ) {
         return null;
     }
@@ -38,8 +39,9 @@ export default function ConditionalFooter() {
                     <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
                         <p>© 2025 Cureza Wellness Pvt Ltd. All rights reserved.</p>
                         <div className="flex gap-6">
-                            <Link href="/privacy" className="hover:text-charcoal dark:hover:text-gray-200">Privacy Policy</Link>
-                            <Link href="/terms" className="hover:text-charcoal dark:hover:text-gray-200">Terms of Service</Link>
+                            <Link href="/legal/privacy-policy" className="hover:text-charcoal dark:hover:text-gray-200">Privacy Policy</Link>
+                            <Link href="/legal/terms-of-service" className="hover:text-charcoal dark:hover:text-gray-200">Terms of Service</Link>
+                            <Link href="/site-map" className="hover:text-charcoal dark:hover:text-gray-200">Sitemap</Link>
                             <Link href="/faq" className="hover:text-charcoal dark:hover:text-gray-200">Help Center</Link>
                         </div>
                     </div>

@@ -117,286 +117,292 @@ export default function SellerForgotPasswordPage() {
     };
 
     return (
-        <div className="min-h-screen flex bg-warm-sand">
-            {/* Left Side - Content */}
-            <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-12 flex-col justify-between relative overflow-hidden">
-                <div className="relative z-10">
-                    <Link href="/" className="text-3xl font-bold flex items-center gap-2 mb-12">
-                        <span className="bg-white text-blue-600 p-1 rounded">Cz</span>
-                        Cureza Seller
-                    </Link>
-                    <h1 className="text-5xl font-bold mb-6 leading-tight">
-                        Secure Account<br />
-                        Recovery.
-                    </h1>
-                    <p className="text-xl text-blue-100 max-w-lg mb-8">
-                        Get back to managing your wellness store. We'll help you reset your password securely.
-                    </p>
+        <div className="min-h-screen w-full bg-[#F8F3EF] flex flex-col text-[#052326] font-sans justify-between">
+            <div className="w-full flex-1 flex flex-col lg:flex-row bg-[#F8F3EF] relative">
+                {/* Left Side - Content */}
+                <div className="hidden lg:flex lg:w-[45%] bg-[#052326] text-[#F8F3EF] p-16 flex-col justify-between relative overflow-hidden min-h-screen">
+                    {/* Decorative glow element */}
+                    <div className="absolute -top-40 -left-40 w-96 h-96 bg-[#F0C417]/10 rounded-full blur-[120px] pointer-events-none" />
+                    <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-[#F8F3EF]/10 rounded-full blur-[120px] pointer-events-none" />
 
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-3">
-                            <div className="bg-white/20 p-2 rounded-full">
-                                <Shield size={20} />
-                            </div>
-                            <span className="font-medium">Secure OTP Verification</span>
+                    <div className="relative z-10">
+                        <Link href="/" className="hover:opacity-95 transition-opacity inline-block shrink-0">
+                            <img src="/logo-white.svg" alt="Cureza Logo" className="h-9 w-auto object-contain" />
+                        </Link>
+                        
+                        <div className="mt-24 space-y-6">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest bg-[#F0C417]/20 text-[#F0C417] border border-[#F0C417]/30">
+                                <Store size={10} className="animate-pulse" />
+                                Merchant Network
+                            </span>
+                            <h1 className="text-4xl xl:text-5xl font-black leading-tight tracking-tight text-[#F8F3EF]">
+                                Secure Account<br />
+                                Recovery.
+                            </h1>
+                            <p className="text-sm xl:text-base text-[#F8F3EF]/80 font-medium leading-relaxed max-w-md">
+                                Get back to managing your wellness store. We'll help you reset your password securely.
+                            </p>
                         </div>
-                        <div className="flex items-center gap-3">
-                            <div className="bg-white/20 p-2 rounded-full">
-                                <Key size={20} />
+
+                        <div className="mt-16 space-y-5">
+                            <div className="flex items-center gap-4 group">
+                                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F8F3EF]/5 border border-[#F8F3EF]/10 text-[#F0C417]">
+                                    <Shield size={20} />
+                                </div>
+                                <span className="text-sm font-bold text-[#F8F3EF]/90">Secure OTP Verification</span>
                             </div>
-                            <span className="font-medium">Instant Password Reset</span>
+                            <div className="flex items-center gap-4 group">
+                                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F8F3EF]/5 border border-[#F8F3EF]/10 text-[#F0C417]">
+                                    <Key size={20} />
+                                </div>
+                                <span className="text-sm font-bold text-[#F8F3EF]/90">Instant Password Reset</span>
+                            </div>
                         </div>
+                    </div>
+
+                    <div className="relative z-10 text-xs text-[#F8F3EF]/50 font-bold uppercase tracking-widest space-y-2">
+                        <div>© 2026 Cureza Wellness. Merchant Portal.</div>
+                    </div>
+
+                    {/* Big decorative background icon */}
+                    <div className="absolute right-[-10%] bottom-[-5%] opacity-[0.03] pointer-events-none">
+                        <Store size={350} />
                     </div>
                 </div>
 
-                <div className="relative z-10 text-sm text-blue-100">
-                    © 2025 Cureza Wellness Pvt Ltd.
-                </div>
+                {/* Right Side - Form */}
+                <div className="w-full lg:w-[55%] flex items-center justify-center p-8 md:p-16 bg-[#F8F3EF] min-h-screen">
+                    <div className="w-full max-w-md space-y-8 bg-white border border-[#052326]/10 rounded-[10px] p-8 md:p-10">
 
-                {/* Background Pattern */}
-                <div className="absolute top-0 right-0 -mr-20 -mt-20 opacity-10">
-                    <Store size={400} />
-                </div>
-            </div>
+                        {/* ===== STEP: EMAIL ===== */}
+                        {step === 'email' && (
+                            <>
+                                <div className="text-center lg:text-left space-y-2">
+                                    <h2 className="text-3xl font-black tracking-tight text-[#052326]">
+                                        Reset Password
+                                    </h2>
+                                    <p className="text-xs text-gray-700 font-semibold leading-relaxed">
+                                        Enter your seller email to receive a verification OTP
+                                    </p>
+                                </div>
 
-            {/* Right Side - Form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-white">
-                <div className="w-full max-w-md space-y-8">
-
-                    {/* ===== STEP: EMAIL ===== */}
-                    {step === 'email' && (
-                        <>
-                            <div className="text-center lg:text-left">
-                                <h2 className="text-3xl font-bold tracking-tight text-charcoal">
-                                    Reset Password
-                                </h2>
-                                <p className="mt-2 text-sm text-gray-600">
-                                    Enter your seller email to receive a verification OTP
-                                </p>
-                            </div>
-
-                            <form className="mt-8 space-y-6" onSubmit={handleSendOtp}>
-                                <div>
-                                    <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Mail size={18} className="text-gray-400" />
+                                <form className="space-y-6" onSubmit={handleSendOtp}>
+                                    <div className="space-y-1">
+                                        <label htmlFor="email-address" className="text-xs font-bold text-[#052326]">Email Address</label>
+                                        <div className="relative">
+                                            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500">
+                                                <Mail size={16} />
+                                            </div>
+                                            <input
+                                                id="email-address"
+                                                name="email"
+                                                type="email"
+                                                autoComplete="email"
+                                                required
+                                                className="block w-full rounded-[10px] border border-[#052326]/20 bg-[#F8F3EF]/40 text-[#052326] py-3 pl-10 pr-4 placeholder:text-gray-500 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#052326] focus:border-transparent transition-all"
+                                                placeholder="seller@example.com"
+                                                value={email}
+                                                onChange={(e) => setEmail(e.target.value)}
+                                            />
                                         </div>
-                                        <input
-                                            id="email-address"
-                                            name="email"
-                                            type="email"
-                                            autoComplete="email"
-                                            required
-                                            className="block w-full rounded-lg border border-gray-300 bg-white text-charcoal py-2.5 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-colors sm:text-sm"
-                                            placeholder="seller@example.com"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                        />
                                     </div>
-                                </div>
 
-                                {error && (
-                                    <div className="bg-red-50 text-red-700 text-sm p-3 rounded-lg border border-red-200">
-                                        {error}
-                                    </div>
-                                )}
-
-                                <div>
-                                    <button
-                                        type="submit"
-                                        disabled={loading}
-                                        className="group relative flex w-full justify-center items-center gap-2 rounded-lg bg-blue-600 py-2.5 px-4 text-sm font-bold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 transition-all disabled:opacity-60"
-                                    >
-                                        {loading ? (
-                                            <><Loader2 size={16} className="animate-spin" /> Sending OTP...</>
-                                        ) : (
-                                            <>Send OTP <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" /></>
-                                        )}
-                                    </button>
-                                </div>
-                            </form>
-                        </>
-                    )}
-
-                    {/* ===== STEP: OTP VERIFY ===== */}
-                    {step === 'otp' && (
-                        <>
-                            <div className="text-center lg:text-left">
-                                <h2 className="text-3xl font-bold tracking-tight text-charcoal">
-                                    Verify OTP
-                                </h2>
-                                <p className="mt-2 text-sm text-gray-600">
-                                    Enter the 4-digit OTP sent to <span className="font-semibold text-charcoal">{email}</span>
-                                </p>
-                            </div>
-
-                            <form className="mt-8 space-y-6" onSubmit={handleVerifyOtp}>
-                                <div>
-                                    <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-1">OTP Code</label>
-                                    <input
-                                        id="otp"
-                                        type="text"
-                                        inputMode="numeric"
-                                        maxLength={4}
-                                        required
-                                        className="block w-full rounded-lg border border-gray-300 bg-white text-charcoal py-3 px-4 text-center text-2xl font-mono tracking-[0.8em] focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-colors"
-                                        placeholder="0000"
-                                        value={otp}
-                                        onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                                    />
-                                    {devOtp && (
-                                        <p className="text-xs text-indigo-500 font-mono text-center mt-2">DEV OTP: {devOtp}</p>
+                                    {error && (
+                                        <div className="bg-red-50 border border-red-200 text-red-600 text-xs font-semibold rounded-[10px] p-3 text-center">
+                                            {error}
+                                        </div>
                                     )}
+
+                                    <div>
+                                        <button
+                                            type="submit"
+                                            disabled={loading}
+                                            className="group relative flex w-full justify-center items-center gap-2 rounded-[10px] bg-[#052326] py-3 px-4 text-xs font-bold tracking-widest text-[#F8F3EF] hover:bg-[#052326]/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            {loading ? 'Sending OTP...' : 'Send Verification OTP'}
+                                            {!loading && <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />}
+                                        </button>
+                                    </div>
+                                </form>
+                            </>
+                        )}
+
+                        {/* ===== STEP: OTP VERIFY ===== */}
+                        {step === 'otp' && (
+                            <>
+                                <div className="text-center lg:text-left space-y-2">
+                                    <h2 className="text-3xl font-black tracking-tight text-[#052326]">
+                                        Verify OTP
+                                    </h2>
+                                    <p className="text-xs text-gray-700 font-semibold leading-relaxed">
+                                        Enter the 4-digit OTP sent to <span className="font-bold text-[#052326]">{email}</span>
+                                    </p>
                                 </div>
 
-                                {/* Resend OTP */}
-                                <div className="flex justify-center">
-                                    {timer > 0 ? (
-                                        <span className="text-sm text-gray-500">
-                                            Resend OTP in <span className="font-semibold text-charcoal">00:{timer.toString().padStart(2, '0')}</span>
-                                        </span>
-                                    ) : (
+                                <form className="space-y-6" onSubmit={handleVerifyOtp}>
+                                    <div className="space-y-1">
+                                        <label htmlFor="otp" className="text-xs font-bold text-[#052326]">OTP Code</label>
+                                        <input
+                                            id="otp"
+                                            type="text"
+                                            inputMode="numeric"
+                                            maxLength={4}
+                                            required
+                                            className="block w-full rounded-[10px] border border-[#052326]/20 bg-[#F8F3EF]/40 text-[#052326] py-3 px-4 text-center text-xl font-mono tracking-[0.6em] focus:outline-none focus:ring-2 focus:ring-[#052326] focus:border-transparent transition-all"
+                                            placeholder="0000"
+                                            value={otp}
+                                            onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                                        />
+                                        {devOtp && (
+                                            <p className="text-xs text-indigo-600 font-mono text-center mt-2">DEV OTP: {devOtp}</p>
+                                        )}
+                                    </div>
+
+                                    {/* Resend OTP */}
+                                    <div className="flex justify-center">
+                                        {timer > 0 ? (
+                                            <span className="text-xs text-gray-500 font-semibold">
+                                                Resend OTP in 00:{timer.toString().padStart(2, '0')}
+                                            </span>
+                                        ) : (
+                                            <button
+                                                type="button"
+                                                onClick={handleResendOtp}
+                                                disabled={loading}
+                                                className="flex items-center gap-1 text-xs font-bold text-[#052326] hover:underline"
+                                            >
+                                                <RefreshCw size={12} className="animate-spin" style={{ animationDuration: '3s' }} /> Resend OTP
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    {error && (
+                                        <div className="bg-red-50 border border-red-200 text-red-600 text-xs font-semibold rounded-[10px] p-3 text-center">
+                                            {error}
+                                        </div>
+                                    )}
+
+                                    <div className="flex gap-3">
                                         <button
                                             type="button"
-                                            onClick={handleResendOtp}
-                                            disabled={loading}
-                                            className="flex items-center gap-1 text-sm font-semibold text-blue-600 hover:underline"
+                                            onClick={() => { setStep('email'); setError(''); setOtp(''); }}
+                                            className="flex-1 flex justify-center items-center gap-1 rounded-[10px] border border-gray-300 py-3 px-4 text-xs font-bold tracking-widest text-gray-700 hover:bg-gray-50 transition-all"
                                         >
-                                            <RefreshCw size={14} /> Resend OTP
+                                            <ArrowLeft size={14} /> Back
                                         </button>
+                                        <button
+                                            type="submit"
+                                            disabled={loading || otp.length < 4}
+                                            className="flex-1 flex justify-center items-center gap-2 rounded-[10px] bg-[#052326] py-3 px-4 text-xs font-bold tracking-widest text-[#F8F3EF] hover:bg-[#052326]/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            Verify <ArrowRight size={14} />
+                                        </button>
+                                    </div>
+                                </form>
+                            </>
+                        )}
+
+                        {/* ===== STEP: RESET PASSWORD ===== */}
+                        {step === 'reset' && (
+                            <>
+                                <div className="text-center lg:text-left space-y-2">
+                                    <h2 className="text-3xl font-black tracking-tight text-[#052326]">
+                                        Set New Password
+                                    </h2>
+                                    <p className="text-xs text-gray-700 font-semibold leading-relaxed">
+                                        Create a strong password for your seller account
+                                    </p>
+                                </div>
+
+                                <form className="space-y-6" onSubmit={handleResetPassword}>
+                                    <div className="space-y-1">
+                                        <label htmlFor="new-password" className="text-xs font-bold text-[#052326]">New Password</label>
+                                        <input
+                                            id="new-password"
+                                            type="password"
+                                            required
+                                            minLength={8}
+                                            className="block w-full rounded-[10px] border border-[#052326]/20 bg-[#F8F3EF]/40 text-[#052326] py-3 px-4 placeholder:text-gray-500 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#052326] focus:border-transparent transition-all"
+                                            placeholder="Min 8 characters"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label htmlFor="confirm-password" className="text-xs font-bold text-[#052326]">Confirm Password</label>
+                                        <input
+                                            id="confirm-password"
+                                            type="password"
+                                            required
+                                            minLength={8}
+                                            className="block w-full rounded-[10px] border border-[#052326]/20 bg-[#F8F3EF]/40 text-[#052326] py-3 px-4 placeholder:text-gray-500 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#052326] focus:border-transparent transition-all"
+                                            placeholder="Re-enter password"
+                                            value={passwordConfirmation}
+                                            onChange={(e) => setPasswordConfirmation(e.target.value)}
+                                        />
+                                    </div>
+
+                                    {error && (
+                                        <div className="bg-red-50 border border-red-200 text-red-600 text-xs font-semibold rounded-[10px] p-3 text-center">
+                                            {error}
+                                        </div>
                                     )}
-                                </div>
 
-                                {error && (
-                                    <div className="bg-red-50 text-red-700 text-sm p-3 rounded-lg border border-red-200">
-                                        {error}
+                                    <div className="flex gap-3">
+                                        <button
+                                            type="button"
+                                            onClick={() => { setStep('otp'); setError(''); }}
+                                            className="flex-1 flex justify-center items-center gap-1 rounded-[10px] border border-gray-300 py-3 px-4 text-xs font-bold tracking-widest text-gray-700 hover:bg-gray-50 transition-all"
+                                        >
+                                            <ArrowLeft size={14} /> Back
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            disabled={loading}
+                                            className="flex-1 flex justify-center items-center gap-2 rounded-[10px] bg-[#052326] py-3 px-4 text-xs font-bold tracking-widest text-[#F8F3EF] hover:bg-[#052326]/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            {loading ? 'Resetting...' : 'Reset Password'}
+                                        </button>
                                     </div>
-                                )}
+                                </form>
+                            </>
+                        )}
 
-                                <div className="flex gap-3">
-                                    <button
-                                        type="button"
-                                        onClick={() => { setStep('email'); setError(''); setOtp(''); }}
-                                        className="flex-1 flex justify-center items-center gap-1 rounded-lg border border-gray-300 py-2.5 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all"
-                                    >
-                                        <ArrowLeft size={14} /> Back
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        disabled={loading || otp.length < 4}
-                                        className="flex-1 flex justify-center items-center gap-2 rounded-lg bg-blue-600 py-2.5 px-4 text-sm font-bold text-white hover:bg-blue-700 transition-all disabled:opacity-60"
-                                    >
-                                        Verify <ArrowRight size={16} />
-                                    </button>
-                                </div>
-                            </form>
-                        </>
-                    )}
-
-                    {/* ===== STEP: RESET PASSWORD ===== */}
-                    {step === 'reset' && (
-                        <>
-                            <div className="text-center lg:text-left">
-                                <h2 className="text-3xl font-bold tracking-tight text-charcoal">
-                                    Set New Password
-                                </h2>
-                                <p className="mt-2 text-sm text-gray-600">
-                                    Create a strong password for your seller account
-                                </p>
-                            </div>
-
-                            <form className="mt-8 space-y-6" onSubmit={handleResetPassword}>
-                                <div>
-                                    <label htmlFor="new-password" className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-                                    <input
-                                        id="new-password"
-                                        type="password"
-                                        required
-                                        minLength={8}
-                                        className="block w-full rounded-lg border border-gray-300 bg-white text-charcoal py-2.5 px-3 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-colors sm:text-sm"
-                                        placeholder="Min 8 characters"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                    />
-                                </div>
-                                <div>
-                                    <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-                                    <input
-                                        id="confirm-password"
-                                        type="password"
-                                        required
-                                        minLength={8}
-                                        className="block w-full rounded-lg border border-gray-300 bg-white text-charcoal py-2.5 px-3 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-colors sm:text-sm"
-                                        placeholder="Re-enter password"
-                                        value={passwordConfirmation}
-                                        onChange={(e) => setPasswordConfirmation(e.target.value)}
-                                    />
-                                </div>
-
-                                {error && (
-                                    <div className="bg-red-50 text-red-700 text-sm p-3 rounded-lg border border-red-200">
-                                        {error}
+                        {/* ===== STEP: SUCCESS ===== */}
+                        {step === 'done' && (
+                            <div className="text-center space-y-6 py-4">
+                                <div className="flex justify-center">
+                                    <div className="h-16 w-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center border border-blue-100">
+                                        <CheckCircle size={32} />
                                     </div>
-                                )}
-
-                                <div className="flex gap-3">
-                                    <button
-                                        type="button"
-                                        onClick={() => { setStep('otp'); setError(''); }}
-                                        className="flex-1 flex justify-center items-center gap-1 rounded-lg border border-gray-300 py-2.5 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all"
-                                    >
-                                        <ArrowLeft size={14} /> Back
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        disabled={loading}
-                                        className="flex-1 flex justify-center items-center gap-2 rounded-lg bg-blue-600 py-2.5 px-4 text-sm font-bold text-white hover:bg-blue-700 transition-all disabled:opacity-60"
-                                    >
-                                        {loading ? (
-                                            <><Loader2 size={16} className="animate-spin" /> Resetting...</>
-                                        ) : (
-                                            <>Reset Password</>
-                                        )}
-                                    </button>
                                 </div>
-                            </form>
-                        </>
-                    )}
-
-                    {/* ===== STEP: SUCCESS ===== */}
-                    {step === 'done' && (
-                        <div className="text-center space-y-6">
-                            <div className="flex justify-center">
-                                <div className="h-20 w-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center ring-8 ring-blue-50">
-                                    <CheckCircle size={40} />
+                                <div className="space-y-1">
+                                    <h2 className="text-2xl font-bold text-[#052326]">Password Reset!</h2>
+                                    <p className="text-xs text-gray-600 font-semibold leading-relaxed">
+                                        Your seller account password has been changed successfully.
+                                    </p>
                                 </div>
+                                <Link
+                                    href="/seller/login"
+                                    className="inline-flex w-full items-center justify-center gap-2 rounded-[10px] bg-[#052326] py-3 px-8 text-xs font-bold tracking-widest text-[#F8F3EF] hover:bg-[#052326]/90 transition-all"
+                                >
+                                    Go to Seller Login <ArrowRight size={14} />
+                                </Link>
                             </div>
-                            <div>
-                                <h2 className="text-2xl font-bold text-charcoal">Password Reset!</h2>
-                                <p className="mt-2 text-sm text-gray-600">
-                                    Your seller account password has been changed successfully.
-                                </p>
-                            </div>
-                            <Link
-                                href="/seller/login"
-                                className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 px-8 text-sm font-bold text-white hover:bg-blue-700 transition-all"
-                            >
-                                Go to Seller Login <ArrowRight size={16} />
-                            </Link>
-                        </div>
-                    )}
+                        )}
 
-                    {/* Back to login link */}
-                    {step !== 'done' && (
-                        <div className="text-center text-sm">
-                            <Link href="/seller/login" className="flex items-center justify-center gap-1 font-medium text-gray-600 hover:text-blue-600 transition-colors">
-                                <ArrowLeft size={14} /> Back to Seller Login
-                            </Link>
-                        </div>
-                    )}
+                        {/* Back to login link */}
+                        {step !== 'done' && (
+                            <div className="text-center text-xs font-semibold mt-6 pt-4 border-t border-gray-100">
+                                <Link href="/seller/login" className="inline-flex items-center justify-center gap-1 font-bold text-[#052326] hover:text-[#F0C417] transition-colors">
+                                    <ArrowLeft size={12} /> Back to Seller Login
+                                </Link>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
     );
 }
+

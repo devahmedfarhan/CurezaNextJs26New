@@ -233,10 +233,11 @@ export default function Footer() {
                 <li><Link href="/shipping" className="hover:text-[#F0C417] transition-colors">Shipping Policy</Link></li>
                 <li><Link href="/returns" className="hover:text-[#F0C417] transition-colors">Return & Exchange Policy</Link></li>
                 <li><Link href="/medical-policy" className="hover:text-[#F0C417] transition-colors">Medical Product Policy</Link></li>
-                <li><Link href="/privacy" className="hover:text-[#F0C417] transition-colors">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="hover:text-[#F0C417] transition-colors">Terms & Conditions</Link></li>
+                <li><Link href="/legal/privacy-policy" className="hover:text-[#F0C417] transition-colors">Privacy Policy</Link></li>
+                <li><Link href="/legal/terms-of-service" className="hover:text-[#F0C417] transition-colors">Terms & Conditions</Link></li>
                 <li><Link href="/consultancy" className="hover:text-[#F0C417] transition-colors">Online Consultancy</Link></li>
                 <li><Link href="/refund-policy" className="hover:text-[#F0C417] transition-colors">Refund Policy</Link></li>
+                <li><Link href="/site-map" className="hover:text-[#F0C417] transition-colors">Sitemap</Link></li>
               </ul>
             </div>
 
@@ -257,7 +258,11 @@ export default function Footer() {
               <Link href="/legal/cancellation-returns" className="hover:text-[#F8F3EF] transition-colors">Cancellation & Returns</Link>
               <Link href="/legal/privacy-policy" className="hover:text-[#F8F3EF] transition-colors">Privacy Policy</Link>
               <Link href="/legal/terms-of-service" className="hover:text-[#F8F3EF] transition-colors">Terms of Service</Link>
+              <Link href="/site-map" className="hover:text-[#F8F3EF] transition-colors">Sitemap</Link>
             </div>
+
+
+
 
             {/* Brand Credit */}
             <div className="flex items-center gap-1.5 text-xs text-[#F8F3EF]/80 font-bold">
