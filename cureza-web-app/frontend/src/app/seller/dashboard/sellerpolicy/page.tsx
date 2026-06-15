@@ -99,26 +99,30 @@ export default function SellerPolicy() {
                         Cureza runs a clear, transparent revenue model. In exchange for the store presence, marketing integrations, hosting, and practitioner referral networks, a commission is deducted from the gross transaction value.
                     </p>
                     <div className="bg-white border border-gray-150 rounded-2xl overflow-hidden shadow-sm">
-                        <div className="grid grid-cols-3 bg-gray-50 p-4 text-xs font-extrabold text-gray-500 uppercase border-b border-gray-150">
-                            <div>Fee Category</div>
-                            <div>Standard Charge</div>
-                            <div>Deduction Timing</div>
-                        </div>
-                        <div className="divide-y divide-gray-150 text-xs font-bold text-gray-700">
-                            <div className="grid grid-cols-3 p-4">
-                                <div className="font-extrabold text-gray-900">Platform Commission</div>
-                                <div>8% - 15% (Depends on Category)</div>
-                                <div className="text-gray-500">Auto-deducted at Settlement</div>
-                            </div>
-                            <div className="grid grid-cols-3 p-4">
-                                <div className="font-extrabold text-gray-900">Payment Gateway Fee</div>
-                                <div>2% (Standard Gateway Cost)</div>
-                                <div className="text-gray-500">Per Successful Transaction</div>
-                            </div>
-                            <div className="grid grid-cols-3 p-4">
-                                <div className="font-extrabold text-gray-900">Referral Incentive</div>
-                                <div>Configurable by Seller (Optional)</div>
-                                <div className="text-gray-500">On Practitioner Recommended Sales</div>
+                        <div className="overflow-x-auto">
+                            <div className="min-w-[600px]">
+                                <div className="grid grid-cols-3 bg-gray-50 p-4 text-xs font-extrabold text-gray-500 uppercase border-b border-gray-150">
+                                    <div>Fee Category</div>
+                                    <div>Standard Charge</div>
+                                    <div>Deduction Timing</div>
+                                </div>
+                                <div className="divide-y divide-gray-150 text-xs font-bold text-gray-700">
+                                    <div className="grid grid-cols-3 p-4">
+                                        <div className="font-extrabold text-gray-900">Platform Commission</div>
+                                        <div>8% - 15% (Depends on Category)</div>
+                                        <div className="text-gray-500">Auto-deducted at Settlement</div>
+                                    </div>
+                                    <div className="grid grid-cols-3 p-4">
+                                        <div className="font-extrabold text-gray-900">Payment Gateway Fee</div>
+                                        <div>2% (Standard Gateway Cost)</div>
+                                        <div className="text-gray-500">Per Successful Transaction</div>
+                                    </div>
+                                    <div className="grid grid-cols-3 p-4">
+                                        <div className="font-extrabold text-gray-900">Referral Incentive</div>
+                                        <div>Configurable by Seller (Optional)</div>
+                                        <div className="text-gray-500">On Practitioner Recommended Sales</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -241,16 +245,16 @@ export default function SellerPolicy() {
                             </p>
                         </div>
 
-                        <div className="flex gap-2">
+                        <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                             <button 
                                 onClick={() => window.print()} 
-                                className="px-4 py-2.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-xs font-bold rounded-xl shadow-sm transition flex items-center gap-1.5"
+                                className="flex-1 sm:flex-none px-4 py-2.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-xs font-bold rounded-xl shadow-sm transition flex items-center justify-center gap-1.5"
                             >
                                 <Printer size={14} /> Print Rules
                             </button>
                             <Link 
                                 href="/seller/dashboard" 
-                                className="px-4 py-2.5 bg-gray-900 hover:bg-black text-white text-xs font-bold rounded-xl shadow-sm transition flex items-center gap-1.5"
+                                className="flex-1 sm:flex-none px-4 py-2.5 bg-gray-900 hover:bg-black text-white text-xs font-bold rounded-xl shadow-sm transition flex items-center justify-center gap-1.5 text-center"
                             >
                                 <ArrowLeft size={14} /> Dashboard
                             </Link>
@@ -281,9 +285,9 @@ export default function SellerPolicy() {
                 {/* Search & Main Layout */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     {/* Left Sidebar Menu */}
-                    <div className="lg:col-span-3 space-y-6">
+                    <div className="lg:col-span-3 flex flex-col gap-6">
                         {/* Search Box */}
-                        <div className="bg-white rounded-2xl border border-gray-150 p-4 shadow-sm">
+                        <div className="bg-white rounded-2xl border border-gray-150 p-4 shadow-sm order-1 lg:order-none">
                             <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Search Policy</label>
                             <div className="relative">
                                 <input
@@ -298,9 +302,9 @@ export default function SellerPolicy() {
                         </div>
 
                         {/* Navigation Tabs */}
-                        <div className="bg-white rounded-2xl border border-gray-150 p-4 shadow-sm">
+                        <div className="bg-white rounded-2xl border border-gray-150 p-4 shadow-sm order-2 lg:order-none">
                             <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3 px-1">Policy Sections</label>
-                            <nav className="space-y-1.5">
+                            <nav className="flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-visible gap-2 lg:gap-0 lg:space-y-1.5 pb-2 lg:pb-0 scrollbar-none">
                                 {sections.map((sec) => {
                                     const Icon = sec.icon;
                                     return (
@@ -313,7 +317,7 @@ export default function SellerPolicy() {
                                                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                                                 }
                                             }}
-                                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold transition-all text-left border ${
+                                            className={`shrink-0 flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold transition-all text-left border ${
                                                 activeSection === sec.id 
                                                 ? 'bg-teal-600 border-teal-600 text-white shadow-sm shadow-teal-100' 
                                                 : 'bg-white border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900'
@@ -328,7 +332,7 @@ export default function SellerPolicy() {
                         </div>
 
                         {/* Need Help Box */}
-                        <div className="bg-gray-900 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden">
+                        <div className="bg-gray-900 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden order-3 lg:order-none">
                             <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full -mr-8 -mt-8"></div>
                             <h4 className="text-xs font-extrabold uppercase tracking-widest text-teal-400 mb-2">Need Compliance Help?</h4>
                             <p className="text-[11px] text-gray-300 leading-relaxed mb-4">

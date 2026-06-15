@@ -107,6 +107,10 @@
   --color-charcoal: var(--charcoal-900);
   --color-alert-red: var(--alert-red);
 
+  /* Cureza Brand Colors */
+  --color-cureza-teal: #00bba7;
+  --color-cureza-dark: #101828;
+
   /* Typography */
   --font-sans: var(--font-sans);
   --font-heading: var(--font-heading);
@@ -157,10 +161,16 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
+html {
+  scrollbar-gutter: stable;
+  overflow-y: scroll;
+}
+
 body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 .dark {
@@ -261,6 +271,31 @@ body {
   .nav-item-active::after {
     content: '';
     @apply absolute left-0 top-1/4 bottom-1/4 w-1 bg-cureza-green rounded-r-full;
+  }
+
+  /* Custom Premium Buttons (#009966 and #101828) */
+  .btn-premium-dark {
+    background-color: #101828 !important;
+    color: #ffffff !important;
+    border: 1px solid #101828 !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .btn-premium-dark:hover {
+    background-color: #00bba7 !important;
+    color: #101828 !important;
+    border-color: #00bba7 !important;
+  }
+
+  .btn-premium-light {
+    background-color: #00bba7 !important;
+    color: #101828 !important;
+    border: 1px solid #00bba7 !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .btn-premium-light:hover {
+    background-color: #101828 !important;
+    color: #00bba7 !important;
+    border-color: #101828 !important;
   }
 }
 
@@ -385,3 +420,47 @@ body {
 .seller-theme textarea {
   border-radius: 10px !important;
 }
+
+/* --- Global Seller Theme Button Override --- */
+/* Primary buttons in light areas (Dark background #101828, hover to Teal #009966) */
+.seller-theme button.bg-emerald-600,
+.seller-theme button.bg-cureza-green,
+.seller-theme a.bg-emerald-600,
+.seller-theme a.bg-cureza-green,
+.seller-theme button[type="submit"] {
+  background-color: #101828 !important;
+  color: #ffffff !important;
+  border: 1px solid #101828 !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.seller-theme button.bg-emerald-600:hover,
+.seller-theme button.bg-cureza-green:hover,
+.seller-theme a.bg-emerald-600:hover,
+.seller-theme a.bg-cureza-green:hover,
+.seller-theme button[type="submit"]:hover {
+  background-color: #00bba7 !important;
+  color: #101828 !important;
+  border-color: #00bba7 !important;
+}
+
+/* Light buttons / active states in dark or highlighted areas (Teal background #009966, hover to Dark #101828) */
+.seller-theme .bg-gray-900 button,
+.seller-theme .bg-\[\#101828\] button,
+.seller-theme button.btn-premium-light,
+.seller-theme a.btn-premium-light {
+  background-color: #00bba7 !important;
+  color: #101828 !important;
+  border: 1px solid #00bba7 !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.seller-theme .bg-gray-900 button:hover,
+.seller-theme .bg-\[\#101828\] button:hover,
+.seller-theme button.btn-premium-light:hover,
+.seller-theme a.btn-premium-light:hover {
+  background-color: #101828 !important;
+  color: #00bba7 !important;
+  border-color: #101828 !important;
+}
+

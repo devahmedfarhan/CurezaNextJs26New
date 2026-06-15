@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import NotificationBell from '@/components/common/NotificationBell';
 import {
     LayoutDashboard,
     Package,
@@ -19,14 +20,13 @@ import {
     FileText,
     LifeBuoy,
     ShieldCheck,
-    Bell,
     User,
     AlertCircle,
     ArrowRight,
     Menu,
     Sparkles
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
@@ -45,31 +45,15 @@ const SELLER_LINKS = [
     { name: 'Support', href: '/seller/dashboard/support', icon: LifeBuoy },
 ];
 
-interface Notification {
-    id: string;
-    type: string;
-    data: {
-        type?: string;
-        title: string;
-        message: string;
-        action_url?: string;
-        order_number?: string;
-        customer_name?: string;
-        total_amount?: number;
-    };
-    read_at: string | null;
-    created_at: string;
-}
-
 export default function SellerLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const { user, isLoading, logout } = useAuth();
     const router = useRouter();
-    const [showNotifications, setShowNotifications] = useState(false);
-    const [notifications, setNotifications] = useState<Notification[]>([]);
-    const [unreadCount, setUnreadCount] = useState(0);
     const [fullProfile, setFullProfile] = useState<any>(null);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+    const profileMenuRef = useRef<HTMLDivElement>(null);
+    const mobileProfileMenuRef = useRef<HTMLDivElement>(null);
 
     const getBrandName = () => {
         if (user?.brand?.name) return user.brand.name;
@@ -82,8 +66,17 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
         return 'Brand';
     };
     const sellerBrandName = getBrandName();
-    const dynamicReportTabName = `${sellerBrandName.toUpperCase()} X CUREZA`;
+    const dynamicReportTabName = `${sellerBrandName} x Cureza`;
     const brandSlug = user?.brand?.slug || (user as any)?.seller_profile?.brand_name?.toLowerCase().replace(/\s+/g, '-') || 'brand';
+
+    const getBrandLogo = () => {
+        const logoPath = user?.brand?.logo || fullProfile?.brand?.logo || (user as any)?.seller_profile?.logo || (user as any)?.sellerProfile?.logo || (user as any)?.brand?.logo;
+        if (!logoPath) return null;
+        if (logoPath.startsWith('http')) return logoPath;
+        const backend = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+        return logoPath.startsWith('/') ? `${backend}${logoPath}` : `${backend}/storage/${logoPath}`;
+    };
+    const brandLogoUrl = getBrandLogo();
 
 
     useEffect(() => {
@@ -100,6 +93,20 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
     }, [user]);
 
     useEffect(() => {
+        const handleOutsideClick = (event: MouseEvent) => {
+            const isClickInsideDesktop = profileMenuRef.current && profileMenuRef.current.contains(event.target as Node);
+            const isClickInsideMobile = mobileProfileMenuRef.current && mobileProfileMenuRef.current.contains(event.target as Node);
+            
+            if (!isClickInsideDesktop && !isClickInsideMobile) {
+                setProfileMenuOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleOutsideClick);
+        return () => document.removeEventListener('mousedown', handleOutsideClick);
+    }, []);
+
+    useEffect(() => {
         if (!isLoading) {
             if (!user) {
                 router.push('/seller/login');
@@ -111,74 +118,6 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
             }
         }
     }, [user, isLoading, router]);
-
-    useEffect(() => {
-        if (user && user.role === 'vendor') {
-            fetchNotifications();
-            fetchUnreadCount();
-
-            // Poll for new notifications every 30 seconds
-            const interval = setInterval(() => {
-                fetchUnreadCount();
-            }, 30000);
-
-            return () => clearInterval(interval);
-        }
-    }, [user]);
-
-    const fetchNotifications = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${API_BASE_URL}/notifications`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            setNotifications(response.data.slice(0, 5)); // Show only last 5
-        } catch (error) {
-            console.error('Failed to fetch notifications:', error);
-        }
-    };
-
-    const fetchUnreadCount = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${API_BASE_URL}/notifications/unread-count`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            setUnreadCount(response.data.count);
-        } catch (error) {
-            console.error('Failed to fetch unread count:', error);
-        }
-    };
-
-    const markAsRead = async (id?: string) => {
-        try {
-            const token = localStorage.getItem('token');
-            await axios.post(`${API_BASE_URL}/notifications/read`,
-                id ? { id } : {},
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-
-            if (id) {
-                setNotifications(prev => prev.map(n => n.id === id ? { ...n, read_at: new Date().toISOString() } : n));
-                setUnreadCount(prev => Math.max(0, prev - 1));
-            } else {
-                setNotifications(prev => prev.map(n => ({ ...n, read_at: new Date().toISOString() })));
-                setUnreadCount(0);
-            }
-        } catch (error) {
-            console.error('Failed to mark as read:', error);
-        }
-    };
-
-    const handleNotificationClick = (notification: Notification) => {
-        if (!notification.read_at) {
-            markAsRead(notification.id);
-        }
-        if (notification.data.action_url) {
-            router.push(notification.data.action_url);
-            setShowNotifications(false);
-        }
-    };
 
     if (isLoading) {
         return (
@@ -356,11 +295,11 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
                         <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-md shadow-emerald-100">
                             C
                         </div>
-                        <span className="text-sm font-extrabold text-gray-900 uppercase tracking-widest">Cureza Seller Hub</span>
+                        <span className="text-sm font-semibold text-gray-800 capitalize tracking-wider">Cureza Seller Hub</span>
                     </div>
                     <button
                         onClick={logout}
-                        className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all border border-gray-100 hover:border-red-100"
+                        className="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-gray-650 hover:text-red-650 hover:bg-red-50 rounded-xl transition-all border border-gray-100 hover:border-red-100"
                     >
                         <LogOut size={13} />
                         Logout Partner
@@ -379,14 +318,14 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
                                     <ShieldCheck size={28} strokeWidth={2} />
                                 </div>
                                 <div className="space-y-1">
-                                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-sm ${isResubmit ? 'bg-red-100 text-red-800 border border-red-200' : 'bg-amber-100 text-amber-800 border border-amber-200'}`}>
+                                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-semibold capitalize tracking-wider shadow-sm ${isResubmit ? 'bg-red-100 text-red-800 border border-red-200' : 'bg-amber-100 text-amber-800 border border-amber-200'}`}>
                                         <span className={`w-1.5 h-1.5 rounded-full ${isResubmit ? 'bg-red-600' : 'bg-amber-600'} animate-ping`}></span>
                                         {isResubmit ? 'Action Required' : 'Verification Under Review'}
                                     </span>
-                                    <h2 className="text-2xl font-black text-gray-900 tracking-tight leading-tight">
+                                    <h2 className="text-2xl font-bold text-gray-800 tracking-tight leading-tight">
                                         {isResubmit ? 'Onboarding Block: Action Required' : 'Compliance Verification Process'}
                                     </h2>
-                                    <p className="text-gray-400 font-semibold text-xs leading-relaxed max-w-lg">
+                                    <p className="text-gray-650 font-medium text-xs leading-relaxed max-w-lg">
                                         {isResubmit 
                                             ? 'Some of your uploaded KYC documents or information did not meet verification criteria. Please review the highlighted document feedback below.'
                                             : 'Your documents and onboarding details have been submitted successfully. Our compliance team is currently verifying your profile details.'
@@ -398,7 +337,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
                             {isResubmit && (
                                 <button
                                     onClick={() => router.push('/seller/register')}
-                                    className="px-6 py-3.5 bg-red-600 hover:bg-red-700 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 group shrink-0"
+                                    className="px-5 py-2.5 bg-red-600 hover:bg-red-750 text-white rounded-xl text-xs font-semibold capitalize tracking-wide transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 group shrink-0"
                                 >
                                     Update KYC & Re-Upload
                                     <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
@@ -413,7 +352,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
                                 
                                 {/* Steps Progress Indicator */}
                                 <div className="p-6 bg-gray-50/50 border border-gray-100 rounded-2xl space-y-4">
-                                    <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Onboarding Milestones</h3>
+                                    <h3 className="text-[10px] font-semibold text-gray-500 capitalize tracking-wider leading-none">Onboarding Milestones</h3>
                                     <div className="grid grid-cols-3 gap-4">
                                         <StepItem label="Identity Setup" desc="Register & Credentials" status="complete" />
                                         <StepItem label="Partner Verify" desc="Email & Mobile OTP" status="complete" />
@@ -423,7 +362,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
 
                                 {/* Dynamic KYC Documents Dossier */}
                                 <div className="space-y-4">
-                                    <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-2 leading-none flex items-center gap-2">
+                                    <h3 className="text-[10px] font-semibold text-gray-500 capitalize tracking-wider border-b border-gray-100 pb-2 leading-none flex items-center gap-2">
                                         <FileText size={12} className="text-emerald-500" />
                                         Compliance Verification Dossier
                                     </h3>
@@ -631,44 +570,123 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
     }
 
     return (
-        <div className="flex min-h-screen bg-gray-50 flex-col md:flex-row seller-theme">
+        <div className="flex min-h-screen w-full overflow-x-hidden bg-gray-50 flex-col md:flex-row seller-theme">
             {/* Mobile Header */}
-            <header className="md:hidden bg-white border-b border-gray-100 px-6 py-3.5 flex items-center justify-between sticky top-0 z-50">
-                <div className="flex items-center gap-2">
-                    <img src="/logo-black-no-tagline.svg" alt="Cureza Logo" className="h-6 w-auto object-contain dark:invert" />
-                    <span className="text-[10px] font-black uppercase tracking-wider text-cureza-green bg-green-50 px-2 py-0.5 rounded">Seller Hub</span>
+            <header className="md:hidden bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between sticky top-0 z-50">
+                <div className="flex items-center gap-3 min-w-0">
+                    <button
+                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        className="p-1.5 text-gray-500 hover:text-gray-800 transition-colors rounded-md hover:bg-gray-100 shrink-0"
+                    >
+                        {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+                    </button>
+                    <h2 className="font-bold text-gray-900 text-sm truncate max-w-[140px]">
+                        {pathname.startsWith('/seller/dashboard/') && pathname !== '/seller/dashboard' && !SELLER_LINKS.some(l => l.href === pathname)
+                            ? dynamicReportTabName
+                            : (SELLER_LINKS.find(l => l.href === pathname)?.name || 'Dashboard')}
+                    </h2>
                 </div>
-                <button
-                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                    className="p-1.5 text-gray-500 hover:text-gray-800 transition-colors rounded-md hover:bg-gray-100"
-                >
-                    {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
-                </button>
+                
+                <div className="flex items-center gap-2 shrink-0">
+                    <NotificationBell />
+                    <div className="relative" ref={mobileProfileMenuRef}>
+                        <button
+                            onClick={() => setProfileMenuOpen(prev => !prev)}
+                            className="flex items-center rounded-2xl bg-transparent p-1 outline-none focus:outline-none transition-all"
+                        >
+                            <div className="w-8 h-8 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 rounded-full flex items-center justify-center text-gray-500 shadow-inner overflow-hidden shrink-0">
+                                {brandLogoUrl ? (
+                                    <img src={brandLogoUrl} alt="Store Logo" className="w-full h-full object-cover" />
+                                ) : (
+                                    <User className="w-4 h-4 text-gray-500" />
+                                )}
+                            </div>
+                        </button>
+                        {profileMenuOpen && (
+                            <div className="absolute right-0 mt-3 w-72 rounded-2xl border border-gray-200 bg-white shadow-xl overflow-hidden z-50">
+                                <div className="p-4 border-b border-gray-100">
+                                    <div className="flex items-center gap-3">
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-50 text-cureza-green border border-emerald-100 shrink-0 overflow-hidden">
+                                            {brandLogoUrl ? (
+                                                <img src={brandLogoUrl} alt="Store Logo" className="w-full h-full object-cover" />
+                                            ) : (
+                                                <User size={18} />
+                                            )}
+                                        </div>
+                                        <div className="min-w-0">
+                                            <p className="text-xs font-bold text-gray-900 truncate">{user.name}</p>
+                                            <p className="text-[10px] text-gray-500 truncate">{user.email}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="p-2 text-xs">
+                                    <Link
+                                        href="/seller/dashboard/profile"
+                                        onClick={() => setProfileMenuOpen(false)}
+                                        className="flex items-center justify-between rounded-xl px-3 py-2 text-gray-700 hover:bg-gray-50"
+                                    >
+                                        <span>Store Profile</span>
+                                        <ArrowRight size={12} />
+                                    </Link>
+                                    <Link
+                                        href="/seller/dashboard/settings"
+                                        onClick={() => setProfileMenuOpen(false)}
+                                        className="flex items-center justify-between rounded-xl px-3 py-2 text-gray-700 hover:bg-gray-50"
+                                    >
+                                        <span>Account Settings</span>
+                                        <ArrowRight size={12} />
+                                    </Link>
+                                    <button
+                                        onClick={logout}
+                                        className="mt-1 flex w-full items-center justify-between rounded-xl px-3 py-2 font-semibold text-red-600 hover:bg-red-50 text-left"
+                                    >
+                                        <span>Logout</span>
+                                        <LogOut size={12} />
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
             </header>
 
             {/* Sidebar Overlay for Mobile */}
             {mobileMenuOpen && (
                 <div
                     onClick={() => setMobileMenuOpen(false)}
-                    className="md:hidden fixed inset-0 bg-black/20 backdrop-blur-[2px] z-40 transition-opacity"
+                    className="md:hidden fixed inset-0 bg-black/20 backdrop-blur-[2px] z-[60] transition-opacity"
                 />
             )}
 
             {/* Sidebar */}
             <aside className={`
-                w-64 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 fixed h-full z-40
+                w-64 bg-[#fbfefc] dark:bg-gray-900 border-r border-emerald-100/70 dark:border-gray-800
+                fixed inset-y-0 left-0 z-[70] md:z-30 shrink-0
                 transform md:transform-none transition-transform duration-200 ease-out
                 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-                md:block premium-shadow flex flex-col justify-between
+                md:flex shadow-[12px_0_35px_rgba(15,76,58,0.06)] flex flex-col justify-between
             `}>
-                <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex flex-col items-center shrink-0">
-                    <Link href="/" className="flex flex-col items-center gap-1 group w-full text-center">
-                        <img src="/logo-black-no-tagline.svg" alt="Cureza Logo" className="h-6.5 w-auto object-contain dark:invert transition-transform group-hover:scale-105" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-cureza-green mt-2 bg-green-50/50 px-2.5 py-0.5 rounded-full border border-green-100">Seller Hub</span>
+                <div className="px-3.5 py-3 border-b border-emerald-100/70 dark:border-gray-800 shrink-0">
+                    <Link href="/" className="group block w-full">
+                        <div className="rounded-2xl bg-white border border-emerald-100 shadow-sm px-3 py-2.5 group-hover:border-cureza-green/40 group-hover:shadow-md transition-all">
+                            <div className="flex items-center justify-between gap-3">
+                                <img src="/logo-black.svg" alt="Cureza Logo" className="h-7 w-auto max-w-[118px] object-contain dark:invert transition-transform group-hover:scale-[1.02]" />
+                                <span className="shrink-0 rounded-full bg-emerald-50 px-2 py-1 text-[7px] font-semibold capitalize tracking-wide text-cureza-green border border-emerald-100">
+                                    Hub
+                                </span>
+                            </div>
+                            <div className="mt-2 flex items-center gap-1.5 text-[8px] font-semibold capitalize tracking-wider text-gray-550">
+                                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                                Verified Seller Workspace
+                            </div>
+                        </div>
                     </Link>
                 </div>
 
-                <nav className="p-4 space-y-1 overflow-y-auto flex-1">
+                <nav className="px-3 py-3 space-y-1 overflow-y-auto flex-1">
+                    <div className="px-2.5 pb-1 text-[8px] font-semibold capitalize tracking-wider text-gray-500">
+                        Navigation
+                    </div>
                     {SELLER_LINKS.map((link) => {
                         const Icon = link.icon;
                         const isActive = link.href === '/seller/dashboard'
@@ -681,42 +699,53 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
                                 key={link.href}
                                 onClick={() => setMobileMenuOpen(false)}
                                 href={link.href}
-                                className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200 group ${isActive
-                                    ? 'bg-cureza-green/10 text-cureza-green font-bold'
-                                    : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:hover:bg-gray-800'
+                                className={`relative flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl text-[11px] font-semibold transition-all duration-200 group border ${isActive
+                                    ? 'bg-white text-cureza-green border-emerald-100 shadow-sm'
+                                    : 'text-gray-550 border-transparent hover:bg-white hover:text-gray-900 hover:border-emerald-100/50 hover:shadow-sm dark:hover:bg-gray-800'
                                     }`}
                             >
-                                <Icon size={16} className={`${isActive ? 'text-cureza-green' : 'text-gray-400 group-hover:text-gray-600'}`} />
-                                {linkName}
+                                {isActive && (
+                                    <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-cureza-green" />
+                                )}
+                                <span className={`flex h-7 w-7 items-center justify-center rounded-lg transition-colors ${isActive
+                                    ? 'bg-emerald-50 text-cureza-green'
+                                    : 'bg-gray-50 text-gray-400 group-hover:bg-emerald-50 group-hover:text-cureza-green'
+                                    }`}>
+                                    <Icon size={14} />
+                                </span>
+                                <span className="truncate">{linkName}</span>
                             </Link>
                         );
                     })}
                 </nav>
 
-                <div className="p-4 border-t border-gray-100 dark:border-gray-800 shrink-0">
+                <div className="p-3 border-t border-emerald-100/70 dark:border-gray-800 shrink-0 bg-white/60">
                     {/* Dynamic verified brand banner */}
                     <Link href={`/seller/dashboard/${brandSlug}`} onClick={() => setMobileMenuOpen(false)}>
-                        <div className="bg-gradient-to-br from-[#0c1f20] to-[#040e0f] border border-[#143d41]/45 rounded-2xl p-4 relative overflow-hidden shadow-lg shadow-green-950/20 hover:border-cureza-green/50 hover:shadow-green-950/30 transition-all cursor-pointer group">
-                            <div className="absolute top-0 right-0 w-24 h-24 bg-cureza-green/10 rounded-full blur-2xl -mr-8 -mt-8 pointer-events-none" />
-                            
+                        <div className="bg-[#0f4c3a] border border-emerald-700 rounded-xl p-3 relative overflow-hidden shadow-lg shadow-emerald-950/15 hover:-translate-y-0.5 hover:shadow-emerald-950/25 transition-all cursor-pointer group">
+                            <div className="absolute inset-x-0 top-0 h-1 bg-emerald-300/80 pointer-events-none" />
+
                             <div className="flex items-center justify-between">
-                                <div className="w-8 h-8 rounded-xl bg-cureza-green/20 border border-cureza-green/30 flex items-center justify-center text-cureza-green group-hover:scale-105 transition-transform">
-                                    <Sparkles size={16} className="animate-pulse" />
+                                <div className="w-8 h-8 rounded-lg bg-white/10 border border-white/15 flex items-center justify-center text-emerald-200 group-hover:scale-105 transition-transform">
+                                    <Sparkles size={14} />
                                 </div>
-                                <div className="flex items-center gap-1 bg-emerald-500/10 text-emerald-450 border border-emerald-500/20 px-2 py-0.5 rounded-full">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                    <span className="text-[8px] font-black uppercase tracking-wider">Verified</span>
+                                <div className="flex items-center gap-1.5 bg-white/10 text-emerald-100 border border-white/15 px-1.5 py-0.5 rounded-full">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-300" />
+                                    <span className="text-[7px] font-semibold capitalize tracking-wide">Verified</span>
                                 </div>
                             </div>
 
-                            <div className="mt-4">
-                                <span className="text-[8px] font-black text-cureza-green uppercase tracking-widest block">Authorized Partner</span>
-                                <h4 className="text-xs font-black text-white mt-1 leading-tight tracking-tight uppercase break-words" title={`${sellerBrandName} X CUREZA`}>
-                                    {sellerBrandName} X CUREZA
+                            <div className="mt-3">
+                                <span className="text-[7px] font-semibold text-emerald-200 capitalize tracking-wide block">Authorized Partner</span>
+                                <h4 className="text-[10px] font-semibold text-white mt-1 leading-tight tracking-tight break-words" title={`${sellerBrandName} x Cureza`}>
+                                    {sellerBrandName} <span className="text-emerald-300 font-normal">x</span> Cureza
                                 </h4>
-                                <p className="text-[9px] text-gray-400 mt-2 font-medium leading-relaxed">
-                                    Managed node with direct billing reconciliation and automatic settlement protocol.
+                                <p className="text-[8px] text-emerald-50/75 mt-1.5 font-medium leading-relaxed">
+                                    View your verified brand node, billing status, and settlement profile.
                                 </p>
+                                <div className="mt-2 flex items-center gap-1 text-[8px] font-semibold capitalize tracking-wide text-emerald-100">
+                                    Open Brand Desk <ArrowRight size={11} className="transition-transform group-hover:translate-x-0.5" />
+                                </div>
                             </div>
                         </div>
                     </Link>
@@ -724,15 +753,12 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 md:ml-64 min-w-0">
-                <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 h-16 sticky top-0 z-10">
+            <main className="w-full min-w-0 flex-1 md:ml-64">
+                <header className="hidden md:flex bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 h-16 md:sticky md:top-0 z-50">
                     <div className="w-full h-full flex items-center justify-between px-4 md:px-8">
-                        <div className="flex items-center gap-4">
-                            <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg md:hidden">
-                                <LayoutDashboard size={20} className="text-gray-400" />
-                            </div>
+                        <div className="flex items-center gap-4 min-w-0">
                             <div>
-                                <h2 className="font-bold text-gray-900 text-lg">
+                                <h2 className="font-bold text-gray-900 text-sm sm:text-lg truncate max-w-[150px] sm:max-w-none">
                                     {pathname.startsWith('/seller/dashboard/') && pathname !== '/seller/dashboard' && !SELLER_LINKS.some(l => l.href === pathname)
                                         ? dynamicReportTabName
                                         : (SELLER_LINKS.find(l => l.href === pathname)?.name || 'Dashboard')}
@@ -740,130 +766,78 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2 sm:gap-4 shrink-0">
                             {/* Status Banner for Pending Sellers */}
                             {(user as any).seller_profile?.status === 'pending' && (
-                                <div className="hidden md:flex items-center gap-2 px-4 py-1.5 bg-yellow-50 border border-yellow-200 rounded-full animate-pulse">
+                                <div className="hidden md:flex items-center gap-2 px-4 py-1.5 bg-yellow-55 border border-yellow-200 rounded-full animate-pulse">
                                     <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
-                                    <span className="text-[11px] font-bold text-yellow-700 uppercase tracking-widest">Application Under Review</span>
+                                    <span className="text-[11px] font-semibold text-yellow-750 capitalize tracking-wide">Application Under Review</span>
                                 </div>
                             )}
 
-                            {/* Notification Bell */}
-                            <div className="relative">
+                            <NotificationBell />
+
+                            <div className="relative" ref={profileMenuRef}>
                                 <button
-                                    onClick={() => {
-                                        setShowNotifications(!showNotifications);
-                                        if (!showNotifications) {
-                                            fetchNotifications();
-                                        }
-                                    }}
-                                    className="p-2 text-gray-400 hover:text-gray-600 relative"
+                                    onClick={() => setProfileMenuOpen(prev => !prev)}
+                                    className="flex items-center gap-2 sm:gap-3 rounded-2xl bg-transparent p-1 sm:p-1.5 outline-none focus:outline-none transition-all"
                                 >
-                                    <Bell size={20} />
-                                    {unreadCount > 0 && (
-                                        <span className="absolute top-1 right-1 min-w-[18px] h-[18px] bg-red-500 text-white text-xs rounded-full flex items-center justify-center px-1">
-                                            {unreadCount > 9 ? '9+' : unreadCount}
-                                        </span>
-                                    )}
+                                    <div className="text-right hidden sm:block">
+                                        <p className="text-[10px] font-semibold capitalize tracking-wider text-gray-500">Signed in as</p>
+                                        <p className="text-sm font-semibold text-gray-900 leading-none">{user.name}</p>
+                                        <p className="text-[10px] font-semibold capitalize text-emerald-700 mt-1">Verified Seller</p>
+                                    </div>
+                                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 rounded-full flex items-center justify-center text-gray-500 shadow-inner shrink-0 overflow-hidden">
+                                        {brandLogoUrl ? (
+                                            <img src={brandLogoUrl} alt="Store Logo" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <User className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+                                        )}
+                                    </div>
                                 </button>
 
-                                {/* Notification Dropdown */}
-                                {showNotifications && (
-                                    <div className="absolute right-0 mt-2 w-96 bg-white rounded-lg shadow-lg border border-gray-200 max-h-[500px] overflow-hidden">
-                                        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-                                            <h3 className="font-bold text-gray-900">Notifications</h3>
-                                            <button
-                                                onClick={() => setShowNotifications(false)}
-                                                className="text-gray-400 hover:text-gray-600"
+                                {profileMenuOpen && (
+                                    <div className="absolute right-0 mt-3 w-80 rounded-2xl border border-gray-200 bg-white shadow-xl overflow-hidden z-50">
+                                        <div className="p-4 border-b border-gray-100">
+                                            <div className="flex items-center gap-3">
+                                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 text-cureza-green border border-emerald-100">
+                                                    <User size={22} />
+                                                </div>
+                                                <div className="min-w-0">
+                                                     <p className="text-sm font-semibold text-gray-950 truncate">{user.name}</p>
+                                                     <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                                                     <p className="mt-1 text-[10px] font-semibold capitalize tracking-wide text-emerald-700">Seller Dashboard Access</p>
+                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div className="p-2">
+                                            <Link
+                                                href="/seller/dashboard/profile"
+                                                onClick={() => setProfileMenuOpen(false)}
+                                                className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
                                             >
-                                                <X size={18} />
+                                                <span>Store Profile</span>
+                                                <ArrowRight size={14} />
+                                            </Link>
+                                            <Link
+                                                href="/seller/dashboard/settings"
+                                                onClick={() => setProfileMenuOpen(false)}
+                                                className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
+                                            >
+                                                <span>Account Settings</span>
+                                                <ArrowRight size={14} />
+                                            </Link>
+                                            <button
+                                                onClick={logout}
+                                                className="mt-1 flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50"
+                                            >
+                                                <span>Logout</span>
+                                                <LogOut size={14} />
                                             </button>
                                         </div>
-
-                                        <div className="overflow-y-auto max-h-[400px]">
-                                            {notifications.length === 0 ? (
-                                                <div className="p-8 text-center text-gray-500">
-                                                    <Bell size={48} className="mx-auto mb-2 text-gray-300" />
-                                                    <p>No notifications yet</p>
-                                                </div>
-                                            ) : (
-                                                notifications.map((notification) => (
-                                                    <div
-                                                        key={notification.id}
-                                                        onClick={() => handleNotificationClick(notification)}
-                                                        className={`p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors ${!notification.read_at ? 'bg-green-50/30' : ''
-                                                            }`}
-                                                    >
-                                                        <div className="flex gap-3">
-                                                            <div className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${!notification.read_at ? 'bg-cureza-green' : 'bg-transparent'
-                                                                }`} />
-                                                            <div className="flex-1 min-w-0">
-                                                                <h4 className={`text-sm font-medium ${!notification.read_at ? 'text-gray-900' : 'text-gray-700'
-                                                                    }`}>
-                                                                    {notification.data.title}
-                                                                </h4>
-                                                                <p className="text-sm text-gray-600 mt-1">
-                                                                    {notification.data.message}
-                                                                </p>
-                                                                {notification.data.order_number && (
-                                                                    <p className="text-xs text-gray-500 mt-1">
-                                                                        Order: {notification.data.order_number}
-                                                                    </p>
-                                                                )}
-                                                                <p className="text-xs text-gray-400 mt-2">
-                                                                    {new Date(notification.created_at).toLocaleString('en-IN')}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                ))
-                                            )}
-                                        </div>
-
-                                        {notifications.length > 0 && (
-                                            <div className="p-3 border-t border-gray-200 flex gap-2">
-                                                <Link
-                                                    href="/seller/dashboard/notifications"
-                                                    onClick={() => setShowNotifications(false)}
-                                                    className="flex-1 text-center py-2 text-sm text-cureza-green hover:bg-green-50 rounded-lg transition-colors"
-                                                >
-                                                    View All
-                                                </Link>
-                                                {unreadCount > 0 && (
-                                                    <button
-                                                        onClick={() => markAsRead()}
-                                                        className="flex-1 text-center py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
-                                                    >
-                                                        Mark All Read
-                                                    </button>
-                                                )}
-                                            </div>
-                                        )}
                                     </div>
                                 )}
                             </div>
-
-                            <div className="flex items-center gap-3 pl-4 border-l border-gray-100 dark:border-gray-800 ml-2">
-                                <div className="text-right hidden sm:block">
-                                    <p className="text-sm font-bold text-gray-900 leading-none">{user.name}</p>
-                                    <div className="flex items-center justify-end gap-1 mt-1">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Verified Seller</p>
-                                    </div>
-                                </div>
-                                <div className="w-10 h-10 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 rounded-full flex items-center justify-center text-gray-500 shadow-inner">
-                                    <User size={20} />
-                                </div>
-                            </div>
-
-                            <button
-                                onClick={logout}
-                                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
-                                title="Logout"
-                            >
-                                <LogOut size={20} />
-                            </button>
                         </div>
                     </div>
                 </header>
@@ -882,11 +856,11 @@ function StepItem({ label, desc, status }: { label: string; desc: string; status
             status === 'complete' 
                 ? 'bg-emerald-50/50 border-emerald-100 text-emerald-800' 
                 : status === 'attention' 
-                    ? 'bg-red-50/50 border-red-100 text-red-800' 
-                    : 'bg-amber-50/50 border-amber-100 text-amber-800'
+                ? 'bg-red-50/50 border-red-100 text-red-800' 
+                : 'bg-amber-50/50 border-amber-100 text-amber-800'
         }`}>
-            <span className="text-[10px] font-black uppercase tracking-wider">{label}</span>
-            <span className="text-[9px] text-gray-500 font-semibold mt-1">{desc}</span>
+            <span className="text-[10px] font-semibold capitalize tracking-wide">{label}</span>
+            <span className="text-[9px] text-gray-600 font-semibold mt-1">{desc}</span>
         </div>
     );
 }

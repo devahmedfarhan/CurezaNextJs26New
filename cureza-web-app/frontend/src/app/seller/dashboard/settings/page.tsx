@@ -55,7 +55,7 @@ export default function SellerSettingsPage() {
                 <p className="text-gray-900 font-medium">Failed to load settings. Please try reloading.</p>
                 <button
                     onClick={fetchSettings}
-                    className="bg-gray-900 text-white px-6 py-2.5 rounded-xl text-sm font-extrabold shadow-xl shadow-gray-200 hover:bg-black transition-all"
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md transition-all"
                 >
                     Reload Settings
                 </button>
@@ -66,7 +66,7 @@ export default function SellerSettingsPage() {
     return (
         <div className="w-full space-y-8 animate-in fade-in duration-500">
             <div className="flex flex-col gap-2 mb-4">
-                <h1 className="text-3xl font-extrabold text-gray-900 dark:text-gray-100 tracking-tight">Account Intelligence</h1>
+                <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 tracking-tight">Account Intelligence</h1>
                 <p className="text-gray-500 dark:text-gray-400 font-medium">Coordinate your security, communication channels, and financial parameters.</p>
             </div>
 
@@ -124,12 +124,12 @@ function TabButton({ active, onClick, icon: Icon, label }: any) {
     return (
         <button
             onClick={onClick}
-            className={`flex items-center gap-2 px-5 py-3 rounded-2xl text-xs font-extrabold transition-all whitespace-nowrap border ${active
-                ? 'bg-gray-900 text-white border-gray-900 shadow-xl shadow-gray-200/50'
-                : 'text-gray-500 bg-white border-gray-100 hover:bg-gray-50 hover:text-gray-900'
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap border ${active
+                ? 'bg-emerald-600 text-white border-emerald-650 shadow-sm'
+                : 'text-gray-550 bg-white border-gray-150 hover:bg-gray-50 hover:text-gray-900'
                 }`}
         >
-            <Icon size={16} className={active ? 'text-cureza-green' : 'text-gray-400'} />
+            <Icon size={14} className={active ? 'text-white' : 'text-gray-400'} />
             {label}
         </button>
     );
@@ -140,8 +140,8 @@ function TabButton({ active, onClick, icon: Icon, label }: any) {
 function InfoRow({ label, value }: { label: string, value: string }) {
     return (
         <div className="flex flex-col border-b border-gray-50 pb-3 last:border-0 last:pb-0">
-            <span className="text-[10px] text-gray-400 uppercase font-extrabold tracking-widest mb-1">{label}</span>
-            <span className="text-sm font-extrabold text-gray-900">{value}</span>
+            <span className="text-[11px] text-gray-500 capitalize font-semibold mb-1">{label}</span>
+            <span className="text-sm font-semibold text-gray-800">{value}</span>
         </div>
     );
 }
@@ -168,16 +168,16 @@ function SecurityTab({ settings }: any) {
     };
 
     return (
-        <div className="p-10 space-y-10">
+        <div className="p-4 sm:p-10 space-y-6 sm:space-y-10">
             <div className="border-b border-gray-50 pb-6">
-                <h2 className="text-xl font-extrabold text-gray-900 tracking-tight">Account Security</h2>
+                <h2 className="text-xl font-bold text-gray-800 tracking-tight">Account Security</h2>
                 <p className="text-gray-500 text-sm font-medium">Manage your password and security settings.</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     <div className="space-y-2">
-                        <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Current Password</label>
+                        <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Current Password</label>
                         <div className="relative">
                             <input
                                 type={showPass ? "text" : "password"}
@@ -195,7 +195,7 @@ function SecurityTab({ settings }: any) {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-bold text-gray-700 dark:text-gray-300">New Password</label>
+                        <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">New Password</label>
                         <input
                             type="password"
                             {...register('password', { required: "Required", minLength: 8 })}
@@ -205,7 +205,7 @@ function SecurityTab({ settings }: any) {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Confirm New Password</label>
+                        <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Confirm New Password</label>
                         <input
                             type="password"
                             {...register('password_confirmation', { required: "Required" })}
@@ -216,16 +216,16 @@ function SecurityTab({ settings }: any) {
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="bg-gray-900 text-white px-8 py-3.5 rounded-2xl font-extrabold shadow-xl shadow-gray-200 hover:bg-black hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-3 disabled:bg-gray-100 disabled:text-gray-400"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-semibold shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-3 disabled:bg-gray-100 disabled:text-gray-400"
                     >
-                        {isSubmitting ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} className="text-cureza-green" />}
+                        {isSubmitting ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} className="text-white" />}
                         Commit Password Change
                     </button>
                 </form>
 
                 <div className="space-y-6">
-                    <div className="bg-gray-50 rounded-3xl p-8 border border-gray-100">
-                        <h3 className="font-extrabold text-gray-900 mb-6 flex items-center gap-3 uppercase text-[10px] tracking-widest px-1">
+                    <div className="bg-gray-50 rounded-xl p-4 sm:p-6 border border-gray-100">
+                        <h3 className="font-semibold text-gray-850 mb-6 flex items-center gap-3 capitalize text-xs tracking-wider px-1">
                             <span className="p-1.5 bg-cureza-green/10 text-cureza-green rounded-lg">
                                 <Info size={14} />
                             </span>
@@ -233,20 +233,20 @@ function SecurityTab({ settings }: any) {
                         </h3>
                         <div className="space-y-6">
                             <div className="flex justify-between items-center border-b border-gray-100/50 pb-3">
-                                <span className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">Access Role</span>
-                                <span className="px-3 py-1 bg-white text-cureza-green text-[10px] font-extrabold rounded-lg shadow-sm border border-emerald-50 uppercase tracking-wider">{settings?.user?.role}</span>
+                                <span className="text-xs font-semibold text-gray-500 capitalize tracking-normal">Access Role</span>
+                                <span className="px-2.5 py-0.5 bg-white text-emerald-600 text-[10px] font-semibold rounded-lg shadow-sm border border-emerald-50 capitalize tracking-normal">{settings?.user?.role}</span>
                             </div>
                             <div className="flex justify-between items-center border-b border-gray-100/50 pb-3">
-                                <span className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">Protocol Status</span>
-                                <span className="px-3 py-1 bg-white text-blue-600 text-[10px] font-extrabold rounded-lg shadow-sm border border-blue-50 uppercase tracking-wider">{settings?.account_info?.status}</span>
+                                <span className="text-xs font-semibold text-gray-500 capitalize tracking-normal">Protocol Status</span>
+                                <span className="px-2.5 py-0.5 bg-white text-blue-600 text-[10px] font-semibold rounded-lg shadow-sm border border-blue-50 capitalize tracking-normal">{settings?.account_info?.status}</span>
                             </div>
                             <div className="flex justify-between items-center border-b border-gray-100/50 pb-3">
-                                <span className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">Last Auth Login</span>
-                                <span className="text-xs font-bold text-gray-700">{settings?.account_info?.last_login_at || 'NEVER'}</span>
+                                <span className="text-xs font-semibold text-gray-500 capitalize tracking-normal">Last Auth Login</span>
+                                <span className="text-xs font-semibold text-gray-700">{settings?.account_info?.last_login_at || 'NEVER'}</span>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">Primary Contact</span>
-                                <span className="text-xs font-bold text-gray-700">{settings?.user?.email}</span>
+                                <span className="text-xs font-semibold text-gray-500 capitalize tracking-normal">Primary Contact</span>
+                                <span className="text-xs font-semibold text-gray-700">{settings?.user?.email}</span>
                             </div>
                         </div>
                     </div>
@@ -283,15 +283,15 @@ function NotificationsTab({ settings, refresh }: any) {
     };
 
     return (
-        <div className="p-10 space-y-10">
+        <div className="p-4 sm:p-10 space-y-6 sm:space-y-10">
             <div className="border-b border-gray-50 pb-6">
-                <h2 className="text-xl font-extrabold text-gray-900 tracking-tight">Notification Preferences</h2>
+                <h2 className="text-xl font-bold text-gray-800 tracking-tight">Notification Preferences</h2>
                 <p className="text-gray-500 text-sm font-medium">Configure how you receive alerts and messages.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div className="space-y-6">
-                    <h3 className="text-[10px] font-extrabold text-gray-400 uppercase tracking-[0.2em] px-1">Alert Categories</h3>
+                    <h3 className="text-xs font-semibold text-gray-500 capitalize px-1">Alert Categories</h3>
                     <ToggleItem
                         label="New Orders"
                         sub="Receive alerts for every new order placed."
@@ -313,7 +313,7 @@ function NotificationsTab({ settings, refresh }: any) {
                 </div>
 
                 <div className="space-y-6">
-                    <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Channels</h3>
+                    <h3 className="text-xs font-semibold text-gray-500 capitalize">Channels</h3>
                     <ToggleItem
                         label="Email Notifications"
                         sub="Send summary alerts to your registered email."
@@ -340,14 +340,14 @@ function NotificationsTab({ settings, refresh }: any) {
 
 function ToggleItem({ label, sub, on, onChange }: any) {
     return (
-        <div className="flex items-center justify-between p-6 bg-gray-50/50 rounded-2xl border border-gray-100 group hover:border-cureza-green transition-all">
+        <div className="flex items-center justify-between p-4 sm:p-6 bg-gray-50/50 rounded-xl border border-gray-100 group hover:border-cureza-green transition-all">
             <div className="space-y-1">
-                <p className="font-extrabold text-gray-900 text-sm">{label}</p>
-                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">{sub}</p>
+                <p className="font-semibold text-gray-800 text-sm">{label}</p>
+                <p className="text-[10px] text-gray-500 font-medium tracking-tight normal-case">{sub}</p>
             </div>
             <button
                 onClick={onChange}
-                className={`w-14 h-7 rounded-full transition-all relative border-2 ${on ? 'bg-gray-900 border-gray-900' : 'bg-gray-100 border-gray-200'}`}
+                className={`w-14 h-7 rounded-full transition-all relative border-2 ${on ? 'bg-emerald-600 border-emerald-600' : 'bg-gray-100 border-gray-200'}`}
             >
                 <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-all shadow-sm ${on ? 'left-8' : 'left-0.5'}`} />
             </button>
@@ -388,14 +388,14 @@ function BankTab({ settings, refresh }: any) {
     };
 
     return (
-        <div className="p-10 space-y-10">
+        <div className="p-4 sm:p-10 space-y-6 sm:space-y-10">
             <div className="border-b border-gray-50 pb-6 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
                 <div>
-                    <h2 className="text-xl font-extrabold text-gray-900 tracking-tight">Bank Details</h2>
+                    <h2 className="text-xl font-bold text-gray-800 tracking-tight">Bank Details</h2>
                     <p className="text-gray-500 text-sm font-medium">Manage where you receive your payouts.</p>
                 </div>
                 <div className="flex gap-2">
-                    <span className={`text-[10px] px-4 py-1.5 rounded-xl font-extrabold uppercase tracking-widest border shadow-sm ${profile.bank_account_number ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-gray-50 text-gray-500 border-gray-100'
+                    <span className={`text-xs px-3 py-1 rounded-xl font-semibold capitalize border shadow-sm ${profile.bank_account_number ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-gray-50 text-gray-500 border-gray-100'
                         }`}>
                         {profile.bank_account_number ? 'Active Account' : 'Account Setup Incomplete'}
                     </span>
@@ -405,8 +405,8 @@ function BankTab({ settings, refresh }: any) {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                 {/* Left: Current Settings + Pending */}
                 <div className="lg:col-span-1 space-y-8">
-                    <div className="bg-gray-50 rounded-3xl p-8 border border-gray-100 shadow-sm">
-                        <h3 className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-6 px-1">Active Bank Info</h3>
+                    <div className="bg-gray-50 rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+                        <h3 className="text-xs font-semibold text-gray-500 capitalize mb-6 px-1">Active Bank Info</h3>
                         <div className="space-y-6">
                             <InfoRow label="Account Holder" value={profile.account_holder_name || 'NOT_DEFINED'} />
                             <InfoRow label="Bank Name" value={profile.bank_name || 'NOT_DEFINED'} />
@@ -417,11 +417,11 @@ function BankTab({ settings, refresh }: any) {
                     </div>
 
                     {pending && (
-                        <div className="bg-amber-50/50 border border-amber-100 p-8 rounded-3xl relative overflow-hidden group">
+                        <div className="bg-amber-50/50 border border-amber-100 p-4 sm:p-6 rounded-xl relative overflow-hidden group">
                             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:rotate-12 transition-transform">
                                 <Clock size={64} />
                             </div>
-                            <h3 className="text-[10px] font-extrabold text-amber-600 uppercase tracking-widest mb-6 flex items-center gap-3">
+                            <h3 className="text-xs font-semibold text-amber-700 capitalize mb-6 flex items-center gap-3">
                                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
                                 Update Pending Review
                             </h3>
@@ -430,13 +430,13 @@ function BankTab({ settings, refresh }: any) {
                                     if (pending.old_data?.[key] === val) return null;
                                     return (
                                         <div key={key} className="flex flex-col border-b border-amber-100/30 pb-2">
-                                            <span className="text-[9px] text-amber-500 uppercase font-extrabold tracking-tighter italic">{key.replace(/_/g, ' ')}</span>
-                                            <span className="text-sm font-extrabold text-amber-900">{val}</span>
+                                            <span className="text-[10px] text-amber-600 capitalize font-semibold tracking-normal">{key.replace(/_/g, ' ')}</span>
+                                            <span className="text-sm font-semibold text-amber-900">{val}</span>
                                         </div>
                                     );
                                 })}
                             </div>
-                            <p className="mt-6 text-[10px] text-amber-700 font-bold uppercase tracking-widest border-t border-amber-100 pt-4 text-center">
+                            <p className="mt-6 text-[10px] text-amber-700 font-semibold capitalize border-t border-amber-100 pt-4 text-center">
                                 Logged: {new Date(pending.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
                             </p>
                         </div>
@@ -448,32 +448,32 @@ function BankTab({ settings, refresh }: any) {
                     <form onSubmit={handleSubmit(onSubmit)} className={`space-y-8 ${pending ? 'opacity-30 pointer-events-none' : ''}`}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-2 md:col-span-2">
-                                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Account Holder Name</label>
-                                <input {...register('account_holder_name', { required: true })} className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="Name as in bank records" />
+                                <label className="text-xs font-semibold text-gray-500 capitalize px-1">Account Holder Name</label>
+                                <input {...register('account_holder_name', { required: true })} className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="Name as in bank records" />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Bank Name</label>
-                                <input {...register('bank_name', { required: true })} className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="e.g. HDFC Bank" />
+                                <label className="text-xs font-semibold text-gray-500 capitalize px-1">Bank Name</label>
+                                <input {...register('bank_name', { required: true })} className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="e.g. HDFC Bank" />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Branch Name</label>
-                                <input {...register('branch_name')} className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="Branch location" />
+                                <label className="text-xs font-semibold text-gray-500 capitalize px-1">Branch Name</label>
+                                <input {...register('branch_name')} className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="Branch location" />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Account Number</label>
-                                <input {...register('bank_account_number', { required: true })} className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="Numbers only" />
+                                <label className="text-xs font-semibold text-gray-500 capitalize px-1">Account Number</label>
+                                <input {...register('bank_account_number', { required: true })} className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="Numbers only" />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">IFSC Code</label>
-                                <input {...register('ifsc_code', { required: true })} className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="HDFC0001234" />
+                                <label className="text-xs font-semibold text-gray-500 capitalize px-1">IFSC Code</label>
+                                <input {...register('ifsc_code', { required: true })} className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="HDFC0001234" />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">PAN Number</label>
-                                <input {...register('pan_number')} className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="ABCDE1234F" />
+                                <label className="text-xs font-semibold text-gray-500 capitalize px-1">PAN Number</label>
+                                <input {...register('pan_number')} className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="ABCDE1234F" />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">GST Number (Optional)</label>
-                                <input {...register('gst_number')} className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="29XXXXX..." />
+                                <label className="text-xs font-semibold text-gray-500 capitalize px-1">GST Number (Optional)</label>
+                                <input {...register('gst_number')} className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="29XXXXX..." />
                             </div>
                         </div>
 
@@ -481,7 +481,7 @@ function BankTab({ settings, refresh }: any) {
                             <button
                                 type="submit"
                                 disabled={isSubmitting || !!pending}
-                                className="bg-gray-900 text-white px-10 py-4 rounded-3xl font-extrabold text-xs uppercase tracking-widest shadow-2xl shadow-gray-200 hover:bg-black hover:scale-[1.02] transition-all disabled:bg-gray-200 disabled:text-gray-400"
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm capitalize shadow-md hover:scale-[1.02] transition-all disabled:bg-gray-200 disabled:text-gray-400"
                             >
                                 {isSubmitting ? (
                                     <span className="flex items-center gap-3">
@@ -575,17 +575,17 @@ function ProfileTab({ settings, refresh }: any) {
     const profile = settings?.profile || {};
 
     return (
-        <div className="p-10 space-y-10">
+        <div className="p-4 sm:p-10 space-y-6 sm:space-y-10">
             <div className="border-b border-gray-50 pb-6">
-                <h2 className="text-xl font-extrabold text-gray-900 tracking-tight">Business Details</h2>
+                <h2 className="text-xl font-bold text-gray-800 tracking-tight">Business Details</h2>
                 <p className="text-gray-500 text-sm font-medium">Coordinate your brand profile and contact information.</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                 {/* Left: Overview */}
                 <div className="lg:col-span-1 space-y-8">
-                    <div className="bg-gray-50 rounded-3xl p-8 border border-gray-100 shadow-sm">
-                        <h3 className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-6 px-1">Profile Overview</h3>
+                    <div className="bg-gray-50 rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+                        <h3 className="text-xs font-semibold text-gray-500 capitalize mb-6 px-1">Profile Overview</h3>
                         <div className="space-y-6">
                             <InfoRow label="Brand Name" value={watchedBrandName || 'NOT_DEFINED'} />
                             <InfoRow label="Business Categories" value={watchedBusinessType || 'Standard'} />
@@ -599,8 +599,8 @@ function ProfileTab({ settings, refresh }: any) {
                                 <InfoRow label="Website Link" value={watch('website_url')} />
                             )}
                             <div className="pt-4 border-t border-gray-100">
-                                <span className="text-[10px] text-gray-400 uppercase font-extrabold tracking-widest block mb-2">Registered Address</span>
-                                <p className="text-sm font-extrabold text-gray-900 leading-relaxed">
+                                <span className="text-xs text-gray-500 capitalize font-semibold block mb-2">Registered Address</span>
+                                <p className="text-sm font-semibold text-gray-800 leading-relaxed">
                                     {watchedAddressLine1 || 'LOC_NOT_SET'}
                                     {watchedAddressLine2 ? `, ${watchedAddressLine2}` : ''} <br />
                                     {watchedCity || 'CITY_NOT_SET'}, {watchedState || 'STATE_NOT_SET'} <br />
@@ -611,11 +611,11 @@ function ProfileTab({ settings, refresh }: any) {
                     </div>
 
                     {pending && (
-                        <div className="bg-blue-50/50 border border-blue-100 p-8 rounded-3xl relative overflow-hidden group">
+                        <div className="bg-blue-50/50 border border-blue-100 p-4 sm:p-6 rounded-xl relative overflow-hidden group">
                             <div className="absolute -bottom-4 -right-4 opacity-5 group-hover:scale-110 transition-transform text-blue-600">
                                 <User size={120} />
                             </div>
-                            <h3 className="text-[10px] font-extrabold text-blue-600 uppercase tracking-widest mb-6 flex items-center gap-3">
+                            <h3 className="text-xs font-semibold text-blue-700 capitalize mb-6 flex items-center gap-3">
                                 <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
                                 Compliance Review
                             </h3>
@@ -624,15 +624,15 @@ function ProfileTab({ settings, refresh }: any) {
                                     if (pending.old_data?.[key] === val) return null;
                                     return (
                                         <div key={key} className="flex flex-col border-b border-blue-100/30 pb-2">
-                                            <span className="text-[9px] text-blue-500 uppercase font-extrabold tracking-tighter italic">{key.replace(/_/g, ' ')}</span>
-                                            <span className="text-sm font-extrabold text-blue-900">
+                                            <span className="text-[10px] text-blue-600 capitalize font-semibold tracking-normal">{key.replace(/_/g, ' ')}</span>
+                                            <span className="text-sm font-semibold text-blue-900">
                                                 {Array.isArray(val) ? val.join(', ') : String(val)}
                                             </span>
                                         </div>
                                     );
                                 })}
                             </div>
-                            <p className="mt-6 text-[10px] text-blue-700 font-bold uppercase tracking-widest border-t border-blue-100 pt-4 text-center">
+                            <p className="mt-6 text-[10px] text-blue-700 font-semibold capitalize border-t border-blue-100 pt-4 text-center">
                                 Pending Verification Protocol
                             </p>
                         </div>
@@ -644,18 +644,18 @@ function ProfileTab({ settings, refresh }: any) {
                     <form onSubmit={handleSubmit(onSubmit)} className={`space-y-8 ${pending ? 'opacity-30 pointer-events-none' : ''}`}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Brand Name</label>
-                                <input {...register('brand_name', { required: true })} className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" />
+                                <label className="text-xs font-semibold text-gray-500 capitalize px-1">Brand Name</label>
+                                <input {...register('brand_name', { required: true })} className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Phone Number</label>
-                                <input {...register('phone')} className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" />
+                                <label className="text-xs font-semibold text-gray-500 capitalize px-1">Phone Number</label>
+                                <input {...register('phone')} className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" />
                             </div>
                         </div>
 
                         {/* Enterprise Category with buttons */}
                         <div className="space-y-2">
-                            <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Business Categories</label>
+                            <label className="text-xs font-semibold text-gray-500 capitalize px-1">Business Categories</label>
                             <div className="flex flex-wrap gap-1.5">
                                 {['Brand', 'Manufacturer', 'Wholesale', 'Reseller'].map(type => {
                                     const isSelected = selectedBusinessTypes.includes(type);
@@ -667,7 +667,7 @@ function ProfileTab({ settings, refresh }: any) {
                                             onClick={() => handleBusinessTypeChange(type, !isSelected)}
                                             className={`px-3 py-1.5 rounded-md text-[11px] font-medium border transition-all ${
                                                 isSelected
-                                                    ? 'bg-gray-900 text-white border-gray-900 shadow-sm'
+                                                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
                                                     : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
                                             }`}
                                         >
@@ -681,10 +681,10 @@ function ProfileTab({ settings, refresh }: any) {
                         {/* Business Parameters */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-gray-100 pt-6">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Annual Turnover *</label>
+                                <label className="text-xs font-semibold text-gray-500 capitalize px-1">Annual Turnover *</label>
                                 <select 
                                     {...register('annual_turnover', { required: true })} 
-                                    className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all appearance-none"
+                                    className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all appearance-none"
                                 >
                                     <option value="">Select Range</option>
                                     {["Less than 1 Lakh", "1 Lakh - 10 Lakh", "10 Lakh - 50 Lakh", "50 Lakh - 1 Crore", "Over 1 Crore"].map(range => (
@@ -694,10 +694,10 @@ function ProfileTab({ settings, refresh }: any) {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Sourcing Method *</label>
+                                <label className="text-xs font-semibold text-gray-500 capitalize px-1">Sourcing Method *</label>
                                 <select 
                                     {...register('sourcing_method', { required: true })} 
-                                    className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all appearance-none"
+                                    className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all appearance-none"
                                 >
                                     <option value="">Select Method</option>
                                     {["I manufacture them", "I sell products manufactured for me", "I resell what I buy", "I import them"].map(method => (
@@ -709,10 +709,10 @@ function ProfileTab({ settings, refresh }: any) {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-gray-100 pt-6">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Do you sell on other platforms? *</label>
+                                <label className="text-xs font-semibold text-gray-500 capitalize px-1">Do you sell on other platforms? *</label>
                                 <select 
                                     {...register('sell_on_other_platforms', { required: true })} 
-                                    className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all appearance-none"
+                                    className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all appearance-none"
                                 >
                                     <option value="No">No</option>
                                     <option value="Yes">Yes</option>
@@ -720,10 +720,10 @@ function ProfileTab({ settings, refresh }: any) {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Do you have a website? *</label>
+                                <label className="text-xs font-semibold text-gray-500 capitalize px-1">Do you have a website? *</label>
                                 <select 
                                     {...register('has_website', { required: true })} 
-                                    className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all appearance-none"
+                                    className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all appearance-none"
                                 >
                                     <option value="No">No</option>
                                     <option value="Yes">Yes</option>
@@ -733,36 +733,36 @@ function ProfileTab({ settings, refresh }: any) {
 
                         {watch('has_website') === 'Yes' && (
                             <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Website URL</label>
+                                <label className="text-xs font-semibold text-gray-500 capitalize px-1">Website URL</label>
                                 <input 
                                     type="url" 
                                     {...register('website_url')} 
-                                    className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" 
+                                    className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" 
                                     placeholder="https://example.com" 
                                 />
                             </div>
                         )}
 
                         <div className="space-y-6 border-t border-gray-100 pt-6">
-                            <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-[0.2em] block px-1">Registered Address</label>
+                            <label className="text-xs font-semibold text-gray-500 capitalize block px-1">Registered Address</label>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="md:col-span-2 space-y-2">
-                                    <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Address Line 1</label>
-                                    <input {...register('address_line_1', { required: true })} className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="House No, Street name, area..." />
+                                    <label className="text-xs font-semibold text-gray-500 capitalize px-1">Address Line 1</label>
+                                    <input {...register('address_line_1', { required: true })} className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="House No, Street name, area..." />
                                 </div>
                                 <div className="md:col-span-2 space-y-2">
-                                    <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Address Line 2 (Optional)</label>
-                                    <input {...register('address_line_2')} className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="Apartment, landmark, suite..." />
+                                    <label className="text-xs font-semibold text-gray-500 capitalize px-1">Address Line 2 (Optional)</label>
+                                    <input {...register('address_line_2')} className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="Apartment, landmark, suite..." />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">State</label>
+                                    <label className="text-xs font-semibold text-gray-500 capitalize px-1">State</label>
                                     <div className="relative">
                                         <select
                                             {...register('state', { 
-                                                required: true,
-                                                onChange: () => setValue('city', '')
+                                                 required: true,
+                                                 onChange: () => setValue('city', '')
                                             })} 
-                                            className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all appearance-none"
+                                            className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all appearance-none"
                                         >
                                             <option value="">Select State</option>
                                             {Object.keys(indianLocations).map(st => (
@@ -772,11 +772,11 @@ function ProfileTab({ settings, refresh }: any) {
                                     </div>
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">City</label>
+                                    <label className="text-xs font-semibold text-gray-500 capitalize px-1">City</label>
                                     <div className="relative">
                                         <select 
                                             {...register('city', { required: true })} 
-                                            className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all appearance-none"
+                                            className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all appearance-none"
                                         >
                                             <option value="">Select City</option>
                                             {selectedState && indianLocations[selectedState] ? (
@@ -790,12 +790,12 @@ function ProfileTab({ settings, refresh }: any) {
                                     </div>
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Country</label>
-                                    <input {...register('country')} readOnly className="w-full h-14 px-6 rounded-2xl bg-gray-100 border border-gray-100 text-sm font-bold outline-none text-gray-500 cursor-not-allowed" />
+                                    <label className="text-xs font-semibold text-gray-500 capitalize px-1">Country</label>
+                                    <input {...register('country')} readOnly className="w-full h-11 px-4 rounded-xl bg-gray-100 border border-gray-100 text-sm font-semibold outline-none text-gray-500 cursor-not-allowed" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Pincode</label>
-                                    <input {...register('pin_code', { required: true })} className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="6 digit pincode" />
+                                    <label className="text-xs font-semibold text-gray-500 capitalize px-1">Pincode</label>
+                                    <input {...register('pin_code', { required: true })} className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="6 digit pincode" />
                                 </div>
                             </div>
                         </div>
@@ -804,7 +804,7 @@ function ProfileTab({ settings, refresh }: any) {
                             <button
                                 type="submit"
                                 disabled={isSubmitting || !!pending}
-                                className="bg-gray-900 text-white px-10 py-4 rounded-3xl font-extrabold text-xs uppercase tracking-widest shadow-2xl shadow-gray-200 hover:bg-black hover:scale-[1.02] transition-all disabled:bg-gray-200 disabled:text-gray-400"
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm capitalize shadow-md hover:scale-[1.02] transition-all disabled:bg-gray-200 disabled:text-gray-400"
                             >
                                 {isSubmitting ? (
                                     <span className="flex items-center gap-3">
@@ -1217,19 +1217,19 @@ function KYCTab({ settings, refresh }: any) {
     const optionalDocs = allDocs.filter(d => !d.required);
 
     return (
-        <div className="p-6 space-y-6 animate-in fade-in duration-300">
+        <div className="p-4 sm:p-6 space-y-6 animate-in fade-in duration-300">
             <div className="border-b border-gray-50 pb-4">
-                <h2 className="text-lg font-extrabold text-gray-900 tracking-tight">KYC Documents</h2>
+                <h2 className="text-lg font-bold text-gray-800 tracking-tight">KYC Documents</h2>
                 <p className="text-gray-500 text-xs font-medium">Upload verified documents required for compliance approval.</p>
             </div>
 
             {pending && (
-                <div className="bg-amber-50/50 border border-amber-100 rounded-3xl p-6 flex gap-4 items-start animate-in fade-in slide-in-from-top-4 duration-500 shadow-sm shadow-amber-100/20">
+                <div className="bg-amber-50/50 border border-amber-100 rounded-xl p-6 flex gap-4 items-start animate-in fade-in slide-in-from-top-4 duration-500 shadow-sm shadow-amber-100/20">
                     <div className="p-2.5 bg-amber-500 text-white rounded-xl shadow-lg shadow-amber-200">
                         <Clock size={20} />
                     </div>
                     <div>
-                        <h3 className="text-amber-900 font-extrabold text-base tracking-tight mb-1">Compliance Review in Progress</h3>
+                        <h3 className="text-amber-900 font-bold text-base tracking-tight mb-1">Compliance Review in Progress</h3>
                         <p className="text-amber-800/80 font-medium leading-relaxed text-xs">
                             A verification request was initiated on <strong>{new Date(pending.created_at).toLocaleDateString()}</strong>.
                             You cannot make new updates until this review is completed by the superadmin.
@@ -1241,13 +1241,13 @@ function KYCTab({ settings, refresh }: any) {
             <form onSubmit={onSubmit} className="space-y-6">
                 
                 {/* Product / Regulatory Licenses selection */}
-                <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-4">
+                <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm space-y-4">
                     <div className="flex items-center gap-2.5 border-b border-gray-50 pb-3">
                         <div className="w-9 h-9 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
                             <FileText size={18} />
                         </div>
                         <div>
-                            <h4 className="text-xs font-bold text-emerald-955 uppercase tracking-widest">Product / Regulatory Licenses *</h4>
+                            <h4 className="text-xs font-semibold text-emerald-800 capitalize">Product / Regulatory Licenses *</h4>
                             <p className="text-[10px] text-gray-500 font-medium">Select available licenses or choose "Upload Later"</p>
                         </div>
                     </div>
@@ -1271,7 +1271,7 @@ function KYCTab({ settings, refresh }: any) {
                                     }}
                                     className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all flex items-center gap-1.5 select-none cursor-pointer ${
                                         isChecked 
-                                            ? 'bg-emerald-50 border-emerald-500 text-emerald-700 font-extrabold' 
+                                            ? 'bg-emerald-50 border-emerald-500 text-emerald-700 font-bold' 
                                             : 'bg-white border-gray-200 text-gray-600 hover:border-emerald-300 hover:text-emerald-700'
                                     }`}
                                 >
@@ -1289,7 +1289,7 @@ function KYCTab({ settings, refresh }: any) {
                             }}
                             className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all flex items-center gap-1.5 select-none cursor-pointer ${
                                 selectedLicenses.includes('Upload Later')
-                                    ? 'bg-amber-50 border-amber-500 text-amber-700 font-extrabold'
+                                    ? 'bg-amber-50 border-amber-500 text-amber-700 font-bold'
                                     : 'bg-white border-gray-200 text-gray-600 hover:border-amber-300 hover:text-amber-700'
                             }`}
                         >
@@ -1300,13 +1300,13 @@ function KYCTab({ settings, refresh }: any) {
                 </div>
 
                 {/* Mandatory Compliance Documents Section */}
-                <div className="space-y-4 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                <div className="space-y-4 bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
                     <div className="flex items-center gap-2.5 border-b border-gray-50 pb-3">
                         <div className="w-9 h-9 bg-red-50 text-red-600 rounded-xl flex items-center justify-center">
                             <Shield size={18} />
                         </div>
                         <div>
-                            <h3 className="text-xs font-extrabold text-gray-900 uppercase tracking-wider">Mandatory Compliance Documents</h3>
+                            <h3 className="text-xs font-semibold text-gray-850 capitalize">Mandatory Compliance Documents</h3>
                             <p className="text-[9px] text-gray-500 font-medium">These documents are strictly required for compliance clearance.</p>
                         </div>
                     </div>
@@ -1317,25 +1317,25 @@ function KYCTab({ settings, refresh }: any) {
                 </div>
 
                 {/* Specific Documents Constitution type selection */}
-                <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-4">
+                <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm space-y-4">
                     <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 bg-gray-900 rounded-xl flex items-center justify-center text-white font-extrabold text-sm">
+                        <div className="w-9 h-9 bg-gray-900 rounded-xl flex items-center justify-center text-white font-bold text-sm">
                             ?
                         </div>
                         <div>
-                            <h3 className="text-xs font-bold text-gray-955 uppercase tracking-wider">Company Constitution Type</h3>
+                            <h3 className="text-xs font-semibold text-gray-850 capitalize">Company Constitution Type</h3>
                             <p className="text-[10px] text-gray-500 font-medium">Verify or adjust your legal entity type to ensure matching requirements.</p>
                         </div>
                     </div>
 
-                    <div className="bg-gray-50/60 p-1 rounded-2xl border border-gray-150 flex flex-col md:flex-row gap-1">
+                    <div className="bg-gray-50/60 p-1 rounded-xl border border-gray-150 flex flex-col md:flex-row gap-1">
                         {['Sole Proprietorship', 'Partnership Firm', 'Private Limited Company', 'LLP'].map(type => (
                             <button
                                 key={type}
                                 type="button"
                                 disabled={!!pending}
                                 onClick={() => setCompanyType(type)}
-                                className={`flex-1 py-2 rounded-xl text-[10px] font-extrabold transition-all text-center uppercase tracking-wider select-none cursor-pointer ${
+                                className={`flex-1 py-2 rounded-xl text-[10px] font-semibold transition-all text-center capitalize select-none cursor-pointer ${
                                     companyType === type
                                         ? 'bg-gray-900 text-white shadow-sm'
                                         : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/40'
@@ -1348,13 +1348,13 @@ function KYCTab({ settings, refresh }: any) {
                 </div>
 
                 {/* Optional Documents Section */}
-                <div className="space-y-4 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                <div className="space-y-4 bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
                     <div className="flex items-center gap-2.5 border-b border-gray-50 pb-3">
                         <div className="w-9 h-9 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
                             <Info size={18} />
                         </div>
                         <div>
-                            <h3 className="text-xs font-extrabold text-gray-900 uppercase tracking-wider">Optional Documents & Registrations</h3>
+                            <h3 className="text-xs font-semibold text-gray-850 capitalize">Optional Documents & Registrations</h3>
                             <p className="text-[9px] text-gray-500 font-medium">Provide additional optional certificates if available.</p>
                         </div>
                     </div>
@@ -1369,12 +1369,12 @@ function KYCTab({ settings, refresh }: any) {
                     <button
                         type="submit"
                         disabled={isSubmitting || !!pending || !hasChanges}
-                        className="bg-gray-900 text-white px-8 py-3.5 rounded-2xl font-extrabold text-xs uppercase tracking-widest shadow-xl shadow-gray-200/50 hover:bg-black hover:scale-[1.02] active:scale-[0.98] transition-all disabled:bg-gray-100 disabled:text-gray-400 flex items-center gap-3"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm capitalize shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all disabled:bg-gray-100 disabled:text-gray-400 flex items-center gap-3"
                     >
                         {isSubmitting ? (
                             <Loader2 className="animate-spin" size={16} />
                         ) : (
-                            <CheckCircle2 size={16} className="text-cureza-green" />
+                            <CheckCircle2 size={16} className="text-white" />
                         )}
                         Submit KYC Documents
                     </button>

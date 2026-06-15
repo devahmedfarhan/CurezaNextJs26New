@@ -8,9 +8,10 @@ export default function ConditionalNavbar() {
 
     // Define paths where the main navbar should be hidden
     const hideNavbarPaths = [
-        '/seller/dashboard', '/seller/onboarding', '/seller/approval',
+        '/seller/dashboard', '/seller/onboarding', '/seller/approval', '/seller/login', '/seller/register', '/seller/forgot-password',
         '/doctor/dashboard', '/doctor/onboarding', '/doctor/approval', '/doctor/register', '/doctor/login',
-        '/superadmin'
+        '/superadmin',
+        '/login', '/register', '/forgot-password', '/login-otp'
     ];
 
     // Check if current path starts with any of the hidden paths

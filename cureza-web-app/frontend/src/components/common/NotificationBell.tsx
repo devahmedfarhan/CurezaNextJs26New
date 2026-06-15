@@ -4,36 +4,32 @@ import { Bell } from 'lucide-react';
 import api from '@/lib/api';
 import { useRouter } from 'next/navigation';
 
+interface NotificationItem {
+    id: string;
+    type: string;
+    data: {
+        title?: string;
+        message?: string;
+        action_url?: string;
+        action_url_suffix?: string;
+        ticket_id?: string;
+    };
+    read_at: string | null;
+    created_at: string;
+}
+
 export default function NotificationBell() {
     const [unreadCount, setUnreadCount] = useState(0);
-    const [notifications, setNotifications] = useState<any[]>([]);
+    const [notifications, setNotifications] = useState<NotificationItem[]>([]);
     const [open, setOpen] = useState(false);
     const router = useRouter();
     const dropdownRef = useRef<HTMLDivElement>(null);
-
-    // Fetch count periodically or on mount
-    useEffect(() => {
-        fetchUnreadCount();
-        const interval = setInterval(fetchUnreadCount, 30000); // Poll every 30s
-        return () => clearInterval(interval);
-    }, []);
-
-    // Close dropdown when clicking outside
-    useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setOpen(false);
-            }
-        }
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
 
     const fetchUnreadCount = async () => {
         try {
             const res = await api.get('/notifications/unread-count');
             setUnreadCount(res.data.count);
-        } catch (error) {
+        } catch {
             // Silent fail
         }
     };
@@ -49,12 +45,13 @@ export default function NotificationBell() {
 
     const handleToggle = () => {
         if (!open) {
+            fetchUnreadCount();
             fetchNotifications();
         }
         setOpen(!open);
     };
 
-    const handleClickNotification = async (notif: any) => {
+    const handleClickNotification = async (notif: NotificationItem) => {
         // Mark as read
         try {
             await api.post('/notifications/read', { id: notif.id });
@@ -89,6 +86,31 @@ export default function NotificationBell() {
         setOpen(false);
     };
 
+    // Fetch count periodically or on mount
+    useEffect(() => {
+        const initialLoad = window.setTimeout(() => {
+            void fetchUnreadCount();
+        }, 0);
+        const interval = window.setInterval(() => {
+            void fetchUnreadCount();
+        }, 30000); // Poll every 30s
+        return () => {
+            window.clearTimeout(initialLoad);
+            window.clearInterval(interval);
+        };
+    }, []);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setOpen(false);
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
     return (
         <div className="relative" ref={dropdownRef}>
             <button
@@ -97,14 +119,14 @@ export default function NotificationBell() {
             >
                 <Bell size={20} />
                 {unreadCount > 0 && (
-                    <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                    <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
                         {unreadCount > 9 ? '9+' : unreadCount}
                     </span>
                 )}
             </button>
 
             {open && (
-                <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-96 overflow-y-auto">
+                <div className="fixed sm:absolute right-4 left-4 sm:right-0 sm:left-auto mt-2 sm:w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-96 overflow-y-auto">
                     <div className="p-3 border-b border-gray-100 font-semibold text-sm flex justify-between">
                         <span>Notifications</span>
                         <button className="text-xs text-blue-600 hover:underline" onClick={() => {

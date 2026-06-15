@@ -80,7 +80,7 @@ export default function DynamicBrandReconciliationPage() {
     const params = useParams();
     
     const brandName = user?.brand?.name || (user as any)?.seller_profile?.brand_name || (user as any)?.sellerProfile?.brand_name || 'Brand';
-    const pageTitle = `${brandName.toUpperCase()} X CUREZA`;
+    const pageTitle = `${brandName} x Cureza`;
 
     const [orders, setOrders] = useState<Order[]>([]);
     const [summary, setSummary] = useState<FinanceSummary | null>(null);
@@ -333,15 +333,13 @@ export default function DynamicBrandReconciliationPage() {
         }
     };
 
-    const rows = getReportRows(orders);
-
-    return (
+    const rows = getReportRows(orders);    return (
         <div className="space-y-8 animate-in fade-in duration-500">
             {/* Header Area */}
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-4">
                 <div>
-                    <h1 className="text-3xl font-black text-gray-900 tracking-tight">{pageTitle}</h1>
-                    <p className="text-gray-500 text-xs font-semibold mt-2 uppercase tracking-wider">
+                    <h1 className="text-xl md:text-2xl font-bold text-gray-800 tracking-tight">{pageTitle}</h1>
+                    <p className="text-gray-550 text-xs font-semibold mt-1 capitalize">
                         Reconciliation Ledger and Financial Export Console
                     </p>
                 </div>
@@ -349,13 +347,13 @@ export default function DynamicBrandReconciliationPage() {
                 <button
                     onClick={handleExportExcel}
                     disabled={exportLoading || loading}
-                    className="flex items-center gap-3 px-8 py-4 bg-gray-900 text-white rounded-[1.5rem] text-[10px] font-black uppercase tracking-widest shadow-2xl shadow-gray-200 hover:bg-black hover:-translate-y-1 transition-all border border-gray-800 active:scale-95 disabled:bg-gray-150 disabled:text-gray-300 disabled:shadow-none disabled:translate-y-0 cursor-pointer"
+                    className="w-full lg:w-auto flex justify-center items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-semibold capitalize shadow-sm hover:bg-emerald-700 active:scale-95 transition-all border border-emerald-650 disabled:bg-gray-150 disabled:text-gray-400 disabled:border-transparent disabled:shadow-none disabled:scale-100 cursor-pointer"
                 >
                     {exportLoading ? (
                         <>Generating Sheet...</>
                     ) : (
                         <>
-                            <Download size={16} className="text-cureza-green" /> Export Database to Excel
+                            <Download size={14} className="text-white" /> Export Database to Excel
                         </>
                     )}
                 </button>
@@ -363,66 +361,66 @@ export default function DynamicBrandReconciliationPage() {
 
             {/* Quick Metrics Summary */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="premium-card p-6 bg-white relative overflow-hidden flex flex-col justify-between h-[150px]">
+                <div className="premium-card p-6 bg-white border border-gray-100 rounded-2xl relative overflow-hidden flex flex-col justify-between h-[140px] shadow-sm">
                     <div>
-                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1">Total Items Sold</span>
-                        <h3 className="text-2xl font-black text-gray-900 tracking-tighter">
+                        <span className="text-[10px] font-semibold text-gray-500 capitalize block mb-1">Total Items Sold</span>
+                        <h3 className="text-2xl font-bold text-gray-800 tracking-tight">
                             {rows.reduce((acc, r) => acc + r.qty, 0)} Units
                         </h3>
                     </div>
-                    <div className="text-[8.5px] font-semibold text-gray-500">Across {totalRecords} order transactions</div>
+                    <div className="text-[9px] font-medium text-gray-500">Across {totalRecords} order transactions</div>
                 </div>
 
-                <div className="premium-card p-6 bg-white relative overflow-hidden flex flex-col justify-between h-[150px]">
+                <div className="premium-card p-6 bg-white border border-gray-100 rounded-2xl relative overflow-hidden flex flex-col justify-between h-[140px] shadow-sm">
                     <div>
-                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1">Gross Selling Volume</span>
-                        <h3 className="text-2xl font-black text-gray-900 tracking-tighter">
+                        <span className="text-[10px] font-semibold text-gray-500 capitalize block mb-1">Gross Selling Volume</span>
+                        <h3 className="text-2xl font-bold text-gray-800 tracking-tight">
                             ₹{rows.reduce((acc, r) => acc + (r.salePrice * r.qty), 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                         </h3>
                     </div>
-                    <div className="text-[8.5px] font-semibold text-gray-500">Before platform charges & statutory deductions</div>
+                    <div className="text-[9px] font-medium text-gray-500">Before platform charges & deductions</div>
                 </div>
 
-                <div className="premium-card p-6 bg-white relative overflow-hidden flex flex-col justify-between h-[150px]">
+                <div className="premium-card p-6 bg-white border border-gray-100 rounded-2xl relative overflow-hidden flex flex-col justify-between h-[140px] shadow-sm">
                     <div>
-                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1">Platform Commission + GST</span>
-                        <h3 className="text-2xl font-black text-rose-600 tracking-tighter">
+                        <span className="text-[10px] font-semibold text-rose-600 capitalize block mb-1">Platform Commission + GST</span>
+                        <h3 className="text-2xl font-bold text-rose-600 tracking-tight">
                             -₹{rows.reduce((acc, r) => acc + (r.commission + r.gstOnCommission), 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                         </h3>
                     </div>
-                    <div className="text-[8.5px] font-semibold text-rose-500">Includes {summary?.commission_rate?.platform}% platform cut + 18% GST</div>
+                    <div className="text-[9px] font-medium text-rose-500">Includes {platRate}% platform cut + 18% GST</div>
                 </div>
 
-                <div className="premium-card p-6 bg-white relative overflow-hidden flex flex-col justify-between h-[150px]">
+                <div className="premium-card p-6 bg-white border border-gray-100 rounded-2xl relative overflow-hidden flex flex-col justify-between h-[140px] shadow-sm">
                     <div>
-                        <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest block mb-1">Amount Payable (Net)</span>
-                        <h3 className="text-2xl font-black text-cureza-green tracking-tighter">
+                        <span className="text-[10px] font-semibold text-emerald-600 capitalize block mb-1">Amount Payable (Net)</span>
+                        <h3 className="text-2xl font-bold text-emerald-600 tracking-tight">
                             ₹{rows.reduce((acc, r) => acc + r.amountPayable, 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                         </h3>
                     </div>
-                    <div className="text-[8.5px] font-semibold text-emerald-600">Net credited into wallet balance (minus TCS/TDS)</div>
+                    <div className="text-[9px] font-medium text-emerald-600">Net credited into wallet balance (minus TCS/TDS)</div>
                 </div>
             </div>
 
             {/* Filter Dashboard */}
-            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
+            <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm space-y-4">
                 <div className="flex flex-wrap gap-4 items-center justify-between">
                     <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-80">
-                        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={15} />
                         <input
                             type="text"
                             placeholder="Search customer, order no., product..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-[11px] font-semibold focus:outline-none focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green transition-all"
+                            className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-gray-250 rounded-xl text-xs font-semibold focus:outline-none focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green transition-all outline-none"
                         />
                     </form>
 
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                         <select
                             value={statusFilter}
                             onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-                            className="bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-[10px] font-black uppercase tracking-wider text-gray-600"
+                            className="w-full sm:w-auto bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-xs font-semibold capitalize text-gray-700 outline-none cursor-pointer focus:border-cureza-green"
                         >
                             <option value="All">All Statuses</option>
                             <option value="Pending">Pending</option>
@@ -431,14 +429,14 @@ export default function DynamicBrandReconciliationPage() {
                             <option value="Delivered">Delivered</option>
                             <option value="Cancelled">Cancelled</option>
                         </select>
-
+ 
                         <select
                             value={paymentFilter}
                             onChange={(e) => { setPaymentFilter(e.target.value); setPage(1); }}
-                            className="bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-[10px] font-black uppercase tracking-wider text-gray-600"
+                            className="w-full sm:w-auto bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-xs font-semibold capitalize text-gray-700 outline-none cursor-pointer focus:border-cureza-green"
                         >
                             <option value="All">All Payment Methods</option>
-                            <option value="cod">COD only</option>
+                            <option value="cod">COD Only</option>
                             <option value="prepaid">Prepaid / Online</option>
                         </select>
                     </div>
@@ -446,27 +444,27 @@ export default function DynamicBrandReconciliationPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
                     <div>
-                        <label className="block text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1.5 px-1">From Date</label>
+                        <label className="block text-[10px] font-semibold text-gray-500 capitalize mb-1.5 px-1">From Date</label>
                         <input
                             type="date"
                             value={startDate}
                             onChange={(e) => { setStartDate(e.target.value); setPage(1); }}
-                            className="w-full border border-gray-200 rounded-xl p-2.5 text-[10px] font-bold text-gray-700 outline-none"
+                            className="w-full border border-gray-250 rounded-xl p-2.5 text-xs font-semibold text-gray-700 outline-none focus:border-cureza-green"
                         />
                     </div>
                     <div>
-                        <label className="block text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1.5 px-1">To Date</label>
+                        <label className="block text-[10px] font-semibold text-gray-500 capitalize mb-1.5 px-1">To Date</label>
                         <input
                             type="date"
                             value={endDate}
                             onChange={(e) => { setEndDate(e.target.value); setPage(1); }}
-                            className="w-full border border-gray-200 rounded-xl p-2.5 text-[10px] font-bold text-gray-700 outline-none"
+                            className="w-full border border-gray-250 rounded-xl p-2.5 text-xs font-semibold text-gray-700 outline-none focus:border-cureza-green"
                         />
                     </div>
                     <div className="flex items-end">
                         <button
                             onClick={resetFilters}
-                            className="w-full py-2.5 border border-red-100 hover:border-red-300 rounded-xl text-[10px] font-black text-red-600 transition-all uppercase cursor-pointer"
+                            className="w-full py-2.5 border border-red-100 hover:border-red-200 hover:bg-red-50/50 rounded-xl text-xs font-semibold text-red-600 transition-all capitalize cursor-pointer"
                         >
                             Reset Filter Parameters
                         </button>
@@ -475,15 +473,15 @@ export default function DynamicBrandReconciliationPage() {
             </div>
 
             {/* Reconciliation Ledger Table */}
-            <div className="premium-card overflow-hidden bg-white">
-                <div className="p-8 border-b border-gray-50 flex items-center justify-between">
-                    <div className="flex items-center gap-6">
-                        <div className="p-3 bg-gray-900 text-white rounded-2xl">
-                            <FileText size={20} />
+            <div className="premium-card overflow-hidden bg-white border border-gray-200 rounded-2xl shadow-sm">
+                <div className="p-6 border-b border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 bg-emerald-50 text-cureza-green border border-emerald-100 rounded-xl shrink-0">
+                            <FileText size={18} />
                         </div>
                         <div>
-                            <h3 className="font-black text-xl text-gray-900 tracking-tighter">Reconciliation Ledger</h3>
-                            <p className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] mt-1 opacity-60">
+                            <h3 className="font-semibold text-lg text-gray-800 tracking-tight">Reconciliation Ledger</h3>
+                            <p className="text-[11px] font-medium text-gray-500 capitalize mt-1">
                                 Detailed statement with commission, tax splits, and payouts
                             </p>
                         </div>
@@ -493,44 +491,44 @@ export default function DynamicBrandReconciliationPage() {
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="premium-table-header border-b border-gray-100">
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap">Month & Year</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap">Date</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap">Order No.</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap">Customer Name</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap">Product</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap">Address</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap text-center">Qty</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap text-right">MRP</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap text-right">Discount By Vendor</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap text-right">Sale Price</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap">Prescription Link</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap">Tracking ID</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap text-right">Total Value</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap text-right">Taxable Value</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap text-right">Commission</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap text-right">GST on Commission</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap text-right">TCS</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap text-right">TDS</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap text-right">Gateway Fee</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap text-right">Amount Payable</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap text-right">Paid</th>
-                                <th className="px-5 py-4 text-[9px] font-black tracking-wider text-gray-500 whitespace-nowrap text-right">Balance</th>
+                            <tr className="premium-table-header border-b border-gray-100 bg-gray-50/50">
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize">Month & Year</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize">Date</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize">Order No.</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize">Customer Name</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize">Product</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize">Address</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-center">Qty</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">MRP</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">Discount By Vendor</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">Sale Price</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize">Prescription Link</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize">Tracking ID</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">Total Value</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">Taxable Value</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">Commission</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">GST on Commission</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">TCS</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">TDS</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">Gateway Fee</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">Amount Payable</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">Paid</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">Balance</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-50 text-[11px] font-semibold text-gray-700">
+                        <tbody className="divide-y divide-gray-50 text-[11px] font-semibold text-gray-650">
                             {loading ? (
                                 <tr>
                                     <td colSpan={22} className="px-8 py-20 text-center">
                                         <div className="flex flex-col items-center justify-center gap-2">
                                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cureza-green"></div>
-                                            <span className="text-[9px] font-black uppercase tracking-widest text-gray-400 mt-2">Loading data portfolio...</span>
+                                            <span className="text-xs font-semibold capitalize text-gray-500 mt-2">Loading data portfolio...</span>
                                         </div>
                                     </td>
                                 </tr>
                             ) : rows.length === 0 ? (
                                 <tr>
-                                    <td colSpan={22} className="px-8 py-20 text-center text-gray-400">
+                                    <td colSpan={22} className="px-8 py-20 text-center text-gray-500 font-medium">
                                         No order data available matching active filter options.
                                     </td>
                                 </tr>
@@ -538,59 +536,59 @@ export default function DynamicBrandReconciliationPage() {
                                 rows.map((r, idx) => (
                                     <tr key={idx} className="group hover:bg-gray-50/30 transition-all font-sans">
                                         <td className="px-5 py-4 whitespace-nowrap text-gray-500">{r.monthYear}</td>
-                                        <td className="px-5 py-4 whitespace-nowrap text-gray-900">{r.dateStr}</td>
+                                        <td className="px-5 py-4 whitespace-nowrap text-gray-800">{r.dateStr}</td>
                                         <td className="px-5 py-4 whitespace-nowrap">
-                                            <span className="font-mono text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded border border-indigo-100 font-bold">#{r.orderNumber}</span>
+                                            <span className="font-mono text-indigo-600 bg-indigo-50/70 px-2.5 py-0.5 rounded border border-indigo-100 font-semibold">#{r.orderNumber}</span>
                                         </td>
-                                        <td className="px-5 py-4 whitespace-nowrap font-bold text-gray-900">{r.customerName}</td>
+                                        <td className="px-5 py-4 whitespace-nowrap font-semibold text-gray-800">{r.customerName}</td>
                                         <td className="px-5 py-4 max-w-[200px] truncate" title={r.product}>{r.product}</td>
-                                        <td className="px-5 py-4 max-w-[200px] truncate text-gray-500" title={r.address}>{r.address}</td>
-                                        <td className="px-5 py-4 text-center whitespace-nowrap font-black">{r.qty}</td>
-                                        <td className="px-5 py-4 text-right whitespace-nowrap">₹{r.mrp.toFixed(2)}</td>
+                                        <td className="px-5 py-4 max-w-[200px] truncate text-gray-500 font-medium" title={r.address}>{r.address}</td>
+                                        <td className="px-5 py-4 text-center whitespace-nowrap font-semibold">{r.qty}</td>
+                                        <td className="px-5 py-4 text-right whitespace-nowrap font-medium">₹{r.mrp.toFixed(2)}</td>
                                         <td className="px-5 py-4 text-right whitespace-nowrap text-red-500 font-medium">{r.discount > 0 ? `₹${r.discount.toFixed(2)}` : '—'}</td>
-                                        <td className="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">₹{r.salePrice.toFixed(2)}</td>
+                                        <td className="px-5 py-4 text-right whitespace-nowrap font-semibold text-gray-800">₹{r.salePrice.toFixed(2)}</td>
                                         <td className="px-5 py-4 whitespace-nowrap">
                                             {r.prescriptionLink !== 'Non Prescription Product' ? (
-                                                <a href={r.prescriptionLink} target="_blank" rel="noreferrer" className="text-emerald-600 hover:text-emerald-700 underline font-bold">
+                                                <a href={r.prescriptionLink} target="_blank" rel="noreferrer" className="text-emerald-600 hover:text-emerald-700 underline font-semibold">
                                                     View Rx
                                                 </a>
                                             ) : (
                                                 <span className="text-gray-400 font-medium text-[10px]">Non Prescription Product</span>
                                             )}
                                         </td>
-                                        <td className="px-5 py-4 whitespace-nowrap font-mono text-gray-400">{r.trackingId}</td>
-                                        <td className="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">₹{r.lineTotal.toFixed(2)}</td>
-                                        <td className="px-5 py-4 text-right whitespace-nowrap">₹{r.taxableValue.toFixed(2)}</td>
-                                        <td className="px-5 py-4 text-right whitespace-nowrap text-rose-500">₹{r.commission.toFixed(2)}</td>
-                                        <td className="px-5 py-4 text-right whitespace-nowrap text-rose-500">₹{r.gstOnCommission.toFixed(2)}</td>
-                                        <td className="px-5 py-4 text-right whitespace-nowrap text-gray-500">₹{r.tcs.toFixed(2)}</td>
-                                        <td className="px-5 py-4 text-right whitespace-nowrap text-gray-500">₹{r.tds.toFixed(2)}</td>
-                                        <td className="px-5 py-4 text-right whitespace-nowrap text-rose-500">₹{r.gatewayFee.toFixed(2)}</td>
-                                        <td className="px-5 py-4 text-right whitespace-nowrap font-black text-gray-950 bg-emerald-50/10">₹{r.amountPayable.toFixed(2)}</td>
-                                        <td className="px-5 py-4 text-right whitespace-nowrap text-emerald-600 font-bold">₹{r.paid.toFixed(2)}</td>
-                                        <td className="px-5 py-4 text-right whitespace-nowrap text-rose-600 font-bold">₹{r.balance.toFixed(2)}</td>
+                                        <td className="px-5 py-4 whitespace-nowrap font-mono text-gray-400 font-medium">{r.trackingId}</td>
+                                        <td className="px-5 py-4 text-right whitespace-nowrap font-semibold text-gray-800">₹{r.lineTotal.toFixed(2)}</td>
+                                        <td className="px-5 py-4 text-right whitespace-nowrap font-medium">₹{r.taxableValue.toFixed(2)}</td>
+                                        <td className="px-5 py-4 text-right whitespace-nowrap text-rose-500 font-medium">₹{r.commission.toFixed(2)}</td>
+                                        <td className="px-5 py-4 text-right whitespace-nowrap text-rose-500 font-medium">₹{r.gstOnCommission.toFixed(2)}</td>
+                                        <td className="px-5 py-4 text-right whitespace-nowrap text-gray-500 font-medium">₹{r.tcs.toFixed(2)}</td>
+                                        <td className="px-5 py-4 text-right whitespace-nowrap text-gray-500 font-medium">₹{r.tds.toFixed(2)}</td>
+                                        <td className="px-5 py-4 text-right whitespace-nowrap text-rose-500 font-medium">₹{r.gatewayFee.toFixed(2)}</td>
+                                        <td className="px-5 py-4 text-right whitespace-nowrap font-semibold text-gray-800 bg-emerald-50/10">₹{r.amountPayable.toFixed(2)}</td>
+                                        <td className="px-5 py-4 text-right whitespace-nowrap text-emerald-600 font-semibold">₹{r.paid.toFixed(2)}</td>
+                                        <td className="px-5 py-4 text-right whitespace-nowrap text-rose-600 font-semibold">₹{r.balance.toFixed(2)}</td>
                                     </tr>
                                 ))
                             )}
                             {rows.length > 0 && (
-                                <tr className="bg-gray-50 font-black text-gray-900 border-t-2 border-b border-gray-200 text-[10px] uppercase tracking-wider">
-                                    <td colSpan={6} className="px-5 py-4 text-left font-black">Totals (Page)</td>
-                                    <td className="px-5 py-4 text-center whitespace-nowrap">{rows.reduce((acc, r) => acc + r.qty, 0)}</td>
+                                <tr className="bg-gray-50 font-bold text-gray-800 border-t border-b border-gray-200 text-[11px] capitalize tracking-wide">
+                                    <td colSpan={6} className="px-5 py-4 text-left font-bold">Totals (Page)</td>
+                                    <td className="px-5 py-4 text-center whitespace-nowrap font-semibold">{rows.reduce((acc, r) => acc + r.qty, 0)}</td>
                                     <td className="px-5 py-4 text-right">—</td>
-                                    <td className="px-5 py-4 text-right text-red-600 whitespace-nowrap">₹{rows.reduce((acc, r) => acc + r.discount, 0).toFixed(2)}</td>
+                                    <td className="px-5 py-4 text-right text-red-600 whitespace-nowrap font-semibold">₹{rows.reduce((acc, r) => acc + r.discount, 0).toFixed(2)}</td>
                                     <td className="px-5 py-4 text-right">—</td>
                                     <td className="px-5 py-4 text-center">—</td>
                                     <td className="px-5 py-4 text-left">—</td>
-                                    <td className="px-5 py-4 text-right font-black whitespace-nowrap">₹{rows.reduce((acc, r) => acc + r.lineTotal, 0).toFixed(2)}</td>
-                                    <td className="px-5 py-4 text-right whitespace-nowrap">₹{rows.reduce((acc, r) => acc + r.taxableValue, 0).toFixed(2)}</td>
-                                    <td className="px-5 py-4 text-right text-rose-600 whitespace-nowrap">₹{rows.reduce((acc, r) => acc + r.commission, 0).toFixed(2)}</td>
-                                    <td className="px-5 py-4 text-right text-rose-600 whitespace-nowrap">₹{rows.reduce((acc, r) => acc + r.gstOnCommission, 0).toFixed(2)}</td>
-                                    <td className="px-5 py-4 text-right text-gray-900 whitespace-nowrap">₹{rows.reduce((acc, r) => acc + r.tcs, 0).toFixed(2)}</td>
-                                    <td className="px-5 py-4 text-right text-gray-900 whitespace-nowrap">₹{rows.reduce((acc, r) => acc + r.tds, 0).toFixed(2)}</td>
-                                    <td className="px-5 py-4 text-right text-rose-600 whitespace-nowrap">₹{rows.reduce((acc, r) => acc + r.gatewayFee, 0).toFixed(2)}</td>
-                                    <td className="px-5 py-4 text-right font-black text-gray-950 bg-emerald-50/20 whitespace-nowrap">₹{rows.reduce((acc, r) => acc + r.amountPayable, 0).toFixed(2)}</td>
-                                    <td className="px-5 py-4 text-right text-emerald-600 font-bold whitespace-nowrap">₹{rows.reduce((acc, r) => acc + r.paid, 0).toFixed(2)}</td>
-                                    <td className="px-5 py-4 text-right text-rose-600 font-bold whitespace-nowrap">₹{rows.reduce((acc, r) => acc + r.balance, 0).toFixed(2)}</td>
+                                    <td className="px-5 py-4 text-right font-bold whitespace-nowrap">₹{rows.reduce((acc, r) => acc + r.lineTotal, 0).toFixed(2)}</td>
+                                    <td className="px-5 py-4 text-right whitespace-nowrap font-semibold">₹{rows.reduce((acc, r) => acc + r.taxableValue, 0).toFixed(2)}</td>
+                                    <td className="px-5 py-4 text-right text-rose-600 whitespace-nowrap font-semibold">₹{rows.reduce((acc, r) => acc + r.commission, 0).toFixed(2)}</td>
+                                    <td className="px-5 py-4 text-right text-rose-600 whitespace-nowrap font-semibold">₹{rows.reduce((acc, r) => acc + r.gstOnCommission, 0).toFixed(2)}</td>
+                                    <td className="px-5 py-4 text-right text-gray-800 whitespace-nowrap font-semibold">₹{rows.reduce((acc, r) => acc + r.tcs, 0).toFixed(2)}</td>
+                                    <td className="px-5 py-4 text-right text-gray-800 whitespace-nowrap font-semibold">₹{rows.reduce((acc, r) => acc + r.tds, 0).toFixed(2)}</td>
+                                    <td className="px-5 py-4 text-right text-rose-600 whitespace-nowrap font-semibold">₹{rows.reduce((acc, r) => acc + r.gatewayFee, 0).toFixed(2)}</td>
+                                    <td className="px-5 py-4 text-right font-bold text-gray-950 bg-emerald-50/20 whitespace-nowrap">₹{rows.reduce((acc, r) => acc + r.amountPayable, 0).toFixed(2)}</td>
+                                    <td className="px-5 py-4 text-right text-emerald-600 font-semibold whitespace-nowrap">₹{rows.reduce((acc, r) => acc + r.paid, 0).toFixed(2)}</td>
+                                    <td className="px-5 py-4 text-right text-rose-600 font-semibold whitespace-nowrap">₹{rows.reduce((acc, r) => acc + r.balance, 0).toFixed(2)}</td>
                                 </tr>
                             )}
                         </tbody>
@@ -600,21 +598,21 @@ export default function DynamicBrandReconciliationPage() {
                 {/* Pagination Controls */}
                 {lastPage > 1 && (
                     <div className="p-5 border-t border-gray-100 flex items-center justify-between">
-                        <span className="text-[10px] text-gray-400 font-black uppercase tracking-wider">
+                        <span className="text-xs text-gray-500 font-semibold capitalize">
                             Showing page {page} of {lastPage} ({totalRecords} records)
                         </span>
                         <div className="flex gap-2">
                             <button
                                 onClick={() => setPage(p => Math.max(1, p - 1))}
                                 disabled={page === 1}
-                                className="px-4 py-2 border border-gray-200 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-600 hover:bg-gray-50 disabled:opacity-50 transition-all cursor-pointer"
+                                className="px-3.5 py-2 border border-gray-200 rounded-xl text-xs font-semibold capitalize text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-all cursor-pointer"
                             >
                                 <ChevronLeft size={14} className="inline mr-1" /> Prev
                             </button>
                             <button
                                 onClick={() => setPage(p => Math.min(lastPage, p + 1))}
                                 disabled={page === lastPage}
-                                className="px-4 py-2 border border-gray-200 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-600 hover:bg-gray-50 disabled:opacity-50 transition-all cursor-pointer"
+                                className="px-3.5 py-2 border border-gray-200 rounded-xl text-xs font-semibold capitalize text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-all cursor-pointer"
                             >
                                 Next <ChevronRight size={14} className="inline ml-1" />
                             </button>

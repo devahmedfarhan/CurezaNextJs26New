@@ -208,28 +208,28 @@ export default function SellerProfilePage() {
     const isLocked = !!pendingRequest;
 
     return (
-        <div className="w-full space-y-8">
+        <div className="w-full space-y-8 animate-in fade-in duration-300">
 
             <div className="flex flex-col gap-2 mb-4">
-                <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Store Architecture</h1>
+                <h1 className="text-2xl font-bold text-gray-800 tracking-tight">Store Architecture</h1>
                 <p className="text-gray-500 font-medium">Control your brand identity and public appearance.</p>
             </div>
 
             {isLocked && (
-                <div className="bg-amber-50/50 border border-amber-100 rounded-3xl p-8 flex gap-6 items-start animate-in fade-in slide-in-from-top-4 duration-500 shadow-sm shadow-amber-100/20">
-                    <div className="p-3 bg-amber-500 text-white rounded-2xl shadow-lg shadow-amber-200">
-                        <Info size={24} />
+                <div className="bg-amber-50/50 border border-amber-100 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row gap-4 sm:gap-6 items-start animate-in fade-in slide-in-from-top-4 duration-500 shadow-sm shadow-amber-100/20">
+                    <div className="p-3 bg-amber-500 text-white rounded-xl shadow-md shrink-0">
+                        <Info size={20} />
                     </div>
                     <div className="flex-1">
-                        <h3 className="text-amber-900 font-extrabold text-lg tracking-tight mb-2">Update Synchronizing</h3>
-                        <p className="text-amber-800/80 font-medium leading-relaxed">
+                        <h3 className="text-amber-900 font-bold text-base tracking-tight mb-1">Update Synchronizing</h3>
+                        <p className="text-amber-855 font-medium leading-relaxed text-xs">
                             A modification request was logged on <strong>{new Date(pendingRequest.created_at).toLocaleDateString()}</strong>.
                             Our integrity team is verifying the data. Editing is temporarily restricted to maintain consistency.
                         </p>
-                        <div className="mt-4">
+                        <div className="mt-3">
                             <button
                                 onClick={handleCancelRequest}
-                                className="text-xs font-extrabold uppercase tracking-widest text-amber-600 hover:text-amber-700 underline underline-offset-4 decoration-2 transition-all"
+                                className="text-xs font-semibold capitalize text-amber-600 hover:text-amber-700 underline underline-offset-4 decoration-2 transition-all"
                             >
                                 Rollback Changes & Re-edit
                             </button>
@@ -244,16 +244,16 @@ export default function SellerProfilePage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
                     {/* Banner Upload */}
                     <div className="lg:col-span-2 space-y-4">
-                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Digital Storefront (Banner)</label>
-                        <div className="relative w-full aspect-[21/9] bg-gray-50 rounded-3xl overflow-hidden border-2 border-dashed border-gray-100 hover:border-cureza-green transition-all group shadow-sm bg-gradient-to-br from-gray-50 to-white">
+                        <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Digital Storefront (Banner)</label>
+                        <div className="relative w-full aspect-[16/9] sm:aspect-[21/9] bg-gray-50 rounded-2xl overflow-hidden border-2 border-dashed border-gray-150 hover:border-cureza-green transition-all group shadow-sm bg-gradient-to-br from-gray-50 to-white">
                             {bannerPreview ? (
                                 <img src={bannerPreview} alt="Banner" className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-700" />
                             ) : (
                                 <div className="flex flex-col items-center justify-center h-full text-gray-300">
-                                    <div className="p-4 bg-white rounded-2xl shadow-sm mb-4">
-                                        <Upload size={32} />
+                                    <div className="p-4 bg-white rounded-xl shadow-sm mb-3">
+                                        <Upload size={28} />
                                     </div>
-                                    <span className="text-xs font-bold uppercase tracking-widest">Deploy Banner Asset</span>
+                                    <span className="text-xs font-semibold capitalize text-gray-550">Deploy Banner Asset</span>
                                 </div>
                             )}
 
@@ -269,27 +269,27 @@ export default function SellerProfilePage() {
                                         className="hidden"
                                         onChange={(e) => handleFileChange(e, 'banner')}
                                     />
-                                    <div className="opacity-0 group-hover:opacity-100 bg-white px-6 py-3 rounded-2xl text-xs font-extrabold shadow-2xl scale-95 group-hover:scale-100 transition-all uppercase tracking-widest">
+                                    <div className="opacity-0 group-hover:opacity-100 bg-white px-4 py-2 rounded-xl text-xs font-semibold shadow-md scale-95 group-hover:scale-100 transition-all capitalize">
                                         Replace Visual
                                     </div>
                                 </label>
                             )}
                         </div>
-                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter italic">Recommended: 1920x600px | Max 4MB | JPG, PNG, WEBP</p>
+                        <p className="text-[10px] text-gray-500 font-semibold capitalize italic">Recommended: 1920x600px | Max 4MB | JPG, PNG, WEBP</p>
                     </div>
 
                     {/* Logo Upload */}
                     <div className="space-y-4">
-                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Identity Mark (Logo)</label>
-                        <div className="relative w-48 h-48 mx-auto lg:ml-0 bg-gray-50 rounded-[2.5rem] overflow-hidden border-2 border-dashed border-gray-100 hover:border-cureza-green transition-all group shadow-sm bg-gradient-to-br from-gray-50 to-white flex items-center justify-center">
+                        <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Identity Mark (Logo)</label>
+                        <div className="relative w-48 h-48 mx-auto lg:ml-0 bg-gray-50 rounded-2xl overflow-hidden border-2 border-dashed border-gray-150 hover:border-cureza-green transition-all group shadow-sm bg-gradient-to-br from-gray-50 to-white flex items-center justify-center">
                             {logoPreview ? (
                                 <img src={logoPreview} alt="Logo" className="w-3/4 h-3/4 object-contain transition-transform group-hover:scale-110 duration-700" />
                             ) : (
                                 <div className="flex flex-col items-center justify-center h-full text-gray-300">
-                                    <div className="p-3 bg-white rounded-2xl shadow-sm mb-3">
-                                        <Upload size={24} />
+                                    <div className="p-3 bg-white rounded-xl shadow-sm mb-3">
+                                        <Upload size={22} />
                                     </div>
-                                    <span className="text-[10px] font-bold uppercase tracking-widest">SVG / PNG</span>
+                                    <span className="text-[10px] font-semibold capitalize text-gray-550">SVG / PNG</span>
                                 </div>
                             )}
                             {!isLocked && (
@@ -304,91 +304,90 @@ export default function SellerProfilePage() {
                                         className="hidden"
                                         onChange={(e) => handleFileChange(e, 'logo')}
                                     />
-                                    <div className="opacity-0 group-hover:opacity-100 bg-white p-3 rounded-2xl shadow-2xl scale-95 group-hover:scale-100 transition-all">
-                                        <Upload size={20} className="text-gray-900" />
+                                    <div className="opacity-0 group-hover:opacity-100 bg-white p-3 rounded-xl shadow-md scale-95 group-hover:scale-100 transition-all">
+                                        <Upload size={18} className="text-gray-900" />
                                     </div>
                                 </label>
                             )}
                         </div>
-                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter italic text-center lg:text-left">Square ratio (1:1) is mandatory</p>
+                        <p className="text-[10px] text-gray-500 font-semibold capitalize italic text-center lg:text-left">Square ratio (1:1) is mandatory</p>
                     </div>
                 </div>
 
                 {/* Text Fields */}
-                <div className="grid grid-cols-1 gap-8 premium-card p-10">
+                <div className="grid grid-cols-1 gap-8 premium-card p-4 sm:p-8 bg-white border border-gray-200 rounded-2xl shadow-sm">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-2">
-                            <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Registered Entity Name</label>
+                            <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Registered Entity Name</label>
                             <input
                                 {...register('name', { required: "Brand Name is required" })}
-                                className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
+                                className="w-full h-12 px-5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
                                 placeholder="Publicly visible brand name"
                             />
-                            {errors.name && <p className="text-xs text-rose-500 font-bold mt-1 px-1">▲ {errors.name.message as string}</p>}
+                            {errors.name && <p className="text-xs text-rose-500 font-semibold mt-1 px-1">▲ {errors.name.message as string}</p>}
                         </div>
 
                         <div className="space-y-2">
-                            <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Search Metatags (Comma separated)</label>
+                            <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Search Metatags (Comma separated)</label>
                             <input
                                 {...register('keywords')}
-                                className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
+                                className="w-full h-12 px-5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
                                 placeholder="e.g. Wellness, Organic, Vegan"
                             />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Brand Tagline (Shown in Header)</label>
+                        <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Brand Tagline (Shown in Header)</label>
                         <input
                             {...register('short_description', { required: "Short description is required", maxLength: 255 })}
-                            className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
+                            className="w-full h-12 px-5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
                             placeholder="A concise mission statement or tagline shown in the store header..."
                         />
-                        {errors.short_description && <p className="text-xs text-rose-500 font-bold mt-1 px-1">▲ {errors.short_description.message as string}</p>}
+                        {errors.short_description && <p className="text-xs text-rose-500 font-semibold mt-1 px-1">▲ {errors.short_description.message as string}</p>}
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Brand Vision (Quote / Slogan - Shown in Our Story)</label>
+                        <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Brand Vision (Quote / Slogan - Shown in Our Story)</label>
                         <textarea
                             {...register('brand_vision')}
-                            className="w-full h-24 p-6 rounded-3xl bg-gray-50 border border-gray-100 text-sm font-medium focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all resize-none leading-relaxed"
+                            className="w-full h-24 p-5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-medium focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all resize-none leading-relaxed"
                             placeholder="A 2-3 line inspiring quote or vision statement shown in your 'Our Story' section..."
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Brand Narrative (Full History)</label>
+                        <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Brand Narrative (Full History)</label>
                         <textarea
                             {...register('description')}
-                            className="w-full h-48 p-6 rounded-3xl bg-gray-50 border border-gray-100 text-sm font-medium focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all resize-none leading-relaxed"
+                            className="w-full h-48 p-5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-medium focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all resize-none leading-relaxed"
                             placeholder="Compose the story of your brand. This content defines your marketplace presence."
                         />
                         <div className="flex justify-between items-center px-1">
-                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest italic">Supports Semantic HTML Tags</p>
-                            <p className="text-[10px] text-gray-300 font-bold">Characters will be audited</p>
+                            <p className="text-[10px] text-gray-500 font-semibold capitalize italic">Supports Semantic HTML Tags</p>
                         </div>
                     </div>
                 </div>
 
                 {/* SEO Settings Card */}
-                <div className="grid grid-cols-1 gap-8 premium-card p-10">
+                <div className="grid grid-cols-1 gap-8 premium-card p-4 sm:p-8 bg-white border border-gray-200 rounded-2xl shadow-sm">
                     <div className="border-b border-gray-100 pb-4">
-                        <h3 className="text-lg font-extrabold text-gray-900 tracking-tight">Search Engine Optimization (SEO)</h3>
+                        <h3 className="text-lg font-bold text-gray-800 tracking-tight">Search Engine Optimization (SEO)</h3>
                         <p className="text-xs text-gray-400 font-medium mt-1">Configure metadata to improve your brand page rankings on Google search.</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-2">
-                            <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Google Search Title (Meta Title - Auto Generated)</label>
+                            <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Google Search Title (Meta Title - Auto Generated)</label>
                             <input
                                 value={fullMetaTitle}
                                 readOnly
                                 disabled
-                                className="w-full h-14 px-6 rounded-2xl bg-gray-100 border border-gray-200 text-sm font-bold text-gray-500 cursor-not-allowed outline-none select-none"
+                                className="w-full h-12 px-5 rounded-xl bg-gray-100 border border-gray-200 text-sm font-semibold text-gray-500 cursor-not-allowed outline-none select-none"
                             />
                             {/* Title Length Meter */}
                             <div className="mt-2 space-y-1">
-                                <div className="flex justify-between items-center text-[10px] font-bold">
+                                <div className="flex justify-between items-center text-[10px] font-semibold">
                                     <span className={
                                         fullMetaTitle.length < 50 ? 'text-amber-600' :
                                         fullMetaTitle.length <= 60 ? 'text-emerald-600' : 'text-rose-600'
@@ -396,7 +395,7 @@ export default function SellerProfilePage() {
                                         {fullMetaTitle.length < 50 ? 'Too Short' :
                                          fullMetaTitle.length <= 60 ? 'Perfect Length' : 'Too Long (Google will truncate)'}
                                     </span>
-                                    <span className="text-gray-400">{fullMetaTitle.length} / 60 chars</span>
+                                    <span className="text-gray-450">{fullMetaTitle.length} / 60 chars</span>
                                 </div>
                                 <div className="h-1 w-full bg-gray-100 rounded-full overflow-hidden">
                                     <div 
@@ -411,20 +410,20 @@ export default function SellerProfilePage() {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Google Search Keywords (Meta Keywords)</label>
+                            <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Google Search Keywords (Meta Keywords)</label>
                             <input
                                 {...register('meta_keywords', { maxLength: 255 })}
-                                className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
+                                className="w-full h-12 px-5 rounded-xl bg-gray-50 border border-gray-250 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
                                 placeholder="e.g. Wellness, health, premium organic"
                             />
-                            <div className="text-[10px] text-gray-300 font-bold text-right px-1 mt-1">Comma separated keywords</div>
+                            <div className="text-[10px] text-gray-400 font-semibold text-right px-1 mt-1">Comma separated keywords</div>
                             
                             <div className="mt-4 p-5 bg-gray-50/50 rounded-2xl border border-gray-100/50 space-y-4">
-                                <span className="block text-[9px] font-extrabold text-gray-400 uppercase tracking-wider">Select Categories & Concerns as Keywords</span>
+                                <span className="block text-xs font-semibold text-gray-500 capitalize">Select Categories & Concerns as Keywords</span>
                                 
                                 {allCategories.length > 0 && (
                                     <div className="space-y-2">
-                                        <span className="block text-[9px] font-bold text-gray-400 uppercase tracking-tight">Categories</span>
+                                        <span className="block text-[10px] font-semibold text-gray-500 capitalize">Categories</span>
                                         <div className="flex flex-wrap gap-2">
                                             {allCategories.map(cat => {
                                                 const isActive = currentKeywordsList.some(k => k.toLowerCase() === cat.name.toLowerCase());
@@ -434,10 +433,10 @@ export default function SellerProfilePage() {
                                                         type="button"
                                                         disabled={isLocked}
                                                         onClick={() => toggleKeyword(cat.name)}
-                                                        className={`px-3 py-1.5 rounded-full text-[11px] font-bold transition-all border ${
+                                                        className={`px-3 py-1 rounded-xl text-xs font-semibold transition-all border ${
                                                             isActive
-                                                                ? 'bg-emerald-505 bg-emerald-500 border-emerald-500 text-white shadow-sm shadow-emerald-100'
-                                                                : 'bg-white border-gray-200 text-gray-600 hover:border-emerald-500 hover:text-emerald-600'
+                                                                ? 'bg-emerald-500 border-emerald-500 text-white shadow-sm shadow-emerald-100'
+                                                                : 'bg-white border-gray-200 text-gray-650 hover:border-emerald-500 hover:text-emerald-600'
                                                         }`}
                                                     >
                                                         {cat.name}
@@ -450,7 +449,7 @@ export default function SellerProfilePage() {
 
                                 {allConcerns.length > 0 && (
                                     <div className="space-y-2">
-                                        <span className="block text-[9px] font-bold text-gray-400 uppercase tracking-tight">Concerns</span>
+                                        <span className="block text-[10px] font-semibold text-gray-500 capitalize">Concerns</span>
                                         <div className="flex flex-wrap gap-2">
                                             {allConcerns.map(con => {
                                                 const isActive = currentKeywordsList.some(k => k.toLowerCase() === con.name.toLowerCase());
@@ -460,10 +459,10 @@ export default function SellerProfilePage() {
                                                         type="button"
                                                         disabled={isLocked}
                                                         onClick={() => toggleKeyword(con.name)}
-                                                        className={`px-3 py-1.5 rounded-full text-[11px] font-bold transition-all border ${
+                                                        className={`px-3 py-1 rounded-xl text-xs font-semibold transition-all border ${
                                                             isActive
-                                                                ? 'bg-emerald-505 bg-emerald-500 border-emerald-500 text-white shadow-sm shadow-emerald-100'
-                                                                : 'bg-white border-gray-200 text-gray-600 hover:border-emerald-500 hover:text-emerald-600'
+                                                                ? 'bg-emerald-500 border-emerald-500 text-white shadow-sm shadow-emerald-100'
+                                                                : 'bg-white border-gray-200 text-gray-650 hover:border-emerald-500 hover:text-emerald-600'
                                                         }`}
                                                     >
                                                         {con.name}
@@ -478,15 +477,15 @@ export default function SellerProfilePage() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Google Snippet Description (Meta Description)</label>
+                        <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Google Snippet Description (Meta Description)</label>
                         <textarea
                             {...register('meta_description')}
-                            className="w-full h-28 p-6 rounded-3xl bg-gray-50 border border-gray-100 text-sm font-medium focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all resize-none leading-relaxed"
+                            className="w-full h-28 p-5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-medium focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all resize-none leading-relaxed"
                             placeholder="Recommended: 150-160 characters describing your brand for Google search results snippet..."
                         />
                         {/* Description Length Meter */}
                         <div className="mt-2 space-y-1">
-                            <div className="flex justify-between items-center text-[10px] font-bold">
+                            <div className="flex justify-between items-center text-[10px] font-semibold">
                                 <span className={
                                     metaDescription.length === 0 ? 'text-gray-405' :
                                     metaDescription.length < 120 ? 'text-amber-600' :
@@ -496,7 +495,7 @@ export default function SellerProfilePage() {
                                      metaDescription.length < 120 ? 'Too Short' :
                                      metaDescription.length <= 160 ? 'Perfect Length' : 'Too Long (Google will truncate)'}
                                 </span>
-                                <span className="text-gray-400">{metaDescription.length} / 160 chars</span>
+                                <span className="text-gray-450">{metaDescription.length} / 160 chars</span>
                             </div>
                             <div className="h-1 w-full bg-gray-100 rounded-full overflow-hidden">
                                 <div 
@@ -513,7 +512,7 @@ export default function SellerProfilePage() {
 
                     {/* Google SERP Live Preview */}
                     <div className="mt-6 p-6 bg-gray-50 rounded-2xl border border-gray-100 space-y-3">
-                        <span className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">Google Search Result Preview</span>
+                        <span className="block text-xs font-semibold text-gray-500 capitalize">Google Search Result Preview</span>
                         <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm font-sans max-w-xl">
                             <div className="text-xs text-gray-500 flex items-center gap-1.5 mb-1.5 select-none">
                                 <span className="bg-[#f1f3f4] px-1.5 py-0.5 rounded text-[10px] font-semibold text-[#3c4043]">Cureza</span>
@@ -530,28 +529,28 @@ export default function SellerProfilePage() {
                 </div>
 
                 {/* Purity & Verification Settings Card */}
-                <div className="grid grid-cols-1 gap-8 premium-card p-10">
+                <div className="grid grid-cols-1 gap-8 premium-card p-4 sm:p-8 bg-white border border-gray-200 rounded-2xl shadow-sm">
                     <div className="border-b border-gray-100 pb-4">
-                        <h3 className="text-lg font-extrabold text-gray-900 tracking-tight">Purity & Verification Standards</h3>
+                        <h3 className="text-lg font-bold text-gray-800 tracking-tight">Purity & Verification Standards</h3>
                         <p className="text-xs text-gray-400 font-medium mt-1">Configure your brand trust badges and purity parameters displayed on the storefront.</p>
                     </div>
 
                     <div className="space-y-4">
-                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Genuine Verification Text</label>
+                        <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Genuine Verification Text</label>
                         <input
                             {...register('genuine_badge_text')}
                             disabled={isLocked}
-                            className="w-full h-14 px-6 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
+                            className="w-full h-12 px-5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
                             placeholder="e.g. 100% Genuine (Default: 100% Genuine)"
                         />
                     </div>
 
                     <div className="space-y-4">
-                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1">Purity & Trust Standards (3 points)</label>
+                        <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Purity & Trust Standards (3 points)</label>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {[0, 1, 2].map((idx) => (
                                 <div key={idx} className="space-y-2">
-                                    <span className="text-[10px] font-bold text-gray-500 uppercase">Standard Point #{idx + 1}</span>
+                                    <span className="text-[10px] font-semibold text-gray-500 capitalize">Standard Point #{idx + 1}</span>
                                     <input
                                         type="text"
                                         value={purityStandards[idx] || ''}
@@ -562,7 +561,7 @@ export default function SellerProfilePage() {
                                             setPurityStandards(updated);
                                         }}
                                         placeholder={`Point #${idx + 1} (e.g. ${idx === 0 ? "100% Organic & Ayurvedic" : idx === 1 ? "Toxin & Heavy Metal Free" : "Cruelty Free & Vegan Friendly"})`}
-                                        className="w-full h-12 px-4 rounded-xl bg-gray-50 border border-gray-100 text-xs font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
+                                        className="w-full h-12 px-4 rounded-xl bg-gray-50 border border-gray-100 text-xs font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
                                     />
                                 </div>
                             ))}
@@ -571,22 +570,22 @@ export default function SellerProfilePage() {
                 </div>
 
                 {/* Brand Classifications Card */}
-                <div className="grid grid-cols-1 gap-8 premium-card p-10">
+                <div className="grid grid-cols-1 gap-8 premium-card p-4 sm:p-8 bg-white border border-gray-200 rounded-2xl shadow-sm">
                     <div className="border-b border-gray-100 pb-4">
-                        <h3 className="text-lg font-extrabold text-gray-900 tracking-tight">Brand Classification & Segments</h3>
+                        <h3 className="text-lg font-bold text-gray-800 tracking-tight">Brand Classification & Segments</h3>
                         <p className="text-xs text-gray-400 font-medium mt-1">Select the product categories and therapeutic concerns your brand caters to.</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {/* Categories */}
                         <div className="space-y-4">
-                            <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1 border-b pb-2">Active Product Categories</label>
+                            <label className="block text-xs font-semibold text-gray-500 capitalize px-1 border-b pb-2">Active Product Categories</label>
                             <div className="max-h-60 overflow-y-auto space-y-2.5 pr-2">
                                 {allCategories.length === 0 ? (
                                     <p className="text-xs text-gray-400 italic">No categories available</p>
                                 ) : (
                                     allCategories.map(cat => (
-                                        <label key={cat.id} className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-gray-50 hover:bg-gray-100/50 cursor-pointer border border-gray-50 transition-all">
+                                        <label key={cat.id} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-50 hover:bg-gray-100/50 cursor-pointer border border-gray-100 transition-all">
                                             <input
                                                 type="checkbox"
                                                 checked={selectedCategories.includes(cat.id)}
@@ -599,7 +598,7 @@ export default function SellerProfilePage() {
                                                 }}
                                                 className="w-4 h-4 text-cureza-green border-gray-300 rounded focus:ring-cureza-green"
                                             />
-                                            <span className="text-xs font-bold text-gray-700">{cat.name}</span>
+                                            <span className="text-xs font-semibold text-gray-750">{cat.name}</span>
                                         </label>
                                     ))
                                 )}
@@ -608,13 +607,13 @@ export default function SellerProfilePage() {
 
                         {/* Concerns */}
                         <div className="space-y-4">
-                            <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest px-1 border-b pb-2">Therapeutic Concerns Catered To</label>
+                            <label className="block text-xs font-semibold text-gray-500 capitalize px-1 border-b pb-2">Therapeutic Concerns Catered To</label>
                             <div className="max-h-60 overflow-y-auto space-y-2.5 pr-2">
                                 {allConcerns.length === 0 ? (
                                     <p className="text-xs text-gray-400 italic">No concerns available</p>
                                 ) : (
                                     allConcerns.map(concern => (
-                                        <label key={concern.id} className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-gray-50 hover:bg-gray-100/50 cursor-pointer border border-gray-50 transition-all">
+                                        <label key={concern.id} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-50 hover:bg-gray-100/50 cursor-pointer border border-gray-100 transition-all">
                                             <input
                                                 type="checkbox"
                                                 checked={selectedConcerns.includes(concern.id)}
@@ -627,7 +626,7 @@ export default function SellerProfilePage() {
                                                 }}
                                                 className="w-4 h-4 text-cureza-green border-gray-300 rounded focus:ring-cureza-green"
                                             />
-                                            <span className="text-xs font-bold text-gray-700">{concern.name}</span>
+                                            <span className="text-xs font-semibold text-gray-750">{concern.name}</span>
                                         </label>
                                     ))
                                 )}
@@ -637,17 +636,17 @@ export default function SellerProfilePage() {
                 </div>
 
                 {/* FAQ Manager Card */}
-                <div className="grid grid-cols-1 gap-8 premium-card p-10">
+                <div className="grid grid-cols-1 gap-8 premium-card p-4 sm:p-8 bg-white border border-gray-200 rounded-2xl shadow-sm">
                     <div className="border-b border-gray-100 pb-4 flex justify-between items-center">
                         <div>
-                            <h3 className="text-lg font-extrabold text-gray-900 tracking-tight">Brand FAQs (Frequently Asked Questions)</h3>
+                            <h3 className="text-lg font-bold text-gray-800 tracking-tight">Brand FAQs (Frequently Asked Questions)</h3>
                             <p className="text-xs text-gray-400 font-medium mt-1">Provide answers to common queries to educate shoppers and improve SEO indexes.</p>
                         </div>
                         {!isLocked && (
                             <button
                                 type="button"
                                 onClick={() => setFaqs([...faqs, { question: '', answer: '' }])}
-                                className="px-4 py-2 bg-gray-900 text-white rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-black transition-colors"
+                                className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-semibold capitalize hover:bg-emerald-700 transition-colors"
                             >
                                 + Add FAQ
                             </button>
@@ -657,7 +656,7 @@ export default function SellerProfilePage() {
                     <div className="space-y-6">
                         {faqs.length === 0 ? (
                             <div className="text-center py-10 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-                                <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">No FAQs Configured</p>
+                                <p className="text-xs font-semibold text-gray-550 capitalize">No FAQs Configured</p>
                             </div>
                         ) : (
                             faqs.map((faq, index) => (
@@ -666,13 +665,13 @@ export default function SellerProfilePage() {
                                         <button
                                             type="button"
                                             onClick={() => setFaqs(faqs.filter((_, i) => i !== index))}
-                                            className="absolute top-4 right-4 text-xs font-bold text-rose-500 hover:text-rose-600 transition-colors uppercase tracking-widest"
+                                            className="absolute top-4 right-4 text-xs font-semibold text-rose-500 hover:text-rose-600 transition-colors capitalize"
                                         >
                                             Remove
                                         </button>
                                     )}
                                     <div className="space-y-2 pr-12">
-                                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">Question #{index + 1}</label>
+                                        <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Question #{index + 1}</label>
                                         <input
                                             type="text"
                                             value={faq.question || ''}
@@ -683,11 +682,11 @@ export default function SellerProfilePage() {
                                                 setFaqs(updated);
                                             }}
                                             placeholder="e.g. Are your products 100% organic?"
-                                            className="w-full h-12 px-4 rounded-xl bg-white border border-gray-200 text-xs font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all disabled:bg-gray-100 disabled:text-gray-500"
+                                            className="w-full h-12 px-4 rounded-xl bg-white border border-gray-200 text-xs font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all disabled:bg-gray-100 disabled:text-gray-500"
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">Answer #{index + 1}</label>
+                                        <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Answer #{index + 1}</label>
                                         <textarea
                                             value={faq.answer || ''}
                                             disabled={isLocked}
@@ -697,7 +696,7 @@ export default function SellerProfilePage() {
                                                 setFaqs(updated);
                                             }}
                                             placeholder="Write the detailed answer here..."
-                                            className="w-full h-24 p-4 rounded-2xl bg-white border border-gray-200 text-xs font-medium focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all resize-none leading-relaxed disabled:bg-gray-100 disabled:text-gray-500"
+                                            className="w-full h-24 p-4 rounded-xl bg-white border border-gray-200 text-xs font-medium focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all resize-none leading-relaxed disabled:bg-gray-100 disabled:text-gray-500"
                                         />
                                     </div>
                                 </div>
@@ -707,20 +706,20 @@ export default function SellerProfilePage() {
                 </div>
 
                 {/* Submit */}
-                <div className="flex justify-end pt-8">
+                <div className="flex justify-end pt-8 w-full">
                     <button
                         type="submit"
                         disabled={isLocked || isSubmitting}
                         className={`
-                            px-10 py-4 rounded-3xl font-extrabold text-sm uppercase tracking-widest text-white shadow-2xl transition-all
+                            w-full sm:w-auto px-5 py-2.5 rounded-xl font-semibold text-xs capitalize text-white transition-all
                             ${isLocked || isSubmitting
                                 ? 'bg-gray-200 cursor-not-allowed shadow-none text-gray-400'
-                                : 'bg-gray-900 hover:bg-black hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] shadow-gray-200'}
+                                : 'bg-emerald-600 hover:bg-emerald-700 active:scale-95 shadow-sm'}
                         `}
                     >
                         {isSubmitting ? (
-                            <span className="flex items-center gap-3">
-                                <Loader2 className="animate-spin" size={18} /> Submitting Request...
+                            <span className="flex items-center gap-2">
+                                <Loader2 className="animate-spin" size={16} /> Submitting Request...
                             </span>
                         ) : isLocked ? (
                             "Request Under Audit"

@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/contexts/ToastContext';
 import { indianLocations } from '@/data/indianLocations';
+import AuthFooter from '@/components/common/AuthFooter';
 
 const SOURCING_METHODS = ["I manufacture them", "I sell products manufactured for me", "I resell what I buy", "I import them"];
 const TURNOVER_RANGES = ["Less than 1 Lakh", "1 Lakh - 10 Lakh", "10 Lakh - 50 Lakh", "50 Lakh - 1 Crore", "Over 1 Crore"];
@@ -23,14 +24,14 @@ const REFERRAL_SOURCES = ["Instagram", "Facebook", "Google Search", "Friend/Coll
 
 const InputField = ({ label, name, value, onChange, validationErrors, type = "text", required = false, placeholder, className = "" }: any) => (
     <div className={`space-y-1 ${className}`}>
-        <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{label} {required && <span className="text-red-500">*</span>}</label>
+        <label className="text-[11px] font-bold text-gray-700">{label} {required && <span className="text-red-500">*</span>}</label>
         <input
             type={type}
             name={name}
             required={required}
             value={value || ''}
             onChange={onChange}
-            className={`flex h-9 w-full rounded-md border ${validationErrors?.[name] ? 'border-red-500' : 'border-gray-200'} bg-white px-3 py-1 text-xs shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-950 transition-all`}
+            className={`flex h-9 w-full rounded-[10px] border ${validationErrors?.[name] ? 'border-red-500' : 'border-gray-200'} bg-white px-3 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-gray-950 transition-all`}
             placeholder={placeholder}
         />
     </div>
@@ -38,12 +39,12 @@ const InputField = ({ label, name, value, onChange, validationErrors, type = "te
 
 const SelectField = ({ label, name, value, onChange, options, required = false }: any) => (
     <div className="space-y-1">
-        <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{label} {required && <span className="text-red-500">*</span>}</label>
+        <label className="text-[11px] font-bold text-gray-700">{label} {required && <span className="text-red-500">*</span>}</label>
         <select
             name={name}
             value={value || ''}
             onChange={onChange}
-            className="flex h-9 w-full rounded-md border border-gray-200 bg-white px-3 py-1 text-xs shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-950 transition-all"
+            className="flex h-9 w-full rounded-[10px] border border-gray-200 bg-white px-3 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-gray-950 transition-all"
         >
             {options.map((opt: string) => <option key={opt} value={opt}>{opt}</option>)}
         </select>
@@ -52,7 +53,7 @@ const SelectField = ({ label, name, value, onChange, options, required = false }
 
 const MultiSelectField = ({ label, name, selectedValues, options, onToggle }: any) => (
     <div className="space-y-1.5">
-        <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{label}</label>
+        <label className="text-[11px] font-bold text-gray-700">{label}</label>
         <div className="flex flex-wrap gap-1.5">
             {options.map((opt: string) => {
                 const isSelected = selectedValues.includes(opt);
@@ -121,33 +122,33 @@ const KYCDocumentRow = ({ doc, files, savedDocs, setSavedDocs, uploadProgress, f
     }
 
     return (
-        <div className={`group relative p-5 bg-white border rounded-2xl transition-all duration-300 ${docStatus === 'rejected'
+        <div className={`group relative p-5 bg-white border rounded-[10px] transition-all duration-300 ${docStatus === 'rejected'
             ? 'border-red-200 bg-red-50/5 hover:border-red-300'
             : isUploaded
-                ? 'border-emerald-100 shadow-sm bg-emerald-50/5'
-                : 'border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200'
+                ? 'border-[#052326]/10 bg-[#052326]/5'
+                : 'border-gray-100 hover:border-gray-200'
             }`}>
             {/* Status Badge */}
             <div className="flex justify-end mb-2 gap-2">
                 {docStatus === 'rejected' && (
-                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-700 text-[10px] font-black uppercase tracking-wider shadow-sm animate-pulse">
+                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-700 text-[10px] font-black animate-pulse">
                         Rejected
                     </div>
                 )}
                 {docStatus === 'approved' && (
-                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-wider shadow-sm">
-                        <CheckCircle size={12} className="fill-emerald-700 text-white" />
+                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#052326]/10 text-[#052326] text-[10px] font-bold">
+                        <CheckCircle size={12} className="fill-[#052326] text-white" />
                         Approved
                     </div>
                 )}
                 {docStatus !== 'rejected' && docStatus !== 'approved' && (
                     isUploaded ? (
-                        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-wider shadow-sm">
-                            <CheckCircle size={12} className="fill-emerald-700 text-white" />
+                        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#052326]/10 text-[#052326] text-[10px] font-bold">
+                            <CheckCircle size={12} className="fill-[#052326] text-white" />
                             {isOnServer ? 'Saved' : 'Ready'}
                         </div>
                     ) : (
-                        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-[10px] font-bold uppercase tracking-wider">
+                        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-[10px] font-bold">
                             <span className="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
                             Pending
                         </div>
@@ -160,7 +161,7 @@ const KYCDocumentRow = ({ doc, files, savedDocs, setSavedDocs, uploadProgress, f
                 <div className="flex items-start gap-4 pr-12">
                     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 transition-colors ${docStatus === 'rejected'
                         ? 'bg-red-100 text-red-600'
-                        : isUploaded ? 'bg-emerald-100 text-emerald-600' : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100'}`}>
+                        : isUploaded ? 'bg-[#052326]/10 text-[#052326]' : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100'}`}>
                         {doc.id.includes('pan') ? <CreditCard size={20} /> : doc.id.includes('gst') ? <FileText size={20} /> : <FileText size={20} />}
                     </div>
                     <div className="space-y-1">
@@ -199,7 +200,7 @@ const KYCDocumentRow = ({ doc, files, savedDocs, setSavedDocs, uploadProgress, f
                                     }
                                     return next;
                                 })}
-                                className="w-full h-11 px-4 rounded-xl border border-gray-200 bg-gray-50/50 text-xs font-semibold focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:bg-white transition-all uppercase placeholder:normal-case disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+                                className="w-full h-11 px-4 rounded-xl border border-gray-200 bg-gray-50/50 text-xs font-semibold focus:ring-2 focus:ring-[#052326]/20 focus:border-[#052326] focus:bg-white transition-all uppercase placeholder:normal-case disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
                             />
                             <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover/input:opacity-100 transition-opacity">
                                 <Tag size={14} className="text-gray-400" />
@@ -236,11 +237,11 @@ const KYCDocumentRow = ({ doc, files, savedDocs, setSavedDocs, uploadProgress, f
                                 />
                                 <label
                                     htmlFor={`file-${doc.id}`}
-                                    className="flex items-center justify-between w-full h-11 px-4 rounded-xl border border-gray-200 bg-white cursor-pointer hover:border-emerald-500 hover:shadow-md transition-all group/upload"
+                                    className="flex items-center justify-between w-full h-11 px-4 rounded-xl border border-gray-200 bg-white cursor-pointer hover:border-[#052326] hover:shadow-md transition-all group/upload"
                                 >
                                     <div className="flex items-center gap-3 min-w-0 flex-1">
-                                        <div className="w-6 h-6 rounded-lg bg-gray-50 flex items-center justify-center group-hover/upload:bg-emerald-50 transition-colors shrink-0">
-                                            <Upload size={14} className="text-gray-400 group-hover/upload:text-emerald-600" />
+                                        <div className="w-6 h-6 rounded-lg bg-gray-50 flex items-center justify-center group-hover/upload:bg-[#052326]/5 transition-colors shrink-0">
+                                            <Upload size={14} className="text-gray-400 group-hover/upload:text-[#052326]" />
                                         </div>
                                         <span className="text-xs font-medium text-gray-500 group-hover/upload:text-gray-700 truncate">Choose file...</span>
                                     </div>
@@ -270,7 +271,7 @@ const KYCDocumentRow = ({ doc, files, savedDocs, setSavedDocs, uploadProgress, f
                                             href={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api').replace('/api', '')}/storage/${serverPath}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="p-2 hover:bg-white rounded-lg text-gray-400 hover:text-emerald-600 transition-all border border-transparent hover:border-gray-200 hover:shadow-sm"
+                                            className="p-2 hover:bg-white rounded-lg text-gray-400 hover:text-[#052326] transition-all border border-transparent hover:border-gray-200 hover:shadow-sm"
                                             title="View Document"
                                         >
                                             <ArrowRight size={14} />
@@ -316,7 +317,7 @@ const KYCDocumentRow = ({ doc, files, savedDocs, setSavedDocs, uploadProgress, f
                     {progress !== undefined && progress > 0 && progress < 100 && (
                         <div className="h-1 w-full bg-gray-100 rounded-full overflow-hidden">
                             <div
-                                className="h-full bg-emerald-500 transition-all duration-300"
+                                className="h-full bg-[#052326] transition-all duration-300"
                                 style={{ width: `${progress}%` }}
                             />
                         </div>
@@ -1042,118 +1043,78 @@ export default function SellerRegisterPage() {
     ];
 
     return (
-        <div className="min-h-screen lg:h-screen bg-white font-sans text-gray-900 flex flex-col lg:overflow-hidden">
+        <div className="min-h-screen w-full bg-[#F8F3EF] flex flex-col text-[#052326] font-sans justify-between">
             {/* 1. Top Bar */}
 
 
             <div className="flex-1 flex flex-col lg:flex-row lg:min-h-0">
-                {/* 3. Left Side: Marketing/Info (50%) */}
-                <div className="hidden lg:flex lg:w-1/2 bg-gray-50 p-12 lg:p-16 flex-col overflow-y-auto">
-                    <div className="max-w-lg mx-auto space-y-12">
-                        <div className="space-y-4">
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 uppercase tracking-widest">
-                                Why Sell on Cureza?
+                {/* Left Side - Hero / Marketing */}
+                <div className="hidden lg:flex lg:w-[45%] bg-[#052326] text-[#F8F3EF] p-16 flex-col justify-between relative overflow-hidden min-h-screen border-r border-[#052326]/10">
+                    {/* Decorative glow element */}
+                    <div className="absolute -top-40 -left-40 w-96 h-96 bg-[#F0C417]/10 rounded-full blur-[120px] pointer-events-none" />
+                    <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-[#F8F3EF]/10 rounded-full blur-[120px] pointer-events-none" />
+
+                    <div className="relative z-10">
+                        <Link href="/" className="hover:opacity-95 transition-opacity inline-block shrink-0">
+                            <img src="/logo-white.svg" alt="Cureza Logo" className="h-9 w-auto object-contain" />
+                        </Link>
+                        
+                        <div className="mt-24 space-y-6">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest bg-[#F0C417]/20 text-[#F0C417] border border-[#F0C417]/30">
+                                <Store size={10} className="animate-pulse" />
+                                Merchant Network
                             </span>
-                            <h1 className="text-2xl font-extrabold tracking-tight text-gray-950 leading-[1.1]">
-                                Join India's fastest-growing <span className="text-emerald-600">wellness marketplace.</span>
+                            <h1 className="text-4xl xl:text-5xl font-black leading-tight tracking-tight text-[#F8F3EF]">
+                                Grow Your<br />
+                                Wellness Business.
                             </h1>
-                            <p className="text-gray-500 text-xs leading-relaxed max-w-sm">
-                                Reach millions of health-conscious customers and grow your brand with verified doctor support and pan-India logistics.
+                            <p className="text-sm xl:text-base text-[#F8F3EF]/80 font-medium leading-relaxed max-w-md">
+                                Join our curated premium network of sellers reaching millions of health-conscious customers across India.
                             </p>
                         </div>
 
-                        {/* Benefits Grid */}
-                        <div className="grid grid-cols-1 gap-8">
-                            {[
-                                {
-                                    icon: Tag,
-                                    title: "Zero Listing Fees",
-                                    desc: "List unlimited products for free. Pay only a commission on successful sales.",
-                                    color: "bg-blue-50 text-blue-600"
-                                }
-
-                            ].map((item, i) => (
-                                <div key={i} className="flex gap-4">
-                                    <div className={`w-10 h-10 rounded-xl ${item.color} flex items-center justify-center shrink-0`}>
-                                        <item.icon size={20} />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-[13px] font-bold text-gray-950 mb-1">{item.title}</h3>
-                                        <p className="text-xs text-gray-500 leading-relaxed font-medium">{item.desc}</p>
-                                    </div>
+                        <div className="mt-16 space-y-5">
+                            <div className="flex items-center gap-4 group">
+                                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F8F3EF]/5 border border-[#F8F3EF]/10 text-[#F0C417] transition-all duration-300 group-hover:bg-[#F8F3EF]/10">
+                                    <Store size={20} />
                                 </div>
-                            ))}
-                        </div>
-
-                        {/* Pricing & Eligibility */}
-                        <div className="grid grid-cols-2 gap-6 p-6 bg-white rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[40px] rounded-full"></div>
-                            <div>
-                                <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Simple Pricing</h4>
-                                <div className="space-y-3">
-                                    <div>
-                                        <p className="text-[13px] font-bold text-gray-950">22% – 27%</p>
-                                        <p className="text-[9px] text-gray-400 font-semibold uppercase">Referral Fees</p>
-                                    </div>
-                                    <div className="pt-2 border-t border-gray-50">
-                                        <p className="text-[13px] font-bold text-gray-950">2.50%</p>
-                                        <p className="text-[9px] text-gray-400 font-semibold uppercase tracking-tighter">India Payment Gateway</p>
-                                    </div>
-                                    <div className="pt-2 border-t border-gray-50">
-                                        <p className="text-[13px] font-bold text-gray-950">Minimal</p>
-                                        <p className="text-[9px] text-gray-400 font-semibold uppercase tracking-tighter">Fixed Closing Fee</p>
-                                    </div>
+                                <span className="text-sm font-bold text-[#F8F3EF]/90 group-hover:text-white transition-colors">Direct Customer Access & Brand Pages</span>
+                            </div>
+                            <div className="flex items-center gap-4 group">
+                                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F8F3EF]/5 border border-[#F8F3EF]/10 text-[#F0C417] transition-all duration-300 group-hover:bg-[#F8F3EF]/10">
+                                    <TrendingUp size={20} />
                                 </div>
-                            </div>
-                            <div>
-                                <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Eligibility</h4>
-                                <ul className="space-y-2">
-                                    {['GST Registration', 'AYUSH / Cosmetic License', 'Original & Authentic Products', 'Brand Auth (for Resellers)', 'Active Bank Account'].map((check, i) => (
-                                        <li key={i} className="flex items-center gap-2 text-[10px] font-bold text-gray-600">
-                                            <div className="w-3.5 h-3.5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
-                                                <Check size={9} strokeWidth={4} />
-                                            </div>
-                                            {check}
-                                        </li>
-                                    ))}
-                                </ul>
+                                <span className="text-sm font-bold text-[#F8F3EF]/90 group-hover:text-white transition-colors">Unified Insights & Logistics Support</span>
                             </div>
                         </div>
+                    </div>
 
-                        {/* How to Sell Steps */}
-                        <div className="space-y-6">
-                            <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">The Process</h4>
-                            <div className="space-y-6">
-                                {[
-                                    { step: "1", title: "Register as Seller", desc: "Upload your GST & business details. Assisted onboarding included." },
-                                    { step: "2", title: "List Products", desc: "Upload images, descriptions, and compliance documents." },
-                                    { step: "3", title: "Start Selling", desc: "Cureza promotes your brand to wellness-focused customers." }
-                                ].map((s, i) => (
-                                    <div key={i} className="flex gap-4 relative">
-                                        {i !== 2 && <div className="absolute left-4 top-10 bottom-0 w-px bg-gray-200" />}
-                                        <div className="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[11px] font-bold shrink-0 z-10 shadow-lg shadow-emerald-100 italic">
-                                            {s.step}
-                                        </div>
-                                        <div>
-                                            <h5 className="text-[12px] font-bold text-gray-900">{s.title}</h5>
-                                            <p className="text-[11px] text-gray-500 font-medium">{s.desc}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                    <div className="relative z-10 text-xs text-[#F8F3EF]/50 font-bold uppercase tracking-widest space-y-2">
+                        <div>© 2026 Cureza Wellness. Merchant Portal.</div>
+                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] font-medium normal-case tracking-normal text-[#F8F3EF]/60 mt-2">
+                            <Link href="/" className="hover:text-white hover:underline transition-colors">Home</Link>
+                            <span className="text-[#F8F3EF]/30">•</span>
+                            <Link href="/legal/privacy-policy" className="hover:text-white hover:underline transition-colors">Privacy Policy</Link>
+                            <span className="text-[#F8F3EF]/30">•</span>
+                            <Link href="/legal/terms-of-service" className="hover:text-white hover:underline transition-colors">Terms & Conditions</Link>
+                            <span className="text-[#F8F3EF]/30">•</span>
+                            <Link href="/support/faqs" className="hover:text-white hover:underline transition-colors">Help Center / FAQs</Link>
                         </div>
+                    </div>
 
-
+                    {/* Big decorative background icon */}
+                    <div className="absolute right-[-10%] bottom-[-5%] opacity-[0.03] pointer-events-none">
+                        <Store size={350} />
                     </div>
                 </div>
 
-                {/* 4. Right Side: Multi-Step Form (50%) */}
-                <div className="flex-1 bg-white flex flex-col relative overflow-hidden">
+                {/* Right Side: Multi-Step Form */}
+                <div className="w-full lg:w-[55%] flex flex-col min-h-screen bg-[#F8F3EF] relative">
                     {/* Stepper for Mobile (Small) */}
                     <div className="lg:hidden px-4 md:px-8 pt-8 flex items-center justify-between">
                         {STEPS.map((step, idx) => (
                             <div key={step.id} className="flex flex-col items-center gap-1">
-                                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= step.id ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-200' : 'bg-gray-100 text-gray-400'}`}>
+                                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= step.id ? 'bg-[#052326] text-white shadow-sm shadow-[#052326]/20' : 'bg-gray-100 text-gray-400'}`}>
                                     {currentStep > step.id ? <Check size={12} strokeWidth={3} /> : step.id}
                                 </div>
                                 <span className={`text-[9px] font-bold uppercase tracking-tighter ${currentStep >= step.id ? 'text-gray-950' : 'text-gray-300'}`}>{step.name}</span>
@@ -1164,19 +1125,19 @@ export default function SellerRegisterPage() {
                     {/* Stepper for Desktop (Inline) */}
                     <div className="hidden lg:flex px-12 pt-12 pb-6 border-b border-gray-50 items-center justify-between">
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                            <div className="w-10 h-10 rounded-xl bg-[#052326]/10 text-[#052326] flex items-center justify-center">
                                 {currentStep === 1 && <User size={20} />}
                                 {currentStep === 2 && <ShieldCheck size={20} />}
                                 {currentStep === 3 && <Upload size={20} />}
                             </div>
                             <div>
-                                <p className="text-[10px] font-extrabold text-emerald-600 uppercase tracking-[0.2em]">Step {currentStep} of 3</p>
+                                <p className="text-[10px] font-extrabold text-[#052326] uppercase tracking-[0.2em]">Step {currentStep} of 3</p>
                                 <h2 className="text-xl font-bold text-gray-950 tracking-tight">{STEPS[currentStep - 1].name}</h2>
                             </div>
                         </div>
                         <div className="flex gap-2">
                             {STEPS.map((s) => (
-                                <div key={s.id} className={`w-8 h-1 rounded-full ${currentStep >= s.id ? 'bg-emerald-600 shadow-[0_0_8px_rgba(16,185,129,0.3)]' : 'bg-gray-100'} transition-all duration-500`} />
+                                <div key={s.id} className={`w-8 h-1 rounded-full ${currentStep >= s.id ? 'bg-[#052326] shadow-[0_0_8px_rgba(5,35,38,0.3)]' : 'bg-gray-100'} transition-all duration-500`} />
                             ))}
                         </div>
                     </div>
@@ -1196,7 +1157,7 @@ export default function SellerRegisterPage() {
                                         {/* 1.1 Identity */}
                                         <div className="p-6 bg-white border border-gray-100 rounded-xl shadow-sm space-y-4">
                                             <div className="flex items-center gap-2 mb-2">
-                                                <Building2 size={16} className="text-emerald-600" />
+                                                <Building2 size={16} className="text-[#052326]" />
                                                 <h3 className="text-sm font-bold text-gray-900">Business Identity</h3>
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1230,7 +1191,7 @@ export default function SellerRegisterPage() {
                                         {/* 1.2 Address */}
                                         <div className="p-6 bg-white border border-gray-100 rounded-xl shadow-sm space-y-4">
                                             <div className="flex items-center gap-2 mb-2">
-                                                <MapPin size={16} className="text-emerald-600" />
+                                                <MapPin size={16} className="text-[#052326]" />
                                                 <h3 className="text-sm font-bold text-gray-900">Address Details</h3>
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1263,7 +1224,7 @@ export default function SellerRegisterPage() {
                                         {/* 1.3 Business Details */}
                                         <div className="p-6 bg-white border border-gray-100 rounded-xl shadow-sm space-y-6">
                                             <div className="flex items-center gap-2 mb-2">
-                                                <Info size={16} className="text-emerald-600" />
+                                                <Info size={16} className="text-[#052326]" />
                                                 <h3 className="text-sm font-bold text-gray-900">Additional Details</h3>
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1292,18 +1253,18 @@ export default function SellerRegisterPage() {
                                 {currentStep === 2 && (
                                     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500 max-w-xl mx-auto py-4">
                                         <div className="text-center space-y-2 mb-8">
-                                            <div className="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                                                <ShieldCheck size={24} className="text-emerald-600" />
+                                            <div className="w-12 h-12 bg-[#052326]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                <ShieldCheck size={24} className="text-[#052326]" />
                                             </div>
                                             <h3 className="text-lg font-bold">Verification Required</h3>
                                             <p className="text-xs text-gray-500">We've sent 4-digit codes to your email and mobile number. Please enter them below to proceed.</p>
                                         </div>
 
                                         {/* Email Verification */}
-                                        <div className={`p-6 rounded-xl border-2 transition-all ${verification.emailVerified ? 'bg-emerald-50/30 border-emerald-100' : 'bg-white border-gray-100 shadow-sm'}`}>
+                                        <div className={`p-6 rounded-xl border-2 transition-all ${verification.emailVerified ? 'bg-[#052326]/5 border-[#052326]/20' : 'bg-white border-gray-200 shadow-sm'}`}>
                                             <div className="flex items-center justify-between mb-4">
                                                 <div className="flex items-center gap-3">
-                                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${verification.emailVerified ? 'bg-emerald-100 text-emerald-600' : 'bg-gray-100 text-gray-400'}`}>
+                                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${verification.emailVerified ? 'bg-[#052326]/10 text-[#052326]' : 'bg-gray-100 text-gray-400'}`}>
                                                         <Mail size={16} />
                                                     </div>
                                                     <div>
@@ -1311,7 +1272,7 @@ export default function SellerRegisterPage() {
                                                         <p className="text-[10px] text-gray-500">{formData.email}</p>
                                                     </div>
                                                 </div>
-                                                {verification.emailVerified && <span className="text-[10px] font-bold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full uppercase">Verified</span>}
+                                                {verification.emailVerified && <span className="text-[10px] font-bold text-[#052326] bg-[#052326]/10 px-2 py-0.5 rounded-full uppercase">Verified</span>}
                                             </div>
 
                                             {!verification.emailVerified && (
@@ -1351,10 +1312,10 @@ export default function SellerRegisterPage() {
                                         </div>
 
                                         {/* Mobile Verification */}
-                                        <div className={`p-6 rounded-xl border-2 transition-all ${verification.mobileVerified ? 'bg-emerald-50/30 border-emerald-100' : 'bg-white border-gray-100 shadow-sm'}`}>
+                                        <div className={`p-6 rounded-xl border-2 transition-all ${verification.mobileVerified ? 'bg-[#052326]/5 border-[#052326]/20' : 'bg-white border-gray-200 shadow-sm'}`}>
                                             <div className="flex items-center justify-between mb-4">
                                                 <div className="flex items-center gap-3">
-                                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${verification.mobileVerified ? 'bg-emerald-100 text-emerald-600' : 'bg-gray-100 text-gray-400'}`}>
+                                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${verification.mobileVerified ? 'bg-[#052326]/10 text-[#052326]' : 'bg-gray-100 text-gray-400'}`}>
                                                         <Phone size={16} />
                                                     </div>
                                                     <div>
@@ -1362,7 +1323,7 @@ export default function SellerRegisterPage() {
                                                         <p className="text-[10px] text-gray-500">{formData.mobile_number}</p>
                                                     </div>
                                                 </div>
-                                                {verification.mobileVerified && <span className="text-[10px] font-bold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full uppercase">Verified</span>}
+                                                {verification.mobileVerified && <span className="text-[10px] font-bold text-[#052326] bg-[#052326]/10 px-2 py-0.5 rounded-full uppercase">Verified</span>}
                                             </div>
 
                                             {!verification.mobileVerified && (
@@ -1415,7 +1376,7 @@ export default function SellerRegisterPage() {
                                         <div className="space-y-6">
                                             <div className="flex items-center justify-between border-b border-gray-100 pb-4">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+                                                    <div className="w-10 h-10 bg-[#052326]/10 rounded-xl flex items-center justify-center text-[#052326]">
                                                         <MapPin size={20} />
                                                     </div>
                                                     <div>
@@ -1519,7 +1480,7 @@ export default function SellerRegisterPage() {
                                                                         value={opt}
                                                                         checked={formData.sell_on_other_platforms === opt}
                                                                         onChange={handleInputChange}
-                                                                        className="text-emerald-600 focus:ring-emerald-500"
+                                                                        className="text-[#052326] focus:ring-[#052326]"
                                                                     />
                                                                     <span className="text-xs font-medium text-gray-700">{opt}</span>
                                                                 </label>
@@ -1537,7 +1498,7 @@ export default function SellerRegisterPage() {
                                                                         value={opt}
                                                                         checked={formData.has_website === opt}
                                                                         onChange={handleInputChange}
-                                                                        className="text-emerald-600 focus:ring-emerald-500"
+                                                                        className="text-[#052326] focus:ring-[#052326]"
                                                                     />
                                                                     <span className="text-xs font-medium text-gray-700">{opt}</span>
                                                                 </label>
@@ -1564,7 +1525,7 @@ export default function SellerRegisterPage() {
                                         <div className="space-y-6">
                                             <div className="flex items-center justify-between border-b border-gray-100 pb-4">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+                                                    <div className="w-10 h-10 bg-[#052326]/10 rounded-xl flex items-center justify-center text-[#052326]">
                                                         <Building2 size={20} />
                                                     </div>
                                                     <div>
@@ -1574,7 +1535,7 @@ export default function SellerRegisterPage() {
                                                 </div>
                                             </div>
 
-                                            <div className="p-6 bg-white border border-gray-100 rounded-2xl shadow-sm space-y-5">
+                                            <div className="p-6 bg-white border border-gray-100 rounded-[10px] space-y-5">
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                                     <InputField
                                                         label="Account Holder Name"
@@ -1633,7 +1594,7 @@ export default function SellerRegisterPage() {
                                         <div className="space-y-6">
                                             <div className="flex items-center justify-between border-b border-gray-100 pb-4">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+                                                    <div className="w-10 h-10 bg-[#052326]/10 rounded-xl flex items-center justify-center text-[#052326]">
                                                         <FileText size={20} />
                                                     </div>
                                                     <div>
@@ -1661,20 +1622,20 @@ export default function SellerRegisterPage() {
                                                 ))}
 
                                                 {/* Product / Regulatory (Conditional Multi-select) */}
-                                                <div className="p-6 bg-emerald-50/20 border border-emerald-100 rounded-2xl space-y-5">
+                                                <div className="p-6 bg-[#052326]/5 border border-[#052326]/10 rounded-[10px] space-y-5">
                                                     <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
-                                                        <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+                                                        <div className="w-10 h-10 bg-[#052326]/10 rounded-[10px] flex items-center justify-center text-[#052326]">
                                                             <ScrollText size={20} />
                                                         </div>
                                                         <div>
-                                                            <h4 className="text-xs font-bold text-emerald-900 uppercase tracking-widest">Product / Regulatory Licenses <span className="text-red-500">*</span></h4>
-                                                            <p className="text-[10px] text-gray-500 font-medium">Select available licenses or choose "Upload Later"</p>
+                                                            <h4 className="text-xs font-bold text-[#052326] tracking-wide">Product / Regulatory Licenses <span className="text-red-500">*</span></h4>
+                                                            <p className="text-[10px] text-gray-600 font-medium">Select available licenses or choose "Upload Later"</p>
                                                         </div>
                                                     </div>
 
                                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                                         {['Drug License', 'AYUSH License', 'FSSAI License', 'CBD / Hemp NOC', 'COA / Lab Reports'].map(license => (
-                                                            <label key={license} className={`flex items-center gap-3 p-3 bg-white border rounded-xl cursor-pointer transition-all select-none group ${formData.selected_licenses.includes(license) ? 'border-emerald-500 bg-emerald-50/10' : 'border-emerald-50 hover:border-emerald-300'}`}>
+                                                            <label key={license} className={`flex items-center gap-3 p-3 bg-white border rounded-[10px] cursor-pointer transition-all select-none group ${formData.selected_licenses.includes(license) ? 'border-[#052326] bg-[#052326]/5' : 'border-[#052326]/10 hover:border-[#052326]/30'}`}>
                                                                 <input
                                                                     type="checkbox"
                                                                     checked={formData.selected_licenses.includes(license)}
@@ -1688,17 +1649,17 @@ export default function SellerRegisterPage() {
                                                                         }
                                                                         setFormData(prev => ({ ...prev, selected_licenses: newSelected }));
                                                                     }}
-                                                                    className="w-4 h-4 rounded border-emerald-200 text-emerald-600 focus:ring-emerald-500"
+                                                                    className="w-4 h-4 rounded border-[#052326]/20 text-[#052326] focus:ring-[#052326]"
                                                                 />
-                                                                <span className={`text-[11px] font-bold transition-colors ${formData.selected_licenses.includes(license) ? 'text-emerald-900' : 'text-gray-700 group-hover:text-emerald-900'}`}>{license}</span>
+                                                                <span className={`text-[11px] font-bold transition-colors ${formData.selected_licenses.includes(license) ? 'text-[#052326]' : 'text-gray-700 group-hover:text-[#052326]'}`}>{license}</span>
                                                             </label>
                                                         ))}
                                                     </div>
 
                                                     {/* Upload Later Warning Row */}
-                                                    <label className={`flex items-start gap-4 p-4 border rounded-xl cursor-pointer transition-all select-none group relative ${formData.selected_licenses.includes('Upload Later')
-                                                        ? 'bg-amber-50 border-amber-200 shadow-sm'
-                                                        : 'bg-white border-dashed border-gray-300 hover:border-amber-300 hover:bg-amber-50/30'
+                                                    <label className={`flex items-start gap-4 p-4 border rounded-[10px] cursor-pointer transition-all select-none group relative ${formData.selected_licenses.includes('Upload Later')
+                                                        ? 'bg-[#F0C417]/10 border-[#F0C417]/30'
+                                                        : 'bg-white border-dashed border-[#052326]/10 hover:border-[#F0C417] hover:bg-[#F0C417]/5'
                                                         }`}>
                                                         <div className="mt-1">
                                                             <input
@@ -1710,22 +1671,22 @@ export default function SellerRegisterPage() {
                                                                         : ['Upload Later'];
                                                                     setFormData(prev => ({ ...prev, selected_licenses: newSelected }));
                                                                 }}
-                                                                className="w-4 h-4 rounded border-amber-300 text-amber-600 focus:ring-amber-500"
+                                                                className="w-4 h-4 rounded border-[#F0C417]/30 text-[#052326] focus:ring-[#052326]"
                                                             />
                                                         </div>
                                                         <div className="flex-1">
                                                             <div className="flex items-center justify-between">
-                                                                <span className={`text-xs font-bold transition-colors ${formData.selected_licenses.includes('Upload Later') ? 'text-amber-900' : 'text-gray-600 group-hover:text-amber-800'}`}>
+                                                                <span className={`text-xs font-bold transition-colors ${formData.selected_licenses.includes('Upload Later') ? 'text-[#052326]' : 'text-gray-700 group-hover:text-[#052326]'}`}>
                                                                     I don't have these documents right now (Upload Later)
                                                                 </span>
                                                                 {formData.selected_licenses.includes('Upload Later') && (
-                                                                    <span className="text-[10px] font-bold px-2 py-0.5 bg-amber-100 text-amber-700 rounded-lg uppercase tracking-wider">
+                                                                    <span className="text-[10px] font-bold px-2 py-0.5 bg-[#F0C417]/20 text-[#052326] rounded-[10px]">
                                                                         Restricted Mode
                                                                     </span>
                                                                 )}
                                                             </div>
                                                             <p className="text-[10px] text-gray-500 mt-1 leading-relaxed">
-                                                                <span className="font-bold text-amber-600">Note:</span> Your account will have restricted access until mandatory regulatory documents are verified. You can upload them later from your seller dashboard settings.
+                                                                <span className="font-bold text-[#F0C417]">Note:</span> Your account will have restricted access until mandatory regulatory documents are verified. You can upload them later from your seller dashboard settings.
                                                             </p>
                                                         </div>
                                                     </label>
@@ -1756,21 +1717,21 @@ export default function SellerRegisterPage() {
                                         <div className="relative py-12 text-center overflow-hidden">
                                             <div className="absolute top-1/2 left-0 w-full h-px bg-gray-100 z-0"></div>
                                             <div className="relative z-10 inline-block px-10 bg-gray-50/50">
-                                                <h3 className="text-sm font-black text-gray-400 uppercase tracking-[0.3em]">Documents – Company Specific</h3>
+                                                <h3 className="text-sm font-bold text-gray-500">Documents – Company Specific</h3>
                                             </div>
                                         </div>
 
                                         {/* SECTION 2: COMPANY TYPE SELECTION */}
-                                        <div className="p-8 bg-white border border-gray-100 rounded-3xl shadow-xl shadow-gray-200/50 space-y-6 relative overflow-hidden group">
-                                            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50/50 rounded-full -mr-16 -mt-16 blur-3xl transition-all group-hover:bg-emerald-100/50 opacity-50"></div>
+                                        <div className="p-8 bg-white border border-gray-100 rounded-[10px] relative overflow-hidden group">
+                                            <div className="absolute top-0 right-0 w-32 h-32 bg-[#052326]/5 rounded-full -mr-16 -mt-16 blur-3xl transition-all group-hover:bg-[#052326]/10 opacity-50"></div>
 
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-200 italic font-black">
+                                            <div className="flex items-center gap-4 mb-6">
+                                                <div className="w-12 h-12 bg-[#052326] rounded-[10px] flex items-center justify-center text-white italic font-black">
                                                     ?
                                                 </div>
                                                 <div>
                                                     <h3 className="text-xl font-bold text-gray-900">Select Company Type *</h3>
-                                                    <p className="text-xs text-gray-500 font-medium">Choose your legal entity status to unveil required documents</p>
+                                                    <p className="text-xs text-gray-700 font-medium">Choose your legal entity status to unveil required documents</p>
                                                 </div>
                                             </div>
 
@@ -1780,9 +1741,9 @@ export default function SellerRegisterPage() {
                                                         key={type}
                                                         type="button"
                                                         onClick={() => setFormData(prev => ({ ...prev, company_type: type as any }))}
-                                                        className={`px-2 py-4 rounded-2xl text-[10px] font-black border transition-all uppercase tracking-[0.1em] text-center flex items-center justify-center h-full min-h-[60px] ${formData.company_type === type
-                                                            ? 'bg-emerald-600 text-white border-emerald-600 shadow-xl shadow-emerald-200 scale-[1.02]'
-                                                            : 'bg-white text-gray-500 border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/30'
+                                                        className={`px-2 py-4 rounded-[10px] text-[10px] font-bold border transition-all text-center flex items-center justify-center h-full min-h-[60px] ${formData.company_type === type
+                                                            ? 'bg-[#052326] text-white border-[#052326] scale-[1.02]'
+                                                            : 'bg-white text-gray-500 border-gray-100 hover:border-[#052326] hover:bg-[#052326]/5'
                                                             }`}
                                                     >
                                                         {type}
@@ -1813,8 +1774,8 @@ export default function SellerRegisterPage() {
                                                 </div>
 
                                                 <div className="mt-12 pt-10 border-t border-gray-100">
-                                                    <div className="bg-emerald-900 rounded-3xl p-8 shadow-2xl shadow-emerald-900/20 text-white group overflow-hidden relative">
-                                                        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-800 rounded-full -mr-32 -mt-32 blur-3xl opacity-50"></div>
+                                                    <div className="bg-[#052326] rounded-[10px] p-8 text-white group overflow-hidden relative">
+                                                        <div className="absolute top-0 right-0 w-64 h-64 bg-[#052326]/90 rounded-full -mr-32 -mt-32 blur-3xl opacity-50"></div>
                                                         <label className="flex items-start gap-6 cursor-pointer relative z-10">
                                                             <div className="relative flex items-center mt-1">
                                                                 <input
@@ -1831,14 +1792,14 @@ export default function SellerRegisterPage() {
                                                                     }}
                                                                     className="peer sr-only"
                                                                 />
-                                                                <div className="w-6 h-6 border-2 border-emerald-700 rounded-lg text-emerald-900 peer-checked:bg-white peer-checked:border-white flex items-center justify-center transition-all group-hover:border-emerald-500">
+                                                                <div className="w-6 h-6 border-2 border-white/20 rounded-lg text-white peer-checked:bg-[#F0C417] peer-checked:border-[#F0C417] flex items-center justify-center transition-all group-hover:border-white">
                                                                     <Check size={14} strokeWidth={4} />
                                                                 </div>
                                                             </div>
                                                             <div>
-                                                                <p className="text-sm font-bold text-emerald-100 leading-relaxed mb-2 uppercase tracking-widest text-[11px]">Final Declaration</p>
-                                                                <span className="text-xs text-emerald-50/80 font-medium leading-relaxed">
-                                                                    I hereby declare that all information and documents provided are true and correct. I understand that false documentation will lead to immediate portal rejection. I agree to the <button type="button" onClick={() => setShowTermsModal(true)} className="text-white font-bold underline decoration-emerald-500 underline-offset-4">Seller Policy</button> and <Link href="/terms" className="text-white font-bold underline decoration-emerald-500 underline-offset-4">Terms of Service</Link>.
+                                                                <p className="text-sm font-bold text-[#F8F3EF]/90 leading-relaxed mb-2 text-[11px]">Final Declaration</p>
+                                                                <span className="text-xs text-[#F8F3EF]/70 font-medium leading-relaxed">
+                                                                    I hereby declare that all information and documents provided are true and correct. I understand that false documentation will lead to immediate portal rejection. I agree to the <button type="button" onClick={() => setShowTermsModal(true)} className="text-white font-bold underline decoration-[#F0C417] underline-offset-4">Seller Policy</button> and <Link href="/terms" className="text-white font-bold underline decoration-[#F0C417] underline-offset-4">Terms of Service</Link>.
                                                                 </span>
                                                             </div>
                                                         </label>
@@ -1846,12 +1807,12 @@ export default function SellerRegisterPage() {
                                                 </div>
                                             </div>
                                         ) : (
-                                            <div className="py-32 text-center space-y-6 bg-gray-50/50 rounded-[3rem] border-4 border-dashed border-gray-100 grayscale opacity-40">
-                                                <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center mx-auto shadow-xl text-gray-200">
+                                            <div className="py-32 text-center space-y-6 bg-gray-50/50 rounded-[10px] border-4 border-dashed border-gray-100 grayscale opacity-40">
+                                                <div className="w-16 h-16 bg-white rounded-[10px] flex items-center justify-center mx-auto text-gray-200">
                                                     <Lock size={32} />
                                                 </div>
                                                 <div className="space-y-1">
-                                                    <p className="text-xs font-black text-gray-400 uppercase tracking-[0.2em]">Company Documents Locked</p>
+                                                    <p className="text-xs font-bold text-gray-400">Company Documents Locked</p>
                                                     <p className="text-[11px] text-gray-400 font-medium italic">Please select your legal entity status above to continue onboarding</p>
                                                 </div>
                                             </div>
@@ -1865,7 +1826,7 @@ export default function SellerRegisterPage() {
                                         <button
                                             type="button"
                                             onClick={prevStep}
-                                            className="px-6 py-2 rounded-xl border border-gray-200 text-[11px] font-bold text-gray-500 hover:bg-gray-50 hover:text-gray-950 transition-all uppercase tracking-widest"
+                                            className="px-6 py-2 rounded-[10px] border border-gray-200 text-[11px] font-bold text-gray-700 hover:bg-gray-50 hover:text-gray-950 transition-all"
                                         >
                                             Previous
                                         </button>
@@ -1879,7 +1840,7 @@ export default function SellerRegisterPage() {
                                                 type="button"
                                                 onClick={handleSaveDraft}
                                                 disabled={isSubmitting}
-                                                className="inline-flex h-11 items-center justify-center rounded-xl border-2 border-emerald-600/20 bg-emerald-50/30 px-8 text-[11px] font-black text-emerald-700 hover:bg-emerald-100 hover:border-emerald-600/40 transition-all disabled:opacity-50 uppercase tracking-widest gap-2 shadow-sm"
+                                                className="inline-flex h-11 items-center justify-center rounded-[10px] border-2 border-[#052326]/20 bg-[#052326]/5 px-8 text-[11px] font-bold text-[#052326] hover:bg-[#052326]/10 hover:border-[#052326]/30 transition-all disabled:opacity-50 gap-2"
                                             >
                                                 {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : (
                                                     <>
@@ -1893,9 +1854,9 @@ export default function SellerRegisterPage() {
                                         <button
                                             type="submit"
                                             disabled={isSubmitting || (currentStep === 3 && (!isKycComplete() || !formData.agree_terms))}
-                                            className={`inline-flex h-11 items-center justify-center rounded-xl px-10 text-[11px] font-black text-white shadow-xl transition-all disabled:opacity-50 uppercase tracking-widest gap-2 ${currentStep === 3 && (!isKycComplete() || !formData.agree_terms)
-                                                ? 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'
-                                                : 'bg-gray-950 hover:bg-emerald-600 shadow-emerald-200'
+                                            className={`inline-flex h-11 items-center justify-center rounded-[10px] px-10 text-[11px] font-bold text-white transition-all disabled:opacity-50 gap-2 ${currentStep === 3 && (!isKycComplete() || !formData.agree_terms)
+                                                ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                                : 'bg-[#052326] hover:bg-[#052326]/90'
                                                 }`}
                                         >
                                             {isSubmitting ? (
@@ -1913,18 +1874,31 @@ export default function SellerRegisterPage() {
                                     </div>
                                 </div>
                             </form>
-                            <div className="mt-4 pt-8 border-t border-gray-100 flex flex-col gap-4">
-                                <div className="space-y-1">
-                                    <h4 className="text-[13px] font-bold text-gray-950">Ready to Start Selling?</h4>
-                                    <p className="text-xs text-gray-500 font-medium leading-relaxed">Grow your wellness brand with India's #1 wellness ecosystem.</p>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <Link href="/seller/login" className="px-5 py-2 rounded-xl bg-gray-950 text-white text-[11px] font-extrabold hover:bg-emerald-600 transition-all shadow-lg shadow-gray-200 uppercase tracking-widest">
-                                        Seller Login
+
+                            <div className="text-center text-xs font-semibold mt-8">
+                                <span className="text-gray-500">Already have a seller account? </span>
+                                <Link href="/seller/login" className="font-bold text-[#052326] hover:text-[#F0C417] transition-colors">
+                                    Login now
+                                </Link>
+                            </div>
+
+                            <div className="text-center text-[11px] font-semibold border-t border-gray-100 pt-4 mt-6 flex flex-col gap-2">
+                                <div>
+                                    <span className="text-gray-400">Are you a customer? </span>
+                                    <Link href="/login" className="font-bold text-[#052326] hover:text-[#F0C417] transition-colors">
+                                        Customer Login
                                     </Link>
-                                    <button onClick={() => document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth' })} className="px-5 py-2 rounded-xl border border-gray-200 text-gray-600 text-[11px] font-extrabold hover:bg-gray-50 transition-all uppercase tracking-widest">
-                                        Learn More
-                                    </button>
+                                </div>
+                                <div>
+                                    <span className="text-gray-400">Are you a doctor? </span>
+                                    <Link href="/doctor/login" className="font-bold text-[#052326] hover:text-[#F0C417] transition-colors">
+                                        Doctor Portal
+                                    </Link>
+                                </div>
+                                <div className="border-t border-gray-100 pt-3 mt-2">
+                                    <Link href="/" className="font-bold text-[#052326] hover:text-[#F0C417] transition-colors text-xs">
+                                        Go Back to Home
+                                    </Link>
                                 </div>
                             </div>
                             <p className="mt-12 text-center text-[10px] text-gray-400 font-semibold uppercase tracking-wider">

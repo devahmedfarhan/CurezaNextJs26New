@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import api from '@/lib/api';
 import { useToast } from '@/contexts/ToastContext';
+import AuthFooter from '@/components/common/AuthFooter';
 
 // --- Steps (Reduced to 4) ---
 const STEPS = [
@@ -338,61 +339,65 @@ export default function DoctorRegisterPage() {
     };
 
     return (
-        <div className="flex min-h-screen bg-background font-sans antialiased text-slate-900">
-            {/* Left Side: Marketing Content (Fixed) */}
-            <div className="hidden lg:flex lg:w-1/2 relative bg-slate-900 text-white flex-col justify-between p-12 overflow-hidden border-r border-slate-800">
-                <div className="relative z-10">
-                    <Link href="/" className="flex items-center gap-2 mb-16 group">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 transition-all group-hover:bg-white/20">
-                            <Stethoscope className="h-6 w-6 text-white" />
-                        </div>
-                        <span className="text-2xl font-bold tracking-tight">Cureza.</span>
-                    </Link>
+        <div className="min-h-screen w-full bg-[#F8F3EF] flex flex-col text-[#052326] font-sans justify-between antialiased">
+            <div className="w-full flex-1 flex flex-col lg:flex-row bg-[#F8F3EF] relative">
+                {/* Left Side: Marketing Content */}
+                <div className="hidden lg:flex lg:w-[45%] bg-[#052326] text-[#F8F3EF] p-16 flex-col justify-between relative overflow-hidden min-h-screen border-r border-[#052326]/10">
+                    {/* Decorative glow element */}
+                    <div className="absolute -top-40 -left-40 w-96 h-96 bg-[#F0C417]/10 rounded-full blur-[120px] pointer-events-none" />
+                    <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-[#F8F3EF]/10 rounded-full blur-[120px] pointer-events-none" />
 
-                    <div className="space-y-6 max-w-lg">
-                        <div className="inline-flex items-center rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-300">
-                            Now onboarding doctors
-                        </div>
-                        <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-5xl leading-[1.15]">
-                            Expand your practice <br />
-                            <span className="text-blue-400">digital first.</span>
-                        </h1>
-                        <p className="text-lg text-slate-400 leading-relaxed">
-                            Join India's most trusted network of holistic healthcare providers. Get verified, manage appointments, and access a global patient base.
-                        </p>
-                    </div>
+                    <div className="relative z-10">
+                        <Link href="/" className="hover:opacity-95 transition-opacity inline-block shrink-0">
+                            <img src="/logo-white.svg" alt="Cureza Logo" className="h-9 w-auto object-contain" />
+                        </Link>
 
-                    <div className="mt-12 space-y-6">
-                        <div className="flex items-start gap-4">
-                            <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-500/10 text-blue-400">
-                                <ShieldCheck size={16} />
-                            </div>
-                            <div>
-                                <h3 className="font-semibold text-white">Verified Profile</h3>
-                                <p className="text-sm text-slate-400 mt-1">Get a "Verified Practitioner" badge.</p>
-                            </div>
+                        <div className="mt-24 space-y-6">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest bg-[#F0C417]/20 text-[#F0C417] border border-[#F0C417]/30">
+                                <Stethoscope size={10} className="animate-pulse" />
+                                Practitioner Network
+                            </span>
+                            <h1 className="text-4xl xl:text-5xl font-black leading-tight tracking-tight text-[#F8F3EF]">
+                                Expand your practice <br />
+                                <span className="text-[#F0C417]">digital first.</span>
+                            </h1>
+                            <p className="text-sm xl:text-base text-[#F8F3EF]/80 font-medium leading-relaxed max-w-md">
+                                Join India's most trusted network of holistic healthcare providers. Get verified, manage appointments, and access a global patient base.
+                            </p>
                         </div>
-                        <div className="flex items-start gap-4">
-                            <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400">
-                                <Building2 size={16} />
+
+                        <div className="mt-16 space-y-5">
+                            <div className="flex items-center gap-4 group">
+                                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F8F3EF]/5 border border-[#F8F3EF]/10 text-[#F0C417] transition-all duration-300 group-hover:bg-[#F8F3EF]/10">
+                                    <ShieldCheck size={20} />
+                                </div>
+                                <span className="text-sm font-bold text-[#F8F3EF]/90 group-hover:text-white transition-colors">Verified Profile Badge</span>
                             </div>
-                            <div>
-                                <h3 className="font-semibold text-white">Practice Management</h3>
-                                <p className="text-sm text-slate-400 mt-1">Smart scheduling & prescriptions.</p>
+                            <div className="flex items-center gap-4 group">
+                                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F8F3EF]/5 border border-[#F8F3EF]/10 text-[#F0C417] transition-all duration-300 group-hover:bg-[#F8F3EF]/10">
+                                    <Building2 size={20} />
+                                </div>
+                                <span className="text-sm font-bold text-[#F8F3EF]/90 group-hover:text-white transition-colors">Smart Practice Management</span>
                             </div>
                         </div>
                     </div>
+                    <div className="relative z-10 text-xs text-[#F8F3EF]/50 font-bold uppercase tracking-widest space-y-2">
+                        <div>© 2026 Cureza Wellness • Doctor Verification</div>
+                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] font-medium normal-case tracking-normal text-[#F8F3EF]/60 mt-2">
+                            <Link href="/" className="hover:text-white hover:underline transition-colors">Home</Link>
+                            <span className="text-[#F8F3EF]/30">•</span>
+                            <Link href="/legal/privacy-policy" className="hover:text-white hover:underline transition-colors">Privacy Policy</Link>
+                            <span className="text-[#F8F3EF]/30">•</span>
+                            <Link href="/legal/terms-of-service" className="hover:text-white hover:underline transition-colors">Terms & Conditions</Link>
+                            <span className="text-[#F8F3EF]/30">•</span>
+                            <Link href="/support/faqs" className="hover:text-white hover:underline transition-colors">Help Center / FAQs</Link>
+                        </div>
+                    </div>
                 </div>
-                <div className="relative z-10 mt-12 text-xs text-slate-500 font-medium uppercase tracking-wider">
-                    © 2025 Cureza Wellness • Doctor Verification
-                </div>
-                <div className="absolute top-0 right-0 -mr-32 -mt-32 w-[500px] h-[500px] bg-blue-600/20 blur-[100px] rounded-full pointer-events-none" />
-                <div className="absolute bottom-0 left-0 -ml-32 -mb-32 w-[500px] h-[500px] bg-emerald-600/10 blur-[100px] rounded-full pointer-events-none" />
-            </div>
 
-            {/* Right Side: Form */}
-            <div className="w-full lg:w-1/2 flex flex-col h-screen overflow-y-auto bg-white">
-                <div className="flex-1 px-6 py-12 lg:px-16 xl:px-24">
+                {/* Right Side: Form */}
+                <div className="w-full lg:w-[55%] flex flex-col min-h-screen bg-[#F8F3EF]">
+                    <div className="flex-1 px-6 py-12 lg:px-16 xl:px-24">
                     <div className="max-w-2xl mx-auto space-y-8">
                         {/* Header */}
                         <div className="flex justify-between items-center">
@@ -827,7 +832,7 @@ export default function DoctorRegisterPage() {
                                         </div>
 
                                         <div className="pt-4">
-                                            <Link href="/doctor/login" className="inline-flex items-center justify-center h-12 px-8 rounded-lg bg-slate-900 text-sm font-semibold text-white shadow-lg shadow-slate-200 hover:bg-slate-800 hover:-translate-y-0.5 transition-all">
+                                            <Link href="/doctor/login" className="inline-flex items-center justify-center h-12 px-8 rounded-lg bg-slate-900 text-sm font-semibold text-white hover:bg-slate-800 hover:-translate-y-0.5 transition-all">
                                                 Return to Login
                                             </Link>
                                         </div>
@@ -839,5 +844,6 @@ export default function DoctorRegisterPage() {
                 </div>
             </div>
         </div>
+    </div>
     );
 }

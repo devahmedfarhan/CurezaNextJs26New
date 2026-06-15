@@ -49,43 +49,43 @@ export default function CreateTicketPage() {
     };
 
     return (
-        <div className="space-y-6 w-full">
+        <div className="space-y-6 w-full animate-in fade-in duration-300">
             {/* Header / Back row */}
             <div className="flex items-center gap-3">
                 <Link 
                     href="/seller/dashboard/support"
-                    className="p-2 border border-black/[0.05] dark:border-white/[0.05] hover:bg-gray-50 dark:hover:bg-gray-800 rounded-[8px] transition-all text-gray-500"
+                    className="p-2 border border-black/[0.05] dark:border-white/[0.05] hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-all text-gray-500"
                 >
                     <ArrowLeft size={16} />
                 </Link>
                 <div>
-                    <h1 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">Create Support Request</h1>
-                    <p className="text-xs text-gray-400 font-medium mt-0.5">Submit a ticket to start a conversation with the support team.</p>
+                    <h1 className="text-xl font-bold text-gray-800 dark:text-white tracking-tight">Create Support Request</h1>
+                    <p className="text-xs text-gray-500 font-medium mt-0.5">Submit a ticket to start a conversation with the support team.</p>
                 </div>
             </div>
 
             {/* Form Card */}
-            <div className="bg-white dark:bg-gray-900 border border-black/[0.05] dark:border-white/[0.05] rounded-[8px] p-6 space-y-6">
+            <div className="bg-white dark:bg-gray-900 border border-gray-150 dark:border-white/[0.05] rounded-2xl p-6 space-y-6 shadow-sm">
                 <form onSubmit={handleSubmit} className="space-y-5">
                     <div>
-                        <label className="block text-[11px] font-bold text-gray-400 uppercase mb-1.5">Subject</label>
+                        <label className="block text-xs font-semibold text-gray-500 capitalize mb-1.5 px-1">Subject</label>
                         <input
                             type="text"
                             name="subject"
                             required
-                            className="w-full border border-black/[0.05] focus:border-cureza-green rounded-[8px] px-3.5 py-2.5 text-xs outline-none bg-white dark:bg-gray-900 font-semibold"
+                            className="w-full border border-gray-200 focus:border-cureza-green rounded-xl px-4 py-2.5 text-xs outline-none bg-white dark:bg-gray-900 font-semibold"
                             value={formData.subject}
                             onChange={handleChange}
-                            placeholder="Brief summary of the issue (e.g. payout delay, listing discrepancy)"
+                            placeholder="Brief summary of the issue (e.g., payout delay, listing discrepancy)"
                         />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-[11px] font-bold text-gray-400 uppercase mb-1.5">Category</label>
+                            <label className="block text-xs font-semibold text-gray-500 capitalize mb-1.5 px-1">Category</label>
                             <select
                                 name="category"
-                                className="w-full border border-black/[0.05] focus:border-cureza-green rounded-[8px] px-3.5 py-2.5 text-xs font-bold bg-white dark:bg-gray-900 outline-none cursor-pointer"
+                                className="w-full border border-gray-200 focus:border-cureza-green rounded-xl px-4 py-2.5 text-xs font-semibold bg-white dark:bg-gray-900 outline-none cursor-pointer"
                                 value={formData.category}
                                 onChange={handleChange}
                             >
@@ -97,10 +97,10 @@ export default function CreateTicketPage() {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-[11px] font-bold text-gray-400 uppercase mb-1.5">Priority</label>
+                            <label className="block text-xs font-semibold text-gray-500 capitalize mb-1.5 px-1">Priority</label>
                             <select
                                 name="priority"
-                                className="w-full border border-black/[0.05] focus:border-cureza-green rounded-[8px] px-3.5 py-2.5 text-xs font-bold bg-white dark:bg-gray-900 outline-none cursor-pointer"
+                                className="w-full border border-gray-200 focus:border-cureza-green rounded-xl px-4 py-2.5 text-xs font-semibold bg-white dark:bg-gray-900 outline-none cursor-pointer"
                                 value={formData.priority}
                                 onChange={handleChange}
                             >
@@ -112,11 +112,11 @@ export default function CreateTicketPage() {
                     </div>
 
                     <div>
-                        <label className="block text-[11px] font-bold text-gray-400 uppercase mb-1.5">Related Order ID (Optional)</label>
+                        <label className="block text-xs font-semibold text-gray-500 capitalize mb-1.5 px-1">Related Order ID (Optional)</label>
                         <input
                             type="number"
                             name="related_id"
-                            className="w-full border border-black/[0.05] focus:border-cureza-green rounded-[8px] px-3.5 py-2.5 text-xs outline-none bg-white dark:bg-gray-900 font-semibold"
+                            className="w-full border border-gray-200 focus:border-cureza-green rounded-xl px-4 py-2.5 text-xs outline-none bg-white dark:bg-gray-900 font-semibold"
                             value={formData.related_id}
                             onChange={handleChange}
                             placeholder="E.g., 12345"
@@ -125,12 +125,12 @@ export default function CreateTicketPage() {
                     </div>
 
                     <div>
-                        <label className="block text-[11px] font-bold text-gray-400 uppercase mb-1.5">Detailed Description</label>
+                        <label className="block text-xs font-semibold text-gray-500 capitalize mb-1.5 px-1">Detailed Description</label>
                         <textarea
                             name="message"
                             required
                             rows={5}
-                            className="w-full border border-black/[0.05] focus:border-cureza-green rounded-[8px] px-3.5 py-2.5 text-xs outline-none bg-white dark:bg-gray-900 font-medium"
+                            className="w-full border border-gray-200 focus:border-cureza-green rounded-xl px-4 py-2.5 text-xs outline-none bg-white dark:bg-gray-900 font-medium leading-relaxed"
                             value={formData.message}
                             onChange={handleChange}
                             placeholder="Describe your issue in detail so our support executives can assist you quickly..."
@@ -138,27 +138,27 @@ export default function CreateTicketPage() {
                     </div>
 
                     <div>
-                        <label className="block text-[11px] font-bold text-gray-400 uppercase mb-1.5">Attachments</label>
+                        <label className="block text-xs font-semibold text-gray-500 capitalize mb-1.5 px-1">Attachments</label>
                         <input
                             type="file"
                             multiple
-                            className="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-[8px] file:border file:border-black/[0.05] file:text-xs file:font-bold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100 cursor-pointer"
+                            className="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border file:border-gray-200 file:text-xs file:font-semibold file:bg-gray-50 file:text-gray-750 hover:file:bg-gray-100 cursor-pointer"
                             onChange={(e) => setFiles(e.target.files)}
                         />
-                        <p className="text-[10px] text-gray-400 mt-1">Maximum 10MB per file. Formats allowed: PNG, JPG, PDF.</p>
+                        <p className="text-[10px] text-gray-400 mt-1.5 px-1">Maximum 10MB per file. Formats allowed: PNG, JPG, PDF.</p>
                     </div>
 
-                    <div className="flex justify-end gap-3 pt-3 border-t border-black/[0.05]">
+                    <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
                         <Link 
                             href="/seller/dashboard/support" 
-                            className="px-4 py-2 border border-black/[0.05] dark:border-white/[0.05] rounded-[8px] hover:bg-gray-50 text-xs font-bold text-gray-600 dark:text-gray-300"
+                            className="px-4 py-2 border border-gray-200 rounded-xl hover:bg-gray-50 text-xs font-semibold text-gray-650 dark:text-gray-300 capitalize"
                         >
                             Cancel
                         </Link>
                         <button 
                             type="submit" 
                             disabled={loading} 
-                            className="px-5 py-2 bg-[#052326] text-white rounded-[8px] hover:bg-emerald-800 disabled:opacity-50 text-xs font-bold transition-all flex items-center gap-1.5"
+                            className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl disabled:opacity-50 text-xs font-semibold transition-all flex items-center gap-1.5 active:scale-95 shadow-sm"
                         >
                             {loading ? 'Submitting...' : 'Submit Request'}
                             <Send size={12} />

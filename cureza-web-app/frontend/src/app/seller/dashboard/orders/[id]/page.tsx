@@ -407,14 +407,24 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
             {/* Order Timeline */}
             <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-100 dark:border-gray-800 p-6">
                 <h2 className="text-base font-bold text-gray-900 dark:text-gray-100 mb-6">Order Timeline</h2>
-                <div className="relative px-8">
-                    <div className="absolute top-6 left-[56px] right-[56px] h-0.5 bg-gray-100 dark:bg-gray-800">
+                <div className="relative px-4 md:px-8">
+                    {/* Horizontal Line for Desktop */}
+                    <div className="hidden md:block absolute top-6 left-[56px] right-[56px] h-0.5 bg-gray-100 dark:bg-gray-800">
                         <div
                             className="h-full bg-emerald-600 transition-all duration-500"
                             style={{ width: `${currentStatusIndex >= 0 ? (currentStatusIndex / (timelineStages.length - 1)) * 100 : 0}%` }}
                         ></div>
                     </div>
-                    <div className="relative flex justify-between">
+                    
+                    {/* Vertical Line for Mobile */}
+                    <div className="md:hidden absolute top-6 bottom-6 left-[28px] w-0.5 bg-gray-100 dark:bg-gray-800">
+                        <div
+                            className="w-full bg-emerald-600 transition-all duration-500"
+                            style={{ height: `${currentStatusIndex >= 0 ? (currentStatusIndex / (timelineStages.length - 1)) * 100 : 0}%` }}
+                        ></div>
+                    </div>
+
+                    <div className="relative flex flex-col md:flex-row justify-between gap-6 md:gap-0">
                         {timelineStages.map((stage, index) => {
                             const Icon = stage.icon;
                             const isCompleted = index <= currentStatusIndex;
@@ -433,8 +443,8 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                             }
 
                             return (
-                                <div key={stage.status} className="flex flex-col items-center flex-1">
-                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center border transition-all z-10 ${
+                                <div key={stage.status} className="flex flex-row md:flex-col items-center gap-4 md:gap-0 flex-1">
+                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center border transition-all z-10 shrink-0 ${
                                         isCurrent
                                             ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm shadow-emerald-200'
                                             : isCompleted
@@ -443,14 +453,16 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                                     }`}>
                                         <Icon size={18} />
                                     </div>
-                                    <p className={`mt-3 text-xs font-bold text-center ${isCompleted ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400 dark:text-gray-500'}`}>
-                                        {stage.label}
-                                    </p>
-                                    {showDate && (
-                                        <p className="mt-1 text-[10px] text-gray-400 dark:text-gray-500 font-semibold whitespace-nowrap">
-                                            {showDate}
+                                    <div className="flex flex-col md:items-center text-left md:text-center">
+                                        <p className={`md:mt-3 text-xs font-bold ${isCompleted ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400 dark:text-gray-500'}`}>
+                                            {stage.label}
                                         </p>
-                                    )}
+                                        {showDate && (
+                                            <p className="mt-1 text-[10px] text-gray-400 dark:text-gray-500 font-semibold md:whitespace-nowrap">
+                                                {showDate}
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
                             );
                         })}

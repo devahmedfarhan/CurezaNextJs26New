@@ -17,7 +17,17 @@ export default function ConditionalFooter() {
     const showMinimalFooter = minimalFooterPaths.some(path => pathname.startsWith(path));
 
     // Completely hide footer for superadmin, doctor portal, and auth pages (50/50 layout)
-    if (pathname.startsWith('/superadmin') || pathname.startsWith('/doctor')) {
+    if (
+        pathname.startsWith('/superadmin') || 
+        pathname.startsWith('/doctor') || 
+        pathname.startsWith('/login') || 
+        pathname.startsWith('/register') || 
+        pathname.startsWith('/forgot-password') ||
+        pathname.startsWith('/login-otp') ||
+        pathname.startsWith('/seller/login') ||
+        pathname.startsWith('/seller/register') ||
+        pathname.startsWith('/seller/forgot-password')
+    ) {
         return null;
     }
 

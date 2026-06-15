@@ -266,9 +266,9 @@ export default function SellerReviewsPage() {
                             >
                                 {/* Review Content */}
                                 <div className="mb-6">
-                                    <div className="flex items-start justify-between mb-4">
+                                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-extrabold text-lg">
+                                            <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-extrabold text-lg shrink-0">
                                                 {(review.customer?.name || review.full_name || 'Anonymous').charAt(0)}
                                             </div>
                                             <div>
@@ -294,7 +294,7 @@ export default function SellerReviewsPage() {
                                             </div>
                                         </div>
                                         {review.product && (
-                                            <span className="text-[10px] font-extrabold bg-gray-100 text-gray-600 px-3 py-1 rounded-lg uppercase tracking-wider">
+                                            <span className="text-[10px] font-extrabold bg-gray-100 text-gray-600 px-3 py-1 rounded-lg uppercase tracking-wider w-fit">
                                                 📦 {review.product.title || review.product.name}
                                             </span>
                                         )}
@@ -309,7 +309,7 @@ export default function SellerReviewsPage() {
 
                                 {/* Reply Section */}
                                 {review.reply ? (
-                                    <div className="bg-indigo-50/50 rounded-2xl p-6 border border-indigo-100/50 ml-12 relative">
+                                    <div className="bg-indigo-50/50 rounded-2xl p-6 border border-indigo-100/50 ml-4 sm:ml-12 relative">
                                         <div className="absolute -top-3 left-6 px-2 bg-indigo-500 text-white text-[8px] font-extrabold uppercase tracking-widest rounded-full py-0.5 shadow-sm">Merchant Response</div>
                                         <p className="text-sm font-bold text-indigo-900 mb-2 leading-relaxed">
                                             {review.reply.reply_text}
@@ -319,7 +319,7 @@ export default function SellerReviewsPage() {
                                         </p>
                                     </div>
                                 ) : replyingTo === review.id ? (
-                                    <div className="bg-gray-50 rounded-2xl p-6 ml-12 border border-gray-100 animate-in slide-in-from-top-2 duration-300">
+                                    <div className="bg-gray-50 rounded-2xl p-6 ml-4 sm:ml-12 border border-gray-100 animate-in slide-in-from-top-2 duration-300">
                                         <textarea
                                             value={replyText}
                                             onChange={(e) => setReplyText(e.target.value)}
@@ -354,7 +354,7 @@ export default function SellerReviewsPage() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="ml-12 border-t border-gray-50 pt-4">
+                                    <div className="ml-4 sm:ml-12 border-t border-gray-50 pt-4">
                                         <button
                                             onClick={() => setReplyingTo(review.id)}
                                             className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 font-extrabold text-xs uppercase tracking-widest transition-all hover:gap-3"
