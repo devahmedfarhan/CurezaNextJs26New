@@ -22,8 +22,9 @@ export default function BundleOfferCard({ bundle, mainProduct }: { bundle: any, 
         setAdding(true);
         try {
             // Add all items
-            for (const product of allProducts) {
-                await addToCart(product, 1);
+            for (let i = 0; i < allProducts.length; i++) {
+                const isLast = i === allProducts.length - 1;
+                await addToCart(allProducts[i], 1, undefined, isLast);
             }
             showToast(`Bundle added! Saved ₹${Math.round(discountAmount)}`, "success");
         } catch (err) {

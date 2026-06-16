@@ -202,8 +202,16 @@ export default function OrderDetailsPage() {
                                     </div>
 
                                     <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                                        <span>Shipping ({order.shipping_method?.name || 'Standard'})</span>
-                                        <span className="font-medium">₹{order.shipping_amount}</span>
+                                        <span>
+                                            Shipping ({
+                                                (order.shipping_method?.name === 'Standard Delivery' || !order.shipping_method?.name || order.shipping_method?.name === 'Standard')
+                                                    ? 'shipping'
+                                                    : (order.shipping_method?.name || 'Standard')
+                                            })
+                                        </span>
+                                        <span className="font-medium">
+                                            {parseFloat(order.shipping_amount) === 0 ? 'free' : `₹${order.shipping_amount}`}
+                                        </span>
                                     </div>
 
                                     {/* Tax Breakdown */}

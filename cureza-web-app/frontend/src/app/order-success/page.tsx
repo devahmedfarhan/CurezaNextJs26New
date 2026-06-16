@@ -179,7 +179,11 @@ function OrderSuccessContent() {
                                 <h3 className="font-bold text-gray-900 mt-6 mb-3 flex items-center gap-2">
                                     <Truck size={18} className="text-gray-400" /> Shipping Method
                                 </h3>
-                                <p className="text-sm text-gray-600">{order.shipping_method?.name || 'Standard Delivery'}</p>
+                                <p className="text-sm text-gray-600">
+                                    {(order.shipping_method?.name === 'Standard Delivery' || !order.shipping_method?.name)
+                                        ? 'shipping'
+                                        : order.shipping_method?.name}
+                                </p>
                             </div>
                         </div>
 
@@ -195,7 +199,7 @@ function OrderSuccessContent() {
                             </div>
                             <div className="flex justify-between text-gray-600">
                                 <span>Shipping</span>
-                                <span>{parseFloat(order.shipping_amount) === 0 ? 'Free' : `₹${parseFloat(order.shipping_amount).toFixed(2)}`}</span>
+                                <span>{parseFloat(order.shipping_amount) === 0 ? 'free' : `₹${parseFloat(order.shipping_amount).toFixed(2)}`}</span>
                             </div>
                             {parseFloat(order.discount_amount) > 0 && (
                                 <div className="flex justify-between text-green-600">

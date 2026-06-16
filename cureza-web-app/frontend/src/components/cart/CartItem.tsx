@@ -43,7 +43,7 @@ export default function CartItem({ item }: CartItemProps) {
     };
 
     return (
-        <div className="flex gap-4 py-6 border-b border-gray-100 dark:border-gray-700 last:border-0">
+        <div className={`flex gap-4 py-6 border-b border-gray-100 dark:border-gray-700 last:border-0 ${item.id < 0 ? 'opacity-60 pointer-events-none animate-pulse' : ''}`}>
             {/* Image */}
             <div className="w-24 h-24 bg-gray-50 dark:bg-gray-800 rounded-lg flex-shrink-0 flex items-center justify-center text-2xl text-gray-300 dark:text-gray-600 border border-gray-100 dark:border-gray-700 overflow-hidden">
                 {item.image ? (

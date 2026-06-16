@@ -23,7 +23,7 @@ interface User {
 interface AuthContextType {
     user: User | null;
     login: (token: string, user: User) => void;
-    logout: () => void;
+    logout: (skipRedirect?: boolean) => void;
     isLoading: boolean;
     mutate: () => void; // Expose mutate to manually refresh user data
 }
@@ -131,7 +131,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         mutate(userData, false); // Update SWR cache immediately
     };
 
-    const logout = async () => {
+    const logout = async (skipRedirect: boolean = false) => {
         const currentToken = token;
         const currentUserRole = user?.role;
         const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
@@ -156,6 +156,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 // Ignore
             }
         }
+
+        if (skipRedirect) return;
         
         if (currentUserRole === 'vendor' || currentPath.startsWith('/seller')) {
             router.push('/seller/login');

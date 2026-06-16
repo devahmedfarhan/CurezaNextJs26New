@@ -2,11 +2,12 @@
 
 import { X, ShoppingBag, Truck, Tag, ArrowRight, Plus, Minus, Trash2, Lock, ShieldCheck, Gift, Percent, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
+import ShopfloCheckout from '@/components/checkout/ShopfloCheckout';
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import axios from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface CartDrawerProps {
     isOpen: boolean;
@@ -18,6 +19,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     const [mounted, setMounted] = useState(false);
     const { user } = useAuth();
     const router = useRouter();
+    const pathname = usePathname();
     const [upsellProducts, setUpsellProducts] = useState<any[]>([]);
     const [isLoadingUpsell, setIsLoadingUpsell] = useState(true);
     const [couponCode, setCouponCode] = useState('');
@@ -27,6 +29,8 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     const [activeCoupons, setActiveCoupons] = useState<any[]>([]);
     const [showBreakdown, setShowBreakdown] = useState(false);
     const [showCouponsList, setShowCouponsList] = useState(false);
+    const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
+    const [prefetchedCheckoutData, setPrefetchedCheckoutData] = useState<any>(null);
     const drawerRef = useRef<HTMLDivElement>(null);
     const upsellScrollRef = useRef<HTMLDivElement>(null);
 
@@ -56,6 +60,21 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             fetchActiveCoupons();
         }
     }, [isOpen]);
+
+    // Prefetch checkout details in the background whenever cart items or open state changes
+    useEffect(() => {
+        if (isOpen && items.length > 0) {
+            const prefetchCheckout = async () => {
+                try {
+                    const res = await axios.get('/checkout/initiate');
+                    setPrefetchedCheckoutData(res.data);
+                } catch (e) {
+                    console.error("Failed to prefetch checkout details", e);
+                }
+            };
+            prefetchCheckout();
+        }
+    }, [isOpen, items]);
 
     const handleApplyCoupon = async (codeToApply?: string) => {
         const code = codeToApply || couponCode;
@@ -92,11 +111,15 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         }
     };
 
-    // Prevent body scroll when drawer is open, trap focus, escape close
+    // Prevent body scroll when drawer or checkout modal is open, trap focus, escape close
     useEffect(() => {
-        if (isOpen) {
+        if (isOpen || isCheckoutModalOpen) {
             document.body.style.overflow = 'hidden';
-            
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+
+        if (isOpen) {
             const handleKeyDown = (e: KeyboardEvent) => {
                 if (e.key === 'Escape') onClose();
             };
@@ -104,10 +127,16 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             return () => {
                 window.removeEventListener('keydown', handleKeyDown);
             };
-        } else {
-            document.body.style.overflow = 'unset';
         }
-    }, [isOpen, onClose]);
+    }, [isOpen, isCheckoutModalOpen, onClose]);
+
+    // Reset modal state and clear body scroll lock on route change/unmount
+    useEffect(() => {
+        setIsCheckoutModalOpen(false);
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [pathname]);
 
     if (!mounted) return null;
 
@@ -366,7 +395,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                     {items.map((item) => (
                                         <div
                                             key={item.id}
-                                            className="flex gap-3 p-2.5 bg-gray-50/40 dark:bg-gray-900/10 hover:bg-gray-50/80 dark:hover:bg-gray-900/20 border border-gray-100/50 dark:border-gray-900/40 rounded-lg transition-all duration-200"
+                                            className={`flex gap-3 p-2.5 bg-gray-50/40 dark:bg-gray-900/10 hover:bg-gray-50/80 dark:hover:bg-gray-900/20 border border-gray-100/50 dark:border-gray-900/40 rounded-lg transition-all duration-200 ${item.id < 0 ? 'opacity-60 pointer-events-none animate-pulse' : ''}`}
                                         >
                                             {/* Thumbnail */}
                                             <div className="w-14 h-14 bg-gray-50 dark:bg-gray-800 rounded-lg flex-shrink-0 overflow-hidden border border-gray-200/60 dark:border-gray-800 relative">
@@ -712,12 +741,8 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                             <div className="space-y-3">
                                 <button
                                     onClick={() => {
-                                        onClose();
-                                        if (user) {
-                                            router.push('/checkout');
-                                        } else {
-                                            router.push('/login?redirect=/checkout');
-                                        }
+                                        setIsCheckoutModalOpen(true);
+                                        onClose(); // Close the cart drawer!
                                     }}
                                     className="w-full text-white text-center font-black py-4 rounded-lg text-[12px] tracking-wider transition-all shadow-lg flex items-center justify-center gap-2 transform active:scale-[0.97] hover:scale-[1.01] hover:shadow-xl hover:brightness-105"
                                     style={{ backgroundColor: primaryColor }}
@@ -772,6 +797,14 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     )}
                 </div>
             </div>
+            {isCheckoutModalOpen && (
+                <ShopfloCheckout 
+                    isModal 
+                    onClose={() => setIsCheckoutModalOpen(false)} 
+                    prefetchedData={prefetchedCheckoutData} 
+                    prefetchedSettings={publicSettings} 
+                />
+            )}
         </>
     );
 }

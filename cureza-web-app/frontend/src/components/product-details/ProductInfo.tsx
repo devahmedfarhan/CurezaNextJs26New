@@ -9,6 +9,7 @@ import Link from 'next/link';
 import InlineUpsell from '@/components/product/InlineUpsell';
 import axios from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
+import ShopfloCheckout from '@/components/checkout/ShopfloCheckout';
 
 interface ProductInfoProps {
   product: any;
@@ -23,6 +24,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
   const activeVariants = product.variants || [];
 
   const [quantity, setQuantity] = useState(1);
+  const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState(() => {
     if (activeVariants.length > 0) {
       return activeVariants.find((v: any) => v.is_default) || activeVariants[0];
@@ -92,8 +94,8 @@ export default function ProductInfo({ product }: ProductInfoProps) {
         sku: selectedVariant ? selectedVariant.sku : product.sku,
         variant_id: selectedVariant ? selectedVariant.id : null
       };
-      await addToCart(productToBag, quantity, product.is_prescription_required ? patientDetails : undefined);
-      window.location.href = '/checkout';
+      await addToCart(productToBag, quantity, product.is_prescription_required ? patientDetails : undefined, false);
+      setIsCheckoutModalOpen(true);
     } catch (error) {
       showToast("Failed to process buy now", "error");
     }
@@ -441,6 +443,12 @@ export default function ProductInfo({ product }: ProductInfoProps) {
         <InlineUpsell productId={product.id} categoryId={product.category_id} />
       </div>
 
+      {isCheckoutModalOpen && (
+        <ShopfloCheckout 
+          isModal 
+          onClose={() => setIsCheckoutModalOpen(false)} 
+        />
+      )}
     </div>
   );
 }

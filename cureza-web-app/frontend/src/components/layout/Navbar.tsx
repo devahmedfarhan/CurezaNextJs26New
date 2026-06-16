@@ -33,9 +33,8 @@ export default function Navbar() {
   }, []);
 
   const { user, logout, isLoading: isAuthLoading } = useAuth();
-  const { totalItems } = useCart();
+  const { totalItems, isCartOpen, setIsCartOpen } = useCart();
   const { items: wishlistItems } = useWishlist();
-  const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
@@ -155,9 +154,9 @@ export default function Navbar() {
               title="Shopping Cart"
             >
               <ShoppingCart size={22} />
-              {(user?.cart_count || totalItems) > 0 && (
+              {totalItems > 0 && (
                 <span className="absolute -top-1 -right-1 bg-[#2E7D32] text-white text-[8px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center border border-white">
-                  {user?.cart_count || totalItems}
+                  {totalItems}
                 </span>
               )}
             </button>

@@ -21,9 +21,10 @@ class CartCalculationService
      * @param string|null $couponCode
      * @param string|null $state
      * @param int|null $shippingMethodId
+     * @param string|null $paymentMethod
      * @return array
      */
-    public function calculate(Cart $cart, ?string $couponCode = null, ?string $state = null, ?int $shippingMethodId = null): array
+    public function calculate(Cart $cart, ?string $couponCode = null, ?string $state = null, ?int $shippingMethodId = null, ?string $paymentMethod = null): array
     {
         $cart->load(['items.product.brand', 'items.product.seller']);
 
@@ -250,23 +251,44 @@ class CartCalculationService
                 $shippingCost = $shippingMethod->cost;
             }
         } else {
-            $shippingMethod = ShippingMethod::where('name', 'Standard Delivery')->first();
+            $shippingMethod = ShippingMethod::where('name', 'Standard Delivery')->where('is_active', true)->first()
+                ?? ShippingMethod::where('is_active', true)->orderBy('cost', 'asc')->first();
             if ($shippingMethod) {
                 $shippingCost = $shippingMethod->cost;
             }
         }
 
-        if ($milestoneFreeShipping) {
-            $shippingCost = 0;
+        // Apply dynamic free shipping check for prepaid payment methods
+        $isPrepaidFree = false;
+        if ($paymentMethod && in_array(strtolower($paymentMethod), ['razorpay', 'stripe', 'payu', 'phonepe'])) {
+            $prepaidFreeEnabled = filter_var(SystemSetting::where('key', 'shipping_prepaid_free_enabled')->value('value') ?? false, FILTER_VALIDATE_BOOLEAN);
+            if ($prepaidFreeEnabled) {
+                $isPrepaidFree = true;
+            }
+        }
+
+        $isFreeShippingEligible = false;
+        if ($isPrepaidFree || $milestoneFreeShipping) {
+            $isFreeShippingEligible = true;
         } else {
             $freeShippingEnabled = filter_var(SystemSetting::where('key', 'cart_free_shipping_enabled')->value('value') ?? true, FILTER_VALIDATE_BOOLEAN);
             $freeShippingThreshold = (float)(SystemSetting::where('key', 'cart_free_shipping_threshold')->value('value') ?? 500);
 
             if ($freeShippingEnabled && $subtotal >= $freeShippingThreshold) {
-                if (!$shippingMethod || (stripos($shippingMethod->name, 'Express') === false)) {
-                    $shippingCost = 0;
-                }
+                $isFreeShippingEligible = true;
             }
+        }
+
+        if ($isFreeShippingEligible) {
+            if (!$shippingMethod || (stripos($shippingMethod->name, 'Express') === false)) {
+                $shippingCost = 0;
+            }
+        }
+
+        // Apply COD surcharge if payment method is COD
+        if ($paymentMethod && strtolower($paymentMethod) === 'cod') {
+            $codSurcharge = (float)(SystemSetting::where('key', 'shipping_cod_charge')->value('value') ?? 50.00);
+            $shippingCost += $codSurcharge;
         }
 
         // --- 8. Reward Milestone progress bar calculations ---

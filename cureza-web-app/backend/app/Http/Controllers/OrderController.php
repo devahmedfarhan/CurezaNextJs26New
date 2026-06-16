@@ -82,7 +82,6 @@ class OrderController extends Controller
         $userId = $user ? $user->id : null;
 
         // For guest checkout, items come from request
-        // For authenticated users, we can also accept items from request or use cart
         $requestItems = $request->items;
 
         if (empty($requestItems)) {
@@ -119,17 +118,54 @@ class OrderController extends Controller
             ];
         }
 
-        // Calculate shipping and tax
+        // Calculate shipping and tax using CartCalculationService
         $shippingAddress = $request->shipping_address;
         $state = $shippingAddress['state'] ?? null;
         $shippingMethodId = $request->input('shipping_method_id');
 
-        // For guest checkout, we need to calculate without a cart object
-        // Simple calculation (you may want to use CartCalculationService differently)
-        $shippingCost = 50; // Default shipping
-        $taxRate = 0.18; // 18% GST
-        $taxAmount = $subtotal * $taxRate;
-        $finalTotal = $subtotal + $shippingCost + $taxAmount;
+        $cart = null;
+        if ($userId) {
+            $cart = Cart::where('user_id', $userId)->first();
+        } else {
+            $sessionId = $request->header('X-Session-ID');
+            $cart = Cart::where('session_id', $sessionId)->first();
+        }
+
+        $shippingCost = 50.00;
+        $taxAmount = 0.00;
+        $discountAmount = 0.00;
+        $finalTotal = $subtotal + $shippingCost;
+        $cgst = 0;
+        $sgst = 0;
+        $igst = 0;
+
+        if ($cart) {
+            $summary = $this->cartService->calculate(
+                $cart, 
+                $request->coupon_code,
+                $state, 
+                $shippingMethodId,
+                $request->payment_method
+            );
+            $shippingCost = $summary['shipping_cost'];
+            $taxAmount = $summary['total_tax'];
+            $discountAmount = $summary['discount'];
+            $finalTotal = $summary['final_total'];
+            $cgst = $summary['cgst'];
+            $sgst = $summary['sgst'];
+            $igst = $summary['igst'];
+        } else {
+            // fallback simple calculation if cart is missing
+            $taxRate = 0.18; // 18% GST
+            $taxAmount = $subtotal * $taxRate;
+            $finalTotal = $subtotal + $shippingCost + $taxAmount;
+            if ($state && strtolower($state) === 'rajasthan') {
+                $cgst = $taxAmount / 2;
+                $sgst = $taxAmount / 2;
+            } else {
+                $igst = $taxAmount;
+            }
+        }
 
         $format = config('services.order.format', 'custom');
         $customPrefix = config('services.order.prefix', 'CZ');
@@ -167,11 +203,11 @@ class OrderController extends Controller
                 'order_number' => $orderNumber,
                 'user_id' => $userId, // Nullable for guest orders
                 'total_amount' => $subtotal,
-                'discount_amount' => 0,
+                'discount_amount' => $discountAmount,
                 'tax_amount' => $taxAmount,
-                'cgst' => $state ? $taxAmount / 2 : 0,
-                'sgst' => $state ? $taxAmount / 2 : 0,
-                'igst' => $state ? 0 : $taxAmount,
+                'cgst' => $cgst,
+                'sgst' => $sgst,
+                'igst' => $igst,
                 'shipping_amount' => $shippingCost,
                 'final_amount' => $finalTotal,
                 'status' => 'pending',

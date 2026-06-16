@@ -129,7 +129,7 @@ export default function PrescriptionDetailPage({ params }: { params: Promise<{ i
                     prescription_path: prescription.prescription_number,
                     doctor_id: prescription.doctor?.id
                 };
-                await addToCart(item.product, 1, item.product.is_prescription_required ? patientDetails : undefined);
+                await addToCart(item.product, 1, item.product.is_prescription_required ? patientDetails : undefined, false);
             }
             showToast('All prescribed items added to cart successfully!', 'success');
             router.push('/cart');

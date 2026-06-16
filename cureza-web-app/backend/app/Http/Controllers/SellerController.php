@@ -429,7 +429,34 @@ class SellerController extends Controller
         if ($user->role !== 'vendor') {
             return response()->json(['message' => 'User is not a vendor'], 400);
         }
-        $user->delete();
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($user) {
+            // 1. Delete seller's products
+            $user->products()->delete();
+
+            // 2. Detach brand relationships and delete brand
+            if ($user->brand) {
+                $user->brand->allCategories()->detach();
+                $user->brand->changeRequests()->delete();
+                $user->brand->delete();
+            }
+
+            // 3. Delete seller profile
+            if ($user->sellerProfile) {
+                $user->sellerProfile->delete();
+            }
+
+            // 4. Delete other dependent records
+            $user->sellerWallet()->delete();
+            $user->sellerCommissions()->delete();
+            $user->sellerTransactions()->delete();
+            $user->sellerNotificationSettings()->delete();
+            $user->sellerChangeRequests()->delete();
+
+            // 5. Finally, delete the user
+            $user->delete();
+        });
+
         return response()->json(['message' => 'Seller deleted successfully']);
     }
 }

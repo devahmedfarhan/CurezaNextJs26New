@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import axios from '@/lib/api'; // Import configured axios instance
 import { v4 as uuidv4 } from 'uuid';
+import { useAuth } from '@/context/AuthContext';
 
 export interface PatientDetails {
     patient_name: string;
@@ -71,7 +72,7 @@ export interface CartSummary {
 interface CartContextType {
     items: CartItem[];
     summary: CartSummary | null;
-    addToCart: (product: any, quantity: number, patientDetails?: PatientDetails) => Promise<void>;
+    addToCart: (product: any, quantity: number, patientDetails?: PatientDetails, openDrawer?: boolean) => Promise<void>;
     removeFromCart: (itemId: number) => Promise<void>;
     updateQuantity: (itemId: number, quantity: number) => Promise<void>;
     clearCart: () => Promise<void>;
@@ -80,15 +81,63 @@ interface CartContextType {
     applyCoupon: (code: string) => Promise<{ success: boolean; message: string }>;
     removeCoupon: () => Promise<void>;
     toggleCoins: () => Promise<void>;
+    isCartOpen: boolean;
+    setIsCartOpen: (open: boolean) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+const getOptimisticSummary = (newItems: CartItem[], currentSummary: CartSummary | null): CartSummary | null => {
+    if (newItems.length === 0) return null;
+
+    const newSubtotal = newItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+    if (!currentSummary) {
+        const shipping = newSubtotal >= 500 ? 0 : 40;
+        return {
+            subtotal: newSubtotal,
+            discount: 0,
+            taxable_amount: newSubtotal,
+            cgst: 0,
+            sgst: 0,
+            igst: 0,
+            total_tax: 0,
+            shipping_cost: shipping,
+            platform_fee: 0,
+            wallet_deduction: 0,
+            projected_cashback: 0,
+            wallet_balance: 0,
+            rewards: null,
+            final_total: newSubtotal + shipping
+        };
+    }
+
+    const diff = newSubtotal - currentSummary.subtotal;
+    
+    let newShipping = currentSummary.shipping_cost;
+    if (currentSummary.shipping_cost > 0 && newSubtotal >= 500) {
+        newShipping = 0;
+    } else if (currentSummary.shipping_cost === 0 && newSubtotal < 500) {
+        newShipping = 40;
+    }
+    
+    const shippingDiff = newShipping - currentSummary.shipping_cost;
+
+    return {
+        ...currentSummary,
+        subtotal: newSubtotal,
+        shipping_cost: newShipping,
+        final_total: Math.max(0, currentSummary.final_total + diff + shippingDiff)
+    };
+};
+
 export function CartProvider({ children }: { children: ReactNode }) {
+    const { user, isLoading: isAuthLoading } = useAuth();
     const [items, setItems] = useState<CartItem[]>([]);
     const [summary, setSummary] = useState<CartSummary | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [sessionId, setSessionId] = useState<string>('');
+    const [isCartOpen, setIsCartOpen] = useState(false);
 
     useEffect(() => {
         let sid = localStorage.getItem('session_id');
@@ -97,8 +146,43 @@ export function CartProvider({ children }: { children: ReactNode }) {
             localStorage.setItem('session_id', sid);
         }
         setSessionId(sid);
-        fetchCart(sid);
+
+        // Load cart items & summary from localStorage on mount
+        const savedItems = localStorage.getItem('cart_items');
+        if (savedItems) {
+            try {
+                setItems(JSON.parse(savedItems));
+            } catch (e) {}
+        }
+        const savedSummary = localStorage.getItem('cart_summary');
+        if (savedSummary) {
+            try {
+                setSummary(JSON.parse(savedSummary));
+            } catch (e) {}
+        }
     }, []);
+
+    useEffect(() => {
+        if (items.length > 0) {
+            localStorage.setItem('cart_items', JSON.stringify(items));
+        } else {
+            localStorage.removeItem('cart_items');
+        }
+    }, [items]);
+
+    useEffect(() => {
+        if (summary) {
+            localStorage.setItem('cart_summary', JSON.stringify(summary));
+        } else {
+            localStorage.removeItem('cart_summary');
+        }
+    }, [summary]);
+
+    useEffect(() => {
+        if (!isAuthLoading && sessionId) {
+            fetchCart(sessionId);
+        }
+    }, [user, isAuthLoading, sessionId]);
 
     const fetchCart = async (sid: string) => {
         setIsLoading(true);
@@ -144,7 +228,48 @@ export function CartProvider({ children }: { children: ReactNode }) {
         }
     };
 
-    const addToCart = async (product: any, quantity: number, patientDetails?: PatientDetails) => {
+    const addToCart = async (product: any, quantity: number, patientDetails?: PatientDetails, openDrawer: boolean = true) => {
+        if (openDrawer) {
+            setIsCartOpen(true);
+        }
+
+        const backupItems = [...items];
+        const backupSummary = summary;
+
+        // Construct optimistic item
+        const tempItem: CartItem = {
+            id: -Math.floor(Math.random() * 1000000), // Temporary ID
+            product_id: product.id,
+            product_slug: product.slug || '',
+            category_slug: (product.category && typeof product.category === 'object') ? product.category.slug : (product.category || 'general'),
+            title: product.title,
+            brand: (product.brand && typeof product.brand === 'object') ? product.brand.name : (product.brand || 'Cureza'),
+            price: parseFloat(product.price) || 0,
+            image: product.image || '',
+            quantity: quantity,
+            patientDetails: patientDetails
+        };
+
+        // Optimistically update items state and summary
+        setItems(prev => {
+            const existingIndex = prev.findIndex(item => 
+                item.product_id === product.id && 
+                (!product.variant_id || (item as any).variant_id === product.variant_id)
+            );
+            let updated;
+            if (existingIndex > -1) {
+                updated = [...prev];
+                updated[existingIndex] = {
+                    ...updated[existingIndex],
+                    quantity: updated[existingIndex].quantity + quantity
+                };
+            } else {
+                updated = [...prev, tempItem];
+            }
+            setSummary(curr => getOptimisticSummary(updated, curr));
+            return updated;
+        });
+
         setIsLoading(true);
         try {
             const payload: any = {
@@ -167,6 +292,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
             await fetchCart(sessionId);
         } catch (error) {
             console.error('Failed to add to cart:', error);
+            setItems(backupItems);
+            setSummary(backupSummary);
             throw error;
         } finally {
             setIsLoading(false);
@@ -174,6 +301,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
     };
 
     const removeFromCart = async (itemId: number) => {
+        if (itemId < 0) return; // Ignore temporary optimistic items
+
+        const backupItems = [...items];
+        const backupSummary = summary;
+
+        // Optimistically remove
+        setItems(prev => {
+            const updated = prev.filter(item => item.id !== itemId);
+            setSummary(curr => getOptimisticSummary(updated, curr));
+            return updated;
+        });
+
         try {
             await axios.delete(`/cart/items/${itemId}`, {
                 headers: { 'X-Session-ID': sessionId }
@@ -181,13 +320,30 @@ export function CartProvider({ children }: { children: ReactNode }) {
             await fetchCart(sessionId);
         } catch (error) {
             console.error('Failed to remove from cart:', error);
+            setItems(backupItems);
+            setSummary(backupSummary);
         }
     };
 
     const updateQuantity = async (itemId: number, quantity: number) => {
+        if (itemId < 0) return; // Ignore temporary optimistic items
+
         if (quantity <= 0) {
             return removeFromCart(itemId);
         }
+
+        const backupItems = [...items];
+        const backupSummary = summary;
+
+        // Optimistically update quantity
+        setItems(prev => {
+            const updated = prev.map(item => 
+                item.id === itemId ? { ...item, quantity } : item
+            );
+            setSummary(curr => getOptimisticSummary(updated, curr));
+            return updated;
+        });
+
         try {
             await axios.put(`/cart/items/${itemId}`, { quantity }, {
                 headers: { 'X-Session-ID': sessionId }
@@ -195,18 +351,26 @@ export function CartProvider({ children }: { children: ReactNode }) {
             await fetchCart(sessionId);
         } catch (error) {
             console.error('Failed to update quantity:', error);
+            setItems(backupItems);
+            setSummary(backupSummary);
         }
     };
 
     const clearCart = async () => {
+        const backupItems = [...items];
+        const backupSummary = summary;
+
+        setItems([]);
+        setSummary(null);
+
         try {
             await axios.delete('/cart/clear', {
                 headers: { 'X-Session-ID': sessionId }
             });
-            setItems([]);
-            setSummary(null);
         } catch (error) {
             console.error('Failed to clear cart:', error);
+            setItems(backupItems);
+            setSummary(backupSummary);
         }
     };
 
@@ -262,7 +426,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 isLoading,
                 applyCoupon,
                 removeCoupon,
-                toggleCoins
+                toggleCoins,
+                isCartOpen,
+                setIsCartOpen
             }}
         >
             {children}

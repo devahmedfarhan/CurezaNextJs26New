@@ -108,10 +108,6 @@ Route::get('/debug-auth', function (Request $request) {
     ]);
 });
 
-// Public Checkout Routes (Guest Checkout Support)
-Route::get('/checkout/initiate', [App\Http\Controllers\CheckoutController::class, 'initiate'])->middleware('throttle:sensitive');
-Route::post('/checkout/calculate', [App\Http\Controllers\CheckoutController::class, 'calculate'])->middleware('throttle:sensitive');
-
 // Public Order Placement (Guest Checkout Support)
 Route::post('/orders', [OrderController::class, 'store'])->middleware('throttle:sensitive');
 Route::get('/orders/{id}', [OrderController::class, 'show']); // Public order view for guests
@@ -307,6 +303,7 @@ Route::middleware('auth:sanctum')->group(function () {
         // System Settings
         Route::get('/settings', [\App\Http\Controllers\Api\Admin\SystemSettingsController::class, 'index']);
         Route::post('/settings', [\App\Http\Controllers\Api\Admin\SystemSettingsController::class, 'store']);
+        Route::get('/settings/logs', [\App\Http\Controllers\Api\Admin\AuditLogController::class, 'index']);
 
         // Product Scraper
         Route::post('/scraper/start', [\App\Http\Controllers\Api\Admin\ScrapedProductController::class, 'startScrape']);
@@ -463,7 +460,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
         Route::get('shipping-methods', [\App\Http\Controllers\Admin\ShippingController::class, 'index']);
+        Route::post('shipping-methods', [\App\Http\Controllers\Admin\ShippingController::class, 'store']);
         Route::put('shipping-methods/{id}', [\App\Http\Controllers\Admin\ShippingController::class, 'update']);
+        Route::delete('shipping-methods/{id}', [\App\Http\Controllers\Admin\ShippingController::class, 'destroy']);
 
         // Reviews
         // Reviews - Moved to dedicated prefix group below (lines 422+)
@@ -573,8 +572,8 @@ Route::get('/cart/upsells', [\App\Http\Controllers\UpsellController::class, 'for
 Route::post('/cart/coins/redeem', [CartController::class, 'toggleCoins']);
 
 // Checkout Routes (Public/Guest accessible)
-Route::get('/checkout/initiate', [CheckoutController::class, 'initiate'])->middleware('throttle:sensitive');
-Route::post('/checkout/calculate', [CheckoutController::class, 'calculate'])->middleware('throttle:sensitive');
+Route::get('/checkout/initiate', [CheckoutController::class, 'initiate'])->middleware('throttle:global');
+Route::post('/checkout/calculate', [CheckoutController::class, 'calculate'])->middleware('throttle:global');
 Route::post('/coupons/validate', [CouponController::class, 'validateCoupon']);
 Route::get('/coupons', [CouponController::class, 'getActiveCoupons']); // Public: Get active coupons for customers
 
@@ -594,3 +593,8 @@ Route::prefix('blog')->group(function () {
     Route::get('/tags/{slug}', [\App\Http\Controllers\Api\BlogController::class, 'byTag']);
     Route::get('/authors/{slug}', [\App\Http\Controllers\Api\BlogController::class, 'byAuthor']);
 });
+
+
+
+
+

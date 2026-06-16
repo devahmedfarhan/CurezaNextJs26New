@@ -91,6 +91,39 @@ class SystemSettingsController extends Controller
      */
     public function publicSettings()
     {
+        // Run migration dynamically if settings don't exist
+        try {
+            if (\Schema::hasTable('system_settings')) {
+                $inserted = false;
+                if (!\App\Models\SystemSetting::where('key', 'checkout_native_enabled')->exists()) {
+                    \App\Models\SystemSetting::updateOrCreate(
+                        ['key' => 'checkout_native_enabled'],
+                        ['value' => '1', 'group' => 'checkout', 'is_secret' => false]
+                    );
+                    $inserted = true;
+                }
+                if (!\App\Models\SystemSetting::where('key', 'shipping_cod_charge')->exists()) {
+                    \App\Models\SystemSetting::updateOrCreate(
+                        ['key' => 'shipping_cod_charge'],
+                        ['value' => '50.00', 'group' => 'shipping', 'is_secret' => false]
+                    );
+                    $inserted = true;
+                }
+                if (!\App\Models\SystemSetting::where('key', 'shipping_prepaid_free_enabled')->exists()) {
+                    \App\Models\SystemSetting::updateOrCreate(
+                        ['key' => 'shipping_prepaid_free_enabled'],
+                        ['value' => '0', 'group' => 'shipping', 'is_secret' => false]
+                    );
+                    $inserted = true;
+                }
+                if ($inserted) {
+                    \App\Services\SystemSettingsService::clearCache();
+                }
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Settings initialization failed: ' . $e->getMessage());
+        }
+
         $publicKeys = [
             'google_auth_enabled',
             'google_client_id',
@@ -135,7 +168,10 @@ class SystemSettingsController extends Controller
             'theme_border_radius',
             'theme_font_heading',
             'theme_font_body',
-            'homepage_section_order'
+            'homepage_section_order',
+            'shipping_cod_charge',
+            'shipping_prepaid_free_enabled',
+            'checkout_native_enabled'
         ];
 
         $settings = SystemSetting::whereIn('key', $publicKeys)->get();
@@ -156,7 +192,9 @@ class SystemSettingsController extends Controller
             'cart_drawer_enable_coupons',
             'cart_drawer_enable_coins',
             'cart_drawer_enable_upsell',
-            'cart_drawer_enable_delivery_note'
+            'cart_drawer_enable_delivery_note',
+            'shipping_prepaid_free_enabled',
+            'checkout_native_enabled'
         ];
 
         foreach ($settings as $setting) {
@@ -212,6 +250,9 @@ class SystemSettingsController extends Controller
         if (!isset($publicSettings['theme_font_heading'])) $publicSettings['theme_font_heading'] = 'Manrope';
         if (!isset($publicSettings['theme_font_body'])) $publicSettings['theme_font_body'] = 'Inter';
         if (!isset($publicSettings['homepage_section_order'])) $publicSettings['homepage_section_order'] = 'hero,stats,purpose,partners,consultation,testimonials,marquee';
+        if (!isset($publicSettings['shipping_cod_charge'])) $publicSettings['shipping_cod_charge'] = 50.00;
+        if (!isset($publicSettings['shipping_prepaid_free_enabled'])) $publicSettings['shipping_prepaid_free_enabled'] = false;
+        if (!isset($publicSettings['checkout_native_enabled'])) $publicSettings['checkout_native_enabled'] = true;
 
         return response()->json($publicSettings);
     }

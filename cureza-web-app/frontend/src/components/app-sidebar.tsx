@@ -32,7 +32,8 @@ import {
   Menu as MenuIcon,
   RefreshCw,
   BookOpen,
-  Star
+  Star,
+  Truck
 } from "lucide-react"
 
 import {
@@ -54,6 +55,8 @@ import {
   SidebarRail,
   SidebarFooter,
 } from "@/components/ui/sidebar"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { useAuth } from "@/context/AuthContext"
 
 // Super Admin Navigation Data
@@ -197,18 +200,24 @@ const data = {
       ],
     },
     {
+      title: "Shipping & Checkout",
+      url: "/superadmin/dashboard/settings/checkout-cart",
+      icon: Truck,
+      items: [
+        { title: "Unified Settings", url: "/superadmin/dashboard/settings/checkout-cart" },
+      ],
+    },
+    {
       title: "Global Settings",
       url: "/superadmin/dashboard/settings",
       icon: Settings,
       items: [
         { title: "General Settings", url: "/superadmin/dashboard/settings/general" },
         { title: "Payment Gateways", url: "/superadmin/dashboard/settings/payments" },
-        { title: "Checkout & Cart", url: "/superadmin/dashboard/settings/checkout-cart" },
         { title: "Notifications", url: "/superadmin/dashboard/settings/notifications" },
         { title: "Legal Pages", url: "/superadmin/dashboard/settings/legal" },
         { title: "Roles & Access", url: "/superadmin/dashboard/settings/rbac" },
         { title: "Backup & Maintenance", url: "/superadmin/dashboard/settings/system" },
-        { title: "Shipping", url: "/superadmin/dashboard/settings/shipping" },
         { title: "Logs & Audit", url: "/superadmin/dashboard/settings/logs" },
       ],
     },
@@ -217,6 +226,7 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user, logout } = useAuth();
+  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -244,37 +254,57 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
-            {data.navMain.map((item, index) => (
-              <Collapsible
-                key={item.title}
-                asChild
-                defaultOpen={index === 0}
-                className="group/collapsible"
-              >
-                <SidebarMenuItem>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip={item.title}>
-                      {item.icon && <item.icon />}
-                      <span>{item.title}</span>
-                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      {item.items?.map((subItem) => (
-                        <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild>
-                            <a href={subItem.url}>
-                              <span>{subItem.title}</span>
-                            </a>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      ))}
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </SidebarMenuItem>
-              </Collapsible>
-            ))}
+            {data.navMain.map((item) => {
+              // Determine if any sub-item is active or if the main URL is active
+              const isSubItemActive = item.items?.some((subItem) => pathname === subItem.url);
+              // Handle Overview vs exact path matching
+              const isParentActive = pathname === item.url || isSubItemActive;
+
+              return (
+                <Collapsible
+                  key={item.title}
+                  asChild
+                  defaultOpen={isParentActive}
+                  className="group/collapsible"
+                >
+                  <SidebarMenuItem>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuButton 
+                        tooltip={item.title}
+                        className={isParentActive ? "text-cureza-green bg-cureza-green/5 font-medium" : ""}
+                      >
+                        {item.icon && <item.icon className={isParentActive ? "text-cureza-green" : ""} />}
+                        <span>{item.title}</span>
+                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                      </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {item.items?.map((subItem) => {
+                          const isSubActive = pathname === subItem.url;
+                          return (
+                            <SidebarMenuSubItem key={subItem.title}>
+                              <SidebarMenuSubButton asChild>
+                                <Link 
+                                  href={subItem.url} 
+                                  className={`flex items-center w-full px-2 py-1.5 rounded-md transition-colors ${
+                                    isSubActive 
+                                      ? "text-cureza-green bg-cureza-green/10 font-semibold" 
+                                      : "text-gray-600 hover:text-cureza-green hover:bg-gray-50"
+                                  }`}
+                                >
+                                  <span>{subItem.title}</span>
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          );
+                        })}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+                  </SidebarMenuItem>
+                </Collapsible>
+              );
+            })}
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>

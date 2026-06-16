@@ -1,22 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Trash2, ShoppingBag, Truck, Ticket, Percent, Check, ArrowRight } from 'lucide-react';
-import CartItem from '@/components/cart/CartItem';
-import Link from 'next/link';
-import { useCart } from '@/contexts/CartContext';
-import { useAuth } from '@/context/AuthContext';
-import { useRouter } from 'next/navigation';
-import api from '@/lib/api';
-import { useToast } from '@/contexts/ToastContext';
-import { Button } from '@/components/ui/button';
-
-'use client';
-
 import { useState, useEffect, useRef } from 'react';
 import { Trash2, ShoppingBag, Truck, Ticket, Percent, Check, ArrowRight, ChevronLeft, ChevronRight, Lock, ShieldCheck } from 'lucide-react';
 import CartItem from '@/components/cart/CartItem';
 import Link from 'next/link';
+import ShopfloCheckout from '@/components/checkout/ShopfloCheckout';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
@@ -40,6 +28,7 @@ export default function CartPage() {
     const [upsellProducts, setUpsellProducts] = useState<any[]>([]);
     const [isLoadingUpsell, setIsLoadingUpsell] = useState(true);
     const [showBreakdown, setShowBreakdown] = useState(true);
+    const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
 
     const upsellScrollRef = useRef<HTMLDivElement>(null);
 
@@ -83,11 +72,7 @@ export default function CartPage() {
     }, []);
 
     const handleCheckout = () => {
-        if (user) {
-            router.push('/checkout');
-        } else {
-            router.push('/login?redirect=/checkout');
-        }
+        setIsCheckoutModalOpen(true);
     };
 
     const handleApplyCoupon = async (codeToApply?: string) => {
@@ -131,6 +116,7 @@ export default function CartPage() {
     const projectedCoins = summary?.projected_cashback || 0;
     const walletBalance = summary?.wallet_balance || 0;
     const shippingCost = summary?.shipping_cost || 0;
+    const totalTax = summary?.total_tax || 0;
     const rewards = summary?.rewards || null;
 
     // Load admin toggles
@@ -576,6 +562,14 @@ export default function CartPage() {
                     </div>
                 )}
             </div>
+            {isCheckoutModalOpen && (
+                <ShopfloCheckout 
+                    isModal 
+                    onClose={() => setIsCheckoutModalOpen(false)} 
+                    prefetchedData={summary} 
+                    prefetchedSettings={publicSettings} 
+                />
+            )}
         </div>
     );
 }
