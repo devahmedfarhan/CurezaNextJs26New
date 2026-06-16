@@ -79,7 +79,7 @@ export default function DynamicBrandReconciliationPage() {
     const { showToast } = useToast();
     const params = useParams();
     
-    const brandName = user?.brand?.name || (user as any)?.seller_profile?.brand_name || (user as any)?.sellerProfile?.brand_name || 'Brand';
+    const brandName = (user as any)?.brand?.name || (user as any)?.seller_profile?.brand_name || (user as any)?.sellerProfile?.brand_name || 'Brand';
     const pageTitle = `${brandName} x Cureza`;
 
     const [orders, setOrders] = useState<Order[]>([]);
@@ -388,7 +388,7 @@ export default function DynamicBrandReconciliationPage() {
                             -₹{rows.reduce((acc, r) => acc + (r.commission + r.gstOnCommission), 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                         </h3>
                     </div>
-                    <div className="text-[9px] font-medium text-rose-500">Includes {platRate}% platform cut + 18% GST</div>
+                    <div className="text-[9px] font-medium text-rose-500">Includes {summary?.commission_rate?.platform ?? 25}% platform cut + 18% GST</div>
                 </div>
 
                 <div className="premium-card p-6 bg-white border border-gray-100 rounded-2xl relative overflow-hidden flex flex-col justify-between h-[140px] shadow-sm">

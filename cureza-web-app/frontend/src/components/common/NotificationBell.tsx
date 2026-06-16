@@ -56,7 +56,7 @@ export default function NotificationBell() {
         try {
             await api.post('/notifications/read', { id: notif.id });
             setUnreadCount(prev => Math.max(0, prev - 1));
-            setNotifications(prev => prev.map(n => n.id === notif.id ? { ...n, read_at: new Date() } : n));
+            setNotifications(prev => prev.map(n => n.id === notif.id ? { ...n, read_at: new Date().toISOString() } : n));
         } catch (e) {
             console.error(e);
         }
@@ -132,7 +132,7 @@ export default function NotificationBell() {
                         <button className="text-xs text-blue-600 hover:underline" onClick={() => {
                             api.post('/notifications/read').then(() => {
                                 setUnreadCount(0);
-                                setNotifications(prev => prev.map(n => ({ ...n, read_at: new Date() })));
+                                setNotifications(prev => prev.map(n => ({ ...n, read_at: new Date().toISOString() })));
                             });
                         }}>Mark all read</button>
                     </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Trash2, ShoppingBag, Truck, Ticket, Percent, Check, ArrowRight, ChevronLeft, ChevronRight, Lock, ShieldCheck } from 'lucide-react';
+import { Trash2, ShoppingBag, Truck, Ticket, Percent, Check, ArrowRight, ChevronLeft, ChevronRight, Lock, ShieldCheck, Gift } from 'lucide-react';
 import CartItem from '@/components/cart/CartItem';
 import Link from 'next/link';
 import ShopfloCheckout from '@/components/checkout/ShopfloCheckout';

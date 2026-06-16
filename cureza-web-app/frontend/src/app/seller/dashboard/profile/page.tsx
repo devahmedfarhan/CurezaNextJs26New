@@ -32,7 +32,7 @@ export default function SellerProfilePage() {
 
     const fullMetaTitle = `${brandName} | Cureza - The Store Of Wellness`;
 
-    const currentKeywordsList = metaKeywords
+    const currentKeywordsList: string[] = metaKeywords
         ? metaKeywords.split(',').map((k: string) => k.trim()).filter((k: string) => k.length > 0)
         : [];
 
@@ -426,7 +426,7 @@ export default function SellerProfilePage() {
                                         <span className="block text-[10px] font-semibold text-gray-500 capitalize">Categories</span>
                                         <div className="flex flex-wrap gap-2">
                                             {allCategories.map(cat => {
-                                                const isActive = currentKeywordsList.some(k => k.toLowerCase() === cat.name.toLowerCase());
+                                                const isActive = currentKeywordsList.some((k: string) => k.toLowerCase() === cat.name.toLowerCase());
                                                 return (
                                                     <button
                                                         key={cat.id}
@@ -452,7 +452,7 @@ export default function SellerProfilePage() {
                                         <span className="block text-[10px] font-semibold text-gray-500 capitalize">Concerns</span>
                                         <div className="flex flex-wrap gap-2">
                                             {allConcerns.map(con => {
-                                                const isActive = currentKeywordsList.some(k => k.toLowerCase() === con.name.toLowerCase());
+                                                const isActive = currentKeywordsList.some((k: string) => k.toLowerCase() === con.name.toLowerCase());
                                                 return (
                                                     <button
                                                         key={con.id}

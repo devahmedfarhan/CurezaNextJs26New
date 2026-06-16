@@ -10,7 +10,7 @@ export default function DivSomaRedirectPage() {
 
     useEffect(() => {
         if (user) {
-            const brandSlug = user?.brand?.slug || (user as any)?.seller_profile?.brand_name?.toLowerCase().replace(/\s+/g, '-') || 'brand';
+            const brandSlug = (user as any)?.brand?.slug || (user as any)?.seller_profile?.brand_name?.toLowerCase().replace(/\s+/g, '-') || 'brand';
             router.replace(`/seller/dashboard/${brandSlug}`);
         }
     }, [user, router]);

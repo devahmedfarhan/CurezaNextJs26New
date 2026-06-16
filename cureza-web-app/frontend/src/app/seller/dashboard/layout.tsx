@@ -56,7 +56,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
     const mobileProfileMenuRef = useRef<HTMLDivElement>(null);
 
     const getBrandName = () => {
-        if (user?.brand?.name) return user.brand.name;
+        if ((user as any)?.brand?.name) return (user as any).brand.name;
         if (fullProfile?.brand?.name) return fullProfile.brand.name;
         if ((user as any)?.seller_profile?.brand_name) return (user as any).seller_profile.brand_name;
         if (fullProfile?.brand_name) return fullProfile.brand_name;
@@ -67,10 +67,10 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
     };
     const sellerBrandName = getBrandName();
     const dynamicReportTabName = `${sellerBrandName} x Cureza`;
-    const brandSlug = user?.brand?.slug || (user as any)?.seller_profile?.brand_name?.toLowerCase().replace(/\s+/g, '-') || 'brand';
+    const brandSlug = (user as any)?.brand?.slug || (user as any)?.seller_profile?.brand_name?.toLowerCase().replace(/\s+/g, '-') || 'brand';
 
     const getBrandLogo = () => {
-        const logoPath = user?.brand?.logo || fullProfile?.brand?.logo || (user as any)?.seller_profile?.logo || (user as any)?.sellerProfile?.logo || (user as any)?.brand?.logo;
+        const logoPath = (user as any)?.brand?.logo || fullProfile?.brand?.logo || (user as any)?.seller_profile?.logo || (user as any)?.sellerProfile?.logo || (user as any)?.brand?.logo;
         if (!logoPath) return null;
         if (logoPath.startsWith('http')) return logoPath;
         const backend = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
@@ -298,7 +298,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
                         <span className="text-sm font-semibold text-gray-800 capitalize tracking-wider">Cureza Seller Hub</span>
                     </div>
                     <button
-                        onClick={logout}
+                        onClick={() => logout()}
                         className="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-gray-650 hover:text-red-650 hover:bg-red-50 rounded-xl transition-all border border-gray-100 hover:border-red-100"
                     >
                         <LogOut size={13} />
@@ -637,7 +637,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
                                         <ArrowRight size={12} />
                                     </Link>
                                     <button
-                                        onClick={logout}
+                                        onClick={() => logout()}
                                         className="mt-1 flex w-full items-center justify-between rounded-xl px-3 py-2 font-semibold text-red-600 hover:bg-red-50 text-left"
                                     >
                                         <span>Logout</span>
@@ -828,7 +828,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
                                                 <ArrowRight size={14} />
                                             </Link>
                                             <button
-                                                onClick={logout}
+                                                onClick={() => logout()}
                                                 className="mt-1 flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50"
                                             >
                                                 <span>Logout</span>

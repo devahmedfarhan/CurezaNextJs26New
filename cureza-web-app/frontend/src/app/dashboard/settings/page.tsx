@@ -4,13 +4,20 @@ import { useState } from 'react';
 import { Lock, Bell, Eye } from 'lucide-react';
 import api from '@/lib/api';
 
+interface CustomerSettings {
+    twoFactor: boolean;
+    orderUpdates: boolean;
+    promotionalEmails: boolean;
+    profileVisibility: string;
+}
+
 export default function SettingsPage() {
-    const [settings, setSettings] = useState(() => {
+    const [settings, setSettings] = useState<CustomerSettings>(() => {
         if (typeof window !== 'undefined') {
             const saved = localStorage.getItem('customer_settings');
             if (saved) {
                 try {
-                    return JSON.parse(saved);
+                    return JSON.parse(saved) as CustomerSettings;
                 } catch (e) {
                     console.error('Failed to parse customer settings', e);
                 }

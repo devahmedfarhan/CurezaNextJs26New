@@ -97,6 +97,8 @@ const getOptimisticSummary = (newItems: CartItem[], currentSummary: CartSummary 
         return {
             subtotal: newSubtotal,
             discount: 0,
+            coupon_applied: null,
+            coupon_message: null,
             taxable_amount: newSubtotal,
             cgst: 0,
             sgst: 0,

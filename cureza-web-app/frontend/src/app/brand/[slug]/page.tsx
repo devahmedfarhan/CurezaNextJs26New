@@ -28,6 +28,7 @@ interface Brand {
     concerns: any[] | null;
     purity_standards: string[] | null;
     genuine_badge_text: string | null;
+    brand_vision?: string | null;
 }
 
 interface Product {
@@ -40,6 +41,7 @@ interface Product {
     rating?: number;
     reviews_count?: number;
     is_verified?: boolean;
+    category?: any;
 }
 
 export default function BrandPage({ params }: { params: { slug: string } }) {

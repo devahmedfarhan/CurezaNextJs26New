@@ -271,7 +271,7 @@ export default function TicketList({ role, onTicketClick }: TicketListProps) {
                                         {/* Status / ID / Date Meta block */}
                                         <div className="flex flex-wrap items-center gap-2 text-[10px]">
                                             <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[8px] font-bold border ${config.bg}`}>
-                                                <span className={`w-1.5 h-1.5 rounded-full ${config.dot}`}></span>
+                                                <span className={`w-1.5 h-1.5 rounded-full ${config.accent}`}></span>
                                                 {formatStatusName(ticket.status)}
                                             </span>
                                             <span className="font-bold text-gray-400">ID: #{ticket.id}</span>

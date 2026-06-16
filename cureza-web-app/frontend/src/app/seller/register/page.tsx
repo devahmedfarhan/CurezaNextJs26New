@@ -225,7 +225,7 @@ const KYCDocumentRow = ({ doc, files, savedDocs, setSavedDocs, uploadProgress, f
                                                 return;
                                             }
                                             setFiles(prev => {
-                                                const next = { ...prev, [doc.id]: file };
+                                                const next: Record<string, File | null> = { ...prev, [doc.id]: file };
                                                 if (legacyId) {
                                                     next[legacyId] = file;
                                                 }

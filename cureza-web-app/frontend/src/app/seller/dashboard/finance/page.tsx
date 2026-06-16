@@ -74,6 +74,7 @@ interface PayoutRequest {
     notes: string | null;
     requested_at: string;
     processed_at: string | null;
+    transaction_id?: string | null;
 }
 
 export default function SellerFinancePage() {

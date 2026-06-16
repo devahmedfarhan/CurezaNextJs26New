@@ -50,7 +50,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             }));
         }
     } catch (error) {
-        console.error("Sitemap: Failed to fetch products:", error.message);
+        console.error("Sitemap: Failed to fetch products:", (error as any).message);
     }
 
     // 3. Fetch Dynamic Brands
@@ -66,7 +66,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             }));
         }
     } catch (error) {
-        console.error("Sitemap: Failed to fetch brands:", error.message);
+        console.error("Sitemap: Failed to fetch brands:", (error as any).message);
     }
 
     // 4. Fetch Dynamic Categories
@@ -81,7 +81,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             }));
         }
     } catch (error) {
-        console.error("Sitemap: Failed to fetch categories:", error.message);
+        console.error("Sitemap: Failed to fetch categories:", (error as any).message);
     }
 
     // 5. Fetch Dynamic Blog Posts
@@ -97,7 +97,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             }));
         }
     } catch (error) {
-        console.error("Sitemap: Failed to fetch blog posts:", error.message);
+        console.error("Sitemap: Failed to fetch blog posts:", (error as any).message);
     }
 
     // Combine all URLs
