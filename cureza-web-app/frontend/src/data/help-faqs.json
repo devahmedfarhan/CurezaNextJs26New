@@ -1,0 +1,682 @@
+[
+    {
+        "id": "orders",
+        "title": "Orders",
+        "icon": "ShoppingBag",
+        "description": "Track, cancel, or manage your orders on Cureza.",
+        "subTopics": [
+            {
+                "id": "tracking",
+                "title": "Track Order",
+                "faqs": [
+                    {
+                        "id": "how-do-i-track-my-order",
+                        "q": "How do I track my order?",
+                        "a": "You can track your order via the \"My Orders\" section. Updates are also sent on SMS and email."
+                    },
+                    {
+                        "id": "why-is-my-order-stuck-on-processing",
+                        "q": "Why is my order stuck on processing?",
+                        "a": "Since Cureza is a multi-vendor marketplace, some vendors require extra time for stock confirmation."
+                    },
+                    {
+                        "id": "my-tracking-link-is-not-updating-what-should-i-do",
+                        "q": "My tracking link is not updating. What should I do?",
+                        "a": "Tracking may take 12\u201324 hours to update. If still not updated, contact support at help@cureza.in."
+                    },
+                    {
+                        "id": "can-i-change-my-address-after-placing-the-order",
+                        "q": "Can I change my address after placing the order?",
+                        "a": "Address changes are only possible before the order is shipped. Contact support immediately."
+                    },
+                    {
+                        "id": "my-order-shows-delivered-but-i-did-not-receive-it",
+                        "q": "My order shows delivered but I did not receive it.",
+                        "a": "Please check with security or neighbors. If still missing, contact us for investigation."
+                    },
+                    {
+                        "id": "will-i-get-whatsapp-updates-for-my-order",
+                        "q": "Will I get WhatsApp updates for my order?",
+                        "a": "Yes, if WhatsApp notifications are enabled in your Cureza account settings."
+                    },
+                    {
+                        "id": "why-is-my-order-split-into-multiple-shipments",
+                        "q": "Why is my order split into multiple shipments?",
+                        "a": "Items from different vendors ship separately. Each vendor handles their own logistics."
+                    },
+                    {
+                        "id": "can-i-check-my-delivery-partner-details",
+                        "q": "Can I check my delivery partner details?",
+                        "a": "Yes, courier details are visible in the tracking section once dispatched."
+                    },
+                    {
+                        "id": "can-someone-else-receive-my-package",
+                        "q": "Can someone else receive my package?",
+                        "a": "Yes, delivery is allowed to family\/neighbors if they confirm your name and OTP."
+                    },
+                    {
+                        "id": "what-happens-if-delivery-fails",
+                        "q": "What happens if delivery fails?",
+                        "a": "Courier will attempt delivery again. If still unsuccessful, contact Cureza support."
+                    }
+                ]
+            },
+            {
+                "id": "cancellation",
+                "title": "Order Cancellation",
+                "faqs": [
+                    {
+                        "id": "how-can-i-cancel-my-order",
+                        "q": "How can I cancel my order?",
+                        "a": "Go to \"My Orders\" and request cancellation before the vendor ships your item."
+                    },
+                    {
+                        "id": "can-i-cancel-a-shipped-order",
+                        "q": "Can I cancel a shipped order?",
+                        "a": "No, shipped orders cannot be cancelled. You may refuse delivery if needed."
+                    },
+                    {
+                        "id": "will-i-get-a-refund-for-cancelled-orders",
+                        "q": "Will I get a refund for cancelled orders?",
+                        "a": "Yes, refunds for prepaid orders are processed within 5\u20137 working days."
+                    },
+                    {
+                        "id": "can-a-vendor-cancel-my-order",
+                        "q": "Can a vendor cancel my order?",
+                        "a": "Yes, if the vendor faces stock issues or quality concerns. You will be refunded."
+                    },
+                    {
+                        "id": "can-i-cancel-one-item-from-a-multi-item-order",
+                        "q": "Can I cancel one item from a multi-item order?",
+                        "a": "Yes, cancellation is available per item if not yet shipped."
+                    },
+                    {
+                        "id": "how-do-i-know-if-my-cancellation-was-successful",
+                        "q": "How do I know if my cancellation was successful?",
+                        "a": "You will receive an SMS\/email confirmation from Cureza."
+                    },
+                    {
+                        "id": "can-i-cancel-a-cod-order",
+                        "q": "Can I cancel a COD order?",
+                        "a": "Yes, COD orders can be cancelled before dispatch."
+                    },
+                    {
+                        "id": "what-if-i-accidentally-cancelled-my-order",
+                        "q": "What if I accidentally cancelled my order?",
+                        "a": "You will need to place a new order. Cancelled orders cannot be revived."
+                    },
+                    {
+                        "id": "why-was-my-cancellation-request-rejected",
+                        "q": "Why was my cancellation request rejected?",
+                        "a": "It may be because the vendor has already shipped the product."
+                    },
+                    {
+                        "id": "who-should-i-contact-for-cancellation-support",
+                        "q": "Who should I contact for cancellation support?",
+                        "a": "Email us anytime at help@cureza.in \u2014 we offer 24\/7 support."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "shipping",
+        "title": "Shipping & Delivery",
+        "icon": "Truck",
+        "description": "Understand shipping charges, timelines, and courier partners.",
+        "subTopics": [
+            {
+                "id": "charges",
+                "title": "Shipping Charges",
+                "faqs": [
+                    {
+                        "id": "what-are-the-shipping-charges",
+                        "q": "What are the shipping charges?",
+                        "a": "Shipping is free for orders above \u20b9499. Below that, a flat \u20b940 charge applies."
+                    },
+                    {
+                        "id": "do-vendors-charge-additional-fees",
+                        "q": "Do vendors charge additional fees?",
+                        "a": "No, Cureza standardizes shipping fees for all vendors."
+                    },
+                    {
+                        "id": "do-you-ship-internationally",
+                        "q": "Do you ship internationally?",
+                        "a": "Currently, we only deliver within India."
+                    },
+                    {
+                        "id": "is-cod-included-in-shipping",
+                        "q": "Is COD included in shipping?",
+                        "a": "COD has an additional small convenience fee depending on seller policies."
+                    },
+                    {
+                        "id": "why-do-some-items-have-free-shipping",
+                        "q": "Why do some items have free shipping?",
+                        "a": "Some vendors offer free shipping promotions."
+                    },
+                    {
+                        "id": "will-i-see-shipping-charges-before-placing-an-orde",
+                        "q": "Will I see shipping charges before placing an order?",
+                        "a": "Yes, shipping charges appear on the checkout page."
+                    },
+                    {
+                        "id": "are-shipping-charges-refundable",
+                        "q": "Are shipping charges refundable?",
+                        "a": "Shipping charges are refundable only for cancelled prepaid orders before dispatch."
+                    },
+                    {
+                        "id": "does-cureza-offer-express-delivery",
+                        "q": "Does Cureza offer express delivery?",
+                        "a": "Express delivery is available on selected products and vendors."
+                    },
+                    {
+                        "id": "why-do-shipping-charges-vary",
+                        "q": "Why do shipping charges vary?",
+                        "a": "Charges depend on location, weight, and vendor logistics."
+                    },
+                    {
+                        "id": "can-i-get-free-shipping-for-multiple-items",
+                        "q": "Can I get free shipping for multiple items?",
+                        "a": "Yes, if the combined cart amount exceeds \u20b9499."
+                    }
+                ]
+            },
+            {
+                "id": "delivery",
+                "title": "Delivery Timelines",
+                "faqs": [
+                    {
+                        "id": "when-will-i-get-my-order",
+                        "q": "When will I get my order?",
+                        "a": "Most orders arrive within 3\u20135 working days. Remote areas may take 7\u20139 days."
+                    },
+                    {
+                        "id": "why-is-delivery-taking-longer",
+                        "q": "Why is delivery taking longer?",
+                        "a": "Vendor location, courier delays, holidays, or high-demand periods may affect delivery."
+                    },
+                    {
+                        "id": "can-i-schedule-my-delivery",
+                        "q": "Can I schedule my delivery?",
+                        "a": "Scheduled delivery is not available yet but coming soon."
+                    },
+                    {
+                        "id": "which-courier-partners-does-cureza-use",
+                        "q": "Which courier partners does Cureza use?",
+                        "a": "We ship with leading partners like Delhivery, BlueDart, Xpressbees, and Ekart."
+                    },
+                    {
+                        "id": "how-do-i-change-the-delivery-date",
+                        "q": "How do I change the delivery date?",
+                        "a": "Contact the courier using the tracking link. Options depend on courier availability."
+                    },
+                    {
+                        "id": "do-you-deliver-to-rural-areas",
+                        "q": "Do you deliver to rural areas?",
+                        "a": "Yes, Cureza delivers to 28,000+ pin codes across India."
+                    },
+                    {
+                        "id": "can-i-request-contactless-delivery",
+                        "q": "Can I request contactless delivery?",
+                        "a": "Yes, mention it in delivery instructions or inform the courier."
+                    },
+                    {
+                        "id": "what-if-i-miss-the-delivery",
+                        "q": "What if I miss the delivery?",
+                        "a": "Couriers make up to 3 attempts before returning the order."
+                    },
+                    {
+                        "id": "can-i-check-delivery-time-slots",
+                        "q": "Can I check delivery time slots?",
+                        "a": "Time slots are visible on the tracking page if enabled by the courier."
+                    },
+                    {
+                        "id": "do-you-deliver-on-weekends",
+                        "q": "Do you deliver on weekends?",
+                        "a": "Yes, most courier partners deliver on Saturdays and sometimes Sundays."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "returns",
+        "title": "Returns & Refunds",
+        "icon": "RefreshCw",
+        "description": "Learn about returns, refunds, and replacement policies.",
+        "subTopics": [
+            {
+                "id": "policy",
+                "title": "Return Policy",
+                "faqs": [
+                    {
+                        "id": "what-is-curezas-return-policy",
+                        "q": "What is Cureza\u2019s return policy?",
+                        "a": "Returns are accepted within 7 days for damaged, defective, or incorrect products."
+                    },
+                    {
+                        "id": "are-all-products-returnable",
+                        "q": "Are all products returnable?",
+                        "a": "Personal care, health, hygiene and consumable items are non-returnable."
+                    },
+                    {
+                        "id": "can-i-return-an-item-from-a-multi-vendor-order",
+                        "q": "Can I return an item from a multi-vendor order?",
+                        "a": "Yes, returns are processed per-item depending on vendor policies."
+                    },
+                    {
+                        "id": "how-do-i-request-a-return",
+                        "q": "How do I request a return?",
+                        "a": "Go to \"My Orders\" > Select Item > Request Return."
+                    },
+                    {
+                        "id": "do-i-need-to-keep-the-original-packaging",
+                        "q": "Do I need to keep the original packaging?",
+                        "a": "Yes, original packaging and unused condition is required for approval."
+                    },
+                    {
+                        "id": "who-handles-return-pickups",
+                        "q": "Who handles return pickups?",
+                        "a": "Cureza arranges pickup through courier partners."
+                    },
+                    {
+                        "id": "why-was-my-return-request-rejected",
+                        "q": "Why was my return request rejected?",
+                        "a": "If the item shows signs of use, damage, or missing accessories."
+                    },
+                    {
+                        "id": "can-i-exchange-the-product-instead",
+                        "q": "Can I exchange the product instead?",
+                        "a": "Exchanges are vendor-specific and available on selected items."
+                    },
+                    {
+                        "id": "what-happens-if-courier-cannot-pick-up-my-return",
+                        "q": "What happens if courier cannot pick up my return?",
+                        "a": "We will reschedule the pickup at your convenience."
+                    },
+                    {
+                        "id": "how-can-i-contact-support-for-returns",
+                        "q": "How can I contact support for returns?",
+                        "a": "Email help@cureza.in for 24\/7 return assistance."
+                    }
+                ]
+            },
+            {
+                "id": "refund-status",
+                "title": "Refund Status",
+                "faqs": [
+                    {
+                        "id": "when-will-i-receive-my-refund",
+                        "q": "When will I receive my refund?",
+                        "a": "Refunds are processed within 48 hours of pickup and take 3\u20137 days to reflect."
+                    },
+                    {
+                        "id": "where-will-my-refund-be-credited",
+                        "q": "Where will my refund be credited?",
+                        "a": "Refunds go back to the original payment method."
+                    },
+                    {
+                        "id": "how-do-i-track-my-refund",
+                        "q": "How do I track my refund?",
+                        "a": "You can check refund status in the \"My Orders\" or \"Refunds\" section."
+                    },
+                    {
+                        "id": "i-paid-by-cod-how-will-i-get-my-refund",
+                        "q": "I paid by COD. How will I get my refund?",
+                        "a": "Refunds for COD orders are sent via bank transfer or UPI."
+                    },
+                    {
+                        "id": "my-refund-is-delayed-what-should-i-do",
+                        "q": "My refund is delayed. What should I do?",
+                        "a": "Contact support with your order ID \u2014 help@cureza.in."
+                    },
+                    {
+                        "id": "will-shipping-charges-be-refunded",
+                        "q": "Will shipping charges be refunded?",
+                        "a": "Shipping charges are refunded only for cancelled prepaid orders before shipping."
+                    },
+                    {
+                        "id": "why-is-my-refund-partial",
+                        "q": "Why is my refund partial?",
+                        "a": "If only certain items were returned or if they did not meet return conditions."
+                    },
+                    {
+                        "id": "can-i-change-my-refund-mode",
+                        "q": "Can I change my refund mode?",
+                        "a": "Refund mode cannot be changed once initiated."
+                    },
+                    {
+                        "id": "when-do-replacement-refunds-happen",
+                        "q": "When do replacement refunds happen?",
+                        "a": "Replacement refunds are processed after quality check by the vendor."
+                    },
+                    {
+                        "id": "do-vendors-issue-refunds",
+                        "q": "Do vendors issue refunds?",
+                        "a": "Refunds are processed by Cureza to ensure fast and secure payouts."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "account",
+        "title": "My Account",
+        "icon": "User",
+        "description": "Manage your Cureza profile, security, and preferences.",
+        "subTopics": [
+            {
+                "id": "profile",
+                "title": "Profile Settings",
+                "faqs": [
+                    {
+                        "id": "how-do-i-update-my-profile-details",
+                        "q": "How do I update my profile details?",
+                        "a": "Go to My Account \u2192 Edit Profile \u2192 Save Changes."
+                    },
+                    {
+                        "id": "how-can-i-reset-my-password",
+                        "q": "How can I reset my password?",
+                        "a": "Use the \"Forgot Password\" option on the login page."
+                    },
+                    {
+                        "id": "can-i-change-my-mobile-number",
+                        "q": "Can I change my mobile number?",
+                        "a": "Yes, you can update it in your account settings after OTP verification."
+                    },
+                    {
+                        "id": "is-my-personal-data-safe-with-cureza",
+                        "q": "Is my personal data safe with Cureza?",
+                        "a": "Yes, Cureza uses industry-level encryption and privacy protection."
+                    },
+                    {
+                        "id": "how-do-i-delete-my-cureza-account",
+                        "q": "How do I delete my Cureza account?",
+                        "a": "Contact support at help@cureza.in to request account deletion."
+                    },
+                    {
+                        "id": "how-can-i-manage-my-addresses",
+                        "q": "How can I manage my addresses?",
+                        "a": "Under \"Address Book\", you can add, edit, or delete addresses."
+                    },
+                    {
+                        "id": "where-can-i-see-my-saved-payment-methods",
+                        "q": "Where can I see my saved payment methods?",
+                        "a": "Saved payment methods are available under \"Payments & Wallet\"."
+                    },
+                    {
+                        "id": "can-i-enable-2-step-verification",
+                        "q": "Can I enable 2-step verification?",
+                        "a": "Yes, 2-step login protection is available for extra security."
+                    },
+                    {
+                        "id": "how-do-i-view-my-past-orders",
+                        "q": "How do I view my past orders?",
+                        "a": "Simply visit \"My Orders\" in your account dashboard."
+                    },
+                    {
+                        "id": "can-i-recover-my-account-if-i-forget-my-email",
+                        "q": "Can I recover my account if I forget my email?",
+                        "a": "Contact Cureza support with identity proof."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "payments",
+        "title": "Payments",
+        "icon": "CreditCard",
+        "description": "Payment options, failed transactions, and COD help.",
+        "subTopics": [
+            {
+                "id": "modes",
+                "title": "Payment Modes",
+                "faqs": [
+                    {
+                        "id": "what-payment-methods-do-you-accept",
+                        "q": "What payment methods do you accept?",
+                        "a": "We accept UPI, Cards, Net Banking, Wallets, and Cash on Delivery."
+                    },
+                    {
+                        "id": "is-cash-on-delivery-available-everywhere",
+                        "q": "Is Cash on Delivery available everywhere?",
+                        "a": "COD availability depends on your pin code and vendor settings."
+                    },
+                    {
+                        "id": "my-payment-failed-but-money-was-deducted",
+                        "q": "My payment failed but money was deducted.",
+                        "a": "Refunds for failed payments are auto-processed within 2\u20134 business days."
+                    },
+                    {
+                        "id": "can-i-pay-via-paytm-or-phonepe",
+                        "q": "Can I pay via Paytm or PhonePe?",
+                        "a": "Yes, all major UPI apps are supported."
+                    },
+                    {
+                        "id": "does-cureza-offer-emi-options",
+                        "q": "Does Cureza offer EMI options?",
+                        "a": "EMI is available on selected bank cards during checkout."
+                    },
+                    {
+                        "id": "is-there-a-cureza-wallet",
+                        "q": "Is there a Cureza Wallet?",
+                        "a": "Yes, refunds for COD orders are faster with Cureza Wallet."
+                    },
+                    {
+                        "id": "can-i-save-my-card-info",
+                        "q": "Can I save my card info?",
+                        "a": "Yes, securely stored via RBI-approved tokenization."
+                    },
+                    {
+                        "id": "why-is-cod-not-available-on-some-items",
+                        "q": "Why is COD not available on some items?",
+                        "a": "High-value or fragile items may have COD disabled."
+                    },
+                    {
+                        "id": "do-you-charge-extra-for-cod",
+                        "q": "Do you charge extra for COD?",
+                        "a": "Some vendors may apply a small COD convenience fee."
+                    },
+                    {
+                        "id": "can-i-split-payment-using-multiple-methods",
+                        "q": "Can I split payment using multiple methods?",
+                        "a": "Currently not supported."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "offers",
+        "title": "Offers & Coupons",
+        "icon": "Gift",
+        "description": "Apply coupons, earn rewards, and get vendor discounts.",
+        "subTopics": [
+            {
+                "id": "coupons",
+                "title": "Coupons & Discounts",
+                "faqs": [
+                    {
+                        "id": "how-do-i-apply-a-coupon-code",
+                        "q": "How do I apply a coupon code?",
+                        "a": "Apply the code at checkout before completing the payment."
+                    },
+                    {
+                        "id": "why-is-my-coupon-not-working",
+                        "q": "Why is my coupon not working?",
+                        "a": "It may be expired, product-restricted, or vendor-specific."
+                    },
+                    {
+                        "id": "can-i-use-multiple-coupons",
+                        "q": "Can I use multiple coupons?",
+                        "a": "Only one coupon can be applied per order."
+                    },
+                    {
+                        "id": "do-vendors-offer-separate-coupons",
+                        "q": "Do vendors offer separate coupons?",
+                        "a": "Yes, some vendors run exclusive promotions."
+                    },
+                    {
+                        "id": "find-offers",
+                        "q": "Find offers",
+                        "a": "Check the \"Offers\" section on the homepage."
+                    },
+                    {
+                        "id": "are-coupons-available-on-cod-orders",
+                        "q": "Are coupons available on COD orders?",
+                        "a": "Yes, most coupons work on COD as well."
+                    },
+                    {
+                        "id": "can-i-apply-a-coupon-after-placing-the-order",
+                        "q": "Can I apply a coupon after placing the order?",
+                        "a": "No, coupons must be applied before payment."
+                    },
+                    {
+                        "id": "do-coupons-work-during-sales",
+                        "q": "Do coupons work during sales?",
+                        "a": "Some coupons may be disabled during mega events."
+                    },
+                    {
+                        "id": "do-vendor-discounts-apply-automatically",
+                        "q": "Do vendor discounts apply automatically?",
+                        "a": "Yes, vendor-specific offers appear automatically at checkout."
+                    },
+                    {
+                        "id": "can-i-transfer-unused-coupons-to-another-account",
+                        "q": "Can I transfer unused coupons to another account?",
+                        "a": "No, coupons are non-transferable."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "safety",
+        "title": "Safety & Trust",
+        "icon": "ShieldCheck",
+        "description": "Your safety is our priority. 100% genuine products.",
+        "subTopics": [
+            {
+                "id": "authenticity",
+                "title": "Authenticity & Trust",
+                "faqs": [
+                    {
+                        "id": "are-products-on-cureza-authentic",
+                        "q": "Are products on Cureza authentic?",
+                        "a": "Yes, all vendors are verified and products are sourced from authorized suppliers."
+                    },
+                    {
+                        "id": "how-does-cureza-verify-vendors",
+                        "q": "How does Cureza verify vendors?",
+                        "a": "We check GST, business licenses, product quality, and past performance."
+                    },
+                    {
+                        "id": "are-payments-secure",
+                        "q": "Are payments secure?",
+                        "a": "Yes, we use encrypted payment gateways with RBI-compliant security."
+                    },
+                    {
+                        "id": "can-i-trust-reviews-on-cureza",
+                        "q": "Can I trust reviews on Cureza?",
+                        "a": "Reviews are from real customers who purchased the product."
+                    },
+                    {
+                        "id": "is-my-data-safe",
+                        "q": "Is my data safe?",
+                        "a": "We follow strict data protection standards and do not share personal data."
+                    },
+                    {
+                        "id": "how-do-i-report-a-fake-product",
+                        "q": "How do I report a fake product?",
+                        "a": "Send details to help@cureza.in and our team will take strict action."
+                    },
+                    {
+                        "id": "do-vendors-undergo-quality-checks",
+                        "q": "Do vendors undergo quality checks?",
+                        "a": "Yes, Cureza monitors vendor performance regularly."
+                    },
+                    {
+                        "id": "is-cureza-a-registered-company",
+                        "q": "Is Cureza a registered company?",
+                        "a": "Yes, headquartered in Jaipur, Rajasthan, India."
+                    },
+                    {
+                        "id": "how-do-i-identify-trusted-sellers",
+                        "q": "How do I identify trusted sellers?",
+                        "a": "Look for \u201cVerified Vendor\u201d badge on product listings."
+                    },
+                    {
+                        "id": "does-cureza-provide-buyer-protection",
+                        "q": "Does Cureza provide buyer protection?",
+                        "a": "Yes, Cureza ensures full protection for defective or incorrect items."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "consultation",
+        "title": "Doctor Consultation",
+        "icon": "MessageCircle",
+        "description": "Book online consultations with certified doctors.",
+        "subTopics": [
+            {
+                "id": "booking",
+                "title": "Consultation Booking",
+                "faqs": [
+                    {
+                        "id": "how-do-i-book-a-consultation",
+                        "q": "How do I book a consultation?",
+                        "a": "Go to \u201cConsult Doctor\u201d, select a doctor, choose a time slot, and confirm the booking."
+                    },
+                    {
+                        "id": "are-doctors-verified",
+                        "q": "Are doctors verified?",
+                        "a": "Yes, all doctors on Cureza are certified and verified by our medical team."
+                    },
+                    {
+                        "id": "can-i-reschedule-my-consultation",
+                        "q": "Can I reschedule my consultation?",
+                        "a": "Yes, rescheduling is allowed up to 2 hours before the session."
+                    },
+                    {
+                        "id": "do-doctors-give-prescriptions",
+                        "q": "Do doctors give prescriptions?",
+                        "a": "Yes, digital prescriptions are provided after your session."
+                    },
+                    {
+                        "id": "are-consultations-private",
+                        "q": "Are consultations private?",
+                        "a": "All online sessions are encrypted and confidential."
+                    },
+                    {
+                        "id": "how-long-does-a-consultation-take",
+                        "q": "How long does a consultation take?",
+                        "a": "Most sessions last 10\u201320 minutes depending on the doctor."
+                    },
+                    {
+                        "id": "is-video-calling-necessary",
+                        "q": "Is video calling necessary?",
+                        "a": "No, you can choose audio, video, or chat-based consultations."
+                    },
+                    {
+                        "id": "can-i-book-for-a-family-member",
+                        "q": "Can I book for a family member?",
+                        "a": "Yes, simply mention patient details while booking."
+                    },
+                    {
+                        "id": "what-if-the-doctor-misses-the-call",
+                        "q": "What if the doctor misses the call?",
+                        "a": "Your session will be rescheduled or refunded."
+                    },
+                    {
+                        "id": "how-do-i-contact-support-for-consultation-issues",
+                        "q": "How do I contact support for consultation issues?",
+                        "a": "Email us 24\/7 at help@cureza.in."
+                    }
+                ]
+            }
+        ]
+    }
+]

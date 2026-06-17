@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Search, ChevronRight, MessageCircle, Mail } from 'lucide-react';
-import { HELP_TOPICS } from '@/data/helpCenterData';
+import * as Icons from 'lucide-react';
+import HELP_TOPICS from '@/data/help-faqs.json';
 
 export default function FAQPage() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -75,25 +76,28 @@ export default function FAQPage() {
                 <div className="space-y-6">
                     <h2 className="text-xs font-bold text-[#052326]/40 uppercase tracking-widest">Browse Topics</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {filteredTopics.map((topic) => (
-                            <Link 
-                                key={topic.id} 
-                                href={`/faq/${topic.id}`} 
-                                className="bg-white p-6 rounded-[12px] border border-[#052326]/12 hover:shadow-md hover:border-[#052326]/30 transition group flex flex-col h-44 justify-between"
-                            >
-                                <div className="space-y-2">
-                                    <div className="w-8 h-8 rounded-lg bg-[#052326]/5 flex items-center justify-center text-[#052326] group-hover:bg-[#052326] group-hover:text-white transition">
-                                        <topic.icon size={16} />
+                        {filteredTopics.map((topic) => {
+                            const IconComponent = (Icons as any)[topic.icon] || Icons.HelpCircle;
+                            return (
+                                <Link 
+                                    key={topic.id} 
+                                    href={`/faq/${topic.id}`} 
+                                    className="bg-white p-6 rounded-[12px] border border-[#052326]/12 hover:shadow-md hover:border-[#052326]/30 transition group flex flex-col h-44 justify-between"
+                                >
+                                    <div className="space-y-2">
+                                        <div className="w-8 h-8 rounded-lg bg-[#052326]/5 flex items-center justify-center text-[#052326] group-hover:bg-[#052326] group-hover:text-white transition">
+                                            <IconComponent size={16} />
+                                        </div>
+                                        <h3 className="font-bold text-sm text-[#052326] tracking-tight">{topic.title}</h3>
+                                        <p className="text-xs text-[#052326]/50 line-clamp-2 font-light leading-relaxed">{topic.description}</p>
                                     </div>
-                                    <h3 className="font-bold text-sm text-[#052326] tracking-tight">{topic.title}</h3>
-                                    <p className="text-xs text-[#052326]/50 line-clamp-2 font-light leading-relaxed">{topic.description}</p>
-                                </div>
-                                <div className="flex justify-end items-center text-[10px] font-bold uppercase tracking-wider text-[#052326]/40 group-hover:text-[#052326] transition">
-                                    <span>Explore</span>
-                                    <ChevronRight size={12} className="ml-1" />
-                                </div>
-                            </Link>
-                        ))}
+                                    <div className="flex justify-end items-center text-[10px] font-bold uppercase tracking-wider text-[#052326]/40 group-hover:text-[#052326] transition">
+                                        <span>Explore</span>
+                                        <ChevronRight size={12} className="ml-1" />
+                                    </div>
+                                </Link>
+                            );
+                        })}
                     </div>
                 </div>
 

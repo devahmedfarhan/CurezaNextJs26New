@@ -24,6 +24,7 @@ class User extends Authenticatable
         'role',
         'phone',
         'brand_id',
+        'admin_role_id',
         // Personal Information
         'date_of_birth',
         'gender',
@@ -83,7 +84,8 @@ class User extends Authenticatable
         'agreed_to_terms', 'agreed_to_telemedicine_guidelines', 'declaration_of_truth', 'consent_timestamp', 'consent_ip', 'consent_version',
         'audit_logs',
         'profile_photo_status', 'license_doc_status', 'identity_proof_status', 'ayush_document_status',
-        'profile_photo_rejection_reason', 'license_doc_rejection_reason', 'identity_proof_rejection_reason', 'ayush_document_rejection_reason'
+        'profile_photo_rejection_reason', 'license_doc_rejection_reason', 'identity_proof_rejection_reason', 'ayush_document_rejection_reason',
+        'referral_code'
     ];
 
     /**
@@ -162,7 +164,8 @@ class User extends Authenticatable
         'ayush_id_url', 
         'identity_proof_url',
         'profile_photo_url',
-        'ayush_document_url'
+        'ayush_document_url',
+        'permissions'
     ];
 
     public function getProfileImageUrlAttribute()
@@ -226,5 +229,65 @@ class User extends Authenticatable
     public function sellerChangeRequests()
     {
         return $this->hasMany(SellerChangeRequest::class, 'seller_id');
+    }
+
+    public function adminRole()
+    {
+        return $this->belongsTo(AdminRole::class, 'admin_role_id');
+    }
+
+    public function getPermissionsAttribute()
+    {
+        if ($this->role === 'super_admin') {
+            return [
+                'dashboard',
+                'products',
+                'reviews',
+                'orders',
+                'users',
+                'approvals',
+                'marketing',
+                'events',
+                'finance',
+                'support',
+                'community',
+                'cms',
+                'settings'
+            ];
+        }
+
+        if ($this->role === 'admin') {
+            $role = $this->adminRole;
+            return $role ? ($role->permissions ?? []) : [];
+        }
+
+        return [];
+    }
+
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
+    }
+
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class, 'user_badges')
+                    ->withPivot('unlocked_at')
+                    ->withTimestamps();
+    }
+
+    public function challengesJoined()
+    {
+        return $this->hasMany(UserChallenge::class);
+    }
+
+    public function redemptions()
+    {
+        return $this->hasMany(RewardRedemption::class);
+    }
+
+    public function referralsMade()
+    {
+        return $this->hasMany(Referral::class, 'referrer_id');
     }
 }

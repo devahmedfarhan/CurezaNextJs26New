@@ -62,5 +62,119 @@ class CommunitySeeder extends Seeder
                 'is_active' => true,
             ]
         );
+
+        // 3. Badges Seeding
+        $badges = [
+            [
+                'name' => 'Early Adopter',
+                'description' => 'Joined in the early stages of Cureza.',
+                'icon' => '🌟',
+                'rule_type' => 'points_milestone',
+                'rule_value' => 100,
+                'is_active' => true
+            ],
+            [
+                'name' => 'Review Star',
+                'description' => 'Posted 10+ high quality product reviews.',
+                'icon' => '✍️',
+                'rule_type' => 'purchases_made',
+                'rule_value' => 2,
+                'is_active' => true
+            ],
+            [
+                'name' => 'Wellness Guru',
+                'description' => 'Earned 5,000+ points on your wellness journey.',
+                'icon' => '📚',
+                'rule_type' => 'points_milestone',
+                'rule_value' => 5000,
+                'is_active' => true
+            ],
+            [
+                'name' => 'Big Spender',
+                'description' => 'Completed 5+ orders successfully.',
+                'icon' => '💎',
+                'rule_type' => 'purchases_made',
+                'rule_value' => 5,
+                'is_active' => true
+            ],
+            [
+                'name' => 'Social Butterfly',
+                'description' => 'Successfully referred 5 friends.',
+                'icon' => '🦋',
+                'rule_type' => 'referrals_made',
+                'rule_value' => 5,
+                'is_active' => true
+            ],
+            [
+                'name' => 'Streak Master',
+                'description' => 'Unlocked 1,000+ XP points milestone.',
+                'icon' => '🔥',
+                'rule_type' => 'points_milestone',
+                'rule_value' => 1000,
+                'is_active' => true
+            ],
+        ];
+
+        foreach ($badges as $badge) {
+            \App\Models\Badge::firstOrCreate(['name' => $badge['name']], $badge);
+        }
+
+        // 4. Rewards Catalog Seeding
+        $rewards = [
+            [
+                'name' => '₹500 Off Coupon',
+                'description' => 'Get flat ₹500 off on your next purchase (orders above ₹1500).',
+                'points_cost' => 5000,
+                'type' => 'coupon',
+                'coupon_code' => 'REDEEM500',
+                'stock' => 100,
+                'image_url' => null,
+                'is_active' => true
+            ],
+            [
+                'name' => 'Free Shipping',
+                'description' => 'Enjoy free shipping code valid on your next order.',
+                'points_cost' => 2000,
+                'type' => 'coupon',
+                'coupon_code' => 'REDEEMSHIP',
+                'stock' => -1,
+                'image_url' => null,
+                'is_active' => true
+            ],
+            [
+                'name' => 'Wellness E-Book',
+                'description' => 'Exclusive comprehensive digital guide to Ayurvedic lifestyle and modern wellness.',
+                'points_cost' => 1500,
+                'type' => 'digital',
+                'coupon_code' => 'EBOOKWELL',
+                'stock' => -1,
+                'image_url' => null,
+                'is_active' => true
+            ],
+            [
+                'name' => 'Mystery Gift Box',
+                'description' => 'Curated pack of health supplements and skincare items delivered to your door.',
+                'points_cost' => 10000,
+                'type' => 'physical',
+                'coupon_code' => null,
+                'stock' => 10,
+                'image_url' => null,
+                'is_active' => true
+            ],
+            [
+                'name' => 'Doctor Consultation',
+                'description' => 'Unlock one free session with our top certified doctors.',
+                'points_cost' => 8000,
+                'type' => 'coupon',
+                'coupon_code' => 'FREECONSULT',
+                'stock' => 50,
+                'image_url' => null,
+                'is_active' => true
+            ],
+        ];
+
+        foreach ($rewards as $reward) {
+            \App\Models\Reward::firstOrCreate(['name' => $reward['name']], $reward);
+        }
     }
 }

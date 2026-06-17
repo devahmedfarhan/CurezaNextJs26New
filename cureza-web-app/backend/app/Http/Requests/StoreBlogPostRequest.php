@@ -32,6 +32,27 @@ class StoreBlogPostRequest extends FormRequest
             'meta_keywords' => 'nullable|string|max:255',
             'tags' => 'nullable|array',
             'tags.*' => 'exists:blog_tags,id',
+            'fact_checked_by' => 'nullable|string|max:255',
+            'fact_checker_title' => 'nullable|string|max:255',
+            'fact_checker_image' => 'nullable',
+            'fact_checker_credentials' => 'nullable|string|max:1000',
+            'recommended_products' => 'nullable|array',
+            'citations' => 'nullable|array',
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        if (is_string($this->recommended_products)) {
+            $this->merge([
+                'recommended_products' => json_decode($this->recommended_products, true),
+            ]);
+        }
+
+        if (is_string($this->citations)) {
+            $this->merge([
+                'citations' => json_decode($this->citations, true),
+            ]);
+        }
     }
 }

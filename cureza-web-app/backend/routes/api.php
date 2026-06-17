@@ -74,6 +74,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // Public Routes
 Route::get('/settings/public', [\App\Http\Controllers\Api\Admin\SystemSettingsController::class, 'publicSettings']);
+Route::get('/public/legal-pages/{slug}', [\App\Http\Controllers\Api\Public\LegalPageController::class, 'show']);
 Route::get('/brands', [\App\Http\Controllers\PublicStoreController::class, 'index']);
 Route::get('/brand/{slug}', [\App\Http\Controllers\PublicStoreController::class, 'show']);
 Route::get('/products/latest', [ProductController::class, 'latest']);
@@ -263,7 +264,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/community', [CommunityController::class, 'index']);
     Route::get('/user/challenges', [ChallengeController::class, 'index']);
     Route::post('/user/challenges/{id}/join', [ChallengeController::class, 'join']);
+    Route::post('/user/challenges/{id}/claim', [ChallengeController::class, 'claimReward']);
     Route::get('/user/referrals', [ReferralController::class, 'index']);
+    Route::get('/user/leaderboard', [CommunityController::class, 'leaderboard']);
+    Route::get('/user/badges', [CommunityController::class, 'badges']);
+    Route::get('/user/rewards', [CommunityController::class, 'rewardsList']);
+    Route::post('/user/rewards/{id}/redeem', [CommunityController::class, 'redeemReward']);
+    Route::get('/user/redemptions', [CommunityController::class, 'redemptionsHistory']);
 
     // Dashboard Overview
     Route::get('/user/dashboard', [DashboardController::class, 'index']);
@@ -300,10 +307,45 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Admin Routes
     Route::middleware(['auth:sanctum', 'role:admin,super_admin'])->prefix('admin')->group(function () {
+        // Legal Pages
+        Route::get('/legal-pages', [\App\Http\Controllers\Api\Admin\LegalPageController::class, 'index']);
+        Route::get('/legal-pages/{id}', [\App\Http\Controllers\Api\Admin\LegalPageController::class, 'show']);
+        Route::post('/legal-pages', [\App\Http\Controllers\Api\Admin\LegalPageController::class, 'store']);
+        Route::put('/legal-pages/{id}', [\App\Http\Controllers\Api\Admin\LegalPageController::class, 'update']);
+        Route::delete('/legal-pages/{id}', [\App\Http\Controllers\Api\Admin\LegalPageController::class, 'destroy']);
+
+        // FAQ Management
+        Route::get('/faqs', [\App\Http\Controllers\Api\Admin\FaqController::class, 'index']);
+        Route::post('/faqs', [\App\Http\Controllers\Api\Admin\FaqController::class, 'store']);
+        Route::put('/faqs/{id}', [\App\Http\Controllers\Api\Admin\FaqController::class, 'update']);
+        Route::delete('/faqs/{id}', [\App\Http\Controllers\Api\Admin\FaqController::class, 'destroy']);
+
         // System Settings
         Route::get('/settings', [\App\Http\Controllers\Api\Admin\SystemSettingsController::class, 'index']);
         Route::post('/settings', [\App\Http\Controllers\Api\Admin\SystemSettingsController::class, 'store']);
         Route::get('/settings/logs', [\App\Http\Controllers\Api\Admin\AuditLogController::class, 'index']);
+
+        // Notifications & WhatsApp Flow Manager
+        Route::get('/notifications/templates', [\App\Http\Controllers\Api\Admin\AdminNotificationController::class, 'getTemplates']);
+        Route::post('/notifications/templates', [\App\Http\Controllers\Api\Admin\AdminNotificationController::class, 'createTemplate']);
+        Route::put('/notifications/templates/{id}', [\App\Http\Controllers\Api\Admin\AdminNotificationController::class, 'updateTemplate']);
+        Route::delete('/notifications/templates/{id}', [\App\Http\Controllers\Api\Admin\AdminNotificationController::class, 'deleteTemplate']);
+        Route::post('/notifications/templates/{id}/test', [\App\Http\Controllers\Api\Admin\AdminNotificationController::class, 'sendTestNotification']);
+        Route::get('/notifications/logs', [\App\Http\Controllers\Api\Admin\AdminNotificationController::class, 'getLogs']);
+        Route::delete('/notifications/logs/clear', [\App\Http\Controllers\Api\Admin\AdminNotificationController::class, 'clearLogs']);
+        Route::get('/notifications/stats', [\App\Http\Controllers\Api\Admin\AdminNotificationController::class, 'getStats']);
+        Route::get('/notifications/waitlist', [\App\Http\Controllers\Api\Admin\AdminNotificationController::class, 'getWaitlist']);
+        Route::post('/notifications/waitlist', [\App\Http\Controllers\Api\Admin\AdminNotificationController::class, 'addWaitlistSubscriber']);
+        Route::delete('/notifications/waitlist/{id}', [\App\Http\Controllers\Api\Admin\AdminNotificationController::class, 'deleteWaitlistSubscriber']);
+        Route::post('/notifications/waitlist/notify-product', [\App\Http\Controllers\Api\Admin\AdminNotificationController::class, 'notifyProductRestock']);
+        Route::post('/notifications/flows/trigger-test', [\App\Http\Controllers\Api\Admin\AdminNotificationController::class, 'triggerTestFlows']);
+
+
+        // Database Backups
+        Route::get('/backups', [\App\Http\Controllers\Api\Admin\BackupController::class, 'index']);
+        Route::post('/backups', [\App\Http\Controllers\Api\Admin\BackupController::class, 'create']);
+        Route::get('/backups/{filename}/download', [\App\Http\Controllers\Api\Admin\BackupController::class, 'download']);
+        Route::delete('/backups/{filename}', [\App\Http\Controllers\Api\Admin\BackupController::class, 'destroy']);
 
         // Product Scraper
         Route::post('/scraper/start', [\App\Http\Controllers\Api\Admin\ScrapedProductController::class, 'startScrape']);
@@ -445,6 +487,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Team Management
         Route::apiResource('team', \App\Http\Controllers\Admin\TeamController::class);
+        Route::apiResource('roles', \App\Http\Controllers\Admin\AdminRoleController::class);
 
         // Blog System (Admin)
         Route::apiResource('blog/posts', \App\Http\Controllers\Api\Admin\AdminBlogPostController::class);
@@ -478,6 +521,21 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Reward Slabs
         Route::apiResource('reward-slabs', \App\Http\Controllers\Api\Admin\AdminRewardSlabController::class);
+
+        // Cureza Circle Admin Management
+        Route::get('/community/stats', [\App\Http\Controllers\Api\Admin\AdminCommunityController::class, 'stats']);
+        Route::get('/community/settings', [\App\Http\Controllers\Api\Admin\AdminCommunityController::class, 'getSettings']);
+        Route::post('/community/settings', [\App\Http\Controllers\Api\Admin\AdminCommunityController::class, 'updateSettings']);
+        Route::get('/community/activity', [\App\Http\Controllers\Api\Admin\AdminCommunityController::class, 'activityLog']);
+
+        Route::apiResource('challenges', \App\Http\Controllers\Api\Admin\AdminChallengeController::class);
+        Route::apiResource('badges', \App\Http\Controllers\Api\Admin\AdminBadgeController::class);
+        
+        Route::apiResource('rewards', \App\Http\Controllers\Api\Admin\AdminRewardController::class);
+        Route::get('/rewards-redemptions', [\App\Http\Controllers\Api\Admin\AdminRewardController::class, 'redemptions']);
+        Route::put('/rewards-redemptions/{id}/status', [\App\Http\Controllers\Api\Admin\AdminRewardController::class, 'updateRedemptionStatus']);
+
+        Route::get('/referrals', [\App\Http\Controllers\Api\Admin\AdminReferralController::class, 'index']);
 
         // Dashboard & Analytics
         Route::get('/dashboard', [\App\Http\Controllers\Api\Admin\DashboardController::class, 'index']);
@@ -588,6 +646,7 @@ Route::prefix('public')->group(function () {
 // Blog System (Public)
 Route::prefix('blog')->group(function () {
     Route::get('/posts', [\App\Http\Controllers\Api\BlogController::class, 'index']);
+    Route::get('/posts/popular', [\App\Http\Controllers\Api\BlogController::class, 'popular']);
     Route::get('/posts/{slug}', [\App\Http\Controllers\Api\BlogController::class, 'show']);
     Route::get('/categories/{slug}', [\App\Http\Controllers\Api\BlogController::class, 'byCategory']);
     Route::get('/tags/{slug}', [\App\Http\Controllers\Api\BlogController::class, 'byTag']);

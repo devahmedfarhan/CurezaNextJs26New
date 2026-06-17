@@ -2,33 +2,7 @@
 
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
-
-const FAQS = [
-    {
-        question: "What is Cureza?",
-        answer: "Cureza is India's leading online marketplace for authentic Ayurvedic and wellness products. We connect verified sellers with customers looking for natural health solutions."
-    },
-    {
-        question: "Is free shipping available?",
-        answer: "Yes! We offer free shipping on all orders above ₹499. For orders below this amount, a nominal shipping fee of ₹49 applies."
-    },
-    {
-        question: "Are all products authentic?",
-        answer: "Absolutely. All products on Cureza are sourced from verified manufacturers and sellers. We ensure 100% authenticity and quality checks before listing."
-    },
-    {
-        question: "Can I consult with a doctor?",
-        answer: "Yes, we have certified Ayurvedic doctors available for online consultations. Book a video consultation starting at just ₹299."
-    },
-    {
-        question: "What is your return policy?",
-        answer: "We offer a 7-day easy return policy for most products. If you're not satisfied with your purchase, you can return it within 7 days for a full refund."
-    },
-    {
-        question: "How can I track my order?",
-        answer: "Once your order is shipped, you'll receive a tracking link via email and SMS. You can also track your order from your account dashboard."
-    },
-];
+import FAQS from '@/data/home-faqs.json';
 
 export default function FAQSection() {
     const [openIndex, setOpenIndex] = useState<number | null>(null);

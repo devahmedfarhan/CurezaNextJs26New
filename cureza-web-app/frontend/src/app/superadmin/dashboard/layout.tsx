@@ -9,9 +9,53 @@ import { Search, Bell } from 'lucide-react';
 import NotificationBell from '@/components/common/NotificationBell';
 import { Skeleton } from "@/components/ui/skeleton"
 
+const getPermissionForPath = (pathname: string): string | null => {
+    if (pathname.includes('/superadmin/dashboard/analytics') || pathname.includes('/superadmin/dashboard/reports')) {
+        return 'dashboard';
+    }
+    if (pathname.includes('/superadmin/dashboard/products') || pathname.includes('/superadmin/dashboard/scraper') || pathname.includes('/superadmin/dashboard/categories') || pathname.includes('/superadmin/dashboard/brands') || pathname.includes('/superadmin/dashboard/attributes')) {
+        return 'products';
+    }
+    if (pathname.includes('/superadmin/dashboard/ratings') || pathname.includes('/superadmin/dashboard/reviews')) {
+        return 'reviews';
+    }
+    if (pathname.includes('/superadmin/dashboard/orders') || pathname.includes('/superadmin/dashboard/refunds') || pathname.includes('/superadmin/dashboard/shipments')) {
+        return 'orders';
+    }
+    if (pathname.includes('/superadmin/dashboard/users')) {
+        return 'users';
+    }
+    if (pathname.includes('/superadmin/dashboard/approvals') || pathname.includes('/superadmin/dashboard/seller-requests')) {
+        return 'approvals';
+    }
+    if (pathname.includes('/superadmin/dashboard/marketing')) {
+        return 'marketing';
+    }
+    if (pathname.includes('/superadmin/dashboard/events')) {
+        return 'events';
+    }
+    if (pathname.includes('/superadmin/dashboard/finance') || pathname.includes('/superadmin/dashboard/payouts')) {
+        return 'finance';
+    }
+    if (pathname.includes('/superadmin/dashboard/support')) {
+        return 'support';
+    }
+    if (pathname.includes('/superadmin/dashboard/community')) {
+        return 'community';
+    }
+    if (pathname.includes('/superadmin/dashboard/cms') || pathname.includes('/superadmin/dashboard/menu')) {
+        return 'cms';
+    }
+    if (pathname.includes('/superadmin/dashboard/settings')) {
+        return 'settings';
+    }
+    return null;
+};
+
 export default function SuperAdminLayout({ children }: { children: React.ReactNode }) {
     const { user, isLoading, logout } = useAuth();
     const router = useRouter();
+    const pathname = usePathname();
 
     useEffect(() => {
         if (!isLoading) {
@@ -19,9 +63,14 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
                 router.push('/superadmin/login');
             } else if (user.role !== 'admin' && user.role !== 'super_admin') {
                 router.push('/unauthorized');
+            } else if (user.role === 'admin') {
+                const requiredPermission = getPermissionForPath(pathname);
+                if (requiredPermission && (!user.permissions || !user.permissions.includes(requiredPermission))) {
+                    router.push('/unauthorized');
+                }
             }
         }
-    }, [user, isLoading, router]);
+    }, [user, isLoading, router, pathname]);
 
     // Show Skeleton Layout while loading
     if (isLoading) {

@@ -111,10 +111,11 @@ export default function PioneeringBanner() {
       ref={sectionRef} 
       className="relative w-full py-16 md:py-24 bg-[#052326] text-[#F8F3EF] overflow-hidden"
     >
-      {/* Background overlay design details */}
-      <div className="absolute inset-0 opacity-5 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(#F8F3EF_1px,transparent_1px)] [background-size:16px_16px]" />
-      </div>
+      {/* Background Image Banner with 50% Opacity */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center pointer-events-none opacity-50"
+        style={{ backgroundImage: "url('/banner.png')" }}
+      />
 
       <div className="container mx-auto px-6 relative z-10">
         

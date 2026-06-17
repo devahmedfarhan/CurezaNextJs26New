@@ -21,19 +21,46 @@ class AuthController extends Controller
             'password' => ['required', 'string', 'confirmed', Password::min(12)->letters()->mixedCase()->numbers()->symbols()->uncompromised()],
             'role' => 'required|in:customer,vendor,doctor',
             'phone' => 'nullable|string|max:20',
+            'referred_by' => 'nullable|string|exists:users,referral_code',
             'cf_turnstile_token' => [app()->environment('testing') || app()->environment('local') ? 'nullable' : 'required', new \App\Rules\Turnstile],
         ]);
 
         try {
             DB::beginTransaction();
             
+            // Generate unique referral code for user
+            $refCode = 'REF-' . strtoupper(Str::random(6));
+            while (User::where('referral_code', $refCode)->exists()) {
+                $refCode = 'REF-' . strtoupper(Str::random(6));
+            }
+
             $user = User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
                 'password' => Hash::make($validated['password']),
                 'role' => $validated['role'],
                 'phone' => $validated['phone'] ?? null,
+                'referral_code' => $refCode,
             ]);
+
+            // Create pending referral if code is valid
+            if ($request->filled('referred_by')) {
+                $referrer = User::where('referral_code', $request->referred_by)->first();
+                if ($referrer) {
+                    \App\Models\Referral::create([
+                        'referrer_id' => $referrer->id,
+                        'referred_user_id' => $user->id,
+                        'referral_code' => $request->referred_by,
+                        'status' => 'pending',
+                        'reward_points' => 0,
+                    ]);
+                }
+            }
+
+            // Credit welcome bonus points (XP)
+            if ($user->role === 'customer') {
+                \App\Services\GamificationService::adjustPoints($user, 100, "Welcome bonus points");
+            }
 
             // If user is a vendor, create a brand for them (Strict 1:1 Enforcement)
             if ($validated['role'] === 'vendor') {

@@ -3,7 +3,7 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, ThumbsUp, ThumbsDown, Search, ChevronRight } from 'lucide-react';
-import { HELP_TOPICS } from '@/data/helpCenterData';
+import HELP_TOPICS from '@/data/help-faqs.json';
 import { useState } from 'react';
 
 export default function FAQArticlePage() {

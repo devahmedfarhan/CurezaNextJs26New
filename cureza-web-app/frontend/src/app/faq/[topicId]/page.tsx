@@ -3,7 +3,8 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, ChevronRight, FileText } from 'lucide-react';
-import { HELP_TOPICS } from '@/data/helpCenterData';
+import * as Icons from 'lucide-react';
+import HELP_TOPICS from '@/data/help-faqs.json';
 
 export default function FAQTopicPage() {
     const params = useParams();
@@ -22,6 +23,8 @@ export default function FAQTopicPage() {
         );
     }
 
+    const IconComponent = (Icons as any)[topic.icon] || Icons.HelpCircle;
+
     return (
         <div className="bg-[#F8F3EF] min-h-screen pb-16 text-[#052326]">
             <div className="bg-white border-b border-[#052326]/12 py-6 px-6">
@@ -32,7 +35,7 @@ export default function FAQTopicPage() {
                     </Link>
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-[#052326]/5 text-[#052326] rounded-[10px] flex items-center justify-center">
-                            <topic.icon size={22} />
+                            <IconComponent size={22} />
                         </div>
                         <div>
                             <h1 className="text-2xl font-bold font-heading text-[#052326] leading-tight">{topic.title}</h1>

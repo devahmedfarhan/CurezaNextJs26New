@@ -25,6 +25,19 @@ class AdminBlogPostController extends Controller
             $data['featured_image'] = '/storage/' . $path;
         }
 
+        if ($request->hasFile('fact_checker_image')) {
+            $path = $request->file('fact_checker_image')->store('blog', 'public');
+            $data['fact_checker_image'] = '/storage/' . $path;
+        }
+
+        // Robustly parse JSON inputs if sent as serialized strings from FormData
+        if (isset($data['recommended_products']) && is_string($data['recommended_products'])) {
+            $data['recommended_products'] = json_decode($data['recommended_products'], true);
+        }
+        if (isset($data['citations']) && is_string($data['citations'])) {
+            $data['citations'] = json_decode($data['citations'], true);
+        }
+
         $post = BlogPost::create($data);
         
         if ($request->has('tags')) {
@@ -49,6 +62,19 @@ class AdminBlogPostController extends Controller
         if ($request->hasFile('featured_image')) {
             $path = $request->file('featured_image')->store('blog', 'public');
             $data['featured_image'] = '/storage/' . $path;
+        }
+
+        if ($request->hasFile('fact_checker_image')) {
+            $path = $request->file('fact_checker_image')->store('blog', 'public');
+            $data['fact_checker_image'] = '/storage/' . $path;
+        }
+
+        // Robustly parse JSON inputs if sent as serialized strings from FormData
+        if (isset($data['recommended_products']) && is_string($data['recommended_products'])) {
+            $data['recommended_products'] = json_decode($data['recommended_products'], true);
+        }
+        if (isset($data['citations']) && is_string($data['citations'])) {
+            $data['citations'] = json_decode($data['citations'], true);
         }
 
         $post->update($data);

@@ -66,6 +66,7 @@ const data = {
       title: "Dashboard",
       url: "/superadmin/dashboard",
       icon: LayoutDashboard,
+      permission: "dashboard",
       items: [
         { title: "Overview", url: "/superadmin/dashboard" },
         { title: "Analytics", url: "/superadmin/dashboard/analytics" },
@@ -76,6 +77,7 @@ const data = {
       title: "Products & Catalog",
       url: "/superadmin/dashboard/products",
       icon: Package,
+      permission: "products",
       items: [
         { title: "All Products", url: "/superadmin/dashboard/products" },
         { title: "Add New Product", url: "/superadmin/dashboard/products/create" },
@@ -91,6 +93,7 @@ const data = {
       title: "Ratings & Reviews",
       url: "/superadmin/dashboard/ratings",
       icon: Star,
+      permission: "reviews",
       items: [
         { title: "All Reviews", url: "/superadmin/dashboard/ratings" },
       ],
@@ -99,6 +102,7 @@ const data = {
       title: "Orders & Refunds",
       url: "/superadmin/dashboard/orders",
       icon: ShoppingBag,
+      permission: "orders",
       items: [
         { title: "All Orders", url: "/superadmin/dashboard/orders" },
         { title: "Refund Requests", url: "/superadmin/dashboard/refunds" },
@@ -109,6 +113,7 @@ const data = {
       title: "User Management",
       url: "/superadmin/dashboard/users",
       icon: Users,
+      permission: "users",
       items: [
         { title: "Customers", url: "/superadmin/dashboard/users/customers" },
         { title: "Doctors", url: "/superadmin/dashboard/users/doctors" },
@@ -120,16 +125,17 @@ const data = {
       title: "Approvals",
       url: "/superadmin/dashboard/approvals",
       icon: Shield,
+      permission: "approvals",
       items: [
         { title: "Store Change Requests", url: "/superadmin/dashboard/approvals/stores" },
         { title: "Seller Change Requests", url: "/superadmin/dashboard/seller-requests" },
-        // { title: "Product Change Requests", url: "/superadmin/dashboard/approvals/products" },
       ]
     },
     {
       title: "Marketing & Promos",
       url: "/superadmin/dashboard/marketing",
       icon: Megaphone,
+      permission: "marketing",
       items: [
         { title: "Offers & Coupons", url: "/superadmin/dashboard/marketing/offers" },
         { title: "Bundle Offers", url: "/superadmin/dashboard/marketing/bundles" },
@@ -142,6 +148,7 @@ const data = {
       title: "Events",
       url: "/superadmin/dashboard/events",
       icon: Calendar,
+      permission: "events",
       items: [
         { title: "All Events", url: "/superadmin/dashboard/events" },
       ],
@@ -150,6 +157,7 @@ const data = {
       title: "Finance",
       url: "/superadmin/dashboard/finance",
       icon: CreditCard,
+      permission: "finance",
       items: [
         { title: "Finance Overview", url: "/superadmin/dashboard/finance" },
         { title: "Transactions", url: "/superadmin/dashboard/finance/transactions" },
@@ -161,6 +169,7 @@ const data = {
       title: "Support & Tickets",
       url: "/superadmin/dashboard/support",
       icon: HelpCircle,
+      permission: "support",
       items: [
         { title: "All Tickets", url: "/superadmin/dashboard/support" },
       ],
@@ -169,6 +178,7 @@ const data = {
       title: "Cureza Circle",
       url: "/superadmin/dashboard/community",
       icon: Award,
+      permission: "community",
       items: [
         { title: "Circle Home", url: "/superadmin/dashboard/community" },
         { title: "Activity Log", url: "/superadmin/dashboard/community/activity" },
@@ -177,24 +187,19 @@ const data = {
         { title: "Challenges", url: "/superadmin/dashboard/community/challenges" },
         { title: "Badges", url: "/superadmin/dashboard/community/badges" },
         { title: "Rewards Shop", url: "/superadmin/dashboard/community/rewards" },
-      ],
-    },
-    {
-      title: "Blogs",
-      url: "/superadmin/dashboard/cms/blogs",
-      icon: BookOpen,
-      items: [
-        { title: "All Posts", url: "/superadmin/dashboard/cms/blogs" },
-        { title: "Categories", url: "/superadmin/dashboard/cms/categories" },
-        { title: "Tags", url: "/superadmin/dashboard/cms/tags" },
+        { title: "Circle Guidelines", url: "/superadmin/dashboard/community/guidelines" },
       ],
     },
     {
       title: "Content & CMS",
       url: "/superadmin/dashboard/cms",
       icon: FileText,
+      permission: "cms",
       items: [
-        { title: "Banners", url: "/superadmin/dashboard/cms/banners" },
+        { title: "All Posts", url: "/superadmin/dashboard/cms/blogs" },
+        { title: "Blog Categories", url: "/superadmin/dashboard/cms/categories" },
+        { title: "Blog Tags", url: "/superadmin/dashboard/cms/tags" },
+        { title: "Blog Authors", url: "/superadmin/dashboard/cms/blogs/authors" },
         { title: "FAQ & Help", url: "/superadmin/dashboard/cms/faq" },
         { title: "Menu Builder", url: "/superadmin/dashboard/menu" },
       ],
@@ -203,18 +208,32 @@ const data = {
       title: "Shipping & Checkout",
       url: "/superadmin/dashboard/settings/checkout-cart",
       icon: Truck,
+      permission: "settings",
       items: [
         { title: "Unified Settings", url: "/superadmin/dashboard/settings/checkout-cart" },
+      ],
+    },
+    {
+      title: "Notifications & Flows",
+      url: "/superadmin/dashboard/settings/notifications",
+      icon: Bell,
+      permission: "settings",
+      items: [
+        { title: "Campaign Templates", url: "/superadmin/dashboard/settings/notifications?tab=templates" },
+        { title: "Automated Flows", url: "/superadmin/dashboard/settings/notifications?tab=flows" },
+        { title: "Product Waitlists", url: "/superadmin/dashboard/settings/notifications?tab=waitlist" },
+        { title: "AISensy WhatsApp", url: "/superadmin/dashboard/settings/notifications?tab=whatsapp" },
+        { title: "Delivery Logs", url: "/superadmin/dashboard/settings/notifications?tab=logs" },
       ],
     },
     {
       title: "Global Settings",
       url: "/superadmin/dashboard/settings",
       icon: Settings,
+      permission: "settings",
       items: [
         { title: "General Settings", url: "/superadmin/dashboard/settings/general" },
         { title: "Payment Gateways", url: "/superadmin/dashboard/settings/payments" },
-        { title: "Notifications", url: "/superadmin/dashboard/settings/notifications" },
         { title: "Legal Pages", url: "/superadmin/dashboard/settings/legal" },
         { title: "Roles & Access", url: "/superadmin/dashboard/settings/rbac" },
         { title: "Backup & Maintenance", url: "/superadmin/dashboard/settings/system" },
@@ -254,10 +273,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
-            {data.navMain.map((item) => {
+            {data.navMain
+              .filter((item) => {
+                if (!user) return false;
+                if (user.role === 'super_admin') return true;
+                if (user.role === 'admin') {
+                  return user.permissions?.includes(item.permission) ?? false;
+                }
+                return false;
+              })
+              .map((item) => {
               // Determine if any sub-item is active or if the main URL is active
-              const isSubItemActive = item.items?.some((subItem) => pathname === subItem.url);
-              // Handle Overview vs exact path matching
+              const isSubItemActive = item.items?.some((subItem) => {
+                const targetPath = subItem.url.split('?')[0];
+                return pathname === targetPath;
+              });
               const isParentActive = pathname === item.url || isSubItemActive;
 
               return (
@@ -281,7 +311,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <CollapsibleContent>
                       <SidebarMenuSub>
                         {item.items?.map((subItem) => {
-                          const isSubActive = pathname === subItem.url;
+                          // Match path and query params for active sub-item
+                          let isSubActive = false;
+                          const [targetPath, targetQuery] = subItem.url.split('?');
+                          
+                          if (pathname === targetPath) {
+                            if (!targetQuery) {
+                              isSubActive = true;
+                            } else if (typeof window !== 'undefined') {
+                              const currentParams = new URLSearchParams(window.location.search);
+                              const targetParams = new URLSearchParams(targetQuery);
+                              isSubActive = true;
+                              targetParams.forEach((val, key) => {
+                                if (currentParams.get(key) !== val) {
+                                  isSubActive = false;
+                                }
+                              });
+                            }
+                          }
+
                           return (
                             <SidebarMenuSubItem key={subItem.title}>
                               <SidebarMenuSubButton asChild>

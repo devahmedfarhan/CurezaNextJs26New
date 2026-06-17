@@ -55,6 +55,7 @@ class MenuItemController extends Controller
             ]);
 
             $menuItem = MenuItem::create($validated);
+            MenuItem::writeStaticJson();
             \Illuminate\Support\Facades\Log::info('MenuItemController: item created', ['id' => $menuItem->id]);
             return response()->json($menuItem, 201);
         } catch (\Exception $e) {
@@ -81,6 +82,7 @@ class MenuItemController extends Controller
             ]);
 
             $menuItem->update($validated);
+            MenuItem::writeStaticJson();
             \Illuminate\Support\Facades\Log::info('MenuItemController: item updated');
             return response()->json($menuItem);
         } catch (\Exception $e) {
@@ -95,6 +97,7 @@ class MenuItemController extends Controller
     public function destroy($id)
     {
         MenuItem::findOrFail($id)->delete();
+        MenuItem::writeStaticJson();
         return response()->json(['message' => 'Deleted successfully']);
     }
 
@@ -109,6 +112,8 @@ class MenuItemController extends Controller
         foreach ($request->items as $item) {
             MenuItem::where('id', $item['id'])->update(['order' => $item['order']]);
         }
+
+        MenuItem::writeStaticJson();
 
         return response()->json(['message' => 'Reordered successfully']);
     }

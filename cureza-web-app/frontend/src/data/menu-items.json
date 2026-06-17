@@ -1,0 +1,112 @@
+[
+    {
+        "id": 1,
+        "title": "Shop All",
+        "url": "\/shop",
+        "parent_id": null,
+        "order": 1,
+        "is_active": true,
+        "created_at": "2026-06-17T19:26:44.000000Z",
+        "updated_at": "2026-06-17T19:26:44.000000Z",
+        "children": []
+    },
+    {
+        "id": 2,
+        "title": "New Launches",
+        "url": "\/new-launches",
+        "parent_id": null,
+        "order": 2,
+        "is_active": true,
+        "created_at": "2026-06-17T19:26:44.000000Z",
+        "updated_at": "2026-06-17T19:26:44.000000Z",
+        "children": []
+    },
+    {
+        "id": 3,
+        "title": "Bestsellers",
+        "url": "\/bestsellers",
+        "parent_id": null,
+        "order": 3,
+        "is_active": true,
+        "created_at": "2026-06-17T19:26:44.000000Z",
+        "updated_at": "2026-06-17T19:26:44.000000Z",
+        "children": []
+    },
+    {
+        "id": 4,
+        "title": "Ayurveda",
+        "url": "\/category\/ayurveda",
+        "parent_id": null,
+        "order": 4,
+        "is_active": true,
+        "created_at": "2026-06-17T19:26:44.000000Z",
+        "updated_at": "2026-06-17T19:26:44.000000Z",
+        "children": []
+    },
+    {
+        "id": 5,
+        "title": "Wellness",
+        "url": "\/category\/wellness",
+        "parent_id": null,
+        "order": 5,
+        "is_active": true,
+        "created_at": "2026-06-17T19:26:44.000000Z",
+        "updated_at": "2026-06-17T19:26:44.000000Z",
+        "children": []
+    },
+    {
+        "id": 6,
+        "title": "Supplements",
+        "url": "\/category\/supplements",
+        "parent_id": null,
+        "order": 6,
+        "is_active": true,
+        "created_at": "2026-06-17T19:26:44.000000Z",
+        "updated_at": "2026-06-17T19:26:44.000000Z",
+        "children": []
+    },
+    {
+        "id": 7,
+        "title": "Immunity",
+        "url": "\/concern\/immunity",
+        "parent_id": null,
+        "order": 7,
+        "is_active": true,
+        "created_at": "2026-06-17T19:26:44.000000Z",
+        "updated_at": "2026-06-17T19:26:44.000000Z",
+        "children": []
+    },
+    {
+        "id": 8,
+        "title": "Stress & Anxiety",
+        "url": "\/concern\/stress-anxiety",
+        "parent_id": null,
+        "order": 8,
+        "is_active": true,
+        "created_at": "2026-06-17T19:26:44.000000Z",
+        "updated_at": "2026-06-17T19:26:44.000000Z",
+        "children": []
+    },
+    {
+        "id": 9,
+        "title": "Blog",
+        "url": "\/blog",
+        "parent_id": null,
+        "order": 10,
+        "is_active": true,
+        "created_at": "2026-06-17T19:26:44.000000Z",
+        "updated_at": "2026-06-17T19:26:44.000000Z",
+        "children": []
+    },
+    {
+        "id": 10,
+        "title": "Offers",
+        "url": "\/offers",
+        "parent_id": null,
+        "order": 11,
+        "is_active": true,
+        "created_at": "2026-06-17T19:26:44.000000Z",
+        "updated_at": "2026-06-17T19:26:44.000000Z",
+        "children": []
+    }
+]

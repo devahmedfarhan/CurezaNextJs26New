@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
 import { 
     Save, 
@@ -21,10 +22,12 @@ import {
     ArrowDown,
     Palette,
     Type,
-    LayoutGrid
+    LayoutGrid,
+    Bell
 } from 'lucide-react';
 
 export default function AdminGeneralSettingsPage() {
+    const router = useRouter();
     const [activeTab, setActiveTab] = useState('branding');
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -137,6 +140,7 @@ export default function AdminGeneralSettingsPage() {
         { id: 'email', label: 'Email (SMTP) Setup', icon: Mail },
         { id: 'google', label: 'Google Login (OAuth)', icon: Key },
         { id: 'otp', label: 'OTP Authentication', icon: ShieldCheck },
+        { id: 'notifications', label: 'Notifications & Flows', icon: Bell },
     ];
 
     if (loading) {
@@ -188,7 +192,13 @@ export default function AdminGeneralSettingsPage() {
                     return (
                         <button
                             key={tab.id}
-                            onClick={() => setActiveTab(tab.id)}
+                            onClick={() => {
+                                if (tab.id === 'notifications') {
+                                    router.push('/superadmin/dashboard/settings/notifications');
+                                } else {
+                                    setActiveTab(tab.id);
+                                }
+                            }}
                             className={`flex items-center gap-2 px-5 py-3 text-sm font-bold border-b-2 whitespace-nowrap transition-all ${
                                 isActive 
                                     ? 'border-cureza-green text-cureza-green bg-green-50/50 rounded-t-lg' 

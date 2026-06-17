@@ -12,7 +12,7 @@ class TeamController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::whereIn('role', ['admin', 'super_admin'])->latest();
+        $query = User::whereIn('role', ['admin', 'super_admin'])->with('adminRole')->latest();
 
         if ($request->has('search')) {
             $search = $request->search;
@@ -32,6 +32,7 @@ class TeamController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
             'role' => ['required', Rule::in(['admin', 'super_admin'])], // Only allow creating admins
+            'admin_role_id' => 'nullable|exists:admin_roles,id',
         ]);
 
         $user = User::create([
@@ -39,7 +40,10 @@ class TeamController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'role' => $validated['role'],
+            'admin_role_id' => $validated['admin_role_id'] ?? null,
         ]);
+
+        $user->load('adminRole');
 
         return response()->json($user, 201);
     }
@@ -53,6 +57,7 @@ class TeamController extends Controller
             'email' => ['sometimes', 'required', 'email', Rule::unique('users')->ignore($user->id)],
             'role' => ['sometimes', 'required', Rule::in(['admin', 'super_admin'])],
             'password' => 'nullable|string|min:8',
+            'admin_role_id' => 'nullable|exists:admin_roles,id',
         ]);
 
         if (isset($validated['password'])) {
@@ -62,6 +67,7 @@ class TeamController extends Controller
         }
 
         $user->update($validated);
+        $user->load('adminRole');
 
         return response()->json($user);
     }

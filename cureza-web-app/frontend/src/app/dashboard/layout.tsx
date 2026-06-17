@@ -34,18 +34,19 @@ const SIDEBAR_SECTIONS = [
         title: 'Wellness Journey',
         links: [
             { name: 'Prescriptions', href: '/dashboard/prescriptions', icon: FileText },
-            { name: 'Cureza Circle', href: '/dashboard/community', icon: Star },
-            { name: 'Challenges', href: '/dashboard/challenges', icon: Target },
+            { name: 'Cureza Circle', href: '/dashboard/circle', icon: Star },
+            { name: 'Challenges', href: '/dashboard/circle/challenges', icon: Target },
         ]
     },
     {
         title: 'Purchases & Rewards',
         links: [
             { name: 'My Orders', href: '/dashboard/orders', icon: ShoppingBag },
-            { name: 'Wallet & Rewards', href: '/dashboard/wallet', icon: Wallet },
+            { name: 'Wallet & Rewards', href: '/dashboard/circle/rewards', icon: Wallet },
+            { name: 'Circle Guidelines', href: '/dashboard/circle/guidelines', icon: HelpCircle },
             { name: 'Wishlist', href: '/dashboard/wishlist', icon: Heart },
             { name: 'My Reviews', href: '/dashboard/reviews', icon: Star },
-            { name: 'Refer & Earn', href: '/dashboard/referrals', icon: Share2 },
+            { name: 'Refer & Earn', href: '/dashboard/circle/referrals', icon: Share2 },
         ]
     },
     {

@@ -27,12 +27,20 @@ class BlogPost extends Model
         'meta_description',
         'meta_keywords',
         'views_count',
+        'fact_checked_by',
+        'fact_checker_title',
+        'fact_checker_image',
+        'fact_checker_credentials',
+        'recommended_products',
+        'citations',
     ];
 
     protected $casts = [
         'published_at' => 'datetime',
         'is_featured' => 'boolean',
         'views_count' => 'integer',
+        'recommended_products' => 'array',
+        'citations' => 'array',
     ];
 
     public function category(): BelongsTo

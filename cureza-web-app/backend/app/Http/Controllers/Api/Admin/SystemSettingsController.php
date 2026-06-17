@@ -12,10 +12,50 @@ use Illuminate\Support\Facades\Log;
 class SystemSettingsController extends Controller
 {
     /**
+     * Ensure default settings exist in the database.
+     */
+    private function ensureDefaults()
+    {
+        try {
+            if (\Schema::hasTable('system_settings')) {
+                $inserted = false;
+                
+                $defaults = [
+                    'checkout_native_enabled' => ['value' => '1', 'group' => 'checkout'],
+                    'shipping_cod_charge' => ['value' => '50.00', 'group' => 'shipping'],
+                    'shipping_prepaid_free_enabled' => ['value' => '0', 'group' => 'shipping'],
+                    'maintenance_mode' => ['value' => '0', 'group' => 'system'],
+                    'whatsapp_provider' => ['value' => 'aisensy', 'group' => 'whatsapp'],
+                    'whatsapp_aisensy_api_key' => ['value' => 'simulate', 'group' => 'whatsapp'],
+                    'whatsapp_sender_number' => ['value' => '+919999999999', 'group' => 'whatsapp'],
+                    'whatsapp_enabled' => ['value' => '0', 'group' => 'whatsapp']
+                ];
+
+                foreach ($defaults as $key => $data) {
+                    if (!SystemSetting::where('key', $key)->exists()) {
+                        SystemSetting::updateOrCreate(
+                            ['key' => $key],
+                            ['value' => $data['value'], 'group' => $data['group'], 'is_secret' => ($key === 'whatsapp_aisensy_api_key')]
+                        );
+                        $inserted = true;
+                    }
+                }
+
+                if ($inserted) {
+                    SystemSettingsService::clearCache();
+                }
+            }
+        } catch (\Exception $e) {
+            Log::error('Settings initialization failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Display a listing of system settings grouped by their category.
      */
     public function index()
     {
+        $this->ensureDefaults();
         $settings = SystemSetting::all();
 
         // Group settings and mask secrets
@@ -91,38 +131,7 @@ class SystemSettingsController extends Controller
      */
     public function publicSettings()
     {
-        // Run migration dynamically if settings don't exist
-        try {
-            if (\Schema::hasTable('system_settings')) {
-                $inserted = false;
-                if (!\App\Models\SystemSetting::where('key', 'checkout_native_enabled')->exists()) {
-                    \App\Models\SystemSetting::updateOrCreate(
-                        ['key' => 'checkout_native_enabled'],
-                        ['value' => '1', 'group' => 'checkout', 'is_secret' => false]
-                    );
-                    $inserted = true;
-                }
-                if (!\App\Models\SystemSetting::where('key', 'shipping_cod_charge')->exists()) {
-                    \App\Models\SystemSetting::updateOrCreate(
-                        ['key' => 'shipping_cod_charge'],
-                        ['value' => '50.00', 'group' => 'shipping', 'is_secret' => false]
-                    );
-                    $inserted = true;
-                }
-                if (!\App\Models\SystemSetting::where('key', 'shipping_prepaid_free_enabled')->exists()) {
-                    \App\Models\SystemSetting::updateOrCreate(
-                        ['key' => 'shipping_prepaid_free_enabled'],
-                        ['value' => '0', 'group' => 'shipping', 'is_secret' => false]
-                    );
-                    $inserted = true;
-                }
-                if ($inserted) {
-                    \App\Services\SystemSettingsService::clearCache();
-                }
-            }
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Settings initialization failed: ' . $e->getMessage());
-        }
+        $this->ensureDefaults();
 
         $publicKeys = [
             'google_auth_enabled',
@@ -171,7 +180,8 @@ class SystemSettingsController extends Controller
             'homepage_section_order',
             'shipping_cod_charge',
             'shipping_prepaid_free_enabled',
-            'checkout_native_enabled'
+            'checkout_native_enabled',
+            'maintenance_mode'
         ];
 
         $settings = SystemSetting::whereIn('key', $publicKeys)->get();
@@ -194,7 +204,8 @@ class SystemSettingsController extends Controller
             'cart_drawer_enable_upsell',
             'cart_drawer_enable_delivery_note',
             'shipping_prepaid_free_enabled',
-            'checkout_native_enabled'
+            'checkout_native_enabled',
+            'maintenance_mode'
         ];
 
         foreach ($settings as $setting) {
@@ -253,6 +264,7 @@ class SystemSettingsController extends Controller
         if (!isset($publicSettings['shipping_cod_charge'])) $publicSettings['shipping_cod_charge'] = 50.00;
         if (!isset($publicSettings['shipping_prepaid_free_enabled'])) $publicSettings['shipping_prepaid_free_enabled'] = false;
         if (!isset($publicSettings['checkout_native_enabled'])) $publicSettings['checkout_native_enabled'] = true;
+        if (!isset($publicSettings['maintenance_mode'])) $publicSettings['maintenance_mode'] = false;
 
         return response()->json($publicSettings);
     }

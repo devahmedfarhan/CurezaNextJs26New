@@ -18,6 +18,8 @@ interface User {
     wallet_balance?: number;
     profile_image?: string;
     profile_image_url?: string;
+    permissions?: string[];
+    admin_role_id?: number;
 }
 
 interface AuthContextType {

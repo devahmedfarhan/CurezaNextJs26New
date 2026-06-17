@@ -608,6 +608,12 @@ class ProductController extends Controller
             });
         }
 
+        if ($request->input('all') || $request->input('paginate') === 'false') {
+            return response()->json([
+                'data' => $query->latest()->get()
+            ]);
+        }
+
         return response()->json($query->latest()->paginate(15));
     }
 

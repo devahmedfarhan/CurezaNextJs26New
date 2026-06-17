@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import api from '@/lib/api';
-import { ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft, Save, Trash2, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -43,6 +43,7 @@ export default function CreateBlogPostPage() {
     const [availableTags, setAvailableTags] = useState<Tag[]>([]);
     const [loading, setLoading] = useState(false);
 
+    const [products, setProducts] = useState<any[]>([]);
     const [formData, setFormData] = useState({
         title: '',
         slug: '',
@@ -58,7 +59,28 @@ export default function CreateBlogPostPage() {
         meta_keywords: '',
         published_at: '',
         tags: [] as number[],
+        fact_checked_by: '',
+        fact_checker_title: '',
+        fact_checker_image: null as File | string | null,
+        fact_checker_credentials: '',
+        recommended_products: [] as number[],
+        citations: [] as { title: string; url: string; source: string }[],
     });
+
+    const groupedProducts = useMemo(() => {
+        const groups: Record<string, typeof products> = {};
+        products.forEach((product) => {
+            const catName = typeof product.category === 'object' && product.category?.name
+                ? product.category.name
+                : 'Uncategorized';
+            
+            if (!groups[catName]) {
+                groups[catName] = [];
+            }
+            groups[catName].push(product);
+        });
+        return groups;
+    }, [products]);
 
     useEffect(() => {
         fetchDependencies();
@@ -66,15 +88,17 @@ export default function CreateBlogPostPage() {
 
     const fetchDependencies = async () => {
         try {
-            const [categoriesRes, authorsRes, tagsRes] = await Promise.all([
+            const [categoriesRes, authorsRes, tagsRes, productsRes] = await Promise.all([
                 api.get('/admin/blog/categories'),
                 api.get('/admin/blog/authors'),
                 api.get('/admin/blog/tags'),
+                api.get('/admin/products/all?all=1'),
             ]);
 
             setCategories(categoriesRes.data);
             setAuthors(authorsRes.data);
             setAvailableTags(tagsRes.data);
+            setProducts(productsRes.data?.data || []);
         } catch (error) {
             toast.error('Failed to load dependencies');
         }
@@ -117,6 +141,21 @@ export default function CreateBlogPostPage() {
             if (formData.featured_image instanceof File) {
                 data.append('featured_image', formData.featured_image);
             }
+
+            if (formData.fact_checked_by) {
+                data.append('fact_checked_by', formData.fact_checked_by);
+            }
+            if (formData.fact_checker_title) {
+                data.append('fact_checker_title', formData.fact_checker_title);
+            }
+            if (formData.fact_checker_credentials) {
+                data.append('fact_checker_credentials', formData.fact_checker_credentials);
+            }
+            if (formData.fact_checker_image instanceof File) {
+                data.append('fact_checker_image', formData.fact_checker_image);
+            }
+            data.append('recommended_products', JSON.stringify(formData.recommended_products));
+            data.append('citations', JSON.stringify(formData.citations));
 
             // Append arrays
             formData.tags.forEach(tagId => {
@@ -199,6 +238,191 @@ export default function CreateBlogPostPage() {
                             placeholder="Short summary of the post..."
                             rows={3}
                         />
+                    </div>
+
+                    <div className="border rounded-lg p-4 space-y-4 bg-white">
+                        <h3 className="font-semibold text-lg text-[#052326]">Fact-Checking & Reviewer Details</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="fact_checked_by">Reviewed By (Doctor Name)</Label>
+                                <Input
+                                    id="fact_checked_by"
+                                    value={formData.fact_checked_by}
+                                    onChange={(e) => setFormData({ ...formData, fact_checked_by: e.target.value })}
+                                    placeholder="e.g. Dr. Anjali Sharma"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="fact_checker_title">Reviewer Title/Degree</Label>
+                                <Input
+                                    id="fact_checker_title"
+                                    value={formData.fact_checker_title}
+                                    onChange={(e) => setFormData({ ...formData, fact_checker_title: e.target.value })}
+                                    placeholder="e.g. BAMS, MD (Ayurveda)"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="fact_checker_credentials">Reviewer Credentials & Bio</Label>
+                            <Textarea
+                                id="fact_checker_credentials"
+                                value={formData.fact_checker_credentials}
+                                onChange={(e) => setFormData({ ...formData, fact_checker_credentials: e.target.value })}
+                                placeholder="e.g. 15+ years experience in clinical Panchakarma..."
+                                rows={2}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="fact_checker_image">Reviewer Avatar</Label>
+                            <Input
+                                id="fact_checker_image"
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                    if (e.target.files && e.target.files[0]) {
+                                        setFormData({ ...formData, fact_checker_image: e.target.files[0] });
+                                    }
+                                }}
+                            />
+                            {formData.fact_checker_image && (
+                                <div className="mt-2 w-16 h-16 rounded-full overflow-hidden border">
+                                    <img
+                                        src={
+                                            formData.fact_checker_image instanceof File
+                                                ? URL.createObjectURL(formData.fact_checker_image)
+                                                : (typeof formData.fact_checker_image === 'string' && formData.fact_checker_image.startsWith('/')
+                                                    ? `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'}${formData.fact_checker_image}`
+                                                    : formData.fact_checker_image)
+                                        }
+                                        alt="Reviewer Preview"
+                                        className="object-cover w-full h-full"
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="border rounded-lg p-4 space-y-4 bg-white">
+                        <div className="flex justify-between items-center">
+                            <h3 className="font-semibold text-lg text-[#052326]">Citations & Scientific References</h3>
+                            <Button 
+                                type="button" 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => {
+                                    setFormData({
+                                        ...formData,
+                                        citations: [...formData.citations, { title: '', url: '', source: '' }]
+                                    });
+                                }}
+                            >
+                                <Plus className="mr-1 h-3 w-3" /> Add Citation
+                            </Button>
+                        </div>
+                        
+                        {formData.citations.length === 0 ? (
+                            <p className="text-sm text-gray-500 italic">No references added yet.</p>
+                        ) : (
+                            <div className="space-y-3">
+                                {formData.citations.map((citation, idx) => (
+                                    <div key={idx} className="flex gap-3 items-end border-b pb-3 last:border-0 last:pb-0">
+                                        <div className="flex-1 space-y-1">
+                                            <Label className="text-xs">Citation Title</Label>
+                                            <Input
+                                                value={citation.title}
+                                                onChange={(e) => {
+                                                    const updated = [...formData.citations];
+                                                    updated[idx].title = e.target.value;
+                                                    setFormData({ ...formData, citations: updated });
+                                                }}
+                                                placeholder="e.g. Clinical study of Amla"
+                                            />
+                                        </div>
+                                        <div className="flex-1 space-y-1">
+                                            <Label className="text-xs">URL (Optional)</Label>
+                                            <Input
+                                                value={citation.url}
+                                                onChange={(e) => {
+                                                    const updated = [...formData.citations];
+                                                    updated[idx].url = e.target.value;
+                                                    setFormData({ ...formData, citations: updated });
+                                                }}
+                                                placeholder="https://pubmed..."
+                                            />
+                                        </div>
+                                        <div className="w-1/4 space-y-1">
+                                            <Label className="text-xs">Source</Label>
+                                            <Input
+                                                value={citation.source}
+                                                onChange={(e) => {
+                                                    const updated = [...formData.citations];
+                                                    updated[idx].source = e.target.value;
+                                                    setFormData({ ...formData, citations: updated });
+                                                }}
+                                                placeholder="PubMed"
+                                            />
+                                        </div>
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                                            size="icon"
+                                            onClick={() => {
+                                                const updated = formData.citations.filter((_, i) => i !== idx);
+                                                setFormData({ ...formData, citations: updated });
+                                            }}
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="border rounded-lg p-4 space-y-4 bg-white">
+                        <h3 className="font-semibold text-lg text-[#052326]">Recommended Products</h3>
+                        <div className="space-y-2">
+                            <Label>Select Products to Recommend (Grouped by Category)</Label>
+                            <div className="space-y-6 max-h-96 overflow-y-auto p-3 border rounded-md bg-gray-50/50">
+                                {Object.entries(groupedProducts).map(([categoryName, items]) => (
+                                    <div key={categoryName} className="space-y-2">
+                                        <h4 className="text-[10px] font-bold text-cureza-green uppercase tracking-wider border-b pb-1 mb-2">
+                                            {categoryName}
+                                        </h4>
+                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                                            {items.map((product) => (
+                                                <div 
+                                                    key={product.id}
+                                                    className={`flex items-center space-x-2 p-2 rounded border cursor-pointer transition-colors ${
+                                                        formData.recommended_products.includes(product.id)
+                                                            ? "bg-cureza-green/10 border-cureza-green"
+                                                            : "bg-white hover:bg-gray-50 border-gray-100"
+                                                    }`}
+                                                    onClick={() => {
+                                                        const isSelected = formData.recommended_products.includes(product.id);
+                                                        const updated = isSelected
+                                                            ? formData.recommended_products.filter(id => id !== product.id)
+                                                            : [...formData.recommended_products, product.id];
+                                                        setFormData({ ...formData, recommended_products: updated });
+                                                    }}
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={formData.recommended_products.includes(product.id)}
+                                                        onChange={() => {}} // handled by div click
+                                                        className="h-4 w-4 text-cureza-green border-gray-300 rounded focus:ring-cureza-green"
+                                                    />
+                                                    <span className="text-xs font-medium truncate">{product.title}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
 
                     <div className="border rounded-lg p-4 space-y-4">

@@ -15,6 +15,7 @@ import {
     FlaskConical, 
     AlertCircle 
 } from 'lucide-react';
+import dynamicCoa from '@/data/legal-pages/lab-reports-coa.json';
 
 interface Report {
     id: string;
@@ -165,11 +166,18 @@ export default function LabReportsContent() {
                             Cureza Certified Transparency
                         </span>
                         <h1 className="text-3xl md:text-5xl font-black font-heading tracking-tight leading-tight">
-                            Lab Reports & Certificates of Analysis (COA)
+                            {dynamicCoa ? dynamicCoa.title : 'Lab Reports & Certificates of Analysis (COA)'}
                         </h1>
-                        <p className="text-sm md:text-base text-white/80 leading-relaxed font-light">
-                            Purity is our priority. Access batch lab tests and heavy metal clearances for all dynamic brands selling CBD and Vijaya formulations on Cureza. Click any report to view or download it directly.
-                        </p>
+                        {dynamicCoa ? (
+                            <div 
+                                className="text-sm md:text-base text-white/80 leading-relaxed font-light prose prose-invert max-w-none"
+                                dangerouslySetInnerHTML={{ __html: dynamicCoa.content }}
+                            />
+                        ) : (
+                            <p className="text-sm md:text-base text-white/80 leading-relaxed font-light">
+                                Purity is our priority. Access batch lab tests and heavy metal clearances for all dynamic brands selling CBD and Vijaya formulations on Cureza. Click any report to view or download it directly.
+                            </p>
+                        )}
                     </div>
                 </div>
 

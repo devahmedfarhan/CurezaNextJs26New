@@ -29,6 +29,9 @@ class DatabaseSeeder extends Seeder
             ShippingMethodSeeder::class,
             PrescriptionSeeder::class,
             DemoDataMasterSeeder::class,
+            LegalPagesSeeder::class,
+            NotificationSeeder::class,
+            FaqSeeder::class,
         ]);
     }
 }

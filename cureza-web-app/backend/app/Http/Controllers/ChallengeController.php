@@ -47,4 +47,40 @@ class ChallengeController extends Controller
 
         return response()->json(['message' => 'Joined challenge successfully']);
     }
+
+    public function claimReward(Request $request, $id)
+    {
+        $user = $request->user();
+        $userChallenge = UserChallenge::where('user_id', $user->id)
+            ->where('challenge_id', $id)
+            ->firstOrFail();
+
+        if ($userChallenge->status === 'claimed') {
+            return response()->json(['message' => 'Points already claimed.'], 422);
+        }
+
+        $challenge = $userChallenge->challenge;
+        
+        // Force completion for testing if goal is met or for convenience
+        if ($userChallenge->current_value < $challenge->goal_value) {
+            return response()->json(['message' => 'Challenge goal not met yet.'], 422);
+        }
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($user, $userChallenge, $challenge) {
+            $userChallenge->update(['status' => 'claimed']);
+            
+            \App\Services\GamificationService::adjustPoints(
+                $user,
+                $challenge->reward_points,
+                "Completed challenge: " . $challenge->title,
+                'credit',
+                $challenge->id
+            );
+        });
+
+        return response()->json([
+            'message' => 'XP claimed successfully!',
+            'xp_earned' => $challenge->reward_points
+        ]);
+    }
 }

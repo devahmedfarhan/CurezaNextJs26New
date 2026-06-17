@@ -16,6 +16,7 @@ import {
     ChevronRight,
     Loader2
 } from 'lucide-react';
+import dynamicPolicy from '@/data/legal-pages/medical-product-policy.json';
 
 export default function MedicalPolicyContent() {
     const [brands, setBrands] = useState<string[]>([]);
@@ -69,10 +70,10 @@ export default function MedicalPolicyContent() {
                             Schedule E-1 Rx Guidelines
                         </span>
                         <h1 className="text-3xl md:text-5xl font-black font-heading tracking-tight leading-tight">
-                            Cureza RX Medication Policy
+                            {dynamicPolicy ? dynamicPolicy.title : 'Cureza RX Medication Policy'}
                         </h1>
                         <p className="text-sm md:text-base text-white/80 leading-relaxed font-light">
-                            Welcome to Cureza, a wellness & holistic Vijaya medication marketplace. Please review our compliance framework, medical supervision guidelines, and prescription standards.
+                            {dynamicPolicy?.description || 'Welcome to Cureza, a wellness & holistic Vijaya medication marketplace. Please review our compliance framework, medical supervision guidelines, and prescription standards.'}
                         </p>
                     </div>
                 </div>
@@ -82,112 +83,122 @@ export default function MedicalPolicyContent() {
                     
                     {/* Main Content Areas */}
                     <div className="lg:col-span-2 space-y-8">
-                        
-                        {/* 1. Dynamic Brand/Seller Registry Section */}
-                        <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#052326]/8 shadow-sm space-y-4">
-                            <h2 className="text-xl font-bold flex items-center gap-2.5">
-                                <span className="p-2 rounded-lg bg-[#052326]/5 text-[#052326]">
-                                    <CheckCircle size={20} />
-                                </span>
-                                Cureza Group of Brands (CGB)
-                            </h2>
-                            <p className="text-sm text-[#052326]/70 leading-relaxed font-light">
-                                Cureza Group of Brands (CGB) Rx medicines contain premium cannabis leaf-based formulations. Cannabis is featured in classical formulations in the Ayurvedic Pharmacopeia as <strong>'Vijaya'</strong>, as part of the Traditional Remedies of India.
-                            </p>
-                            
-                            <div>
-                                <h3 className="text-xs font-bold uppercase tracking-wider text-[#052326]/60 mb-3">
-                                    Our Active Rx & Medicine Brands
-                                </h3>
-                                {loadingBrands ? (
-                                    <div className="flex items-center gap-2 text-sm text-[#052326]/50 py-3">
-                                        <Loader2 className="animate-spin" size={16} />
-                                        <span>Retrieving active medicine vendors...</span>
-                                    </div>
-                                ) : brands.length === 0 ? (
-                                    <div className="text-sm text-[#052326]/50 py-3 italic">
-                                        No registered Rx medicine brands found currently.
-                                    </div>
-                                ) : (
-                                    <div className="flex flex-wrap gap-2">
-                                        {brands.map((brand, idx) => (
-                                            <span 
-                                                key={idx} 
-                                                className="bg-[#F8F3EF] hover:bg-[#052326]/10 text-xs font-semibold px-4 py-2 rounded-full border border-[#052326]/8 transition-colors cursor-default"
-                                            >
-                                                {brand}
-                                            </span>
-                                        ))}
-                                    </div>
-                                )}
+                        {dynamicPolicy ? (
+                            <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#052326]/8 shadow-sm">
+                                <div 
+                                    className="prose prose-sm sm:prose max-w-none text-[#052326]/80 leading-relaxed dynamic-legal-content"
+                                    dangerouslySetInnerHTML={{ __html: dynamicPolicy.content }} 
+                                />
                             </div>
-                        </div>
+                        ) : (
+                            <>
+                                {/* 1. Dynamic Brand/Seller Registry Section */}
+                                <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#052326]/8 shadow-sm space-y-4">
+                                    <h2 className="text-xl font-bold flex items-center gap-2.5">
+                                        <span className="p-2 rounded-lg bg-[#052326]/5 text-[#052326]">
+                                            <CheckCircle size={20} />
+                                        </span>
+                                        Cureza Group of Brands (CGB)
+                                    </h2>
+                                    <p className="text-sm text-[#052326]/70 leading-relaxed font-light">
+                                        Cureza Group of Brands (CGB) Rx medicines contain premium cannabis leaf-based formulations. Cannabis is featured in classical formulations in the Ayurvedic Pharmacopeia as <strong>'Vijaya'</strong>, as part of the Traditional Remedies of India.
+                                    </p>
+                                    
+                                    <div>
+                                        <h3 className="text-xs font-bold uppercase tracking-wider text-[#052326]/60 mb-3">
+                                            Our Active Rx & Medicine Brands
+                                        </h3>
+                                        {loadingBrands ? (
+                                            <div className="flex items-center gap-2 text-sm text-[#052326]/50 py-3">
+                                                <Loader2 className="animate-spin" size={16} />
+                                                <span>Retrieving active medicine vendors...</span>
+                                            </div>
+                                        ) : brands.length === 0 ? (
+                                            <div className="text-sm text-[#052326]/50 py-3 italic">
+                                                No registered Rx medicine brands found currently.
+                                            </div>
+                                        ) : (
+                                            <div className="flex flex-wrap gap-2">
+                                                {brands.map((brand, idx) => (
+                                                    <span 
+                                                        key={idx} 
+                                                        className="bg-[#F8F3EF] hover:bg-[#052326]/10 text-xs font-semibold px-4 py-2 rounded-full border border-[#052326]/8 transition-colors cursor-default"
+                                                    >
+                                                        {brand}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
 
-                        {/* 2. Medical Supervision & Schedule E-1 */}
-                        <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#052326]/8 shadow-sm space-y-4">
-                            <h2 className="text-xl font-bold flex items-center gap-2.5">
-                                <span className="p-2 rounded-lg bg-[#052326]/5 text-[#052326]">
-                                    <FileText size={20} />
-                                </span>
-                                Supervision & Prescription Requirement
-                            </h2>
-                            <p className="text-sm text-[#052326]/70 leading-relaxed font-light">
-                                Cannabis falls under <strong>Schedule E-1 of The Drugs and Cosmetics Rules, 1945</strong>. As per law, any consumable medicine containing Schedule E-1 substances must be taken under medical supervision only.
-                            </p>
-                            <div className="bg-[#052326]/5 p-4 rounded-xl border-l-4 border-[#052326] text-xs space-y-2">
-                                <p className="font-bold">Important Dispatch Requirement:</p>
-                                <p className="text-[#052326]/80 leading-relaxed font-light">
-                                    A supporting prescription is proof that the medicine will be consumed following due medical diligence. We only initiate shipping of consumable medical products after receiving and verifying a valid prescription corresponding to your order.
-                                </p>
-                            </div>
-                        </div>
+                                {/* 2. Medical Supervision & Schedule E-1 */}
+                                <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#052326]/8 shadow-sm space-y-4">
+                                    <h2 className="text-xl font-bold flex items-center gap-2.5">
+                                        <span className="p-2 rounded-lg bg-[#052326]/5 text-[#052326]">
+                                            <FileText size={20} />
+                                        </span>
+                                        Supervision & Prescription Requirement
+                                    </h2>
+                                    <p className="text-sm text-[#052326]/70 leading-relaxed font-light">
+                                        Cannabis falls under <strong>Schedule E-1 of The Drugs and Cosmetics Rules, 1945</strong>. As per law, any consumable medicine containing Schedule E-1 substances must be taken under medical supervision only.
+                                    </p>
+                                    <div className="bg-[#052326]/5 p-4 rounded-xl border-l-4 border-[#052326] text-xs space-y-2">
+                                        <p className="font-bold">Important Dispatch Requirement:</p>
+                                        <p className="text-[#052326]/80 leading-relaxed font-light">
+                                            A supporting prescription is proof that the medicine will be consumed following due medical diligence. We only initiate shipping of consumable medical products after receiving and verifying a valid prescription corresponding to your order.
+                                        </p>
+                                    </div>
+                                </div>
 
-                        {/* 3. Medical Experts Panel */}
-                        <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#052326]/8 shadow-sm space-y-4">
-                            <h2 className="text-xl font-bold flex items-center gap-2.5">
-                                <span className="p-2 rounded-lg bg-[#052326]/5 text-[#052326]">
-                                    <Stethoscope size={20} />
-                                </span>
-                                Consultation & Expert Medical Panel
-                            </h2>
-                            <p className="text-sm text-[#052326]/70 leading-relaxed font-light">
-                                We maintain a dedicated team consisting of doctors, a quality analyst, and a compliance officer to monitor active practitioners in our medical panel. This ensures accountability for the medical purpose and safe use of formulations.
-                            </p>
-                            <p className="text-sm text-[#052326]/70 leading-relaxed font-light">
-                                Our Medical Experts Panel consists of independent service providers who are not directly affiliated with Cureza. While we facilitate consultations for your convenience, we do not earn referral fees. We encourage all patients to perform their own due diligence or consult their regular doctors.
-                            </p>
-                            
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                                <div className="p-4 rounded-xl bg-[#F8F3EF] border border-[#052326]/6 space-y-1">
-                                    <h4 className="text-xs font-bold uppercase text-[#052326]">Prescription Validity</h4>
-                                    <p className="text-xs text-[#052326]/70 font-light leading-relaxed">
-                                        Any prescription generated through our internal or external doctor networks is valid for exactly <strong>120 days</strong> from the date of issue.
+                                {/* 3. Medical Experts Panel */}
+                                <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#052326]/8 shadow-sm space-y-4">
+                                    <h2 className="text-xl font-bold flex items-center gap-2.5">
+                                        <span className="p-2 rounded-lg bg-[#052326]/5 text-[#052326]">
+                                            <Stethoscope size={20} />
+                                        </span>
+                                        Consultation & Expert Medical Panel
+                                    </h2>
+                                    <p className="text-sm text-[#052326]/70 leading-relaxed font-light">
+                                        We maintain a dedicated team consisting of doctors, a quality analyst, and a compliance officer to monitor active practitioners in our medical panel. This ensures accountability for the medical purpose and safe use of formulations.
+                                    </p>
+                                    <p className="text-sm text-[#052326]/70 leading-relaxed font-light">
+                                        Our Medical Experts Panel consists of independent service providers who are not directly affiliated with Cureza. While we facilitate consultations for your convenience, we do not earn referral fees. We encourage all patients to perform their own due diligence or consult their regular doctors.
+                                    </p>
+                                    
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                                        <div className="p-4 rounded-xl bg-[#F8F3EF] border border-[#052326]/6 space-y-1">
+                                            <h4 className="text-xs font-bold uppercase text-[#052326]">Prescription Validity</h4>
+                                            <p className="text-xs text-[#052326]/70 font-light leading-relaxed">
+                                                Any prescription generated through our internal or external doctor networks is valid for exactly <strong>120 days</strong> from the date of issue.
+                                            </p>
+                                        </div>
+                                        <div className="p-4 rounded-xl bg-[#F8F3EF] border border-[#052326]/6 space-y-1">
+                                            <h4 className="text-xs font-bold uppercase text-[#052326]">Data & Health Sharing</h4>
+                                            <p className="text-xs text-[#052326]/70 font-light leading-relaxed">
+                                                Doctors share your medical history and prescription details with us to facilitate order dispatch. This data is protected as per our Privacy Policy.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 4. Ayurvedic Efficacy & Research Disclaimer */}
+                                <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#052326]/8 shadow-sm space-y-4">
+                                    <h2 className="text-xl font-bold flex items-center gap-2.5">
+                                        <span className="p-2 rounded-lg bg-[#052326]/5 text-[#052326]">
+                                            <HelpCircle size={20} />
+                                        </span>
+                                        Efficacy & Research Disclaimer
+                                    </h2>
+                                    <p className="text-sm text-[#052326]/70 leading-relaxed font-light">
+                                        This is an Ayurvedic medicine. The efficacy of the medicine has not been independently confirmed. Constant research is ongoing globally to discover new properties, as well as the long-term and short-term effects of traditional medicine systems.
+                                    </p>
+                                    <p className="text-xs text-[#052326]/50 italic">
+                                        * Information on this website is for general educational and informational purposes only and is not a substitute for professional medical advice, diagnosis, or treatment.
                                     </p>
                                 </div>
-                                <div className="p-4 rounded-xl bg-[#F8F3EF] border border-[#052326]/6 space-y-1">
-                                    <h4 className="text-xs font-bold uppercase text-[#052326]">Data & Health Sharing</h4>
-                                    <p className="text-xs text-[#052326]/70 font-light leading-relaxed">
-                                        Doctors share your medical history and prescription details with us to facilitate order dispatch. This data is protected as per our Privacy Policy.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* 4. Ayurvedic Efficacy & Research Disclaimer */}
-                        <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#052326]/8 shadow-sm space-y-4">
-                            <h2 className="text-xl font-bold flex items-center gap-2.5">
-                                <span className="p-2 rounded-lg bg-[#052326]/5 text-[#052326]">
-                                    <HelpCircle size={20} />
-                                </span>
-                                Efficacy & Research Disclaimer
-                            </h2>
-                            <p className="text-sm text-[#052326]/70 leading-relaxed font-light">
-                                This is an Ayurvedic medicine. The efficacy of the medicine has not been independently confirmed. Constant research is ongoing globally to discover new properties, as well as the long-term and short-term effects of traditional medicine systems.
-                            </p>
-                            <p className="text-xs text-[#052326]/50 italic">
-                                * Information on this website is for general educational and informational purposes only and is not a substitute for professional medical advice, diagnosis, or treatment.
-                            </p>
-                        </div>
+                            </>
+                        )}
                     </div>
 
                     {/* Right Sidebar - Restrictions, Payments, and Verification */}

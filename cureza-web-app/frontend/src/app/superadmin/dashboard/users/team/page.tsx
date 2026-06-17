@@ -10,6 +10,12 @@ interface TeamMember {
     name: string;
     email: string;
     role: string;
+    admin_role_id?: number;
+    admin_role?: {
+        id: number;
+        name: string;
+        slug: string;
+    };
     created_at: string;
 }
 
@@ -22,11 +28,13 @@ export default function AdminTeamPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [roles, setRoles] = useState<any[]>([]);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         password: '',
-        role: 'super_admin'
+        role: 'admin',
+        admin_role_id: ''
     });
 
     const fetchTeam = async () => {
@@ -42,8 +50,18 @@ export default function AdminTeamPage() {
         }
     };
 
+    const fetchRoles = async () => {
+        try {
+            const response = await api.get('/admin/roles');
+            setRoles(response.data);
+        } catch (error) {
+            console.error('Failed to fetch admin roles', error);
+        }
+    };
+
     useEffect(() => {
         fetchTeam();
+        fetchRoles();
     }, []);
 
     const handleOpenModal = (member?: TeamMember) => {
@@ -53,11 +71,18 @@ export default function AdminTeamPage() {
                 name: member.name,
                 email: member.email,
                 password: '',
-                role: 'super_admin' // Force upgrade to Super Admin on edit
+                role: member.role || 'admin',
+                admin_role_id: member.admin_role_id?.toString() || ''
             });
         } else {
             setEditingMember(null);
-            setFormData({ name: '', email: '', password: '', role: 'super_admin' });
+            setFormData({ 
+                name: '', 
+                email: '', 
+                password: '', 
+                role: 'admin', 
+                admin_role_id: '' 
+            });
         }
         setIsModalOpen(true);
     };
@@ -69,12 +94,16 @@ export default function AdminTeamPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
+        const submitData = {
+            ...formData,
+            admin_role_id: formData.role === 'admin' ? (formData.admin_role_id ? parseInt(formData.admin_role_id) : null) : null
+        };
         try {
             if (editingMember) {
-                await api.put(`/admin/team/${editingMember.id}`, formData);
+                await api.put(`/admin/team/${editingMember.id}`, submitData);
                 showToast('Team member updated successfully', 'success');
             } else {
-                await api.post('/admin/team', formData);
+                await api.post('/admin/team', submitData);
                 showToast('Team member added successfully', 'success');
             }
             setIsModalOpen(false);
@@ -145,9 +174,15 @@ export default function AdminTeamPage() {
                                     </td>
                                     <td className="px-6 py-4 text-gray-600">{member.email}</td>
                                     <td className="px-6 py-4">
-                                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">
+                                        <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                                            member.role === 'super_admin' 
+                                                ? 'bg-purple-100 text-purple-800' 
+                                                : 'bg-blue-100 text-blue-800'
+                                        }`}>
                                             <Shield size={12} />
-                                            {member.role === 'super_admin' ? 'Super Admin' : 'Admin'}
+                                            {member.role === 'super_admin' 
+                                                ? 'Super Admin' 
+                                                : `Admin (${member.admin_role?.name || 'Custom'})`}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 text-gray-600">{new Date(member.created_at).toLocaleDateString()}</td>
@@ -206,14 +241,36 @@ export default function AdminTeamPage() {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Role</label>
-                                <input
-                                    type="text"
-                                    value="Super Admin"
-                                    disabled
-                                    className="w-full px-3 py-2 border rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
-                                />
+                                <label className="block text-sm font-medium mb-1">System Role</label>
+                                <select
+                                    name="role"
+                                    value={formData.role}
+                                    onChange={handleInputChange}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cureza-green"
+                                >
+                                    <option value="admin">Admin (Custom Permissions)</option>
+                                    <option value="super_admin">Super Admin</option>
+                                </select>
                             </div>
+                            {formData.role === 'admin' && (
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Custom RBAC Role</label>
+                                    <select
+                                        name="admin_role_id"
+                                        required
+                                        value={formData.admin_role_id}
+                                        onChange={handleInputChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cureza-green"
+                                    >
+                                        <option value="">Select an admin role...</option>
+                                        {roles.map((r) => (
+                                            <option key={r.id} value={r.id}>
+                                                {r.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
                             <div>
                                 <label className="block text-sm font-medium mb-1">
                                     Password {editingMember && '(Leave blank to keep current)'}
