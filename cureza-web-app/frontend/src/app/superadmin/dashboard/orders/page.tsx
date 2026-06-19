@@ -22,22 +22,32 @@ interface Order {
 export default function AdminOrdersPage() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [brands, setBrands] = useState<{ id: number; name: string }[]>([]);
+    const [sellers, setSellers] = useState<{ id: number; name: string }[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('All');
     const [paymentStatusFilter, setPaymentStatusFilter] = useState('All');
     const [brandFilter, setBrandFilter] = useState('All');
+    const [sellerFilter, setSellerFilter] = useState('All');
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [selectedOrderIds, setSelectedOrderIds] = useState<number[]>([]);
 
     useEffect(() => {
         // Fetch Brands for filter
         api.get('/admin/brands').then(res => {
-            if (res.data.data) setBrands(res.data.data); // Assuming paginated or wrapped
+            if (res.data.data) setBrands(res.data.data);
             else setBrands(res.data);
         }).catch(err => console.error('Failed to fetch brands', err));
+
+        // Fetch Sellers for filter
+        api.get('/admin/sellers?all=1').then(res => {
+            if (res.data.data) setSellers(res.data.data);
+            else if (Array.isArray(res.data)) setSellers(res.data);
+            else if (res.data.sellers) setSellers(res.data.sellers);
+        }).catch(err => console.error('Failed to fetch sellers', err));
     }, []);
 
     const fetchOrders = async () => {
@@ -48,18 +58,19 @@ export default function AdminOrdersPage() {
             if (statusFilter !== 'All') params.status = statusFilter;
             if (paymentStatusFilter !== 'All') params.payment_status = paymentStatusFilter;
             if (brandFilter !== 'All') params.brand_id = brandFilter;
+            if (sellerFilter !== 'All') params.seller_id = sellerFilter;
             if (fromDate) params.from_date = fromDate;
             if (toDate) params.to_date = toDate;
 
             const response = await api.get('/admin/orders', { params });
-            // Handle both paginated and non-paginated responses just in case, but controller uses paginate
             const data = response.data;
             if (data.data) {
                 setOrders(data.data);
                 setTotalPages(data.last_page);
             } else {
-                setOrders(data); // If direct array
+                setOrders(data);
             }
+            setSelectedOrderIds([]); // Reset selection on page or filter change
         } catch (error) {
             console.error('Failed to fetch orders:', error);
         } finally {
@@ -72,7 +83,7 @@ export default function AdminOrdersPage() {
             fetchOrders();
         }, 500); // Debounce search
         return () => clearTimeout(timeoutId);
-    }, [searchTerm, statusFilter, paymentStatusFilter, brandFilter, fromDate, toDate, page]);
+    }, [searchTerm, statusFilter, paymentStatusFilter, brandFilter, sellerFilter, fromDate, toDate, page]);
 
     const handleExport = async () => {
         try {
@@ -86,6 +97,42 @@ export default function AdminOrdersPage() {
             link.remove();
         } catch (error) {
             console.error('Export failed:', error);
+        }
+    };
+
+    const handleBulkInvoiceDownload = async () => {
+        if (selectedOrderIds.length === 0) return;
+        try {
+            const response = await api.post('/admin/orders/bulk-invoices', {
+                order_ids: selectedOrderIds,
+                seller_id: sellerFilter !== 'All' ? parseInt(sellerFilter) : null
+            }, { responseType: 'blob' });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `bulk_invoices_${new Date().toISOString().slice(0,10)}.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } catch (error) {
+            console.error('Bulk invoice download failed:', error);
+            alert('Failed to download bulk invoices');
+        }
+    };
+
+    const toggleSelectAll = () => {
+        if (selectedOrderIds.length === orders.length) {
+            setSelectedOrderIds([]);
+        } else {
+            setSelectedOrderIds(orders.map(o => o.id));
+        }
+    };
+
+    const toggleSelectOrder = (id: number) => {
+        if (selectedOrderIds.includes(id)) {
+            setSelectedOrderIds(selectedOrderIds.filter(oid => oid !== id));
+        } else {
+            setSelectedOrderIds([...selectedOrderIds, id]);
         }
     };
 
@@ -106,7 +153,16 @@ export default function AdminOrdersPage() {
                     <h1 className="text-2xl font-bold text-gray-900">Order Management</h1>
                     <p className="text-gray-500">Track and manage all orders across the platform</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
+                    {selectedOrderIds.length > 0 && (
+                        <button
+                            onClick={handleBulkInvoiceDownload}
+                            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm"
+                        >
+                            <Download size={18} />
+                            Bulk Invoices ({selectedOrderIds.length})
+                        </button>
+                    )}
                     <Link
                         href="/superadmin/dashboard/orders/create"
                         className="flex items-center gap-2 bg-cureza-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors shadow-sm"
@@ -146,6 +202,18 @@ export default function AdminOrdersPage() {
                         <Filter size={18} className="text-gray-500" />
                         <span className="text-sm font-medium text-gray-700">Filters:</span>
                     </div>
+
+                    {/* Seller Filter */}
+                    <select
+                        value={sellerFilter}
+                        onChange={(e) => setSellerFilter(e.target.value)}
+                        className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-1 focus:ring-cureza-green focus:border-cureza-green max-w-[200px]"
+                    >
+                        <option value="All">All Sellers</option>
+                        {sellers.map(seller => (
+                            <option key={seller.id} value={seller.id}>{seller.name}</option>
+                        ))}
+                    </select>
 
                     {/* Brand Filter */}
                     <select
@@ -214,6 +282,14 @@ export default function AdminOrdersPage() {
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                             <tr>
+                                <th scope="col" className="px-6 py-3 text-left">
+                                    <input
+                                        type="checkbox"
+                                        className="h-4 w-4 text-cureza-green border-gray-300 rounded focus:ring-cureza-green"
+                                        checked={orders.length > 0 && selectedOrderIds.length === orders.length}
+                                        onChange={toggleSelectAll}
+                                    />
+                                </th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
@@ -227,15 +303,23 @@ export default function AdminOrdersPage() {
                         <tbody className="bg-white divide-y divide-gray-200">
                             {loading ? (
                                 <tr>
-                                    <td colSpan={8} className="px-6 py-4 text-center text-sm text-gray-500">Loading orders...</td>
+                                    <td colSpan={9} className="px-6 py-4 text-center text-sm text-gray-500">Loading orders...</td>
                                 </tr>
                             ) : orders.length === 0 ? (
                                 <tr>
-                                    <td colSpan={8} className="px-6 py-4 text-center text-sm text-gray-500">No orders found.</td>
+                                    <td colSpan={9} className="px-6 py-4 text-center text-sm text-gray-500">No orders found.</td>
                                 </tr>
                             ) : (
                                 orders.map((order) => (
                                     <tr key={order.id} className="hover:bg-gray-50 transition-colors">
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <input
+                                                type="checkbox"
+                                                className="h-4 w-4 text-cureza-green border-gray-300 rounded focus:ring-cureza-green"
+                                                checked={selectedOrderIds.includes(order.id)}
+                                                onChange={() => toggleSelectOrder(order.id)}
+                                            />
+                                        </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-cureza-green hover:underline cursor-pointer">
                                             <Link href={`/superadmin/dashboard/orders/${order.id}`}>{order.order_number}</Link>
                                         </td>

@@ -269,7 +269,9 @@ class SuperAdminOrderController extends Controller
             'status' => 'nullable|string|in:pending,processing,shipped,delivered,cancelled',
             'payment_status' => 'nullable|string|in:pending,paid,failed,refunded',
             'payment_method' => 'nullable|string',
-            'shipping_address_json' => 'nullable|array'
+            'shipping_address_json' => 'nullable|array',
+            'tracking_id' => 'nullable|string|max:255',
+            'tracking_provider' => 'nullable|string|max:255',
         ]);
 
         DB::transaction(function () use ($order, $request) {
@@ -280,22 +282,24 @@ class SuperAdminOrderController extends Controller
                 'status', 
                 'payment_status', 
                 'payment_method', 
-                'shipping_address_json'
+                'shipping_address_json',
+                'tracking_id',
+                'tracking_provider'
             ]));
             
             // Reload items to ensure we have access to them for seller_id
             $order->load('items');
             $firstItem = $order->items->first();
 
-            // Auto-create Shipment Record if status is 'shipped' (Idempotent: create if missing)
-            if ($request->status === 'shipped') {
-                \App\Models\Shipment::firstOrCreate(
+            // Auto-create/update Shipment Record if status is 'shipped' or if tracking info is provided
+            if ($request->status === 'shipped' || $request->filled('tracking_id') || $request->filled('tracking_provider')) {
+                \App\Models\Shipment::updateOrCreate(
                     ['order_id' => $order->id],
                     [
                         'seller_id' => $firstItem ? $firstItem->seller_id : null,
-                        'courier_name' => 'Manual Update',
-                        'tracking_number' => 'N/A',
-                        'status' => 'shipped',
+                        'courier_name' => $request->tracking_provider ?? $order->tracking_provider ?? 'Manual Update',
+                        'tracking_number' => $request->tracking_id ?? $order->tracking_id ?? 'N/A',
+                        'status' => $request->status ?? $order->status ?? 'shipped',
                         'shipped_at' => now(),
                     ]
                 );
@@ -331,5 +335,87 @@ class SuperAdminOrderController extends Controller
         $pdf = Pdf::loadView('admin.pdf.invoice', compact('order'));
         
         return $pdf->download('invoice-' . $order->order_number . '.pdf');
+    }
+
+    /**
+     * Bulk download invoices - combines all into single PDF
+     */
+    public function bulkDownloadInvoices(Request $request)
+    {
+        $request->validate([
+            'order_ids' => 'required|array',
+            'order_ids.*' => 'required|integer',
+            'seller_id' => 'nullable|integer'
+        ]);
+
+        $orderIds = $request->order_ids;
+        $sellerId = $request->seller_id;
+
+        $query = Order::whereIn('id', $orderIds)
+            ->with(['items.seller', 'user', 'items.product.brand']);
+
+        if ($sellerId) {
+            $query->whereHas('items', function ($q) use ($sellerId) {
+                $q->where('seller_id', $sellerId);
+            });
+        }
+
+        $orders = $query->latest()->get();
+
+        if ($orders->isEmpty()) {
+            return response()->json(['message' => 'No orders found matching the criteria'], 404);
+        }
+
+        // If seller_id is specified, filter the items within each order
+        if ($sellerId) {
+            foreach ($orders as $order) {
+                $filteredItems = $order->items->filter(function ($item) use ($sellerId) {
+                    return $item->seller_id == $sellerId;
+                });
+                
+                $order->setRelation('items', $filteredItems);
+                
+                // Recalculate totals for this seller's subset of items
+                $subtotal = $filteredItems->sum('total');
+                $order->total_amount = $subtotal;
+                $order->tax_amount = $subtotal * 0.18; // approx 18% GST
+                $order->discount_amount = 0; // reset for seller view
+                $order->final_amount = $order->total_amount + $order->tax_amount + $order->shipping_amount;
+            }
+        }
+
+        $pdf = Pdf::loadView('admin.pdf.bulk-invoices', compact('orders', 'sellerId'));
+        $filename = 'bulk-invoices-' . ($sellerId ? 'seller-' . $sellerId . '-' : '') . date('Ymd-His') . '.pdf';
+        
+        return $pdf->download($filename);
+    }
+
+    /**
+     * List cancelled order items
+     */
+    public function cancelledItems(Request $request)
+    {
+        $query = \App\Models\OrderItem::where('status', 'cancelled')
+            ->orWhereHas('order', function ($q) {
+                $q->where('status', 'cancelled');
+            })
+            ->with(['order.user', 'seller', 'product.brand']);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('product_name', 'like', "%{$search}%")
+                  ->orWhereHas('order', function ($oq) use ($search) {
+                      $oq->where('order_number', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        if ($request->filled('seller_id')) {
+            $query->where('seller_id', $request->seller_id);
+        }
+
+        $cancelled = $query->latest()->paginate(15);
+        return response()->json($cancelled);
     }
 }

@@ -289,5 +289,106 @@ class SuperAdminUserController extends Controller
             return response()->json(['message' => 'Failed to update customer: ' . $e->getMessage()], 500);
         }
     }
+
+    /**
+     * Get user management dashboard metrics
+     */
+    public function getStats()
+    {
+        $totalCustomers = User::where('role', 'customer')->count();
+        $totalDoctors = User::where('role', 'doctor')->count();
+        $totalSellers = User::where('role', 'vendor')->count();
+        $totalTeam = User::whereIn('role', ['admin', 'super_admin'])->count();
+
+        $pendingDoctors = User::where('role', 'doctor')->where('doctor_status', 'pending_approval')->count();
+        $pendingSellers = User::where('role', 'vendor')->whereHas('sellerProfile', function($q) {
+            $q->where('status', 'pending');
+        })->count();
+
+        $pendingDoctorUpdates = User::where('role', 'doctor')->whereNotNull('pending_updates')->count();
+        $pendingStoreRequests = \App\Models\StoreChangeRequest::where('status', 'pending')->count();
+        $pendingSellerRequests = \App\Models\SellerChangeRequest::where('status', 'pending')->count();
+
+        return response()->json([
+            'total_customers' => $totalCustomers,
+            'total_doctors' => $totalDoctors,
+            'total_sellers' => $totalSellers,
+            'total_team' => $totalTeam,
+            'pending_doctors' => $pendingDoctors,
+            'pending_sellers' => $pendingSellers,
+            'pending_doctor_updates' => $pendingDoctorUpdates,
+            'pending_store_requests' => $pendingStoreRequests,
+            'pending_seller_requests' => $pendingSellerRequests,
+            'total_pending_approvals' => $pendingDoctors + $pendingSellers + $pendingDoctorUpdates + $pendingStoreRequests + $pendingSellerRequests
+        ]);
+    }
+
+    /**
+     * Bulk upload and register customers
+     */
+    public function storeCustomerBulk(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'customers' => 'required|array|min:1',
+            'customers.*.name' => 'required|string|max:255',
+            'customers.*.email' => 'required|email',
+            'customers.*.phone' => 'required|string|max:20',
+            'customers.*.password' => 'nullable|string|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $customers = $request->input('customers');
+        $successCount = 0;
+        $failedList = [];
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($customers as $index => $c) {
+                $errors = [];
+                if (User::where('email', $c['email'])->exists()) {
+                    $errors[] = "Email '{$c['email']}' is already taken.";
+                }
+                if (User::where('phone', $c['phone'])->exists()) {
+                    $errors[] = "Phone '{$c['phone']}' is already taken.";
+                }
+
+                if (!empty($errors)) {
+                    $failedList[] = [
+                        'row' => $index + 1,
+                        'name' => $c['name'],
+                        'email' => $c['email'],
+                        'errors' => $errors
+                    ];
+                    continue;
+                }
+
+                User::create([
+                    'name' => $c['name'],
+                    'email' => $c['email'],
+                    'phone' => $c['phone'],
+                    'password' => Hash::make($c['password'] ?? Str::random(10)),
+                    'role' => 'customer',
+                ]);
+                $successCount++;
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'message' => "Bulk import completed. Successfully imported {$successCount} customers.",
+                'success_count' => $successCount,
+                'failed_count' => count($failedList),
+                'failed_list' => $failedList
+            ], 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Failed to import customers: ' . $e->getMessage()], 500);
+        }
+    }
 }
 

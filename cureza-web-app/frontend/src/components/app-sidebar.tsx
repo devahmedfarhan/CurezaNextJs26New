@@ -91,11 +91,15 @@ const data = {
     },
     {
       title: "Ratings & Reviews",
-      url: "/superadmin/dashboard/ratings",
+      url: "/superadmin/dashboard/ratings?tab=overview",
       icon: Star,
       permission: "reviews",
       items: [
-        { title: "All Reviews", url: "/superadmin/dashboard/ratings" },
+        { title: "Overview", url: "/superadmin/dashboard/ratings?tab=overview" },
+        { title: "Product Reviews", url: "/superadmin/dashboard/ratings?tab=products" },
+        { title: "Store Reviews", url: "/superadmin/dashboard/ratings?tab=sellers" },
+        { title: "Doctor Reviews", url: "/superadmin/dashboard/ratings?tab=doctors" },
+        { title: "Seller Replies", url: "/superadmin/dashboard/ratings?tab=replies" },
       ],
     },
     {
@@ -115,21 +119,12 @@ const data = {
       icon: Users,
       permission: "users",
       items: [
+        { title: "Overview", url: "/superadmin/dashboard/users" },
         { title: "Customers", url: "/superadmin/dashboard/users/customers" },
         { title: "Doctors", url: "/superadmin/dashboard/users/doctors" },
         { title: "Sellers", url: "/superadmin/dashboard/users/sellers" },
         { title: "Team & Admins", url: "/superadmin/dashboard/users/team" },
       ],
-    },
-    {
-      title: "Approvals",
-      url: "/superadmin/dashboard/approvals",
-      icon: Shield,
-      permission: "approvals",
-      items: [
-        { title: "Store Change Requests", url: "/superadmin/dashboard/approvals/stores" },
-        { title: "Seller Change Requests", url: "/superadmin/dashboard/seller-requests" },
-      ]
     },
     {
       title: "Marketing & Promos",
@@ -144,15 +139,7 @@ const data = {
         { title: "Pixel Settings", url: "/superadmin/dashboard/marketing/pixel" },
       ],
     },
-    {
-      title: "Events",
-      url: "/superadmin/dashboard/events",
-      icon: Calendar,
-      permission: "events",
-      items: [
-        { title: "All Events", url: "/superadmin/dashboard/events" },
-      ],
-    },
+
     {
       title: "Finance",
       url: "/superadmin/dashboard/finance",
@@ -160,9 +147,12 @@ const data = {
       permission: "finance",
       items: [
         { title: "Finance Overview", url: "/superadmin/dashboard/finance" },
-        { title: "Transactions", url: "/superadmin/dashboard/finance/transactions" },
-        { title: "Seller Payouts", url: "/superadmin/dashboard/finance/payouts" },
-        { title: "Tax & Invoices", url: "/superadmin/dashboard/finance/tax" },
+        { title: "Business Ledgers", url: "/superadmin/dashboard/finance/sellers" },
+        { title: "Payout Releases", url: "/superadmin/dashboard/finance/payouts" },
+        { title: "Transactions Log", url: "/superadmin/dashboard/finance/transactions" },
+        { title: "Invoices & Taxes", url: "/superadmin/dashboard/finance/tax" },
+        { title: "Audit Desk Simulator", url: "/superadmin/dashboard/finance/simulators" },
+        { title: "Commission Policy", url: "/superadmin/dashboard/finance/commission" },
       ],
     },
     {

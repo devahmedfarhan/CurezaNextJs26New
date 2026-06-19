@@ -299,7 +299,7 @@ export default function AttributesPage() {
                                         ) : (
                                             <>
                                                 <Check size={20} />
-                                                {isEditing ? 'COMMIT UPDATES' : 'PURCHASE DEPLOY'}
+                                                {isEditing ? 'COMMIT UPDATES' : 'SAVE ATTRIBUTE'}
                                             </>
                                         )}
                                     </button>

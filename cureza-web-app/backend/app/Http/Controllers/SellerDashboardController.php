@@ -25,92 +25,78 @@ class SellerDashboardController extends Controller
             'end' => now()
         ];
         
-        // 1. Get sales data - Include all non-cancelled orders (handling COD)
-        $totalSales = \App\Models\OrderItem::where('seller_id', $sellerId)
+        // 1. Get current period sales and orders in a single query
+        $currentStats = \App\Models\OrderItem::where('seller_id', $sellerId)
             ->whereHas('order', function ($q) use ($dateRange) {
                 if ($dateRange['start'] && $dateRange['end']) {
                     $q->whereBetween('created_at', [$dateRange['start'], $dateRange['end']]);
                 }
-                $q->where('status', '!=', 'cancelled'); // Count confirmed/pending/shipped/delivered
+                $q->where('status', '!=', 'cancelled');
             })
-            ->sum('total');
+            ->selectRaw('coalesce(sum(total), 0) as sales_total, count(distinct order_id) as orders_count')
+            ->first();
+
+        $totalSales = (float)$currentStats->sales_total;
+        $totalOrders = (int)$currentStats->orders_count;
         
-        // Get previous period sales for comparison
+        // Get previous period sales and orders in a single query
         $previousStartDate = $this->getPreviousStartDate($range);
         $previousRange = [
             'start' => $previousStartDate,
             'end' => $startDate
         ];
         
-        $previousSales = \App\Models\OrderItem::where('seller_id', $sellerId)
+        $previousStats = \App\Models\OrderItem::where('seller_id', $sellerId)
             ->whereHas('order', function ($q) use ($previousRange) {
                 if ($previousRange['start'] && $previousRange['end']) {
                     $q->whereBetween('created_at', [$previousRange['start'], $previousRange['end']]);
                 }
                 $q->where('status', '!=', 'cancelled');
             })
-            ->sum('total');
+            ->selectRaw('coalesce(sum(total), 0) as sales_total, count(distinct order_id) as orders_count')
+            ->first();
+
+        $previousSales = (float)$previousStats->sales_total;
+        $previousOrders = (int)$previousStats->orders_count;
         
         $salesChange = $previousSales > 0 ? (($totalSales - $previousSales) / $previousSales) * 100 : ($totalSales > 0 ? 100 : 0);
-        
-        // 2. Get orders count
-        $totalOrders = \App\Models\OrderItem::where('seller_id', $sellerId)
-            ->whereHas('order', function ($q) use ($dateRange) {
-                if ($dateRange['start'] && $dateRange['end']) {
-                    $q->whereBetween('created_at', [$dateRange['start'], $dateRange['end']]);
-                }
-                $q->where('status', '!=', 'cancelled');
-            })
-            ->distinct('order_id')
-            ->count('order_id');
-        
-        $previousOrders = \App\Models\OrderItem::where('seller_id', $sellerId)
-            ->whereHas('order', function ($q) use ($previousRange) {
-                if ($previousRange['start'] && $previousRange['end']) {
-                    $q->whereBetween('created_at', [$previousRange['start'], $previousRange['end']]);
-                }
-                $q->where('status', '!=', 'cancelled');
-            })
-            ->distinct('order_id')
-            ->count('order_id');
-        
         $ordersChange = $previousOrders > 0 ? (($totalOrders - $previousOrders) / $previousOrders) * 100 : ($totalOrders > 0 ? 100 : 0);
         
         // 3. Average order value
         $avgOrderValue = $totalOrders > 0 ? $totalSales / $totalOrders : 0;
         
-        // 4. Products stats
-        $totalProducts = Product::where('seller_id', $sellerId)->count();
-        
-        $activeProducts = Product::where('seller_id', $sellerId)
-            ->where('status', 'published')
-            ->count();
-            
-        $pendingProducts = Product::where('seller_id', $sellerId)
-            ->whereIn('status', ['pending_approval', 'pending_update', 'delete_requested'])
-            ->count();
-            
-        $outOfStock = Product::where('seller_id', $sellerId)
-            ->where('stock', '<=', 0)
-            ->count();
-            
-        $lowStock = Product::where('seller_id', $sellerId)
-            ->where('stock', '<=', 10)
-            ->count();
-        
-        // 6. Payouts Section
-        $pendingPayout = \App\Models\Payout::where('seller_id', $sellerId)
-            ->where('status', 'pending')
-            ->sum('requested_amount');
+        // 4. Products stats in a single query
+        $productStats = Product::where('seller_id', $sellerId)
+            ->selectRaw('
+                count(*) as total,
+                sum(case when status = \'published\' then 1 else 0 end) as active,
+                sum(case when status in (\'pending_approval\', \'pending_update\', \'delete_requested\') then 1 else 0 end) as pending,
+                sum(case when stock <= 0 then 1 else 0 end) as out_of_stock,
+                sum(case when stock <= 10 then 1 else 0 end) as low_stock
+            ')
+            ->first();
 
-        $paidPayout = \App\Models\Payout::where('seller_id', $sellerId)
-            ->where('status', 'approved')
-            ->sum('approved_amount');
+        $totalProducts = (int)$productStats->total;
+        $activeProducts = (int)$productStats->active;
+        $pendingProducts = (int)$productStats->pending;
+        $outOfStock = (int)$productStats->out_of_stock;
+        $lowStock = (int)$productStats->low_stock;
+        
+        // 6. Payouts Section in a single query
+        $payoutStats = \App\Models\Payout::where('seller_id', $sellerId)
+            ->selectRaw('
+                coalesce(sum(case when status = \'pending\' then requested_amount else 0 end), 0) as pending,
+                coalesce(sum(case when status = \'approved\' then approved_amount else 0 end), 0) as approved
+            ')
+            ->first();
+
+        $pendingPayout = (float)$payoutStats->pending;
+        $paidPayout = (float)$payoutStats->approved;
 
         // Wallet details
         $wallet = \App\Models\SellerWallet::where('seller_id', $sellerId)->first();
         $availableBalance = $wallet ? $wallet->available_balance : 0;
-
+        
         // Use CommissionService
         $commissionService = new \App\Services\CommissionService();
         $commissionSummary = $commissionService->getSellerCommissionSummary($sellerId, $dateRange['start'], $dateRange['end']);
@@ -137,26 +123,23 @@ class SellerDashboardController extends Controller
             'cancelled' => $orderStats['cancelled'] ?? 0,
         ];
 
-        // 8. Coupons Summary
+        // 8. Coupons Summary in a single query
         $activeCouponsCount = \App\Models\Coupon::where('is_active', true)
             ->where(function($q) {
                 $q->whereNull('expires_at')->orWhere('expires_at', '>', now());
             })
             ->count();
 
-        $totalRedeemed = Order::whereHas('items', function ($q) use ($sellerId) {
+        $couponStats = Order::whereHas('items', function ($q) use ($sellerId) {
                 $q->where('seller_id', $sellerId);
             })
             ->whereNotNull('coupon_code')
             ->where('status', '!=', 'cancelled')
-            ->count();
+            ->selectRaw('count(*) as count, coalesce(sum(discount_amount), 0) as discount')
+            ->first();
 
-        $totalDiscount = Order::whereHas('items', function ($q) use ($sellerId) {
-                $q->where('seller_id', $sellerId);
-            })
-            ->whereNotNull('coupon_code')
-            ->where('status', '!=', 'cancelled')
-            ->sum('discount_amount');
+        $totalRedeemed = (int)$couponStats->count;
+        $totalDiscount = (float)$couponStats->discount;
 
         $couponsList = \App\Models\Coupon::where('is_active', true)
             ->where(function($q) {
@@ -209,14 +192,16 @@ class SellerDashboardController extends Controller
             'latest' => $latestReviews
         ];
 
-        // 10. Support Summary
-        $openTickets = \App\Models\Ticket::where('created_by_id', $sellerId)
-            ->whereNotIn('status', ['resolved', 'closed'])
-            ->count();
+        // 10. Support Summary in a single query
+        $ticketStats = \App\Models\Ticket::where('created_by_id', $sellerId)
+            ->selectRaw('
+                sum(case when status not in (\'resolved\', \'closed\') then 1 else 0 end) as open,
+                sum(case when status in (\'resolved\', \'closed\') then 1 else 0 end) as resolved
+            ')
+            ->first();
 
-        $resolvedTickets = \App\Models\Ticket::where('created_by_id', $sellerId)
-            ->whereIn('status', ['resolved', 'closed'])
-            ->count();
+        $openTickets = (int)$ticketStats->open;
+        $resolvedTickets = (int)$ticketStats->resolved;
 
         $latestTicket = \App\Models\Ticket::where('created_by_id', $sellerId)
             ->latest()

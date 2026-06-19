@@ -675,11 +675,13 @@ class ProductController extends Controller
     // Public: Get latest products for upsell
     public function latest()
     {
-        $products = Product::where('status', 'published')
-            ->latest()
-            ->take(3)
-            ->with('brand')
-            ->get();
+        $products = \Illuminate\Support\Facades\Cache::remember('products_latest_3', 900, function() {
+            return Product::where('status', 'published')
+                ->latest()
+                ->take(3)
+                ->with('brand')
+                ->get();
+        });
         return response()->json($products);
     }
 

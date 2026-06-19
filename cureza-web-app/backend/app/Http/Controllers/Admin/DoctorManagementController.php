@@ -13,7 +13,11 @@ class DoctorManagementController extends Controller
         $query = User::where('role', 'doctor');
 
         if ($request->has('status') && $request->status !== 'all') {
-            $query->where('doctor_status', $request->status);
+            if ($request->status === 'pending_updates') {
+                $query->whereNotNull('pending_updates');
+            } else {
+                $query->where('doctor_status', $request->status);
+            }
         }
 
         if ($request->has('search')) {

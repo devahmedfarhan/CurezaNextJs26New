@@ -15,7 +15,7 @@ class CommissionSeeder extends Seeder
     public function run(): void
     {
         // Get all sellers
-        $sellers = User::where('role', 'seller')->get();
+        $sellers = User::where('role', 'vendor')->get();
 
         foreach ($sellers as $seller) {
             // Create default commission if not exists

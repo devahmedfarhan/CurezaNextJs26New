@@ -9,6 +9,7 @@ import { WishlistProvider } from "@/contexts/WishlistContext";
 import { ToastProvider } from "@/contexts/ToastContext";
 import { CategoryProvider } from "@/contexts/CategoryContext";
 import FloatingCompareBar from "@/components/FloatingCompareBar";
+import { SWRConfig } from "swr";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -41,22 +42,28 @@ export default function RootLayout({
         className={`${inter.variable} ${manrope.variable} antialiased font-sans bg-background text-charcoal`}
         suppressHydrationWarning
       >
-        <AuthProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <ToastProvider>
-                <CategoryProvider>
-                  <ConditionalNavbar />
-                  <main className="min-h-screen">
-                    {children}
-                  </main>
-                  <ConditionalFooter />
-                  <FloatingCompareBar />
-                </CategoryProvider>
-              </ToastProvider>
-            </WishlistProvider>
-          </CartProvider>
-        </AuthProvider>
+        <SWRConfig value={{
+          dedupingInterval: 5000,
+          revalidateOnFocus: false,
+          revalidateOnReconnect: true
+        }}>
+          <AuthProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <ToastProvider>
+                  <CategoryProvider>
+                    <ConditionalNavbar />
+                    <main className="min-h-screen">
+                      {children}
+                    </main>
+                    <ConditionalFooter />
+                    <FloatingCompareBar />
+                  </CategoryProvider>
+                </ToastProvider>
+              </WishlistProvider>
+            </CartProvider>
+          </AuthProvider>
+        </SWRConfig>
       </body>
     </html>
   );

@@ -8,6 +8,7 @@ use App\Models\ReviewReply;
 use App\Services\ReviewService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ReviewController extends Controller
 {
@@ -41,11 +42,27 @@ class ReviewController extends Controller
             ->when($request->rating, function ($query, $rating) {
                 $query->where('rating', $rating);
             })
+            ->when($request->seller_role, function ($query, $role) {
+                $query->whereHas('seller', function ($q) use ($role) {
+                    $q->where('role', $role);
+                });
+            })
+            ->when($request->has('has_reply'), function ($query) use ($request) {
+                $hasReply = filter_var($request->has_reply, FILTER_VALIDATE_BOOLEAN);
+                if ($hasReply) {
+                    $query->has('reply');
+                } else {
+                    $query->doesntHave('reply');
+                }
+            })
             ->when($request->search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('review_text', 'like', "%{$search}%")
                       ->orWhereHas('customer', function ($cq) use ($search) {
                           $cq->where('name', 'like', "%{$search}%");
+                      })
+                      ->orWhereHas('seller', function ($sq) use ($search) {
+                          $sq->where('name', 'like', "%{$search}%");
                       });
                 });
             })
@@ -220,15 +237,58 @@ class ReviewController extends Controller
      */
     public function statistics()
     {
+        $breakdown = Review::where('status', 'active')
+            ->select('rating', DB::raw('count(*) as count'))
+            ->groupBy('rating')
+            ->pluck('count', 'rating')
+            ->toArray();
+
+        // Fill in missing ratings
+        for ($i = 1; $i <= 5; $i++) {
+            $breakdown[$i] = (int)($breakdown[$i] ?? 0);
+        }
+
+        // Monthly trends for the last 6 months
+        $monthlyTrend = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $year = $date->year;
+            $month = $date->month;
+            $monthName = $date->format('M');
+
+            $count = Review::whereYear('created_at', $year)
+                ->whereMonth('created_at', $month)
+                ->count();
+
+            $avg = Review::whereYear('created_at', $year)
+                ->whereMonth('created_at', $month)
+                ->avg('rating') ?: 0;
+
+            $monthlyTrend[] = [
+                'month' => $monthName,
+                'count' => $count,
+                'average' => round($avg, 2)
+            ];
+        }
+
         $stats = [
             'total_reviews' => Review::count(),
             'active_reviews' => Review::where('status', 'active')->count(),
             'hidden_reviews' => Review::where('status', 'hidden')->count(),
+            'pending_moderation' => Review::where('status', 'pending')->count(),
             'product_reviews' => Review::where('review_type', 'product')->count(),
             'seller_reviews' => Review::where('review_type', 'seller')->count(),
+            'doctor_reviews_count' => Review::whereHas('seller', function ($query) {
+                $query->where('role', 'doctor');
+            })->count(),
+            'store_reviews_count' => Review::where('review_type', 'seller')
+                ->whereHas('seller', function ($query) {
+                    $query->where('role', 'vendor');
+                })->count(),
             'average_rating' => round(Review::where('status', 'active')->avg('rating'), 2),
             'total_replies' => ReviewReply::count(),
-            'pending_moderation' => Review::where('status', 'pending')->count(),
+            'rating_breakdown' => $breakdown,
+            'monthly_trend' => $monthlyTrend,
         ];
 
         return response()->json([

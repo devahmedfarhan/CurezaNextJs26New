@@ -80,46 +80,95 @@ class AdminFinanceController extends Controller
         $perPage = $request->input('per_page', 15);
 
         // Get all sellers with their wallets
-        $sellersQuery = User::where('role', 'seller')
+        $sellersQuery = User::where('role', 'vendor')
             ->with(['sellerProfile', 'sellerWallet'])
             ->whereHas('sellerWallet');
 
         $sellers = $sellersQuery->paginate($perPage);
+        $sellerIds = $sellers->pluck('id')->toArray();
 
-        $sellersData = $sellers->map(function ($seller) use ($startDate, $endDate) {
-            // Get seller's orders
-            $ordersQuery = Order::whereHas('items', function ($q) use ($seller) {
-                $q->where('seller_id', $seller->id);
+        // Eager load matching orders + items in a single query
+        $orders = Order::whereHas('items', function ($q) use ($sellerIds) {
+                $q->whereIn('seller_id', $sellerIds);
             })
+            ->with(['items' => function ($q) use ($sellerIds) {
+                $q->whereIn('seller_id', $sellerIds);
+            }])
             ->where('status', 'delivered')
-            ->whereNotNull('commission_calculated_at');
+            ->whereNotNull('commission_calculated_at')
+            ->when($startDate, function ($q) use ($startDate) {
+                return $q->where('created_at', '>=', $startDate);
+            })
+            ->when($endDate, function ($q) use ($endDate) {
+                return $q->where('created_at', '<=', $endDate);
+            })
+            ->get();
 
-            if ($startDate) $ordersQuery->where('created_at', '>=', $startDate);
-            if ($endDate) $ordersQuery->where('created_at', '<=', $endDate);
+        // Group orders by seller
+        $ordersBySeller = [];
+        foreach ($orders as $order) {
+            foreach ($order->items as $item) {
+                $sellerId = $item->seller_id;
+                if (!isset($ordersBySeller[$sellerId])) {
+                    $ordersBySeller[$sellerId] = collect();
+                }
+                $ordersBySeller[$sellerId]->push([
+                    'order' => $order,
+                    'item' => $item
+                ]);
+            }
+        }
 
-            $orders = $ordersQuery->get();
+        // Pre-fetch all commission configurations for the page
+        $commissions = \App\Models\SellerCommission::whereIn('seller_id', $sellerIds)
+            ->where('is_active', true)
+            ->get()
+            ->groupBy('seller_id');
 
+        $getCommissionRate = function($sellerId, $date) use ($commissions) {
+            $sellerComms = $commissions->get($sellerId);
+            if (!$sellerComms) {
+                return (object)[
+                    'base_commission_percentage' => 25.00,
+                    'payment_gateway_percentage' => 2.50,
+                ];
+            }
+            $match = $sellerComms->first(function ($comm) use ($date) {
+                return $comm->valid_from <= $date && (is_null($comm->valid_until) || $comm->valid_until >= $date);
+            });
+            return $match ?? $sellerComms->sortByDesc('valid_from')->first() ?? (object)[
+                'base_commission_percentage' => 25.00,
+                'payment_gateway_percentage' => 2.50,
+            ];
+        };
+
+        $sellersData = $sellers->map(function ($seller) use ($ordersBySeller, $getCommissionRate) {
+            $sellerData = $ordersBySeller[$seller->id] ?? collect();
+            
             $totalSales = 0;
             $platformCommission = 0;
             $gatewayFee = 0;
             $sellerEarnings = 0;
+            $orderIds = [];
 
-            foreach ($orders as $order) {
-                $sellerItems = $order->items->where('seller_id', $seller->id);
-                $sellerTotal = $sellerItems->sum('total');
-                
-                $commission = $this->commissionService->getSellerCommissionRate($seller->id, $order->created_at);
+            foreach ($sellerData as $data) {
+                $order = $data['order'];
+                $item = $data['item'];
+                $orderIds[$order->id] = true;
+
+                $sellerTotal = $item->total;
+                $commission = $getCommissionRate($seller->id, $order->created_at);
                 $commAmount = $sellerTotal * ($commission->base_commission_percentage / 100);
                 $isCOD = strtolower($order->payment_method ?? '') === 'cod';
                 $gwFee = $isCOD ? 0 : ($sellerTotal * ($commission->payment_gateway_percentage / 100));
-                
+
                 $totalSales += $sellerTotal;
                 $platformCommission += $commAmount;
                 $gatewayFee += $gwFee;
                 $sellerEarnings += ($sellerTotal - $commAmount - $gwFee);
             }
 
-            $currentCommission = $this->commissionService->getSellerCommissionRate($seller->id);
+            $currentCommission = $getCommissionRate($seller->id, now());
 
             return [
                 'seller_id' => $seller->id,
@@ -135,7 +184,7 @@ class AdminFinanceController extends Controller
                     'platform' => $currentCommission->base_commission_percentage,
                     'gateway' => $currentCommission->payment_gateway_percentage,
                 ],
-                'order_count' => $orders->count(),
+                'order_count' => count($orderIds),
             ];
         });
 
@@ -160,12 +209,42 @@ class AdminFinanceController extends Controller
         $endDate = $request->input('end_date');
 
         $ordersQuery = Order::where('status', 'delivered')
-            ->whereNotNull('commission_calculated_at');
+            ->whereNotNull('commission_calculated_at')
+            ->with('items');
 
         if ($startDate) $ordersQuery->where('created_at', '>=', $startDate);
         if ($endDate) $ordersQuery->where('created_at', '<=', $endDate);
 
         $orders = $ordersQuery->get();
+
+        // Pre-fetch all seller commission rates to avoid N+1 queries
+        $sellerIds = $orders->flatMap(function($order) {
+            return $order->items->pluck('seller_id');
+        })->filter()->unique()->toArray();
+
+        $commissions = \App\Models\SellerCommission::whereIn('seller_id', $sellerIds)
+            ->where('is_active', true)
+            ->get()
+            ->groupBy('seller_id');
+
+        $getCommissionRate = function($sellerId, $date) use ($commissions) {
+            $sellerComms = $commissions->get($sellerId);
+            if (!$sellerComms) {
+                return (object)[
+                    'base_commission_percentage' => 25.00,
+                    'payment_gateway_percentage' => 2.50,
+                    'effective_commission_percentage' => 27.50,
+                ];
+            }
+            $match = $sellerComms->first(function ($comm) use ($date) {
+                return $comm->valid_from <= $date && (is_null($comm->valid_until) || $comm->valid_until >= $date);
+            });
+            return $match ?? $sellerComms->sortByDesc('valid_from')->first() ?? (object)[
+                'base_commission_percentage' => 25.00,
+                'payment_gateway_percentage' => 2.50,
+                'effective_commission_percentage' => 27.50,
+            ];
+        };
 
         // Group by commission rate
         $breakdown = [];
@@ -175,8 +254,8 @@ class AdminFinanceController extends Controller
             foreach ($itemsBySeller as $sellerId => $items) {
                 if (!$sellerId) continue;
                 
-                $commission = $this->commissionService->getSellerCommissionRate($sellerId, $order->created_at);
-                $rate = $commission->effective_commission_percentage;
+                $commission = $getCommissionRate($sellerId, $order->created_at);
+                $rate = $commission->effective_commission_percentage ?? ($commission->base_commission_percentage + $commission->payment_gateway_percentage);
                 
                 if (!isset($breakdown[$rate])) {
                     $breakdown[$rate] = [
@@ -214,21 +293,51 @@ class AdminFinanceController extends Controller
     {
         $perPage = (int)$request->input('per_page', 15);
         $page = (int)$request->input('page', 1);
+        $offset = ($page - 1) * $perPage;
+        $limit = $offset + $perPage; // Fetch enough records to cover up to current page
 
         $allTransactions = collect();
 
-        // 1. Seller Transactions
-        if (!$request->has('stakeholder_type') || $request->stakeholder_type === 'all' || $request->stakeholder_type === 'seller') {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $search = $request->input('search');
+        $searchLower = $search ? strtolower($search) : null;
+        $filterType = $request->input('type', 'all');
+
+        $stakeholderType = $request->input('stakeholder_type', 'all');
+        $showSeller = $stakeholderType === 'all' || $stakeholderType === 'seller';
+        $showDoctor = $stakeholderType === 'all' || $stakeholderType === 'doctor';
+        $showCustomer = $stakeholderType === 'all' || $stakeholderType === 'customer';
+
+        $totalRecords = 0;
+
+        // 1. Seller Transactions Query
+        if ($showSeller) {
             $sellerTxQuery = SellerTransaction::with(['seller', 'order', 'payout']);
             
-            if ($request->has('start_date') && $request->start_date) {
-                $sellerTxQuery->where('created_at', '>=', $request->start_date);
-            }
-            if ($request->has('end_date') && $request->end_date) {
-                $sellerTxQuery->where('created_at', '<=', $request->end_date);
+            if ($startDate) $sellerTxQuery->where('created_at', '>=', $startDate);
+            if ($endDate) $sellerTxQuery->where('created_at', '<=', $endDate);
+            if ($filterType !== 'all') $sellerTxQuery->where('type', $filterType);
+            
+            if ($searchLower) {
+                $sellerTxQuery->where(function($q) use ($searchLower) {
+                    $q->whereHas('seller', function($sq) use ($searchLower) {
+                        $sq->where('name', 'like', "%{$searchLower}%");
+                    })
+                    ->orWhere('description', 'like', "%{$searchLower}%")
+                    ->orWhereHas('order', function($oq) use ($searchLower) {
+                        $oq->where('order_number', 'like', "%{$searchLower}%");
+                    })
+                    ->orWhereHas('payout', function($pq) use ($searchLower) {
+                        $pq->where('transaction_id', 'like', "%{$searchLower}%");
+                    });
+                });
             }
 
-            $sellerTransactions = $sellerTxQuery->get();
+            $totalRecords += $sellerTxQuery->count();
+
+            // Fetch only up to the required limit
+            $sellerTransactions = $sellerTxQuery->orderBy('created_at', 'desc')->limit($limit)->get();
 
             foreach ($sellerTransactions as $tx) {
                 $allTransactions->push([
@@ -246,18 +355,30 @@ class AdminFinanceController extends Controller
             }
         }
 
-        // 2. Doctor Transactions (Appointments & Payouts)
-        if (!$request->has('stakeholder_type') || $request->stakeholder_type === 'all' || $request->stakeholder_type === 'doctor') {
-            // Appointments
+        // 2. Doctor Transactions Query
+        if ($showDoctor) {
+            // Appointments Query
             $apptQuery = \App\Models\Appointment::with('doctor')->where('status', 'completed');
-            if ($request->has('start_date') && $request->start_date) {
-                $apptQuery->where('appointment_date', '>=', $request->start_date);
-            }
-            if ($request->has('end_date') && $request->end_date) {
-                $apptQuery->where('appointment_date', '<=', $request->end_date);
+            if ($startDate) $apptQuery->where('appointment_date', '>=', $startDate);
+            if ($endDate) $apptQuery->where('appointment_date', '<=', $endDate);
+            if ($filterType !== 'all' && $filterType !== 'earning') {
+                // If filtering by non-earning type, appts will have 0 matches
+                $apptQuery->whereRaw('1 = 0');
             }
 
-            $appointments = $apptQuery->get();
+            if ($searchLower) {
+                $apptQuery->where(function($q) use ($searchLower) {
+                    $q->whereHas('doctor', function($dq) use ($searchLower) {
+                        $dq->where('name', 'like', "%{$searchLower}%");
+                    })
+                    ->orWhere('payment_id', 'like', "%{$searchLower}%")
+                    ->orWhere('health_concern', 'like', "%{$searchLower}%");
+                });
+            }
+
+            $totalRecords += $apptQuery->count();
+            $appointments = $apptQuery->orderBy('appointment_date', 'desc')->limit($limit)->get();
+
             foreach ($appointments as $appt) {
                 $amt = (float)$appt->amount;
                 $isFollowUp = $appt->is_follow_up == 1 || $appt->is_follow_up == true;
@@ -285,21 +406,32 @@ class AdminFinanceController extends Controller
                 ]);
             }
 
-            // Doctor Payouts
+            // Doctor Payouts Query
             $docPayoutsQuery = \App\Models\Payout::with('user')
                 ->where('status', 'approved')
                 ->whereHas('user', function($q) {
                     $q->where('role', 'doctor');
                 });
             
-            if ($request->has('start_date') && $request->start_date) {
-                $docPayoutsQuery->where('processed_at', '>=', $request->start_date);
-            }
-            if ($request->has('end_date') && $request->end_date) {
-                $docPayoutsQuery->where('processed_at', '<=', $request->end_date);
+            if ($startDate) $docPayoutsQuery->where('processed_at', '>=', $startDate);
+            if ($endDate) $docPayoutsQuery->where('processed_at', '<=', $endDate);
+            if ($filterType !== 'all' && $filterType !== 'payout') {
+                $docPayoutsQuery->whereRaw('1 = 0');
             }
 
-            $docPayouts = $docPayoutsQuery->get();
+            if ($searchLower) {
+                $docPayoutsQuery->where(function($q) use ($searchLower) {
+                    $q->whereHas('user', function($uq) use ($searchLower) {
+                        $uq->where('name', 'like', "%{$searchLower}%");
+                    })
+                    ->orWhere('transaction_id', 'like', "%{$searchLower}%")
+                    ->orWhere('notes', 'like', "%{$searchLower}%");
+                });
+            }
+
+            $totalRecords += $docPayoutsQuery->count();
+            $docPayouts = $docPayoutsQuery->orderBy('processed_at', 'desc')->limit($limit)->get();
+
             foreach ($docPayouts as $payout) {
                 $allTransactions->push([
                     'id' => 'doctor_payout_' . $payout->id,
@@ -316,18 +448,28 @@ class AdminFinanceController extends Controller
             }
         }
 
-        // 3. Customer Transactions (Orders & Refunds)
-        if (!$request->has('stakeholder_type') || $request->stakeholder_type === 'all' || $request->stakeholder_type === 'customer') {
-            // Orders
+        // 3. Customer Transactions Query
+        if ($showCustomer) {
+            // Orders Query
             $orderQuery = Order::with('user');
-            if ($request->has('start_date') && $request->start_date) {
-                $orderQuery->where('created_at', '>=', $request->start_date);
-            }
-            if ($request->has('end_date') && $request->end_date) {
-                $orderQuery->where('created_at', '<=', $request->end_date);
+            if ($startDate) $orderQuery->where('created_at', '>=', $startDate);
+            if ($endDate) $orderQuery->where('created_at', '<=', $endDate);
+            if ($filterType !== 'all' && $filterType !== 'order_payment') {
+                $orderQuery->whereRaw('1 = 0');
             }
 
-            $orders = $orderQuery->get();
+            if ($searchLower) {
+                $orderQuery->where(function($q) use ($searchLower) {
+                    $q->whereHas('user', function($uq) use ($searchLower) {
+                        $uq->where('name', 'like', "%{$searchLower}%");
+                    })
+                    ->orWhere('order_number', 'like', "%{$searchLower}%");
+                });
+            }
+
+            $totalRecords += $orderQuery->count();
+            $orders = $orderQuery->orderBy('created_at', 'desc')->limit($limit)->get();
+
             foreach ($orders as $order) {
                 $allTransactions->push([
                     'id' => 'customer_order_' . $order->id,
@@ -343,16 +485,28 @@ class AdminFinanceController extends Controller
                 ]);
             }
 
-            // Refunds
+            // Refunds Query
             $refundQuery = \App\Models\Refund::with(['user', 'order']);
-            if ($request->has('start_date') && $request->start_date) {
-                $refundQuery->where('created_at', '>=', $request->start_date);
-            }
-            if ($request->has('end_date') && $request->end_date) {
-                $refundQuery->where('created_at', '<=', $request->end_date);
+            if ($startDate) $refundQuery->where('created_at', '>=', $startDate);
+            if ($endDate) $refundQuery->where('created_at', '<=', $endDate);
+            if ($filterType !== 'all' && $filterType !== 'refund') {
+                $refundQuery->whereRaw('1 = 0');
             }
 
-            $refunds = $refundQuery->get();
+            if ($searchLower) {
+                $refundQuery->where(function($q) use ($searchLower) {
+                    $q->whereHas('user', function($uq) use ($searchLower) {
+                        $uq->where('name', 'like', "%{$searchLower}%");
+                    })
+                    ->orWhereHas('order', function($oq) use ($searchLower) {
+                        $oq->where('order_number', 'like', "%{$searchLower}%");
+                    });
+                });
+            }
+
+            $totalRecords += $refundQuery->count();
+            $refunds = $refundQuery->orderBy('created_at', 'desc')->limit($limit)->get();
+
             foreach ($refunds as $refund) {
                 $allTransactions->push([
                     'id' => 'customer_refund_' . $refund->id,
@@ -369,34 +523,15 @@ class AdminFinanceController extends Controller
             }
         }
 
-        // Apply filters like search
-        if ($request->has('search') && $request->search) {
-            $search = strtolower($request->search);
-            $allTransactions = $allTransactions->filter(function($tx) use ($search) {
-                return str_contains(strtolower($tx['stakeholder_name']), $search) ||
-                       str_contains(strtolower($tx['reference_id']), $search) ||
-                       str_contains(strtolower($tx['description']), $search);
-            });
-        }
-
-        // Apply filters like type
-        if ($request->has('type') && $request->type && $request->type !== 'all') {
-            $type = $request->type;
-            $allTransactions = $allTransactions->filter(function($tx) use ($type) {
-                return $tx['type'] === $type;
-            });
-        }
-
-        // Sort by date desc
+        // Sort the merged subset by date descending
         $sortedTransactions = $allTransactions->sortByDesc('date')->values();
 
-        // Paginate the collection
-        $offset = ($page - 1) * $perPage;
+        // Slice only the relevant slice for the current page
         $itemsForCurrentPage = $sortedTransactions->slice($offset, $perPage)->values();
 
         $paginator = new \Illuminate\Pagination\LengthAwarePaginator(
             $itemsForCurrentPage,
-            $sortedTransactions->count(),
+            $totalRecords,
             $perPage,
             $page,
             ['path' => $request->url(), 'query' => $request->query()]
@@ -428,7 +563,7 @@ class AdminFinanceController extends Controller
             if ($type === 'sellers') {
                 fputcsv($file, ['Seller Name', 'Brand', 'Total Sales', 'Platform Commission', 'Gateway Fee', 'Seller Earnings', 'Wallet Balance', 'Orders']);
 
-                $sellers = User::where('role', 'seller')
+                $sellers = User::where('role', 'vendor')
                     ->with(['sellerProfile', 'sellerWallet'])
                     ->get();
 
@@ -464,47 +599,59 @@ class AdminFinanceController extends Controller
         $endDate = $request->input('end_date');
         $perPage = $request->input('per_page', 15);
 
-        // Fetch all approved doctors
+        // Fetch all approved doctors with DB aggregations in a single query
         $doctorsQuery = User::where('role', 'doctor')
-            ->where('doctor_status', 'approved');
+            ->where('doctor_status', 'approved')
+            ->select('users.*')
+            ->selectSub(function($q) use ($startDate, $endDate) {
+                $q->from('appointments')
+                  ->whereColumn('appointments.doctor_id', 'users.id')
+                  ->where('appointments.status', 'completed')
+                  ->when($startDate, function($query) use ($startDate) {
+                      $query->where('appointments.appointment_date', '>=', $startDate);
+                  })
+                  ->when($endDate, function($query) use ($endDate) {
+                      $query->where('appointments.appointment_date', '<=', $endDate);
+                  })
+                  ->selectRaw('count(*)');
+            }, 'bookings_count')
+            ->selectSub(function($q) use ($startDate, $endDate) {
+                $q->from('appointments')
+                  ->whereColumn('appointments.doctor_id', 'users.id')
+                  ->where('appointments.status', 'completed')
+                  ->when($startDate, function($query) use ($startDate) {
+                      $query->where('appointments.appointment_date', '>=', $startDate);
+                  })
+                  ->when($endDate, function($query) use ($endDate) {
+                      $query->where('appointments.appointment_date', '<=', $endDate);
+                  })
+                  ->selectRaw('coalesce(sum(amount), 0)');
+            }, 'gross_sales')
+            ->selectSub(function($q) use ($startDate, $endDate) {
+                $q->from('appointments')
+                  ->whereColumn('appointments.doctor_id', 'users.id')
+                  ->where('appointments.status', 'completed')
+                  ->when($startDate, function($query) use ($startDate) {
+                      $query->where('appointments.appointment_date', '>=', $startDate);
+                  })
+                  ->when($endDate, function($query) use ($endDate) {
+                      $query->where('appointments.appointment_date', '<=', $endDate);
+                  })
+                  ->selectRaw('coalesce(sum(amount * case when is_follow_up = 1 then 1.0 when consultation_type = \'chat\' then 0.80 else 0.85 end), 0)');
+            }, 'doctor_earnings')
+            ->selectSub(function($q) {
+                $q->from('payouts')
+                  ->whereColumn('payouts.user_id', 'users.id')
+                  ->where('payouts.status', 'pending')
+                  ->selectRaw('coalesce(sum(requested_amount), 0)');
+            }, 'pending_payouts');
 
         $doctors = $doctorsQuery->paginate($perPage);
 
-        $doctorsData = $doctors->map(function ($doctor) use ($startDate, $endDate) {
-            // Get completed appointments
-            $appointmentsQuery = \App\Models\Appointment::where('doctor_id', $doctor->id)
-                ->where('status', 'completed');
-
-            if ($startDate) $appointmentsQuery->where('appointment_date', '>=', $startDate);
-            if ($endDate) $appointmentsQuery->where('appointment_date', '<=', $endDate);
-
-            $appointments = $appointmentsQuery->get();
-
-            $grossSales = 0;
-            $doctorEarnings = 0;
-            $platformCommission = 0;
-
-            foreach ($appointments as $appt) {
-                $amt = (float) $appt->amount;
-                $isFollowUp = $appt->is_follow_up == 1 || $appt->is_follow_up == true;
-
-                if ($isFollowUp) {
-                    $docShare = 1.0;
-                } else if ($appt->consultation_type === 'chat') {
-                    $docShare = 0.80;
-                } else {
-                    $docShare = 0.85; // Video / Audio / default
-                }
-
-                $grossSales += $amt;
-                $doctorEarnings += ($amt * $docShare);
-                $platformCommission += ($amt * (1 - $docShare));
-            }
-
-            // Get pending payouts in payouts table
-            $pendingPayouts = \App\Models\Payout::where('user_id', $doctor->id)
-                ->where('status', 'pending')
-                ->sum('requested_amount');
+        $doctorsData = $doctors->map(function ($doctor) {
+            $grossSales = (float)$doctor->gross_sales;
+            $doctorEarnings = (float)$doctor->doctor_earnings;
+            $platformCommission = $grossSales - $doctorEarnings;
 
             return [
                 'doctor_id' => $doctor->id,
@@ -513,37 +660,26 @@ class AdminFinanceController extends Controller
                 'gross_sales' => round($grossSales, 2),
                 'doctor_earnings' => round($doctorEarnings, 2),
                 'platform_commission' => round($platformCommission, 2),
-                'pending_payouts' => round($pendingPayouts, 2),
+                'pending_payouts' => round((float)$doctor->pending_payouts, 2),
                 'bank_account_holder' => $doctor->bank_account_holder,
                 'bank_name' => $doctor->bank_name,
                 'bank_account_number' => $doctor->bank_account_number,
                 'bank_ifsc' => $doctor->bank_ifsc,
-                'bookings_count' => $appointments->count(),
+                'bookings_count' => (int)$doctor->bookings_count,
             ];
         });
 
-        // Global Doctor aggregates for overview
-        $allCompletedAppointments = \App\Models\Appointment::where('status', 'completed')->get();
-        $globalGross = 0;
-        $globalDocEarn = 0;
-        $globalComm = 0;
+        // Global Doctor aggregates using a single DB summary query
+        $aggregates = \App\Models\Appointment::where('status', 'completed')
+            ->selectRaw('
+                coalesce(sum(amount), 0) as total_gross,
+                coalesce(sum(amount * case when is_follow_up = 1 then 1.0 when consultation_type = \'chat\' then 0.80 else 0.85 end), 0) as total_doctor_earnings
+            ')
+            ->first();
 
-        foreach ($allCompletedAppointments as $appt) {
-            $amt = (float) $appt->amount;
-            $isFollowUp = $appt->is_follow_up == 1 || $appt->is_follow_up == true;
-
-            if ($isFollowUp) {
-                $docShare = 1.0;
-            } else if ($appt->consultation_type === 'chat') {
-                $docShare = 0.80;
-            } else {
-                $docShare = 0.85;
-            }
-
-            $globalGross += $amt;
-            $globalDocEarn += ($amt * $docShare);
-            $globalComm += ($amt * (1 - $docShare));
-        }
+        $globalGross = (float)($aggregates->total_gross ?? 0);
+        $globalDocEarn = (float)($aggregates->total_doctor_earnings ?? 0);
+        $globalComm = $globalGross - $globalDocEarn;
 
         return response()->json([
             'data' => $doctorsData,

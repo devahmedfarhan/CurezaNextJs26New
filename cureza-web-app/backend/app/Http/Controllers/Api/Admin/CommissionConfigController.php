@@ -72,7 +72,7 @@ class CommissionConfigController extends Controller
         }
 
         // Verify seller exists
-        $seller = User::where('id', $sellerId)->where('role', 'seller')->firstOrFail();
+        $seller = User::where('id', $sellerId)->where('role', 'vendor')->firstOrFail();
 
         // Deactivate previous commission rates
         SellerCommission::where('seller_id', $sellerId)
@@ -118,7 +118,7 @@ class CommissionConfigController extends Controller
      */
     public function unconfigured()
     {
-        $sellers = User::where('role', 'seller')
+        $sellers = User::where('role', 'vendor')
             ->with('sellerProfile')
             ->whereDoesntHave('sellerCommissions', function ($q) {
                 $q->where('is_active', true);

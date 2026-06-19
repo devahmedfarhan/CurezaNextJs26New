@@ -13,6 +13,8 @@ interface EditOrderModalProps {
 export default function EditOrderModal({ order, onClose, onUpdate }: EditOrderModalProps) {
     const [status, setStatus] = useState(order.status);
     const [paymentStatus, setPaymentStatus] = useState(order.payment_status);
+    const [trackingId, setTrackingId] = useState(order.tracking_id || '');
+    const [trackingProvider, setTrackingProvider] = useState(order.tracking_provider || '');
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -21,7 +23,9 @@ export default function EditOrderModal({ order, onClose, onUpdate }: EditOrderMo
         try {
             await api.put(`/admin/orders/${order.id}`, {
                 status,
-                payment_status: paymentStatus
+                payment_status: paymentStatus,
+                tracking_id: trackingId || null,
+                tracking_provider: trackingProvider || null
             });
             onUpdate();
             onClose();
@@ -71,6 +75,28 @@ export default function EditOrderModal({ order, onClose, onUpdate }: EditOrderMo
                             <option value="failed">Failed</option>
                             <option value="refunded">Refunded</option>
                         </select>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Courier Provider</label>
+                        <input
+                            type="text"
+                            placeholder="e.g. BlueDart, Delhivery, Fedex"
+                            value={trackingProvider}
+                            onChange={(e) => setTrackingProvider(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-cureza-green focus:border-cureza-green"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Tracking ID / AWB Number</label>
+                        <input
+                            type="text"
+                            placeholder="e.g. AWB123456789"
+                            value={trackingId}
+                            onChange={(e) => setTrackingId(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-cureza-green focus:border-cureza-green"
+                        />
                     </div>
 
                     <div className="pt-4 flex justify-end gap-3">

@@ -26,14 +26,12 @@ const getPermissionForPath = (pathname: string): string | null => {
         return 'users';
     }
     if (pathname.includes('/superadmin/dashboard/approvals') || pathname.includes('/superadmin/dashboard/seller-requests')) {
-        return 'approvals';
+        return 'users';
     }
     if (pathname.includes('/superadmin/dashboard/marketing')) {
         return 'marketing';
     }
-    if (pathname.includes('/superadmin/dashboard/events')) {
-        return 'events';
-    }
+
     if (pathname.includes('/superadmin/dashboard/finance') || pathname.includes('/superadmin/dashboard/payouts')) {
         return 'finance';
     }

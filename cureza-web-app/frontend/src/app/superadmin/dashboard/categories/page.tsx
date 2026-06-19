@@ -98,15 +98,9 @@ export default function AdminCategoriesPage() {
     };
 
     useEffect(() => {
-        console.log('AdminPage: Auth state changed', { authLoading, user: !!user });
-        if (!authLoading) {
-            if (user) {
-                fetchCategories();
-                fetchProductsList();
-            } else {
-                console.log('AdminPage: No user, redirecting to login');
-                window.location.href = '/login'; // Force redirect
-            }
+        if (!authLoading && user) {
+            fetchCategories();
+            fetchProductsList();
         }
     }, [authLoading, user]);
 
@@ -251,155 +245,197 @@ export default function AdminCategoriesPage() {
     };
 
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Master Data Management</h1>
-                    <p className="text-gray-500">Manage Product Categories, Concerns, and Page Collections</p>
+        <div className="space-y-8 animate-in fade-in duration-500">
+            {/* Header Section */}
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-3xl p-8 border border-gray-100 dark:border-gray-800 shadow-sm">
+                <div className="absolute top-0 right-0 p-8 opacity-5">
+                    <Database size={120} />
                 </div>
-                <div className="flex gap-2">
-                    <button
-                        onClick={handleInitDB}
-                        disabled={isInitializingDb}
-                        className="flex items-center gap-2 border border-gray-300 text-gray-700 bg-white px-4 py-2 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-colors"
-                        title="Initialize collections database tables and run migrations"
-                    >
-                        {isInitializingDb ? (
-                            <Loader2 className="animate-spin" size={18} />
-                        ) : (
-                            <Database size={18} />
-                        )}
-                        Init Collections DB
-                    </button>
-                    <button
-                        onClick={() => handleOpenModal()}
-                        className="flex items-center gap-2 bg-cureza-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
-                    >
-                        <Plus size={18} />
-                        Add {activeTab === 'category' ? 'Category' : activeTab === 'concern' ? 'Concern' : 'Collection'}
-                    </button>
+                <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div className="space-y-2">
+                        <div className="flex items-center gap-3">
+                            <div className="p-3 bg-cureza-green/10 rounded-2xl text-cureza-green">
+                                <Layers size={24} />
+                            </div>
+                            <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+                                Master <span className="text-cureza-green">Catalog Data</span>
+                            </h1>
+                        </div>
+                        <p className="text-gray-500 dark:text-gray-400 max-w-xl font-medium">
+                            Manage Product Categories, Medical Concerns, and special Promotion Collections across the store layout.
+                        </p>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-3">
+                        <button
+                            onClick={handleInitDB}
+                            disabled={isInitializingDb}
+                            className="flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-5 py-3 rounded-2xl font-black text-xs hover:bg-gray-50 dark:hover:bg-gray-750 transition-all disabled:opacity-50"
+                            title="Initialize collections database tables and run migrations"
+                        >
+                            {isInitializingDb ? (
+                                <Loader2 className="animate-spin text-cureza-green" size={16} />
+                            ) : (
+                                <Database size={16} className="text-gray-400" />
+                            )}
+                            INIT COLLECTIONS DB
+                        </button>
+                        <button
+                            onClick={() => handleOpenModal()}
+                            className="flex items-center justify-center gap-2 bg-cureza-green text-white px-6 py-3 rounded-2xl font-black shadow-lg shadow-green-100 dark:shadow-none hover:bg-green-700 transition-all active:scale-95 text-xs"
+                        >
+                            <Plus size={18} />
+                            ADD {activeTab.toUpperCase()}
+                        </button>
+                    </div>
                 </div>
             </div>
 
             {/* Tabs */}
-            <div className="border-b border-gray-200">
+            <div className="border-b border-gray-100 dark:border-gray-800">
                 <nav className="-mb-px flex space-x-8">
-                    <button
-                        onClick={() => setActiveTab('category')}
-                        className={`py-4 px-1 border-b-2 font-medium text-sm transition-all ${activeTab === 'category'
-                            ? 'border-cureza-green text-cureza-green'
-                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    {(['category', 'concern', 'collection'] as TabType[]).map((tab) => (
+                        <button
+                            key={tab}
+                            onClick={() => setActiveTab(tab)}
+                            className={`py-4 px-1 border-b-2 font-black text-xs uppercase tracking-wider transition-all ${
+                                activeTab === tab
+                                    ? 'border-cureza-green text-cureza-green'
+                                    : 'border-transparent text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
                             }`}
-                    >
-                        Product Categories
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('concern')}
-                        className={`py-4 px-1 border-b-2 font-medium text-sm transition-all ${activeTab === 'concern'
-                            ? 'border-cureza-green text-cureza-green'
-                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                            }`}
-                    >
-                        Shop by Concern
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('collection')}
-                        className={`py-4 px-1 border-b-2 font-medium text-sm transition-all ${activeTab === 'collection'
-                            ? 'border-cureza-green text-cureza-green'
-                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                            }`}
-                    >
-                        Page Collections (Offers/Sale)
-                    </button>
+                        >
+                            {tab === 'category' ? 'Product Categories' : tab === 'concern' ? 'Shop by Concern' : 'Page Collections'}
+                        </button>
+                    ))}
                 </nav>
             </div>
 
-            {/* Search */}
+            {/* Search and Filters */}
             <div className="relative max-w-md">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                 <input
                     type="text"
-                    placeholder={`Search ${activeTab === 'category' ? 'categories' : activeTab === 'concern' ? 'concerns' : 'collections'}...`}
+                    placeholder={`Search ${activeTab === 'category' ? 'categories' : activeTab === 'concern' ? 'concerns' : 'collections'} by name...`}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green"
+                    className="w-full pl-12 pr-4 py-3 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl font-bold text-sm text-gray-900 dark:text-white placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green transition-all"
                 />
             </div>
 
-            {/* DEBUG PANEL */}
-            <div className="bg-gray-100 p-4 rounded-lg text-xs font-mono overflow-auto max-h-60 space-y-2">
-                <div className="flex justify-between items-center">
-                    <h3 className="font-bold">Diagnostics Panel</h3>
-                    <button onClick={fetchCategories} className="bg-blue-500 text-white px-2 py-1 rounded">Force Refresh</button>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {/* Diagnostics Panel Collapsible */}
+            <details className="group bg-gray-50 dark:bg-gray-850 border border-gray-100 dark:border-gray-800 rounded-2xl">
+                <summary className="flex justify-between items-center px-6 py-3 text-xs font-black text-gray-400 uppercase tracking-widest cursor-pointer select-none outline-none">
+                    <span>System Diagnostics</span>
+                    <span className="text-[10px] text-cureza-green font-mono group-open:hidden">SHOW</span>
+                    <span className="text-[10px] text-gray-400 font-mono hidden group-open:inline">HIDE</span>
+                </summary>
+                <div className="px-6 pb-6 pt-2 text-[10px] font-mono grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-gray-100/50 dark:border-gray-800/50 text-gray-500">
                     <p>Auth Loading: {String(authLoading)}</p>
                     <p>User Logged In: {String(!!user)}</p>
                     <p>Is Loading Data: {String(isLoading)}</p>
-                    <p>Error: <span className="text-red-600">{error || 'None'}</span></p>
+                    <p>Error: <span className="text-red-500">{error || 'None'}</span></p>
                     <p>Total Categories: {categories.length}</p>
                     <p>Total Collections: {collections.length}</p>
+                    <button onClick={fetchCategories} className="px-3 py-1 bg-white border border-gray-200 text-gray-600 rounded-md font-bold hover:bg-gray-50 transition-colors w-fit">Force Refresh</button>
                 </div>
-            </div>
+            </details>
 
-            {/* List */}
+            {/* Grid List with skeleton states */}
             {isLoading ? (
-                <div className="flex justify-center py-12">
-                    <Loader2 className="animate-spin text-cureza-green" size={32} />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {[1, 2, 3].map((n) => (
+                        <div key={n} className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-3xl p-6 space-y-4 animate-pulse">
+                            <div className="flex items-center gap-3">
+                                <div className="w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-2xl" />
+                                <div className="space-y-2 flex-1">
+                                    <div className="h-4 bg-gray-100 dark:bg-gray-800 rounded-md w-2/3" />
+                                    <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded-md w-1/3" />
+                                </div>
+                            </div>
+                            <div className="h-10 bg-gray-100 dark:bg-gray-800 rounded-2xl w-full" />
+                        </div>
+                    ))}
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredItems.map((item) => (
-                        <div key={item.id} className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow group flex flex-col justify-between">
+                        <div 
+                            key={item.id} 
+                            className="group bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-3xl p-6 hover:shadow-xl hover:border-cureza-green/20 transition-all duration-300 flex flex-col justify-between"
+                        >
                             <div>
                                 <div className="flex justify-between items-start">
                                     <div className="flex items-center gap-3">
-                                        <div className={`p-2 rounded-lg ${
-                                            activeTab === 'category' ? 'bg-blue-50 text-blue-600' :
-                                            activeTab === 'concern' ? 'bg-purple-50 text-purple-600' :
-                                            'bg-emerald-50 text-emerald-600'
+                                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border transition-colors ${
+                                            activeTab === 'category' 
+                                                ? 'bg-blue-50/50 dark:bg-blue-950/20 text-blue-600 border-blue-100/50 dark:border-blue-900/20' 
+                                                : activeTab === 'concern' 
+                                                ? 'bg-purple-50/50 dark:bg-purple-950/20 text-purple-600 border-purple-100/50 dark:border-purple-900/20' 
+                                                : 'bg-emerald-50/50 dark:bg-emerald-950/20 text-cureza-green border-emerald-100/50 dark:border-emerald-900/20'
                                         }`}>
-                                            {activeTab === 'collection' ? <Layers size={24} /> : <Folder size={24} />}
+                                            {activeTab !== 'collection' && (item as Category).icon ? (
+                                                <span className="text-xl leading-none">{(item as Category).icon}</span>
+                                            ) : activeTab === 'collection' ? (
+                                                <Layers size={20} />
+                                            ) : (
+                                                <Folder size={20} />
+                                            )}
                                         </div>
-                                        <div>
-                                            <h3 className="font-bold text-gray-900 line-clamp-1">{item.name}</h3>
-                                            <p className="text-xs text-gray-500">/{item.slug}</p>
+                                        <div className="min-w-0">
+                                            <h3 className="font-outfit font-extrabold text-base text-gray-950 dark:text-gray-100 tracking-tight truncate uppercase leading-tight" title={item.name}>
+                                                {item.name}
+                                            </h3>
+                                            <p className="text-[11px] font-bold text-gray-400 tracking-wider truncate">/{item.slug}</p>
                                         </div>
                                     </div>
-                                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 transition-transform">
                                         <button
                                             onClick={() => handleOpenModal(item)}
-                                            className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                            className="p-2 text-gray-400 hover:text-cureza-green hover:bg-green-50 dark:hover:bg-green-950/20 rounded-xl transition-all"
+                                            title="Edit"
                                         >
                                             <Edit size={16} />
                                         </button>
                                         <button
                                             onClick={() => handleDelete(item.id)}
-                                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-xl transition-all"
+                                            title="Delete"
                                         >
                                             <Trash2 size={16} />
                                         </button>
                                     </div>
                                 </div>
                                 {item.description && (
-                                    <p className="mt-3 text-sm text-gray-600 line-clamp-2">{item.description}</p>
+                                    <p className="mt-4 text-xs font-medium text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">
+                                        {item.description}
+                                    </p>
                                 )}
                             </div>
-                            <div className="mt-4 flex items-center justify-between pt-2 border-t border-gray-50">
-                                <span className={`text-xs px-2 py-1 rounded-full font-medium ${item.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
+                            <div className="mt-6 flex items-center justify-between pt-4 border-t border-gray-50 dark:border-gray-800">
+                                <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full ${
+                                    item.is_active 
+                                        ? 'bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400 border border-green-100/50 dark:border-green-900/30' 
+                                        : 'bg-gray-100 dark:bg-gray-800 text-gray-500'
+                                }`}>
                                     {item.is_active ? 'Active' : 'Inactive'}
                                 </span>
                                 {activeTab === 'collection' && (
-                                    <span className="text-xs text-gray-500 font-medium">
-                                        {(item as any).products_count ?? 0} Products
+                                    <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+                                        {item.products_count ?? 0} Products
                                     </span>
                                 )}
                             </div>
                         </div>
                     ))}
                     {filteredItems.length === 0 && (
-                        <div className="col-span-full text-center py-12 text-gray-500 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                            No {activeTab === 'category' ? 'categories' : activeTab === 'concern' ? 'concerns' : 'collections'} found.
+                        <div className="col-span-full py-20 bg-gray-50/50 dark:bg-gray-800/20 rounded-[32px] border-2 border-dashed border-gray-100 dark:border-gray-800 flex flex-col items-center justify-center text-center space-y-4">
+                            <div className="w-16 h-16 bg-white dark:bg-gray-900 rounded-2xl flex items-center justify-center shadow-md text-gray-200">
+                                <Layers size={32} />
+                            </div>
+                            <div className="space-y-1">
+                                <h3 className="text-lg font-black text-gray-900 dark:text-white uppercase">No items found</h3>
+                                <p className="text-gray-400 text-xs font-medium max-w-xs">There are no matches for "{searchQuery}". Create a new item to populate the database.</p>
+                            </div>
                         </div>
                     )}
                 </div>

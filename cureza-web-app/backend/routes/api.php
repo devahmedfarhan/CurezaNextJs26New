@@ -324,6 +324,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/settings', [\App\Http\Controllers\Api\Admin\SystemSettingsController::class, 'index']);
         Route::post('/settings', [\App\Http\Controllers\Api\Admin\SystemSettingsController::class, 'store']);
         Route::get('/settings/logs', [\App\Http\Controllers\Api\Admin\AuditLogController::class, 'index']);
+        Route::get('/performance/report', [\App\Http\Controllers\Api\Admin\PerformanceController::class, 'report']);
 
         // Notifications & WhatsApp Flow Manager
         Route::get('/notifications/templates', [\App\Http\Controllers\Api\Admin\AdminNotificationController::class, 'getTemplates']);
@@ -500,6 +501,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/users/create-seller', [\App\Http\Controllers\Admin\SuperAdminUserController::class, 'storeSeller']);
         Route::post('/users/create-doctor', [\App\Http\Controllers\Admin\SuperAdminUserController::class, 'storeDoctor']);
         Route::post('/users/create-customer', [\App\Http\Controllers\Admin\SuperAdminUserController::class, 'storeCustomer']);
+        Route::post('/users/bulk-customer', [\App\Http\Controllers\Admin\SuperAdminUserController::class, 'storeCustomerBulk']);
+        Route::get('/users/stats', [\App\Http\Controllers\Admin\SuperAdminUserController::class, 'getStats']);
 
 
         Route::get('shipping-methods', [\App\Http\Controllers\Admin\ShippingController::class, 'index']);
@@ -583,6 +586,8 @@ Route::middleware('auth:sanctum')->group(function () {
         // Orders (Super Admin)
         Route::get('/orders', [\App\Http\Controllers\Admin\SuperAdminOrderController::class, 'index']);
         Route::post('/orders', [\App\Http\Controllers\Admin\SuperAdminOrderController::class, 'store']); // Manual Create
+        Route::post('/orders/bulk-invoices', [\App\Http\Controllers\Admin\SuperAdminOrderController::class, 'bulkDownloadInvoices']);
+        Route::get('/orders/cancelled-items', [\App\Http\Controllers\Admin\SuperAdminOrderController::class, 'cancelledItems']);
         Route::get('/orders/export', [\App\Http\Controllers\Admin\SuperAdminOrderController::class, 'export']);
         Route::get('/orders/{id}', [\App\Http\Controllers\Admin\SuperAdminOrderController::class, 'show']);
         Route::put('/orders/{id}', [\App\Http\Controllers\Admin\SuperAdminOrderController::class, 'update']); // Edit
@@ -594,7 +599,9 @@ Route::middleware('auth:sanctum')->group(function () {
         
         // Refunds (Super Admin)
         Route::get('/refunds', [\App\Http\Controllers\Admin\SuperAdminRefundController::class, 'index']);
+        Route::post('/refunds', [\App\Http\Controllers\Admin\SuperAdminRefundController::class, 'store']); // Manual Initiate
         Route::post('/refund/approve', [\App\Http\Controllers\Admin\SuperAdminRefundController::class, 'approve']);
+        Route::post('/refund/reject', [\App\Http\Controllers\Admin\SuperAdminRefundController::class, 'reject']);
 
         // Review Management (Super Admin)
         Route::prefix('reviews')->group(function () {

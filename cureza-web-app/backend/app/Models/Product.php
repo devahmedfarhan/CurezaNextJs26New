@@ -91,6 +91,14 @@ class Product extends Model
                 $product->slug = \Illuminate\Support\Str::slug($product->title) . '-' . \Illuminate\Support\Str::random(6);
             }
         });
+
+        static::saved(function ($product) {
+            \Illuminate\Support\Facades\Cache::forget('products_latest_3');
+        });
+
+        static::deleted(function ($product) {
+            \Illuminate\Support\Facades\Cache::forget('products_latest_3');
+        });
     }
 
     public function category()

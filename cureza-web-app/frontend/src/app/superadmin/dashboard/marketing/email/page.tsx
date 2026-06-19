@@ -1,68 +1,454 @@
 'use client';
 
 import { useState } from 'react';
-import { Mail, Send, Users, BarChart2, Plus } from 'lucide-react';
+import { Mail, Send, Users, BarChart2, Plus, X, Eye, CheckCircle2, Inbox, ArrowRight } from 'lucide-react';
+import { useToast } from '@/contexts/ToastContext';
+
+interface Campaign {
+    id: number;
+    title: string;
+    subject: string;
+    segment: string;
+    template: string;
+    sentAt: string;
+    recipients: number;
+    delivered: number;
+    openRate: number;
+}
 
 export default function AdminEmailPage() {
-    return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Email Campaign Builder</h1>
-                    <p className="text-gray-500">Design and send newsletters to your customers</p>
+    const { showToast } = useToast();
+    const [campaigns, setCampaigns] = useState<Campaign[]>([
+        { id: 1, title: 'November Wellness Newsletter', subject: 'Your guide to winter wellness ❄️', segment: 'All Customers', template: 'Weekly Newsletter', sentAt: 'Nov 24, 2025', recipients: 12500, delivered: 98, openRate: 24 },
+        { id: 2, title: 'Supplements Flash Sale', subject: 'Flat 20% off on premium proteins!', segment: 'Inactive Users', template: 'Flash Sale Alert', sentAt: 'Dec 02, 2025', recipients: 4200, delivered: 99, openRate: 31 },
+        { id: 3, title: 'Herbals Product Launch', subject: 'Introducing Cureza Organic Tea Blend 🌿', segment: 'Repeat Buyers', template: 'Product Launch', sentAt: 'Jan 15, 2026', recipients: 8400, delivered: 97, openRate: 28 },
+    ]);
+
+    const templates = [
+        { id: 'launch', name: 'Product Launch', desc: 'Promote a new wellness product or collection with high visibility.', subject: 'Introducing our latest wellness solution! 🌟' },
+        { id: 'weekly', name: 'Weekly Newsletter', desc: 'Share articles, expert tips, and top wellness discounts.', subject: 'Your weekly Cureza wellness digest 🍏' },
+        { id: 'sale', name: 'Flash Sale Alert', desc: 'Urgent promotional codes, counters, and countdown headers.', subject: 'HURRY! 24-Hour Flash Sale Live! ⚡' }
+    ];
+
+    const segments = [
+        { id: 'all', name: 'All Customers', count: 14820 },
+        { id: 'repeat', name: 'Repeat Buyers', count: 5240 },
+        { id: 'inactive', name: 'Inactive Users (>30 days)', count: 3180 },
+        { id: 'newsletter', name: 'Newsletter Subscribers', count: 9600 }
+    ];
+
+    // Modal state
+    const [isCreating, setIsCreating] = useState(false);
+    const [previewTemplate, setPreviewTemplate] = useState<string | null>(null);
+    const [isSending, setIsSending] = useState(false);
+    const [sendProgress, setSendProgress] = useState(0);
+    const [sendingStage, setSendingStage] = useState('');
+
+    // Form inputs
+    const [formData, setFormData] = useState({
+        title: '',
+        subject: '',
+        segment: 'all',
+        template: 'weekly'
+    });
+
+    const getTemplateHTML = (templateName: string, subject: string) => {
+        const primaryColor = '#16A34A'; // Cureza Green
+        let content = '';
+
+        if (templateName.includes('Launch')) {
+            content = `
+                <div style="background-color: #F8F3EF; padding: 30px; border-radius: 12px; font-family: sans-serif;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <span style="font-weight: bold; color: ${primaryColor}; font-size: 24px;">CUREZA</span>
+                    </div>
+                    <div style="background-color: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+                        <h2 style="color: #111827; margin-top: 0;">Introducing Our New Product Line! 🌿</h2>
+                        <p style="color: #4B5563; line-height: 1.6;">We are excited to launch our new premium wellness collection designed specifically for your daily health routine.</p>
+                        <div style="text-align: center; margin: 30px 0;">
+                            <a href="#" style="background-color: ${primaryColor}; color: white; padding: 12px 25px; text-decoration: none; font-weight: bold; border-radius: 8px;">Explore New Arrivals</a>
+                        </div>
+                        <p style="color: #9CA3AF; font-size: 12px; text-align: center; border-top: 1px solid #E5E7EB; padding-top: 15px; margin-bottom: 0;">You received this because you subscribed to Cureza updates.</p>
+                    </div>
                 </div>
-                <button className="bg-cureza-green text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-green-700 transition-colors">
+            `;
+        } else if (templateName.includes('Sale')) {
+            content = `
+                <div style="background-color: #111827; padding: 30px; border-radius: 12px; font-family: sans-serif; color: white;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <span style="font-weight: bold; color: ${primaryColor}; font-size: 24px;">CUREZA</span>
+                    </div>
+                    <div style="background-color: #1F2937; padding: 25px; border-radius: 12px;">
+                        <span style="background-color: #EF4444; color: white; padding: 4px 10px; border-radius: 99px; font-size: 11px; font-weight: bold; text-transform: uppercase;">Limited Time Offer</span>
+                        <h2 style="color: white; margin-top: 10px; font-size: 26px;">FLASH SALE IS LIVE! ⚡</h2>
+                        <p style="color: #D1D5DB; line-height: 1.6; font-size: 15px;">Enjoy flat <b>20% off</b> storewide on all health and dietary supplements. Use code <b>FLASH20</b> at checkout.</p>
+                        <div style="text-align: center; margin: 30px 0;">
+                            <a href="#" style="background-color: ${primaryColor}; color: white; padding: 12px 25px; text-decoration: none; font-weight: bold; border-radius: 8px;">Shop The Sale Now</a>
+                        </div>
+                        <p style="color: #9CA3AF; font-size: 11px; text-align: center; border-top: 1px solid #374151; padding-top: 15px;">Valid for 24 hours only. T&C Apply.</p>
+                    </div>
+                </div>
+            `;
+        } else {
+            content = `
+                <div style="background-color: #F3F4F6; padding: 30px; border-radius: 12px; font-family: sans-serif;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <span style="font-weight: bold; color: ${primaryColor}; font-size: 24px;">CUREZA</span>
+                    </div>
+                    <div style="background-color: white; padding: 25px; border-radius: 12px;">
+                        <h2 style="color: #111827; margin-top: 0;">Your Weekly Health Insights 🍏</h2>
+                        <p style="color: #4B5563; line-height: 1.6;">Stay updated with our curated wellness tips of the week, expert consultation advice, and exclusive store items recommendations.</p>
+                        <ul style="color: #4B5563; line-height: 1.6; padding-left: 20px;">
+                            <li>5 Ways to build immune response naturally</li>
+                            <li>Understanding active herbal ingredients</li>
+                            <li>Exclusive discount coupon inside!</li>
+                        </ul>
+                        <div style="text-align: center; margin: 30px 0;">
+                            <a href="#" style="background-color: ${primaryColor}; color: white; padding: 12px 25px; text-decoration: none; font-weight: bold; border-radius: 8px;">Read Newsletter</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        return content;
+    };
+
+    const handleCreateCampaign = () => {
+        setIsCreating(true);
+        // Pre-fill subject based on first template
+        const matched = templates.find(t => t.id === 'weekly');
+        setFormData({
+            title: '',
+            subject: matched?.subject || '',
+            segment: 'all',
+            template: 'weekly'
+        });
+    };
+
+    const handleTemplateChange = (tempId: string) => {
+        const matched = templates.find(t => t.id === tempId);
+        setFormData(prev => ({
+            ...prev,
+            template: tempId,
+            subject: matched?.subject || prev.subject
+        }));
+    };
+
+    const handleSendSimulate = () => {
+        if (!formData.title || !formData.subject) {
+            return showToast("Please fill all fields", "error");
+        }
+
+        setIsSending(true);
+        setSendProgress(0);
+        setSendingStage('Segmenting list and identifying recipients...');
+
+        // Start progress ticker
+        const interval = setInterval(() => {
+            setSendProgress(prev => {
+                const next = prev + 10;
+                if (next === 30) setSendingStage('Rendering email layout and tags...');
+                if (next === 60) setSendingStage('Dispatching messages through SMTP relays...');
+                if (next === 90) setSendingStage('Awaiting delivery receipt signals...');
+                if (next >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        const targetSegment = segments.find(s => s.id === formData.segment);
+                        const templateDetails = templates.find(t => t.id === formData.template);
+                        
+                        const newCampaign: Campaign = {
+                            id: Date.now(),
+                            title: formData.title,
+                            subject: formData.subject,
+                            segment: targetSegment?.name || 'All Customers',
+                            template: templateDetails?.name || 'Custom Template',
+                            sentAt: 'Just Now',
+                            recipients: targetSegment?.count || 12500,
+                            delivered: 100,
+                            openRate: 0
+                        };
+
+                        setCampaigns([newCampaign, ...campaigns]);
+                        showToast("Campaign Sent Successfully (Simulated)!", "success");
+                        setIsSending(false);
+                        setIsCreating(false);
+                    }, 500);
+                    return 100;
+                }
+                return next;
+            });
+        }, 300);
+    };
+
+    return (
+        <div className="space-y-8 p-6 max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="flex justify-between items-center bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                <div>
+                    <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Email Campaign Builder</h1>
+                    <p className="text-gray-500 mt-1">Design, segment, and dispatch promotional newsletters</p>
+                </div>
+                <button 
+                    onClick={handleCreateCampaign}
+                    className="bg-cureza-green text-white px-5 py-2.5 rounded-xl flex items-center gap-2 hover:bg-green-700 transition font-bold shadow-sm"
+                >
                     <Plus size={18} />
                     New Campaign
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Recent Campaigns */}
-                <div className="lg:col-span-2 space-y-6">
-                    <h3 className="font-bold text-gray-900">Recent Campaigns</h3>
-                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm divide-y divide-gray-200">
-                        {[1, 2, 3].map((i) => (
-                            <div key={i} className="p-6 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                                <div className="flex items-center gap-4">
-                                    <div className="p-3 bg-blue-50 text-blue-600 rounded-lg">
-                                        <Mail size={24} />
+            {/* Metrics cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white border border-gray-100 p-6 rounded-2xl shadow-sm space-y-2">
+                    <span className="text-xs text-gray-400 font-bold uppercase tracking-wider block">Sent Newsletters</span>
+                    <h3 className="text-3xl font-extrabold text-gray-900">25,100</h3>
+                    <p className="text-xs text-gray-400">Total delivered email units this month</p>
+                </div>
+                <div className="bg-white border border-gray-100 p-6 rounded-2xl shadow-sm space-y-2">
+                    <span className="text-xs text-gray-400 font-bold uppercase tracking-wider block">Avg. Open Rate</span>
+                    <h3 className="text-3xl font-extrabold text-blue-650 text-blue-600">27.6%</h3>
+                    <p className="text-xs text-gray-400">Benchmark average is 21.3%</p>
+                </div>
+                <div className="bg-white border border-gray-100 p-6 rounded-2xl shadow-sm space-y-2">
+                    <span className="text-xs text-gray-400 font-bold uppercase tracking-wider block">Delivery Success</span>
+                    <h3 className="text-3xl font-extrabold text-green-600">98.0%</h3>
+                    <p className="text-xs text-gray-400">SMTP Server bounce rate is 2.0%</p>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Recent Campaigns list */}
+                <div className="lg:col-span-2 space-y-4">
+                    <h3 className="font-extrabold text-xl text-gray-900">Sent Campaigns Log</h3>
+                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm divide-y divide-gray-100 overflow-hidden">
+                        {campaigns.map((c) => (
+                            <div key={c.id} className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-gray-50/50 transition-colors">
+                                <div className="flex items-start gap-4">
+                                    <div className="p-3 bg-blue-50 text-blue-600 rounded-xl mt-0.5">
+                                        <Mail size={22} />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-gray-900">November Wellness Newsletter</h4>
-                                        <p className="text-sm text-gray-500">Sent on Nov 24, 2025 • 12,500 Recipients</p>
+                                        <h4 className="font-bold text-gray-900 text-base">{c.title}</h4>
+                                        <p className="text-xs text-gray-400 mt-0.5">Subject: "{c.subject}"</p>
+                                        <div className="flex flex-wrap items-center gap-2 mt-2">
+                                            <span className="text-[10px] font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full">{c.segment}</span>
+                                            <span className="text-[10px] font-bold bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">{c.template}</span>
+                                            <span className="text-xs text-gray-400 font-semibold">• Sent {c.sentAt} • {c.recipients.toLocaleString()} Recipients</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="text-right">
-                                    <div className="flex items-center gap-4 text-sm">
-                                        <span className="flex items-center gap-1 text-green-600 font-medium">
-                                            <Send size={14} /> 98% Delivered
+                                <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-gray-50">
+                                    <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-100">
+                                        {c.delivered}% Delivered
+                                    </span>
+                                    {c.openRate > 0 ? (
+                                        <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100 sm:mt-1.5">
+                                            {c.openRate}% Open Rate
                                         </span>
-                                        <span className="flex items-center gap-1 text-blue-600 font-medium">
-                                            <Users size={14} /> 24% Open Rate
-                                        </span>
-                                    </div>
+                                    ) : (
+                                        <span className="text-xs text-gray-400 sm:mt-1.5 italic">Gathering metrics...</span>
+                                    )}
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                {/* Templates */}
-                <div className="space-y-6">
-                    <h3 className="font-bold text-gray-900">Templates</h3>
+                {/* Newsletter design template presets */}
+                <div className="space-y-4">
+                    <h3 className="font-extrabold text-xl text-gray-900">Email Presets</h3>
                     <div className="grid grid-cols-1 gap-4">
-                        {['Product Launch', 'Weekly Newsletter', 'Flash Sale Alert'].map((template) => (
-                            <div key={template} className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:border-cureza-green cursor-pointer transition-colors">
-                                <div className="h-32 bg-gray-100 rounded-lg mb-3 flex items-center justify-center text-gray-400">
-                                    Preview
+                        {templates.map((t) => (
+                            <div 
+                                key={t.id} 
+                                className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:border-cureza-green cursor-pointer transition-all duration-300 relative group"
+                                onClick={() => setPreviewTemplate(t.name)}
+                            >
+                                <div className="absolute top-4 right-4 p-1 bg-gray-50 text-gray-400 group-hover:text-cureza-green rounded-lg hover:bg-gray-100 transition-colors">
+                                    <Eye size={16} />
                                 </div>
-                                <h4 className="font-medium text-gray-900">{template}</h4>
+                                <h4 className="font-bold text-gray-900 group-hover:text-cureza-green transition-colors text-base">{t.name}</h4>
+                                <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">{t.desc}</p>
+                                <div className="mt-4 flex items-center gap-1 text-xs text-cureza-green font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span>Preview Preset Template</span>
+                                    <ArrowRight size={12} />
+                                </div>
                             </div>
                         ))}
                     </div>
                 </div>
             </div>
+
+            {/* New Campaign Creation Modal */}
+            {isCreating && (
+                <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white rounded-2xl p-7 w-full max-w-4xl shadow-2xl flex flex-col lg:flex-row gap-6 max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
+                        {/* Editor Form */}
+                        <div className="flex-1 space-y-5">
+                            <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                                <h2 className="text-xl font-extrabold text-gray-900">Configure Campaign</h2>
+                                <button onClick={() => setIsCreating(false)} className="text-gray-400 hover:text-gray-600 p-1.5 hover:bg-gray-50 rounded-lg lg:hidden">
+                                    <X size={18} />
+                                </button>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div className="space-y-1">
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide">Campaign Title</label>
+                                    <input
+                                        type="text"
+                                        className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green font-semibold"
+                                        placeholder="e.g. Winter Clearance Promo"
+                                        value={formData.title}
+                                        onChange={e => setFormData({ ...formData, title: e.target.value })}
+                                    />
+                                </div>
+
+                                <div className="space-y-1">
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide">Email Subject Line</label>
+                                    <input
+                                        type="text"
+                                        className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green"
+                                        placeholder="e.g. Get 20% off winter health essentials!"
+                                        value={formData.subject}
+                                        onChange={e => setFormData({ ...formData, subject: e.target.value })}
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-1">
+                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide">Target Segment</label>
+                                        <select
+                                            className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white"
+                                            value={formData.segment}
+                                            onChange={e => setFormData({ ...formData, segment: e.target.value })}
+                                        >
+                                            {segments.map(s => (
+                                                <option key={s.id} value={s.id}>{s.name} ({s.count.toLocaleString()} users)</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide">Template Layout</label>
+                                        <select
+                                            className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white"
+                                            value={formData.template}
+                                            onChange={e => handleTemplateChange(e.target.value)}
+                                        >
+                                            {templates.map(t => (
+                                                <option key={t.id} value={t.id}>{t.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="flex justify-end gap-3 pt-5 border-t border-gray-100 mt-6">
+                                <button
+                                    onClick={() => setIsCreating(false)}
+                                    disabled={isSending}
+                                    className="px-5 py-2.5 text-gray-700 hover:bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold disabled:opacity-50"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={handleSendSimulate}
+                                    disabled={isSending}
+                                    className="px-5 py-2.5 bg-cureza-green text-white rounded-xl hover:bg-green-700 text-sm font-bold flex items-center gap-2 shadow-sm disabled:opacity-50"
+                                >
+                                    {isSending ? (
+                                        <>
+                                            <span className="h-4 w-4 border-2 border-white border-t-transparent animate-spin rounded-full" />
+                                            <span>Sending...</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Send size={16} />
+                                            <span>Dispatch Campaign</span>
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Interactive Preview Pane */}
+                        <div className="w-full lg:w-96 border-t lg:border-t-0 lg:border-l border-gray-100 pt-6 lg:pt-0 lg:pl-6 space-y-4">
+                            <h4 className="font-bold text-gray-900 text-sm flex items-center gap-1.5">
+                                <Eye size={16} className="text-gray-400" />
+                                Live Newsletter Preview
+                            </h4>
+                            <div className="border border-gray-200 rounded-2xl overflow-hidden p-1 bg-gray-50 h-[380px] overflow-y-auto">
+                                <div 
+                                    className="bg-white rounded-xl shadow-inner p-3 min-h-full"
+                                    dangerouslySetInnerHTML={{ 
+                                        __html: getTemplateHTML(
+                                            templates.find(t => t.id === formData.template)?.name || '', 
+                                            formData.subject
+                                        ) 
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Simulated progress overlay */}
+            {isSending && (
+                <div className="fixed inset-0 bg-black/75 flex items-center justify-center z-55 p-4 backdrop-blur-md animate-in fade-in duration-300">
+                    <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl text-center space-y-6">
+                        <div className="w-16 h-16 bg-green-50 text-cureza-green rounded-2xl flex items-center justify-center mx-auto border border-green-100 animate-bounce">
+                            <Send size={28} />
+                        </div>
+                        <div className="space-y-2">
+                            <h3 className="font-extrabold text-xl text-gray-900">Dispatching Newsletter</h3>
+                            <p className="text-sm text-gray-500 font-semibold">{sendingStage}</p>
+                        </div>
+                        
+                        <div className="space-y-2">
+                            <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+                                <div 
+                                    className="bg-cureza-green h-full transition-all duration-300 rounded-full"
+                                    style={{ width: `${sendProgress}%` }}
+                                />
+                            </div>
+                            <span className="text-xs text-gray-400 font-bold">{sendProgress}% complete</span>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Template Presets Preview Dialog */}
+            {previewTemplate && (
+                <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4 animate-in zoom-in-95 duration-200">
+                        <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                            <h3 className="font-extrabold text-lg text-gray-900">Preset Layout: {previewTemplate}</h3>
+                            <button onClick={() => setPreviewTemplate(null)} className="text-gray-400 hover:text-gray-600 p-1.5 hover:bg-gray-50 rounded-lg">
+                                <X size={18} />
+                            </button>
+                        </div>
+                        <div className="border border-gray-200 rounded-xl overflow-hidden bg-gray-50 p-3 max-h-[450px] overflow-y-auto">
+                            <div 
+                                className="bg-white p-4 rounded-lg shadow-inner"
+                                dangerouslySetInnerHTML={{ 
+                                    __html: getTemplateHTML(previewTemplate, 'Preset Subject') 
+                                }}
+                            />
+                        </div>
+                        <div className="flex justify-end pt-2">
+                            <button
+                                onClick={() => setPreviewTemplate(null)}
+                                className="px-5 py-2.5 bg-gray-950 text-white font-bold rounded-xl hover:bg-gray-800 text-sm shadow-sm"
+                            >
+                                Close Preview
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

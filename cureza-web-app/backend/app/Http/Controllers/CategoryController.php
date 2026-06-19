@@ -72,6 +72,10 @@ class CategoryController extends Controller
             'is_active' => filter_var($request->input('is_active', true), FILTER_VALIDATE_BOOLEAN)
         ]);
 
+        \Illuminate\Support\Facades\Cache::forget('public_categories_all');
+        \Illuminate\Support\Facades\Cache::forget('public_categories_category');
+        \Illuminate\Support\Facades\Cache::forget('public_categories_concern');
+
         return response()->json($category, 201);
     }
 
@@ -108,6 +112,10 @@ class CategoryController extends Controller
              $data['is_active'] = filter_var($validated['is_active'], FILTER_VALIDATE_BOOLEAN);
         }
 
+        \Illuminate\Support\Facades\Cache::forget('public_categories_all');
+        \Illuminate\Support\Facades\Cache::forget('public_categories_category');
+        \Illuminate\Support\Facades\Cache::forget('public_categories_concern');
+
         $category->update($data);
         return response()->json($category);
     }
@@ -115,42 +123,53 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         Category::findOrFail($id)->delete();
+        
+        \Illuminate\Support\Facades\Cache::forget('public_categories_all');
+        \Illuminate\Support\Facades\Cache::forget('public_categories_category');
+        \Illuminate\Support\Facades\Cache::forget('public_categories_concern');
+
         return response()->json(['message' => 'Deleted successfully']);
     }
 
     public function publicIndex(Request $request)
     {
-        $query = Category::where('is_active', true);
-        
-        if ($request->has('type')) {
-            $type = $request->type;
-            $query->where('type', $type);
+        $type = $request->input('type', 'all');
+        $cacheKey = "public_categories_" . $type;
+
+        $categories = \Illuminate\Support\Facades\Cache::remember($cacheKey, 900, function() use ($request) {
+            $query = Category::where('is_active', true);
             
-            if ($type === 'category') {
-                $query->whereHas('products', function ($q) {
-                    $q->where('status', 'published');
-                });
-            } elseif ($type === 'concern') {
-                $query->whereHas('concernProducts', function ($q) {
-                    $q->where('status', 'published');
+            if ($request->has('type')) {
+                $type = $request->type;
+                $query->where('type', $type);
+                
+                if ($type === 'category') {
+                    $query->whereHas('products', function ($q) {
+                        $q->where('status', 'published');
+                    });
+                } elseif ($type === 'concern') {
+                    $query->whereHas('concernProducts', function ($q) {
+                        $q->where('status', 'published');
+                    });
+                }
+            } else {
+                $query->where(function ($q) {
+                    $q->where(function ($sub) {
+                        $sub->where('type', 'category')
+                            ->whereHas('products', function ($p) {
+                                $p->where('status', 'published');
+                            });
+                    })->orWhere(function ($sub) {
+                        $sub->where('type', 'concern')
+                            ->whereHas('concernProducts', function ($p) {
+                                $p->where('status', 'published');
+                            });
+                    });
                 });
             }
-        } else {
-            $query->where(function ($q) {
-                $q->where(function ($sub) {
-                    $sub->where('type', 'category')
-                        ->whereHas('products', function ($p) {
-                            $p->where('status', 'published');
-                        });
-                })->orWhere(function ($sub) {
-                    $sub->where('type', 'concern')
-                        ->whereHas('concernProducts', function ($p) {
-                            $p->where('status', 'published');
-                        });
-                });
-            });
-        }
-        
-        return response()->json($query->get());
+            return $query->get();
+        });
+
+        return response()->json($categories);
     }
 }

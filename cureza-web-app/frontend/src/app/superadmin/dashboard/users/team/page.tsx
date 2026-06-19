@@ -1,9 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Shield, UserPlus, Edit, Trash2, X, User } from 'lucide-react';
+import { 
+  Shield, UserPlus, Edit, Trash2, X, User, Check, Plus, 
+  Settings, Users, ChevronRight, Lock, Key, Mail, ShieldAlert
+} from 'lucide-react';
 import api from '@/lib/api';
 import { useToast } from '@/contexts/ToastContext';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 
 interface TeamMember {
     id: number;
@@ -19,17 +23,44 @@ interface TeamMember {
     created_at: string;
 }
 
+interface AdminRole {
+    id: number;
+    name: string;
+    slug: string;
+    permissions: string[];
+    users_count: number;
+    created_at: string;
+}
+
+const AVAILABLE_MODULES = [
+    { id: 'dashboard', name: 'Dashboard Overview', desc: 'Access dashboard statistics, analytics charts, and system reports' },
+    { id: 'products', name: 'Products & Catalog', desc: 'Manage products, categories, brands, tags, and web scrapers' },
+    { id: 'orders', name: 'Orders & Refunds', desc: 'View customer orders, refunds, and shipments' },
+    { id: 'reviews', name: 'Ratings & Reviews', desc: 'Moderate and reply to product and doctor reviews' },
+    { id: 'users', name: 'User Management', desc: 'View lists and details of customers, sellers, doctors, and team members' },
+    { id: 'approvals', name: 'Approvals', desc: 'Approve seller registrations and store profile changes' },
+    { id: 'marketing', name: 'Marketing & Promos', desc: 'Manage discount coupons, offers, campaigns, and pixel tracking' },
+    { id: 'events', name: 'Events', desc: 'Create and coordinate public events and health webinars' },
+    { id: 'finance', name: 'Finance & Payouts', desc: 'Access payouts, transactions, and commission settings' },
+    { id: 'support', name: 'Support & Tickets', desc: 'Manage customer, seller, and doctor support tickets' },
+    { id: 'community', name: 'Cureza Circle', desc: 'Manage referrals, leaderboards, challenges, and rewards shop' },
+    { id: 'cms', name: 'CMS & Blogs', desc: 'Access homepage banners, FAQ listings, and blog posts' },
+    { id: 'settings', name: 'Global Settings', desc: 'Access shipping options, payment gateways, and system settings' },
+];
+
 export default function AdminTeamPage() {
-    const [team, setTeam] = useState<TeamMember[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
     const { showToast } = useToast();
 
-    // Modal State
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    // View State
+    const [subTab, setSubTab] = useState<'members' | 'roles'>('members');
+
+    // Members State
+    const [team, setTeam] = useState<TeamMember[]>([]);
+    const [isMembersLoading, setIsMembersLoading] = useState(true);
+    const [isMemberModalOpen, setIsMemberModalOpen] = useState(false);
     const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [roles, setRoles] = useState<any[]>([]);
-    const [formData, setFormData] = useState({
+    const [isMemberSubmitting, setIsMemberSubmitting] = useState(false);
+    const [memberFormData, setMemberFormData] = useState({
         name: '',
         email: '',
         password: '',
@@ -37,37 +68,40 @@ export default function AdminTeamPage() {
         admin_role_id: ''
     });
 
-    const fetchTeam = async () => {
-        setIsLoading(true);
-        try {
-            const response = await api.get('/admin/team');
-            setTeam(response.data.data); // Pagination data wrapper
-        } catch (error) {
-            console.error('Failed to fetch team', error);
-            showToast('Failed to load team members', 'error');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const fetchRoles = async () => {
-        try {
-            const response = await api.get('/admin/roles');
-            setRoles(response.data);
-        } catch (error) {
-            console.error('Failed to fetch admin roles', error);
-        }
-    };
+    // Roles State
+    const [roles, setRoles] = useState<AdminRole[]>([]);
+    const [isRolesLoading, setIsRolesLoading] = useState(true);
+    const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
+    const [editingRole, setEditingRole] = useState<AdminRole | null>(null);
+    const [isRoleSubmitting, setIsRoleSubmitting] = useState(false);
+    const [roleFormData, setRoleFormData] = useState({
+        name: '',
+        permissions: [] as string[]
+    });
 
     useEffect(() => {
         fetchTeam();
         fetchRoles();
     }, []);
 
-    const handleOpenModal = (member?: TeamMember) => {
+    // ---- Member Operations ----
+    const fetchTeam = async () => {
+        setIsMembersLoading(true);
+        try {
+            const response = await api.get('/admin/team');
+            setTeam(response.data.data || response.data); 
+        } catch (error) {
+            console.error('Failed to fetch team', error);
+            showToast('Failed to load team members', 'error');
+        } finally {
+            setIsMembersLoading(false);
+        }
+    };
+
+    const handleOpenMemberModal = (member?: TeamMember) => {
         if (member) {
             setEditingMember(member);
-            setFormData({
+            setMemberFormData({
                 name: member.name,
                 email: member.email,
                 password: '',
@@ -76,7 +110,7 @@ export default function AdminTeamPage() {
             });
         } else {
             setEditingMember(null);
-            setFormData({ 
+            setMemberFormData({ 
                 name: '', 
                 email: '', 
                 password: '', 
@@ -84,19 +118,15 @@ export default function AdminTeamPage() {
                 admin_role_id: '' 
             });
         }
-        setIsModalOpen(true);
+        setIsMemberModalOpen(true);
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleMemberSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsSubmitting(true);
+        setIsMemberSubmitting(true);
         const submitData = {
-            ...formData,
-            admin_role_id: formData.role === 'admin' ? (formData.admin_role_id ? parseInt(formData.admin_role_id) : null) : null
+            ...memberFormData,
+            admin_role_id: memberFormData.role === 'admin' ? (memberFormData.admin_role_id ? parseInt(memberFormData.admin_role_id) : null) : null
         };
         try {
             if (editingMember) {
@@ -106,17 +136,17 @@ export default function AdminTeamPage() {
                 await api.post('/admin/team', submitData);
                 showToast('Team member added successfully', 'success');
             }
-            setIsModalOpen(false);
+            setIsMemberModalOpen(false);
             fetchTeam();
         } catch (error: any) {
             console.error('Failed to save team member', error);
             showToast(error.response?.data?.message || 'Failed to save team member', 'error');
         } finally {
-            setIsSubmitting(false);
+            setIsMemberSubmitting(false);
         }
     };
 
-    const handleDelete = async (id: number) => {
+    const handleDeleteMember = async (id: number) => {
         if (!confirm('Are you sure you want to remove this team member?')) return;
         try {
             await api.delete(`/admin/team/${id}`);
@@ -128,173 +158,464 @@ export default function AdminTeamPage() {
         }
     };
 
+    // ---- Role Operations ----
+    const fetchRoles = async () => {
+        setIsRolesLoading(true);
+        try {
+            const response = await api.get('/admin/roles');
+            setRoles(response.data);
+        } catch (error) {
+            console.error('Failed to fetch admin roles', error);
+            showToast('Failed to load access roles', 'error');
+        } finally {
+            setIsRolesLoading(false);
+        }
+    };
+
+    const handleOpenRoleModal = (role?: AdminRole) => {
+        if (role) {
+            setEditingRole(role);
+            setRoleFormData({
+                name: role.name,
+                permissions: role.permissions
+            });
+        } else {
+            setEditingRole(null);
+            setRoleFormData({
+                name: '',
+                permissions: []
+            });
+        }
+        setIsRoleModalOpen(true);
+    };
+
+    const handlePermissionToggle = (moduleId: string) => {
+        setRoleFormData(prev => {
+            const hasPermission = prev.permissions.includes(moduleId);
+            const nextPermissions = hasPermission
+                ? prev.permissions.filter(p => p !== moduleId)
+                : [...prev.permissions, moduleId];
+            return { ...prev, permissions: nextPermissions };
+        });
+    };
+
+    const handleSelectAllPermissions = () => {
+        const allIds = AVAILABLE_MODULES.map(m => m.id);
+        const isAllSelected = roleFormData.permissions.length === allIds.length;
+        setRoleFormData(prev => ({
+            ...prev,
+            permissions: isAllSelected ? [] : allIds
+        }));
+    };
+
+    const handleRoleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!roleFormData.name.trim()) {
+            showToast('Please enter a role name', 'error');
+            return;
+        }
+        if (roleFormData.permissions.length === 0) {
+            showToast('Please select at least one permission module', 'error');
+            return;
+        }
+
+        setIsRoleSubmitting(true);
+        try {
+            if (editingRole) {
+                await api.put(`/admin/roles/${editingRole.id}`, roleFormData);
+                showToast('Role updated successfully', 'success');
+            } else {
+                await api.post('/admin/roles', roleFormData);
+                showToast('Role created successfully', 'success');
+            }
+            setIsRoleModalOpen(false);
+            fetchRoles();
+            fetchTeam(); // reload team to reflect role changes
+        } catch (error: any) {
+            console.error('Failed to save role', error);
+            showToast(error.response?.data?.message || 'Failed to save role', 'error');
+        } finally {
+            setIsRoleSubmitting(false);
+        }
+    };
+
+    const handleDeleteRole = async (id: number) => {
+        if (!confirm('Are you sure you want to delete this role? This action cannot be undone.')) return;
+        try {
+            await api.delete(`/admin/roles/${id}`);
+            showToast('Role deleted successfully', 'success');
+            fetchRoles();
+            fetchTeam();
+        } catch (error: any) {
+            console.error('Failed to delete role', error);
+            showToast(error.response?.data?.message || 'Failed to delete role', 'error');
+        }
+    };
+
     return (
-        <div>
-            <div className="flex justify-between items-center mb-6">
+        <div className="space-y-6">
+            
+            {/* Top Header */}
+            <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-2">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                        <Shield className="text-cureza-green" />
-                        Team & Access Control
-                    </h1>
-                    <p className="text-gray-500 mt-1">Manage administrators and moderators</p>
+                    <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Team & Access Control</h1>
+                    <p className="text-gray-500 text-sm font-semibold uppercase tracking-wider mt-1">Manage platform administrators, moderators, and customize Role-Based Access Control (RBAC) permissions.</p>
                 </div>
-                <button
-                    onClick={() => handleOpenModal()}
-                    className="bg-cureza-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
-                >
-                    <UserPlus size={18} />
-                    Add Team Member
-                </button>
+                <div className="flex gap-2">
+                    {subTab === 'members' ? (
+                        <button
+                            onClick={() => handleOpenMemberModal()}
+                            className="bg-cureza-green text-white px-5 py-2.5 rounded-xl hover:bg-green-700 transition-colors flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-wider shadow-lg shadow-green-150"
+                        >
+                            <UserPlus size={16} /> Add Team Member
+                        </button>
+                    ) : (
+                        <button
+                            onClick={() => handleOpenRoleModal()}
+                            className="bg-gray-900 text-white px-5 py-2.5 rounded-xl hover:bg-black transition-colors flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-wider shadow-lg"
+                        >
+                            <Plus size={16} /> Create Role
+                        </button>
+                    )}
+                </div>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <table className="w-full text-left text-sm">
-                    <thead className="bg-gray-50 border-b border-gray-200">
-                        <tr>
-                            <th className="px-6 py-4 font-medium text-gray-500">Name</th>
-                            <th className="px-6 py-4 font-medium text-gray-500">Email</th>
-                            <th className="px-6 py-4 font-medium text-gray-500">Role</th>
-                            <th className="px-6 py-4 font-medium text-gray-500">Joined Date</th>
-                            <th className="px-6 py-4 font-medium text-gray-500 text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                        {isLoading ? (
-                            <tr><td colSpan={5} className="text-center py-8">Loading team members...</td></tr>
-                        ) : team.length === 0 ? (
-                            <tr><td colSpan={5} className="text-center py-8 text-gray-500">No team members found</td></tr>
-                        ) : (
-                            team.map((member) => (
-                                <tr key={member.id} className="hover:bg-gray-50">
-                                    <td className="px-6 py-4 font-medium text-gray-900 flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
-                                            <User size={16} />
-                                        </div>
-                                        {member.name}
-                                    </td>
-                                    <td className="px-6 py-4 text-gray-600">{member.email}</td>
-                                    <td className="px-6 py-4">
-                                        <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold ${
-                                            member.role === 'super_admin' 
-                                                ? 'bg-purple-100 text-purple-800' 
-                                                : 'bg-blue-100 text-blue-800'
-                                        }`}>
-                                            <Shield size={12} />
-                                            {member.role === 'super_admin' 
-                                                ? 'Super Admin' 
-                                                : `Admin (${member.admin_role?.name || 'Custom'})`}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 text-gray-600">{new Date(member.created_at).toLocaleDateString()}</td>
-                                    <td className="px-6 py-4 text-right">
-                                        <div className="flex items-center justify-end gap-2">
-                                            <button
-                                                onClick={() => handleOpenModal(member)}
-                                                className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
-                                            >
-                                                <Edit size={18} />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(member.id)}
-                                                className="p-1 text-gray-400 hover:text-red-600 transition-colors"
-                                            >
-                                                <Trash2 size={18} />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
+            {/* Sub Tabs Control */}
+            <div className="flex flex-col md:flex-row gap-3 items-center justify-between bg-white p-3 rounded-3xl border border-gray-150 shadow-sm">
+                <div className="flex items-center bg-gray-50/70 p-0.5 rounded-xl border border-gray-100 flex-wrap">
+                    <button
+                        onClick={() => setSubTab('members')}
+                        className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${
+                            subTab === 'members' ? 'bg-white text-gray-900 shadow-sm border border-gray-150' : 'text-gray-400 hover:text-gray-700'
+                        }`}
+                    >
+                        Team Directory
+                    </button>
+                    <button
+                        onClick={() => setSubTab('roles')}
+                        className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${
+                            subTab === 'roles' ? 'bg-white text-gray-900 shadow-sm border border-gray-150' : 'text-gray-400 hover:text-gray-700'
+                        }`}
+                    >
+                        RBAC Roles & Permissions
+                    </button>
+                </div>
             </div>
 
-            {/* Modal */}
-            {isModalOpen && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-xl shadow-xl max-w-md w-full overflow-hidden">
-                        <div className="p-4 border-b border-gray-100 flex justify-between items-center">
-                            <h2 className="font-bold text-lg">{editingMember ? 'Edit Team Member' : 'Add Team Member'}</h2>
-                            <button onClick={() => setIsModalOpen(false)}><X size={20} /></button>
-                        </div>
-                        <form onSubmit={handleSubmit} className="p-4 space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Full Name</label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    required
-                                    value={formData.name}
-                                    onChange={handleInputChange}
-                                    className="w-full px-3 py-2 border rounded-lg"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Email</label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    required
-                                    value={formData.email}
-                                    onChange={handleInputChange}
-                                    className="w-full px-3 py-2 border rounded-lg"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-1">System Role</label>
-                                <select
-                                    name="role"
-                                    value={formData.role}
-                                    onChange={handleInputChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cureza-green"
-                                >
-                                    <option value="admin">Admin (Custom Permissions)</option>
-                                    <option value="super_admin">Super Admin</option>
-                                </select>
-                            </div>
-                            {formData.role === 'admin' && (
-                                <div>
-                                    <label className="block text-sm font-medium mb-1">Custom RBAC Role</label>
-                                    <select
-                                        name="admin_role_id"
-                                        required
-                                        value={formData.admin_role_id}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cureza-green"
-                                    >
-                                        <option value="">Select an admin role...</option>
-                                        {roles.map((r) => (
-                                            <option key={r.id} value={r.id}>
-                                                {r.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+            {/* ---- VIEW 1: TEAM MEMBERS DIRECTORY ---- */}
+            {subTab === 'members' && (
+                <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden animate-in fade-in duration-300">
+                    <table className="w-full text-left text-sm">
+                        <thead className="bg-gray-50 border-b border-gray-100">
+                            <tr>
+                                <th className="px-6 py-4 text-[10px] font-black uppercase text-gray-400 tracking-wider">Member Name</th>
+                                <th className="px-6 py-4 text-[10px] font-black uppercase text-gray-400 tracking-wider">Email Address</th>
+                                <th className="px-6 py-4 text-[10px] font-black uppercase text-gray-400 tracking-wider">System Role</th>
+                                <th className="px-6 py-4 text-[10px] font-black uppercase text-gray-400 tracking-wider">Joined Date</th>
+                                <th className="px-6 py-4 text-[10px] font-black uppercase text-gray-400 tracking-wider text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-50 bg-white">
+                            {isMembersLoading ? (
+                                <tr><td colSpan={5} className="text-center py-12 text-xs font-bold text-gray-400 uppercase tracking-wider animate-pulse">Loading team members...</td></tr>
+                            ) : team.length === 0 ? (
+                                <tr><td colSpan={5} className="text-center py-12 text-xs font-bold text-gray-400 uppercase tracking-wider">No team members found</td></tr>
+                            ) : (
+                                team.map((member) => (
+                                    <tr key={member.id} className="hover:bg-gray-50/30 transition-colors">
+                                        <td className="px-6 py-4">
+                                            <div className="font-extrabold text-gray-900 flex items-center gap-3">
+                                                <div className="w-8 h-8 rounded-full bg-gray-100 text-gray-550 flex items-center justify-center font-bold text-sm">
+                                                    {member.name.charAt(0).toUpperCase()}
+                                                </div>
+                                                {member.name}
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 text-xs font-semibold text-gray-500">{member.email}</td>
+                                        <td className="px-6 py-4">
+                                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wide border 
+                                                ${member.role === 'super_admin' 
+                                                    ? 'bg-purple-50 text-purple-700 border-purple-100' 
+                                                    : 'bg-indigo-50 text-indigo-700 border-indigo-100'}`}>
+                                                <Shield size={10} />
+                                                {member.role === 'super_admin' 
+                                                    ? 'Super Admin' 
+                                                    : `Admin (${member.admin_role?.name || 'Custom'})`}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4 text-xs font-semibold text-gray-500">{new Date(member.created_at).toLocaleDateString()}</td>
+                                        <td className="px-6 py-4 text-right">
+                                            <div className="flex items-center justify-end gap-2.5">
+                                                <button 
+                                                    onClick={() => handleOpenMemberModal(member)} 
+                                                    className="p-1.5 bg-gray-50 hover:bg-gray-150 border border-gray-200 text-gray-500 hover:text-gray-900 rounded-lg transition-colors" 
+                                                    title="Edit"
+                                                >
+                                                    <Edit size={14} />
+                                                </button>
+                                                <button 
+                                                    onClick={() => handleDeleteMember(member.id)} 
+                                                    className="p-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-rose-600 rounded-lg transition-colors" 
+                                                    title="Remove"
+                                                >
+                                                    <Trash2 size={14} />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
                             )}
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    Password {editingMember && '(Leave blank to keep current)'}
-                                </label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    required={!editingMember}
-                                    value={formData.password}
-                                    onChange={handleInputChange}
-                                    className="w-full px-3 py-2 border rounded-lg"
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                disabled={isSubmitting}
-                                className="w-full bg-cureza-green text-white py-2 rounded-lg hover:bg-green-700 disabled:opacity-50"
-                            >
-                                {isSubmitting ? 'Saving...' : (editingMember ? 'Update Member' : 'Create Member')}
-                            </button>
-                        </form>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             )}
+
+            {/* ---- VIEW 2: ROLES & PERMISSIONS EDITOR ---- */}
+            {subTab === 'roles' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in duration-300">
+                    {isRolesLoading ? (
+                        <div className="col-span-full text-center py-12 text-xs font-bold text-gray-400 uppercase tracking-wider animate-pulse bg-white rounded-3xl border border-gray-100 shadow-sm">
+                            Loading access roles...
+                        </div>
+                    ) : roles.length === 0 ? (
+                        <div className="col-span-full text-center py-12 text-xs font-bold text-gray-400 uppercase tracking-widest bg-white rounded-3xl border border-gray-100 shadow-sm">
+                            No roles defined. Create a custom role to configure permissions.
+                        </div>
+                    ) : (
+                        roles.map((role) => (
+                            <div key={role.id} className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4">
+                                <div className="space-y-4">
+                                    <div className="flex justify-between items-start">
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-3 bg-indigo-50 text-indigo-650 rounded-2xl border border-indigo-100 shadow-inner">
+                                                <Shield size={22} />
+                                            </div>
+                                            <div>
+                                                <h3 className="font-extrabold text-gray-900 text-base leading-snug">{role.name}</h3>
+                                                <p className="text-[10px] text-gray-450 font-bold uppercase tracking-wide mt-0.5">
+                                                    {role.users_count || 0} Admins Assigned
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-1.5">
+                                            <button
+                                                onClick={() => handleOpenRoleModal(role)}
+                                                className="p-1.5 bg-gray-50 border border-gray-250 text-gray-450 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-colors"
+                                                title="Edit Role"
+                                            >
+                                                <Edit size={14} />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDeleteRole(role.id)}
+                                                className="p-1.5 bg-red-50 border border-red-200 text-rose-600 hover:bg-red-100 rounded-lg transition-colors"
+                                                title="Delete Role"
+                                            >
+                                                <Trash2 size={14} />
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100/50 space-y-2">
+                                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest block">
+                                            Assigned Permissions ({role.permissions.length})
+                                        </span>
+                                        <div className="flex flex-wrap gap-1">
+                                            {role.permissions.map((perm) => {
+                                                const module = AVAILABLE_MODULES.find(m => m.id === perm);
+                                                return (
+                                                    <span key={perm} className="px-2 py-0.5 bg-white text-gray-700 border border-gray-200 rounded text-[9px] font-extrabold uppercase">
+                                                        {module ? module.name : perm}
+                                                    </span>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
+            )}
+
+            {/* MEMBER DIALOG (ADD/EDIT TEAM MEMBER) */}
+            <Dialog open={isMemberModalOpen} onOpenChange={setIsMemberModalOpen}>
+                <DialogContent className="max-w-md rounded-2xl p-6 bg-white shadow-xl">
+                    <DialogHeader>
+                        <DialogTitle className="text-lg font-bold text-gray-900">
+                            {editingMember ? 'Edit Staff Profile' : 'Register Admin / Team'}
+                        </DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleMemberSubmit} className="space-y-4 py-2">
+                        <div>
+                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Full Name</label>
+                            <input
+                                type="text"
+                                required
+                                value={memberFormData.name}
+                                onChange={(e) => setMemberFormData({ ...memberFormData, name: e.target.value })}
+                                className="w-full px-4 py-2.5 text-xs font-bold border border-gray-250 rounded-xl focus:ring-2 focus:ring-cureza-green/10 focus:border-cureza-green outline-none"
+                                placeholder="Staff Name"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Email Address</label>
+                            <input
+                                type="email"
+                                required
+                                disabled={!!editingMember}
+                                value={memberFormData.email}
+                                onChange={(e) => setMemberFormData({ ...memberFormData, email: e.target.value })}
+                                className={`w-full px-4 py-2.5 text-xs font-bold border border-gray-250 rounded-xl focus:ring-2 focus:ring-cureza-green/10 focus:border-cureza-green outline-none ${editingMember ? 'bg-gray-50 text-gray-400 cursor-not-allowed' : ''}`}
+                                placeholder="email@cureza.com"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">System Access Role</label>
+                            <select
+                                value={memberFormData.role}
+                                onChange={(e) => setMemberFormData({ ...memberFormData, role: e.target.value })}
+                                className="w-full px-3 py-2.5 border border-gray-250 rounded-xl text-xs font-bold focus:ring-2 focus:ring-cureza-green/10 focus:border-cureza-green bg-white cursor-pointer outline-none"
+                            >
+                                <option value="admin">Admin (Custom Permissions)</option>
+                                <option value="super_admin">Super Admin</option>
+                            </select>
+                        </div>
+                        
+                        {memberFormData.role === 'admin' && (
+                            <div>
+                                <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Custom RBAC Role Profile</label>
+                                <select
+                                    required
+                                    value={memberFormData.admin_role_id}
+                                    onChange={(e) => setMemberFormData({ ...memberFormData, admin_role_id: e.target.value })}
+                                    className="w-full px-3 py-2.5 border border-gray-250 rounded-xl text-xs font-bold focus:ring-2 focus:ring-cureza-green/10 focus:border-cureza-green bg-white cursor-pointer outline-none"
+                                >
+                                    <option value="">Select RBAC role...</option>
+                                    {roles.map((r) => (
+                                        <option key={r.id} value={r.id}>{r.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+
+                        <div>
+                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">
+                                Password {editingMember && '(Leave blank to keep current)'}
+                            </label>
+                            <input
+                                type="password"
+                                required={!editingMember}
+                                value={memberFormData.password}
+                                onChange={(e) => setMemberFormData({ ...memberFormData, password: e.target.value })}
+                                className="w-full px-4 py-2.5 text-xs font-bold border border-gray-250 rounded-xl focus:ring-2 focus:ring-cureza-green/10 focus:border-cureza-green outline-none"
+                                placeholder="••••••••"
+                            />
+                        </div>
+
+                        <DialogFooter className="pt-4 border-t gap-2 sm:gap-0">
+                            <button
+                                type="button"
+                                onClick={() => setIsMemberModalOpen(false)}
+                                className="px-4 py-2.5 text-xs font-extrabold uppercase tracking-wider text-gray-500 hover:bg-gray-50 rounded-xl"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={isMemberSubmitting}
+                                className="px-6 py-2.5 rounded-xl bg-gray-900 text-white text-xs font-extrabold uppercase tracking-wider hover:bg-black transition-colors"
+                            >
+                                {isMemberSubmitting ? 'Saving...' : (editingMember ? 'Update Staff' : 'Register Staff')}
+                            </button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
+
+            {/* ROLE CONFIGURATION DIALOG (ADD/EDIT RBAC ROLE) */}
+            <Dialog open={isRoleModalOpen} onOpenChange={setIsRoleModalOpen}>
+                <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto rounded-3xl p-8 bg-white shadow-xl">
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-black text-gray-900 flex items-center gap-2">
+                            <Shield className="text-cureza-green" />
+                            {editingRole ? 'Configure Role Details' : 'Create Custom RBAC Role'}
+                        </DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleRoleSubmit} className="space-y-6 py-3">
+                        <div>
+                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Role Name</label>
+                            <input
+                                type="text"
+                                required
+                                placeholder="e.g. Order Manager, Support Lead"
+                                value={roleFormData.name}
+                                onChange={(e) => setRoleFormData({ ...roleFormData, name: e.target.value })}
+                                className="w-full px-4 py-2.5 text-xs font-bold border border-gray-250 rounded-xl focus:ring-2 focus:ring-cureza-green/10 focus:border-cureza-green outline-none"
+                            />
+                        </div>
+
+                        <div className="space-y-3">
+                            <div className="flex justify-between items-center border-b pb-2">
+                                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Select Access Permissions</label>
+                                <button
+                                    type="button"
+                                    onClick={handleSelectAllPermissions}
+                                    className="text-[10px] font-black text-cureza-green hover:underline uppercase tracking-wider"
+                                >
+                                    {roleFormData.permissions.length === AVAILABLE_MODULES.length ? 'Deselect All' : 'Select All'}
+                                </button>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                {AVAILABLE_MODULES.map((mod) => {
+                                    const isSelected = roleFormData.permissions.includes(mod.id);
+                                    return (
+                                        <div
+                                            key={mod.id}
+                                            onClick={() => handlePermissionToggle(mod.id)}
+                                            className={`p-3.5 rounded-xl border transition-all cursor-pointer flex items-start gap-3 select-none ${
+                                                isSelected
+                                                    ? 'border-cureza-green bg-green-50/15 shadow-sm'
+                                                    : 'border-gray-200 hover:border-gray-300 bg-white'
+                                            }`}
+                                        >
+                                            <div className={`mt-0.5 w-4 h-4 rounded border flex items-center justify-center transition-all ${
+                                                isSelected
+                                                    ? 'bg-cureza-green border-cureza-green text-white'
+                                                    : 'border-gray-300'
+                                            }`}>
+                                                {isSelected && <Check size={11} strokeWidth={3} />}
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-xs font-bold text-gray-900">{mod.name}</p>
+                                                <p className="text-[10px] text-gray-400 mt-0.5 leading-normal">{mod.desc}</p>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        <DialogFooter className="pt-4 border-t gap-2 sm:gap-0">
+                            <button
+                                type="button"
+                                onClick={() => setIsRoleModalOpen(false)}
+                                className="px-4 py-2.5 text-xs font-extrabold uppercase tracking-wider text-gray-500 hover:bg-gray-50 rounded-xl"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={isRoleSubmitting}
+                                className="px-6 py-2.5 rounded-xl bg-gray-900 text-white text-xs font-extrabold uppercase tracking-wider hover:bg-black transition-colors"
+                            >
+                                {isRoleSubmitting ? 'Saving...' : (editingRole ? 'Update Role' : 'Create Role')}
+                            </button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
+
         </div>
     );
 }
