@@ -119,6 +119,19 @@ class SellerSettingsController extends Controller
             'status' => 'pending'
         ]);
 
+        // Notify Admins
+        try {
+            $admins = User::whereIn('role', ['admin', 'super_admin'])->get();
+            \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\AdminAlertNotification(
+                'seller_bank_update',
+                'Seller Bank Update Request',
+                'Seller ' . $user->name . ' has requested to update their bank details.',
+                '/superadmin/dashboard/users/sellers/' . $user->id
+            ));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send seller bank update notification to admins: ' . $e->getMessage());
+        }
+
         return response()->json(['message' => 'Bank details update submitted for approval.']);
     }
 
@@ -192,6 +205,19 @@ class SellerSettingsController extends Controller
             'new_data' => $validated,
             'status' => 'pending'
         ]);
+
+        // Notify Admins
+        try {
+            $admins = User::whereIn('role', ['admin', 'super_admin'])->get();
+            \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\AdminAlertNotification(
+                'seller_profile_update',
+                'Seller Profile Update Request',
+                'Seller ' . $user->name . ' has requested to update their store/brand profile.',
+                '/superadmin/dashboard/users/sellers/' . $user->id
+            ));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send seller profile update notification to admins: ' . $e->getMessage());
+        }
 
         return response()->json(['message' => 'Profile update submitted for approval.']);
     }
@@ -285,6 +311,19 @@ class SellerSettingsController extends Controller
             'new_data' => $newData,
             'status' => 'pending'
         ]);
+
+        // Notify Admins
+        try {
+            $admins = User::whereIn('role', ['admin', 'super_admin'])->get();
+            \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\AdminAlertNotification(
+                'seller_kyc_update',
+                'Seller KYC Update Request',
+                'Seller ' . $user->name . ' has uploaded new KYC documents for verification.',
+                '/superadmin/dashboard/users/sellers/' . $user->id
+            ));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send seller kyc update notification to admins: ' . $e->getMessage());
+        }
 
         return response()->json(['message' => 'KYC documents submitted for approval.']);
     }

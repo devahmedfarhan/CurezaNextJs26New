@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Trophy, Medal, Star } from 'lucide-react';
+import { Trophy } from 'lucide-react';
 import api from '@/lib/api';
 
 export default function AdminLeaderboardPage() {
@@ -20,48 +20,50 @@ export default function AdminLeaderboardPage() {
     if (loading) {
         return (
             <div className="space-y-6 animate-pulse">
-                <div className="h-8 w-48 bg-gray-200 rounded-lg"></div>
-                <div className="h-64 bg-gray-200 rounded-xl"></div>
+                <div className="h-64 bg-neutral-100 rounded-[10px]"></div>
             </div>
         );
     }
 
     return (
         <div className="space-y-6">
-            <div>
-                <h1 className="text-2xl font-bold text-gray-900">Leaderboard & Rankings</h1>
-                <p className="text-gray-500">Global user placements based on points accumulated.</p>
-            </div>
-
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm">
-                        <thead className="bg-gray-50 border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                    <table className="w-full text-left text-xs">
+                        <thead className="bg-neutral-50 border-b-[0.5px] border-neutral-950/10 text-gray-500 font-medium">
                             <tr>
-                                <th className="p-4 w-24">Rank</th>
-                                <th className="p-4">User Name</th>
-                                <th className="p-4">Current XP Points</th>
-                                <th className="p-4">Tier Status</th>
+                                <th className="p-3 w-24">Rank</th>
+                                <th className="p-3">User Name</th>
+                                <th className="p-3">Current XP Points</th>
+                                <th className="p-3">Tier Status</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200">
+                        <tbody className="divide-y-[0.5px] divide-neutral-950/10">
                             {leaders.map((leader) => {
-                                let tierColor = 'text-gray-500 bg-gray-100';
-                                if (leader.badge === 'Gold') tierColor = 'text-yellow-800 bg-yellow-100';
-                                if (leader.badge === 'Platinum') tierColor = 'text-purple-800 bg-purple-100';
-
                                 return (
-                                    <tr key={leader.rank} className="hover:bg-gray-50/50 transition-colors">
-                                        <td className="p-4 font-extrabold text-gray-900">
-                                            {leader.rank === 1 && <span className="inline-flex items-center gap-1 text-yellow-600"><Trophy size={16} /> #1</span>}
-                                            {leader.rank === 2 && <span className="inline-flex items-center gap-1 text-gray-400"><Trophy size={16} /> #2</span>}
-                                            {leader.rank === 3 && <span className="inline-flex items-center gap-1 text-amber-700"><Trophy size={16} /> #3</span>}
+                                    <tr key={leader.rank} className="hover:bg-neutral-50/50 transition-colors">
+                                        <td className="p-3 font-semibold text-gray-900">
+                                            {leader.rank === 1 && (
+                                                <span className="inline-flex items-center gap-1 text-black font-semibold">
+                                                    <Trophy size={14} /> #1
+                                                </span>
+                                            )}
+                                            {leader.rank === 2 && (
+                                                <span className="inline-flex items-center gap-1 text-neutral-600 font-semibold">
+                                                    <Trophy size={14} /> #2
+                                                </span>
+                                            )}
+                                            {leader.rank === 3 && (
+                                                <span className="inline-flex items-center gap-1 text-neutral-400 font-semibold">
+                                                    <Trophy size={14} /> #3
+                                                </span>
+                                            )}
                                             {leader.rank > 3 && `#${leader.rank}`}
                                         </td>
-                                        <td className="p-4 font-bold text-gray-900">{leader.name}</td>
-                                        <td className="p-4 font-bold text-yellow-600">{leader.xp.toLocaleString()} XP</td>
-                                        <td className="p-4">
-                                            <span className={`inline-block text-xs font-bold px-2.5 py-0.5 rounded-full ${tierColor}`}>
+                                        <td className="p-3 font-medium text-gray-900">{leader.name}</td>
+                                        <td className="p-3 font-semibold text-gray-900">{leader.xp.toLocaleString()} XP</td>
+                                        <td className="p-3">
+                                            <span className="inline-block text-[10px] font-medium px-2 py-0.5 rounded-[6px] border-[0.5px] border-neutral-250 bg-neutral-50 text-neutral-700">
                                                 {leader.badge}
                                             </span>
                                         </td>

@@ -22,6 +22,7 @@ import {
     DialogFooter,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 
 interface Tag {
@@ -29,6 +30,9 @@ interface Tag {
     name: string;
     slug: string;
     posts_count?: number;
+    meta_title?: string;
+    meta_description?: string;
+    meta_keywords?: string;
 }
 
 export default function TagsPage() {
@@ -43,6 +47,9 @@ export default function TagsPage() {
     const [formData, setFormData] = useState({
         name: '',
         slug: '',
+        meta_title: '',
+        meta_description: '',
+        meta_keywords: '',
     });
 
     useEffect(() => {
@@ -75,7 +82,7 @@ export default function TagsPage() {
             await api.post('/admin/blog/tags', formData);
             toast.success('Tag created successfully');
             setIsCreateOpen(false);
-            setFormData({ name: '', slug: '' });
+            setFormData({ name: '', slug: '', meta_title: '', meta_description: '', meta_keywords: '' });
             fetchTags();
         } catch (error: any) {
             toast.error(error.response?.data?.message || 'Failed to create tag');
@@ -87,6 +94,9 @@ export default function TagsPage() {
         setFormData({
             name: tag.name,
             slug: tag.slug,
+            meta_title: tag.meta_title || '',
+            meta_description: tag.meta_description || '',
+            meta_keywords: tag.meta_keywords || '',
         });
         setIsEditOpen(true);
     };
@@ -100,6 +110,7 @@ export default function TagsPage() {
             toast.success('Tag updated successfully');
             setIsEditOpen(false);
             setCurrentTag(null);
+            setFormData({ name: '', slug: '', meta_title: '', meta_description: '', meta_keywords: '' });
             fetchTags();
         } catch (error: any) {
             toast.error(error.response?.data?.message || 'Failed to update tag');
@@ -123,43 +134,84 @@ export default function TagsPage() {
     );
 
     return (
-        <div className="space-y-6">
+        <div className="w-full space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Tags</h1>
-                    <p className="text-muted-foreground">Manage blog tags.</p>
+                    <h1 className="text-2xl font-semibold tracking-tight text-black">Tags</h1>
+                    <p className="text-gray-500 text-sm">Manage blog tags and their SEO settings.</p>
                 </div>
-                <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+                <Dialog open={isCreateOpen} onOpenChange={(open) => {
+                    setIsCreateOpen(open);
+                    if (!open) setFormData({ name: '', slug: '', meta_title: '', meta_description: '', meta_keywords: '' });
+                }}>
                     <DialogTrigger asChild>
-                        <Button>
+                        <Button className="bg-black hover:bg-black/80 text-white rounded-[10px] border-none shadow-none font-medium text-sm">
                             <Plus className="mr-2 h-4 w-4" /> Add Tag
                         </Button>
                     </DialogTrigger>
-                    <DialogContent>
+                    <DialogContent className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none max-h-[85vh] overflow-y-auto">
                         <DialogHeader>
-                            <DialogTitle>Create Tag</DialogTitle>
+                            <DialogTitle className="text-base font-medium text-black">Create Tag</DialogTitle>
                         </DialogHeader>
                         <form onSubmit={handleCreate} className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="name">Name</Label>
+                                <Label htmlFor="name" className="text-xs font-medium text-gray-700">Name</Label>
                                 <Input
                                     id="name"
                                     value={formData.name}
                                     onChange={handleNameChange}
                                     required
+                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="slug">Slug</Label>
+                                <Label htmlFor="slug" className="text-xs font-medium text-gray-700">Slug</Label>
                                 <Input
                                     id="slug"
                                     value={formData.slug}
                                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                                     required
+                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
-                            <DialogFooter>
-                                <Button type="submit">Create</Button>
+                            
+                            <div className="border-[0.5px] border-gray-150 p-4 rounded-[10px] space-y-4 bg-gray-50/30">
+                                <h4 className="font-medium text-xs text-black">SEO Settings</h4>
+                                <div className="space-y-2">
+                                    <Label htmlFor="meta_title" className="text-[10px] font-medium text-gray-700">Meta Title</Label>
+                                    <Input
+                                        id="meta_title"
+                                        value={formData.meta_title}
+                                        onChange={(e) => setFormData({ ...formData, meta_title: e.target.value })}
+                                        placeholder="SEO Tag Title"
+                                        className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="meta_description" className="text-[10px] font-medium text-gray-700">Meta Description</Label>
+                                    <Textarea
+                                        id="meta_description"
+                                        value={formData.meta_description}
+                                        onChange={(e) => setFormData({ ...formData, meta_description: e.target.value })}
+                                        placeholder="SEO Tag Description"
+                                        rows={2}
+                                        className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="meta_keywords" className="text-[10px] font-medium text-gray-700">Meta Keywords</Label>
+                                    <Input
+                                        id="meta_keywords"
+                                        value={formData.meta_keywords}
+                                        onChange={(e) => setFormData({ ...formData, meta_keywords: e.target.value })}
+                                        placeholder="keyword1, keyword2"
+                                        className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                    />
+                                </div>
+                            </div>
+
+                            <DialogFooter className="pt-2">
+                                <Button type="submit" className="bg-black hover:bg-black/80 text-white rounded-[10px] border-none shadow-none font-medium text-sm w-full">Create</Button>
                             </DialogFooter>
                         </form>
                     </DialogContent>
@@ -168,45 +220,45 @@ export default function TagsPage() {
 
             <div className="flex items-center gap-2">
                 <div className="relative flex-1 max-w-sm">
-                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
                     <Input
                         placeholder="Search tags..."
-                        className="pl-8"
+                        className="pl-9 rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
                 </div>
             </div>
 
-            <div className="border rounded-lg bg-white">
+            <div className="border-[0.5px] border-gray-200/50 rounded-[10px] overflow-hidden bg-white shadow-none">
                 <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Name</TableHead>
-                            <TableHead>Slug</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
+                    <TableHeader className="bg-gray-50/50">
+                        <TableRow className="border-b-[0.5px] border-gray-200/50">
+                            <TableHead className="text-gray-500 font-medium text-xs">Name</TableHead>
+                            <TableHead className="text-gray-500 font-medium text-xs">Slug</TableHead>
+                            <TableHead className="text-right text-gray-500 font-medium text-xs">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {loading ? (
                             <TableRow>
-                                <TableCell colSpan={3} className="text-center py-8">Loading...</TableCell>
+                                <TableCell colSpan={3} className="text-center py-10 text-gray-500 font-normal text-sm">Loading...</TableCell>
                             </TableRow>
                         ) : filteredTags.length === 0 ? (
                             <TableRow>
-                                <TableCell colSpan={3} className="text-center py-8">No tags found.</TableCell>
+                                <TableCell colSpan={3} className="text-center py-10 text-gray-500 font-normal text-sm">No tags found.</TableCell>
                             </TableRow>
                         ) : (
                             filteredTags.map((tag) => (
-                                <TableRow key={tag.id}>
-                                    <TableCell className="font-medium">{tag.name}</TableCell>
-                                    <TableCell>{tag.slug}</TableCell>
+                                <TableRow key={tag.id} className="border-b-[0.5px] border-gray-200/50 hover:bg-gray-50/30">
+                                    <TableCell className="font-normal text-sm text-black">{tag.name}</TableCell>
+                                    <TableCell className="text-gray-500 text-sm">{tag.slug}</TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex items-center justify-end gap-2">
-                                            <Button variant="ghost" size="icon" onClick={() => handleEditClick(tag)}>
-                                                <Pencil className="h-4 w-4" />
+                                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-gray-100 rounded-[10px]" onClick={() => handleEditClick(tag)}>
+                                                <Pencil className="h-4 w-4 text-black" />
                                             </Button>
-                                            <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-600" onClick={() => handleDelete(tag.id)}>
+                                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-red-50 rounded-[10px] text-red-500" onClick={() => handleDelete(tag.id)}>
                                                 <Trash2 className="h-4 w-4" />
                                             </Button>
                                         </div>
@@ -218,32 +270,76 @@ export default function TagsPage() {
                 </Table>
             </div>
 
-            <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-                <DialogContent>
+            <Dialog open={isEditOpen} onOpenChange={(open) => {
+                setIsEditOpen(open);
+                if (!open) {
+                    setCurrentTag(null);
+                    setFormData({ name: '', slug: '', meta_title: '', meta_description: '', meta_keywords: '' });
+                }
+            }}>
+                <DialogContent className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none max-h-[85vh] overflow-y-auto">
                     <DialogHeader>
-                        <DialogTitle>Edit Tag</DialogTitle>
+                        <DialogTitle className="text-base font-medium text-black">Edit Tag</DialogTitle>
                     </DialogHeader>
                     <form onSubmit={handleUpdate} className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="edit-name">Name</Label>
+                            <Label htmlFor="edit-name" className="text-xs font-medium text-gray-700">Name</Label>
                             <Input
                                 id="edit-name"
                                 value={formData.name}
                                 onChange={handleNameChange}
                                 required
+                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="edit-slug">Slug</Label>
+                            <Label htmlFor="edit-slug" className="text-xs font-medium text-gray-700">Slug</Label>
                             <Input
                                 id="edit-slug"
                                 value={formData.slug}
                                 onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                                 required
+                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                             />
                         </div>
-                        <DialogFooter>
-                            <Button type="submit">Update</Button>
+                        
+                        <div className="border-[0.5px] border-gray-150 p-4 rounded-[10px] space-y-4 bg-gray-50/30">
+                            <h4 className="font-medium text-xs text-black">SEO Settings</h4>
+                            <div className="space-y-2">
+                                <Label htmlFor="edit-meta_title" className="text-[10px] font-medium text-gray-700">Meta Title</Label>
+                                <Input
+                                    id="edit-meta_title"
+                                    value={formData.meta_title}
+                                    onChange={(e) => setFormData({ ...formData, meta_title: e.target.value })}
+                                    placeholder="SEO Tag Title"
+                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="edit-meta_description" className="text-[10px] font-medium text-gray-700">Meta Description</Label>
+                                <Textarea
+                                    id="edit-meta_description"
+                                    value={formData.meta_description}
+                                    onChange={(e) => setFormData({ ...formData, meta_description: e.target.value })}
+                                    placeholder="SEO Tag Description"
+                                    rows={2}
+                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="edit-meta_keywords" className="text-[10px] font-medium text-gray-700">Meta Keywords</Label>
+                                <Input
+                                    id="edit-meta_keywords"
+                                    value={formData.meta_keywords}
+                                    onChange={(e) => setFormData({ ...formData, meta_keywords: e.target.value })}
+                                    placeholder="keyword1, keyword2"
+                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                />
+                            </div>
+                        </div>
+
+                        <DialogFooter className="pt-2">
+                            <Button type="submit" className="bg-black hover:bg-black/80 text-white rounded-[10px] border-none shadow-none font-medium text-sm w-full">Update</Button>
                         </DialogFooter>
                     </form>
                 </DialogContent>

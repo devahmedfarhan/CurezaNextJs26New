@@ -361,13 +361,13 @@ export default function SuperAdminDashboardHome() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     {[1, 2, 3, 4].map((n) => (
-                        <div key={n} className="h-32 bg-gray-200 rounded-3xl" />
+                        <div key={n} className="h-32 bg-gray-200 rounded-lg" />
                     ))}
                 </div>
-                <div className="h-12 w-full bg-gray-200 rounded-xl" />
+                <div className="h-12 w-full bg-gray-200 rounded-lg" />
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {[1, 2, 3, 4, 5, 6].map((n) => (
-                        <div key={n} className="h-72 bg-gray-200 rounded-3xl" />
+                        <div key={n} className="h-72 bg-gray-200 rounded-lg" />
                     ))}
                 </div>
             </div>
@@ -377,37 +377,33 @@ export default function SuperAdminDashboardHome() {
     return (
         <div className="space-y-8 pb-12">
             {/* Header Dashboard Banner */}
-            <div className="relative overflow-hidden bg-gradient-to-r from-slate-900 via-slate-800 to-[#0c1e21] text-white p-6 md:p-8 rounded-3xl shadow-xl">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-cureza-green/10 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute -bottom-10 -left-10 w-72 h-72 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
-                
+            <div className="relative overflow-hidden bg-black text-white p-6 md:p-8 rounded-lg border-[0.5px] border-neutral-900/10">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
                     <div>
                         <div className="flex items-center gap-2 mb-1.5">
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                                <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[10px] font-bold tracking-wider bg-neutral-800 text-neutral-200 border border-neutral-700">
                                 Overview Console
                             </span>
                             {refreshing && (
-                                <span className="text-xs text-slate-400 font-semibold flex items-center gap-1">
+                                <span className="text-xs text-neutral-400 font-semibold flex items-center gap-1">
                                     <RefreshCw className="animate-spin" size={12} /> Syncing
                                 </span>
                             )}
                         </div>
                         <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">Superadmin Control Center</h1>
-                        <p className="text-slate-350 text-sm mt-1 font-medium">Summarizing all platform micro-services, databases, and configuration panels.</p>
+                        <p className="text-neutral-400 text-sm mt-1 font-medium">Summarizing all platform micro-services, databases, and configuration panels.</p>
                     </div>
                     <div className="flex flex-wrap gap-2.5">
                         <button 
                             onClick={() => fetchDashboardData(true)} 
-                            className="bg-white/10 hover:bg-white/15 text-white border border-white/10 px-4 py-2 rounded-xl transition-all flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-wider"
+                            className="bg-neutral-900 hover:bg-neutral-850 text-white border border-neutral-800 px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2 font-semibold text-xs tracking-wider"
                         >
                             <RefreshCw size={14} className={refreshing ? 'animate-spin' : ''} />
                             Force Refresh
                         </button>
                         <Link
                             href="/superadmin/dashboard/products/create"
-                            className="bg-cureza-green hover:bg-green-700 text-white px-4 py-2 rounded-xl transition-all flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-wider shadow-lg shadow-green-950/20"
+                            className="bg-white hover:bg-neutral-100 text-black px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2 font-bold text-xs tracking-wider border border-neutral-200"
                         >
                             <Plus size={16} strokeWidth={2.5} />
                             Add Product
@@ -419,21 +415,21 @@ export default function SuperAdminDashboardHome() {
             {/* Core Highlight KPIs Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* Revenue Card */}
-                <div className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform text-emerald-600">
+                <div className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 p-6 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform text-neutral-400">
                         <DollarSign size={80} />
                     </div>
                     <div className="flex justify-between items-start">
-                        <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl border border-emerald-100">
+                        <div className="p-3 bg-neutral-50 text-neutral-900 rounded-lg border-[0.5px] border-neutral-950/10">
                             <DollarSign size={22} />
                         </div>
-                        <span className="flex items-center text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-100 gap-1">
+                        <span className="flex items-center text-xs font-bold text-emerald-705 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200 gap-1">
                             <TrendingUp size={12} />
                             Active
                         </span>
                     </div>
                     <div className="mt-4 space-y-1">
-                        <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Total Sales Revenue</p>
+                        <p className="text-neutral-400 text-[10px] font-bold tracking-widest">Total Sales Revenue</p>
                         <h3 className="text-2xl font-black text-gray-900">₹{parseFloat(stats.total_revenue).toLocaleString('en-IN')}</h3>
                         <p className="text-xs font-semibold text-gray-550 flex items-center gap-1">
                             <span className="text-emerald-600 font-extrabold">₹{parseFloat(stats.today_revenue).toLocaleString('en-IN')}</span> today
@@ -442,47 +438,47 @@ export default function SuperAdminDashboardHome() {
                 </div>
 
                 {/* Orders Card */}
-                <div className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform text-blue-650">
+                <div className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 p-6 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform text-neutral-400">
                         <ShoppingBag size={80} />
                     </div>
                     <div className="flex justify-between items-start">
-                        <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl border border-blue-100">
+                        <div className="p-3 bg-neutral-50 text-neutral-900 rounded-lg border-[0.5px] border-neutral-950/10">
                             <ShoppingBag size={22} />
                         </div>
-                        <Link href="/superadmin/dashboard/orders" className="text-gray-400 hover:text-gray-600 transition-colors">
+                        <Link href="/superadmin/dashboard/orders" className="text-gray-400 hover:text-gray-650 transition-colors">
                             <ArrowUpRight size={18} />
                         </Link>
                     </div>
                     <div className="mt-4 space-y-1">
-                        <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Total Orders Placed</p>
+                        <p className="text-neutral-400 text-[10px] font-bold tracking-widest">Total Orders Placed</p>
                         <h3 className="text-2xl font-black text-gray-900">{stats.total_orders}</h3>
-                        <p className="text-xs font-semibold text-gray-555 flex items-center gap-1">
-                            <span className="text-blue-600 font-extrabold">{stats.today_orders}</span> new orders today
+                        <p className="text-xs font-semibold text-gray-550 flex items-center gap-1">
+                            <span className="text-emerald-600 font-extrabold">{stats.today_orders}</span> new orders today
                         </p>
                     </div>
                 </div>
 
                 {/* Sellers Card */}
-                <div className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform text-amber-600">
+                <div className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 p-6 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform text-neutral-400">
                         <Store size={80} />
                     </div>
                     <div className="flex justify-between items-start">
-                        <div className="p-3 bg-amber-50 text-amber-600 rounded-2xl border border-amber-100">
+                        <div className="p-3 bg-neutral-50 text-neutral-900 rounded-lg border-[0.5px] border-neutral-950/10">
                             <Store size={22} />
                         </div>
-                        <Link href="/superadmin/dashboard/users/sellers" className="text-gray-400 hover:text-gray-600 transition-colors">
+                        <Link href="/superadmin/dashboard/users/sellers" className="text-gray-400 hover:text-gray-650 transition-colors">
                             <ArrowUpRight size={18} />
                         </Link>
                     </div>
                     <div className="mt-4 space-y-1">
-                        <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Registered Sellers</p>
+                        <p className="text-neutral-400 text-[10px] font-bold tracking-widest">Registered Sellers</p>
                         <h3 className="text-2xl font-black text-gray-900">{stats.total_sellers}</h3>
                         <p className="text-xs font-semibold text-gray-550 flex items-center gap-1.5">
                             <span className="text-emerald-600 font-extrabold">{stats.active_sellers} active</span>
                             <span>•</span>
-                            <span className="text-amber-605 font-extrabold flex items-center gap-0.5">
+                            <span className="text-red-600 font-bold flex items-center gap-0.5">
                                 <Clock size={10} />
                                 {stats.pending_approvals} pending
                             </span>
@@ -491,34 +487,34 @@ export default function SuperAdminDashboardHome() {
                 </div>
 
                 {/* Users/Doctors Card */}
-                <div className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform text-purple-650">
+                <div className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 p-6 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform text-neutral-400">
                         <Users size={80} />
                     </div>
                     <div className="flex justify-between items-start">
-                        <div className="p-3 bg-purple-50 text-purple-600 rounded-2xl border border-purple-100">
+                        <div className="p-3 bg-neutral-50 text-neutral-900 rounded-lg border-[0.5px] border-neutral-950/10">
                             <Users size={22} />
                         </div>
-                        <Link href="/superadmin/dashboard/users/customers" className="text-gray-400 hover:text-gray-600 transition-colors">
+                        <Link href="/superadmin/dashboard/users/customers" className="text-gray-400 hover:text-gray-650 transition-colors">
                             <ArrowUpRight size={18} />
                         </Link>
                     </div>
                     <div className="mt-4 space-y-1">
-                        <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Doctors & Customers</p>
+                        <p className="text-neutral-400 text-[10px] font-bold tracking-widest">Doctors & Customers</p>
                         <h3 className="text-2xl font-black text-gray-900">
                             {stats.total_users + stats.total_doctors}
                         </h3>
                         <p className="text-xs font-semibold text-gray-550 flex items-center gap-1.5">
-                            <span className="text-purple-600 font-extrabold">{stats.total_doctors} Doctors</span>
+                            <span className="text-neutral-800 font-extrabold">{stats.total_doctors} Doctors</span>
                             <span>•</span>
-                            <span className="text-gray-700 font-extrabold">{stats.total_users} Customers</span>
+                            <span className="text-neutral-850 font-extrabold">{stats.total_users} Customers</span>
                         </p>
                     </div>
                 </div>
             </div>
 
             {/* Interactive Filters and Real-Time Search Bar */}
-            <div className="bg-white rounded-3xl border border-gray-100 p-4 md:p-6 shadow-sm space-y-4">
+            <div className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 p-4 md:p-6 space-y-4">
                 <div className="flex flex-col lg:flex-row justify-between gap-4">
                     {/* Search Controls */}
                     <div className="relative flex-1">
@@ -528,7 +524,7 @@ export default function SuperAdminDashboardHome() {
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Type to filter module summaries (e.g. coupon, reviews, scraper)..."
-                            className="w-full pl-11 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-cureza-green/30 focus:border-cureza-green transition-all"
+                            className="w-full pl-11 pr-10 py-2.5 bg-gray-50 border-[0.5px] border-neutral-950/20 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-black transition-all"
                         />
                         {searchQuery && (
                             <button 
@@ -540,8 +536,8 @@ export default function SuperAdminDashboardHome() {
                         )}
                     </div>
 
-                    {/* Category Selector Tabs */}
-                    <div className="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 scrollbar-none">
+                    {/* Category Selector segmented control */}
+                    <div className="flex items-center gap-1 p-1 bg-neutral-50 border-[0.5px] border-neutral-950/10 rounded-lg overflow-x-auto scrollbar-none">
                         {[
                             { id: 'all', label: 'All Modules' },
                             { id: 'catalog', label: 'Catalog & Sales' },
@@ -552,10 +548,10 @@ export default function SuperAdminDashboardHome() {
                             <button
                                 key={tab.id}
                                 onClick={() => setSelectedCategory(tab.id)}
-                                className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border
+                                className={`px-3.5 py-1.5 rounded-[6px] text-xs font-semibold whitespace-nowrap transition-all border border-transparent
                                     ${selectedCategory === tab.id 
-                                        ? 'bg-slate-900 text-white border-slate-900 shadow-sm' 
-                                        : 'bg-white text-gray-600 border-gray-150 hover:bg-gray-50'}`}
+                                        ? 'bg-white text-black border-[0.5px] border-neutral-950/10 font-bold' 
+                                        : 'text-neutral-500 hover:text-black'}`}
                             >
                                 {tab.label}
                             </button>
@@ -564,7 +560,7 @@ export default function SuperAdminDashboardHome() {
                 </div>
 
                 {searchQuery && (
-                    <div className="text-xs text-gray-400 font-semibold uppercase tracking-wider flex items-center gap-1">
+                    <div className="text-xs text-gray-450 font-semibold uppercase tracking-wider flex items-center gap-1">
                         <Filter size={12} />
                         Found {filteredModules.length} modules matching &ldquo;{searchQuery}&rdquo;
                     </div>
@@ -578,25 +574,25 @@ export default function SuperAdminDashboardHome() {
                     return (
                         <div 
                             key={module.id} 
-                            className="bg-white rounded-3xl border border-gray-100 hover:border-gray-200/90 shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden relative group"
+                            className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 hover:border-black/35 transition-all flex flex-col justify-between overflow-hidden relative group"
                         >
-                            {/* Accent Bar */}
-                            <div className={`h-1.5 bg-gradient-to-r ${module.color}`} />
+                            {/* Top thin line indicator */}
+                            <div className="h-[1px] bg-black/10 group-hover:bg-black transition-colors" />
                             
                             <div className="p-6 flex-1 space-y-4">
                                 {/* Card Header */}
                                 <div className="flex justify-between items-start">
                                     <div className="space-y-1">
-                                        <h3 className="text-lg font-black text-gray-900 tracking-tight group-hover:text-cureza-green transition-colors">
+                                        <h3 className="text-lg font-black text-gray-900 tracking-tight group-hover:text-black transition-colors">
                                             {module.title}
                                         </h3>
-                                        <span className={`inline-flex px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider border ${module.bgLight}`}>
+                                        <span className="inline-flex px-2 py-0.5 rounded-lg text-[9px] font-bold border border-neutral-950/10 bg-neutral-50 text-neutral-600">
                                             {module.category === 'catalog' ? 'Catalog & Sales' : 
                                              module.category === 'users' ? 'Users & Reviews' : 
                                              module.category === 'marketing' ? 'Marketing & Circle' : 'System & Settings'}
                                         </span>
                                     </div>
-                                    <div className={`p-2.5 rounded-2xl ${module.iconBg} transition-transform group-hover:scale-105`}>
+                                    <div className="p-2 bg-neutral-50 text-black border-[0.5px] border-neutral-950/10 rounded-lg transition-transform group-hover:scale-105">
                                         <IconComponent size={20} />
                                     </div>
                                 </div>
@@ -607,14 +603,14 @@ export default function SuperAdminDashboardHome() {
                                 </p>
 
                                 {/* Micro-Metrics Widget Block */}
-                                <div className="bg-gray-50/75 rounded-2xl p-3 border border-gray-100/50 grid grid-cols-3 gap-2">
+                                <div className="bg-neutral-50 rounded-lg p-3 border-[0.5px] border-neutral-950/10 grid grid-cols-3 gap-2">
                                     {module.metrics.map((metric, idx) => (
                                         <div key={idx} className="text-center space-y-0.5">
-                                            <p className="text-[9px] text-gray-400 font-bold uppercase tracking-wider truncate">
+                                            <p className="text-[9px] text-neutral-500 font-bold tracking-wider truncate">
                                                 {metric.label}
                                             </p>
                                             <p className={`text-xs font-black tracking-tight truncate
-                                                ${metric.warning ? 'text-amber-600' : metric.success ? 'text-emerald-600' : 'text-gray-800'}`}>
+                                                ${metric.warning ? 'text-red-600' : metric.success ? 'text-emerald-600' : 'text-gray-800'}`}>
                                                 {metric.value}
                                             </p>
                                         </div>
@@ -623,7 +619,7 @@ export default function SuperAdminDashboardHome() {
 
                                 {/* Sub-menus Quick links */}
                                 <div className="space-y-2">
-                                    <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest">
+                                    <p className="text-[9px] text-neutral-400 font-bold tracking-widest">
                                         Submenus & Sections
                                     </p>
                                     <div className="flex flex-wrap gap-1.5">
@@ -634,10 +630,10 @@ export default function SuperAdminDashboardHome() {
                                                 <Link
                                                     key={idx}
                                                     href={link.url}
-                                                    className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all border flex items-center gap-0.5
+                                                    className={`px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-all border flex items-center gap-1
                                                         ${isMatched
-                                                            ? 'bg-emerald-50 text-emerald-700 border-emerald-300 font-extrabold shadow-sm scale-102' 
-                                                            : 'bg-white text-gray-600 border-gray-150 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900'}`}
+                                                            ? 'bg-black text-white border-black font-bold scale-102' 
+                                                            : 'bg-white text-gray-600 border-gray-150 hover:border-black hover:bg-black hover:text-white'}`}
                                                 >
                                                     {link.title}
                                                     <ChevronRight size={10} className="opacity-40" />
@@ -649,13 +645,13 @@ export default function SuperAdminDashboardHome() {
                             </div>
 
                             {/* Card Footer Link */}
-                            <div className="px-6 py-3.5 bg-gray-50/70 border-t border-gray-50 flex justify-between items-center text-xs">
-                                <span className="text-gray-400 font-semibold uppercase tracking-wider text-[10px]">
+                            <div className="px-6 py-3.5 bg-neutral-50/50 border-t-[0.5px] border-neutral-950/10 flex justify-between items-center text-xs">
+                                <span className="text-gray-400 font-semibold tracking-wider text-[10px]">
                                     {module.links.length} subsections
                                 </span>
                                 <Link 
                                     href={module.links[0]?.url || '#'} 
-                                    className="text-slate-800 font-black hover:text-cureza-green transition-colors inline-flex items-center gap-1 text-[11px] uppercase tracking-wider"
+                                    className="text-slate-800 font-bold hover:text-black hover:underline transition-colors inline-flex items-center gap-1 text-[11px] tracking-wider"
                                 >
                                     Access Panel
                                     <ArrowRight size={12} className="transition-transform group-hover:translate-x-0.5" />
@@ -666,7 +662,7 @@ export default function SuperAdminDashboardHome() {
                 })}
 
                 {filteredModules.length === 0 && (
-                    <div className="col-span-full py-16 bg-white border border-gray-100 rounded-3xl text-center space-y-3">
+                    <div className="col-span-full py-16 bg-white border-[0.5px] border-neutral-950/10 rounded-lg text-center p-8 space-y-3">
                         <AlertCircle className="mx-auto text-gray-300" size={48} />
                         <div className="space-y-1">
                             <h4 className="font-extrabold text-gray-800">No matching modules found</h4>
@@ -674,7 +670,7 @@ export default function SuperAdminDashboardHome() {
                         </div>
                         <button 
                             onClick={() => { setSearchQuery(''); setSelectedCategory('all'); }} 
-                            className="bg-slate-100 text-slate-800 px-4 py-2 rounded-xl text-xs font-bold hover:bg-slate-200 transition-colors"
+                            className="bg-black text-white hover:bg-neutral-900 px-4 py-2 rounded-lg text-xs font-bold transition-all border border-transparent"
                         >
                             Reset Dashboard Filters
                         </button>
@@ -685,15 +681,15 @@ export default function SuperAdminDashboardHome() {
             {/* Monitor Logs Rows (Recent Orders & Activity Logs) */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Recent Orders List */}
-                <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 lg:col-span-2 space-y-4">
+                <div className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 p-6 lg:col-span-2 space-y-4">
                     <div className="flex justify-between items-center pb-2 border-b border-gray-50">
                         <div>
                             <h2 className="text-lg font-extrabold text-gray-900">Recent Sales Activity</h2>
-                            <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Latest invoice summaries from storefront</p>
+                            <p className="text-xs text-neutral-400 font-semibold">Latest invoice summaries from storefront</p>
                         </div>
                         <Link 
                             href="/superadmin/dashboard/orders" 
-                            className="text-cureza-green hover:underline text-xs font-extrabold uppercase tracking-wider flex items-center gap-1"
+                            className="text-black font-semibold hover:underline text-xs flex items-center gap-1"
                         >
                             All Orders <ChevronRight size={14} />
                         </Link>
@@ -702,7 +698,7 @@ export default function SuperAdminDashboardHome() {
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-sm">
                             <thead>
-                                <tr className="text-[10px] font-black uppercase text-gray-400 tracking-wider">
+                                <tr className="text-[10px] font-bold text-neutral-500 tracking-wider border-b-[0.5px] border-neutral-950/10">
                                     <th className="py-3">Order ID</th>
                                     <th className="py-3">Customer</th>
                                     <th className="py-3">Amount</th>
@@ -731,10 +727,10 @@ export default function SuperAdminDashboardHome() {
                                                 ₹{parseFloat(order.final_amount).toLocaleString('en-IN')}
                                             </td>
                                             <td className="py-3.5">
-                                                <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border
+                                                <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[10px] font-bold border
                                                     ${order.payment_status === 'paid' 
-                                                        ? 'bg-emerald-50 text-emerald-700 border-emerald-100' 
-                                                        : 'bg-amber-50 text-amber-700 border-amber-100'}`}>
+                                                        ? 'bg-emerald-50 text-emerald-700 border-emerald-250/50' 
+                                                        : 'bg-neutral-55 text-neutral-700 border-neutral-250/55'}`}>
                                                     {order.payment_status}
                                                 </span>
                                             </td>
@@ -753,11 +749,11 @@ export default function SuperAdminDashboardHome() {
                 </div>
 
                 {/* Audit Logs */}
-                <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-4">
+                <div className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 p-6 space-y-4">
                     <div className="flex justify-between items-center pb-2 border-b border-gray-50">
                         <div>
                             <h2 className="text-lg font-extrabold text-gray-900">Security Audit Logs</h2>
-                            <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Latest administrator and staff actions</p>
+                            <p className="text-xs text-neutral-400 font-semibold">Latest administrator and staff actions</p>
                         </div>
                         <Activity size={18} className="text-gray-400" />
                     </div>
@@ -770,7 +766,7 @@ export default function SuperAdminDashboardHome() {
                         ) : (
                             recentActivities.map((activity: any) => (
                                 <div key={activity.id} className="flex gap-3 items-start text-xs">
-                                    <div className="p-2 bg-gray-50 border border-gray-100 text-gray-500 rounded-xl mt-0.5">
+                                    <div className="p-2 bg-neutral-50 border-[0.5px] border-neutral-950/10 text-black rounded-lg mt-0.5">
                                         <Activity size={12} />
                                     </div>
                                     <div className="space-y-0.5 flex-1">

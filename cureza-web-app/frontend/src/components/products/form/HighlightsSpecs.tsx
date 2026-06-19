@@ -10,6 +10,7 @@ interface HighlightsSpecsProps {
     handleSpecChange: (index: number, key: string, value: string) => void;
     addSpec: () => void;
     removeSpec: (index: number) => void;
+    isSuperAdmin?: boolean;
 }
 
 export default function HighlightsSpecs({
@@ -20,34 +21,28 @@ export default function HighlightsSpecs({
     removeArrayItem,
     handleSpecChange,
     addSpec,
-    removeSpec
+    removeSpec,
+    isSuperAdmin
 }: HighlightsSpecsProps) {
 
-    // Icon selector state is per-row? 
-    // The prompt says "Highlights -> Bullet points with icon selector".
-    // Since `highlights` is a string array in backend, we can't easily store the icon unless we change schema or serialize it.
-    // "❌ Do NOT change backend logic".
-    // If I add an icon, it must be purely visual in UI or prepended to string as emoji?
-    // I will implementation a "Visual" selector that effectively prepends an Emoji to the text, 
-    // OR keeps it strictly UI. Assuming Emoji prepending is safest for no-backend-change.
-    // "Icon Selector" implies more than dot.
+    const roundedClass = isSuperAdmin ? 'rounded-[10px]' : 'rounded-xl';
 
     return (
-        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-8">
+        <div className={`bg-white dark:bg-gray-900 p-6 ${roundedClass} border ${isSuperAdmin ? 'border-neutral-950/15 shadow-none' : 'border-gray-200 shadow-sm'} space-y-8`}>
             {/* Highlights */}
             <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Key Highlights</h3>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Key Highlights</h3>
                 <div className="space-y-3">
                     {highlights.map((highlight, index) => (
                         <div key={index} className="flex gap-3 items-center group">
-                            <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+                            <div className={`w-8 h-8 ${isSuperAdmin ? 'rounded-md bg-neutral-100 dark:bg-gray-800 text-black dark:text-white border-[0.5px] border-neutral-950/10' : 'rounded-full bg-blue-50 text-blue-600'} flex items-center justify-center flex-shrink-0`}>
                                 <Check size={16} />
                             </div>
                             <input
                                 type="text"
                                 value={highlight}
                                 onChange={(e) => handleArrayChange(index, e.target.value, 'highlights')}
-                                className="flex-1 rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                                className={`flex-1 ${isSuperAdmin ? 'rounded-md border-[0.5px] border-neutral-950/15 focus:ring-black/10 focus:border-black' : 'rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500'} bg-transparent px-3 py-2 text-sm text-gray-900 dark:text-gray-100 transition-all outline-none`}
                                 placeholder="e.g. 100% Organic Ingredients"
                             />
                             <button
@@ -59,27 +54,35 @@ export default function HighlightsSpecs({
                             </button>
                         </div>
                     ))}
-                    <button type="button" onClick={() => addArrayItem('highlights')} className="text-sm font-bold text-blue-600 flex items-center gap-2 hover:bg-blue-50 w-fit px-3 py-2 rounded-lg transition-colors">
+                    <button 
+                        type="button" 
+                        onClick={() => addArrayItem('highlights')} 
+                        className={`text-sm font-bold flex items-center gap-2 w-fit px-3 py-2 rounded-lg transition-colors cursor-pointer ${
+                            isSuperAdmin
+                                ? 'text-black dark:text-white border-[0.5px] border-neutral-950/15 bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-750'
+                                : 'text-blue-600 hover:bg-blue-50'
+                        }`}
+                    >
                         <Plus size={16} /> Add Highlight
                     </button>
                 </div>
             </div>
 
-            <hr className="border-gray-100" />
+            <hr className="border-gray-100 dark:border-gray-800" />
 
             {/* Specifications */}
             <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Technical Specifications</h3>
-                <div className="rounded-lg border border-gray-200 overflow-hidden">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Technical Specifications</h3>
+                <div className={`overflow-hidden ${isSuperAdmin ? 'rounded-[10px] border-[0.5px] border-neutral-950/15' : 'rounded-lg border border-gray-200'}`}>
                     <table className="w-full text-sm">
-                        <thead className="bg-gray-50 text-gray-600 font-medium border-b border-gray-200">
+                        <thead className={`font-medium border-b ${isSuperAdmin ? 'bg-neutral-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-neutral-950/15' : 'bg-gray-50 text-gray-600 border-gray-200'}`}>
                             <tr>
                                 <th className="px-4 py-3 text-left w-1/3">Feature</th>
                                 <th className="px-4 py-3 text-left">Value</th>
                                 <th className="w-10"></th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100">
+                        <tbody className="divide-y divide-gray-100 dark:divide-gray-850">
                             {specifications.map((spec, index) => (
                                 <tr key={index} className="group">
                                     <td className="p-2">
@@ -87,7 +90,7 @@ export default function HighlightsSpecs({
                                             type="text"
                                             value={spec.key}
                                             onChange={(e) => handleSpecChange(index, 'key', e.target.value)}
-                                            className="w-full border-transparent bg-transparent hover:bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded px-3 py-1.5 transition-all text-gray-900 font-medium placeholder:font-normal"
+                                            className={`w-full border-transparent bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800/35 focus:bg-white dark:focus:bg-gray-900 ${isSuperAdmin ? 'focus:border-black focus:ring-1 focus:ring-black/10' : 'focus:border-blue-500 focus:ring-1 focus:ring-blue-500'} rounded px-3 py-1.5 transition-all text-gray-900 dark:text-white font-medium placeholder:font-normal`}
                                             placeholder="e.g. Material"
                                         />
                                     </td>
@@ -96,7 +99,7 @@ export default function HighlightsSpecs({
                                             type="text"
                                             value={spec.value}
                                             onChange={(e) => handleSpecChange(index, 'value', e.target.value)}
-                                            className="w-full border-transparent bg-transparent hover:bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded px-3 py-1.5 transition-all text-gray-600"
+                                            className={`w-full border-transparent bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800/35 focus:bg-white dark:focus:bg-gray-900 ${isSuperAdmin ? 'focus:border-black focus:ring-1 focus:ring-black/10' : 'focus:border-blue-500 focus:ring-1 focus:ring-blue-500'} rounded px-3 py-1.5 transition-all text-gray-650 dark:text-gray-300`}
                                             placeholder="e.g. Cotton"
                                         />
                                     </td>
@@ -113,13 +116,21 @@ export default function HighlightsSpecs({
                             ))}
                         </tbody>
                     </table>
-                    <div className="bg-gray-50 p-2 border-t border-gray-200">
-                        <button type="button" onClick={addSpec} className="w-full py-2 text-sm font-medium text-gray-500 hover:text-blue-600 hover:bg-gray-100 rounded border border-dashed border-gray-300 flex items-center justify-center gap-2 transition-all">
+                    <div className={`p-2 border-t ${isSuperAdmin ? 'bg-neutral-50 dark:bg-gray-800 border-neutral-950/15' : 'bg-gray-50 border-gray-200'}`}>
+                        <button 
+                            type="button" 
+                            onClick={addSpec} 
+                            className={`w-full py-2 text-sm font-medium rounded border border-dashed flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                                isSuperAdmin
+                                    ? 'text-black dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-750 border-neutral-950/20'
+                                    : 'text-gray-500 hover:text-blue-600 hover:bg-gray-100 border-gray-300'
+                            }`}
+                        >
                             <Plus size={16} /> Add Specification Row
                         </button>
-                    </div>
                 </div>
             </div>
+        </div>
         </div>
     );
 }

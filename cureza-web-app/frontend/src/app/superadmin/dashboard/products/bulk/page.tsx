@@ -153,21 +153,21 @@ export default function AdminBulkProductPage() {
     };
 
     return (
-        <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-500 font-outfit">
-            {/* Header section with glassmorphic look */}
-            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-3xl p-8 border border-gray-100 dark:border-gray-800 shadow-sm">
+        <div className="w-full space-y-6 animate-in fade-in duration-550">
+            {/* Header section with flat look */}
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border-[0.5px] border-neutral-950/15 dark:border-gray-800">
                 <div className="relative flex items-center gap-4">
                     <Link 
                         href="/superadmin/dashboard/products" 
-                        className="flex h-11 w-11 items-center justify-center rounded-2xl border border-gray-200 bg-gray-50 text-gray-600 shadow-sm transition-all hover:border-cureza-green hover:text-cureza-green hover:bg-emerald-50 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
+                        className="flex h-10 w-10 items-center justify-center rounded-lg border-[0.5px] border-neutral-950/15 bg-gray-50 text-gray-650 hover:bg-neutral-100 hover:text-black dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
                     >
-                        <ArrowLeft size={16} />
+                        <ArrowLeft size={15} />
                     </Link>
                     <div>
-                        <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
-                            Bulk <span className="text-cureza-green">Inventory</span> Upload
+                        <h1 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
+                            Bulk Inventory Upload
                         </h1>
-                        <p className="text-gray-500 dark:text-gray-400 font-medium text-sm mt-1">
+                        <p className="text-gray-550 dark:text-gray-400 font-normal text-xs mt-0.5">
                             Export your catalog and upload multiple listings using optimized CSV spreadsheets.
                         </p>
                     </div>
@@ -175,36 +175,36 @@ export default function AdminBulkProductPage() {
             </div>
 
             {error && (
-                <div className="bg-red-50 dark:bg-red-950/20 border border-red-100 dark:border-red-900/30 text-red-700 dark:text-red-400 p-5 rounded-2xl flex items-start gap-3 shadow-sm animate-in slide-in-from-top-4 duration-300">
-                    <AlertCircle size={20} className="shrink-0 mt-0.5" />
-                    <div className="space-y-1">
-                        <h4 className="font-bold text-sm">Operation Failed</h4>
-                        <p className="text-xs font-semibold leading-relaxed">{error}</p>
+                <div className="bg-red-50 dark:bg-red-950/20 border-[0.5px] border-red-200 text-red-700 dark:text-red-400 p-4 rounded-lg flex items-start gap-3 animate-in slide-in-from-top-4 duration-300">
+                    <AlertCircle size={18} className="shrink-0 mt-0.5" />
+                    <div className="space-y-0.5">
+                        <h4 className="font-semibold text-xs">Operation Failed</h4>
+                        <p className="text-[11px] font-medium leading-relaxed">{error}</p>
                     </div>
                 </div>
             )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Column 1 & 2: Import Card */}
-                <div className="lg:col-span-2 bg-white dark:bg-gray-900 p-8 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm space-y-6">
-                    <div className="flex items-center gap-3 border-b border-gray-50 dark:border-gray-850 pb-5">
-                        <div className="p-3 bg-cureza-green/10 text-cureza-green rounded-2xl shadow-inner">
-                            <Upload size={22} />
+                <div className="lg:col-span-2 bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 space-y-6">
+                    <div className="flex items-center gap-3 border-b border-neutral-950/10 dark:border-gray-850 pb-4">
+                        <div className="p-2.5 bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white rounded-lg">
+                            <Upload size={18} />
                         </div>
                         <div>
-                            <h3 className="font-extrabold text-lg text-gray-950 dark:text-white tracking-tight">Import Spreadsheet</h3>
-                            <p className="text-xs text-gray-400 font-semibold mt-0.5">Upload a clean format .csv file to batch insert products</p>
+                            <h3 className="font-semibold text-sm text-gray-950 dark:text-white tracking-tight">Import Spreadsheet</h3>
+                            <p className="text-xs text-gray-400 font-normal mt-0.5">Upload a clean format .csv file to batch insert products</p>
                         </div>
                     </div>
 
                     <div className="space-y-5">
                         {/* Seller Select */}
-                        <div className="space-y-2">
-                            <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block">Target Seller/Merchant <span className="text-red-500">*</span></label>
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 tracking-wider block">Target Seller/Merchant <span className="text-red-500">*</span></label>
                             <select
                                 value={selectedSellerId}
                                 onChange={(e) => setSelectedSellerId(e.target.value)}
-                                className="w-full h-11 px-4 border border-gray-200 dark:border-gray-700 rounded-2xl bg-gray-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-cureza-green/15 focus:border-cureza-green outline-none font-bold text-sm text-gray-950 dark:text-gray-100 transition-all cursor-pointer"
+                                className="w-full h-10 px-3 border-[0.5px] border-neutral-950/15 dark:border-gray-700 rounded-lg bg-gray-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-[1.5px] focus:ring-black/10 focus:border-black dark:focus:ring-white/10 dark:focus:border-white outline-none font-semibold text-xs text-gray-950 dark:text-gray-100 transition-all cursor-pointer"
                                 disabled={loadingSellers}
                             >
                                 <option value="" className="text-gray-500">-- Select merchant assignee --</option>
@@ -214,18 +214,18 @@ export default function AdminBulkProductPage() {
                                     </option>
                                 ))}
                             </select>
-                            {loadingSellers && <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider animate-pulse">Loading merchant registry...</span>}
+                            {loadingSellers && <span className="text-[9px] text-gray-400 font-semibold tracking-wider animate-pulse">Loading merchant registry...</span>}
                         </div>
 
-                        {/* Drag and Drop Zone with micro-animations */}
+                        {/* Drag and Drop Zone */}
                         <div 
                             onDragOver={handleDragOver}
                             onDragLeave={handleDragLeave}
                             onDrop={handleDrop}
-                            className={`relative border-2 border-dashed rounded-3xl p-10 text-center transition-all duration-300 group flex flex-col items-center justify-center cursor-pointer ${
+                            className={`relative border-2 border-dashed rounded-[10px] p-8 text-center transition-all duration-300 group flex flex-col items-center justify-center cursor-pointer ${
                                 isDragOver 
-                                ? 'border-cureza-green bg-emerald-50/30 dark:bg-emerald-950/10 scale-[0.99] shadow-md shadow-emerald-500/5' 
-                                : 'border-gray-200 dark:border-gray-800 hover:border-cureza-green/70 hover:bg-gray-50/50 dark:hover:bg-gray-850/20'
+                                ? 'border-black bg-neutral-50/50 dark:bg-neutral-800/10' 
+                                : 'border-neutral-950/15 dark:border-gray-850 hover:border-black/50 hover:bg-neutral-50/30'
                             }`}
                         >
                             <input
@@ -234,13 +234,13 @@ export default function AdminBulkProductPage() {
                                 onChange={handleFileChange}
                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                             />
-                            <div className={`p-4 bg-gray-50 dark:bg-gray-850 rounded-2xl text-gray-400 dark:text-gray-500 mb-4 transition-transform duration-300 group-hover:scale-110 shadow-sm ${isDragOver ? 'bg-emerald-50 dark:bg-emerald-900/20 text-cureza-green' : ''}`}>
-                                <FileSpreadsheet size={40} />
+                            <div className={`p-3 bg-neutral-100 dark:bg-gray-800 rounded-lg text-gray-400 dark:text-gray-500 mb-3 transition-transform duration-300 group-hover:scale-105 ${isDragOver ? 'bg-neutral-200 dark:bg-gray-700 text-black' : ''}`}>
+                                <FileSpreadsheet size={32} />
                             </div>
-                            <p className="font-extrabold text-sm text-gray-900 dark:text-white">
+                            <p className="font-semibold text-xs text-gray-900 dark:text-white">
                                 {importFile ? importFile.name : 'Choose CSV file or drag here'}
                             </p>
-                            <p className="text-xs text-gray-450 dark:text-gray-400 font-medium mt-1">
+                            <p className="text-[10px] text-gray-450 dark:text-gray-400 font-medium mt-1">
                                 {importFile ? `Size: ${(importFile.size / 1024).toFixed(1)} KB` : 'Only CSV files formatted properly will be parsed'}
                             </p>
                         </div>
@@ -248,16 +248,16 @@ export default function AdminBulkProductPage() {
                         <button
                             onClick={handleImport}
                             disabled={isImporting || !importFile || !selectedSellerId}
-                            className="w-full h-12 bg-cureza-green hover:bg-green-700 disabled:bg-gray-150 disabled:dark:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed text-white font-extrabold text-sm uppercase tracking-wider rounded-2xl transition-all shadow-lg shadow-green-100 dark:shadow-none hover:-translate-y-0.5 active:scale-95 flex justify-center items-center gap-2"
+                            className="w-full h-11 bg-black text-white hover:bg-neutral-900 dark:bg-white dark:text-black dark:hover:bg-neutral-100 disabled:bg-neutral-150 disabled:dark:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed font-bold text-xs tracking-wider rounded-lg transition-all flex justify-center items-center gap-2 cursor-pointer"
                         >
                             {isImporting ? (
                                 <>
-                                    <Loader2 className="animate-spin" size={18} />
+                                    <Loader2 className="animate-spin" size={16} />
                                     Parsing & Importing List...
                                 </>
                             ) : (
                                 <>
-                                    <Upload size={18} />
+                                    <Upload size={16} />
                                     Confirm Batch Upload
                                 </>
                             )}
@@ -265,20 +265,20 @@ export default function AdminBulkProductPage() {
                     </div>
 
                     {importResult && (
-                        <div className="mt-6 p-6 bg-gray-50/50 dark:bg-gray-850/20 border border-gray-100 dark:border-gray-800 rounded-3xl space-y-4">
-                            <h4 className="font-bold text-sm text-gray-950 dark:text-white tracking-tight uppercase">Import Results summary</h4>
-                            <div className="flex items-center gap-2.5 text-emerald-600 dark:text-emerald-400 font-extrabold text-sm">
-                                <CheckCircle size={18} />
+                        <div className="mt-6 p-5 bg-neutral-50/50 dark:bg-gray-850/20 border-[0.5px] border-neutral-950/15 dark:border-gray-800 rounded-lg space-y-4">
+                            <h4 className="font-semibold text-xs text-gray-950 dark:text-white tracking-tight">Import Results Summary</h4>
+                            <div className="flex items-center gap-2 text-green-600 dark:text-green-400 font-bold text-xs">
+                                <CheckCircle size={16} />
                                 <span>{importResult.success_count} products loaded successfully.</span>
                             </div>
 
                             {importResult.errors && importResult.errors.length > 0 && (
-                                <div className="space-y-2 border-t border-gray-100 dark:border-gray-800 pt-4">
-                                    <p className="text-rose-600 dark:text-rose-450 font-black text-xs uppercase tracking-wider flex items-center gap-1.5">
-                                        <AlertCircle size={14} />
+                                <div className="space-y-2 border-t border-neutral-950/10 dark:border-gray-800 pt-3">
+                                    <p className="text-red-600 dark:text-red-400 font-bold text-[10px] tracking-wider flex items-center gap-1.5">
+                                        <AlertCircle size={12} />
                                         Errors encountered ({importResult.errors.length}):
                                     </p>
-                                    <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-4 max-h-48 overflow-y-auto space-y-1.5 font-mono text-[11px] text-rose-500 leading-normal">
+                                    <div className="bg-white dark:bg-gray-900 border-[0.5px] border-neutral-950/15 dark:border-gray-800 rounded-lg p-3 max-h-40 overflow-y-auto space-y-1 font-mono text-[10px] text-red-500 leading-normal">
                                         {importResult.errors.map((err, i) => (
                                             <div key={i} className="flex gap-2">
                                                 <span className="text-gray-400 select-none">[{i+1}]</span>
@@ -295,32 +295,32 @@ export default function AdminBulkProductPage() {
                 {/* Column 3: Guide/Export Cards */}
                 <div className="space-y-6">
                     {/* Export/Template Card */}
-                    <div className="bg-white dark:bg-gray-900 p-8 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm space-y-6">
-                        <div className="flex items-center gap-3 border-b border-gray-50 dark:border-gray-850 pb-5">
-                            <div className="p-3 bg-cureza-green/10 text-cureza-green rounded-2xl shadow-inner">
-                                <Download size={22} />
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 space-y-5">
+                        <div className="flex items-center gap-3 border-b border-neutral-950/10 dark:border-gray-850 pb-4">
+                            <div className="p-2.5 bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white rounded-lg">
+                                <Download size={18} />
                             </div>
                             <div>
-                                <h3 className="font-extrabold text-lg text-gray-950 dark:text-white tracking-tight">Export Registry</h3>
-                                <p className="text-xs text-gray-400 font-semibold mt-0.5">Save template or full DB products dump</p>
+                                <h3 className="font-semibold text-sm text-gray-950 dark:text-white tracking-tight">Export Registry</h3>
+                                <p className="text-xs text-gray-400 font-normal mt-0.5">Save template or full DB products dump</p>
                             </div>
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-3.5">
                             <button
                                 onClick={handleDownloadTemplate}
-                                className="w-full h-11 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-850 transition-all flex items-center justify-center gap-2 shadow-sm border-dashed"
+                                className="w-full h-10 border-[0.5px] border-neutral-950/15 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 font-semibold text-xs tracking-wider rounded-lg hover:bg-neutral-50 dark:hover:bg-gray-850 transition-all flex items-center justify-center gap-2 border-dashed cursor-pointer"
                             >
                                 <Download size={14} />
                                 Download CSV Template
                             </button>
 
-                            <div className="h-px bg-gray-100 dark:bg-gray-800 my-2" />
+                            <div className="h-[0.5px] bg-neutral-950/10 dark:bg-gray-800 my-1" />
 
                             <button
                                 onClick={handleExport}
                                 disabled={isExporting}
-                                className="w-full h-11 bg-emerald-650 hover:bg-emerald-700 disabled:opacity-55 disabled:cursor-not-allowed text-white font-bold text-xs uppercase tracking-wider rounded-2xl transition-all flex justify-center items-center gap-2 shadow-md shadow-emerald-50 dark:shadow-none"
+                                className="w-full h-10 bg-black text-white hover:bg-neutral-900 dark:bg-white dark:text-black dark:hover:bg-neutral-100 disabled:opacity-55 disabled:cursor-not-allowed font-semibold text-xs tracking-wider rounded-lg transition-all flex justify-center items-center gap-2 cursor-pointer"
                             >
                                 {isExporting ? <Loader2 className="animate-spin" size={14} /> : <Download size={14} />}
                                 Export All Products
@@ -329,23 +329,23 @@ export default function AdminBulkProductPage() {
                     </div>
 
                     {/* Step-by-Step Instructions card */}
-                    <div className="bg-white dark:bg-gray-900 p-8 rounded-3xl border border-gray-150 dark:border-gray-850 shadow-sm space-y-5">
-                        <h4 className="font-black text-xs text-gray-950 dark:text-white tracking-wider uppercase border-b border-gray-50 dark:border-gray-850 pb-3">CSV Upload Guideline</h4>
-                        <ul className="space-y-4 text-xs font-semibold text-gray-600 dark:text-gray-400">
-                            <li className="flex gap-3 items-start">
-                                <div className="h-5 w-5 rounded-full bg-emerald-50 border border-emerald-100/50 text-cureza-green shrink-0 flex items-center justify-center font-extrabold text-[10px]">1</div>
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 space-y-4">
+                        <h4 className="font-semibold text-xs text-gray-950 dark:text-white tracking-wider border-b border-neutral-950/10 dark:border-gray-850 pb-2">CSV Upload Guideline</h4>
+                        <ul className="space-y-3.5 text-[11px] font-normal text-gray-600 dark:text-gray-400">
+                            <li className="flex gap-2.5 items-start">
+                                <div className="h-5 w-5 rounded bg-neutral-100 border border-neutral-250/20 text-black shrink-0 flex items-center justify-center font-semibold text-[10px]">1</div>
                                 <span>Download and open the standard **CSV Template** inside Google Sheets or Excel.</span>
                             </li>
-                            <li className="flex gap-3 items-start">
-                                <div className="h-5 w-5 rounded-full bg-emerald-50 border border-emerald-100/50 text-cureza-green shrink-0 flex items-center justify-center font-extrabold text-[10px]">2</div>
+                            <li className="flex gap-2.5 items-start">
+                                <div className="h-5 w-5 rounded bg-neutral-100 border border-neutral-250/20 text-black shrink-0 flex items-center justify-center font-semibold text-[10px]">2</div>
                                 <span>Populate columns exactly as shown (`title`, `sku`, `price`, `stock`, `status`, `short_description`).</span>
                             </li>
-                            <li className="flex gap-3 items-start">
-                                <div className="h-5 w-5 rounded-full bg-emerald-50 border border-emerald-100/50 text-cureza-green shrink-0 flex items-center justify-center font-extrabold text-[10px]">3</div>
+                            <li className="flex gap-2.5 items-start">
+                                <div className="h-5 w-5 rounded bg-neutral-100 border border-neutral-250/20 text-black shrink-0 flex items-center justify-center font-semibold text-[10px]">3</div>
                                 <span>Select a valid merchant assign from the dropdown before uploading the file.</span>
                             </li>
-                            <li className="flex gap-3 items-start">
-                                <div className="h-5 w-5 rounded-full bg-emerald-50 border border-emerald-100/50 text-cureza-green shrink-0 flex items-center justify-center font-extrabold text-[10px]">4</div>
+                            <li className="flex gap-2.5 items-start">
+                                <div className="h-5 w-5 rounded bg-neutral-100 border border-neutral-250/20 text-black shrink-0 flex items-center justify-center font-semibold text-[10px]">4</div>
                                 <span>Confirm upload. If validation errors occur, correct rows specified in the console box.</span>
                             </li>
                         </ul>

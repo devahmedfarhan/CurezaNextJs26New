@@ -25,13 +25,20 @@ export default function BasicInfo({
     handleSellerChange
 }: BasicInfoProps) {
 
+    const roundedClass = isSuperAdmin ? 'rounded-[10px]' : 'rounded-xl';
+    const inputClass = `w-full h-11 ${roundedClass} border ${isSuperAdmin ? 'border-neutral-950/15 focus:ring-black/10 focus:border-black' : 'border-gray-200 dark:border-gray-700 focus:ring-cureza-green/15 focus:border-cureza-green'} bg-gray-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 px-4 font-semibold text-gray-955 dark:text-gray-100 text-sm transition-all outline-none`;
+    const selectClass = `w-full h-10 ${roundedClass} border ${isSuperAdmin ? 'border-neutral-950/15 focus:ring-black/10 focus:border-black' : 'border-gray-200 dark:border-gray-700 focus:ring-cureza-green/15 focus:border-cureza-green'} bg-gray-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 px-3 font-semibold text-gray-955 dark:text-gray-100 text-sm transition-all outline-none cursor-pointer`;
+    const textareaClass = `w-full min-h-[80px] p-3.5 ${roundedClass} border ${isSuperAdmin ? 'border-neutral-950/15 focus:ring-black/10 focus:border-black' : 'border-gray-200 dark:border-gray-700 focus:ring-cureza-green/15 focus:border-cureza-green'} bg-gray-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 font-medium text-gray-750 dark:text-gray-300 leading-relaxed outline-none transition-all text-sm`;
+    const iconColor = isSuperAdmin ? 'text-black dark:text-white' : 'text-cureza-green';
+    const labelClass = `text-[11px] font-bold text-gray-500 dark:text-gray-400 ${isSuperAdmin ? 'capitalize' : 'uppercase'} tracking-wider flex items-center gap-1.5`;
+
     return (
         <div className="space-y-6 w-full">
 
             {/* Row 1: Title */}
             <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <FileText size={13} className="text-cureza-green" />
+                <label className={labelClass}>
+                    <FileText size={13} className={iconColor} />
                     Product Title <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -40,7 +47,7 @@ export default function BasicInfo({
                     required
                     value={formData.title}
                     onChange={handleInputChange}
-                    className="w-full h-11 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-cureza-green/15 focus:border-cureza-green px-4 font-semibold text-gray-950 dark:text-gray-100 text-sm transition-all outline-none"
+                    className={inputClass}
                     placeholder="Enter a descriptive product name..."
                 />
             </div>
@@ -49,8 +56,8 @@ export default function BasicInfo({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {isSuperAdmin ? (
                     <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
-                            <Briefcase size={13} className="text-cureza-green" />
+                        <label className={labelClass}>
+                            <Briefcase size={13} className={iconColor} />
                             Seller & Brand <span className="text-red-500">*</span>
                         </label>
                         <select
@@ -58,7 +65,7 @@ export default function BasicInfo({
                             required
                             value={formData.seller_id?.toString() || ''}
                             onChange={handleSellerChange}
-                            className="w-full h-10 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-cureza-green/15 focus:border-cureza-green px-3 font-semibold text-gray-950 dark:text-gray-100 text-sm transition-all outline-none cursor-pointer"
+                            className={selectClass}
                         >
                             <option value="" className="text-gray-500">Select Seller</option>
                             {sellers.map(s => (
@@ -68,7 +75,7 @@ export default function BasicInfo({
                             ))}
                         </select>
                         {formData.seller_id && (
-                            <div className="mt-1.5 text-[9px] font-bold uppercase bg-cureza-green/5 text-cureza-green px-2.5 py-1 rounded-md border border-cureza-green/10 flex items-center justify-between tracking-wider">
+                            <div className={`mt-1.5 text-[9px] font-bold ${isSuperAdmin ? 'capitalize' : 'uppercase'} bg-neutral-50 dark:bg-neutral-800 text-black dark:text-white px-2.5 py-1 rounded-md border border-neutral-950/15 flex items-center justify-between tracking-wider`}>
                                 <span>Verified Brand:</span>
                                 <span className="font-extrabold">
                                     {sellers.find(s => s.id.toString() === formData.seller_id?.toString())?.brand?.name || "Generic"}
@@ -78,20 +85,20 @@ export default function BasicInfo({
                     </div>
                 ) : (
                     <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
-                            <Briefcase size={13} className="text-cureza-green" />
+                        <label className={labelClass}>
+                            <Briefcase size={13} className={iconColor} />
                             Your Brand/Store
                         </label>
-                        <div className="w-full h-10 rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50/30 px-3 flex items-center justify-between text-sm">
+                        <div className={`w-full h-10 ${roundedClass} border border-gray-150 dark:border-gray-800 bg-gray-50/30 px-3 flex items-center justify-between text-sm`}>
                             <span className="font-semibold text-gray-600 dark:text-gray-300">{sellerBrand?.name || "Generic"}</span>
-                            <span className="text-[9px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 px-2 py-0.5 rounded-full font-extrabold uppercase tracking-wider">Locked</span>
+                            <span className="text-[9px] bg-white dark:bg-gray-800 border border-gray-250 dark:border-gray-700 text-gray-400 px-2 py-0.5 rounded-full font-extrabold uppercase tracking-wider">Locked</span>
                         </div>
                     </div>
                 )}
 
                 <div className="space-y-1.5">
-                    <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
-                        <Layers size={13} className="text-cureza-green" />
+                    <label className={labelClass}>
+                        <Layers size={13} className={iconColor} />
                         Main Category <span className="text-red-500">*</span>
                     </label>
                     <select
@@ -99,7 +106,7 @@ export default function BasicInfo({
                         required
                         value={formData.category_id}
                         onChange={handleInputChange}
-                        className="w-full h-10 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-cureza-green/15 focus:border-cureza-green px-3 font-semibold text-gray-950 dark:text-gray-100 text-sm transition-all outline-none cursor-pointer"
+                        className={selectClass}
                     >
                         <option value="" className="text-gray-500">Choose Category</option>
                         {categories.map(c => <option key={c.id} value={c.id} className="text-gray-900 dark:text-gray-100">{c.name}</option>)}
@@ -109,15 +116,15 @@ export default function BasicInfo({
 
             {/* Row 3: Concern */}
             <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <Tag size={13} className="text-cureza-green" />
+                <label className={labelClass}>
+                    <Tag size={13} className={iconColor} />
                     Medical Concern (Optional)
                 </label>
                 <select
                     name="concern_id"
                     value={formData.concern_id}
                     onChange={handleInputChange}
-                    className="w-full h-10 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-cureza-green/15 focus:border-cureza-green px-3 font-semibold text-gray-955 dark:text-gray-100 text-sm transition-all outline-none cursor-pointer"
+                    className={selectClass}
                 >
                     <option value="" className="text-gray-500">Any Concern</option>
                     {concerns.map(c => <option key={c.id} value={c.id} className="text-gray-900 dark:text-gray-100">{c.name}</option>)}
@@ -130,21 +137,21 @@ export default function BasicInfo({
             <div className="space-y-5">
                 <div className="space-y-1.5">
                     <div className="flex justify-between items-center">
-                        <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Short Summary</label>
+                        <label className={`text-[11px] font-bold text-gray-500 dark:text-gray-400 ${isSuperAdmin ? 'capitalize' : 'uppercase'} tracking-wider`}>Short Summary</label>
                         <span className="text-[9px] font-extrabold text-gray-400 tracking-wider uppercase">{formData.short_description.length} / 500 CHARS</span>
                     </div>
                     <textarea
                         name="short_description"
                         value={formData.short_description}
                         onChange={handleInputChange}
-                        className="w-full min-h-[80px] p-3.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-cureza-green/15 focus:border-cureza-green font-medium text-gray-750 dark:text-gray-300 leading-relaxed outline-none transition-all text-sm"
+                        className={textareaClass}
                         placeholder="Write a catchy 2-3 line summary for the product listing page..."
                     />
                 </div>
 
                 <div className="space-y-1.5">
-                    <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Full Story & Details</label>
-                    <div className="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden focus-within:ring-4 focus-within:ring-cureza-green/15 focus-within:border-cureza-green transition-all">
+                    <label className={`text-[11px] font-bold text-gray-500 dark:text-gray-400 ${isSuperAdmin ? 'capitalize' : 'uppercase'} tracking-wider`}>Full Story & Details</label>
+                    <div className={`${roundedClass} border ${isSuperAdmin ? 'border-neutral-950/15 focus-within:ring-4 focus-within:ring-black/10 focus-within:border-black' : 'border-gray-200 dark:border-gray-700 focus-within:ring-4 focus-within:ring-cureza-green/15 focus-within:border-cureza-green'} overflow-hidden transition-all`}>
                         <RichTextEditor
                             value={formData.long_description}
                             onChange={(content: string) => {
@@ -159,23 +166,23 @@ export default function BasicInfo({
                 </div>
 
                 <div className="space-y-1.5 pb-2">
-                    <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
-                        <Info size={13} className="text-cureza-green" />
+                    <label className={labelClass}>
+                        <Info size={13} className={iconColor} />
                         Product Listing Status
                     </label>
                     <select
                         name="status"
                         value={formData.status}
                         onChange={handleInputChange}
-                        className="w-full h-10 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-cureza-green/15 focus:border-cureza-green px-3 font-semibold text-gray-955 dark:text-gray-100 text-sm transition-all outline-none cursor-pointer"
+                        className={selectClass}
                     >
-                        <option value="draft" className="text-gray-900">DRAFT (HIDDEN)</option>
-                        <option value="published" className="text-gray-900">PUBLISHED (LIVE)</option>
-                        <option value="archived" className="text-gray-900">ARCHIVED</option>
+                        <option value="draft" className="text-gray-900">Draft (Hidden)</option>
+                        <option value="published" className="text-gray-900">Published (Live)</option>
+                        <option value="archived" className="text-gray-900">Archived</option>
                         {isSuperAdmin && (
                             <>
-                                <option value="pending_approval" className="text-gray-900">PENDING APPROVAL</option>
-                                <option value="pending_update" className="text-gray-900">PENDING UPDATE</option>
+                                <option value="pending_approval" className="text-gray-900">Pending Approval</option>
+                                <option value="pending_update" className="text-gray-900">Pending Update</option>
                             </>
                         )}
                     </select>
@@ -183,12 +190,12 @@ export default function BasicInfo({
                         {formData.status === 'published' ? (
                             <>
                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                <span className="text-emerald-600 dark:text-emerald-400 font-bold">THIS PRODUCT IS CURRENTLY LIVE ON THE SHOP</span>
+                                <span className="text-emerald-600 dark:text-emerald-400 font-bold">This product is currently live on the shop</span>
                             </>
                         ) : (
                             <>
                                 <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-                                <span className="text-rose-600 dark:text-rose-450 font-bold">THIS PRODUCT IS CURRENTLY HIDDEN FROM CUSTOMERS</span>
+                                <span className="text-rose-600 dark:text-rose-450 font-bold">This product is currently hidden from customers</span>
                             </>
                         )}
                     </p>
@@ -196,14 +203,18 @@ export default function BasicInfo({
             </div>
 
             {/* Row 5: Safety Toggle */}
-            <div className={`p-4 rounded-2xl border-2 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${formData.is_prescription_required ? 'bg-rose-50/40 border-rose-100/70 shadow-md shadow-rose-50/10' : 'bg-cureza-green-50/20 border-cureza-green-100/20'}`}>
+            <div className={`p-4 ${isSuperAdmin ? 'rounded-[10px] border-[0.5px]' : 'rounded-2xl border-2 shadow-sm'} transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                formData.is_prescription_required 
+                    ? (isSuperAdmin ? 'bg-rose-50/20 border-rose-200/30' : 'bg-rose-50/40 border-rose-100/70') 
+                    : (isSuperAdmin ? 'bg-neutral-50/50 border-neutral-950/15' : 'bg-cureza-green-50/20 border-cureza-green-100/20')
+            }`}>
                 <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-sm ${formData.is_prescription_required ? 'bg-white text-rose-500 border border-rose-100' : 'bg-white text-cureza-green border border-cureza-green-100/30'}`}>
+                    <div className={`w-10 h-10 ${isSuperAdmin ? 'rounded-lg border-[0.5px] border-neutral-950/15 bg-white text-black' : 'rounded-xl shadow-sm bg-white text-cureza-green border border-cureza-green-100/30'} flex items-center justify-center`}>
                         <Info size={18} />
                     </div>
                     <div>
-                        <h4 className="font-outfit font-bold text-gray-900 dark:text-gray-100 text-sm uppercase tracking-tight">Prescription Necessary?</h4>
-                        <p className={`text-[11px] font-semibold mt-0.5 ${formData.is_prescription_required ? 'text-rose-600 dark:text-rose-450' : 'text-cureza-green'}`}>
+                        <h4 className="font-outfit font-bold text-gray-900 dark:text-gray-100 text-sm capitalize tracking-tight">Prescription Necessary?</h4>
+                        <p className={`text-[11px] font-semibold mt-0.5 ${formData.is_prescription_required ? 'text-rose-600 dark:text-rose-450' : (isSuperAdmin ? 'text-neutral-500' : 'text-cureza-green')}`}>
                             {formData.is_prescription_required
                                 ? "Critical: Customers MUST upload a verified doctor prescription to buy."
                                 : "No prescription required for this item."}

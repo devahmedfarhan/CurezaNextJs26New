@@ -59,16 +59,16 @@ interface Stats {
 // Badge component for change type
 const ChangeTypeBadge = ({ type }: { type: string }) => {
     const config = {
-        create: { bg: 'bg-green-100', text: 'text-green-700', icon: Plus, label: 'New Product' },
-        edit: { bg: 'bg-blue-100', text: 'text-blue-700', icon: Edit, label: 'Edit Request' },
-        delete: { bg: 'bg-red-100', text: 'text-red-700', icon: Trash2, label: 'Delete Request' },
-    }[type] || { bg: 'bg-gray-100', text: 'text-gray-700', icon: AlertCircle, label: type };
+        create: { bg: 'bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400 border-green-200/30', icon: Plus, label: 'New Product' },
+        edit: { bg: 'bg-neutral-50 dark:bg-gray-850 text-neutral-800 dark:text-neutral-200 border-neutral-250/20', icon: Edit, label: 'Edit Request' },
+        delete: { bg: 'bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-400 border-red-200/30', icon: Trash2, label: 'Delete Request' },
+    }[type] || { bg: 'bg-neutral-50 dark:bg-gray-850 text-neutral-800 dark:text-neutral-200 border-neutral-250/20', icon: AlertCircle, label: type };
 
     const Icon = config.icon;
 
     return (
-        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${config.bg} ${config.text}`}>
-            <Icon size={12} />
+        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px] font-bold ${config.bg}`}>
+            <Icon size={11} />
             {config.label}
         </span>
     );
@@ -183,65 +183,65 @@ export default function ChangeRequestsPage() {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 animate-in fade-in duration-550">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-[0.5px] border-neutral-950/15 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 rounded-[10px]">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Change Requests</h1>
-                    <p className="text-gray-500">Review and approve seller product changes</p>
+                    <h1 className="text-2xl font-black text-gray-900 dark:text-white">Change Requests</h1>
+                    <p className="text-xs text-gray-500 mt-0.5">Review and approve seller product changes</p>
                 </div>
                 <Link
                     href="/superadmin/dashboard/products"
-                    className="text-sm text-cureza-green hover:underline flex items-center gap-1"
+                    className="text-xs font-bold text-black dark:text-white hover:underline flex items-center gap-1"
                 >
-                    <ChevronLeft size={16} /> Back to Products
+                    <ChevronLeft size={14} /> Back to Products
                 </Link>
             </div>
 
             {/* Stats Cards */}
             {stats && (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="bg-white rounded-xl border border-gray-200 p-4">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-4">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-yellow-100 rounded-lg">
-                                <Clock className="text-yellow-600" size={20} />
+                            <div className="p-2 bg-neutral-100 dark:bg-gray-800 rounded-md text-neutral-600 dark:text-neutral-400">
+                                <Clock size={16} />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-gray-900">{stats.pending}</p>
-                                <p className="text-xs text-gray-500">Total Pending</p>
+                                <p className="text-xl font-black text-gray-900 dark:text-white">{stats.pending}</p>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Total Pending</p>
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white rounded-xl border border-gray-200 p-4">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-4">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-green-100 rounded-lg">
-                                <Plus className="text-green-600" size={20} />
+                            <div className="p-2 bg-neutral-100 dark:bg-gray-800 rounded-md text-neutral-600 dark:text-neutral-400">
+                                <Plus size={16} />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-gray-900">{stats.pending_create}</p>
-                                <p className="text-xs text-gray-500">New Products</p>
+                                <p className="text-xl font-black text-gray-900 dark:text-white">{stats.pending_create}</p>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">New Products</p>
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white rounded-xl border border-gray-200 p-4">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-4">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-blue-100 rounded-lg">
-                                <Edit className="text-blue-600" size={20} />
+                            <div className="p-2 bg-neutral-100 dark:bg-gray-800 rounded-md text-neutral-600 dark:text-neutral-400">
+                                <Edit size={16} />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-gray-900">{stats.pending_edit}</p>
-                                <p className="text-xs text-gray-500">Edit Requests</p>
+                                <p className="text-xl font-black text-gray-900 dark:text-white">{stats.pending_edit}</p>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Edit Requests</p>
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white rounded-xl border border-gray-200 p-4">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-4">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-red-100 rounded-lg">
-                                <Trash2 className="text-red-600" size={20} />
+                            <div className="p-2 bg-neutral-100 dark:bg-gray-800 rounded-md text-neutral-600 dark:text-neutral-400">
+                                <Trash2 size={16} />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-gray-900">{stats.pending_delete}</p>
-                                <p className="text-xs text-gray-500">Delete Requests</p>
+                                <p className="text-xl font-black text-gray-900 dark:text-white">{stats.pending_delete}</p>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Delete Requests</p>
                             </div>
                         </div>
                     </div>
@@ -249,14 +249,14 @@ export default function ChangeRequestsPage() {
             )}
 
             {/* Filters */}
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col sm:flex-row gap-4">
+            <div className="bg-white dark:bg-gray-900 p-4 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 flex flex-col sm:flex-row gap-4">
                 <div className="relative flex-1">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Search className="h-5 w-5 text-gray-400" />
+                        <Search className="h-4 w-4 text-gray-400" />
                     </div>
                     <input
                         type="text"
-                        className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-gray-50 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-1 focus:ring-cureza-green focus:border-cureza-green sm:text-sm"
+                        className="block w-full pl-9 pr-3 py-2 border-[0.5px] border-neutral-950/15 dark:border-gray-700 rounded-lg bg-gray-50/50 dark:bg-gray-800/35 placeholder-gray-400 focus:outline-none focus:bg-white dark:focus:bg-gray-900 focus:ring-[1.5px] focus:ring-black/10 focus:border-black dark:focus:ring-white/10 dark:focus:border-white text-xs"
                         placeholder="Search by product or seller..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -268,7 +268,7 @@ export default function ChangeRequestsPage() {
                         setTypeFilter(e.target.value);
                         setCurrentPage(1);
                     }}
-                    className="px-3 py-2 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-cureza-green text-sm"
+                    className="px-3 py-2 border-[0.5px] border-neutral-950/15 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 focus:outline-none focus:ring-[1.5px] focus:ring-black/10 text-xs cursor-pointer font-medium"
                 >
                     <option value="">All Types</option>
                     <option value="create">New Products</option>
@@ -278,87 +278,87 @@ export default function ChangeRequestsPage() {
             </div>
 
             {/* Change Requests Table */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 overflow-hidden">
                 {loading ? (
                     <div className="p-12 flex justify-center">
-                        <Loader2 className="animate-spin text-cureza-green" size={32} />
+                        <Loader2 className="animate-spin text-black dark:text-white" size={24} />
                     </div>
                 ) : filteredRequests.length === 0 ? (
-                    <div className="p-12 text-center text-gray-500">
-                        <Clock size={48} className="mx-auto mb-4 text-gray-300" />
-                        <p className="font-medium">No pending change requests</p>
-                        <p className="text-sm mt-1">All seller requests have been reviewed</p>
+                    <div className="p-12 text-center text-gray-550 dark:text-gray-400">
+                        <Clock size={40} className="mx-auto mb-3 text-gray-300 dark:text-gray-700" />
+                        <p className="font-bold text-sm">No Pending Change Requests</p>
+                        <p className="text-xs text-gray-400 mt-0.5">All seller requests have been reviewed.</p>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
+                        <table className="min-w-full divide-y divide-neutral-950/10 dark:divide-gray-800">
+                            <thead className="bg-neutral-50/50 dark:bg-gray-850/50">
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seller</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Submitted</th>
-                                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 tracking-wider">Product</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 tracking-wider">Seller</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 tracking-wider">Type</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 tracking-wider">Submitted</th>
+                                    <th className="px-6 py-4 text-right text-xs font-semibold text-gray-500 tracking-wider">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
+                            <tbody className="bg-white dark:bg-gray-900 divide-y divide-neutral-950/5 dark:divide-gray-850 text-xs">
                                 {filteredRequests.map((request) => (
-                                    <tr key={request.id} className="hover:bg-gray-50">
+                                    <tr key={request.id} className="hover:bg-neutral-50/50 dark:hover:bg-gray-850/30 transition-colors">
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
-                                                <div className="h-10 w-10 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
+                                                <div className="h-10 w-10 shrink-0 bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-neutral-950/10 rounded-lg overflow-hidden flex items-center justify-center text-gray-400">
                                                     {request.product?.image ? (
                                                         <img src={getImageUrl(request.product.image)} alt="" className="w-full h-full object-cover" />
                                                     ) : (
-                                                        <div className="w-full h-full flex items-center justify-center text-gray-400">📦</div>
+                                                        <div className="w-full h-full flex items-center justify-center text-xs">📦</div>
                                                     )}
                                                 </div>
-                                                <div className="ml-4">
-                                                    <div className="text-sm font-medium text-gray-900">{request.product?.title || 'Unknown Product'}</div>
-                                                    <div className="text-xs text-gray-500">
+                                                <div className="ml-4 min-w-0">
+                                                    <div className="text-gray-950 dark:text-gray-100 font-bold truncate max-w-[200px]">{request.product?.title || 'Unknown Product'}</div>
+                                                    <div className="text-[9px] text-gray-450 dark:text-gray-400 font-medium">
                                                         {request.product?.brand?.name} • ₹{request.product?.price}
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-900">{request.seller?.name}</div>
-                                            <div className="text-xs text-gray-500">{request.seller?.email}</div>
+                                        <td className="px-6 py-4 whitespace-nowrap text-gray-650 dark:text-gray-300 font-medium">
+                                            <div>{request.seller?.name}</div>
+                                            <div className="text-[10px] text-gray-400">{request.seller?.email}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <ChangeTypeBadge type={request.change_type} />
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <td className="px-6 py-4 whitespace-nowrap text-gray-500">
                                             {formatDate(request.created_at)}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right">
-                                            <div className="flex items-center justify-end gap-2">
+                                            <div className="flex items-center justify-end gap-1.5">
                                                 <Link
                                                     href={`/superadmin/dashboard/products/change-requests/${request.id}`}
-                                                    className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                    className="p-1.5 text-gray-400 hover:text-black hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
                                                     title="View Details"
                                                 >
-                                                    <Eye size={18} />
+                                                    <Eye size={14} />
                                                 </Link>
                                                 <button
                                                     onClick={() => handleApprove(request.id)}
                                                     disabled={processingId === request.id}
-                                                    className="p-1.5 text-green-600 hover:bg-green-50 rounded-lg transition-colors disabled:opacity-50"
+                                                    className="p-1.5 text-green-600 hover:bg-green-50 dark:hover:bg-green-950/20 rounded-md transition-colors disabled:opacity-50"
                                                     title="Approve"
                                                 >
                                                     {processingId === request.id ? (
-                                                        <Loader2 size={18} className="animate-spin" />
+                                                        <Loader2 size={14} className="animate-spin" />
                                                     ) : (
-                                                        <Check size={18} />
+                                                        <Check size={14} />
                                                     )}
                                                 </button>
                                                 <button
                                                     onClick={() => openRejectModal(request)}
                                                     disabled={processingId === request.id}
-                                                    className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                                                    className="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-md transition-colors disabled:opacity-50"
                                                     title="Reject"
                                                 >
-                                                    <X size={18} />
+                                                    <X size={14} />
                                                 </button>
                                             </div>
                                         </td>
@@ -371,24 +371,24 @@ export default function ChangeRequestsPage() {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                    <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-                        <p className="text-sm text-gray-500">
+                    <div className="px-6 py-4 border-t border-neutral-950/10 dark:border-gray-800 flex items-center justify-between">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">
                             Page {currentPage} of {totalPages}
                         </p>
                         <div className="flex gap-2">
                             <button
                                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                 disabled={currentPage === 1}
-                                className="px-3 py-1 border border-gray-300 rounded-lg text-sm disabled:opacity-50 hover:bg-gray-50"
+                                className="p-1.5 border border-neutral-950/15 dark:border-gray-700 rounded-lg disabled:opacity-50 hover:bg-neutral-50 dark:hover:bg-gray-850"
                             >
-                                <ChevronLeft size={16} />
+                                <ChevronLeft size={14} />
                             </button>
                             <button
                                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                 disabled={currentPage === totalPages}
-                                className="px-3 py-1 border border-gray-300 rounded-lg text-sm disabled:opacity-50 hover:bg-gray-50"
+                                className="p-1.5 border border-neutral-950/15 dark:border-gray-700 rounded-lg disabled:opacity-50 hover:bg-neutral-50 dark:hover:bg-gray-850"
                             >
-                                <ChevronRight size={16} />
+                                <ChevronRight size={14} />
                             </button>
                         </div>
                     </div>
@@ -397,36 +397,36 @@ export default function ChangeRequestsPage() {
 
             {/* Reject Modal */}
             {rejectModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-                    <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-xl">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-sm animate-in fade-in duration-300">
+                    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-850 rounded-[10px] p-6 max-w-md w-full mx-4 shadow-2xl animate-in zoom-in-95 duration-200">
                         <div className="flex items-center gap-3 mb-4">
-                            <div className="p-2 bg-red-100 rounded-full">
-                                <X className="text-red-600" size={24} />
+                            <div className="p-2 bg-red-50 rounded-md text-red-600">
+                                <X size={20} />
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900">Reject Change Request</h3>
+                            <h3 className="text-base font-extrabold text-gray-900 dark:text-white">Reject Change Request</h3>
                         </div>
-                        <p className="text-gray-600 mb-4">
+                        <p className="text-xs text-gray-500 leading-relaxed mb-4">
                             Rejecting <strong>{requestToReject?.change_type}</strong> request for <strong>"{requestToReject?.product?.title}"</strong>
                         </p>
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
                                 Rejection Reason <span className="text-red-500">*</span>
                             </label>
                             <textarea
                                 value={rejectReason}
                                 onChange={(e) => setRejectReason(e.target.value)}
                                 placeholder="Provide a reason for rejection..."
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 min-h-[100px]"
+                                className="w-full px-3 py-2 border-[0.5px] border-neutral-950/15 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-[1.5px] focus:ring-black/10 focus:border-black dark:focus:ring-white/10 dark:focus:border-white text-xs min-h-[100px] resize-none leading-relaxed"
                             />
                         </div>
-                        <div className="flex gap-3 justify-end">
+                        <div className="flex gap-3 justify-end text-xs">
                             <button
                                 onClick={() => {
                                     setRejectModalOpen(false);
                                     setRequestToReject(null);
                                     setRejectReason('');
                                 }}
-                                className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                                className="px-4 py-2 text-gray-750 dark:text-gray-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg transition-colors cursor-pointer"
                                 disabled={processingId !== null}
                             >
                                 Cancel
@@ -434,9 +434,9 @@ export default function ChangeRequestsPage() {
                             <button
                                 onClick={handleReject}
                                 disabled={!rejectReason.trim() || processingId !== null}
-                                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+                                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-2 cursor-pointer"
                             >
-                                {processingId && <Loader2 size={16} className="animate-spin" />}
+                                {processingId && <Loader2 size={12} className="animate-spin" />}
                                 Reject Request
                             </button>
                         </div>

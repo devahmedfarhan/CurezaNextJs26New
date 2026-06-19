@@ -50,7 +50,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     }
 
     return (
-        <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
+        <div className="w-full space-y-6">
             <ProductForm key={product.id} isSuperAdmin={true} initialData={product} />
         </div>
     );

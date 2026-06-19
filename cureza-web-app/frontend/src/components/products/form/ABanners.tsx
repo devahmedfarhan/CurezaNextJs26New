@@ -4,31 +4,33 @@ import { getImageUrl } from '@/lib/imageHelper';
 interface ABannersProps {
     banners: { desktop: File | string | null; mobile: File | string | null }[];
     handleBannerChange: (index: number, type: 'desktop' | 'mobile', file: File | null) => void;
+    isSuperAdmin?: boolean;
 }
 
-export default function ABanners({ banners, handleBannerChange }: ABannersProps) {
+export default function ABanners({ banners, handleBannerChange, isSuperAdmin }: ABannersProps) {
+    const roundedClass = isSuperAdmin ? 'rounded-[10px]' : 'rounded-xl';
 
     return (
-        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-6">
+        <div className={`p-6 ${roundedClass} border ${isSuperAdmin ? 'border-neutral-950/15 bg-white dark:bg-gray-900 shadow-none' : 'border-gray-200 bg-white dark:bg-gray-900 shadow-sm'} space-y-6`}>
             <div>
-                <h3 className="text-lg font-bold text-gray-900">A+ Listing Banners</h3>
-                <p className="text-sm text-gray-500">Enhanced rich media content. Max 3 sections.</p>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">A+ Listing Banners</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Enhanced rich media content. Max 3 sections.</p>
             </div>
 
             <div className="space-y-6">
                 {[0, 1, 2].map((index) => (
-                    <div key={index} className="p-5 border border-gray-200 rounded-xl bg-gray-50 relative">
-                        <span className="absolute -top-3 -left-3 w-8 h-8 flex items-center justify-center bg-gray-900 text-white rounded-full text-sm font-bold shadow-sm">
+                    <div key={index} className={`p-5 border ${isSuperAdmin ? 'border-neutral-950/15 rounded-lg bg-neutral-50/50 dark:bg-gray-800/10' : 'border-gray-200 rounded-xl bg-gray-50'} relative`}>
+                        <span className={`absolute -top-3 -left-3 w-8 h-8 flex items-center justify-center bg-gray-900 text-white ${isSuperAdmin ? 'rounded-md shadow-none border-[0.5px] border-neutral-950/15' : 'rounded-full shadow-sm'} text-sm font-bold`}>
                             {index + 1}
                         </span>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
                             {/* Desktop */}
                             <div>
-                                <div className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
+                                <div className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                                     <Monitor size={16} /> Desktop Banner
                                 </div>
-                                <div className="relative group border-2 border-dashed border-gray-300 bg-white rounded-lg h-32 flex items-center justify-center overflow-hidden hover:border-blue-500 transition-colors">
+                                <div className={`relative group border-2 border-dashed ${isSuperAdmin ? 'border-neutral-300 hover:border-black' : 'border-gray-300 hover:border-blue-500'} bg-white dark:bg-gray-900 rounded-lg h-32 flex items-center justify-center overflow-hidden transition-colors`}>
                                     {banners[index]?.desktop ? (
                                         <>
                                             <img
@@ -70,10 +72,10 @@ export default function ABanners({ banners, handleBannerChange }: ABannersProps)
 
                             {/* Mobile */}
                             <div>
-                                <div className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700">
+                                <div className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                                     <Smartphone size={16} /> Mobile Banner
                                 </div>
-                                <div className="relative group border-2 border-dashed border-gray-300 bg-white rounded-lg h-32 w-full md:w-3/4 flex items-center justify-center overflow-hidden hover:border-blue-500 transition-colors mx-auto">
+                                <div className={`relative group border-2 border-dashed ${isSuperAdmin ? 'border-neutral-300 hover:border-black' : 'border-gray-300 hover:border-blue-500'} bg-white dark:bg-gray-900 rounded-lg h-32 w-full md:w-3/4 flex items-center justify-center overflow-hidden transition-colors mx-auto`}>
                                     {banners[index]?.mobile ? (
                                         <>
                                             <img

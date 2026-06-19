@@ -166,6 +166,10 @@ html {
   overflow-y: scroll;
 }
 
+body[data-radix-scroll-locked] {
+  padding-right: 0px !important;
+}
+
 body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;

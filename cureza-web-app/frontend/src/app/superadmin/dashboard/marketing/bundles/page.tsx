@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
-import { Plus, Trash2, Edit, Package, Search, X, Check, Eye } from 'lucide-react';
+import { Plus, Trash2, Edit, Package, Search, X, Check, Eye, HelpCircle } from 'lucide-react';
 import { useToast } from '@/contexts/ToastContext';
 
 export default function BundlesPage() {
@@ -202,23 +202,23 @@ export default function BundlesPage() {
     );
 
     return (
-        <div className="p-6 space-y-8 max-w-7xl mx-auto">
+        <div className="space-y-6 pb-12">
             {/* Header */}
-            <div className="flex justify-between items-center bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                <div>
-                    <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Bundle Offers</h1>
-                    <p className="text-gray-500 mt-1">Configure 'Frequently Bought Together' promotional deals</p>
+            <div className="flex justify-between items-center bg-white p-6 rounded-[10px] border-[0.35px] border-neutral-950/10">
+                <div className="space-y-1.5">
+                    <h1 className="text-xl font-semibold text-gray-900 tracking-tight">Bundle Offers</h1>
+                    <p className="text-xs text-gray-500 font-normal">Configure 'Frequently Bought Together' promotional deals</p>
                 </div>
                 <button
                     onClick={() => {
                         if (isCreating) resetForm();
                         else setIsCreating(true);
                     }}
-                    className="flex items-center gap-2 bg-cureza-green text-white px-5 py-2.5 rounded-xl hover:bg-green-700 transition-all font-bold shadow-sm"
+                    className="flex items-center gap-2 bg-black text-white px-4 py-2.5 rounded-[10px] hover:bg-neutral-900 transition-all font-medium text-xs"
                 >
                     {isCreating ? 'Cancel' : (
                         <>
-                            <Plus size={18} />
+                            <Plus size={14} />
                             <span>Create New Bundle</span>
                         </>
                     )}
@@ -227,35 +227,35 @@ export default function BundlesPage() {
 
             {/* Creation / Editing Form */}
             {isCreating && (
-                <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-lg space-y-6 animate-in fade-in slide-in-from-top-4 duration-300">
-                    <div className="flex justify-between items-center border-b border-gray-100 pb-4">
-                        <h3 className="font-extrabold text-xl text-gray-900">
+                <div className="bg-white p-6 rounded-[10px] border-[0.35px] border-neutral-950/10 space-y-6 animate-in fade-in slide-in-from-top-4 duration-300">
+                    <div className="flex justify-between items-center border-b-[0.35px] border-neutral-950/10 pb-4">
+                        <h3 className="font-semibold text-base text-gray-900">
                             {isEditing ? 'Edit Bundle Offer' : 'Create New Bundle Offer'}
                         </h3>
-                        <button onClick={resetForm} className="text-gray-400 hover:text-gray-600 p-1.5 hover:bg-gray-50 rounded-lg">
-                            <X size={18} />
+                        <button onClick={resetForm} className="text-gray-400 hover:text-gray-600 p-1.5 hover:bg-neutral-50 rounded-lg">
+                            <X size={16} />
                         </button>
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {/* Main Product Selection with local search */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-bold text-gray-700">Main Product (Primary Item)</label>
+                            <label className="block text-xs font-medium text-gray-700">Main Product (Primary Item)</label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                                    <Search size={16} />
+                                    <Search size={14} />
                                 </div>
                                 <input
                                     type="text"
                                     placeholder="Search main product..."
-                                    className="pl-9 pr-4 py-2 w-full border border-gray-200 rounded-xl focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green text-sm"
+                                    className="pl-9 pr-4 py-2 w-full border-[0.35px] border-neutral-950/10 rounded-[10px] focus:border-black text-xs font-normal outline-none"
                                     value={mainSearch}
                                     onChange={e => setMainSearch(e.target.value)}
                                 />
                             </div>
                             <select
                                 size={4}
-                                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm max-h-40 focus:outline-none focus:ring-2 focus:ring-cureza-green/20"
+                                className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 text-xs max-h-40 focus:outline-none focus:border-black bg-white"
                                 value={formData.main_product_id}
                                 onChange={e => {
                                     setFormData({ ...formData, main_product_id: e.target.value });
@@ -271,7 +271,7 @@ export default function BundlesPage() {
                                 ))}
                             </select>
                             {formData.main_product_id && (
-                                <div className="text-xs text-cureza-green font-bold bg-green-50/50 p-2 rounded-lg border border-green-100 flex items-center gap-1.5">
+                                <div className="text-xs text-neutral-800 font-medium bg-neutral-50/50 p-2 rounded-[10px] border-[0.35px] border-neutral-950/10 flex items-center gap-1.5">
                                     <Check size={14} /> Selected: {getProductTitle(formData.main_product_id)}
                                 </div>
                             )}
@@ -279,22 +279,22 @@ export default function BundlesPage() {
 
                         {/* Bundled Product Selection (Supports multiple add-ons) */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-bold text-gray-700">Add-on Item(s) (Discounted Bundled Products)</label>
+                            <label className="block text-xs font-medium text-gray-700">Add-on Item(s) (Discounted Bundled Products)</label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                                    <Search size={16} />
+                                    <Search size={14} />
                                 </div>
                                 <input
                                     type="text"
                                     placeholder="Search add-on products..."
-                                    className="pl-9 pr-4 py-2 w-full border border-gray-200 rounded-xl focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green text-sm"
+                                    className="pl-9 pr-4 py-2 w-full border-[0.35px] border-neutral-950/10 rounded-[10px] focus:border-black text-xs font-normal outline-none"
                                     value={bundledSearch}
                                     onChange={e => setBundledSearch(e.target.value)}
                                 />
                             </div>
                             <select
                                 size={4}
-                                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm max-h-40 focus:outline-none focus:ring-2 focus:ring-cureza-green/20"
+                                className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 text-xs max-h-40 focus:outline-none focus:border-black bg-white"
                                 onChange={e => {
                                     addBundledId(e.target.value);
                                     // Reset dropdown value
@@ -312,20 +312,20 @@ export default function BundlesPage() {
 
                             {/* Selected Bundle Items Badge List */}
                             <div className="space-y-1.5 mt-3">
-                                <span className="block text-xs font-bold text-gray-400 uppercase tracking-wide">Selected Add-ons ({selectedBundledIds.length})</span>
+                                <span className="block text-[10px] font-medium text-gray-500 tracking-normal uppercase">Selected Add-ons ({selectedBundledIds.length})</span>
                                 {selectedBundledIds.length === 0 ? (
-                                    <div className="text-xs text-gray-400 bg-gray-50 p-3 rounded-xl border border-dashed text-center">
+                                    <div className="text-xs text-gray-400 bg-neutral-50/50 p-3 rounded-[10px] border-[0.35px] border-dashed border-neutral-950/10 text-center">
                                         No items added. Click products in list to add them.
                                     </div>
                                 ) : (
                                     <div className="flex flex-wrap gap-2 pt-1">
                                         {selectedBundledIds.map(id => (
-                                            <div key={id} className="inline-flex items-center gap-1.5 bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-1 rounded-xl text-xs font-bold">
+                                            <div key={id} className="inline-flex items-center gap-1.5 bg-neutral-50 border-[0.35px] border-neutral-950/10 text-neutral-800 px-3 py-1 rounded-[10px] text-xs font-medium">
                                                 <span>{getProductTitle(id)}</span>
                                                 <button
                                                     type="button"
                                                     onClick={() => removeBundledId(id)}
-                                                    className="text-indigo-400 hover:text-indigo-600 p-0.5 rounded-full hover:bg-indigo-100"
+                                                    className="text-gray-450 hover:text-black p-0.5 rounded-full hover:bg-neutral-100"
                                                 >
                                                     <X size={12} />
                                                 </button>
@@ -338,24 +338,24 @@ export default function BundlesPage() {
 
                         {/* Discount parameters */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-bold text-gray-700">Bundle Discount Percentage (%)</label>
+                            <label className="block text-xs font-medium text-gray-700">Bundle Discount Percentage (%)</label>
                             <input
                                 type="number"
                                 min="1"
                                 max="100"
-                                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-cureza-green/20 text-sm"
+                                className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-4 py-2.5 focus:border-black text-xs font-normal outline-none"
                                 value={formData.discount_percentage}
                                 onChange={e => setFormData({ ...formData, discount_percentage: parseInt(e.target.value) || 1 })}
                             />
-                            <p className="text-xs text-gray-400">Discount will be applied to the add-on products in this bundle</p>
+                            <p className="text-[10px] text-gray-500 font-normal">Discount will be applied to the add-on products in this bundle</p>
                         </div>
 
                         {/* Title */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-bold text-gray-700">Bundle Title (Marketing Tagline)</label>
+                            <label className="block text-xs font-medium text-gray-700">Bundle Title (Marketing Tagline)</label>
                             <input
                                 type="text"
-                                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-cureza-green/20 text-sm"
+                                className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-4 py-2.5 focus:border-black text-xs font-normal outline-none"
                                 placeholder="e.g. Double Cleanse Kit, Skincare Duo"
                                 value={formData.title}
                                 onChange={e => setFormData({ ...formData, title: e.target.value })}
@@ -369,24 +369,25 @@ export default function BundlesPage() {
                                 id="form_is_active"
                                 checked={formData.is_active}
                                 onChange={e => setFormData({ ...formData, is_active: e.target.checked })}
-                                className="rounded text-cureza-green focus:ring-cureza-green h-4 w-4 border-gray-300"
+                                className="rounded text-black focus:ring-black h-4 w-4 border-neutral-950/20"
+                                style={{ borderRadius: '4px' }}
                             />
-                            <label htmlFor="form_is_active" className="text-sm font-bold text-gray-700 cursor-pointer">
+                            <label htmlFor="form_is_active" className="text-xs font-medium text-gray-700 cursor-pointer">
                                 Mark bundle offer active immediately
                             </label>
                         </div>
                     </div>
 
-                    <div className="flex justify-end gap-3 border-t border-gray-100 pt-4 mt-6">
+                    <div className="flex justify-end gap-3 border-t-[0.35px] border-neutral-950/10 pt-4 mt-6">
                         <button
                             onClick={resetForm}
-                            className="bg-gray-100 text-gray-700 px-5 py-2.5 rounded-xl font-bold hover:bg-gray-200 transition-colors text-sm"
+                            className="bg-neutral-50 border-[0.35px] border-neutral-950/10 text-gray-750 px-5 py-2.5 rounded-[10px] font-medium hover:bg-neutral-100 transition-colors text-xs"
                         >
                             Cancel
                         </button>
                         <button
                             onClick={handleSave}
-                            className="bg-cureza-green text-white px-6 py-2.5 rounded-xl font-bold hover:bg-green-700 transition-colors text-sm shadow-sm"
+                            className="bg-black text-white px-5 py-2.5 rounded-[10px] font-medium hover:bg-neutral-900 transition-colors text-xs"
                         >
                             {isEditing ? 'Update Bundle' : 'Save Bundle'}
                         </button>
@@ -396,22 +397,22 @@ export default function BundlesPage() {
 
             {/* Bundles Grid */}
             {loading ? (
-                <div className="flex flex-col items-center justify-center py-24 text-gray-500 space-y-3 bg-white rounded-2xl border border-gray-100 shadow-sm">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cureza-green"></div>
-                    <span className="text-sm font-medium">Loading bundle promotions...</span>
+                <div className="flex flex-col items-center justify-center py-24 text-gray-500 space-y-3 bg-white rounded-[10px] border-[0.35px] border-neutral-950/10">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+                    <span className="text-xs font-medium">Loading bundle promotions...</span>
                 </div>
             ) : bundles.length === 0 ? (
-                <div className="text-center py-20 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-                    <Package className="mx-auto h-16 w-16 text-gray-300 mb-4" />
-                    <h3 className="text-xl font-bold text-gray-900">No active bundles found</h3>
-                    <p className="text-gray-500 mt-1 max-w-sm mx-auto text-sm">
+                <div className="text-center py-20 bg-neutral-50 rounded-[10px] border-[0.35px] border-dashed border-neutral-950/10">
+                    <Package className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                    <h3 className="text-sm font-semibold text-gray-900">No active bundles found</h3>
+                    <p className="text-gray-500 mt-1 max-w-sm mx-auto text-xs font-normal">
                         Create bundles combining your main catalog items with matching add-on accessories at a discount.
                     </p>
                     <button
                         onClick={() => setIsCreating(true)}
-                        className="mt-6 inline-flex items-center gap-2 bg-cureza-green text-white px-5 py-2.5 rounded-xl hover:bg-green-700 transition-all font-bold text-sm shadow-sm"
+                        className="mt-6 inline-flex items-center gap-2 bg-black text-white px-4 py-2.5 rounded-[10px] hover:bg-neutral-900 transition-all font-medium text-xs"
                     >
-                        <Plus size={16} /> Create Bundle
+                        <Plus size={14} /> Create Bundle
                     </button>
                 </div>
             ) : (
@@ -421,53 +422,53 @@ export default function BundlesPage() {
                         return (
                             <div 
                                 key={bundle.id} 
-                                className="bg-white border border-gray-100 shadow-sm rounded-2xl overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col justify-between group"
+                                className="bg-white border-[0.35px] border-neutral-950/10 rounded-[10px] overflow-hidden hover:border-black transition-all duration-300 flex flex-col justify-between group"
                             >
                                 <div className="p-6 space-y-4">
                                     {/* Card header */}
                                     <div className="flex justify-between items-start">
-                                        <span className="inline-flex items-center rounded-lg bg-green-50 px-2.5 py-1 text-xs font-bold text-green-700 border border-green-100">
+                                        <span className="inline-flex items-center rounded-[10px] bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-800 border-[0.35px] border-neutral-950/10">
                                             {bundle.discount_percentage}% OFF Add-ons
                                         </span>
                                         <div className="flex gap-1.5 opacity-60 group-hover:opacity-100 transition-opacity">
                                             <button 
                                                 onClick={() => handleEdit(bundle)}
-                                                className="text-gray-400 hover:text-blue-600 p-1.5 hover:bg-blue-50 rounded-lg transition-colors"
+                                                className="text-gray-400 hover:text-black p-1.5 hover:bg-neutral-50 rounded-lg transition-colors border-[0.35px] border-transparent hover:border-neutral-950/10"
                                                 title="Edit bundle"
                                             >
-                                                <Edit size={16} />
+                                                <Edit size={14} />
                                             </button>
                                             <button 
                                                 onClick={() => handleDelete(bundle.id)}
-                                                className="text-gray-400 hover:text-red-600 p-1.5 hover:bg-red-50 rounded-lg transition-colors"
+                                                className="text-gray-400 hover:text-rose-600 p-1.5 hover:bg-rose-50 rounded-lg transition-colors border-[0.35px] border-transparent hover:border-rose-500/10"
                                                 title="Delete bundle"
                                             >
-                                                <Trash2 size={16} />
+                                                <Trash2 size={14} />
                                             </button>
                                         </div>
                                     </div>
 
                                     {/* Titles */}
                                     <div>
-                                        <h3 className="font-extrabold text-lg text-gray-900 group-hover:text-cureza-green transition-colors">
+                                        <h3 className="font-medium text-sm text-gray-900 group-hover:text-black transition-colors leading-tight">
                                             {bundle.title || 'Untitled Bundle Promo'}
                                         </h3>
-                                        <p className="text-xs text-gray-400 mt-1">ID: #{bundle.id} • Created {new Date(bundle.created_at || Date.now()).toLocaleDateString()}</p>
+                                        <p className="text-[10px] text-gray-500 mt-1 font-normal">ID: #{bundle.id} • Created {new Date(bundle.created_at || Date.now()).toLocaleDateString()}</p>
                                     </div>
 
                                     {/* Products mapping details */}
-                                    <div className="space-y-3 bg-gray-50 p-4 rounded-xl border border-gray-100 text-sm">
+                                    <div className="space-y-3 bg-neutral-50/50 p-4 rounded-[10px] border-[0.35px] border-neutral-950/10 text-xs font-normal">
                                         <div>
-                                            <span className="text-xs font-bold text-gray-400 uppercase tracking-wide block">Primary Item</span>
-                                            <span className="font-bold text-gray-800 line-clamp-1 mt-0.5">{getProductTitle(bundle.main_product_id) || bundle.main_product?.title || `Product #${bundle.main_product_id}`}</span>
+                                            <span className="text-[10px] font-medium text-gray-500 uppercase tracking-normal block">Primary Item</span>
+                                            <span className="font-semibold text-gray-800 line-clamp-1 mt-0.5">{getProductTitle(bundle.main_product_id) || bundle.main_product?.title || `Product #${bundle.main_product_id}`}</span>
                                         </div>
                                         <div>
-                                            <span className="text-xs font-bold text-gray-400 uppercase tracking-wide block">Bundled Add-ons ({bundledIds.length})</span>
+                                            <span className="text-[10px] font-medium text-gray-500 uppercase tracking-normal block">Bundled Add-ons ({bundledIds.length})</span>
                                             <div className="space-y-1 mt-1">
                                                 {bundledIds.map((id: any) => (
-                                                    <div key={id} className="text-xs text-gray-600 flex justify-between items-center bg-white px-2.5 py-1 rounded-lg border border-gray-100">
-                                                        <span className="truncate font-semibold max-w-[180px]">{getProductTitle(id)}</span>
-                                                        {getProductPrice(id) && <span className="text-gray-400 shrink-0">₹{getProductPrice(id)}</span>}
+                                                    <div key={id} className="text-xs text-gray-600 flex justify-between items-center bg-white px-2.5 py-1 rounded-[10px] border-[0.35px] border-neutral-950/10">
+                                                        <span className="truncate font-medium max-w-[180px]">{getProductTitle(id)}</span>
+                                                        {getProductPrice(id) && <span className="text-gray-500 shrink-0 font-normal">₹{getProductPrice(id)}</span>}
                                                     </div>
                                                 ))}
                                             </div>
@@ -476,17 +477,17 @@ export default function BundlesPage() {
                                 </div>
 
                                 {/* Toggle Active Status footer */}
-                                <div className="border-t border-gray-50 px-6 py-4 bg-gray-50/50 flex justify-between items-center text-xs">
+                                <div className="border-t-[0.35px] border-neutral-950/10 px-6 py-4 bg-neutral-50/50 flex justify-between items-center text-xs">
                                     <span className="text-gray-400">Bundle Status</span>
                                     <button 
                                         onClick={() => handleToggleActive(bundle)}
-                                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-bold transition-all shadow-sm ${
+                                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-[10px] font-medium transition-all border-[0.35px] ${
                                             bundle.is_active 
-                                                ? 'bg-green-100 text-green-700 border border-green-200 hover:bg-green-200' 
-                                                : 'bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-200'
+                                                ? 'bg-emerald-50 text-emerald-700 border-emerald-500/10 hover:bg-emerald-100/50' 
+                                                : 'bg-neutral-50 text-gray-600 border-[0.35px] border-neutral-950/10 hover:bg-neutral-100'
                                         }`}
                                     >
-                                        <span className={`h-1.5 w-1.5 rounded-full ${bundle.is_active ? 'bg-green-600' : 'bg-gray-400'}`} />
+                                        <span className={`h-1.5 w-1.5 rounded-full ${bundle.is_active ? 'bg-emerald-600' : 'bg-gray-400'}`} />
                                         {bundle.is_active ? 'Active' : 'Inactive'}
                                     </button>
                                 </div>
@@ -495,6 +496,34 @@ export default function BundlesPage() {
                     })}
                 </div>
             )}
+
+            {/* Tutorial / Guidelines Section */}
+            <div className="bg-neutral-50 border-[0.35px] border-neutral-950/10 rounded-[10px] p-6 space-y-4">
+                <div className="flex items-center gap-2">
+                    <HelpCircle className="h-5 w-5 text-black" />
+                    <h3 className="text-sm font-semibold text-gray-900">How It Works & Guidelines | Bundle Offers Setup</h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-xs text-gray-600 leading-relaxed font-normal">
+                    <div className="space-y-2">
+                        <h4 className="font-medium text-gray-900">1. Select Primary & Add-on Products</h4>
+                        <p>
+                            Bundle banane ke liye sabse pehle ek "Main Product" select karein jo primary item hoga. Uske baad list se ek ya zyada "Add-on Items" choose karein jo customer ko sath me beche jayenge.
+                        </p>
+                    </div>
+                    <div className="space-y-2">
+                        <h4 className="font-medium text-gray-900">2. Discount Configuration</h4>
+                        <p>
+                            Bundle Discount Percentage (%) field me likha hua discount sirf Add-on products par apply hoga. Main product full price par rahega aur customer ko bundle package me add-ons saste padenge.
+                        </p>
+                    </div>
+                    <div className="space-y-2">
+                        <h4 className="font-medium text-gray-900">3. Checkout and Storefront Display</h4>
+                        <p>
+                            Jab customer product detail page par jayega, toh use "Frequently Bought Together" section me ye bundle aur uska total pricing dikhega. Customer single-click se pure bundle ko cart me add kar sakta hai.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

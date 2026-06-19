@@ -214,11 +214,9 @@ export default function AdminCustomersPage() {
     };
 
     const parseCSV = (text: string) => {
-        // Simple CSV parser supporting quotes
         const lines = text.split(/\r?\n/);
         if (lines.length === 0 || !lines[0].trim()) return [];
 
-        // Parse headers
         const headers = lines[0].split(',').map(h => h.trim().replace(/^["']|["']$/g, '').toLowerCase());
         const dataRows = [];
 
@@ -226,7 +224,6 @@ export default function AdminCustomersPage() {
             const line = lines[i].trim();
             if (!line) continue;
 
-            // Split line by comma, keeping track of values inside double quotes
             const values: string[] = [];
             let currentVal = '';
             let inQuotes = false;
@@ -265,19 +262,16 @@ export default function AdminCustomersPage() {
         const validatedRows = rows.map((row, idx) => {
             const rowErrors: string[] = [];
             
-            // Name Check
             if (!row.name) {
                 rowErrors.push('Name missing');
             }
 
-            // Email Check
             if (!row.email) {
                 rowErrors.push('Email missing');
             } else if (!row.email.includes('@')) {
                 rowErrors.push('Invalid email format');
             }
 
-            // Phone Check
             if (!row.phone) {
                 rowErrors.push('Phone missing');
             } else {
@@ -318,7 +312,7 @@ export default function AdminCustomersPage() {
                     name: c.name,
                     email: c.email,
                     phone: c.phone,
-                    password: c.password || undefined // backend creates random if empty
+                    password: c.password || undefined
                 }))
             };
 
@@ -352,8 +346,8 @@ export default function AdminCustomersPage() {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Customer Management</h1>
-                    <p className="text-gray-500 text-sm font-semibold uppercase tracking-wider mt-1">Directory of customers, order histories, and registration details.</p>
+                    <h1 className="text-xl font-semibold text-neutral-900 tracking-tight">Customer Management</h1>
+                    <p className="text-neutral-500 text-xs font-normal mt-1">Directory of customers, order histories, and registration details.</p>
                 </div>
                 <div className="flex flex-wrap gap-2.5">
                     <button
@@ -364,16 +358,16 @@ export default function AdminCustomersPage() {
                             setImportResult(null);
                             setIsBulkModalOpen(true);
                         }}
-                        className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl hover:bg-gray-50 transition-colors font-bold text-xs uppercase tracking-wider shadow-sm"
+                        className="flex items-center gap-2 bg-white border-[0.5px] border-neutral-950/15 text-neutral-850 px-4 py-2.5 rounded-[10px] hover:bg-neutral-50 transition-colors font-medium text-xs shadow-none"
                     >
-                        <Upload size={16} />
+                        <Upload size={14} />
                         Bulk Upload (CSV)
                     </button>
                     <button
                         onClick={() => handleOpenModal()}
-                        className="flex items-center gap-2 bg-cureza-green text-white px-5 py-2.5 rounded-xl hover:bg-green-700 transition-colors font-bold text-xs uppercase tracking-wider shadow-lg shadow-green-150"
+                        className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-[10px] hover:bg-neutral-900 transition-colors font-medium text-xs shadow-none"
                     >
-                        <Plus size={16} />
+                        <Plus size={14} />
                         Add Customer
                     </button>
                 </div>
@@ -381,30 +375,30 @@ export default function AdminCustomersPage() {
 
             {/* Bulk Actions Toolbar */}
             {selectedIds.size > 0 && (
-                <div className="bg-rose-50 border border-rose-100 p-4 rounded-2xl flex items-center justify-between shadow-sm animate-in slide-in-from-top-4 duration-300">
-                    <div className="flex items-center gap-2 text-rose-800 text-xs font-bold uppercase tracking-wider">
-                        <AlertCircle size={16} />
+                <div className="bg-red-50/50 border-[0.5px] border-red-200/50 p-4 rounded-[10px] flex items-center justify-between shadow-none animate-in slide-in-from-top-4 duration-300">
+                    <div className="flex items-center gap-2 text-red-700 text-xs font-medium">
+                        <AlertCircle size={14} />
                         {selectedIds.size} Customers selected
                     </div>
                     <button
                         onClick={handleBulkDelete}
-                        className="bg-red-650 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-colors shadow-sm"
+                        className="bg-red-600 hover:bg-red-755 text-white px-4 py-2 rounded-[10px] text-xs font-medium flex items-center gap-1.5 transition-colors shadow-none"
                     >
-                        <Trash2 size={14} />
+                        <Trash2 size={13} />
                         Delete Selected
                     </button>
                 </div>
             )}
 
             {/* Search Bar */}
-            <div className="bg-white p-4 rounded-3xl border border-gray-100 shadow-sm">
+            <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 shadow-none">
                 <div className="relative flex-1">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                        <Search className="h-4 w-4 text-gray-400" />
+                        <Search className="h-4 w-4 text-neutral-400" />
                     </div>
                     <input
                         type="text"
-                        className="block w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-cureza-green/10 focus:border-cureza-green outline-none w-full transition-all placeholder:font-semibold"
+                        className="block w-full pl-10 pr-4 py-2.5 border-[0.5px] border-neutral-950/15 rounded-[10px] text-xs font-normal focus:outline-none focus:ring-1 focus:ring-black focus:border-black w-full transition-all placeholder:text-neutral-400"
                         placeholder="Search by name, email or phone..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -413,95 +407,95 @@ export default function AdminCustomersPage() {
             </div>
 
             {/* Customers List */}
-            <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 shadow-none overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm">
-                        <thead className="bg-gray-50 border-b border-gray-100">
-                            <tr>
+                    <table className="w-full text-left text-xs">
+                        <thead className="bg-neutral-50/50 border-b border-neutral-950/5">
+                            <tr className="text-neutral-500 font-medium">
                                 <th scope="col" className="px-6 py-4 w-12 text-center">
                                     <input 
                                         type="checkbox"
-                                        className="rounded text-cureza-green focus:ring-cureza-green w-4 h-4 cursor-pointer"
+                                        className="rounded text-black focus:ring-black w-4 h-4 cursor-pointer"
                                         checked={customers.length > 0 && selectedIds.size === customers.length}
                                         onChange={toggleSelectAll}
                                     />
                                 </th>
-                                <th scope="col" className="px-6 py-4 text-[10px] font-black uppercase text-gray-400 tracking-wider">Customer</th>
-                                <th scope="col" className="px-6 py-4 text-[10px] font-black uppercase text-gray-400 tracking-wider">Contact Info</th>
-                                <th scope="col" className="px-6 py-4 text-[10px] font-black uppercase text-gray-400 tracking-wider">Status</th>
-                                <th scope="col" className="px-6 py-4 text-[10px] font-black uppercase text-gray-400 tracking-wider">Joined</th>
-                                <th scope="col" className="px-6 py-4 text-[10px] font-black uppercase text-gray-400 tracking-wider text-right">Actions</th>
+                                <th scope="col" className="px-6 py-4 text-xs font-medium tracking-wide">Customer</th>
+                                <th scope="col" className="px-6 py-4 text-xs font-medium tracking-wide">Contact Info</th>
+                                <th scope="col" className="px-6 py-4 text-xs font-medium tracking-wide">Status</th>
+                                <th scope="col" className="px-6 py-4 text-xs font-medium tracking-wide">Joined</th>
+                                <th scope="col" className="px-6 py-4 text-xs font-medium tracking-wide text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-50 bg-white">
+                        <tbody className="divide-y divide-neutral-950/5 bg-white text-neutral-750 font-normal">
                             {isLoading ? (
                                 <tr>
-                                    <td colSpan={6} className="px-6 py-12 text-center text-xs font-bold text-gray-400 uppercase tracking-wider animate-pulse">Loading directory data...</td>
+                                    <td colSpan={6} className="px-6 py-12 text-center text-xs text-neutral-400 font-medium animate-pulse">Loading directory data...</td>
                                 </tr>
                             ) : customers.length === 0 ? (
                                 <tr>
-                                    <td colSpan={6} className="px-6 py-16 text-center text-gray-500">
-                                        <UserIcon size={48} className="mx-auto text-gray-300 mb-4" />
-                                        <p className="text-sm font-extrabold text-gray-900 uppercase tracking-wider">No customers found</p>
+                                    <td colSpan={6} className="px-6 py-16 text-center text-neutral-500">
+                                        <UserIcon size={40} className="mx-auto text-neutral-300 mb-3" />
+                                        <p className="text-xs font-medium text-neutral-900">No customers found</p>
                                     </td>
                                 </tr>
                             ) : (
                                 customers.map((customer) => (
-                                    <tr key={customer.id} className={`hover:bg-gray-50/40 transition-colors ${selectedIds.has(customer.id) ? 'bg-purple-50/10' : ''}`}>
+                                    <tr key={customer.id} className={`hover:bg-neutral-50/20 transition-colors ${selectedIds.has(customer.id) ? 'bg-neutral-50/40' : ''}`}>
                                         <td className="px-6 py-4 text-center">
                                             <input 
                                                 type="checkbox"
-                                                className="rounded text-cureza-green focus:ring-cureza-green w-4 h-4 cursor-pointer"
+                                                className="rounded text-black focus:ring-black w-4 h-4 cursor-pointer"
                                                 checked={selectedIds.has(customer.id)}
                                                 onChange={() => toggleSelectRow(customer.id)}
                                             />
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
-                                                <div className="flex-shrink-0 h-9 w-9 bg-purple-50 border border-purple-100 text-purple-650 rounded-xl flex items-center justify-center font-bold text-sm">
+                                                <div className="flex-shrink-0 h-9 w-9 bg-neutral-100 border-[0.5px] border-neutral-950/10 text-neutral-900 rounded-[10px] flex items-center justify-center font-semibold text-sm">
                                                     {customer.name.charAt(0).toUpperCase()}
                                                 </div>
-                                                <div className="ml-3.5">
-                                                    <div className="text-sm font-extrabold text-gray-900">{customer.name}</div>
-                                                    <div className="text-[10px] text-gray-400 font-mono uppercase">ID: CUST-{customer.id.toString().padStart(4, '0')}</div>
+                                                <div className="ml-3">
+                                                    <div className="text-sm font-medium text-neutral-900">{customer.name}</div>
+                                                    <div className="text-[10px] text-neutral-400 font-mono">ID: Cust-{customer.id.toString().padStart(4, '0')}</div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex flex-col gap-1 text-xs">
-                                                <div className="flex items-center gap-2 font-medium text-gray-650">
-                                                    <Mail size={13} className="text-gray-400" />
+                                                <div className="flex items-center gap-2 font-normal text-neutral-600">
+                                                    <Mail size={12} className="text-neutral-400" />
                                                     {customer.email}
                                                 </div>
-                                                <div className="flex items-center gap-2 font-medium text-gray-650">
-                                                    <Phone size={13} className="text-gray-400" />
+                                                <div className="flex items-center gap-2 font-normal text-neutral-600">
+                                                    <Phone size={12} className="text-neutral-400" />
                                                     {customer.phone}
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                            <span className="inline-flex items-center px-2 py-0.5 rounded-[4px] text-[10px] font-semibold tracking-wide bg-green-50 text-green-700 border border-green-200/50">
                                                 {customer.status}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-gray-500">
+                                        <td className="px-6 py-4 whitespace-nowrap text-xs text-neutral-500 font-normal">
                                             {customer.joined}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-right text-xs font-medium">
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-xs">
                                             <div className="flex items-center justify-end gap-2">
                                                 <button 
                                                     onClick={() => handleOpenModal(customer)} 
-                                                    className="p-1.5 bg-gray-50 hover:bg-blue-50 border border-gray-200 text-gray-400 hover:text-blue-600 rounded-lg transition-colors" 
+                                                    className="p-1.5 bg-neutral-50 hover:bg-neutral-100 border border-neutral-950/10 text-neutral-500 hover:text-neutral-900 rounded-lg transition-colors" 
                                                     title="Edit"
                                                 >
-                                                    <Edit size={14} />
+                                                    <Edit size={12} />
                                                 </button>
                                                 <button 
                                                     onClick={() => handleDelete(customer.id)} 
-                                                    className="p-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-rose-600 rounded-lg transition-colors" 
+                                                    className="p-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 rounded-lg transition-colors" 
                                                     title="Delete"
                                                 >
-                                                    <Trash2 size={14} />
+                                                    <Trash2 size={12} />
                                                 </button>
                                             </div>
                                         </td>
@@ -514,25 +508,25 @@ export default function AdminCustomersPage() {
 
                 {/* Pagination Controls */}
                 {pagination.last_page > 1 && (
-                    <div className="bg-white px-6 py-4 flex items-center justify-between border-t border-gray-150">
+                    <div className="bg-white px-6 py-4 flex items-center justify-between border-t border-neutral-950/5">
                         <div className="flex-1 flex justify-between items-center gap-4">
                             <div>
-                                <p className="text-xs text-gray-500 font-medium">
-                                    Showing page <strong className="text-gray-900">{pagination.current_page}</strong> of <strong className="text-gray-900">{pagination.last_page}</strong> (Total: {pagination.total} customers)
+                                <p className="text-xs text-neutral-500 font-normal">
+                                    Showing page <strong className="text-neutral-900">{pagination.current_page}</strong> of <strong className="text-neutral-900">{pagination.last_page}</strong> (Total: {pagination.total} customers)
                                 </p>
                             </div>
                             <div className="flex gap-2">
                                 <button
                                     onClick={() => handlePageChange(pagination.current_page - 1)}
                                     disabled={pagination.current_page === 1}
-                                    className="px-3.5 py-1.5 rounded-xl border border-gray-250 text-xs font-bold text-gray-650 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                                    className="px-3.5 py-1.5 rounded-[10px] border border-neutral-950/10 text-xs font-medium text-neutral-600 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                                 >
                                     Previous
                                 </button>
                                 <button
                                     onClick={() => handlePageChange(pagination.current_page + 1)}
                                     disabled={pagination.current_page === pagination.last_page}
-                                    className="px-3.5 py-1.5 rounded-xl border border-gray-250 text-xs font-bold text-gray-650 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                                    className="px-3.5 py-1.5 rounded-[10px] border border-neutral-950/10 text-xs font-medium text-neutral-650 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                                 >
                                     Next
                                 </button>
@@ -544,27 +538,27 @@ export default function AdminCustomersPage() {
 
             {/* SINGLE ADD / EDIT MODAL */}
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-                <DialogContent className="max-w-md rounded-2xl p-6 bg-white shadow-xl">
+                <DialogContent className="max-w-md rounded-[10px] p-6 bg-white shadow-none border border-neutral-950/10">
                     <DialogHeader>
-                        <DialogTitle className="text-lg font-bold text-gray-900">
+                        <DialogTitle className="text-base font-semibold text-neutral-900">
                             {editingCustomer ? 'Edit Customer Info' : 'Register Customer Profile'}
                         </DialogTitle>
                     </DialogHeader>
                     <form onSubmit={handleSubmit} className="space-y-4 py-2">
                         <div>
-                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Full Name</label>
+                            <label className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-1.5">Full Name</label>
                             <input
                                 type="text"
                                 name="name"
                                 required
                                 value={formData.name}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-2.5 text-xs font-bold border border-gray-250 rounded-xl focus:ring-2 focus:ring-cureza-green/10 focus:border-cureza-green outline-none outline-offset-0"
+                                className="w-full px-4 py-2.5 text-xs font-normal border border-neutral-950/15 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
                                 placeholder="Rahul Kumar"
                             />
                         </div>
                         <div>
-                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Email Address</label>
+                            <label className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-1.5">Email Address</label>
                             <input
                                 type="email"
                                 name="email"
@@ -572,31 +566,31 @@ export default function AdminCustomersPage() {
                                 disabled={!!editingCustomer}
                                 value={formData.email}
                                 onChange={handleInputChange}
-                                className={`w-full px-4 py-2.5 text-xs font-bold border border-gray-250 rounded-xl focus:ring-2 focus:ring-cureza-green/10 focus:border-cureza-green outline-none ${editingCustomer ? 'bg-gray-50 text-gray-400 cursor-not-allowed' : ''}`}
+                                className={`w-full px-4 py-2.5 text-xs font-normal border border-neutral-950/15 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black ${editingCustomer ? 'bg-neutral-50 text-neutral-400 cursor-not-allowed' : ''}`}
                                 placeholder="rahul@example.com"
                             />
                         </div>
                         <div>
-                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Phone Number</label>
+                            <label className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-1.5">Phone Number</label>
                             <input
                                 type="tel"
                                 name="phone"
                                 value={formData.phone}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-2.5 text-xs font-bold border border-gray-250 rounded-xl focus:ring-2 focus:ring-cureza-green/10 focus:border-cureza-green outline-none"
+                                className="w-full px-4 py-2.5 text-xs font-normal border border-neutral-950/15 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
                                 placeholder="9876543210"
                             />
                         </div>
                         {!editingCustomer && (
                             <div>
-                                <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Password</label>
+                                <label className="block text-xs font-medium text-neutral-400 uppercase tracking-wider mb-1.5">Password</label>
                                 <input
                                     type="password"
                                     name="password"
                                     required
                                     value={formData.password}
                                     onChange={handleInputChange}
-                                    className="w-full px-4 py-2.5 text-xs font-bold border border-gray-250 rounded-xl focus:ring-2 focus:ring-cureza-green/10 focus:border-cureza-green outline-none"
+                                    className="w-full px-4 py-2.5 text-xs font-normal border border-neutral-950/15 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
                                     placeholder="••••••••"
                                 />
                             </div>
@@ -605,14 +599,14 @@ export default function AdminCustomersPage() {
                             <button
                                 type="button"
                                 onClick={() => setIsModalOpen(false)}
-                                className="px-4 py-2.5 text-xs font-extrabold uppercase tracking-wider text-gray-500 hover:bg-gray-50 rounded-xl"
+                                className="px-4 py-2.5 text-xs font-medium text-neutral-500 hover:bg-neutral-50 rounded-[10px]"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="px-6 py-2.5 rounded-xl bg-gray-900 text-white text-xs font-extrabold uppercase tracking-wider hover:bg-black transition-colors"
+                                className="px-6 py-2.5 rounded-[10px] bg-black text-white text-xs font-medium hover:bg-neutral-900 transition-colors shadow-none"
                             >
                                 {isSubmitting ? 'Saving...' : (editingCustomer ? 'Save Details' : 'Create User')}
                             </button>
@@ -623,30 +617,30 @@ export default function AdminCustomersPage() {
 
             {/* BULK CSV IMPORT DIALOG */}
             <Dialog open={isBulkModalOpen} onOpenChange={setIsBulkModalOpen}>
-                <DialogContent className="max-w-2xl rounded-3xl p-8 bg-white shadow-xl max-h-[85vh] overflow-y-auto">
+                <DialogContent className="max-w-2xl rounded-[10px] p-6 bg-white shadow-none border border-neutral-950/10 max-h-[85vh] overflow-y-auto">
                     <DialogHeader>
-                        <DialogTitle className="text-xl font-black text-gray-900 flex items-center gap-2">
-                            <FileSpreadsheet className="text-cureza-green" />
+                        <DialogTitle className="text-lg font-semibold text-neutral-900 flex items-center gap-2">
+                            <FileSpreadsheet className="text-neutral-900" size={20} />
                             Bulk Import Customers (CSV)
                         </DialogTitle>
                     </DialogHeader>
                     
                     <div className="space-y-6 py-3">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100 gap-4">
-                            <div className="space-y-0.5">
-                                <h4 className="text-xs font-bold text-gray-800">CSV Formatted Template</h4>
-                                <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">Download standard CSV layout with sample values.</p>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-neutral-50 rounded-[10px] border border-neutral-950/10 gap-4">
+                            <div className="space-y-0.5 text-xs font-normal">
+                                <h4 className="font-semibold text-neutral-900">CSV Formatted Template</h4>
+                                <p className="text-[10px] text-neutral-500">Download standard CSV layout with sample values.</p>
                             </div>
                             <button
                                 onClick={downloadTemplateCSV}
-                                className="flex items-center gap-1.5 bg-white border border-gray-200 text-gray-700 px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-gray-50 shadow-sm shrink-0"
+                                className="flex items-center gap-1.5 bg-white border border-neutral-950/15 text-neutral-800 px-3.5 py-2 rounded-[10px] text-xs font-medium hover:bg-neutral-50 shadow-none shrink-0"
                             >
                                 <Download size={14} /> Download Template
                             </button>
                         </div>
 
                         {/* File Upload Selector */}
-                        <div className="border-2 border-dashed border-gray-250 rounded-2xl p-6 text-center hover:border-cureza-green/50 transition-colors relative cursor-pointer group">
+                        <div className="border border-dashed border-neutral-950/20 rounded-[10px] p-6 text-center hover:border-black/50 transition-colors relative cursor-pointer group">
                             <input 
                                 type="file"
                                 accept=".csv"
@@ -654,12 +648,12 @@ export default function AdminCustomersPage() {
                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                             />
                             <div className="space-y-2">
-                                <div className="p-3 bg-green-50 text-cureza-green rounded-2xl w-fit mx-auto border border-green-100 group-hover:scale-105 transition-transform">
-                                    <Upload size={22} />
+                                <div className="p-3 bg-neutral-50 text-neutral-900 rounded-lg w-fit mx-auto border border-neutral-950/10 group-hover:scale-105 transition-transform">
+                                    <Upload size={20} />
                                 </div>
-                                <div>
-                                    <p className="text-xs font-bold text-gray-800">{csvFile ? csvFile.name : 'Select or drop customer CSV file'}</p>
-                                    <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider mt-0.5">File type limit: .csv, Max size: 2MB</p>
+                                <div className="text-xs">
+                                    <p className="font-medium text-neutral-900">{csvFile ? csvFile.name : 'Select or drop customer CSV file'}</p>
+                                    <p className="text-[10px] text-neutral-450 mt-0.5">File type limit: .csv, Max size: 2MB</p>
                                 </div>
                             </div>
                         </div>
@@ -667,18 +661,18 @@ export default function AdminCustomersPage() {
                         {/* Parsed List Preview */}
                         {parsedData.length > 0 && !importResult && (
                             <div className="space-y-3">
-                                <div className="flex justify-between items-center border-b border-gray-50 pb-2">
-                                    <h4 className="text-xs font-bold text-gray-800 uppercase tracking-widest">CSV Preview ({parsedData.length} records parsed)</h4>
+                                <div className="flex justify-between items-center border-b border-neutral-950/5 pb-2">
+                                    <h4 className="text-xs font-medium text-neutral-900">CSV Preview ({parsedData.length} records parsed)</h4>
                                     {validationErrors.length > 0 && (
-                                        <span className="text-[10px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded border border-rose-100">
+                                        <span className="text-[10px] font-medium text-red-650 bg-red-50 px-2 py-0.5 rounded border border-red-100">
                                             {validationErrors.length} validation errors
                                         </span>
                                     )}
                                 </div>
 
-                                <div className="border rounded-2xl overflow-hidden max-h-48 overflow-y-auto">
+                                <div className="border border-neutral-950/10 rounded-[10px] overflow-hidden max-h-48 overflow-y-auto">
                                     <table className="w-full text-left text-xs">
-                                        <thead className="bg-gray-50 font-bold border-b text-gray-650 sticky top-0">
+                                        <thead className="bg-neutral-50/50 border-b border-neutral-950/10 text-neutral-500 font-medium sticky top-0">
                                             <tr>
                                                 <th className="px-4 py-2.5">Name</th>
                                                 <th className="px-4 py-2.5">Email</th>
@@ -686,19 +680,19 @@ export default function AdminCustomersPage() {
                                                 <th className="px-4 py-2.5">Status</th>
                                             </tr>
                                         </thead>
-                                        <tbody className="divide-y divide-gray-50">
+                                        <tbody className="divide-y divide-neutral-950/5 bg-white text-neutral-750 font-normal">
                                             {parsedData.slice(0, 10).map((row, idx) => (
-                                                <tr key={idx} className="hover:bg-gray-50">
-                                                    <td className="px-4 py-2.5 font-bold">{row.name || <span className="text-rose-500 italic">None</span>}</td>
-                                                    <td className="px-4 py-2.5 font-semibold text-gray-550">{row.email || <span className="text-rose-500 italic">None</span>}</td>
-                                                    <td className="px-4 py-2.5 font-medium text-gray-500">{row.phone || <span className="text-rose-500 italic">None</span>}</td>
+                                                <tr key={idx} className="hover:bg-neutral-50/10">
+                                                    <td className="px-4 py-2.5 font-medium">{row.name || <span className="text-red-500 italic">None</span>}</td>
+                                                    <td className="px-4 py-2.5 text-neutral-600">{row.email || <span className="text-red-500 italic">None</span>}</td>
+                                                    <td className="px-4 py-2.5 text-neutral-500">{row.phone || <span className="text-red-500 italic">None</span>}</td>
                                                     <td className="px-4 py-2.5">
                                                         {row.isValid ? (
-                                                            <span className="text-emerald-600 font-extrabold flex items-center gap-0.5">
+                                                            <span className="text-green-600 font-semibold flex items-center gap-0.5">
                                                                 <CheckCircle2 size={10} /> Valid
                                                             </span>
                                                         ) : (
-                                                            <span className="text-rose-600 font-bold flex items-center gap-0.5" title={row.errors.join(', ')}>
+                                                            <span className="text-red-600 font-semibold flex items-center gap-0.5" title={row.errors.join(', ')}>
                                                                 <AlertCircle size={10} /> Invalid
                                                             </span>
                                                         )}
@@ -709,39 +703,39 @@ export default function AdminCustomersPage() {
                                     </table>
                                 </div>
                                 {parsedData.length > 10 && (
-                                    <p className="text-[10px] text-gray-400 font-bold italic text-center">... and {parsedData.length - 10} more rows</p>
+                                    <p className="text-[10px] text-neutral-400 font-medium italic text-center">... and {parsedData.length - 10} more rows</p>
                                 )}
                             </div>
                         )}
 
                         {/* Import Result Panel */}
                         {importResult && (
-                            <div className="bg-emerald-50/50 border border-emerald-100 p-6 rounded-2xl space-y-3">
-                                <h4 className="text-sm font-black text-emerald-800 flex items-center gap-1.5">
-                                    <CheckCircle2 className="text-emerald-700" size={18} />
+                            <div className="bg-neutral-50/50 border border-neutral-950/10 p-6 rounded-[10px] space-y-3">
+                                <h4 className="text-sm font-semibold text-neutral-900 flex items-center gap-1.5">
+                                    <CheckCircle2 className="text-neutral-900" size={18} />
                                     Import Summary
                                 </h4>
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs">
-                                    <div className="bg-white p-3.5 rounded-xl border border-emerald-100">
-                                        <p className="text-gray-450 font-semibold uppercase text-[9px] tracking-wider">Successfully Imported</p>
-                                        <p className="text-lg font-black text-emerald-700">{importResult.success_count}</p>
+                                    <div className="bg-white p-3.5 rounded-[10px] border border-neutral-950/10">
+                                        <p className="text-neutral-450 font-medium uppercase text-[9px] tracking-wider">Successfully Imported</p>
+                                        <p className="text-lg font-semibold text-neutral-900">{importResult.success_count}</p>
                                     </div>
-                                    <div className="bg-white p-3.5 rounded-xl border border-emerald-100">
-                                        <p className="text-gray-450 font-semibold uppercase text-[9px] tracking-wider">Failed Rows</p>
-                                        <p className="text-lg font-black text-rose-700">{importResult.failed_count}</p>
+                                    <div className="bg-white p-3.5 rounded-[10px] border border-neutral-950/10">
+                                        <p className="text-neutral-450 font-medium uppercase text-[9px] tracking-wider">Failed Rows</p>
+                                        <p className="text-lg font-semibold text-red-600">{importResult.failed_count}</p>
                                     </div>
                                 </div>
 
                                 {importResult.failed_list?.length > 0 && (
                                     <div className="mt-4 space-y-2">
-                                        <h5 className="text-xs font-bold text-rose-800 uppercase tracking-wide">Duplicate or Invalid Database Records:</h5>
-                                        <div className="border border-rose-100 bg-white rounded-xl max-h-32 overflow-y-auto text-[11px] p-3 space-y-1.5">
+                                        <h5 className="text-xs font-semibold text-red-700 uppercase tracking-wide">Duplicate or Invalid Database Records:</h5>
+                                        <div className="border border-red-100 bg-white rounded-[10px] max-h-32 overflow-y-auto text-[11px] p-3 space-y-1.5 font-normal">
                                             {importResult.failed_list.map((f: any, idx: number) => (
                                                 <div key={idx} className="flex gap-2">
-                                                    <span className="font-extrabold text-rose-700">Row {f.row}:</span>
-                                                    <span className="font-bold text-gray-800">{f.name} ({f.email})</span>
-                                                    <span className="text-gray-400">—</span>
-                                                    <span className="text-rose-600 font-semibold">{f.errors.join(', ')}</span>
+                                                    <span className="font-semibold text-red-700">Row {f.row}:</span>
+                                                    <span className="font-medium text-neutral-800">{f.name} ({f.email})</span>
+                                                    <span className="text-neutral-400">—</span>
+                                                    <span className="text-red-600">{f.errors.join(', ')}</span>
                                                 </div>
                                             ))}
                                         </div>
@@ -755,7 +749,7 @@ export default function AdminCustomersPage() {
                         <button
                             type="button"
                             onClick={() => setIsBulkModalOpen(false)}
-                            className="px-4 py-2.5 text-xs font-extrabold uppercase tracking-wider text-gray-500 hover:bg-gray-50 rounded-xl"
+                            className="px-4 py-2.5 text-xs font-medium text-neutral-500 hover:bg-neutral-50 rounded-[10px]"
                         >
                             {importResult ? 'Close' : 'Cancel'}
                         </button>
@@ -763,7 +757,7 @@ export default function AdminCustomersPage() {
                             <button
                                 onClick={handleImportCSV}
                                 disabled={isImporting || parsedData.filter(r => r.isValid).length === 0}
-                                className="px-6 py-2.5 rounded-xl bg-gray-900 text-white text-xs font-extrabold uppercase tracking-wider hover:bg-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
+                                className="px-6 py-2.5 rounded-[10px] bg-black text-white text-xs font-medium hover:bg-neutral-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 shadow-none"
                             >
                                 {isImporting ? (
                                     <>

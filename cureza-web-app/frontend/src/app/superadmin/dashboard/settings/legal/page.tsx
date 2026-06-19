@@ -1108,9 +1108,9 @@ export default function AdminLegalSettingsPage() {
 
     if (loading && pages.length === 0) {
         return (
-            <div className="max-w-4xl space-y-6 flex flex-col justify-center items-center py-20">
-                <Loader2 className="animate-spin text-cureza-green" size={40} />
-                <p className="text-gray-500 font-medium animate-pulse">Loading legal pages...</p>
+            <div className="w-full space-y-6 flex flex-col justify-center items-center py-20">
+                <Loader2 className="animate-spin text-black" size={32} />
+                <p className="text-xs text-neutral-500 font-normal animate-pulse">Loading legal pages...</p>
             </div>
         );
     }
@@ -1119,31 +1119,31 @@ export default function AdminLegalSettingsPage() {
         <div className="max-w-5xl space-y-6 pb-20">
             {/* Header */}
             {!selectedPage ? (
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center border-b border-black/10 pb-5">
                     <div>
-                        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Legal & Policy Pages</h1>
-                        <p className="text-gray-500 text-sm mt-1">Manage content, terms, and agreements across the Cureza marketplace</p>
+                        <h2 className="text-sm font-medium text-neutral-900 tracking-tight">Legal & Policy Pages</h2>
+                        <p className="text-neutral-500 text-xs mt-0.5">Manage content, terms, and agreements across the Cureza marketplace</p>
                     </div>
                 </div>
             ) : (
-                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-black/10 pb-5">
                     <div className="flex items-center gap-4">
                         <button 
                             onClick={handleBack}
-                            className="p-2 hover:bg-gray-100 rounded-lg text-gray-600 transition-colors"
+                            className="p-2 hover:bg-neutral-50 rounded-[10px] text-neutral-600 transition-colors border border-black/10"
                         >
-                            <ArrowLeft size={20} />
+                            <ArrowLeft size={16} />
                         </button>
                         <div>
                             <div className="flex items-center gap-2">
-                                <h1 className="text-2xl font-bold text-gray-900">{selectedPage.title}</h1>
-                                <span className={`px-2.5 py-0.5 text-xs font-bold rounded-full ${
-                                    editStatus === 'Published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                                <h3 className="font-semibold text-neutral-900 text-sm">{selectedPage.title}</h3>
+                                <span className={`px-2 py-0.5 text-[10px] font-medium rounded-full ${
+                                    editStatus === 'Published' ? 'bg-green-50 text-green-700 border border-green-150' : 'bg-neutral-100 text-neutral-800 border border-black/5'
                                 }`}>
                                     {editStatus}
                                 </span>
                             </div>
-                            <p className="text-gray-500 text-xs mt-1">Slug: <span className="font-mono text-gray-700 bg-gray-100 px-1.5 py-0.5 rounded">{editSlug}</span></p>
+                            <p className="text-neutral-450 text-[10px] mt-0.5">Slug: <span className="font-mono text-neutral-700 bg-neutral-50 px-1.5 py-0.5 rounded-[10px] border border-black/5">{editSlug}</span></p>
                         </div>
                     </div>
                     
@@ -1152,18 +1152,18 @@ export default function AdminLegalSettingsPage() {
                             <Link 
                                 href={getPublicUrl(editSlug)} 
                                 target="_blank"
-                                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg flex items-center justify-center gap-2 font-bold text-sm hover:bg-gray-50 transition-colors"
+                                className="px-3 py-1.5 border border-black/10 text-neutral-700 rounded-[10px] flex items-center justify-center gap-1.5 font-medium text-xs hover:bg-neutral-50 transition-colors"
                             >
-                                <ExternalLink size={16} />
+                                <ExternalLink size={14} />
                                 View Public Page
                             </Link>
                         )}
                         <button 
                             onClick={handleSave}
                             disabled={saving}
-                            className="bg-cureza-green hover:bg-green-700 text-white px-5 py-2 rounded-lg flex items-center justify-center gap-2 font-bold text-sm shadow-sm transition-all disabled:opacity-50"
+                            className="bg-black hover:bg-neutral-900 text-white px-4 py-2 rounded-[10px] flex items-center justify-center gap-1.5 font-medium text-xs transition-all disabled:opacity-50"
                         >
-                            {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                            {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
                             Save Content
                         </button>
                     </div>
@@ -1191,32 +1191,32 @@ export default function AdminLegalSettingsPage() {
                     {pages.map((page) => (
                         <div 
                             key={page.id} 
-                            className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-cureza-green hover:shadow transition-all"
+                            className="bg-white p-5 rounded-[10px] border-[0.5px] border-black/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-black/35 transition-all shadow-none"
                         >
                             <div className="flex items-start gap-4">
-                                <div className="p-3 bg-gray-50 text-gray-600 rounded-xl border border-gray-100 flex-shrink-0">
-                                    <FileText size={24} className="text-[#052326]" />
+                                <div className="p-3 bg-neutral-50 text-neutral-600 rounded-[10px] border border-black/5 flex-shrink-0">
+                                    <FileText size={20} className="text-neutral-900" />
                                 </div>
                                 <div className="space-y-1">
-                                    <h3 className="font-extrabold text-gray-900 text-base">{page.title}</h3>
-                                    <p className="text-xs text-gray-500 max-w-xl font-light">
+                                    <h3 className="font-medium text-neutral-900 text-sm">{page.title}</h3>
+                                    <p className="text-xs text-neutral-500 max-w-xl font-normal">
                                         {page.description || 'No description provided.'}
                                     </p>
-                                    <div className="flex items-center gap-3 pt-1 text-xs text-gray-400 font-light">
-                                        <span>Slug: <strong className="font-semibold text-gray-600">{page.slug}</strong></span>
+                                    <div className="flex items-center gap-3 pt-1 text-[11px] text-neutral-400 font-normal">
+                                        <span>Slug: <strong className="font-medium text-neutral-650">{page.slug}</strong></span>
                                         <span>•</span>
                                         <span>Last modified: {new Date(page.updated_at).toLocaleDateString()}</span>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div className="flex items-center gap-3 justify-end border-t sm:border-0 pt-3 sm:pt-0">
-                                <span className={`px-2.5 py-1 text-xs font-semibold rounded-full flex items-center gap-1.5 ${
+                            <div className="flex items-center gap-3 justify-end border-t sm:border-0 pt-3 sm:pt-0 border-black/5">
+                                <span className={`px-2 py-0.5 text-[10px] font-medium rounded-full flex items-center gap-1.5 ${
                                     page.status === 'Published' 
                                         ? 'bg-green-50 text-green-700 border border-green-150' 
-                                        : 'bg-yellow-50 text-yellow-700 border border-yellow-150'
+                                        : 'bg-neutral-100 text-neutral-600 border border-black/5'
                                 }`}>
-                                    {page.status === 'Published' ? <Globe size={12} /> : <Lock size={12} />}
+                                    {page.status === 'Published' ? <Globe size={10} /> : <Lock size={10} />}
                                     {page.status}
                                 </span>
                                 <div className="flex items-center gap-2">
@@ -1224,18 +1224,18 @@ export default function AdminLegalSettingsPage() {
                                         <Link 
                                             href={getPublicUrl(page.slug)} 
                                             target="_blank"
-                                            className="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors border border-gray-200"
+                                            className="p-1.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-50 rounded-[10px] transition-colors border border-black/10"
                                             title="View published page"
                                         >
-                                            <Eye size={18} />
+                                            <Eye size={14} />
                                         </Link>
                                     )}
                                     <button 
                                         onClick={() => handleSelectPage(page)}
-                                        className="p-2 text-cureza-green hover:text-green-800 hover:bg-green-50 border border-green-200/50 rounded-lg transition-colors flex items-center gap-1.5 font-semibold text-xs"
+                                        className="p-1.5 text-black hover:bg-neutral-50 border border-black/10 rounded-[10px] transition-colors flex items-center gap-1 font-medium text-xs"
                                         title="Edit page content"
                                     >
-                                        <Edit size={16} />
+                                        <Edit size={12} />
                                         Manage
                                     </button>
                                 </div>
@@ -1248,8 +1248,8 @@ export default function AdminLegalSettingsPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Main Content Editor */}
                     <div className="lg:col-span-2 space-y-6">
-                        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
-                            <h3 className="font-bold text-gray-900 text-lg border-b border-gray-100 pb-2">Policy Content Editor</h3>
+                        <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 p-6 space-y-4 shadow-none">
+                            <h3 className="font-medium text-neutral-900 text-sm border-b border-black/10 pb-2">Policy Content Editor</h3>
                             
                             {editSlug === 'seller-policy' && structuredSellerData ? (
                                 <SellerPolicyEditor 
@@ -1274,50 +1274,50 @@ export default function AdminLegalSettingsPage() {
 
                     {/* Metadata & Options Sidebar */}
                     <div className="space-y-6">
-                        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
-                            <h3 className="font-bold text-gray-900 text-lg border-b border-gray-100 pb-2">Page Settings</h3>
+                        <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 p-6 space-y-4 shadow-none">
+                            <h3 className="font-medium text-neutral-900 text-sm border-b border-black/10 pb-2">Page Settings</h3>
                             
-                            <div className="space-y-4 text-xs font-semibold text-gray-700">
+                            <div className="space-y-4 text-xs font-normal text-neutral-700">
                                 <div>
-                                    <label className="block text-gray-700 mb-1">Page Title</label>
+                                    <label className="block text-neutral-600 mb-1">Page Title</label>
                                     <input 
                                         type="text" 
                                         value={editTitle}
                                         onChange={(e) => setEditTitle(e.target.value)}
-                                        className="w-full px-3.5 py-2 border border-gray-300 rounded-lg font-bold text-gray-950 focus:ring-2 focus:ring-cureza-green focus:border-transparent outline-none bg-white text-sm"
+                                        className="w-full px-3 py-2 border border-black/10 rounded-[10px] text-neutral-950 focus:border-black outline-none bg-white text-xs font-normal"
                                         placeholder="Privacy Policy"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-gray-700 mb-1">Page Slug (URL Identifier)</label>
+                                    <label className="block text-neutral-600 mb-1">Page Slug (URL Identifier)</label>
                                     <input 
                                         type="text" 
                                         value={editSlug}
                                         onChange={(e) => setEditSlug(e.target.value)}
-                                        className="w-full px-3.5 py-2 border border-gray-300 rounded-lg font-mono text-gray-600 focus:ring-2 focus:ring-cureza-green focus:border-transparent outline-none bg-gray-50 text-xs"
+                                        className="w-full px-3 py-2 border border-black/10 rounded-[10px] font-mono text-neutral-450 outline-none bg-neutral-50 text-xs"
                                         placeholder="privacy-policy"
                                         disabled
                                     />
-                                    <p className="text-[10px] text-gray-400 mt-1 font-light">System page slugs are locked for integrity.</p>
+                                    <p className="text-[10px] text-neutral-400 mt-1 font-normal">System page slugs are locked for integrity.</p>
                                 </div>
 
                                 <div>
-                                    <label className="block text-gray-700 mb-1">Short Description</label>
+                                    <label className="block text-neutral-600 mb-1">Short Description</label>
                                     <textarea 
                                         value={editDescription}
                                         onChange={(e) => setEditDescription(e.target.value)}
-                                        className="w-full px-3.5 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 focus:ring-2 focus:ring-cureza-green focus:border-transparent outline-none bg-white min-h-[80px]"
+                                        className="w-full px-3 py-2 border border-black/10 rounded-[10px] font-normal text-neutral-700 focus:border-black outline-none bg-white min-h-[80px]"
                                         placeholder="Short SEO meta description for this page..."
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-gray-700 mb-1">Status</label>
+                                    <label className="block text-neutral-600 mb-1">Status</label>
                                     <select 
                                         value={editStatus}
                                         onChange={(e) => setEditStatus(e.target.value as 'Published' | 'Draft')}
-                                        className="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white focus:ring-2 focus:ring-cureza-green focus:border-transparent outline-none text-sm"
+                                        className="w-full px-3 py-2 border border-black/10 rounded-[10px] text-neutral-900 bg-white focus:border-black outline-none text-xs"
                                     >
                                         <option value="Published">Published (Publicly Visible)</option>
                                         <option value="Draft">Draft (Restricted/Private)</option>
@@ -1327,9 +1327,9 @@ export default function AdminLegalSettingsPage() {
                         </div>
 
                         {/* Tips card */}
-                        <div className="bg-[#052326] text-white p-5 rounded-xl border border-transparent shadow-sm space-y-3">
-                            <h4 className="font-extrabold text-sm text-[#F0C417]">SEO & Styling Tips</h4>
-                            <ul className="list-disc pl-4 text-[10px] space-y-1.5 text-white/80 font-light leading-relaxed">
+                        <div className="bg-neutral-50 text-neutral-900 p-5 rounded-[10px] border border-black/10 shadow-none space-y-3">
+                            <h4 className="font-medium text-xs text-neutral-850">SEO & Styling Tips</h4>
+                            <ul className="list-disc pl-4 text-[10px] space-y-1.5 text-neutral-600 font-normal leading-relaxed">
                                 <li>Use **Heading 2** (`H2`) for primary policy chapters and **Heading 3** (`H3`) for detailed sub-sections.</li>
                                 <li>Insert external resource links using the **Link** icon in Tiptap.</li>
                                 <li>Adding descriptive bullet points (`UL`) improves readability on mobile screens.</li>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Save, Users, Share2, Zap, Gift, HelpCircle, Loader2 } from 'lucide-react';
+import { Save, Users, Share2, Zap, Gift, Loader2 } from 'lucide-react';
 import api from '@/lib/api';
 
 export default function AdminCommunityPage() {
@@ -63,149 +63,143 @@ export default function AdminCommunityPage() {
     if (loading) {
         return (
             <div className="space-y-6 animate-pulse">
-                <div className="h-8 w-48 bg-gray-200 rounded-lg"></div>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div className="h-24 bg-gray-200 rounded-xl"></div>
-                    <div className="h-24 bg-gray-200 rounded-xl"></div>
-                    <div className="h-24 bg-gray-200 rounded-xl"></div>
-                    <div className="h-24 bg-gray-200 rounded-xl"></div>
+                    <div className="h-20 bg-neutral-100 rounded-[10px]"></div>
+                    <div className="h-20 bg-neutral-100 rounded-[10px]"></div>
+                    <div className="h-20 bg-neutral-100 rounded-[10px]"></div>
+                    <div className="h-20 bg-neutral-100 rounded-[10px]"></div>
                 </div>
-                <div className="h-64 bg-gray-200 rounded-xl"></div>
+                <div className="h-64 bg-neutral-100 rounded-[10px]"></div>
             </div>
         );
     }
 
     return (
-        <div className="space-y-8">
-            <div>
-                <h1 className="text-2xl font-bold text-gray-900">Cureza Circle & Gamification</h1>
-                <p className="text-gray-500">Configure global XP rules, view participation statistics, and manage gamification assets.</p>
-            </div>
-
+        <div className="space-y-6">
             {/* Statistics Row */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
-                    <div className="p-4 bg-emerald-50 text-[#052326] rounded-xl">
-                        <Users size={24} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 flex items-center gap-4">
+                    <div className="p-3 bg-neutral-50 text-neutral-900 border-[0.5px] border-neutral-950/10 rounded-[10px]">
+                        <Users size={20} />
                     </div>
                     <div>
-                        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total Members</p>
-                        <h3 className="text-2xl font-bold text-gray-900">{(stats?.total_members || 0).toLocaleString()}</h3>
+                        <p className="text-xs font-medium text-gray-500">Total Members</p>
+                        <h3 className="text-lg font-semibold text-gray-900 mt-0.5">{(stats?.total_members || 0).toLocaleString()}</h3>
                     </div>
                 </div>
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
-                    <div className="p-4 bg-blue-50 text-blue-600 rounded-xl">
-                        <Share2 size={24} />
+                <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 flex items-center gap-4">
+                    <div className="p-3 bg-neutral-50 text-neutral-900 border-[0.5px] border-neutral-950/10 rounded-[10px]">
+                        <Share2 size={20} />
                     </div>
                     <div>
-                        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Referrals Program</p>
-                        <h3 className="text-2xl font-bold text-gray-900">
-                            {stats?.completed_referrals || 0} <span className="text-xs font-medium text-gray-400">/ {stats?.total_referrals || 0}</span>
+                        <p className="text-xs font-medium text-gray-500">Referrals Program</p>
+                        <h3 className="text-lg font-semibold text-gray-900 mt-0.5">
+                          {stats?.completed_referrals || 0} <span className="text-xs font-normal text-gray-400">/ {stats?.total_referrals || 0}</span>
                         </h3>
                     </div>
                 </div>
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
-                    <div className="p-4 bg-yellow-50 text-yellow-600 rounded-xl">
-                        <Zap size={24} />
+                <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 flex items-center gap-4">
+                    <div className="p-3 bg-neutral-50 text-neutral-900 border-[0.5px] border-neutral-950/10 rounded-[10px]">
+                        <Zap size={20} />
                     </div>
                     <div>
-                        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">XP Minted</p>
-                        <h3 className="text-2xl font-bold text-gray-900">{(stats?.total_xp_distributed || 0).toLocaleString()} XP</h3>
+                        <p className="text-xs font-medium text-gray-500">XP Minted</p>
+                        <h3 className="text-lg font-semibold text-gray-900 mt-0.5">{(stats?.total_xp_distributed || 0).toLocaleString()} XP</h3>
                     </div>
                 </div>
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
-                    <div className="p-4 bg-purple-50 text-purple-600 rounded-xl">
-                        <Gift size={24} />
+                <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 flex items-center gap-4">
+                    <div className="p-3 bg-neutral-50 text-neutral-900 border-[0.5px] border-neutral-950/10 rounded-[10px]">
+                        <Gift size={20} />
                     </div>
                     <div>
-                        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Redemptions processed</p>
-                        <h3 className="text-2xl font-bold text-gray-900">{(stats?.total_redemptions || 0).toLocaleString()}</h3>
+                        <p className="text-xs font-medium text-gray-500">Redemptions Processed</p>
+                        <h3 className="text-lg font-semibold text-gray-900 mt-0.5">{(stats?.total_redemptions || 0).toLocaleString()}</h3>
                     </div>
                 </div>
             </div>
 
-            {/* XP Earning Rules form */}
-            <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm max-w-3xl">
-                <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
-                    <Zap size={24} className="text-yellow-600" />
+            {/* XP Earning Rules Form */}
+            <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-neutral-950/10 max-w-3xl">
+                <div className="flex items-center gap-3 mb-6 pb-4 border-b-[0.5px] border-neutral-950/10">
+                    <Zap size={18} className="text-black" />
                     <div>
-                        <h3 className="font-bold text-gray-900 text-lg">Earning Rules Configuration</h3>
-                        <p className="text-xs text-gray-500">Determine how many points (XP) are awarded to users for performing actions.</p>
+                        <h3 className="font-semibold text-gray-900 text-sm">Earning Rules Configuration</h3>
+                        <p className="text-xs text-gray-400 font-normal mt-0.5">Determine how many points (XP) are awarded to users for performing actions.</p>
                     </div>
                 </div>
 
-                <form onSubmit={handleSaveRules} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-1.5">
-                            <label className="block text-sm font-bold text-gray-700">XP per ₹100 Spent</label>
+                <form onSubmit={handleSaveRules} className="space-y-5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div className="space-y-1">
+                            <label className="block text-xs font-medium text-gray-700">XP per ₹100 Spent</label>
                             <input
                                 type="number"
                                 name="xp_per_100_spent"
                                 value={rules.xp_per_100_spent}
                                 onChange={handleChange}
                                 min="0"
-                                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-[#052326] focus:border-[#052326]"
+                                className="w-full px-3 py-2 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs bg-white focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 font-normal"
                                 required
                             />
-                            <span className="text-[10px] text-gray-400 block font-medium">Points earned per ₹100 paid on orders.</span>
+                            <span className="text-[10px] text-gray-400 block font-normal">Points earned per ₹100 paid on orders.</span>
                         </div>
-                        <div className="space-y-1.5">
-                            <label className="block text-sm font-bold text-gray-700">XP for Product Review</label>
+                        <div className="space-y-1">
+                            <label className="block text-xs font-medium text-gray-700">XP for Product Review</label>
                             <input
                                 type="number"
                                 name="xp_per_review"
                                 value={rules.xp_per_review}
                                 onChange={handleChange}
                                 min="0"
-                                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-[#052326] focus:border-[#052326]"
+                                className="w-full px-3 py-2 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs bg-white focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 font-normal"
                                 required
                             />
-                            <span className="text-[10px] text-gray-400 block font-medium">Points awarded for writing a product review.</span>
+                            <span className="text-[10px] text-gray-400 block font-normal">Points awarded for writing a product review.</span>
                         </div>
-                        <div className="space-y-1.5">
-                            <label className="block text-sm font-bold text-gray-700">XP for Photo Upload</label>
+                        <div className="space-y-1">
+                            <label className="block text-xs font-medium text-gray-700">XP for Photo Upload</label>
                             <input
                                 type="number"
                                 name="xp_per_photo_upload"
                                 value={rules.xp_per_photo_upload}
                                 onChange={handleChange}
                                 min="0"
-                                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-[#052326] focus:border-[#052326]"
+                                className="w-full px-3 py-2 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs bg-white focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 font-normal"
                                 required
                             />
-                            <span className="text-[10px] text-gray-400 block font-medium">Points awarded for uploading photos in reviews.</span>
+                            <span className="text-[10px] text-gray-400 block font-normal">Points awarded for uploading photos in reviews.</span>
                         </div>
-                        <div className="space-y-1.5">
-                            <label className="block text-sm font-bold text-gray-700">XP for Referral Completion</label>
+                        <div className="space-y-1">
+                            <label className="block text-xs font-medium text-gray-700">XP for Referral Completion</label>
                             <input
                                 type="number"
                                 name="xp_per_referral"
                                 value={rules.xp_per_referral}
                                 onChange={handleChange}
                                 min="0"
-                                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-[#052326] focus:border-[#052326]"
+                                className="w-full px-3 py-2 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs bg-white focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 font-normal"
                                 required
                             />
-                            <span className="text-[10px] text-gray-400 block font-medium">Points awarded to referrer when friend completes their 1st purchase.</span>
+                            <span className="text-[10px] text-gray-400 block font-normal">Points awarded to referrer when friend completes their first purchase.</span>
                         </div>
                     </div>
 
                     {successMessage && (
-                        <div className="p-3 bg-green-50 text-green-700 rounded-lg text-sm font-semibold">
+                        <div className="p-3 bg-green-50 border-[0.5px] border-green-200 text-green-800 rounded-[10px] text-xs font-medium">
                             {successMessage}
                         </div>
                     )}
 
-                    <div className="flex justify-end pt-4 border-t border-gray-100">
+                    <div className="flex justify-end pt-4 border-t-[0.5px] border-neutral-950/10">
                         <button
                             type="submit"
                             disabled={saving}
-                            className="bg-[#052326] text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-opacity-90 transition-colors flex items-center gap-2"
+                            className="bg-black text-white px-4 py-2 rounded-[10px] text-xs font-medium hover:bg-neutral-800 transition-colors flex items-center gap-2"
                         >
                             {saving ? (
-                                <><Loader2 size={16} className="animate-spin" /> Saving...</>
+                                <><Loader2 size={14} className="animate-spin" /> Saving...</>
                             ) : (
-                                <><Save size={16} /> Save Configuration</>
+                                <><Save size={14} /> Save Configuration</>
                             )}
                         </button>
                     </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search, Filter, Eye, Download, ChevronDown, Package } from 'lucide-react';
+import { Search, Filter, Eye, Download, ChevronDown, Package, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
 import api from '@/lib/api';
 
@@ -34,6 +34,7 @@ export default function AdminOrdersPage() {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [selectedOrderIds, setSelectedOrderIds] = useState<number[]>([]);
+    const [showFilters, setShowFilters] = useState(false);
 
     useEffect(() => {
         // Fetch Brands for filter
@@ -137,218 +138,283 @@ export default function AdminOrdersPage() {
     };
 
     const getStatusColor = (status: string) => {
-        switch (status) { // Match controller/migration defaults
-            case 'delivered': return 'bg-green-100 text-green-800';
-            case 'shipped': return 'bg-blue-100 text-blue-800';
-            case 'processing': return 'bg-yellow-100 text-yellow-800';
-            case 'cancelled': return 'bg-red-100 text-red-800';
-            default: return 'bg-gray-100 text-gray-800';
+        switch (status) {
+            case 'delivered':
+                return 'bg-green-50 text-green-700 border border-green-200/50 dark:bg-green-950/20 dark:text-green-400 dark:border-green-900/30';
+            case 'cancelled':
+                return 'bg-red-50 text-red-700 border border-red-200/50 dark:bg-red-950/20 dark:text-red-400 dark:border-red-900/30';
+            default:
+                return 'bg-neutral-50 text-neutral-750 border border-neutral-200 dark:bg-neutral-850 dark:text-neutral-350 dark:border-neutral-800';
+        }
+    };
+
+    const getPaymentStatusColor = (status: string) => {
+        switch (status) {
+            case 'paid':
+                return 'bg-green-50 text-green-700 border border-green-200/50 dark:bg-green-950/20 dark:text-green-400 dark:border-green-900/30';
+            case 'failed':
+            case 'refunded':
+                return 'bg-red-50 text-red-700 border border-red-200/50 dark:bg-red-950/20 dark:text-red-400 dark:border-red-900/30';
+            default:
+                return 'bg-neutral-50 text-neutral-750 border border-neutral-200 dark:bg-neutral-850 dark:text-neutral-350 dark:border-neutral-800';
         }
     };
 
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Order Management</h1>
-                    <p className="text-gray-500">Track and manage all orders across the platform</p>
+        <div className="w-full space-y-6 animate-in fade-in duration-300">
+            {/* Header Section */}
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border-[0.5px] border-neutral-950/10 dark:border-neutral-800">
+                <div className="absolute top-0 right-0 p-8 opacity-5">
+                    <ShoppingBag size={120} />
                 </div>
-                <div className="flex flex-wrap gap-2">
-                    {selectedOrderIds.length > 0 && (
-                        <button
-                            onClick={handleBulkInvoiceDownload}
-                            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm"
+                <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="space-y-1.5">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2.5 bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white rounded-lg">
+                                <ShoppingBag size={20} />
+                            </div>
+                            <h1 className="text-xl font-semibold text-gray-900 dark:text-white tracking-tight">
+                                Order Management
+                            </h1>
+                        </div>
+                        <p className="text-gray-500 dark:text-gray-400 max-w-xl font-normal text-xs">
+                            Track and manage all orders across the platform
+                        </p>
+                    </div>
+                    <div className="flex flex-wrap gap-2 self-start md:self-center">
+                        {selectedOrderIds.length > 0 && (
+                            <button
+                                onClick={handleBulkInvoiceDownload}
+                                className="flex items-center justify-center gap-2 bg-black text-white dark:bg-white dark:text-black px-4 py-2.5 rounded-[10px] font-medium hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-all active:scale-95 text-xs border border-transparent shadow-none"
+                            >
+                                <Download size={16} />
+                                Bulk Invoices ({selectedOrderIds.length})
+                            </button>
+                        )}
+                        <Link
+                            href="/superadmin/dashboard/orders/create"
+                            className="flex items-center justify-center gap-2 bg-black text-white dark:bg-white dark:text-black px-4 py-2.5 rounded-[10px] font-medium hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-all active:scale-95 text-xs border border-transparent shadow-none"
                         >
-                            <Download size={18} />
-                            Bulk Invoices ({selectedOrderIds.length})
+                            <Package size={16} />
+                            Create New Order
+                        </Link>
+                        <button
+                            onClick={handleExport}
+                            className="flex items-center justify-center gap-2 bg-white border border-neutral-950/15 text-gray-700 px-4 py-2.5 rounded-[10px] font-medium hover:bg-neutral-50 transition-all active:scale-95 text-xs dark:bg-gray-900 dark:text-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-800 shadow-none"
+                        >
+                            <Download size={16} />
+                            Export All Details
                         </button>
-                    )}
-                    <Link
-                        href="/superadmin/dashboard/orders/create"
-                        className="flex items-center gap-2 bg-cureza-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors shadow-sm"
-                    >
-                        <Package size={18} />
-                        Create New Order
-                    </Link>
-                    <button
-                        onClick={handleExport}
-                        className="flex items-center gap-2 bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
-                    >
-                        <Download size={18} />
-                        Export All Details
-                    </button>
+                    </div>
                 </div>
             </div>
 
+
+
             {/* Search and Filter Bar */}
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm space-y-4">
+            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-neutral-950/10 dark:border-neutral-800 space-y-4 shadow-none">
                 <div className="flex flex-col sm:flex-row gap-4">
                     <div className="relative flex-1">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Search className="h-5 w-5 text-gray-400" />
+                            <Search className="h-4 w-4 text-gray-450" />
                         </div>
                         <input
                             type="text"
-                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-1 focus:ring-cureza-green focus:border-cureza-green sm:text-sm transition-colors"
+                            className="block w-full pl-10 pr-3 py-2 border border-neutral-950/15 rounded-[10px] bg-neutral-50/50 dark:bg-gray-800/30 text-xs font-normal placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-1 focus:ring-black focus:border-black dark:text-white transition-colors"
                             placeholder="Search by Order ID, Customer, or Email..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
+                    {/* Filter Toggle Button */}
+                    <button
+                        onClick={() => setShowFilters(!showFilters)}
+                        className={`flex items-center justify-center gap-2 h-10 px-4 rounded-[10px] border border-neutral-950/15 text-xs font-medium transition-all ${
+                            showFilters
+                                ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
+                                : 'bg-white text-neutral-600 hover:bg-neutral-50 dark:bg-gray-900 dark:text-neutral-350 dark:border-neutral-800 dark:hover:bg-neutral-800 shadow-none'
+                        }`}
+                    >
+                        <Filter size={14} />
+                        <span>Filters</span>
+                        <ChevronDown
+                            size={14}
+                            className={`transform transition-transform duration-200 ${showFilters ? 'rotate-180' : ''}`}
+                        />
+                    </button>
                 </div>
 
-                <div className="flex flex-wrap gap-4 items-center">
-                    <div className="flex items-center gap-2">
-                        <Filter size={18} className="text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Filters:</span>
+                {/* Collapsible Filters Container */}
+                {showFilters && (
+                    <div className="flex flex-col gap-3 pt-3 border-t border-neutral-950/5 dark:border-neutral-800/50 animate-in fade-in slide-in-from-top-2 duration-200">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:flex lg:flex-wrap gap-3 text-xs">
+                            {/* Seller Filter */}
+                            <div className="relative w-full lg:w-auto lg:min-w-[160px] lg:max-w-[200px]">
+                                <select
+                                    value={sellerFilter}
+                                    onChange={(e) => setSellerFilter(e.target.value)}
+                                    className="w-full h-10 pl-3 pr-10 border border-neutral-950/15 rounded-[10px] text-xs bg-white dark:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black dark:text-white outline-none appearance-none cursor-pointer"
+                                >
+                                    <option value="All">All Sellers</option>
+                                    {sellers.map(seller => (
+                                        <option key={seller.id} value={seller.id}>{seller.name}</option>
+                                    ))}
+                                </select>
+                                <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-neutral-500 dark:text-neutral-400">
+                                    <ChevronDown size={14} />
+                                </div>
+                            </div>
+
+                            {/* Brand Filter */}
+                            <div className="relative w-full lg:w-auto lg:min-w-[160px] lg:max-w-[200px]">
+                                <select
+                                    value={brandFilter}
+                                    onChange={(e) => setBrandFilter(e.target.value)}
+                                    className="w-full h-10 pl-3 pr-10 border border-neutral-950/15 rounded-[10px] text-xs bg-white dark:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black dark:text-white outline-none appearance-none cursor-pointer"
+                                >
+                                    <option value="All">All Brands</option>
+                                    {brands.map(brand => (
+                                        <option key={brand.id} value={brand.id}>{brand.name}</option>
+                                    ))}
+                                </select>
+                                <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-neutral-500 dark:text-neutral-400">
+                                    <ChevronDown size={14} />
+                                </div>
+                            </div>
+
+                            {/* Status Filter */}
+                            <div className="relative w-full lg:w-auto lg:min-w-[140px]">
+                                <select
+                                    value={statusFilter}
+                                    onChange={(e) => setStatusFilter(e.target.value)}
+                                    className="w-full h-10 pl-3 pr-10 border border-neutral-950/15 rounded-[10px] text-xs bg-white dark:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black dark:text-white outline-none appearance-none cursor-pointer"
+                                >
+                                    <option value="All">All Statuses</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="processing">Processing</option>
+                                    <option value="shipped">Shipped</option>
+                                    <option value="delivered">Delivered</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                                <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-neutral-500 dark:text-neutral-400">
+                                    <ChevronDown size={14} />
+                                </div>
+                            </div>
+
+                            {/* Payment Status Filter */}
+                            <div className="relative w-full lg:w-auto lg:min-w-[140px]">
+                                <select
+                                    value={paymentStatusFilter}
+                                    onChange={(e) => setPaymentStatusFilter(e.target.value)}
+                                    className="w-full h-10 pl-3 pr-10 border border-neutral-950/15 rounded-[10px] text-xs bg-white dark:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black dark:text-white outline-none appearance-none cursor-pointer"
+                                >
+                                    <option value="All">All Payments</option>
+                                    <option value="paid">Paid</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="failed">Failed</option>
+                                    <option value="refunded">Refunded</option>
+                                </select>
+                                <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-neutral-500 dark:text-neutral-400">
+                                    <ChevronDown size={14} />
+                                </div>
+                            </div>
+
+                            {/* Date Range - From */}
+                            <div className="w-full lg:w-auto h-10 flex items-center justify-between lg:justify-start gap-2 bg-white dark:bg-gray-900 border border-neutral-950/15 rounded-[10px] px-3">
+                                <span className="text-[10px] text-neutral-450 uppercase font-semibold">From:</span>
+                                <input
+                                    type="date"
+                                    value={fromDate}
+                                    onChange={(e) => setFromDate(e.target.value)}
+                                    className="text-xs border-none focus:ring-0 p-0 bg-transparent dark:text-white outline-none cursor-pointer"
+                                />
+                            </div>
+
+                            {/* Date Range - To */}
+                            <div className="w-full lg:w-auto h-10 flex items-center justify-between lg:justify-start gap-2 bg-white dark:bg-gray-950 border border-neutral-950/15 rounded-[10px] px-3">
+                                <span className="text-[10px] text-neutral-450 uppercase font-semibold">To:</span>
+                                <input
+                                    type="date"
+                                    value={toDate}
+                                    onChange={(e) => setToDate(e.target.value)}
+                                    className="text-xs border-none focus:ring-0 p-0 bg-transparent dark:text-white outline-none cursor-pointer"
+                                />
+                            </div>
+                        </div>
                     </div>
-
-                    {/* Seller Filter */}
-                    <select
-                        value={sellerFilter}
-                        onChange={(e) => setSellerFilter(e.target.value)}
-                        className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-1 focus:ring-cureza-green focus:border-cureza-green max-w-[200px]"
-                    >
-                        <option value="All">All Sellers</option>
-                        {sellers.map(seller => (
-                            <option key={seller.id} value={seller.id}>{seller.name}</option>
-                        ))}
-                    </select>
-
-                    {/* Brand Filter */}
-                    <select
-                        value={brandFilter}
-                        onChange={(e) => setBrandFilter(e.target.value)}
-                        className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-1 focus:ring-cureza-green focus:border-cureza-green max-w-[200px]"
-                    >
-                        <option value="All">All Brands</option>
-                        {brands.map(brand => (
-                            <option key={brand.id} value={brand.id}>{brand.name}</option>
-                        ))}
-                    </select>
-
-                    {/* Status Filter */}
-                    <select
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                        className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-1 focus:ring-cureza-green focus:border-cureza-green"
-                    >
-                        <option value="All">All Statuses</option>
-                        <option value="pending">Pending</option>
-                        <option value="processing">Processing</option>
-                        <option value="shipped">Shipped</option>
-                        <option value="delivered">Delivered</option>
-                        <option value="cancelled">Cancelled</option>
-                    </select>
-
-                    {/* Payment Status Filter */}
-                    <select
-                        value={paymentStatusFilter}
-                        onChange={(e) => setPaymentStatusFilter(e.target.value)}
-                        className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-1 focus:ring-cureza-green focus:border-cureza-green"
-                    >
-                        <option value="All">All Payments</option>
-                        <option value="paid">Paid</option>
-                        <option value="pending">Pending</option>
-                        <option value="failed">Failed</option>
-                        <option value="refunded">Refunded</option>
-                    </select>
-
-                    {/* Date Range */}
-                    <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-2 py-1">
-                        <span className="text-xs text-gray-500">From:</span>
-                        <input
-                            type="date"
-                            value={fromDate}
-                            onChange={(e) => setFromDate(e.target.value)}
-                            className="text-sm border-none focus:ring-0 p-1"
-                        />
-                    </div>
-                    <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-2 py-1">
-                        <span className="text-xs text-gray-500">To:</span>
-                        <input
-                            type="date"
-                            value={toDate}
-                            onChange={(e) => setToDate(e.target.value)}
-                            className="text-sm border-none focus:ring-0 p-1"
-                        />
-                    </div>
-                </div>
+                )}
             </div>
 
-            {/* Orders List */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            {/* Orders List Table */}
+            <div className="bg-white dark:bg-gray-900 rounded-[10px] border border-neutral-950/10 dark:border-neutral-800 overflow-hidden shadow-none">
                 <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th scope="col" className="px-6 py-3 text-left">
+                    <table className="min-w-full divide-y divide-neutral-955/10 dark:divide-neutral-800">
+                        <thead className="bg-neutral-50/50 dark:bg-gray-850/50">
+                            <tr className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
+                                <th scope="col" className="px-6 py-3.5 text-left">
                                     <input
                                         type="checkbox"
-                                        className="h-4 w-4 text-cureza-green border-gray-300 rounded focus:ring-cureza-green"
+                                        className="h-4 w-4 text-black border-neutral-950/15 rounded-[4px] focus:ring-black cursor-pointer bg-transparent"
                                         checked={orders.length > 0 && selectedOrderIds.length === orders.length}
                                         onChange={toggleSelectAll}
                                     />
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seller(s)</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th scope="col" className="relative px-6 py-3"><span className="sr-only">Actions</span></th>
+                                <th scope="col" className="px-6 py-3.5 text-left tracking-wide">Order ID</th>
+                                <th scope="col" className="px-6 py-3.5 text-left tracking-wide">Date</th>
+                                <th scope="col" className="px-6 py-3.5 text-left tracking-wide">Customer</th>
+                                <th scope="col" className="px-6 py-3.5 text-left tracking-wide">Seller(s)</th>
+                                <th scope="col" className="px-6 py-3.5 text-left tracking-wide">Total</th>
+                                <th scope="col" className="px-6 py-3.5 text-left tracking-wide">Payment</th>
+                                <th scope="col" className="px-6 py-3.5 text-left tracking-wide">Status</th>
+                                <th scope="col" className="relative px-6 py-3.5"><span className="sr-only">Actions</span></th>
                             </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
+                        <tbody className="divide-y divide-neutral-955/5 dark:divide-gray-850 font-normal text-xs text-gray-700 dark:text-gray-300">
                             {loading ? (
                                 <tr>
-                                    <td colSpan={9} className="px-6 py-4 text-center text-sm text-gray-500">Loading orders...</td>
+                                    <td colSpan={9} className="px-6 py-8 text-center text-xs text-neutral-500 font-normal">Loading orders...</td>
                                 </tr>
                             ) : orders.length === 0 ? (
                                 <tr>
-                                    <td colSpan={9} className="px-6 py-4 text-center text-sm text-gray-500">No orders found.</td>
+                                    <td colSpan={9} className="px-6 py-8 text-center text-xs text-neutral-500 font-normal">No orders found.</td>
                                 </tr>
                             ) : (
                                 orders.map((order) => (
-                                    <tr key={order.id} className="hover:bg-gray-50 transition-colors">
+                                    <tr key={order.id} className="hover:bg-neutral-50/40 dark:hover:bg-gray-850/20 transition-colors">
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <input
                                                 type="checkbox"
-                                                className="h-4 w-4 text-cureza-green border-gray-300 rounded focus:ring-cureza-green"
+                                                className="h-4 w-4 text-black border-neutral-950/15 rounded-[4px] focus:ring-black cursor-pointer bg-transparent"
                                                 checked={selectedOrderIds.includes(order.id)}
                                                 onChange={() => toggleSelectOrder(order.id)}
                                             />
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-cureza-green hover:underline cursor-pointer">
+                                        <td className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-black dark:text-white hover:underline cursor-pointer">
                                             <Link href={`/superadmin/dashboard/orders/${order.id}`}>{order.order_number}</Link>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <td className="px-6 py-4 whitespace-nowrap font-normal text-neutral-550 dark:text-neutral-400">
                                             {new Date(order.created_at).toLocaleDateString()}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <td className="px-6 py-4 whitespace-nowrap font-normal text-neutral-900 dark:text-neutral-100">
                                             {order.user?.name || 'Guest'}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <td className="px-6 py-4 whitespace-nowrap font-normal text-neutral-500 dark:text-neutral-400">
                                             {Array.from(new Set(order.items.map(i => i.product?.brand?.name || i.seller?.name || 'N/A'))).join(', ')}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">₹{order.final_amount}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap font-semibold text-neutral-900 dark:text-white">₹{order.final_amount}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full capitalize ${order.payment_status === 'paid' ? 'bg-green-50 text-green-700 border border-green-200' :
-                                                order.payment_status === 'pending' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
-                                                    'bg-red-50 text-red-700 border border-red-200'
-                                                }`}>
+                                            <span className={`px-2 py-0.5 inline-flex text-[10px] leading-5 font-semibold rounded-full capitalize ${getPaymentStatusColor(order.payment_status)}`}>
                                                 {order.payment_status}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full capitalize ${getStatusColor(order.status)}`}>
+                                            <span className={`px-2 py-0.5 inline-flex text-[10px] leading-5 font-semibold rounded-full capitalize ${getStatusColor(order.status)}`}>
                                                 {order.status}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <Link href={`/superadmin/dashboard/orders/${order.id}`} className="text-gray-400 hover:text-cureza-green transition-colors">
-                                                <Eye size={18} />
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-xs font-medium">
+                                            <Link href={`/superadmin/dashboard/orders/${order.id}`} className="text-gray-400 hover:text-black dark:hover:text-white transition-colors">
+                                                <Eye size={16} />
                                             </Link>
                                         </td>
                                     </tr>
@@ -357,13 +423,26 @@ export default function AdminOrdersPage() {
                         </tbody>
                     </table>
                 </div>
-                {/* Pagination (Simple) */}
-                <div className="px-6 py-3 flex justify-between items-center border-t border-gray-200">
-                    <button disabled={page <= 1} onClick={() => setPage(page - 1)} className="px-3 py-1 border rounded disabled:opacity-50">Previous</button>
-                    <span className="text-sm text-gray-600">Page {page} of {totalPages}</span>
-                    <button disabled={page >= totalPages} onClick={() => setPage(page + 1)} className="px-3 py-1 border rounded disabled:opacity-50">Next</button>
+                {/* Pagination */}
+                <div className="px-6 py-3 flex justify-between items-center border-t border-neutral-955/10 dark:border-neutral-800 text-xs">
+                    <button
+                        disabled={page <= 1}
+                        onClick={() => setPage(page - 1)}
+                        className="px-3 py-1.5 border border-neutral-950/10 rounded-[10px] hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-neutral-800 dark:hover:bg-neutral-800 dark:text-white transition-all shadow-none"
+                    >
+                        Previous
+                    </button>
+                    <span className="text-neutral-500 dark:text-neutral-450 font-normal">Page {page} of {totalPages}</span>
+                    <button
+                        disabled={page >= totalPages}
+                        onClick={() => setPage(page + 1)}
+                        className="px-3 py-1.5 border border-neutral-950/10 rounded-[10px] hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-neutral-800 dark:hover:bg-neutral-800 dark:text-white transition-all shadow-none"
+                    >
+                        Next
+                    </button>
                 </div>
             </div>
         </div>
     );
 }
+

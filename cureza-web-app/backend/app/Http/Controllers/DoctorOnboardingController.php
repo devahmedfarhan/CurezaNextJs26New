@@ -247,6 +247,19 @@ class DoctorOnboardingController extends Controller
             'declaration_of_truth' => true,
         ]);
 
+        // Notify Admins
+        try {
+            $admins = \App\Models\User::whereIn('role', ['admin', 'super_admin'])->get();
+            \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\AdminAlertNotification(
+                'doctor_registration',
+                'New Doctor Registration',
+                'Doctor ' . $user->name . ' has completed onboarding and is pending verification.',
+                '/superadmin/dashboard/users/doctors/' . $user->id
+            ));
+        } catch (\Exception $e) {
+            Log::error('Failed to send doctor onboarding notification to admins: ' . $e->getMessage());
+        }
+
         return response()->json([
             'message' => 'Application submitted successfully. Under review.',
             'user' => $user

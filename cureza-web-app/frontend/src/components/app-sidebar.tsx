@@ -109,7 +109,8 @@ const data = {
       permission: "orders",
       items: [
         { title: "All Orders", url: "/superadmin/dashboard/orders" },
-        { title: "Refund Requests", url: "/superadmin/dashboard/refunds" },
+        { title: "Refund Requests", url: "/superadmin/dashboard/refunds?tab=refunds" },
+        { title: "Cancelled Products", url: "/superadmin/dashboard/refunds?tab=cancelled" },
         { title: "Shipments", url: "/superadmin/dashboard/shipments" },
       ],
     },
@@ -210,10 +211,11 @@ const data = {
       permission: "settings",
       items: [
         { title: "Campaign Templates", url: "/superadmin/dashboard/settings/notifications?tab=templates" },
-        { title: "Automated Flows", url: "/superadmin/dashboard/settings/notifications?tab=flows" },
-        { title: "Product Waitlists", url: "/superadmin/dashboard/settings/notifications?tab=waitlist" },
-        { title: "AISensy WhatsApp", url: "/superadmin/dashboard/settings/notifications?tab=whatsapp" },
-        { title: "Delivery Logs", url: "/superadmin/dashboard/settings/notifications?tab=logs" },
+        { title: "Automated Flow Rules", url: "/superadmin/dashboard/settings/notifications?tab=flows" },
+        { title: "Product Waitlist", url: "/superadmin/dashboard/settings/notifications?tab=waitlist" },
+        { title: "AISensy API Configuration", url: "/superadmin/dashboard/settings/notifications?tab=whatsapp" },
+        { title: "Delivery Audit Logs", url: "/superadmin/dashboard/settings/notifications?tab=logs" },
+        { title: "System Integration Guide", url: "/superadmin/dashboard/settings/notifications?tab=guide" },
       ],
     },
     {
@@ -250,8 +252,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <div className="flex items-center gap-2 px-4 py-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cureza-green text-white font-bold">
+        <div className="flex items-center gap-2 px-4 py-2 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:justify-center">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-black text-white font-bold shrink-0">
             C
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
@@ -291,9 +293,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <CollapsibleTrigger asChild>
                       <SidebarMenuButton 
                         tooltip={item.title}
-                        className={isParentActive ? "text-cureza-green bg-cureza-green/5 font-medium" : ""}
+                        className={isParentActive ? "text-black bg-neutral-100/80 font-medium" : ""}
                       >
-                        {item.icon && <item.icon className={isParentActive ? "text-cureza-green" : ""} />}
+                        {item.icon && <item.icon className={isParentActive ? "text-black" : ""} />}
                         <span>{item.title}</span>
                         <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                       </SidebarMenuButton>
@@ -327,8 +329,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                   href={subItem.url} 
                                   className={`flex items-center w-full px-2 py-1.5 rounded-md transition-colors ${
                                     isSubActive 
-                                      ? "text-cureza-green bg-cureza-green/10 font-semibold" 
-                                      : "text-gray-600 hover:text-cureza-green hover:bg-gray-50"
+                                      ? "text-black bg-neutral-150 font-semibold" 
+                                      : "text-gray-650 hover:text-black hover:bg-neutral-50"
                                   }`}
                                 >
                                   <span>{subItem.title}</span>

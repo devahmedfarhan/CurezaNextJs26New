@@ -11,6 +11,9 @@ class BlogTag extends Model
     protected $fillable = [
         'name',
         'slug',
+        'meta_title',
+        'meta_description',
+        'meta_keywords',
     ];
 
     public function posts(): BelongsToMany

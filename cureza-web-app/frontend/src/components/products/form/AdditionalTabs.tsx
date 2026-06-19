@@ -9,6 +9,7 @@ interface AdditionalTabsProps {
     updateTabTitle: (id: string, title: string) => void;
     deleteTab: (id: string) => void;
     toggleTabVisibility: (id: string) => void;
+    isSuperAdmin?: boolean;
 }
 
 const PREDEFINED_TABS = [
@@ -21,7 +22,8 @@ export default function AdditionalTabs({
     addTab,
     updateTabContent,
     updateTabTitle,
-    deleteTab
+    deleteTab,
+    isSuperAdmin
 }: AdditionalTabsProps) {
     const [activeTabId, setActiveTabId] = useState<string | null>(additionalTabs.length > 0 ? additionalTabs[0].id : null);
 
@@ -39,13 +41,14 @@ export default function AdditionalTabs({
     }
 
     const currentTab = additionalTabs.find(t => t.id === activeTabId);
+    const roundedClass = isSuperAdmin ? 'rounded-[10px]' : 'rounded-xl';
 
     return (
-        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-6">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+        <div className={`p-6 ${roundedClass} border ${isSuperAdmin ? 'border-neutral-950/15 bg-white dark:bg-gray-900 shadow-none' : 'border-gray-200 bg-white dark:bg-gray-900 shadow-sm'} space-y-6`}>
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-3">
                 <div>
-                    <h3 className="text-lg font-bold text-gray-900">Additional Information</h3>
-                    <p className="text-sm text-gray-500">Add dynamic tabs like warranty, materials, etc.</p>
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Additional Information</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Add dynamic tabs like warranty, materials, etc.</p>
                 </div>
 
                 <div className="flex gap-2">
@@ -56,7 +59,7 @@ export default function AdditionalTabs({
                                 e.target.value = '';
                             }
                         }}
-                        className="text-sm rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
+                        className={`text-sm ${isSuperAdmin ? 'rounded-md border-[0.5px] border-neutral-950/15 focus:ring-black/10 focus:border-black' : 'rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500'} bg-gray-50 dark:bg-gray-800/40`}
                     >
                         <option value="">+ Add Predefined Tab</option>
                         {PREDEFINED_TABS.map(tab => (
@@ -69,7 +72,7 @@ export default function AdditionalTabs({
                             const title = prompt('Enter custom tab title:');
                             if (title) addTab(title);
                         }}
-                        className="px-3 py-1.5 bg-gray-900 text-white text-sm rounded-lg hover:bg-black font-medium"
+                        className={`px-3 py-1.5 ${isSuperAdmin ? 'bg-black hover:bg-neutral-900 text-white rounded-md' : 'bg-gray-900 text-white rounded-lg hover:bg-black'} text-sm font-medium transition-colors`}
                     >
                         + Custom
                     </button>
@@ -77,22 +80,27 @@ export default function AdditionalTabs({
             </div>
 
             {additionalTabs.length === 0 ? (
-                <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-200">
-                    <p className="text-gray-500">No additional tabs yet.</p>
+                <div className={`text-center py-12 bg-gray-50 dark:bg-gray-800/20 ${roundedClass} border border-dashed ${isSuperAdmin ? 'border-neutral-950/15' : 'border-gray-200'}`}>
+                    <p className="text-gray-500 dark:text-gray-400">No additional tabs yet.</p>
                 </div>
             ) : (
                 <div>
-                    {/* Horizontal Tab Bar */}
-                    <div className="flex overflow-x-auto border-b border-gray-200 no-scrollbar mb-4">
+                    {/* Horizontal Tab Bar / Modern Card segment selector */}
+                    <div className="flex flex-wrap gap-2 border-b border-gray-200 dark:border-gray-800 pb-4 mb-4">
                         {additionalTabs.map(tab => (
                             <button
                                 key={tab.id}
                                 type="button"
                                 onClick={() => setActiveTabId(tab.id)}
-                                className={`flex-shrink-0 px-5 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${activeTabId === tab.id
-                                    ? 'border-blue-600 text-blue-600 bg-blue-50/50'
-                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
-                                    }`}
+                                className={`flex-shrink-0 px-4 py-2 text-xs font-semibold border-[0.5px] transition-all ${
+                                    isSuperAdmin
+                                        ? (activeTabId === tab.id
+                                            ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white rounded-md'
+                                            : 'bg-white dark:bg-gray-900 text-gray-500 hover:bg-neutral-50 dark:hover:bg-gray-800 border-neutral-950/10 dark:border-gray-700 rounded-md')
+                                        : (activeTabId === tab.id
+                                            ? 'border-blue-600 text-blue-600 bg-blue-50/50 rounded-lg'
+                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200 rounded-lg')
+                                }`}
                             >
                                 {tab.title}
                             </button>
@@ -102,20 +110,20 @@ export default function AdditionalTabs({
                     {/* Active Tab Content */}
                     {currentTab && (
                         <div className="animate-in fade-in slide-in-from-left-2 duration-300">
-                            <div className="flex items-center justify-between mb-3 bg-gray-50 p-2 rounded-lg border border-gray-200">
+                            <div className={`flex items-center justify-between mb-3 bg-gray-50 dark:bg-gray-800/40 p-2 ${isSuperAdmin ? 'rounded-md border-[0.5px] border-neutral-950/15' : 'rounded-lg border border-gray-200'}`}>
                                 <div className="flex items-center gap-2">
-                                    <span className="text-xs font-bold text-gray-500 uppercase px-2">Editing Tab:</span>
+                                    <span className={`text-xs font-bold text-gray-500 ${isSuperAdmin ? 'capitalize' : 'uppercase'} px-2`}>Editing Tab:</span>
                                     <input
                                         type="text"
                                         value={currentTab.title}
                                         onChange={(e) => updateTabTitle(currentTab.id, e.target.value)}
-                                        className="text-sm font-bold text-gray-900 bg-transparent border-none focus:ring-0 p-0"
+                                        className="text-sm font-bold text-gray-900 dark:text-white bg-transparent border-none focus:ring-0 p-0"
                                     />
                                 </div>
                                 <button
                                     type="button"
                                     onClick={() => deleteTab(currentTab.id)}
-                                    className="text-red-500 hover:bg-red-100 p-1.5 rounded transition-colors text-xs font-medium flex items-center gap-1"
+                                    className={`text-red-500 hover:bg-red-100 dark:hover:bg-red-950/30 p-1.5 ${isSuperAdmin ? 'rounded-md' : 'rounded'} transition-colors text-xs font-medium flex items-center gap-1`}
                                 >
                                     <Trash2 size={14} /> Delete Tab
                                 </button>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Code, Save, CheckCircle2, AlertTriangle, Play, RefreshCw, Terminal, Check, Info } from 'lucide-react';
+import { Code, Save, CheckCircle2, AlertTriangle, Play, RefreshCw, Terminal, Check, Info, HelpCircle } from 'lucide-react';
 import { useToast } from '@/contexts/ToastContext';
 
 interface EventLog {
@@ -98,26 +98,26 @@ export default function AdminPixelPage() {
     };
 
     return (
-        <div className="space-y-8 p-6 max-w-7xl mx-auto animate-in fade-in duration-350">
+        <div className="space-y-6 pb-12">
             {/* Header */}
-            <div className="flex justify-between items-center bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                <div>
-                    <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Meta Pixel & Google Tags</h1>
-                    <p className="text-gray-500 mt-1">Manage pixel analytics integration, event parameters, and check connection logs</p>
+            <div className="flex justify-between items-center bg-white p-6 rounded-[10px] border-[0.35px] border-neutral-950/10">
+                <div className="space-y-1.5">
+                    <h1 className="text-xl font-semibold text-gray-900 tracking-tight">Meta Pixel & Google Tags</h1>
+                    <p className="text-xs text-gray-500 font-normal">Manage pixel analytics integration, event parameters, and check connection logs</p>
                 </div>
                 <button 
                     onClick={handleSave}
                     disabled={isSaving}
-                    className="bg-cureza-green text-white px-5 py-2.5 rounded-xl flex items-center gap-2 hover:bg-green-700 font-bold transition shadow-sm disabled:opacity-50"
+                    className="flex items-center gap-2 bg-black text-white px-4 py-2.5 rounded-[10px] hover:bg-neutral-900 font-medium text-xs border-[0.35px] border-neutral-950/10 transition-all disabled:opacity-50"
                 >
                     {isSaving ? (
                         <>
-                            <RefreshCw size={18} className="animate-spin" />
-                            <span>Saving...</span>
+                            <RefreshCw size={14} className="animate-spin" />
+                            <span>Saving Settings...</span>
                         </>
                     ) : (
                         <>
-                            <Save size={18} />
+                            <Save size={14} />
                             <span>Save Settings</span>
                         </>
                     )}
@@ -125,37 +125,37 @@ export default function AdminPixelPage() {
             </div>
 
             {/* Main Workspace Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Left Column: Settings Configuration */}
                 <div className="space-y-6">
-                    <h3 className="font-extrabold text-xl text-gray-900">Active Tags Setup</h3>
+                    <h3 className="font-semibold text-sm text-gray-900">Active Tags Setup</h3>
 
                     {/* Meta Pixel Card */}
-                    <div className="bg-white p-6 rounded-2xl border border-gray-150 shadow-sm space-y-4 hover:shadow-md transition-shadow">
+                    <div className="bg-white p-5 rounded-[10px] border-[0.35px] border-neutral-950/10 space-y-4 hover:bg-neutral-50/10 transition-all">
                         <div className="flex items-start justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="p-3 bg-blue-50 text-blue-600 rounded-xl border border-blue-100">
-                                    <Code size={24} />
+                                <div className="p-2.5 bg-neutral-50 border-[0.35px] border-neutral-950/10 text-black rounded-[10px]">
+                                    <Code size={18} />
                                 </div>
-                                <div>
-                                    <h4 className="font-extrabold text-gray-900 text-lg">Meta Pixel (Facebook)</h4>
-                                    <p className="text-xs text-gray-400">Track purchase conversions and page views</p>
+                                <div className="space-y-0.5">
+                                    <h4 className="font-semibold text-gray-900 text-sm">Meta Pixel (Facebook)</h4>
+                                    <p className="text-[11px] text-gray-400 font-normal">Track purchase conversions and page views</p>
                                 </div>
                             </div>
-                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
-                                isMetaConnected 
-                                    ? 'bg-green-50 text-green-700 border border-green-150' 
-                                    : 'bg-yellow-50 text-yellow-750 border border-yellow-150'
-                            }`}>
-                                <span className={`h-1.5 w-1.5 rounded-full ${isMetaConnected ? 'bg-green-600' : 'bg-yellow-500'}`} />
+                             <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[10px] text-[10px] font-semibold ${
+                                 isMetaConnected 
+                                     ? 'bg-emerald-50 text-emerald-700 border-[0.35px] border-emerald-500/10' 
+                                     : 'bg-neutral-50 text-neutral-500 border-[0.35px] border-neutral-950/10'
+                              }`}>
+                                <span className={`h-1.5 w-1.5 rounded-full ${isMetaConnected ? 'bg-emerald-600' : 'bg-neutral-400'}`} />
                                 {isMetaConnected ? 'Connected' : 'Offline'}
                             </span>
                         </div>
                         <div className="space-y-1.5">
-                            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide">Pixel ID</label>
+                            <label className="block text-[10px] font-semibold text-gray-500 tracking-normal">Pixel ID</label>
                             <input
                                 type="text"
-                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green text-sm font-semibold"
+                                className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3.5 py-2 bg-white text-gray-900 text-xs focus:ring-1 focus:ring-black focus:border-black font-semibold outline-none"
                                 placeholder="Enter Meta Pixel ID..."
                                 value={metaPixelId}
                                 onChange={e => setMetaPixelId(e.target.value)}
@@ -164,31 +164,31 @@ export default function AdminPixelPage() {
                     </div>
 
                     {/* Google Analytics GA4 Card */}
-                    <div className="bg-white p-6 rounded-2xl border border-gray-150 shadow-sm space-y-4 hover:shadow-md transition-shadow">
+                    <div className="bg-white p-5 rounded-[10px] border-[0.35px] border-neutral-950/10 space-y-4 hover:bg-neutral-50/10 transition-all">
                         <div className="flex items-start justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="p-3 bg-orange-50 text-orange-600 rounded-xl border border-orange-100">
-                                    <Code size={24} />
+                                <div className="p-2.5 bg-neutral-50 border-[0.35px] border-neutral-950/10 text-black rounded-[10px]">
+                                    <Code size={18} />
                                 </div>
-                                <div>
-                                    <h4 className="font-extrabold text-gray-900 text-lg">Google Analytics 4 (GA4)</h4>
-                                    <p className="text-xs text-gray-400">Track user acquisition and behavior stats</p>
+                                <div className="space-y-0.5">
+                                    <h4 className="font-semibold text-gray-900 text-sm">Google Analytics 4 (GA4)</h4>
+                                    <p className="text-[11px] text-gray-400 font-normal">Track user acquisition and behavior stats</p>
                                 </div>
                             </div>
-                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
-                                isGa4Connected 
-                                    ? 'bg-green-50 text-green-700 border border-green-150' 
-                                    : 'bg-yellow-50 text-yellow-750 border border-yellow-150'
-                            }`}>
-                                <span className={`h-1.5 w-1.5 rounded-full ${isGa4Connected ? 'bg-green-600' : 'bg-yellow-500'}`} />
+                             <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[10px] text-[10px] font-semibold ${
+                                 isGa4Connected 
+                                     ? 'bg-emerald-50 text-emerald-700 border-[0.35px] border-emerald-500/10' 
+                                     : 'bg-neutral-50 text-neutral-500 border-[0.35px] border-neutral-950/10'
+                              }`}>
+                                <span className={`h-1.5 w-1.5 rounded-full ${isGa4Connected ? 'bg-emerald-600' : 'bg-neutral-400'}`} />
                                 {isGa4Connected ? 'Connected' : 'Offline'}
                             </span>
                         </div>
                         <div className="space-y-1.5">
-                            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide">Measurement ID (G-XXXXXXXXXX)</label>
+                            <label className="block text-[10px] font-semibold text-gray-500 tracking-normal">Measurement ID (G-XXXXXXXXXX)</label>
                             <input
                                 type="text"
-                                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green text-sm font-semibold"
+                                className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3.5 py-2 bg-white text-gray-900 text-xs focus:ring-1 focus:ring-black focus:border-black font-semibold outline-none"
                                 placeholder="Enter GA4 Measurement ID..."
                                 value={ga4Id}
                                 onChange={e => setGa4Id(e.target.value)}
@@ -197,34 +197,34 @@ export default function AdminPixelPage() {
                     </div>
 
                     {/* Simulator Trigger Buttons */}
-                    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-                        <h4 className="font-extrabold text-gray-900 text-sm flex items-center gap-1.5">
-                            <Play size={16} className="text-cureza-green" />
+                    <div className="bg-white p-5 rounded-[10px] border-[0.35px] border-neutral-950/10 space-y-4">
+                        <h4 className="font-semibold text-gray-900 text-sm flex items-center gap-1.5">
+                            <Play size={14} className="text-black" />
                             Simulation Trigger Console
                         </h4>
-                        <p className="text-xs text-gray-500">Click actions below to test how events transmit to active measurement channels:</p>
+                        <p className="text-xs text-gray-400 font-normal">Click actions below to test how events transmit to active measurement channels:</p>
                         <div className="grid grid-cols-2 gap-3 pt-1">
                             <button 
                                 onClick={() => simulateEvent('PageView')} 
-                                className="py-2.5 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl text-xs font-bold border border-gray-200 transition-colors flex items-center justify-center gap-1.5"
+                                className="py-2 px-3 bg-neutral-50 hover:bg-neutral-100 text-neutral-850 rounded-[10px] text-xs font-medium border-[0.35px] border-neutral-950/10 transition-colors flex items-center justify-center gap-1.5"
                             >
                                 PageView
                             </button>
                             <button 
                                 onClick={() => simulateEvent('AddToCart')} 
-                                className="py-2.5 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl text-xs font-bold border border-gray-200 transition-colors flex items-center justify-center gap-1.5"
+                                className="py-2 px-3 bg-neutral-50 hover:bg-neutral-100 text-neutral-850 rounded-[10px] text-xs font-medium border-[0.35px] border-neutral-950/10 transition-colors flex items-center justify-center gap-1.5"
                             >
                                 AddToCart
                             </button>
                             <button 
                                 onClick={() => simulateEvent('InitiateCheckout')} 
-                                className="py-2.5 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl text-xs font-bold border border-gray-200 transition-colors flex items-center justify-center gap-1.5"
+                                className="py-2 px-3 bg-neutral-50 hover:bg-neutral-100 text-neutral-850 rounded-[10px] text-xs font-medium border-[0.35px] border-neutral-950/10 transition-colors flex items-center justify-center gap-1.5"
                             >
                                 InitiateCheckout
                             </button>
                             <button 
                                 onClick={() => simulateEvent('Purchase')} 
-                                className="py-2.5 px-4 bg-cureza-green/10 hover:bg-cureza-green/20 text-cureza-green rounded-xl text-xs font-bold border border-cureza-green/20 transition-colors flex items-center justify-center gap-1.5"
+                                className="py-2 px-3 bg-black text-white hover:bg-neutral-900 rounded-[10px] text-xs font-medium transition-colors flex items-center justify-center gap-1.5 border-[0.35px] border-neutral-950/10"
                             >
                                 Purchase (Conversion)
                             </button>
@@ -235,50 +235,78 @@ export default function AdminPixelPage() {
                 {/* Right Column: Terminal Logging Console */}
                 <div className="space-y-6 flex flex-col h-full">
                     <div className="flex justify-between items-center">
-                        <h3 className="font-extrabold text-xl text-gray-900 flex items-center gap-2">
-                            <Terminal className="h-5 w-5 text-gray-400" />
+                        <h3 className="font-semibold text-sm text-gray-900 flex items-center gap-2">
+                            <Terminal className="h-4 w-4 text-black" />
                             Real-time Event Stream
                         </h3>
                         {logs.length > 0 && (
                             <button 
                                 onClick={clearLogs}
-                                className="text-xs font-bold text-red-500 hover:text-red-700 hover:underline"
+                                className="text-xs font-medium text-neutral-500 hover:text-black hover:underline"
                             >
                                 Clear console
                             </button>
                         )}
                     </div>
 
-                    <div className="bg-gray-950 text-gray-200 font-mono rounded-3xl p-6 shadow-2xl flex-1 min-h-[460px] max-h-[560px] overflow-y-auto border border-gray-800 space-y-4">
-                        <div className="text-[10px] text-gray-500 uppercase tracking-widest border-b border-gray-800 pb-3 flex justify-between items-center">
+                    <div className="bg-neutral-900 text-neutral-100 font-mono rounded-[10px] p-5 flex-1 min-h-[460px] max-h-[560px] overflow-y-auto border-[0.35px] border-neutral-950/10 space-y-4">
+                        <div className="text-[10px] text-neutral-450 tracking-normal border-b-[0.35px] border-neutral-850/50 pb-3 flex justify-between items-center">
                             <span>Connection Logs</span>
-                            <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 bg-green-500 rounded-full animate-ping" /> System Listening</span>
+                            <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 bg-emerald-500 rounded-full animate-ping" /> System Listening</span>
                         </div>
                         
                         {logs.length === 0 ? (
-                            <div className="h-full flex flex-col items-center justify-center py-20 text-gray-600 text-xs">
+                            <div className="h-full flex flex-col items-center justify-center py-20 text-neutral-500 text-xs">
                                 <span>No events recorded. Trigger simulation packets above.</span>
                             </div>
                         ) : (
                             <div className="space-y-3.5 text-xs">
                                 {logs.map((log, index) => (
-                                    <div key={index} className="space-y-1.5 border-b border-gray-900 pb-3.5 last:border-0">
+                                    <div key={index} className="space-y-1.5 border-b-[0.35px] border-neutral-850/50 pb-3.5 last:border-0">
                                         <div className="flex justify-between items-center">
-                                            <span className="text-[10px] text-gray-400 font-bold">[{log.timestamp}]</span>
+                                            <span className="text-[10px] text-neutral-450 font-semibold">[{log.timestamp}]</span>
                                             <span className="flex items-center gap-1.5">
-                                                <span className="text-green-400 font-extrabold">{log.event}</span>
-                                                <span className="text-[9px] bg-gray-800 text-gray-400 px-1.5 py-0.2 rounded-md font-sans">
+                                                <span className="text-emerald-450 font-bold">{log.event}</span>
+                                                <span className="text-[9px] bg-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded-[4px] border-[0.35px] border-neutral-850/50 font-sans">
                                                     to {log.platform}
                                                 </span>
                                             </span>
                                         </div>
-                                        <pre className="text-[11px] text-gray-300 bg-gray-900/50 p-2.5 rounded-xl border border-gray-900 overflow-x-auto whitespace-pre-wrap leading-relaxed">
+                                        <pre className="text-[11px] text-neutral-300 bg-neutral-950/40 p-2.5 rounded-[10px] border-[0.35px] border-neutral-950/10 overflow-x-auto whitespace-pre-wrap leading-relaxed">
                                             {JSON.stringify(log.payload, null, 2)}
                                         </pre>
                                     </div>
                                 ))}
                             </div>
                         )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Tutorial / Guidelines Section */}
+            <div className="bg-neutral-50 border-[0.35px] border-neutral-950/10 rounded-[10px] p-6 space-y-4">
+                <div className="flex items-center gap-2">
+                    <HelpCircle className="h-5 w-5 text-black" />
+                    <h3 className="text-sm font-semibold text-gray-900">How It Works & Guidelines | Meta Pixel & GA4</h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-xs text-gray-600 leading-relaxed font-normal">
+                    <div className="space-y-2">
+                        <h4 className="font-medium text-gray-900">1. Integration Setup (Pixel ID kese set karein)</h4>
+                        <p>
+                            Apna Meta Pixel ID ya GA4 Measurement ID inputs me fill karke "Save Settings" par click karein. Ye IDs website ke header injection scripts me push ho jayengi aur real-time event tracking active ho jayegi.
+                        </p>
+                    </div>
+                    <div className="space-y-2">
+                        <h4 className="font-medium text-gray-900">2. Real-Time Tracking & Events</h4>
+                        <p>
+                            Cureza e-commerce storefront par user actions (PageView, AddToCart, InitiateCheckout, Purchase) directly connect ho kar conversion pixel ko standard event trigger push karte hain taaki ads targeting improve ho.
+                        </p>
+                    </div>
+                    <div className="space-y-2">
+                        <h4 className="font-medium text-gray-900">3. Simulation Test Stream</h4>
+                        <p>
+                            Simulator Console buttons ka use karke aap dummy payloads test event trigger dispatch kar sakte hain. Dark panel container logs validation logs window me debug packet verify karne me help karta hai.
+                        </p>
                     </div>
                 </div>
             </div>

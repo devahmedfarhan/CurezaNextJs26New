@@ -85,7 +85,6 @@ export default function AdminProductsPage() {
     const handleApprove = async (id: number) => {
         try {
             await api.post(`/admin/products/${id}/approve`);
-            // alert('Product Approved Successfully');
             fetchProducts(currentPage); // Refresh list
         } catch (error) {
             console.error('Approve failed', error);
@@ -109,7 +108,6 @@ export default function AdminProductsPage() {
     };
 
     const handleEdit = (id: number) => {
-        // Navigate to edit page
         window.location.href = `/superadmin/dashboard/products/${id}/edit`;
     };
 
@@ -117,7 +115,6 @@ export default function AdminProductsPage() {
         if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) return;
         try {
             await api.delete(`/admin/products/${id}`);
-            // alert('Product Deleted Successfully');
             fetchProducts(currentPage);
         } catch (error) {
             console.error('Delete failed', error);
@@ -128,23 +125,20 @@ export default function AdminProductsPage() {
     const filteredProducts = products;
 
     return (
-        <div className="space-y-8 animate-in fade-in duration-500">
+        <div className="space-y-6 animate-in fade-in duration-550">
             {/* Header Section */}
-            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-3xl p-8 border border-gray-100 dark:border-gray-800 shadow-sm">
-                <div className="absolute top-0 right-0 p-8 opacity-5">
-                    <Plus size={120} />
-                </div>
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border-[0.5px] border-neutral-950/15 dark:border-gray-800">
                 <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <div className="space-y-2">
+                    <div className="space-y-1">
                         <div className="flex items-center gap-3">
-                            <div className="p-3 bg-cureza-green/10 rounded-2xl text-cureza-green">
-                                <Plus size={24} />
+                            <div className="p-2.5 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-black dark:text-white">
+                                <Plus size={22} />
                             </div>
-                            <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
-                                Product <span className="text-cureza-green">Catalog</span>
+                            <h1 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">
+                                Product Catalog
                             </h1>
                         </div>
-                        <p className="text-gray-500 dark:text-gray-400 max-w-xl font-medium">
+                        <p className="text-gray-500 dark:text-gray-400 max-w-xl font-medium text-xs">
                             Manage your global e-commerce listings, merchant inventory, status verifications, and approvals.
                         </p>
                     </div>
@@ -152,69 +146,95 @@ export default function AdminProductsPage() {
                     <div className="flex flex-wrap items-center gap-3">
                         <Link 
                             href="/superadmin/dashboard/products/bulk" 
-                            className="flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-5 py-3 rounded-2xl font-black text-xs hover:bg-gray-50 dark:hover:bg-gray-750 transition-all shadow-sm"
+                            className="flex items-center gap-2 bg-white dark:bg-gray-800 border-[0.5px] border-neutral-950/15 text-gray-700 dark:text-gray-300 px-4 py-2.5 rounded-lg font-black text-xs hover:bg-gray-50 dark:hover:bg-gray-750 transition-all"
                         >
-                            <Upload size={16} className="text-gray-400" />
-                            BULK IMPORT
+                            <Upload size={14} className="text-gray-400" />
+                            Bulk Import
                         </Link>
                         <Link 
                             href="/superadmin/dashboard/products/create" 
-                            className="flex items-center justify-center gap-2 bg-cureza-green text-white px-6 py-3 rounded-2xl font-black shadow-lg shadow-green-100 dark:shadow-none hover:bg-green-700 transition-all active:scale-95 text-xs uppercase"
+                            className="flex items-center justify-center gap-2 bg-black text-white dark:bg-white dark:text-black px-5 py-2.5 rounded-lg font-black hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-all active:scale-95 text-xs"
                         >
-                            <Plus size={18} />
+                            <Plus size={16} />
                             Add Product
                         </Link>
                     </div>
                 </div>
             </div>
 
-            {/* Tabs */}
-            <div className="border-b border-gray-100 dark:border-gray-800">
-                <nav className="-mb-px flex space-x-8">
-                    <button
-                        onClick={() => setActiveTab('all')}
-                        className={`py-4 px-1 border-b-2 font-black text-xs uppercase tracking-wider transition-all ${
-                            activeTab === 'all'
-                                ? 'border-cureza-green text-cureza-green'
-                                : 'border-transparent text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
-                        }`}
-                    >
-                        All Products
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('pending')}
-                        className={`py-4 px-1 border-b-2 font-black text-xs uppercase tracking-wider transition-all ${
-                            activeTab === 'pending'
-                                ? 'border-cureza-green text-cureza-green'
-                                : 'border-transparent text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
-                        }`}
-                    >
-                        Pending Approvals
-                    </button>
-                    <Link
-                        href="/superadmin/dashboard/products/change-requests"
-                        className={`py-4 px-1 border-b-2 font-black text-xs uppercase tracking-wider transition-all flex items-center gap-2 ${
-                            activeTab === 'changes'
-                                ? 'border-cureza-green text-cureza-green'
-                                : 'border-transparent text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
-                        }`}
-                    >
-                        Change Requests
-                        {pendingChangeCount > 0 && (
-                            <span className="bg-orange-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full leading-none">
-                                {pendingChangeCount}
-                            </span>
-                        )}
-                    </Link>
-                </nav>
+            {/* Card-based Navigation */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <button
+                    onClick={() => setActiveTab('all')}
+                    className={`flex flex-col items-start p-5 text-left border-[0.5px] rounded-[10px] transition-all cursor-pointer ${
+                        activeTab === 'all'
+                            ? 'border-black bg-black text-white dark:border-white dark:bg-white dark:text-black'
+                            : 'border-neutral-950/15 bg-white text-gray-950 hover:bg-neutral-50 dark:border-gray-800 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-850'
+                    }`}
+                >
+                    <div className="flex justify-between items-center w-full mb-1">
+                        <span className="text-xs font-bold tracking-wider">All Products</span>
+                        <div className={`px-2 py-0.5 text-[10px] font-bold rounded ${
+                            activeTab === 'all' ? 'bg-white/20 text-white dark:bg-black/10 dark:text-black' : 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300'
+                        }`}>
+                            Catalog
+                        </div>
+                    </div>
+                    <p className={`text-[11px] leading-relaxed ${activeTab === 'all' ? 'text-neutral-300 dark:text-neutral-600' : 'text-neutral-500 dark:text-neutral-400'}`}>
+                        Browse and manage all registered products in the system.
+                    </p>
+                </button>
+
+                <button
+                    onClick={() => setActiveTab('pending')}
+                    className={`flex flex-col items-start p-5 text-left border-[0.5px] rounded-[10px] transition-all cursor-pointer ${
+                        activeTab === 'pending'
+                            ? 'border-black bg-black text-white dark:border-white dark:bg-white dark:text-black'
+                            : 'border-neutral-950/15 bg-white text-gray-950 hover:bg-neutral-50 dark:border-gray-800 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-850'
+                    }`}
+                >
+                    <div className="flex justify-between items-center w-full mb-1">
+                        <span className="text-xs font-bold tracking-wider">Pending Approvals</span>
+                        <div className={`px-2 py-0.5 text-[10px] font-bold rounded ${
+                            activeTab === 'pending' ? 'bg-white/20 text-white dark:bg-black/10 dark:text-black' : 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300'
+                        }`}>
+                            Approval Required
+                        </div>
+                    </div>
+                    <p className={`text-[11px] leading-relaxed ${activeTab === 'pending' ? 'text-neutral-300 dark:text-neutral-600' : 'text-neutral-500 dark:text-neutral-400'}`}>
+                        Verify and approve new product catalog listings from sellers.
+                    </p>
+                </button>
+
+                <Link
+                    href="/superadmin/dashboard/products/change-requests"
+                    className="flex flex-col items-start p-5 text-left border-[0.5px] rounded-[10px] bg-white text-gray-950 hover:bg-neutral-50 dark:border-gray-800 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-850 transition-all"
+                >
+                    <div className="flex justify-between items-center w-full mb-1">
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold tracking-wider">Change Requests</span>
+                            {pendingChangeCount > 0 && (
+                                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-black text-white dark:bg-white dark:text-black">
+                                    {pendingChangeCount}
+                                </span>
+                            )}
+                        </div>
+                        <div className="px-2 py-0.5 text-[10px] font-bold rounded bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
+                            Updates
+                        </div>
+                    </div>
+                    <p className="text-[11px] leading-relaxed text-neutral-500 dark:text-neutral-400">
+                        Review proposed product details updates and deletion requests.
+                    </p>
+                </Link>
             </div>
 
             {/* Search and Filters */}
             <div className="relative max-w-md">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
                 <input
                     type="text"
-                    className="w-full pl-12 pr-4 py-3 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl font-bold text-sm text-gray-900 dark:text-white placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green transition-all"
+                    className="w-full pl-11 pr-4 py-2.5 bg-white dark:bg-gray-900 border-[0.5px] border-neutral-950/15 dark:border-gray-800 rounded-lg font-bold text-xs text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-[1.5px] focus:ring-black/10 focus:border-black dark:focus:ring-white/10 dark:focus:border-white transition-all"
                     placeholder="Search products by title or brand..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -222,43 +242,43 @@ export default function AdminProductsPage() {
             </div>
 
             {/* Products List Table */}
-            <div className="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 overflow-hidden">
                 {loading ? (
                     <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-100 dark:divide-gray-800">
-                            <thead className="bg-gray-50/50 dark:bg-gray-850/50">
+                        <table className="min-w-full divide-y divide-neutral-950/10 dark:divide-gray-800">
+                            <thead className="bg-neutral-50/50 dark:bg-gray-850/50">
                                 <tr>
-                                    <th className="px-6 py-4 text-left text-xs font-black text-gray-400 uppercase tracking-widest">Product</th>
-                                    <th className="px-6 py-4 text-left text-xs font-black text-gray-400 uppercase tracking-widest">Category</th>
-                                    <th className="px-6 py-4 text-left text-xs font-black text-gray-400 uppercase tracking-widest">Price</th>
-                                    <th className="px-6 py-4 text-left text-xs font-black text-gray-400 uppercase tracking-widest">Stock</th>
-                                    <th className="px-6 py-4 text-left text-xs font-black text-gray-400 uppercase tracking-widest">Status</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 tracking-wider">Product</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 tracking-wider">Category</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 tracking-wider">Price</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 tracking-wider">Stock</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 tracking-wider">Status</th>
                                     <th className="px-6 py-4" />
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-50 dark:divide-gray-850">
+                            <tbody className="divide-y divide-neutral-950/5 dark:divide-gray-850">
                                 {[1, 2, 3].map((n) => (
                                     <tr key={n} className="animate-pulse">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-xl" />
+                                                <div className="w-10 h-10 bg-neutral-100 dark:bg-gray-850 rounded-lg" />
                                                 <div className="space-y-1.5 flex-1">
-                                                    <div className="h-3.5 bg-gray-100 dark:bg-gray-800 rounded-md w-32" />
-                                                    <div className="h-2.5 bg-gray-100 dark:bg-gray-800 rounded-md w-16" />
+                                                    <div className="h-3.5 bg-neutral-100 dark:bg-gray-850 rounded w-32" />
+                                                    <div className="h-2.5 bg-neutral-100 dark:bg-gray-850 rounded w-16" />
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <div className="h-3.5 bg-gray-100 dark:bg-gray-800 rounded-md w-20" />
+                                            <div className="h-3.5 bg-neutral-100 dark:bg-gray-850 rounded w-20" />
                                         </td>
                                         <td className="px-6 py-4">
-                                            <div className="h-3.5 bg-gray-100 dark:bg-gray-800 rounded-md w-14" />
+                                            <div className="h-3.5 bg-neutral-100 dark:bg-gray-850 rounded w-14" />
                                         </td>
                                         <td className="px-6 py-4">
-                                            <div className="h-3.5 bg-gray-100 dark:bg-gray-800 rounded-md w-16" />
+                                            <div className="h-3.5 bg-neutral-100 dark:bg-gray-850 rounded w-16" />
                                         </td>
                                         <td className="px-6 py-4">
-                                            <div className="h-3.5 bg-gray-100 dark:bg-gray-800 rounded-md w-16" />
+                                            <div className="h-3.5 bg-neutral-100 dark:bg-gray-850 rounded w-16" />
                                         </td>
                                         <td className="px-6 py-4" />
                                     </tr>
@@ -269,66 +289,64 @@ export default function AdminProductsPage() {
                 ) : (
                     <>
                         <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-100 dark:divide-gray-800">
-                                <thead className="bg-gray-50/50 dark:bg-gray-850/50">
+                            <table className="min-w-full divide-y divide-neutral-950/10 dark:divide-gray-800">
+                                <thead className="bg-neutral-50/55 dark:bg-gray-850/50">
                                     <tr>
-                                        <th scope="col" className="px-6 py-4 text-left text-xs font-black text-gray-400 uppercase tracking-widest">Product</th>
-                                        <th scope="col" className="px-6 py-4 text-left text-xs font-black text-gray-400 uppercase tracking-widest">Category</th>
-                                        <th scope="col" className="px-6 py-4 text-left text-xs font-black text-gray-400 uppercase tracking-widest">Seller</th>
-                                        <th scope="col" className="px-6 py-4 text-left text-xs font-black text-gray-400 uppercase tracking-widest">Price</th>
-                                        <th scope="col" className="px-6 py-4 text-left text-xs font-black text-gray-400 uppercase tracking-widest">Stock</th>
-                                        <th scope="col" className="px-6 py-4 text-left text-xs font-black text-gray-400 uppercase tracking-widest">Status</th>
+                                        <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 tracking-wider">Product</th>
+                                        <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 tracking-wider">Category</th>
+                                        <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 tracking-wider">Seller</th>
+                                        <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 tracking-wider">Price</th>
+                                        <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 tracking-wider">Stock</th>
+                                        <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 tracking-wider">Status</th>
                                         <th scope="col" className="relative px-6 py-4"><span className="sr-only">Actions</span></th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-50 dark:divide-gray-850 font-bold text-sm">
+                                <tbody className="divide-y divide-neutral-950/5 dark:divide-gray-850 text-xs">
                                     {filteredProducts.length > 0 ? (
                                         filteredProducts.map((product) => (
-                                            <tr key={product.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-850/30 transition-colors group">
+                                            <tr key={product.id} className="hover:bg-neutral-50/50 dark:hover:bg-gray-850/30 transition-colors group">
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <div className="flex items-center">
-                                                        <div className="h-10 w-10 shrink-0 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-800 rounded-xl overflow-hidden shadow-sm flex items-center justify-center text-gray-400">
+                                                        <div className="h-10 w-10 shrink-0 bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-neutral-950/10 rounded-lg overflow-hidden flex items-center justify-center text-gray-400">
                                                             {product.image ? (
                                                                 <img src={getImageUrl(product.image)} alt="" className="w-full h-full object-cover" />
                                                             ) : (
-                                                                <span className="text-[10px] uppercase font-black">Img</span>
+                                                                <span className="text-[9px] uppercase font-bold">Img</span>
                                                             )}
                                                         </div>
                                                         <div className="ml-4 min-w-0">
-                                                            <div className="text-gray-950 dark:text-gray-100 truncate max-w-[200px]" title={product.title}>{product.title}</div>
-                                                            <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider pt-0.5">ID: PRD-{product.id}</div>
+                                                            <div className="text-gray-950 dark:text-gray-100 font-bold truncate max-w-[200px]" title={product.title}>{product.title}</div>
+                                                            <div className="text-[9px] text-gray-400 font-bold uppercase tracking-wider pt-0.5">Id: Prd-{product.id}</div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-gray-300 font-medium">
+                                                <td className="px-6 py-4 whitespace-nowrap text-gray-650 dark:text-gray-300 font-medium">
                                                     {product.category?.name || 'N/A'}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-gray-300 font-medium">
+                                                <td className="px-6 py-4 whitespace-nowrap text-gray-650 dark:text-gray-300 font-medium">
                                                     {product.seller?.name || 'N/A'}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-gray-950 dark:text-white font-extrabold">
                                                     ₹{parseFloat(product.price).toLocaleString('en-IN')}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className={`px-2.5 py-1 inline-flex text-[10px] font-black uppercase tracking-wider rounded-full border ${
+                                                    <span className={`px-2 py-0.5 inline-flex text-[9px] font-bold uppercase tracking-wider rounded border ${
                                                         product.stock > 10 
-                                                            ? 'bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400 border-green-100/50 dark:border-green-900/20' 
+                                                            ? 'bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400 border-green-200/30' 
                                                             : product.stock > 0 
-                                                            ? 'bg-yellow-50 dark:bg-yellow-950/20 text-yellow-700 dark:text-yellow-400 border-yellow-100/50 dark:border-yellow-900/20' 
-                                                            : 'bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-400 border-red-100/50 dark:border-red-900/20'
+                                                            ? 'bg-neutral-50 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200' 
+                                                            : 'bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-400 border-red-200/30'
                                                     }`}>
-                                                        {product.stock > 0 ? `${product.stock} in stock` : 'Out of Stock'}
+                                                        {product.stock > 0 ? `${product.stock} In Stock` : 'Out of Stock'}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className={`px-2.5 py-1 inline-flex text-[10px] font-black uppercase tracking-wider rounded-full border ${
+                                                    <span className={`px-2 py-0.5 inline-flex text-[9px] font-bold uppercase tracking-wider rounded border ${
                                                         product.status === 'published' || product.status === 'approved'
-                                                            ? 'bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400 border-green-100/50 dark:border-green-900/20' 
-                                                            : product.status === 'pending' || product.status === 'pending_approval' || product.status === 'pending_update'
-                                                            ? 'bg-yellow-50 dark:bg-yellow-950/20 text-yellow-700 dark:text-yellow-400 border-yellow-100/50 dark:border-yellow-900/20' 
-                                                            : 'bg-gray-100 dark:bg-gray-800 text-gray-500 border-gray-200 dark:border-gray-700'
+                                                            ? 'bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400 border-green-200/30' 
+                                                            : 'bg-neutral-50 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200'
                                                     }`}>
-                                                        {product.status.replace('_', ' ')}
+                                                        {product.status.replace('_', ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-right">
@@ -337,40 +355,40 @@ export default function AdminProductsPage() {
                                                             <>
                                                                 <button
                                                                     onClick={() => handleApprove(product.id)}
-                                                                    className="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-950/20 rounded-xl transition-all"
+                                                                    className="p-1.5 text-green-600 hover:bg-green-50 dark:hover:bg-green-950/20 rounded-md transition-all"
                                                                     title="Approve Submission"
                                                                 >
-                                                                    <Check size={16} />
+                                                                    <Check size={14} />
                                                                 </button>
                                                                 <button
                                                                     onClick={() => handleReject(product.id)}
-                                                                    className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-xl transition-all"
+                                                                    className="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-md transition-all"
                                                                     title="Reject Submission"
                                                                 >
-                                                                    <X size={16} />
+                                                                    <X size={14} />
                                                                 </button>
                                                             </>
                                                         )}
                                                         <button
                                                             onClick={() => handleView(product.id)}
-                                                            className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/20 rounded-xl transition-all"
+                                                            className="p-1.5 text-gray-400 hover:text-black hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-all"
                                                             title="View details"
                                                         >
-                                                            <Eye size={16} />
+                                                            <Eye size={14} />
                                                         </button>
                                                         <button
                                                             onClick={() => handleEdit(product.id)}
-                                                            className="p-2 text-gray-400 hover:text-cureza-green hover:bg-green-50 dark:hover:bg-green-950/20 rounded-xl transition-all"
+                                                            className="p-1.5 text-gray-400 hover:text-black hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-all"
                                                             title="Edit Details"
                                                         >
-                                                            <Edit size={16} />
+                                                            <Edit size={14} />
                                                         </button>
                                                         <button
                                                             onClick={() => handleDelete(product.id)}
-                                                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-xl transition-all"
+                                                            className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-all"
                                                             title="Delete Product"
                                                         >
-                                                            <Trash2 size={16} />
+                                                            <Trash2 size={14} />
                                                         </button>
                                                     </div>
                                                 </td>
@@ -380,12 +398,12 @@ export default function AdminProductsPage() {
                                         <tr>
                                             <td colSpan={7} className="px-6 py-20 text-center">
                                                 <div className="flex flex-col items-center gap-4">
-                                                    <div className="p-4 bg-gray-50 dark:bg-gray-850 rounded-full text-gray-300">
-                                                        <Plus size={40} />
+                                                    <div className="p-3 bg-neutral-50 dark:bg-neutral-800 rounded-full text-gray-300">
+                                                        <Plus size={32} />
                                                     </div>
                                                     <div className="space-y-1">
-                                                        <p className="text-lg font-bold text-gray-900 dark:text-white">No products found</p>
-                                                        <p className="text-sm text-gray-500 max-w-xs">Register your first system catalog product or adjust filters.</p>
+                                                        <p className="text-base font-bold text-gray-900 dark:text-white">No Products Found</p>
+                                                        <p className="text-xs text-gray-500 max-w-xs">Register your first system catalog product or adjust filters.</p>
                                                     </div>
                                                 </div>
                                             </td>
@@ -397,26 +415,26 @@ export default function AdminProductsPage() {
 
                         {/* Pagination Controls */}
                         {totalPages > 1 && (
-                            <div className="bg-white dark:bg-gray-900 px-6 py-4 flex items-center justify-between border-t border-gray-100 dark:border-gray-800 rounded-b-3xl">
+                            <div className="bg-white dark:bg-gray-900 px-6 py-4 flex items-center justify-between border-t border-neutral-950/10 dark:border-gray-800 rounded-b-[10px]">
                                 <div className="flex-1 flex justify-between sm:hidden">
                                     <button
                                         onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                         disabled={currentPage === 1}
-                                        className="px-4 py-2 border border-gray-200 dark:border-gray-700 text-xs font-black uppercase tracking-wider rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-850 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                        className="px-4 py-2 border border-neutral-950/15 dark:border-gray-700 text-[10px] font-black uppercase tracking-wider rounded-lg text-gray-700 dark:text-gray-300 hover:bg-neutral-50 dark:hover:bg-gray-850 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                                     >
-                                        PREV
+                                        Prev
                                     </button>
                                     <button
                                         onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                                         disabled={currentPage === totalPages}
-                                        className="px-4 py-2 border border-gray-200 dark:border-gray-700 text-xs font-black uppercase tracking-wider rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-850 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                        className="px-4 py-2 border border-neutral-950/15 dark:border-gray-700 text-[10px] font-black uppercase tracking-wider rounded-lg text-gray-700 dark:text-gray-300 hover:bg-neutral-50 dark:hover:bg-gray-850 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                                     >
-                                        NEXT
+                                        Next
                                     </button>
                                 </div>
                                 <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                                     <div>
-                                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wide">
+                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">
                                             Showing <span className="text-gray-900 dark:text-white">{(currentPage - 1) * 15 + 1}</span> to{' '}
                                             <span className="text-gray-900 dark:text-white">
                                                 {Math.min(currentPage * 15, totalItems)}
@@ -425,23 +443,23 @@ export default function AdminProductsPage() {
                                         </p>
                                     </div>
                                     <div>
-                                        <nav className="relative z-0 inline-flex rounded-xl shadow-sm -space-x-px border border-gray-100 dark:border-gray-800 overflow-hidden" aria-label="Pagination">
+                                        <nav className="relative z-0 inline-flex rounded-lg -space-x-px border border-neutral-950/10 dark:border-gray-800 overflow-hidden" aria-label="Pagination">
                                             <button
                                                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                                 disabled={currentPage === 1}
-                                                className="relative inline-flex items-center px-3 py-2 border-r border-gray-150 dark:border-gray-800 bg-white dark:bg-gray-900 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-850 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                className="relative inline-flex items-center px-3 py-2 border-r border-neutral-950/10 dark:border-gray-850 bg-white dark:bg-gray-900 text-xs font-medium text-gray-500 hover:bg-neutral-50 dark:hover:bg-gray-850 disabled:opacity-50 disabled:cursor-not-allowed"
                                             >
                                                 <span className="sr-only">Previous</span>
-                                                <ChevronLeft size={16} />
+                                                <ChevronLeft size={14} />
                                             </button>
                                             {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                                                 <button
                                                     key={page}
                                                     onClick={() => setCurrentPage(page)}
-                                                    className={`relative inline-flex items-center px-4 py-2 border-r border-gray-150 dark:border-gray-800 text-xs font-black uppercase tracking-wider transition-all ${
+                                                    className={`relative inline-flex items-center px-3.5 py-1.5 border-r border-neutral-950/10 dark:border-gray-850 text-[10px] font-black uppercase tracking-wider transition-all ${
                                                         currentPage === page
-                                                            ? 'z-10 bg-cureza-green text-white border-cureza-green'
-                                                            : 'bg-white dark:bg-gray-900 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-850'
+                                                            ? 'z-10 bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
+                                                            : 'bg-white dark:bg-gray-900 text-gray-500 hover:bg-neutral-50 dark:hover:bg-gray-850'
                                                     }`}
                                                 >
                                                     {page}
@@ -450,10 +468,10 @@ export default function AdminProductsPage() {
                                             <button
                                                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                                                 disabled={currentPage === totalPages}
-                                                className="relative inline-flex items-center px-3 py-2 bg-white dark:bg-gray-900 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-850 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                className="relative inline-flex items-center px-3 py-2 bg-white dark:bg-gray-900 text-xs font-medium text-gray-500 hover:bg-neutral-50 dark:hover:bg-gray-850 disabled:opacity-50 disabled:cursor-not-allowed"
                                             >
                                                 <span className="sr-only">Next</span>
-                                                <ChevronRight size={16} />
+                                                <ChevronRight size={14} />
                                             </button>
                                         </nav>
                                     </div>

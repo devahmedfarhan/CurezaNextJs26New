@@ -22,6 +22,9 @@ class UpdateBlogCategoryRequest extends FormRequest
             'description' => 'nullable|string',
             'icon' => 'nullable|string',
             'is_active' => 'boolean',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string',
+            'meta_keywords' => 'nullable|string',
         ];
     }
 }

@@ -17,6 +17,9 @@ class BlogCategory extends Model
         'description',
         'icon',
         'is_active',
+        'meta_title',
+        'meta_description',
+        'meta_keywords',
     ];
 
     protected $casts = [

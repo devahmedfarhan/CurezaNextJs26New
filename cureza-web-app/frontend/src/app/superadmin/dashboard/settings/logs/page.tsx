@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 import api from '@/lib/api';
 import { 
     Clock, 
-    User, 
-    ShieldAlert, 
     Search, 
     Users, 
     Activity, 
@@ -14,7 +12,8 @@ import {
     ChevronLeft, 
     ChevronRight, 
     Loader2, 
-    RefreshCw 
+    RefreshCw,
+    ShieldAlert
 } from 'lucide-react';
 
 interface LogUser {
@@ -108,97 +107,95 @@ export default function AdminLogsPage() {
     const getRoleBadgeStyles = (role?: string) => {
         switch (role?.toLowerCase()) {
             case 'customer':
-                return 'bg-blue-50 text-blue-700 border border-blue-200';
             case 'doctor':
-                return 'bg-emerald-50 text-emerald-700 border border-emerald-200';
             case 'seller':
             case 'vendor':
-                return 'bg-amber-50 text-amber-700 border border-amber-200';
+                return 'bg-neutral-50 text-neutral-600 border border-black/5';
             case 'super_admin':
             case 'admin':
-                return 'bg-purple-50 text-purple-700 border border-purple-200';
+                return 'bg-neutral-900 text-white border border-black/10';
             default:
-                return 'bg-slate-50 text-slate-700 border border-slate-200';
+                return 'bg-neutral-50 text-neutral-600 border border-black/5';
         }
     };
 
     const getActionBadgeStyles = (action: string) => {
         const lower = action.toLowerCase();
+        // Red is reserved for failure/error states
         if (lower.includes('delete') || lower.includes('reject') || lower.includes('fail')) {
-            return 'bg-red-50 text-red-600 border border-red-200';
+            return 'bg-red-50 text-red-650 border border-red-200/50';
         }
+        // Green is reserved for success/approval states
         if (lower.includes('create') || lower.includes('approve') || lower.includes('success') || lower.includes('verify')) {
-            return 'bg-green-50 text-green-700 border border-green-200';
+            return 'bg-green-50 text-green-700 border border-green-200/50';
         }
-        if (lower.includes('update')) {
-            return 'bg-indigo-50 text-indigo-700 border border-indigo-200';
-        }
-        return 'bg-sky-50 text-sky-700 border border-sky-200';
+        // General action styles must remain monochrome
+        return 'bg-neutral-50 text-neutral-800 border border-black/10';
     };
 
     return (
-        <div className="space-y-6 max-w-7xl mx-auto pb-20">
+        <div className="w-full space-y-6 pb-20 font-sans text-neutral-900">
             {/* Header Section */}
-            <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 bg-gradient-to-r from-emerald-950 to-emerald-900 p-6 rounded-2xl text-white shadow-lg">
+            <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b border-black/10 pb-5">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">System Audit Trail</h1>
-                    <p className="text-emerald-100/80 text-sm mt-1">
+                    <h2 className="text-sm font-medium text-neutral-900 tracking-tight">System Audit Trail</h2>
+                    <p className="text-neutral-500 text-xs mt-0.5">
                         Monitor and filter actions performed by customers, doctors, sellers, and system administrators.
                     </p>
                 </div>
                 <button 
                     onClick={() => fetchLogs(1, activeTab, search)}
-                    className="flex items-center justify-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 transition-all rounded-lg text-sm font-semibold border border-white/10 backdrop-blur-sm self-start md:self-auto"
+                    className="flex items-center justify-center gap-1.5 px-3 py-1.5 border border-black/10 hover:bg-neutral-50 transition-all rounded-[10px] text-xs font-medium text-neutral-800 shrink-0 bg-white"
                 >
-                    <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
+                    <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
                     Refresh Logs
                 </button>
             </div>
 
             {/* Filter and Search Bar */}
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div className="bg-white p-4 rounded-[10px] border border-black/10 shadow-none flex flex-col md:flex-row gap-4 items-center justify-between">
                 <form onSubmit={handleSearchSubmit} className="relative w-full md:max-w-md">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={14} />
                     <input
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder="Search logs by action, IP, description..."
-                        className="w-full pl-10 pr-24 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cureza-green/50 text-sm"
+                        className="w-full pl-9 pr-20 py-2 bg-neutral-50/50 border border-black/10 rounded-[10px] focus:border-black outline-none text-xs"
                     />
                     <button 
                         type="submit"
-                        className="absolute right-1.5 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-cureza-green text-white rounded-md text-xs font-semibold hover:bg-emerald-800 transition-all"
+                        className="absolute right-1.5 top-1/2 -translate-y-1/2 px-2.5 py-1 bg-black text-white rounded-[10px] text-[10px] font-medium hover:bg-neutral-900 transition-all"
                     >
                         Search
                     </button>
                 </form>
 
-                {/* Total Stats */}
-                <div className="text-sm text-gray-500 whitespace-nowrap">
-                    Found <span className="font-bold text-gray-900">{total}</span> activity records
+                <div className="text-xs text-neutral-500 whitespace-nowrap">
+                    Found <span className="font-medium text-neutral-900">{total}</span> activity records
                 </div>
             </div>
 
-            {/* 4 Tabs Container */}
-            <div className="flex border-b border-gray-200 overflow-x-auto gap-2 scrollbar-none">
+            {/* Navigation Pills */}
+            <div className="flex flex-wrap gap-2 pb-2">
                 {tabs.map((tab) => {
                     const Icon = tab.icon;
                     const isActive = activeTab === tab.id;
                     return (
                         <button
                             key={tab.id}
+                            type="button"
                             onClick={() => {
                                 setActiveTab(tab.id as any);
                                 setPage(1);
                             }}
-                            className={`flex items-center gap-2 px-5 py-3.5 text-sm font-bold border-b-2 whitespace-nowrap transition-all ${
+                            className={`flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-[10px] transition-all border ${
                                 isActive 
-                                    ? 'border-cureza-green text-cureza-green bg-emerald-50/40 rounded-t-lg font-extrabold' 
-                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                    ? 'bg-black border-black text-white' 
+                                    : 'border-black/10 text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 bg-white'
                             }`}
                         >
-                            <Icon size={16} />
+                            <Icon size={14} />
                             {tab.label}
                         </button>
                     );
@@ -206,63 +203,63 @@ export default function AdminLogsPage() {
             </div>
 
             {/* Table Container */}
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-[10px] border border-black/10 shadow-none overflow-hidden">
                 {loading ? (
                     <div className="flex flex-col justify-center items-center py-20 gap-3">
-                        <Loader2 className="animate-spin text-cureza-green" size={40} />
-                        <span className="text-gray-500 text-sm font-medium">Fetching Audit logs...</span>
+                        <Loader2 className="animate-spin text-black" size={28} />
+                        <span className="text-neutral-450 text-xs font-normal">Fetching Audit logs...</span>
                     </div>
                 ) : logs.length === 0 ? (
-                    <div className="flex flex-col justify-center items-center py-20 text-center px-4">
-                        <Activity className="text-gray-300 mb-3" size={48} />
-                        <h3 className="font-bold text-gray-700 text-lg">No Log Records Found</h3>
-                        <p className="text-gray-500 text-sm mt-1 max-w-md">
+                    <div className="flex flex-col justify-center items-center py-20 text-center px-4 bg-neutral-50/10">
+                        <Activity className="text-neutral-350 mb-3" size={32} />
+                        <h3 className="font-medium text-neutral-700 text-sm">No Log Records Found</h3>
+                        <p className="text-neutral-450 text-xs mt-1 max-w-sm font-normal">
                             No activities match the current filters. Modify your search query or select another stakeholder tab.
                         </p>
                     </div>
                 ) : (
                     <>
                         <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
+                            <table className="min-w-full divide-y divide-black/10">
+                                <thead className="bg-neutral-50/50">
                                     <tr>
-                                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Stakeholder</th>
-                                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Action</th>
-                                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Description</th>
-                                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Network Details</th>
-                                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Timestamp</th>
+                                        <th className="px-5 py-3 text-left text-[11px] font-medium text-neutral-500 tracking-normal capitalize">Stakeholder</th>
+                                        <th className="px-5 py-3 text-left text-[11px] font-medium text-neutral-500 tracking-normal capitalize">Action</th>
+                                        <th className="px-5 py-3 text-left text-[11px] font-medium text-neutral-500 tracking-normal capitalize">Description</th>
+                                        <th className="px-5 py-3 text-left text-[11px] font-medium text-neutral-500 tracking-normal capitalize">Network Details</th>
+                                        <th className="px-5 py-3 text-left text-[11px] font-medium text-neutral-500 tracking-normal capitalize">Timestamp</th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-150">
+                                <tbody className="bg-white divide-y divide-black/5">
                                     {logs.map((log) => (
-                                        <tr key={log.id} className="hover:bg-gray-50/50 transition-colors">
+                                        <tr key={log.id} className="hover:bg-neutral-50/30 transition-colors">
                                             {/* Stakeholder Details */}
-                                            <td className="px-6 py-4 whitespace-nowrap">
+                                            <td className="px-5 py-4 whitespace-nowrap">
                                                 {log.user ? (
                                                     <div className="flex flex-col gap-1">
                                                         <div className="flex items-center gap-2">
-                                                            <div className="w-8 h-8 rounded-full bg-emerald-50 text-cureza-green flex items-center justify-center font-bold text-xs uppercase border border-emerald-100">
+                                                            <div className="w-7 h-7 rounded-full bg-neutral-100 text-black flex items-center justify-center font-bold text-xs uppercase border border-black/5">
                                                                 {log.user.name.charAt(0)}
                                                             </div>
                                                             <div className="flex flex-col">
-                                                                <span className="font-bold text-gray-900 text-sm">{log.user.name}</span>
-                                                                <span className="text-xs text-gray-500">{log.user.email}</span>
+                                                                <span className="font-medium text-neutral-900 text-xs">{log.user.name}</span>
+                                                                <span className="text-[10px] text-neutral-450 font-normal">{log.user.email}</span>
                                                             </div>
                                                         </div>
-                                                        <div className="mt-1">
-                                                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${getRoleBadgeStyles(log.user.role)}`}>
+                                                        <div className="mt-0.5">
+                                                            <span className={`px-1.5 py-0.5 rounded-[10px] text-[9px] font-medium uppercase ${getRoleBadgeStyles(log.user.role)}`}>
                                                                 {log.user.role}
                                                             </span>
                                                         </div>
                                                     </div>
                                                 ) : (
                                                     <div className="flex items-center gap-2">
-                                                        <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center font-bold text-xs">
+                                                        <div className="w-7 h-7 rounded-full bg-neutral-50 text-neutral-450 border border-black/5 flex items-center justify-center font-semibold text-xs">
                                                             S
                                                         </div>
                                                         <div className="flex flex-col">
-                                                            <span className="font-bold text-slate-800 text-sm">System / Guest</span>
-                                                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase w-max mt-1 ${getRoleBadgeStyles('system')}`}>
+                                                            <span className="font-medium text-neutral-700 text-xs">System / Guest</span>
+                                                            <span className={`px-1.5 py-0.5 rounded-[10px] text-[9px] font-medium uppercase w-max mt-0.5 ${getRoleBadgeStyles('system')}`}>
                                                                 System
                                                             </span>
                                                         </div>
@@ -271,31 +268,31 @@ export default function AdminLogsPage() {
                                             </td>
 
                                             {/* Action Badge */}
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className={`px-3 py-1 rounded-full text-xs font-bold ${getActionBadgeStyles(log.action)}`}>
+                                            <td className="px-5 py-4 whitespace-nowrap">
+                                                <span className={`px-2 py-0.5 rounded-[10px] text-[10px] font-medium ${getActionBadgeStyles(log.action)}`}>
                                                     {log.action}
                                                 </span>
                                             </td>
 
                                             {/* Description details */}
-                                            <td className="px-6 py-4 text-sm text-gray-600 max-w-xs md:max-w-md break-all">
+                                            <td className="px-5 py-4 text-xs text-neutral-600 max-w-xs md:max-w-md break-all font-normal">
                                                 <p className="line-clamp-2" title={log.description}>{log.description || 'N/A'}</p>
                                             </td>
 
                                             {/* Network details */}
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">
+                                            <td className="px-5 py-4 whitespace-nowrap text-xs text-neutral-550 font-mono font-normal">
                                                 <div className="flex flex-col gap-0.5">
-                                                    <span className="text-gray-800 font-semibold">{log.ip_address || 'localhost'}</span>
-                                                    <span className="text-[10px] text-gray-400 truncate max-w-[150px]" title={log.user_agent || 'N/A'}>
+                                                    <span className="text-neutral-800 font-medium">{log.ip_address || 'localhost'}</span>
+                                                    <span className="text-[9px] text-neutral-400 truncate max-w-[150px] font-normal" title={log.user_agent || 'N/A'}>
                                                         {log.user_agent || 'N/A'}
                                                     </span>
                                                 </div>
                                             </td>
 
                                             {/* Timestamp */}
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-medium">
-                                                <div className="flex items-center gap-1.5">
-                                                    <Clock size={13} className="text-gray-400" />
+                                            <td className="px-5 py-4 whitespace-nowrap text-xs text-neutral-600 font-normal">
+                                                <div className="flex items-center gap-1">
+                                                    <Clock size={12} className="text-neutral-400" />
                                                     {formatTimestamp(log.created_at)}
                                                 </div>
                                             </td>
@@ -307,24 +304,24 @@ export default function AdminLogsPage() {
 
                         {/* Pagination Footer */}
                         {lastPage > 1 && (
-                            <div className="px-6 py-4 bg-gray-50 border-t border-gray-150 flex items-center justify-between">
-                                <div className="text-sm text-gray-600">
-                                    Showing page <span className="font-bold text-gray-900">{page}</span> of <span className="font-bold text-gray-900">{lastPage}</span>
+                            <div className="px-5 py-3 bg-neutral-50/50 border-t border-black/10 flex items-center justify-between">
+                                <div className="text-xs text-neutral-550">
+                                    Showing page <span className="font-medium text-neutral-900">{page}</span> of <span className="font-medium text-neutral-900">{lastPage}</span>
                                 </div>
-                                <div className="flex gap-2">
+                                <div className="flex gap-1.5">
                                     <button
                                         onClick={() => handlePageChange(page - 1)}
                                         disabled={page === 1}
-                                        className="p-2 border border-gray-300 rounded-lg hover:bg-white transition-all disabled:opacity-40 bg-white shadow-sm flex items-center justify-center"
+                                        className="p-1.5 border border-black/10 rounded-[10px] hover:bg-neutral-50 transition-all disabled:opacity-40 bg-white flex items-center justify-center"
                                     >
-                                        <ChevronLeft size={16} />
+                                        <ChevronLeft size={14} />
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(page + 1)}
                                         disabled={page === lastPage}
-                                        className="p-2 border border-gray-300 rounded-lg hover:bg-white transition-all disabled:opacity-40 bg-white shadow-sm flex items-center justify-center"
+                                        className="p-1.5 border border-black/10 rounded-[10px] hover:bg-neutral-50 transition-all disabled:opacity-40 bg-white flex items-center justify-center"
                                     >
-                                        <ChevronRight size={16} />
+                                        <ChevronRight size={14} />
                                     </button>
                                 </div>
                             </div>

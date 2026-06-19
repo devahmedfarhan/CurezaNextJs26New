@@ -57,7 +57,7 @@ export default function AdminSystemPage() {
             setTimeout(() => setSuccessMessage(''), 4000);
         } catch (err: any) {
             console.error('Failed to create backup:', err);
-            setErrorMessage(err.response?.data?.message || 'Failed to generate database backup.');
+            setErrorMessage(err.response?.data?.message || 'Failed to generate database database backup.');
         } finally {
             setCreatingBackup(false);
         }
@@ -107,38 +107,38 @@ export default function AdminSystemPage() {
     };
 
     return (
-        <div className="max-w-4xl space-y-6 pb-12 font-sans">
+        <div className="w-full space-y-6 pb-12 font-sans text-neutral-900">
             {/* Header */}
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center border-b border-black/10 pb-5">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">System & Maintenance</h1>
-                    <p className="text-gray-500 text-sm mt-1">Backup database records and manage platform recovery snapshots</p>
+                    <h2 className="text-sm font-medium text-neutral-900 tracking-tight">System & Maintenance</h2>
+                    <p className="text-neutral-500 text-xs mt-0.5">Backup database records and manage platform recovery snapshots</p>
                 </div>
             </div>
 
             {/* Notification Banners */}
             {successMessage && (
-                <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-lg shadow-sm flex items-center gap-3 animate-fadeIn">
-                    <CheckCircle className="text-green-500 flex-shrink-0" size={20} />
-                    <span className="text-green-800 text-sm font-medium">{successMessage}</span>
+                <div className="bg-green-50 border-l-2 border-green-500 p-4 rounded-[10px] shadow-none flex items-center gap-3 animate-fadeIn">
+                    <CheckCircle className="text-green-500 flex-shrink-0" size={16} />
+                    <span className="text-green-800 text-xs font-medium">{successMessage}</span>
                 </div>
             )}
             {errorMessage && (
-                <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg shadow-sm flex items-center gap-3 animate-fadeIn">
-                    <AlertCircle className="text-red-500 flex-shrink-0" size={20} />
-                    <span className="text-red-800 text-sm font-medium">{errorMessage}</span>
+                <div className="bg-red-50 border-l-2 border-red-500 p-4 rounded-[10px] shadow-none flex items-center gap-3 animate-fadeIn">
+                    <AlertCircle className="text-red-500 flex-shrink-0" size={16} />
+                    <span className="text-red-800 text-xs font-medium">{errorMessage}</span>
                 </div>
             )}
 
             {/* Database Backup Card */}
-            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm animate-fadeIn">
+            <div className="bg-white p-6 rounded-[10px] border border-black/10 shadow-none animate-fadeIn">
                 <div className="flex items-center gap-4 mb-6">
-                    <div className="p-3 bg-emerald-50 text-emerald-600 rounded-lg">
-                        <Database size={24} />
+                    <div className="p-2.5 bg-neutral-50 text-black border border-black/10 rounded-[10px] shadow-none">
+                        <Database size={20} />
                     </div>
                     <div>
-                        <h3 className="font-bold text-gray-900 text-lg">Database Backups</h3>
-                        <p className="text-sm text-gray-500">Create, download, and delete manual SQLite database backups</p>
+                        <h3 className="font-medium text-neutral-900 text-sm">Database Backups</h3>
+                        <p className="text-xs text-neutral-500 font-normal">Create, download, and delete manual SQLite database backups</p>
                     </div>
                 </div>
 
@@ -146,47 +146,47 @@ export default function AdminSystemPage() {
                 <div className="space-y-3">
                     {loadingBackups ? (
                         <div className="flex flex-col items-center py-8">
-                            <Loader2 className="animate-spin text-emerald-500 mb-2" size={32} />
-                            <p className="text-gray-400 text-sm">Fetching list of database backups...</p>
+                            <Loader2 className="animate-spin text-black mb-2" size={28} />
+                            <p className="text-neutral-450 text-xs font-normal">Fetching list of database backups...</p>
                         </div>
                     ) : backups.length === 0 ? (
-                        <div className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center">
-                            <Database size={36} className="text-gray-300 mx-auto mb-2" />
-                            <p className="text-gray-500 font-medium text-sm">No backup files found</p>
-                            <p className="text-gray-400 text-xs mt-1">Generate a manual backup of the system database to start</p>
+                        <div className="border border-dashed border-black/10 rounded-[10px] p-8 text-center bg-neutral-50/20">
+                            <Database size={30} className="text-neutral-350 mx-auto mb-2" />
+                            <p className="text-neutral-800 font-medium text-xs">No backup files found</p>
+                            <p className="text-neutral-450 text-[10px] mt-1 font-normal">Generate a manual backup of the system database to start</p>
                         </div>
                     ) : (
                         backups.map((backup) => (
-                            <div key={backup.name} className="flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100/70 transition-all rounded-lg border border-gray-150">
+                            <div key={backup.name} className="flex items-center justify-between p-4 bg-neutral-50/30 hover:bg-neutral-50/60 transition-all rounded-[10px] border border-black/10">
                                 <div className="flex items-center gap-3 min-w-0 flex-1">
-                                    <Server size={20} className="text-emerald-600 flex-shrink-0" />
+                                    <Server size={18} className="text-black flex-shrink-0" />
                                     <div className="min-w-0">
-                                        <p className="font-semibold text-gray-900 truncate text-sm font-mono">{backup.name}</p>
-                                        <p className="text-xs text-gray-500 mt-0.5">Created: {backup.date}</p>
+                                        <p className="font-medium text-neutral-900 truncate text-xs font-mono">{backup.name}</p>
+                                        <p className="text-[10px] text-neutral-450 mt-0.5 font-normal">Created: {backup.date}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-4 ml-4">
-                                    <span className="text-xs font-bold text-gray-600 bg-gray-200/60 px-2 py-1 rounded">
+                                    <span className="text-[10px] font-medium text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded border border-black/5">
                                         {backup.size}
                                     </span>
                                     <button 
                                         onClick={() => handleDownloadBackup(backup.name)}
-                                        className="flex items-center gap-1.5 text-emerald-600 hover:text-emerald-800 text-xs font-bold transition-colors"
+                                        className="flex items-center gap-1 text-black hover:underline text-xs font-medium transition-colors"
                                         title="Download database backup file"
                                     >
-                                        <Download size={16} />
+                                        <Download size={14} />
                                         <span className="hidden sm:inline">Download</span>
                                     </button>
                                     <button 
                                         onClick={() => handleDeleteBackup(backup.name)}
                                         disabled={deletingBackupName === backup.name}
-                                        className="flex items-center gap-1.5 text-red-500 hover:text-red-700 disabled:text-gray-400 text-xs font-bold transition-colors"
+                                        className="flex items-center gap-1 text-neutral-600 hover:text-black disabled:text-neutral-300 text-xs font-medium transition-colors"
                                         title="Delete database backup file"
                                     >
                                         {deletingBackupName === backup.name ? (
-                                            <Loader2 size={16} className="animate-spin" />
+                                            <Loader2 size={14} className="animate-spin" />
                                         ) : (
-                                            <Trash2 size={16} />
+                                            <Trash2 size={14} />
                                         )}
                                         <span className="hidden sm:inline">Delete</span>
                                     </button>
@@ -197,19 +197,19 @@ export default function AdminSystemPage() {
                 </div>
 
                 {/* Create Backup Button */}
-                <div className="mt-6 pt-6 border-t border-gray-100 flex justify-between items-center">
-                    <p className="text-xs text-gray-400">
+                <div className="mt-6 pt-6 border-t border-black/10 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+                    <p className="text-[10px] text-neutral-450 font-normal leading-relaxed max-w-md">
                         Warning: Backups capture current SQLite database file. Ensure correct environment configs.
                     </p>
                     <button 
                         onClick={handleCreateBackup}
                         disabled={creatingBackup}
-                        className="bg-emerald-600 text-white px-5 py-2.5 rounded-lg flex items-center gap-2 hover:bg-emerald-700 transition-colors font-semibold shadow-sm disabled:opacity-50 text-sm"
+                        className="bg-black hover:bg-neutral-900 text-white px-4 py-2 rounded-[10px] flex items-center gap-2 font-medium transition-all disabled:opacity-50 text-xs shrink-0"
                     >
                         {creatingBackup ? (
-                            <Loader2 size={16} className="animate-spin" />
+                            <Loader2 size={14} className="animate-spin" />
                         ) : (
-                            <Database size={16} />
+                            <Database size={14} />
                         )}
                         Create Manual Backup
                     </button>

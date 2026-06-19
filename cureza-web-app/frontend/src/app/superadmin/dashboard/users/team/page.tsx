@@ -230,7 +230,7 @@ export default function AdminTeamPage() {
             }
             setIsRoleModalOpen(false);
             fetchRoles();
-            fetchTeam(); // reload team to reflect role changes
+            fetchTeam();
         } catch (error: any) {
             console.error('Failed to save role', error);
             showToast(error.response?.data?.message || 'Failed to save role', 'error');
@@ -256,45 +256,45 @@ export default function AdminTeamPage() {
         <div className="space-y-6">
             
             {/* Top Header */}
-            <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-2">
+            <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Team & Access Control</h1>
-                    <p className="text-gray-500 text-sm font-semibold uppercase tracking-wider mt-1">Manage platform administrators, moderators, and customize Role-Based Access Control (RBAC) permissions.</p>
+                    <h1 className="text-xl font-semibold text-neutral-900 tracking-tight">Team & Access Control</h1>
+                    <p className="text-neutral-500 text-xs font-normal mt-1">Manage platform administrators, moderators, and customize Role-Based Access Control (RBAC) permissions.</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 self-start md:self-center">
                     {subTab === 'members' ? (
                         <button
                             onClick={() => handleOpenMemberModal()}
-                            className="bg-cureza-green text-white px-5 py-2.5 rounded-xl hover:bg-green-700 transition-colors flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-wider shadow-lg shadow-green-150"
+                            className="bg-black text-white px-5 py-2.5 rounded-[10px] hover:bg-neutral-900 transition-colors flex items-center justify-center gap-2 font-medium text-xs shadow-none"
                         >
-                            <UserPlus size={16} /> Add Team Member
+                            <UserPlus size={14} /> Add Team Member
                         </button>
                     ) : (
                         <button
                             onClick={() => handleOpenRoleModal()}
-                            className="bg-gray-900 text-white px-5 py-2.5 rounded-xl hover:bg-black transition-colors flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-wider shadow-lg"
+                            className="bg-black text-white px-5 py-2.5 rounded-[10px] hover:bg-neutral-900 transition-colors flex items-center justify-center gap-2 font-medium text-xs shadow-none"
                         >
-                            <Plus size={16} /> Create Role
+                            <Plus size={14} /> Create Role
                         </button>
                     )}
                 </div>
             </div>
 
             {/* Sub Tabs Control */}
-            <div className="flex flex-col md:flex-row gap-3 items-center justify-between bg-white p-3 rounded-3xl border border-gray-150 shadow-sm">
-                <div className="flex items-center bg-gray-50/70 p-0.5 rounded-xl border border-gray-100 flex-wrap">
+            <div className="flex flex-col md:flex-row gap-3 items-center justify-between bg-white p-3 rounded-[10px] border border-neutral-950/10 shadow-none">
+                <div className="flex items-center bg-neutral-50/70 p-0.5 rounded-lg border border-neutral-950/5 flex-wrap">
                     <button
                         onClick={() => setSubTab('members')}
-                        className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${
-                            subTab === 'members' ? 'bg-white text-gray-900 shadow-sm border border-gray-150' : 'text-gray-400 hover:text-gray-700'
+                        className={`px-4 py-2 text-xs font-medium rounded-md transition-all ${
+                            subTab === 'members' ? 'bg-white text-neutral-900 border border-neutral-950/10' : 'text-neutral-500 hover:text-neutral-900'
                         }`}
                     >
                         Team Directory
                     </button>
                     <button
                         onClick={() => setSubTab('roles')}
-                        className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${
-                            subTab === 'roles' ? 'bg-white text-gray-900 shadow-sm border border-gray-150' : 'text-gray-400 hover:text-gray-700'
+                        className={`px-4 py-2 text-xs font-medium rounded-md transition-all ${
+                            subTab === 'roles' ? 'bg-white text-neutral-900 border border-neutral-950/10' : 'text-neutral-500 hover:text-neutral-900'
                         }`}
                     >
                         RBAC Roles & Permissions
@@ -304,61 +304,61 @@ export default function AdminTeamPage() {
 
             {/* ---- VIEW 1: TEAM MEMBERS DIRECTORY ---- */}
             {subTab === 'members' && (
-                <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden animate-in fade-in duration-300">
+                <div className="bg-white rounded-[10px] border border-neutral-950/10 shadow-none overflow-hidden animate-in fade-in duration-300">
                     <table className="w-full text-left text-sm">
-                        <thead className="bg-gray-50 border-b border-gray-100">
-                            <tr>
-                                <th className="px-6 py-4 text-[10px] font-black uppercase text-gray-400 tracking-wider">Member Name</th>
-                                <th className="px-6 py-4 text-[10px] font-black uppercase text-gray-400 tracking-wider">Email Address</th>
-                                <th className="px-6 py-4 text-[10px] font-black uppercase text-gray-400 tracking-wider">System Role</th>
-                                <th className="px-6 py-4 text-[10px] font-black uppercase text-gray-400 tracking-wider">Joined Date</th>
-                                <th className="px-6 py-4 text-[10px] font-black uppercase text-gray-400 tracking-wider text-right">Actions</th>
+                        <thead className="bg-neutral-50/50 border-b border-neutral-950/5">
+                            <tr className="text-neutral-500 font-medium">
+                                <th className="px-6 py-4 text-xs tracking-wide">Member Name</th>
+                                <th className="px-6 py-4 text-xs tracking-wide">Email Address</th>
+                                <th className="px-6 py-4 text-xs tracking-wide">System Role</th>
+                                <th className="px-6 py-4 text-xs tracking-wide">Joined Date</th>
+                                <th className="px-6 py-4 text-xs tracking-wide text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-50 bg-white">
+                        <tbody className="divide-y divide-neutral-950/5 bg-white text-neutral-750 font-normal text-xs">
                             {isMembersLoading ? (
-                                <tr><td colSpan={5} className="text-center py-12 text-xs font-bold text-gray-400 uppercase tracking-wider animate-pulse">Loading team members...</td></tr>
+                                <tr><td colSpan={5} className="text-center py-12 text-xs text-neutral-400 font-medium animate-pulse">Loading team members...</td></tr>
                             ) : team.length === 0 ? (
-                                <tr><td colSpan={5} className="text-center py-12 text-xs font-bold text-gray-400 uppercase tracking-wider">No team members found</td></tr>
+                                <tr><td colSpan={5} className="text-center py-12 text-xs text-neutral-500 font-medium">No team members found</td></tr>
                             ) : (
                                 team.map((member) => (
-                                    <tr key={member.id} className="hover:bg-gray-50/30 transition-colors">
+                                    <tr key={member.id} className="hover:bg-neutral-50/20 transition-colors">
                                         <td className="px-6 py-4">
-                                            <div className="font-extrabold text-gray-900 flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded-full bg-gray-100 text-gray-550 flex items-center justify-center font-bold text-sm">
+                                            <div className="font-medium text-neutral-900 flex items-center gap-3">
+                                                <div className="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-950/10 text-neutral-700 flex items-center justify-center font-semibold text-sm">
                                                     {member.name.charAt(0).toUpperCase()}
                                                 </div>
                                                 {member.name}
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-xs font-semibold text-gray-500">{member.email}</td>
+                                        <td className="px-6 py-4 text-neutral-600">{member.email}</td>
                                         <td className="px-6 py-4">
-                                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wide border 
+                                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[4px] text-[10px] font-semibold uppercase tracking-wide border 
                                                 ${member.role === 'super_admin' 
-                                                    ? 'bg-purple-50 text-purple-700 border-purple-100' 
-                                                    : 'bg-indigo-50 text-indigo-700 border-indigo-100'}`}>
+                                                    ? 'bg-neutral-900 text-white border-transparent' 
+                                                    : 'bg-neutral-50 text-neutral-850 border-neutral-950/10'}`}>
                                                 <Shield size={10} />
                                                 {member.role === 'super_admin' 
                                                     ? 'Super Admin' 
                                                     : `Admin (${member.admin_role?.name || 'Custom'})`}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 text-xs font-semibold text-gray-500">{new Date(member.created_at).toLocaleDateString()}</td>
+                                        <td className="px-6 py-4 text-neutral-500">{new Date(member.created_at).toLocaleDateString()}</td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end gap-2.5">
                                                 <button 
                                                     onClick={() => handleOpenMemberModal(member)} 
-                                                    className="p-1.5 bg-gray-50 hover:bg-gray-150 border border-gray-200 text-gray-500 hover:text-gray-900 rounded-lg transition-colors" 
+                                                    className="p-1.5 bg-neutral-50 hover:bg-neutral-100 border border-neutral-950/10 text-neutral-500 hover:text-neutral-900 rounded-lg transition-colors" 
                                                     title="Edit"
                                                 >
-                                                    <Edit size={14} />
+                                                    <Edit size={12} />
                                                 </button>
                                                 <button 
                                                     onClick={() => handleDeleteMember(member.id)} 
-                                                    className="p-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-rose-600 rounded-lg transition-colors" 
+                                                    className="p-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 rounded-lg transition-colors" 
                                                     title="Remove"
                                                 >
-                                                    <Trash2 size={14} />
+                                                    <Trash2 size={12} />
                                                 </button>
                                             </div>
                                         </td>
@@ -374,25 +374,25 @@ export default function AdminTeamPage() {
             {subTab === 'roles' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in duration-300">
                     {isRolesLoading ? (
-                        <div className="col-span-full text-center py-12 text-xs font-bold text-gray-400 uppercase tracking-wider animate-pulse bg-white rounded-3xl border border-gray-100 shadow-sm">
+                        <div className="col-span-full text-center py-12 text-xs text-neutral-400 font-medium animate-pulse bg-white rounded-[10px] border border-neutral-950/10 shadow-none">
                             Loading access roles...
                         </div>
                     ) : roles.length === 0 ? (
-                        <div className="col-span-full text-center py-12 text-xs font-bold text-gray-400 uppercase tracking-widest bg-white rounded-3xl border border-gray-100 shadow-sm">
+                        <div className="col-span-full text-center py-12 text-xs text-neutral-500 font-medium bg-white rounded-[10px] border border-neutral-950/10 shadow-none">
                             No roles defined. Create a custom role to configure permissions.
                         </div>
                     ) : (
                         roles.map((role) => (
-                            <div key={role.id} className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4">
+                            <div key={role.id} className="bg-white p-6 rounded-[10px] border border-neutral-950/10 shadow-none flex flex-col justify-between space-y-4">
                                 <div className="space-y-4">
                                     <div className="flex justify-between items-start">
                                         <div className="flex items-center gap-3">
-                                            <div className="p-3 bg-indigo-50 text-indigo-650 rounded-2xl border border-indigo-100 shadow-inner">
-                                                <Shield size={22} />
+                                            <div className="p-2.5 bg-neutral-100 text-neutral-900 rounded-lg border border-neutral-950/5">
+                                                <Shield size={20} />
                                             </div>
                                             <div>
-                                                <h3 className="font-extrabold text-gray-900 text-base leading-snug">{role.name}</h3>
-                                                <p className="text-[10px] text-gray-450 font-bold uppercase tracking-wide mt-0.5">
+                                                <h3 className="font-semibold text-neutral-900 text-base leading-snug">{role.name}</h3>
+                                                <p className="text-[10px] text-neutral-450 font-semibold uppercase tracking-wider mt-0.5">
                                                     {role.users_count || 0} Admins Assigned
                                                 </p>
                                             </div>
@@ -400,30 +400,30 @@ export default function AdminTeamPage() {
                                         <div className="flex gap-1.5">
                                             <button
                                                 onClick={() => handleOpenRoleModal(role)}
-                                                className="p-1.5 bg-gray-50 border border-gray-250 text-gray-450 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-colors"
+                                                className="p-1.5 bg-neutral-50 border border-neutral-950/15 text-neutral-500 hover:bg-neutral-105 hover:text-neutral-900 rounded-lg transition-colors"
                                                 title="Edit Role"
                                             >
-                                                <Edit size={14} />
+                                                <Edit size={12} />
                                             </button>
                                             <button
                                                 onClick={() => handleDeleteRole(role.id)}
-                                                className="p-1.5 bg-red-50 border border-red-200 text-rose-600 hover:bg-red-100 rounded-lg transition-colors"
+                                                className="p-1.5 bg-red-50 border border-red-200 text-red-650 hover:bg-red-100 rounded-lg transition-colors"
                                                 title="Delete Role"
                                             >
-                                                <Trash2 size={14} />
+                                                <Trash2 size={12} />
                                             </button>
                                         </div>
                                     </div>
 
-                                    <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100/50 space-y-2">
-                                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest block">
+                                    <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/5 space-y-2">
+                                        <span className="text-[9px] font-semibold text-neutral-450 uppercase tracking-wider block">
                                             Assigned Permissions ({role.permissions.length})
                                         </span>
                                         <div className="flex flex-wrap gap-1">
                                             {role.permissions.map((perm) => {
                                                 const module = AVAILABLE_MODULES.find(m => m.id === perm);
                                                 return (
-                                                    <span key={perm} className="px-2 py-0.5 bg-white text-gray-700 border border-gray-200 rounded text-[9px] font-extrabold uppercase">
+                                                    <span key={perm} className="px-2 py-0.5 bg-white text-neutral-700 border border-neutral-950/10 rounded text-[9px] font-semibold uppercase">
                                                         {module ? module.name : perm}
                                                     </span>
                                                 );
@@ -439,42 +439,42 @@ export default function AdminTeamPage() {
 
             {/* MEMBER DIALOG (ADD/EDIT TEAM MEMBER) */}
             <Dialog open={isMemberModalOpen} onOpenChange={setIsMemberModalOpen}>
-                <DialogContent className="max-w-md rounded-2xl p-6 bg-white shadow-xl">
+                <DialogContent className="max-w-md rounded-[10px] p-6 bg-white shadow-none border border-neutral-950/10">
                     <DialogHeader>
-                        <DialogTitle className="text-lg font-bold text-gray-900">
+                        <DialogTitle className="text-base font-semibold text-neutral-900">
                             {editingMember ? 'Edit Staff Profile' : 'Register Admin / Team'}
                         </DialogTitle>
                     </DialogHeader>
                     <form onSubmit={handleMemberSubmit} className="space-y-4 py-2">
                         <div>
-                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Full Name</label>
+                            <label className="block text-xs font-medium text-neutral-450 uppercase tracking-wider mb-1.5">Full Name</label>
                             <input
                                 type="text"
                                 required
                                 value={memberFormData.name}
                                 onChange={(e) => setMemberFormData({ ...memberFormData, name: e.target.value })}
-                                className="w-full px-4 py-2.5 text-xs font-bold border border-gray-250 rounded-xl focus:ring-2 focus:ring-cureza-green/10 focus:border-cureza-green outline-none"
+                                className="w-full px-4 py-2.5 text-xs font-normal border border-neutral-950/15 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
                                 placeholder="Staff Name"
                             />
                         </div>
                         <div>
-                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Email Address</label>
+                            <label className="block text-xs font-medium text-neutral-450 uppercase tracking-wider mb-1.5">Email Address</label>
                             <input
                                 type="email"
                                 required
                                 disabled={!!editingMember}
                                 value={memberFormData.email}
                                 onChange={(e) => setMemberFormData({ ...memberFormData, email: e.target.value })}
-                                className={`w-full px-4 py-2.5 text-xs font-bold border border-gray-250 rounded-xl focus:ring-2 focus:ring-cureza-green/10 focus:border-cureza-green outline-none ${editingMember ? 'bg-gray-50 text-gray-400 cursor-not-allowed' : ''}`}
+                                className={`w-full px-4 py-2.5 text-xs font-normal border border-neutral-950/15 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black ${editingMember ? 'bg-neutral-50 text-neutral-400 cursor-not-allowed border-neutral-950/5' : ''}`}
                                 placeholder="email@cureza.com"
                             />
                         </div>
                         <div>
-                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">System Access Role</label>
+                            <label className="block text-xs font-medium text-neutral-450 uppercase tracking-wider mb-1.5">System Access Role</label>
                             <select
                                 value={memberFormData.role}
                                 onChange={(e) => setMemberFormData({ ...memberFormData, role: e.target.value })}
-                                className="w-full px-3 py-2.5 border border-gray-250 rounded-xl text-xs font-bold focus:ring-2 focus:ring-cureza-green/10 focus:border-cureza-green bg-white cursor-pointer outline-none"
+                                className="w-full px-3 py-2.5 border border-neutral-950/15 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black bg-white cursor-pointer outline-none text-neutral-800"
                             >
                                 <option value="admin">Admin (Custom Permissions)</option>
                                 <option value="super_admin">Super Admin</option>
@@ -483,12 +483,12 @@ export default function AdminTeamPage() {
                         
                         {memberFormData.role === 'admin' && (
                             <div>
-                                <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Custom RBAC Role Profile</label>
+                                <label className="block text-xs font-medium text-neutral-450 uppercase tracking-wider mb-1.5">Custom RBAC Role Profile</label>
                                 <select
                                     required
                                     value={memberFormData.admin_role_id}
                                     onChange={(e) => setMemberFormData({ ...memberFormData, admin_role_id: e.target.value })}
-                                    className="w-full px-3 py-2.5 border border-gray-250 rounded-xl text-xs font-bold focus:ring-2 focus:ring-cureza-green/10 focus:border-cureza-green bg-white cursor-pointer outline-none"
+                                    className="w-full px-3 py-2.5 border border-neutral-950/15 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black bg-white cursor-pointer outline-none text-neutral-800"
                                 >
                                     <option value="">Select RBAC role...</option>
                                     {roles.map((r) => (
@@ -499,7 +499,7 @@ export default function AdminTeamPage() {
                         )}
 
                         <div>
-                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">
+                            <label className="block text-xs font-medium text-neutral-450 uppercase tracking-wider mb-1.5">
                                 Password {editingMember && '(Leave blank to keep current)'}
                             </label>
                             <input
@@ -507,23 +507,23 @@ export default function AdminTeamPage() {
                                 required={!editingMember}
                                 value={memberFormData.password}
                                 onChange={(e) => setMemberFormData({ ...memberFormData, password: e.target.value })}
-                                className="w-full px-4 py-2.5 text-xs font-bold border border-gray-250 rounded-xl focus:ring-2 focus:ring-cureza-green/10 focus:border-cureza-green outline-none"
+                                className="w-full px-4 py-2.5 text-xs font-normal border border-neutral-950/15 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
                                 placeholder="••••••••"
                             />
                         </div>
 
-                        <DialogFooter className="pt-4 border-t gap-2 sm:gap-0">
+                        <DialogFooter className="pt-4 border-t border-neutral-950/5 gap-2 sm:gap-0">
                             <button
                                 type="button"
                                 onClick={() => setIsMemberModalOpen(false)}
-                                className="px-4 py-2.5 text-xs font-extrabold uppercase tracking-wider text-gray-500 hover:bg-gray-50 rounded-xl"
+                                className="px-4 py-2.5 text-xs font-medium text-neutral-500 hover:bg-neutral-50 rounded-[10px] transition-colors"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
                                 disabled={isMemberSubmitting}
-                                className="px-6 py-2.5 rounded-xl bg-gray-900 text-white text-xs font-extrabold uppercase tracking-wider hover:bg-black transition-colors"
+                                className="px-6 py-2.5 rounded-[10px] bg-black text-white text-xs font-medium hover:bg-neutral-900 transition-colors shadow-none"
                             >
                                 {isMemberSubmitting ? 'Saving...' : (editingMember ? 'Update Staff' : 'Register Staff')}
                             </button>
@@ -534,33 +534,33 @@ export default function AdminTeamPage() {
 
             {/* ROLE CONFIGURATION DIALOG (ADD/EDIT RBAC ROLE) */}
             <Dialog open={isRoleModalOpen} onOpenChange={setIsRoleModalOpen}>
-                <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto rounded-3xl p-8 bg-white shadow-xl">
+                <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto rounded-[10px] p-6 bg-white shadow-none border border-neutral-950/10">
                     <DialogHeader>
-                        <DialogTitle className="text-xl font-black text-gray-900 flex items-center gap-2">
-                            <Shield className="text-cureza-green" />
+                        <DialogTitle className="text-base font-semibold text-neutral-900 flex items-center gap-2">
+                            <Shield className="text-neutral-900" size={18} />
                             {editingRole ? 'Configure Role Details' : 'Create Custom RBAC Role'}
                         </DialogTitle>
                     </DialogHeader>
                     <form onSubmit={handleRoleSubmit} className="space-y-6 py-3">
                         <div>
-                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Role Name</label>
+                            <label className="block text-xs font-medium text-neutral-450 uppercase tracking-wider mb-1.5">Role Name</label>
                             <input
                                 type="text"
                                 required
                                 placeholder="e.g. Order Manager, Support Lead"
                                 value={roleFormData.name}
                                 onChange={(e) => setRoleFormData({ ...roleFormData, name: e.target.value })}
-                                className="w-full px-4 py-2.5 text-xs font-bold border border-gray-250 rounded-xl focus:ring-2 focus:ring-cureza-green/10 focus:border-cureza-green outline-none"
+                                className="w-full px-4 py-2.5 text-xs font-normal border border-neutral-950/15 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
                             />
                         </div>
 
                         <div className="space-y-3">
-                            <div className="flex justify-between items-center border-b pb-2">
-                                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Select Access Permissions</label>
+                            <div className="flex justify-between items-center border-b border-neutral-950/5 pb-2">
+                                <label className="text-xs font-semibold text-neutral-450 uppercase tracking-wider">Select Access Permissions</label>
                                 <button
                                     type="button"
                                     onClick={handleSelectAllPermissions}
-                                    className="text-[10px] font-black text-cureza-green hover:underline uppercase tracking-wider"
+                                    className="text-[10px] font-semibold text-neutral-900 hover:underline uppercase tracking-wider"
                                 >
                                     {roleFormData.permissions.length === AVAILABLE_MODULES.length ? 'Deselect All' : 'Select All'}
                                 </button>
@@ -573,22 +573,22 @@ export default function AdminTeamPage() {
                                         <div
                                             key={mod.id}
                                             onClick={() => handlePermissionToggle(mod.id)}
-                                            className={`p-3.5 rounded-xl border transition-all cursor-pointer flex items-start gap-3 select-none ${
+                                            className={`p-3.5 rounded-[10px] border transition-all cursor-pointer flex items-start gap-3 select-none ${
                                                 isSelected
-                                                    ? 'border-cureza-green bg-green-50/15 shadow-sm'
-                                                    : 'border-gray-200 hover:border-gray-300 bg-white'
+                                                    ? 'border-black bg-neutral-50 shadow-none'
+                                                    : 'border-neutral-950/10 hover:border-neutral-950/20 bg-white'
                                             }`}
                                         >
                                             <div className={`mt-0.5 w-4 h-4 rounded border flex items-center justify-center transition-all ${
                                                 isSelected
-                                                    ? 'bg-cureza-green border-cureza-green text-white'
-                                                    : 'border-gray-300'
+                                                    ? 'bg-black border-black text-white'
+                                                    : 'border-neutral-300'
                                             }`}>
                                                 {isSelected && <Check size={11} strokeWidth={3} />}
                                             </div>
-                                            <div className="flex-1 min-w-0">
-                                                <p className="text-xs font-bold text-gray-900">{mod.name}</p>
-                                                <p className="text-[10px] text-gray-400 mt-0.5 leading-normal">{mod.desc}</p>
+                                            <div className="flex-1 min-w-0 text-xs">
+                                                <p className="font-semibold text-neutral-900">{mod.name}</p>
+                                                <p className="text-[10px] text-neutral-450 mt-0.5 leading-normal font-normal">{mod.desc}</p>
                                             </div>
                                         </div>
                                     );
@@ -596,18 +596,18 @@ export default function AdminTeamPage() {
                             </div>
                         </div>
 
-                        <DialogFooter className="pt-4 border-t gap-2 sm:gap-0">
+                        <DialogFooter className="pt-4 border-t border-neutral-950/5 gap-2 sm:gap-0">
                             <button
                                 type="button"
                                 onClick={() => setIsRoleModalOpen(false)}
-                                className="px-4 py-2.5 text-xs font-extrabold uppercase tracking-wider text-gray-500 hover:bg-gray-50 rounded-xl"
+                                className="px-4 py-2.5 text-xs font-medium text-neutral-500 hover:bg-neutral-50 rounded-[10px] transition-colors"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
                                 disabled={isRoleSubmitting}
-                                className="px-6 py-2.5 rounded-xl bg-gray-900 text-white text-xs font-extrabold uppercase tracking-wider hover:bg-black transition-colors"
+                                className="px-6 py-2.5 rounded-[10px] bg-black text-white text-xs font-medium hover:bg-neutral-900 transition-colors shadow-none"
                             >
                                 {isRoleSubmitting ? 'Saving...' : (editingRole ? 'Update Role' : 'Create Role')}
                             </button>

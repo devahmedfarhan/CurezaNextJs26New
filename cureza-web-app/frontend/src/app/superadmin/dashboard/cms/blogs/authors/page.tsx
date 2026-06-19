@@ -31,6 +31,9 @@ interface Author {
     bio: string;
     image: string;
     social_links: any;
+    meta_title?: string;
+    meta_description?: string;
+    meta_keywords?: string;
 }
 
 export default function BlogAuthorsPage() {
@@ -44,6 +47,9 @@ export default function BlogAuthorsPage() {
         bio: '',
         image: '',
         social_links: '{}',
+        meta_title: '',
+        meta_description: '',
+        meta_keywords: '',
     });
 
     useEffect(() => {
@@ -144,6 +150,9 @@ export default function BlogAuthorsPage() {
             bio: author.bio || '',
             image: author.image || '',
             social_links: JSON.stringify(author.social_links || {}, null, 2),
+            meta_title: author.meta_title || '',
+            meta_description: author.meta_description || '',
+            meta_keywords: author.meta_keywords || '',
         });
         setIsOpen(true);
     };
@@ -156,114 +165,157 @@ export default function BlogAuthorsPage() {
             bio: '',
             image: '',
             social_links: '{\n  "twitter": "",\n  "linkedin": ""\n}',
+            meta_title: '',
+            meta_description: '',
+            meta_keywords: '',
         });
     };
 
     return (
-        <div className="space-y-6">
+        <div className="w-full space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Authors</h1>
-                    <p className="text-muted-foreground">Manage blog authors.</p>
+                    <h1 className="text-2xl font-semibold tracking-tight text-black">Authors</h1>
+                    <p className="text-gray-500 text-sm">Manage blog authors and their bio/SEO settings.</p>
                 </div>
                 <Dialog open={isOpen} onOpenChange={(open) => {
                     setIsOpen(open);
                     if (!open) resetForm();
                 }}>
                     <DialogTrigger asChild>
-                        <Button>
+                        <Button className="bg-black hover:bg-black/80 text-white rounded-[10px] border-none shadow-none font-medium text-sm">
                             <Plus className="mr-2 h-4 w-4" /> Add Author
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-lg">
+                    <DialogContent className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none max-w-lg max-h-[85vh] overflow-y-auto">
                         <DialogHeader>
-                            <DialogTitle>{editingId ? 'Edit Author' : 'Add Author'}</DialogTitle>
+                            <DialogTitle className="text-base font-medium text-black">{editingId ? 'Edit Author' : 'Add Author'}</DialogTitle>
                         </DialogHeader>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="name">Name</Label>
+                                <Label htmlFor="name" className="text-xs font-medium text-gray-700">Name</Label>
                                 <Input
                                     id="name"
                                     value={formData.name}
                                     onChange={handleNameChange}
                                     required
+                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="slug">Slug</Label>
+                                <Label htmlFor="slug" className="text-xs font-medium text-gray-700">Slug</Label>
                                 <Input
                                     id="slug"
                                     value={formData.slug}
                                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                                     required
+                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="bio">Bio</Label>
+                                <Label htmlFor="bio" className="text-xs font-medium text-gray-700">Bio</Label>
                                 <Textarea
                                     id="bio"
                                     value={formData.bio}
                                     onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
                                     rows={3}
+                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="image">Image URL</Label>
+                                <Label htmlFor="image" className="text-xs font-medium text-gray-700">Image URL</Label>
                                 <Input
                                     id="image"
                                     value={formData.image}
                                     onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="social_links">Social Links (JSON)</Label>
+                                <Label htmlFor="social_links" className="text-xs font-medium text-gray-700">Social Links (JSON)</Label>
                                 <Textarea
                                     id="social_links"
                                     value={formData.social_links}
                                     onChange={(e) => setFormData({ ...formData, social_links: e.target.value })}
-                                    rows={4}
-                                    className="font-mono text-sm"
+                                    rows={3}
+                                    className="font-mono text-xs rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
-                            <DialogFooter>
-                                <Button type="submit">Save</Button>
+
+                            <div className="border-[0.5px] border-gray-150 p-4 rounded-[10px] space-y-4 bg-gray-50/30">
+                                <h4 className="font-medium text-xs text-black">SEO Settings</h4>
+                                <div className="space-y-2">
+                                    <Label htmlFor="meta_title" className="text-[10px] font-medium text-gray-700">Meta Title</Label>
+                                    <Input
+                                        id="meta_title"
+                                        value={formData.meta_title}
+                                        onChange={(e) => setFormData({ ...formData, meta_title: e.target.value })}
+                                        placeholder="SEO Author Title"
+                                        className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="meta_description" className="text-[10px] font-medium text-gray-700">Meta Description</Label>
+                                    <Textarea
+                                        id="meta_description"
+                                        value={formData.meta_description}
+                                        onChange={(e) => setFormData({ ...formData, meta_description: e.target.value })}
+                                        placeholder="SEO Author Description"
+                                        rows={2}
+                                        className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="meta_keywords" className="text-[10px] font-medium text-gray-700">Meta Keywords</Label>
+                                    <Input
+                                        id="meta_keywords"
+                                        value={formData.meta_keywords}
+                                        onChange={(e) => setFormData({ ...formData, meta_keywords: e.target.value })}
+                                        placeholder="keyword1, keyword2"
+                                        className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                    />
+                                </div>
+                            </div>
+
+                            <DialogFooter className="pt-2">
+                                <Button type="submit" className="bg-black hover:bg-black/80 text-white rounded-[10px] border-none shadow-none font-medium text-sm w-full">Save</Button>
                             </DialogFooter>
                         </form>
                     </DialogContent>
                 </Dialog>
             </div>
 
-            <div className="border rounded-md">
+            <div className="border-[0.5px] border-gray-200/50 rounded-[10px] overflow-hidden bg-white shadow-none">
                 <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Name</TableHead>
-                            <TableHead>Slug</TableHead>
-                            <TableHead>Bio</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
+                    <TableHeader className="bg-gray-50/50">
+                        <TableRow className="border-b-[0.5px] border-gray-200/50">
+                            <TableHead className="text-gray-500 font-medium text-xs">Name</TableHead>
+                            <TableHead className="text-gray-500 font-medium text-xs">Slug</TableHead>
+                            <TableHead className="text-gray-500 font-medium text-xs">Bio</TableHead>
+                            <TableHead className="text-right text-gray-500 font-medium text-xs">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {loading ? (
                             <TableRow>
-                                <TableCell colSpan={4} className="text-center py-10">Loading...</TableCell>
+                                <TableCell colSpan={4} className="text-center py-10 text-gray-500 font-normal text-sm">Loading...</TableCell>
                             </TableRow>
                         ) : authors.length === 0 ? (
                             <TableRow>
-                                <TableCell colSpan={4} className="text-center py-10">No authors found.</TableCell>
+                                <TableCell colSpan={4} className="text-center py-10 text-gray-500 font-normal text-sm">No authors found.</TableCell>
                             </TableRow>
                         ) : (
                             authors.map((author) => (
-                                <TableRow key={author.id}>
-                                    <TableCell className="font-medium">{author.name}</TableCell>
-                                    <TableCell>{author.slug}</TableCell>
-                                    <TableCell className="truncate max-w-xs">{author.bio}</TableCell>
+                                <TableRow key={author.id} className="border-b-[0.5px] border-gray-200/50 hover:bg-gray-50/30">
+                                    <TableCell className="font-medium text-sm text-black">{author.name}</TableCell>
+                                    <TableCell className="text-gray-500 text-sm">{author.slug}</TableCell>
+                                    <TableCell className="truncate max-w-xs text-gray-500 text-sm">{author.bio}</TableCell>
                                     <TableCell className="text-right space-x-2">
-                                        <Button variant="ghost" size="icon" onClick={() => handleEdit(author)}>
-                                            <Edit className="h-4 w-4" />
+                                        <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-gray-100 rounded-[10px]" onClick={() => handleEdit(author)}>
+                                            <Edit className="h-4 w-4 text-black" />
                                         </Button>
-                                        <Button variant="ghost" size="icon" onClick={() => handleDelete(author.id)}>
-                                            <Trash2 className="h-4 w-4 text-red-500" />
+                                        <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-red-50 rounded-[10px] text-red-500" onClick={() => handleDelete(author.id)}>
+                                            <Trash2 className="h-4 w-4" />
                                         </Button>
                                     </TableCell>
                                 </TableRow>

@@ -4,7 +4,7 @@ import ProductForm from '@/components/products/ProductForm';
 
 export default function AdminCreateProductPage() {
     return (
-        <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
+        <div className="w-full space-y-6">
             <ProductForm isSuperAdmin={true} />
         </div>
     );

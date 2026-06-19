@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, Calendar, Target, HelpCircle, Save, Loader2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, Save, Loader2 } from 'lucide-react';
 import api from '@/lib/api';
 
 export default function AdminChallengesPage() {
@@ -120,85 +120,83 @@ export default function AdminChallengesPage() {
         return (
             <div className="space-y-6 animate-pulse">
                 <div className="flex justify-between items-center">
-                    <div className="h-8 w-48 bg-gray-200 rounded-lg"></div>
-                    <div className="h-10 w-36 bg-gray-200 rounded-lg"></div>
+                    <div className="h-9 w-32 bg-neutral-100 rounded-[10px]"></div>
                 </div>
-                <div className="h-64 bg-gray-200 rounded-xl"></div>
+                <div className="h-64 bg-neutral-100 rounded-[10px]"></div>
             </div>
         );
     }
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Challenges Manager</h1>
-                    <p className="text-gray-500">Create and modify ongoing quests that reward users with points.</p>
-                </div>
+        <div className="space-y-4">
+            <div className="flex justify-end items-center">
                 <button
                     onClick={handleOpenCreate}
-                    className="bg-[#052326] text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-opacity-90 flex items-center gap-2 shadow-sm"
+                    className="bg-black text-white px-3 py-1.5 rounded-[10px] text-xs font-medium hover:bg-neutral-800 transition-colors flex items-center gap-1.5"
                 >
-                    <Plus size={18} /> Create Challenge
+                    <Plus size={14} />
+                    <span>Create Challenge</span>
                 </button>
             </div>
 
-            {/* list Grid */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            {/* List Table */}
+            <div className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 overflow-hidden">
                 {challenges.length === 0 ? (
-                    <div className="p-8 text-center text-gray-500">No challenges configured yet. Click "Create Challenge" to start!</div>
+                    <div className="p-8 text-center text-xs text-gray-500">No challenges configured yet. Click "Create Challenge" to start!</div>
                 ) : (
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left text-sm">
-                            <thead className="bg-gray-50 border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                        <table className="w-full text-left text-xs">
+                            <thead className="bg-neutral-50 border-b-[0.5px] border-neutral-950/10 text-gray-500 font-medium">
                                 <tr>
-                                    <th className="p-4">Title / Description</th>
-                                    <th className="p-4">Type</th>
-                                    <th className="p-4">Goal Goal Value</th>
-                                    <th className="p-4">XP Reward</th>
-                                    <th className="p-4">Duration</th>
-                                    <th className="p-4">Status</th>
-                                    <th className="p-4 text-right">Actions</th>
+                                    <th className="p-3">Title / Description</th>
+                                    <th className="p-3">Type</th>
+                                    <th className="p-3">Goal Value Target</th>
+                                    <th className="p-3">XP Reward</th>
+                                    <th className="p-3">Duration</th>
+                                    <th className="p-3">Status</th>
+                                    <th className="p-3 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-200">
+                            <tbody className="divide-y-[0.5px] divide-neutral-950/10">
                                 {challenges.map((item) => {
                                     const start = new Date(item.start_date).toLocaleDateString();
                                     const end = new Date(item.end_date).toLocaleDateString();
 
                                     return (
-                                        <tr key={item.id} className="hover:bg-gray-50/50 transition-colors">
-                                            <td className="p-4 max-w-xs">
-                                                <p className="font-bold text-gray-900">{item.title}</p>
-                                                <p className="text-xs text-gray-500 truncate mt-0.5">{item.description}</p>
+                                        <tr key={item.id} className="hover:bg-neutral-50/50 transition-colors">
+                                            <td className="p-3 max-w-xs">
+                                                <p className="font-medium text-gray-900">{item.title}</p>
+                                                <p className="text-[10px] text-gray-400 truncate mt-0.5">{item.description}</p>
                                             </td>
-                                            <td className="p-4 capitalize text-gray-600 font-medium">{item.type}</td>
-                                            <td className="p-4 font-bold text-gray-900">{item.goal_value.toLocaleString()}</td>
-                                            <td className="p-4 font-bold text-yellow-600">+{item.reward_points} XP</td>
-                                            <td className="p-4 text-xs text-gray-500">
+                                            <td className="p-3 capitalize text-gray-650 font-normal">{item.type}</td>
+                                            <td className="p-3 font-semibold text-gray-900">{item.goal_value.toLocaleString()}</td>
+                                            <td className="p-3 font-semibold text-gray-900">+{item.reward_points} XP</td>
+                                            <td className="p-3 text-[10px] text-gray-400">
                                                 <span className="block">{start}</span>
-                                                <span className="block text-gray-400">to {end}</span>
+                                                <span className="block text-gray-400 mt-0.5">to {end}</span>
                                             </td>
-                                            <td className="p-4">
-                                                <span className={`inline-block text-xs font-bold px-2 py-0.5 rounded-full ${
-                                                    item.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500'
+                                            <td className="p-3">
+                                                <span className={`inline-block text-[10px] font-medium px-2 py-0.5 rounded-[6px] border-[0.5px] ${
+                                                    item.is_active 
+                                                        ? 'bg-green-50 text-green-800 border-green-200/50' 
+                                                        : 'bg-neutral-50 text-neutral-500 border-neutral-950/10'
                                                 }`}>
                                                     {item.is_active ? 'Active' : 'Draft'}
                                                 </span>
                                             </td>
-                                            <td className="p-4 text-right">
-                                                <div className="flex gap-2 justify-end">
+                                            <td className="p-3 text-right">
+                                                <div className="flex gap-1.5 justify-end">
                                                     <button
                                                         onClick={() => handleOpenEdit(item)}
-                                                        className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-gray-100 rounded"
+                                                        className="p-1 text-gray-500 hover:text-black hover:bg-neutral-50 rounded-[6px] border-[0.5px] border-transparent hover:border-neutral-950/10 transition-colors"
                                                     >
-                                                        <Edit2 size={16} />
+                                                        <Edit2 size={13} />
                                                     </button>
                                                     <button
                                                         onClick={() => handleDelete(item.id)}
-                                                        className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-gray-100 rounded"
+                                                        className="p-1 text-gray-500 hover:text-red-650 hover:bg-neutral-50 rounded-[6px] border-[0.5px] border-transparent hover:border-neutral-950/10 transition-colors"
                                                     >
-                                                        <Trash2 size={16} />
+                                                        <Trash2 size={13} />
                                                     </button>
                                                 </div>
                                             </td>
@@ -213,53 +211,53 @@ export default function AdminChallengesPage() {
 
             {/* Create/Edit Modal */}
             {isOpen && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-                    <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-gray-100 space-y-6">
+                <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+                    <div className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 max-w-md w-full p-5 space-y-4">
                         <div className="flex justify-between items-start">
-                            <h3 className="text-xl font-bold text-gray-900">{editingId ? 'Edit Challenge' : 'Create Challenge'}</h3>
+                            <h3 className="text-sm font-semibold text-gray-900">{editingId ? 'Edit Challenge' : 'Create Challenge'}</h3>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="text-gray-400 hover:text-gray-600 text-lg font-bold"
+                                className="text-gray-400 hover:text-black text-base font-semibold transition-colors"
                             >
                                 &times;
                             </button>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <div className="space-y-1.5">
-                                <label className="block text-sm font-bold text-gray-700">Challenge Title</label>
+                        <form onSubmit={handleSubmit} className="space-y-3.5">
+                            <div className="space-y-1">
+                                <label className="block text-xs font-medium text-gray-700">Challenge Title</label>
                                 <input
                                     type="text"
                                     name="title"
                                     value={form.title}
                                     onChange={handleInputChange}
-                                    placeholder="e.g., The Wellness Warrior"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-[#052326] focus:border-[#052326]"
+                                    placeholder="e.g., Wellness Warrior"
+                                    className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                     required
                                 />
                             </div>
 
-                            <div className="space-y-1.5">
-                                <label className="block text-sm font-bold text-gray-700">Description</label>
+                            <div className="space-y-1">
+                                <label className="block text-xs font-medium text-gray-700">Description</label>
                                 <textarea
                                     name="description"
                                     value={form.description}
                                     onChange={handleInputChange}
                                     placeholder="Explain how users can complete this quest..."
                                     rows={3}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-[#052326] focus:border-[#052326]"
+                                    className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal resize-none"
                                     required
                                 ></textarea>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-1.5">
-                                    <label className="block text-sm font-bold text-gray-700">Challenge Type</label>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1">
+                                    <label className="block text-xs font-medium text-gray-700">Challenge Type</label>
                                     <select
                                         name="type"
                                         value={form.type}
                                         onChange={handleInputChange}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-[#052326] focus:border-[#052326]"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                     >
                                         <option value="purchase">Purchases Count</option>
                                         <option value="referral">Referrals Count</option>
@@ -267,40 +265,40 @@ export default function AdminChallengesPage() {
                                         <option value="social">Social Actions</option>
                                     </select>
                                 </div>
-                                <div className="space-y-1.5">
-                                    <label className="block text-sm font-bold text-gray-700">Goal Value Target</label>
+                                <div className="space-y-1">
+                                    <label className="block text-xs font-medium text-gray-700">Goal Value Target</label>
                                     <input
                                         type="number"
                                         name="goal_value"
                                         value={form.goal_value}
                                         onChange={handleInputChange}
                                         min="1"
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-[#052326] focus:border-[#052326]"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                         required
                                     />
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-1.5">
-                                    <label className="block text-sm font-bold text-gray-700">Reward points (XP)</label>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1">
+                                    <label className="block text-xs font-medium text-gray-700">Reward points (XP)</label>
                                     <input
                                         type="number"
                                         name="reward_points"
                                         value={form.reward_points}
                                         onChange={handleInputChange}
                                         min="1"
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-[#052326] focus:border-[#052326]"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                         required
                                     />
                                 </div>
-                                <div className="space-y-1.5">
-                                    <label className="block text-sm font-bold text-gray-700">Active Status</label>
+                                <div className="space-y-1">
+                                    <label className="block text-xs font-medium text-gray-700">Active Status</label>
                                     <select
                                         name="is_active"
                                         value={form.is_active ? 'true' : 'false'}
                                         onChange={handleInputChange}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-[#052326] focus:border-[#052326]"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                     >
                                         <option value="true">Active (Visible)</option>
                                         <option value="false">Draft (Hidden)</option>
@@ -308,48 +306,48 @@ export default function AdminChallengesPage() {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-1.5">
-                                    <label className="block text-sm font-bold text-gray-700">Start Date</label>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1">
+                                    <label className="block text-xs font-medium text-gray-700">Start Date</label>
                                     <input
                                         type="date"
                                         name="start_date"
                                         value={form.start_date}
                                         onChange={handleInputChange}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-[#052326] focus:border-[#052326]"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                         required
                                     />
                                 </div>
-                                <div className="space-y-1.5">
-                                    <label className="block text-sm font-bold text-gray-700">End Date</label>
+                                <div className="space-y-1">
+                                    <label className="block text-xs font-medium text-gray-700">End Date</label>
                                     <input
                                         type="date"
                                         name="end_date"
                                         value={form.end_date}
                                         onChange={handleInputChange}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-[#052326] focus:border-[#052326]"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                         required
                                     />
                                 </div>
                             </div>
 
-                            <div className="flex gap-3 pt-4 border-t border-gray-100">
+                            <div className="flex gap-2.5 pt-3 border-t-[0.5px] border-neutral-950/10">
                                 <button
                                     type="button"
                                     onClick={() => setIsOpen(false)}
-                                    className="flex-1 border border-gray-300 text-gray-700 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50"
+                                    className="flex-1 border-[0.5px] border-neutral-950/20 text-gray-700 py-1.5 rounded-[10px] text-xs font-medium hover:bg-neutral-50 transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={saving}
-                                    className="flex-1 bg-[#052326] text-white py-2.5 rounded-lg text-sm font-medium hover:bg-opacity-90 transition-colors flex items-center justify-center gap-2"
+                                    className="flex-1 bg-black text-white py-1.5 rounded-[10px] text-xs font-medium hover:bg-neutral-800 transition-colors flex items-center justify-center gap-1.5"
                                 >
                                     {saving ? (
-                                        <><Loader2 size={16} className="animate-spin" /> Saving...</>
+                                        <><Loader2 size={13} className="animate-spin" /> Saving...</>
                                     ) : (
-                                        <><Save size={16} /> Save Challenge</>
+                                        <><Save size={13} /> Save Challenge</>
                                     )}
                                 </button>
                             </div>

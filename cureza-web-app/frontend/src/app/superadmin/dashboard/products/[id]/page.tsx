@@ -35,40 +35,40 @@ export default function AdminProductViewPage() {
     if (!product) return <div className="p-8 text-center">Product not found</div>;
 
     return (
-        <div className="max-w-5xl mx-auto pb-12">
+        <div className="max-w-5xl mx-auto pb-12 animate-in fade-in duration-550">
             {/* Header */}
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-6 border-[0.5px] border-neutral-950/15 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 rounded-[10px]">
                 <div className="flex items-center gap-4">
-                    <button onClick={() => router.back()} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                        <ArrowLeft size={20} className="text-gray-600" />
+                    <button onClick={() => router.back()} className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors cursor-pointer">
+                        <ArrowLeft size={18} className="text-gray-600 dark:text-gray-400" />
                     </button>
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900">Product Details</h1>
-                        <p className="text-sm text-gray-500">ID: PRD-{product.id}</p>
+                        <h1 className="text-xl font-black text-gray-900 dark:text-white">Product Details</h1>
+                        <p className="text-[10px] text-gray-450 font-bold uppercase tracking-wider">Id: Prd-{product.id}</p>
                     </div>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex gap-3 text-xs font-bold">
                     <Link
                         href={`/shop/${product.category?.slug || 'general'}/${product.slug}`}
                         target="_blank"
-                        className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium flex items-center gap-2"
+                        className="px-4 py-2 border-[0.5px] border-neutral-950/15 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-neutral-50 font-medium flex items-center gap-2"
                     >
-                        <ExternalLink size={18} /> View Live
+                        <ExternalLink size={14} /> View Live
                     </Link>
                     <Link
                         href={`/superadmin/dashboard/products/${product.id}/edit`}
-                        className="px-4 py-2 bg-cureza-green text-white rounded-lg hover:bg-green-700 font-medium flex items-center gap-2"
+                        className="px-4 py-2 bg-black text-white dark:bg-white dark:text-black rounded-lg hover:bg-neutral-900 dark:hover:bg-neutral-100 font-medium flex items-center gap-2"
                     >
-                        <Edit size={18} /> Edit Product
+                        <Edit size={14} /> Edit Product
                     </Link>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Left Column: Images & Key Info */}
-                <div className="space-y-8">
-                    <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-                        <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 mb-4">
+                <div className="space-y-6">
+                    <div className="bg-white dark:bg-gray-900 p-4 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800">
+                        <div className="aspect-square rounded-lg overflow-hidden bg-neutral-50 dark:bg-gray-850 mb-4 border-[0.5px] border-neutral-950/10">
                             {product.image ? (
                                 <img src={getImageUrl(product.image)} alt={product.title} className="w-full h-full object-cover" />
                             ) : (
@@ -77,80 +77,83 @@ export default function AdminProductViewPage() {
                         </div>
                         <div className="grid grid-cols-4 gap-2">
                             {product.images && product.images.map((img: string, idx: number) => (
-                                <div key={idx} className="aspect-square rounded-md overflow-hidden bg-gray-100 border border-gray-200">
+                                <div key={idx} className="aspect-square rounded-md overflow-hidden bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-neutral-950/10">
                                     <img src={getImageUrl(img)} alt="" className="w-full h-full object-cover" />
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                        <h3 className="font-bold text-gray-900 border-b border-gray-100 pb-3 mb-4">Status & Stock</h3>
+                    <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 text-xs font-semibold">
+                        <h3 className="font-extrabold text-sm text-gray-950 dark:text-white border-b border-neutral-950/10 dark:border-gray-800 pb-2.5 mb-4">Status & Stock</h3>
                         <div className="space-y-4">
-                            <div className="flex justify-between">
+                            <div className="flex justify-between items-center">
                                 <span className="text-gray-500">Status</span>
-                                <span className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${product.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                                    }`}>{product.status}</span>
+                                <span className={`px-2 py-0.5 rounded border text-[10px] font-bold uppercase ${
+                                    product.status === 'published' || product.status === 'approved' 
+                                        ? 'bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400 border-green-200/30' 
+                                        : 'bg-neutral-50 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200'
+                                }`}>{product.status.replace('_', ' ')}</span>
                             </div>
                             <div className="flex justify-between">
                                 <span className="text-gray-500">Stock Status</span>
-                                <span className="font-medium text-gray-900 capitalize">{product.stock_status.replace('_', ' ')}</span>
+                                <span className="font-bold text-gray-900 dark:text-white capitalize">{product.stock_status.replace('_', ' ')}</span>
                             </div>
                             <div className="flex justify-between">
                                 <span className="text-gray-500">Quantity</span>
-                                <span className="font-medium text-gray-900">{product.stock} units</span>
+                                <span className="font-bold text-gray-900 dark:text-white">{product.stock} units</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Right Column: Details */}
-                <div className="lg:col-span-2 space-y-8">
-                    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-6">
+                <div className="lg:col-span-2 space-y-6">
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 space-y-6">
                         <div>
-                            <h2 className="text-xl font-bold text-gray-900 mb-2">{product.title}</h2>
-                            <div className="flex items-center gap-4 text-sm text-gray-500 flex-wrap">
-                                <span className="bg-gray-100 px-2 py-1 rounded">Category: {product.category?.name}</span>
+                            <h2 className="text-lg font-black text-gray-900 dark:text-white mb-3">{product.title}</h2>
+                            <div className="flex items-center gap-3 text-[10px] text-gray-500 font-bold flex-wrap">
+                                <span className="bg-neutral-50 dark:bg-gray-800 border border-neutral-200/60 dark:border-gray-700 px-2 py-0.5 rounded">Category: {product.category?.name}</span>
                                 {product.concern && (
-                                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">Concern: {product.concern?.name}</span>
+                                    <span className="bg-neutral-50 dark:bg-gray-800 border border-neutral-200/60 dark:border-gray-700 px-2 py-0.5 rounded">Concern: {product.concern?.name}</span>
                                 )}
-                                <span className="bg-gray-100 px-2 py-1 rounded">Brand: {product.brand?.name}</span>
+                                <span className="bg-neutral-50 dark:bg-gray-800 border border-neutral-200/60 dark:border-gray-700 px-2 py-0.5 rounded">Brand: {product.brand?.name}</span>
                             </div>
                         </div>
 
                         <div className="flex items-end gap-3">
-                            <span className="text-3xl font-bold text-gray-900">₹{product.price}</span>
+                            <span className="text-2xl font-black text-gray-950 dark:text-white">₹{product.price}</span>
                             {product.original_price && (
-                                <span className="text-lg text-gray-400 line-through">₹{product.original_price}</span>
+                                <span className="text-sm text-gray-400 line-through">₹{product.original_price}</span>
                             )}
                         </div>
 
-                        <div>
-                            <h3 className="font-bold text-gray-900 mb-2">Short Description</h3>
-                            <p className="text-gray-600 leading-relaxed">{product.short_description || 'No short description.'}</p>
+                        <div className="space-y-1.5">
+                            <h3 className="font-extrabold text-sm text-gray-900 dark:text-white">Short Description</h3>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed font-medium">{product.short_description || 'No short description.'}</p>
                         </div>
 
-                        <div>
-                            <h3 className="font-bold text-gray-900 mb-2">Long Description</h3>
-                            <div className="prose max-w-none text-gray-600">
+                        <div className="space-y-1.5">
+                            <h3 className="font-extrabold text-sm text-gray-900 dark:text-white">Long Description</h3>
+                            <div className="prose max-w-none text-xs text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
                                 {product.long_description || 'No detailed description.'}
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                        <h3 className="font-bold text-gray-900 border-b border-gray-100 pb-3 mb-4">Specifications</h3>
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800">
+                        <h3 className="font-extrabold text-sm text-gray-900 dark:text-white border-b border-neutral-950/10 dark:border-gray-800 pb-2.5 mb-4">Specifications</h3>
                         {product.specifications && product.specifications.length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-semibold">
                                 {product.specifications.map((spec: any, idx: number) => (
-                                    <div key={idx} className="flex justify-between border-b border-gray-50 pb-2">
+                                    <div key={idx} className="flex justify-between border-b border-neutral-950/5 pb-2">
                                         <span className="text-gray-500">{spec.key}</span>
-                                        <span className="font-medium text-gray-900">{spec.value}</span>
+                                        <span className="font-bold text-gray-900 dark:text-white">{spec.value}</span>
                                     </div>
                                 ))}
                             </div>
                         ) : (
-                            <p className="text-gray-500 italic">No specifications added.</p>
+                            <p className="text-xs text-gray-450 italic font-medium">No specifications added.</p>
                         )}
                     </div>
                 </div>

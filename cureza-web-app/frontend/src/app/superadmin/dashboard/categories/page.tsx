@@ -245,23 +245,23 @@ export default function AdminCategoriesPage() {
     };
 
     return (
-        <div className="space-y-8 animate-in fade-in duration-500">
+        <div className="w-full space-y-6 animate-in fade-in duration-500">
             {/* Header Section */}
-            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-3xl p-8 border border-gray-100 dark:border-gray-800 shadow-sm">
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border border-neutral-950/10 dark:border-gray-800">
                 <div className="absolute top-0 right-0 p-8 opacity-5">
                     <Database size={120} />
                 </div>
-                <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <div className="space-y-2">
+                <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="space-y-1.5">
                         <div className="flex items-center gap-3">
-                            <div className="p-3 bg-cureza-green/10 rounded-2xl text-cureza-green">
-                                <Layers size={24} />
+                            <div className="p-2.5 bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white rounded-lg">
+                                <Layers size={20} />
                             </div>
-                            <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
-                                Master <span className="text-cureza-green">Catalog Data</span>
+                            <h1 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
+                                Master Catalog Data
                             </h1>
                         </div>
-                        <p className="text-gray-500 dark:text-gray-400 max-w-xl font-medium">
+                        <p className="text-gray-550 dark:text-gray-400 max-w-xl font-normal text-xs">
                             Manage Product Categories, Medical Concerns, and special Promotion Collections across the store layout.
                         </p>
                     </div>
@@ -270,73 +270,78 @@ export default function AdminCategoriesPage() {
                         <button
                             onClick={handleInitDB}
                             disabled={isInitializingDb}
-                            className="flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-5 py-3 rounded-2xl font-black text-xs hover:bg-gray-50 dark:hover:bg-gray-750 transition-all disabled:opacity-50"
+                            className="flex items-center gap-2 bg-white dark:bg-gray-800 border border-neutral-950/15 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2.5 rounded-[10px] font-semibold text-xs hover:bg-neutral-50 dark:hover:bg-gray-750 transition-all disabled:opacity-50"
                             title="Initialize collections database tables and run migrations"
                         >
                             {isInitializingDb ? (
-                                <Loader2 className="animate-spin text-cureza-green" size={16} />
+                                <Loader2 className="animate-spin" size={16} />
                             ) : (
                                 <Database size={16} className="text-gray-400" />
                             )}
-                            INIT COLLECTIONS DB
+                            Initialize Collections Database
                         </button>
                         <button
                             onClick={() => handleOpenModal()}
-                            className="flex items-center justify-center gap-2 bg-cureza-green text-white px-6 py-3 rounded-2xl font-black shadow-lg shadow-green-100 dark:shadow-none hover:bg-green-700 transition-all active:scale-95 text-xs"
+                            className="flex items-center justify-center gap-2 bg-black text-white dark:bg-white dark:text-black px-4 py-2.5 rounded-[10px] font-semibold hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-all text-xs"
                         >
                             <Plus size={18} />
-                            ADD {activeTab.toUpperCase()}
+                            Add {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
                         </button>
                     </div>
                 </div>
             </div>
 
-            {/* Tabs */}
-            <div className="border-b border-gray-100 dark:border-gray-800">
-                <nav className="-mb-px flex space-x-8">
-                    {(['category', 'concern', 'collection'] as TabType[]).map((tab) => (
-                        <button
-                            key={tab}
-                            onClick={() => setActiveTab(tab)}
-                            className={`py-4 px-1 border-b-2 font-black text-xs uppercase tracking-wider transition-all ${
-                                activeTab === tab
-                                    ? 'border-cureza-green text-cureza-green'
-                                    : 'border-transparent text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
-                            }`}
-                        >
-                            {tab === 'category' ? 'Product Categories' : tab === 'concern' ? 'Shop by Concern' : 'Page Collections'}
-                        </button>
-                    ))}
-                </nav>
+            {/* Card-based Navigation Selector */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[
+                    { type: 'category', label: 'Product Categories', count: categories.filter(c => c.type === 'category').length, desc: 'Manage catalog categories & hierarchies' },
+                    { type: 'concern', label: 'Shop by Concern', count: categories.filter(c => c.type === 'concern').length, desc: 'Manage health/medical concern categories' },
+                    { type: 'collection', label: 'Page Collections', count: collections.length, desc: 'Manage promotional groups & product sets' }
+                ].map((item) => (
+                    <button
+                        key={item.type}
+                        type="button"
+                        onClick={() => setActiveTab(item.type as TabType)}
+                        className={`flex flex-col text-left p-4 rounded-[10px] border-[0.5px] transition-all cursor-pointer ${
+                            activeTab === item.type
+                                ? 'border-black bg-black text-white dark:border-white dark:bg-white dark:text-black'
+                                : 'border-neutral-955/10 bg-white hover:bg-neutral-50 dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-gray-850 text-gray-800 dark:text-gray-250'
+                        }`}
+                    >
+                        <span className="text-[10px] font-semibold tracking-wider opacity-60">Section</span>
+                        <span className="text-sm font-bold tracking-tight mt-1">{item.label}</span>
+                        <span className={`text-[11px] mt-2 ${activeTab === item.type ? 'text-white/80' : 'text-gray-550'}`}>{item.desc}</span>
+                    </button>
+                ))}
             </div>
 
             {/* Search and Filters */}
             <div className="relative max-w-md">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
                 <input
                     type="text"
                     placeholder={`Search ${activeTab === 'category' ? 'categories' : activeTab === 'concern' ? 'concerns' : 'collections'} by name...`}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl font-bold text-sm text-gray-900 dark:text-white placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green transition-all"
+                    className="w-full h-10 pl-10 pr-4 bg-white dark:bg-gray-900 border border-neutral-955/15 dark:border-gray-800 rounded-lg text-xs font-normal text-gray-900 dark:text-white placeholder:text-gray-300 focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all"
                 />
             </div>
 
             {/* Diagnostics Panel Collapsible */}
-            <details className="group bg-gray-50 dark:bg-gray-850 border border-gray-100 dark:border-gray-800 rounded-2xl">
-                <summary className="flex justify-between items-center px-6 py-3 text-xs font-black text-gray-400 uppercase tracking-widest cursor-pointer select-none outline-none">
+            <details className="group bg-neutral-50/50 dark:bg-gray-850 border border-neutral-950/10 dark:border-gray-800 rounded-lg">
+                <summary className="flex justify-between items-center px-4 py-2.5 text-xs font-semibold text-gray-500 tracking-wide cursor-pointer select-none outline-none">
                     <span>System Diagnostics</span>
-                    <span className="text-[10px] text-cureza-green font-mono group-open:hidden">SHOW</span>
-                    <span className="text-[10px] text-gray-400 font-mono hidden group-open:inline">HIDE</span>
+                    <span className="text-[10px] font-mono group-open:hidden">Show</span>
+                    <span className="text-[10px] font-mono hidden group-open:inline">Hide</span>
                 </summary>
-                <div className="px-6 pb-6 pt-2 text-[10px] font-mono grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-gray-100/50 dark:border-gray-800/50 text-gray-500">
+                <div className="px-4 pb-4 pt-2 text-[10px] font-mono grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-neutral-955/5 text-gray-500">
                     <p>Auth Loading: {String(authLoading)}</p>
                     <p>User Logged In: {String(!!user)}</p>
                     <p>Is Loading Data: {String(isLoading)}</p>
                     <p>Error: <span className="text-red-500">{error || 'None'}</span></p>
                     <p>Total Categories: {categories.length}</p>
                     <p>Total Collections: {collections.length}</p>
-                    <button onClick={fetchCategories} className="px-3 py-1 bg-white border border-gray-200 text-gray-600 rounded-md font-bold hover:bg-gray-50 transition-colors w-fit">Force Refresh</button>
+                    <button onClick={fetchCategories} className="px-2.5 py-1 bg-white border border-neutral-950/15 text-gray-650 rounded-md font-semibold hover:bg-neutral-50 transition-colors w-fit">Force Refresh</button>
                 </div>
             </details>
 
@@ -344,15 +349,15 @@ export default function AdminCategoriesPage() {
             {isLoading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {[1, 2, 3].map((n) => (
-                        <div key={n} className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-3xl p-6 space-y-4 animate-pulse">
+                        <div key={n} className="bg-white dark:bg-gray-900 border border-neutral-955/10 dark:border-gray-800 rounded-[10px] p-5 space-y-4 animate-pulse">
                             <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-2xl" />
+                                <div className="w-12 h-12 bg-neutral-100 dark:bg-gray-800 rounded-lg" />
                                 <div className="space-y-2 flex-1">
-                                    <div className="h-4 bg-gray-100 dark:bg-gray-800 rounded-md w-2/3" />
-                                    <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded-md w-1/3" />
+                                    <div className="h-4 bg-neutral-100 dark:bg-gray-800 rounded-md w-2/3" />
+                                    <div className="h-3 bg-neutral-100 dark:bg-gray-800 rounded-md w-1/3" />
                                 </div>
                             </div>
-                            <div className="h-10 bg-gray-100 dark:bg-gray-800 rounded-2xl w-full" />
+                            <div className="h-10 bg-neutral-100 dark:bg-gray-800 rounded-lg w-full" />
                         </div>
                     ))}
                 </div>
@@ -361,66 +366,58 @@ export default function AdminCategoriesPage() {
                     {filteredItems.map((item) => (
                         <div 
                             key={item.id} 
-                            className="group bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-3xl p-6 hover:shadow-xl hover:border-cureza-green/20 transition-all duration-300 flex flex-col justify-between"
+                            className="group bg-white dark:bg-gray-900 border border-neutral-950/10 dark:border-gray-800 rounded-[10px] p-5 hover:border-black dark:hover:border-white transition-all flex flex-col justify-between"
                         >
                             <div>
                                 <div className="flex justify-between items-start">
                                     <div className="flex items-center gap-3">
-                                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border transition-colors ${
-                                            activeTab === 'category' 
-                                                ? 'bg-blue-50/50 dark:bg-blue-950/20 text-blue-600 border-blue-100/50 dark:border-blue-900/20' 
-                                                : activeTab === 'concern' 
-                                                ? 'bg-purple-50/50 dark:bg-purple-950/20 text-purple-600 border-purple-100/50 dark:border-purple-900/20' 
-                                                : 'bg-emerald-50/50 dark:bg-emerald-950/20 text-cureza-green border-emerald-100/50 dark:border-emerald-900/20'
-                                        }`}>
+                                        <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 border bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white border-neutral-955/5">
                                             {activeTab !== 'collection' && (item as Category).icon ? (
-                                                <span className="text-xl leading-none">{(item as Category).icon}</span>
-                                            ) : activeTab === 'collection' ? (
-                                                <Layers size={20} />
+                                                <span className="text-lg leading-none">{(item as Category).icon}</span>
                                             ) : (
-                                                <Folder size={20} />
+                                                <Folder size={18} />
                                             )}
                                         </div>
                                         <div className="min-w-0">
-                                            <h3 className="font-outfit font-extrabold text-base text-gray-950 dark:text-gray-100 tracking-tight truncate uppercase leading-tight" title={item.name}>
+                                            <h3 className="font-outfit font-bold text-sm text-gray-955 dark:text-gray-100 tracking-tight truncate leading-tight" title={item.name}>
                                                 {item.name}
                                             </h3>
-                                            <p className="text-[11px] font-bold text-gray-400 tracking-wider truncate">/{item.slug}</p>
+                                            <p className="text-[11px] font-semibold text-gray-400 tracking-wider truncate">/{item.slug}</p>
                                         </div>
                                     </div>
-                                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 transition-transform">
+                                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity translate-x-1 group-hover:translate-x-0 transition-transform">
                                         <button
                                             onClick={() => handleOpenModal(item)}
-                                            className="p-2 text-gray-400 hover:text-cureza-green hover:bg-green-50 dark:hover:bg-green-950/20 rounded-xl transition-all"
+                                            className="p-2 text-gray-400 hover:text-black dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg transition-all"
                                             title="Edit"
                                         >
-                                            <Edit size={16} />
+                                            <Edit size={14} />
                                         </button>
                                         <button
                                             onClick={() => handleDelete(item.id)}
-                                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-xl transition-all"
+                                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-955/20 rounded-lg transition-all"
                                             title="Delete"
                                         >
-                                            <Trash2 size={16} />
+                                            <Trash2 size={14} />
                                         </button>
                                     </div>
                                 </div>
                                 {item.description && (
-                                    <p className="mt-4 text-xs font-medium text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">
+                                    <p className="mt-3.5 text-xs font-normal text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">
                                         {item.description}
                                     </p>
                                 )}
                             </div>
-                            <div className="mt-6 flex items-center justify-between pt-4 border-t border-gray-50 dark:border-gray-800">
-                                <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full ${
+                            <div className="mt-5 flex items-center justify-between pt-3.5 border-t border-neutral-955/10 dark:border-gray-800">
+                                <span className={`text-[10px] font-semibold tracking-wider px-2.5 py-0.5 rounded-lg ${
                                     item.is_active 
-                                        ? 'bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400 border border-green-100/50 dark:border-green-900/30' 
-                                        : 'bg-gray-100 dark:bg-gray-800 text-gray-500'
+                                        ? 'bg-green-50 dark:bg-green-950/30 text-green-755 dark:text-green-400 border border-green-200' 
+                                        : 'bg-neutral-100 dark:bg-gray-800 text-gray-500'
                                 }`}>
                                     {item.is_active ? 'Active' : 'Inactive'}
                                 </span>
                                 {activeTab === 'collection' && (
-                                    <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+                                    <span className="text-[11px] font-semibold text-gray-400 tracking-wider">
                                         {item.products_count ?? 0} Products
                                     </span>
                                 )}
@@ -428,13 +425,13 @@ export default function AdminCategoriesPage() {
                         </div>
                     ))}
                     {filteredItems.length === 0 && (
-                        <div className="col-span-full py-20 bg-gray-50/50 dark:bg-gray-800/20 rounded-[32px] border-2 border-dashed border-gray-100 dark:border-gray-800 flex flex-col items-center justify-center text-center space-y-4">
-                            <div className="w-16 h-16 bg-white dark:bg-gray-900 rounded-2xl flex items-center justify-center shadow-md text-gray-200">
-                                <Layers size={32} />
+                        <div className="col-span-full py-20 bg-neutral-50/50 dark:bg-gray-800/20 rounded-[10px] border border-dashed border-neutral-955/15 dark:border-gray-800 flex flex-col items-center justify-center text-center space-y-4">
+                            <div className="w-14 h-14 bg-white dark:bg-gray-900 rounded-lg flex items-center justify-center border border-neutral-955/10 text-gray-250">
+                                <Layers size={24} />
                             </div>
                             <div className="space-y-1">
-                                <h3 className="text-lg font-black text-gray-900 dark:text-white uppercase">No items found</h3>
-                                <p className="text-gray-400 text-xs font-medium max-w-xs">There are no matches for "{searchQuery}". Create a new item to populate the database.</p>
+                                <h3 className="text-base font-semibold text-gray-900 dark:text-white">No items found</h3>
+                                <p className="text-gray-450 text-xs font-normal max-w-xs">There are no matches for "{searchQuery}". Create a new item to populate the database.</p>
                             </div>
                         </div>
                     )}
@@ -443,37 +440,37 @@ export default function AdminCategoriesPage() {
 
             {/* Modal */}
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-xl shadow-xl max-w-md w-full overflow-hidden">
-                        <div className="p-4 border-b border-gray-100 flex justify-between items-center">
-                            <h2 className="font-bold text-lg">
+                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border border-neutral-950/15 max-w-md w-full overflow-hidden">
+                        <div className="p-4 border-b border-neutral-955/10 flex justify-between items-center bg-neutral-50 dark:bg-gray-850/50">
+                            <h2 className="font-semibold text-sm text-gray-955 dark:text-white">
                                 {editingItem ? 'Edit' : 'Add'} {activeTab === 'category' ? 'Category' : activeTab === 'concern' ? 'Concern' : 'Collection'}
                             </h2>
-                            <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600">
-                                <X size={20} />
+                            <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-650 cursor-pointer">
+                                <X size={18} />
                             </button>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="p-4 space-y-4 max-h-[80vh] overflow-y-auto">
+                        <form onSubmit={handleSubmit} className="p-5 space-y-4 max-h-[80vh] overflow-y-auto text-xs">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                <label className="block text-[10px] font-semibold text-gray-500 mb-1">Name</label>
                                 <input
                                     type="text"
                                     required
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green"
+                                    className="w-full h-10 px-3 border border-neutral-950/15 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-900 dark:text-white transition-all"
                                 />
                             </div>
 
                             {activeTab !== 'collection' && (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Parent Category</label>
+                                        <label className="block text-[10px] font-semibold text-gray-550 mb-1">Parent Category</label>
                                         <select
                                             value={formData.parent_id}
                                             onChange={(e) => setFormData({ ...formData, parent_id: e.target.value })}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green"
+                                            className="w-full h-10 px-3 border border-neutral-950/15 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-950 dark:text-gray-100 transition-all cursor-pointer"
                                         >
                                             <option value="">None (Top Level)</option>
                                             {parentOptions.map(p => (
@@ -482,74 +479,74 @@ export default function AdminCategoriesPage() {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Icon (Emoji/Text)</label>
+                                        <label className="block text-[10px] font-semibold text-gray-550 mb-1">Icon (Emoji/Text)</label>
                                         <input
                                             type="text"
                                             value={formData.icon}
                                             onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
                                             placeholder="e.g. 🌿"
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green"
+                                            className="w-full h-10 px-3 border border-neutral-950/15 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-900 dark:text-white transition-all"
                                         />
                                     </div>
                                 </div>
                             )}
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>
+                                <label className="block text-[10px] font-semibold text-gray-555 mb-1">Image</label>
                                 <input
                                     type="file"
                                     accept="image/*"
                                     onChange={(e) => setFormData({ ...formData, image: e.target.files ? e.target.files[0] : null })}
-                                    className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-cureza-green hover:file:bg-green-100"
+                                    className="w-full text-xs text-gray-500 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-[0.5px] file:border-neutral-950/15 file:text-xs file:font-semibold file:bg-neutral-50 file:text-black hover:file:bg-neutral-100"
                                 />
                                 {editingItem?.image && !formData.image && (
-                                    <p className="text-xs text-gray-500 mt-1">Current: {editingItem.image.split('/').pop()}</p>
+                                    <p className="text-[10px] text-gray-550 mt-1">Current: {editingItem.image.split('/').pop()}</p>
                                 )}
                             </div>
 
                             {activeTab !== 'collection' && (
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Sub Heading</label>
+                                    <label className="block text-[10px] font-semibold text-gray-555 mb-1">Sub Heading</label>
                                     <input
                                         type="text"
                                         value={formData.sub_heading}
                                         onChange={(e) => setFormData({ ...formData, sub_heading: e.target.value })}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green"
+                                        className="w-full h-10 px-3 border border-neutral-950/15 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-900 dark:text-white transition-all"
                                     />
                                 </div>
                             )}
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                <label className="block text-[10px] font-semibold text-gray-555 mb-1">Description</label>
                                 <textarea
                                     rows={3}
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green"
+                                    className="w-full p-3 border border-neutral-955/15 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-normal text-gray-750 dark:text-gray-300 resize-none transition-all leading-relaxed"
                                 />
                             </div>
 
                             {activeTab !== 'collection' && (
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Bottom Description (SEO)</label>
+                                    <label className="block text-[10px] font-semibold text-gray-555 mb-1">Bottom Description (SEO)</label>
                                     <textarea
                                         rows={3}
                                         value={formData.bottom_description}
                                         onChange={(e) => setFormData({ ...formData, bottom_description: e.target.value })}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green"
+                                        className="w-full p-3 border border-neutral-955/15 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-normal text-gray-750 dark:text-gray-300 resize-none transition-all leading-relaxed"
                                     />
                                 </div>
                             )}
 
                             {/* Products checklist for collections */}
                             {activeTab === 'collection' && (
-                                <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-gray-700">Select Products for this Collection</label>
-                                    <div className="border border-gray-300 rounded-lg p-3 max-h-48 overflow-y-auto space-y-2 bg-gray-50/50">
+                                <div className="space-y-1.5">
+                                    <label className="block text-[10px] font-semibold text-gray-555">Select Products for this Collection</label>
+                                    <div className="border border-neutral-955/15 rounded-lg p-3 max-h-48 overflow-y-auto space-y-2 bg-neutral-50/50">
                                         {productsList.map((product) => {
                                             const isChecked = formData.product_ids.includes(product.id);
                                             return (
-                                                <label key={product.id} className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-1.5 rounded transition">
+                                                <label key={product.id} className="flex items-center gap-2 cursor-pointer hover:bg-neutral-100 p-1.5 rounded transition">
                                                     <input
                                                         type="checkbox"
                                                         checked={isChecked}
@@ -559,45 +556,45 @@ export default function AdminCategoriesPage() {
                                                                 : formData.product_ids.filter(id => id !== product.id);
                                                             setFormData({ ...formData, product_ids: newIds });
                                                         }}
-                                                        className="rounded border-gray-300 text-cureza-green focus:ring-cureza-green"
+                                                        className="w-4 h-4 rounded-[3px] border-neutral-300 text-black focus:ring-black/10"
                                                     />
-                                                    <div className="text-sm">
-                                                        <span className="font-semibold text-gray-800">{product.title}</span>
-                                                        <span className="text-xs text-gray-500 ml-2">₹{product.price} ({product.brand?.name || 'Generic'})</span>
+                                                    <div className="text-xs">
+                                                        <span className="font-semibold text-gray-800 dark:text-gray-200">{product.title}</span>
+                                                        <span className="text-gray-500 ml-2">₹{product.price} ({product.brand?.name || 'Generic'})</span>
                                                     </div>
                                                 </label>
                                             );
                                         })}
                                         {productsList.length === 0 && (
-                                            <p className="text-sm text-gray-500 text-center py-4">No published products available.</p>
+                                            <p className="text-xs text-gray-500 text-center py-4">No published products available.</p>
                                         )}
                                     </div>
                                 </div>
                             )}
 
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 pt-1">
                                 <input
                                     type="checkbox"
                                     id="is_active"
                                     checked={formData.is_active}
                                     onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                                    className="rounded border-gray-300 text-cureza-green focus:ring-cureza-green"
+                                    className="w-4 h-4 rounded-[3px] border-neutral-300 text-black focus:ring-black/10"
                                 />
-                                <label htmlFor="is_active" className="text-sm text-gray-700">Active</label>
+                                <label htmlFor="is_active" className="text-xs font-semibold text-gray-700">Active</label>
                             </div>
 
-                            <div className="pt-4 flex gap-3">
+                            <div className="pt-3 flex gap-3">
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                                    className="flex-1 h-10 border border-neutral-955/15 text-gray-750 font-semibold rounded-lg hover:bg-neutral-50"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="flex-1 px-4 py-2 bg-cureza-green text-white rounded-lg hover:bg-green-700 disabled:opacity-50 flex items-center justify-center gap-2"
+                                    className="flex-1 h-10 bg-black text-white dark:bg-white dark:text-black font-semibold rounded-lg hover:bg-neutral-900 dark:hover:bg-neutral-100 disabled:opacity-50 flex items-center justify-center gap-2"
                                 >
                                     {isSubmitting && <Loader2 size={16} className="animate-spin" />}
                                     Save

@@ -140,76 +140,73 @@ export default function AdminRBACPage() {
     };
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
+        <div className="w-full space-y-6 pb-20 font-sans text-neutral-900">
+            <div className="flex justify-between items-center border-b border-black/10 pb-5">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                        <Shield className="text-cureza-green" />
-                        Role-Based Access Control
-                    </h1>
-                    <p className="text-gray-500 mt-1">Manage admin roles and assign system module permissions</p>
+                    <h2 className="text-sm font-medium text-neutral-900 tracking-tight">Role-Based Access Control</h2>
+                    <p className="text-neutral-500 text-xs mt-0.5">Manage admin roles and assign system module permissions</p>
                 </div>
                 <button
                     onClick={() => handleOpenModal()}
-                    className="bg-cureza-green text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-green-750 transition-all shadow-sm hover:shadow-md font-medium"
+                    className="bg-black text-white px-4 py-2 rounded-[10px] flex items-center gap-2 hover:bg-neutral-900 transition-all font-medium text-xs shadow-none shrink-0"
                 >
-                    <Plus size={18} />
+                    <Plus size={14} />
                     Create New Role
                 </button>
             </div>
 
             {isLoading ? (
-                <div className="text-center py-12 text-gray-500 font-medium bg-white rounded-xl border border-gray-200 shadow-sm">
+                <div className="text-center py-12 text-neutral-500 text-xs font-normal bg-white rounded-[10px] border border-black/10 shadow-none">
                     Loading admin roles...
                 </div>
             ) : roles.length === 0 ? (
-                <div className="text-center py-12 text-gray-500 font-medium bg-white rounded-xl border border-gray-200 shadow-sm">
+                <div className="text-center py-12 text-neutral-500 text-xs font-normal bg-white rounded-[10px] border border-black/10 shadow-none">
                     No roles found. Create one to get started.
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {roles.map((role) => (
-                        <div key={role.id} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                        <div key={role.id} className="bg-white p-5 rounded-[10px] border border-black/10 shadow-none hover:border-black/30 transition-all flex flex-col justify-between">
                             <div>
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="flex items-center gap-3">
-                                        <div className="p-3 bg-green-50 text-cureza-green rounded-lg shadow-inner">
-                                            <Shield size={24} />
+                                        <div className="p-2.5 bg-neutral-50 text-black border border-black/10 rounded-[10px] shadow-none">
+                                            <Shield size={18} />
                                         </div>
                                         <div>
-                                            <h3 className="font-bold text-gray-900 text-lg">{role.name}</h3>
-                                            <p className="text-sm text-gray-500 flex items-center gap-1.5 mt-0.5">
-                                                <Users size={14} /> {role.users_count} Admins Assigned
+                                            <h3 className="font-medium text-neutral-900 text-sm">{role.name}</h3>
+                                            <p className="text-xs text-neutral-450 flex items-center gap-1.5 mt-0.5">
+                                                <Users size={12} /> {role.users_count} Admins Assigned
                                             </p>
                                         </div>
                                     </div>
-                                    <div className="flex gap-2">
+                                    <div className="flex gap-1.5">
                                         <button
                                             onClick={() => handleOpenModal(role)}
-                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                            className="p-1.5 text-neutral-500 hover:text-black hover:bg-neutral-50 rounded-[10px] transition-colors border border-black/10"
                                             title="Edit Role"
                                         >
-                                            <Edit size={18} />
+                                            <Edit size={14} />
                                         </button>
                                         <button
                                             onClick={() => handleDelete(role.id)}
-                                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                            className="p-1.5 text-neutral-500 hover:text-black hover:bg-neutral-50 rounded-[10px] transition-colors border border-black/10"
                                             title="Delete Role"
                                         >
-                                            <Trash2 size={18} />
+                                            <Trash2 size={14} />
                                         </button>
                                     </div>
                                 </div>
                                 
-                                <div className="bg-gray-50 p-4 rounded-lg mt-2">
-                                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                                <div className="bg-neutral-50/50 p-4 rounded-[10px] mt-2 border border-black/5">
+                                    <p className="text-[10px] font-medium text-neutral-500 uppercase tracking-wider mb-2">
                                         Permissions ({role.permissions.length})
                                     </p>
                                     <div className="flex flex-wrap gap-1.5">
                                         {role.permissions.map((perm) => {
                                             const module = AVAILABLE_MODULES.find(m => m.id === perm);
                                             return (
-                                                <span key={perm} className="px-2.5 py-1 bg-white text-gray-800 border border-gray-200 rounded-md text-xs font-medium shadow-sm">
+                                                <span key={perm} className="px-2 py-0.5 bg-white text-neutral-800 border border-black/10 rounded-[10px] text-xs font-normal">
                                                     {module ? module.name : perm}
                                                 </span>
                                             );
@@ -224,25 +221,25 @@ export default function AdminRBACPage() {
 
             {/* Create/Edit Modal */}
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black/55 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full overflow-hidden flex flex-col max-h-[90vh]">
-                        <div className="p-5 border-b border-gray-150 flex justify-between items-center bg-gray-50">
-                            <h2 className="font-bold text-lg text-gray-900 flex items-center gap-2">
-                                <Shield className="text-cureza-green" size={20} />
+                <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-[10px] border border-black/10 shadow-none max-w-2xl w-full overflow-hidden flex flex-col max-h-[90vh]">
+                        <div className="p-4 border-b border-black/10 flex justify-between items-center bg-neutral-50/50">
+                            <h3 className="font-medium text-sm text-neutral-900 flex items-center gap-2">
+                                <Shield className="text-black" size={16} />
                                 {editingRole ? 'Edit Admin Role' : 'Create New Admin Role'}
-                            </h2>
+                            </h3>
                             <button
                                 onClick={() => setIsModalOpen(false)}
-                                className="text-gray-400 hover:text-gray-650 transition-colors p-1.5 hover:bg-gray-100 rounded-lg"
+                                className="text-neutral-400 hover:text-black transition-colors p-1 hover:bg-neutral-100 rounded-[10px]"
                             >
-                                <X size={20} />
+                                <X size={16} />
                             </button>
                         </div>
                         
                         <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
                             <div className="p-6 space-y-6 overflow-y-auto flex-1">
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Role Name</label>
+                                    <label className="block text-xs font-medium text-neutral-600 mb-1.5">Role Name</label>
                                     <input
                                         type="text"
                                         name="name"
@@ -250,45 +247,45 @@ export default function AdminRBACPage() {
                                         placeholder="e.g. Customer Support Agent, Order Manager"
                                         value={formData.name}
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                        className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cureza-green/50 focus:border-cureza-green text-sm shadow-sm transition-all"
+                                        className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs bg-white focus:border-black font-normal"
                                     />
                                 </div>
 
                                 <div className="space-y-3">
-                                    <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                                        <label className="block text-sm font-semibold text-gray-700">Assign Modules & Permissions</label>
+                                    <div className="flex justify-between items-center border-b border-black/10 pb-2">
+                                        <label className="block text-xs font-medium text-neutral-600">Assign Modules & Permissions</label>
                                         <button
                                             type="button"
                                             onClick={handleSelectAllPermissions}
-                                            className="text-xs font-bold text-cureza-green hover:text-green-700 transition-colors"
+                                            className="text-xs font-medium text-black hover:underline transition-colors"
                                         >
                                             {formData.permissions.length === AVAILABLE_MODULES.length ? 'Deselect All' : 'Select All'}
                                         </button>
                                     </div>
 
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                         {AVAILABLE_MODULES.map((mod) => {
                                             const isSelected = formData.permissions.includes(mod.id);
                                             return (
                                                 <div
                                                     key={mod.id}
                                                     onClick={() => handlePermissionToggle(mod.id)}
-                                                    className={`p-3 rounded-lg border transition-all cursor-pointer flex items-start gap-3 select-none ${
+                                                    className={`p-3 rounded-[10px] border transition-all cursor-pointer flex items-start gap-3 select-none ${
                                                         isSelected
-                                                            ? 'border-cureza-green bg-green-50/20 shadow-sm'
-                                                            : 'border-gray-200 hover:border-gray-300 bg-white'
+                                                            ? 'border-black bg-neutral-50 shadow-none'
+                                                            : 'border-black/10 hover:border-black/20 bg-white'
                                                     }`}
                                                 >
                                                     <div className={`mt-0.5 w-4 h-4 rounded border flex items-center justify-center transition-all ${
                                                         isSelected
-                                                            ? 'bg-cureza-green border-cureza-green text-white'
-                                                            : 'border-gray-300'
+                                                            ? 'bg-black border-black text-white'
+                                                            : 'border-black/20'
                                                     }`}>
                                                         {isSelected && <Check size={12} strokeWidth={3} />}
                                                     </div>
                                                     <div className="flex-1">
-                                                        <p className="text-sm font-bold text-gray-900">{mod.name}</p>
-                                                        <p className="text-xs text-gray-500 mt-0.5 leading-normal">{mod.desc}</p>
+                                                        <p className="text-xs font-medium text-neutral-900">{mod.name}</p>
+                                                        <p className="text-[10px] text-neutral-450 mt-0.5 leading-normal font-normal">{mod.desc}</p>
                                                     </div>
                                                 </div>
                                             );
@@ -297,18 +294,18 @@ export default function AdminRBACPage() {
                                 </div>
                             </div>
                             
-                            <div className="p-4 border-t border-gray-150 bg-gray-50 flex justify-end gap-3">
+                            <div className="p-4 border-t border-black/10 bg-neutral-50/50 flex justify-end gap-2.5">
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition-all font-medium"
+                                    className="px-4 py-2 border border-black/10 rounded-[10px] text-xs text-neutral-700 hover:bg-neutral-50 transition-all font-medium"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="px-5 py-2 bg-cureza-green text-white rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50 transition-all shadow-sm"
+                                    className="px-4 py-2 bg-black text-white rounded-[10px] text-xs font-medium hover:bg-neutral-900 disabled:opacity-50 transition-all shadow-none"
                                 >
                                     {isSubmitting ? 'Saving...' : (editingRole ? 'Update Role' : 'Create Role')}
                                 </button>

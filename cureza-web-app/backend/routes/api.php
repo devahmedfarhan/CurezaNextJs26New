@@ -280,6 +280,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index']);
     Route::get('/notifications/unread-count', [\App\Http\Controllers\NotificationController::class, 'unreadCount']);
     Route::post('/notifications/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead']);
+    Route::post('/notifications/test-trigger', [\App\Http\Controllers\NotificationController::class, 'triggerTestAlert']);
 
     // Support / Ticket System
     Route::prefix('tickets')->group(function () {

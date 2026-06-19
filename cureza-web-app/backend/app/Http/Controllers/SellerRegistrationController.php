@@ -354,6 +354,19 @@ class SellerRegistrationController extends Controller
             
             DB::commit();
 
+            // Notify Admins
+            try {
+                $admins = User::whereIn('role', ['admin', 'super_admin'])->get();
+                \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\AdminAlertNotification(
+                    'seller_registration',
+                    'New Seller Registration',
+                    'Seller ' . $user->name . ' has submitted registration documents for approval.',
+                    '/superadmin/dashboard/users/sellers/' . $user->id
+                ));
+            } catch (\Exception $e) {
+                Log::error('Failed to send seller registration notification to admins: ' . $e->getMessage());
+            }
+
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([

@@ -1,17 +1,13 @@
 'use client';
 
+// Superadmin Users Dashboard Overview - SubNav removed as navigation is handled via sidebar.
 import { useState, useEffect } from 'react';
 import { 
   Users, 
   Stethoscope, 
   Store, 
-  ShieldAlert, 
   Clock, 
   ArrowUpRight, 
-  TrendingUp, 
-  Activity, 
-  UserCheck, 
-  FileCheck2,
   ChevronRight,
   ShieldCheck
 } from 'lucide-react';
@@ -40,17 +36,15 @@ export default function UserManagementOverview() {
     if (isLoading) {
         return (
             <div className="flex flex-col gap-6 animate-pulse">
-                <div className="flex justify-between items-center mb-2">
-                    <div className="h-8 w-64 bg-gray-250 rounded-lg" />
-                </div>
+                <div className="h-28 bg-white border-[0.5px] border-neutral-950/10 rounded-[10px]" />
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     {[1, 2, 3, 4].map((n) => (
-                        <div key={n} className="h-32 bg-gray-200 rounded-3xl" />
+                        <div key={n} className="h-32 bg-neutral-50 border-[0.5px] border-neutral-950/10 rounded-[10px]" />
                     ))}
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div className="h-96 lg:col-span-2 bg-gray-200 rounded-3xl" />
-                    <div className="h-96 bg-gray-200 rounded-3xl" />
+                    <div className="h-96 lg:col-span-2 bg-neutral-50 border-[0.5px] border-neutral-950/10 rounded-[10px]" />
+                    <div className="h-96 bg-neutral-50 border-[0.5px] border-neutral-950/10 rounded-[10px]" />
                 </div>
             </div>
         );
@@ -62,7 +56,6 @@ export default function UserManagementOverview() {
             count: stats?.total_customers || 0,
             link: "/superadmin/dashboard/users/customers",
             icon: Users,
-            color: "purple",
             subtext: "Active consumers on platform"
         },
         {
@@ -70,7 +63,6 @@ export default function UserManagementOverview() {
             count: stats?.total_doctors || 0,
             link: "/superadmin/dashboard/users/doctors",
             icon: Stethoscope,
-            color: "blue",
             subtext: `${stats?.pending_doctors || 0} pending onboarding`
         },
         {
@@ -78,7 +70,6 @@ export default function UserManagementOverview() {
             count: stats?.total_sellers || 0,
             link: "/superadmin/dashboard/users/sellers",
             icon: Store,
-            color: "emerald",
             subtext: `${stats?.pending_sellers || 0} pending verification`
         },
         {
@@ -86,7 +77,6 @@ export default function UserManagementOverview() {
             count: stats?.total_team || 0,
             link: "/superadmin/dashboard/users/team",
             icon: ShieldCheck,
-            color: "indigo",
             subtext: "Administrators and staff"
         }
     ];
@@ -96,7 +86,7 @@ export default function UserManagementOverview() {
             title: "Doctor Onboarding Applications",
             count: stats?.pending_doctors || 0,
             link: "/superadmin/dashboard/users/doctors?view=pending_onboarding",
-            desc: "Verify qualifications, medical council registrations, and identify proofs."
+            desc: "Verify qualifications, medical council registrations, and identity proofs."
         },
         {
             title: "Doctor Profile Change Requests",
@@ -125,40 +115,51 @@ export default function UserManagementOverview() {
     ];
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-6">
             {/* Page Header */}
-            <div>
-                <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">User Management Directory</h1>
-                <p className="text-gray-500 text-sm font-semibold uppercase tracking-wider mt-1">Directory of accounts, onboard compliance clearance, and administrative roles.</p>
+            <div className="relative overflow-hidden bg-white rounded-[10px] p-6 border-[0.5px] border-neutral-950/10">
+                <div className="absolute top-0 right-0 p-8 opacity-5">
+                    <Users size={120} />
+                </div>
+                <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="space-y-1.5">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2.5 bg-neutral-100 text-black rounded-lg">
+                                <Users size={20} />
+                            </div>
+                            <h1 className="text-xl font-semibold text-neutral-900 tracking-tight">
+                                User Management Directory
+                            </h1>
+                        </div>
+                        <p className="text-neutral-500 max-w-xl font-normal text-xs">
+                            Directory of accounts, onboard compliance clearance, and administrative roles.
+                        </p>
+                    </div>
+                </div>
             </div>
 
             {/* Overview Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {cards.map((card, idx) => {
                     const Icon = card.icon;
-                    const colorStyles = 
-                        card.color === 'purple' ? { bg: 'bg-purple-50', text: 'text-purple-650', border: 'border-purple-100' } :
-                        card.color === 'blue' ? { bg: 'bg-blue-50', text: 'text-blue-650', border: 'border-blue-100' } :
-                        card.color === 'emerald' ? { bg: 'bg-emerald-50', text: 'text-emerald-650', border: 'border-emerald-100' } :
-                        { bg: 'bg-indigo-50', text: 'text-indigo-650', border: 'border-indigo-100' };
 
                     return (
-                        <div key={idx} className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                            <div className={`absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform ${colorStyles.text}`}>
-                                <Icon size={80} />
+                        <div key={idx} className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 p-5 relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-115 transition-transform text-neutral-900">
+                                <Icon size={72} />
                             </div>
                             <div className="flex justify-between items-start">
-                                <div className={`p-3 rounded-2xl border ${colorStyles.bg} ${colorStyles.text} ${colorStyles.border}`}>
-                                    <Icon size={24} />
+                                <div className="p-2.5 rounded-lg border-[0.5px] border-neutral-950/10 bg-neutral-50 text-neutral-900">
+                                    <Icon size={20} />
                                 </div>
-                                <Link href={card.link} className="text-gray-400 hover:text-gray-600 transition-colors">
+                                <Link href={card.link} className="text-neutral-400 hover:text-neutral-900 transition-colors">
                                     <ArrowUpRight size={18} />
                                 </Link>
                             </div>
                             <div className="mt-4 space-y-1">
-                                <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest">{card.title}</p>
-                                <h3 className="text-2xl font-black text-gray-900">{card.count}</h3>
-                                <p className="text-xs font-semibold text-gray-550">{card.subtext}</p>
+                                <p className="text-xs font-medium text-neutral-500">{card.title}</p>
+                                <h3 className="text-2xl font-semibold text-neutral-900">{card.count}</h3>
+                                <p className="text-xs font-normal text-neutral-400">{card.subtext}</p>
                             </div>
                         </div>
                     );
@@ -166,45 +167,45 @@ export default function UserManagementOverview() {
             </div>
 
             {/* Approvals Central Console */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Left: Pending Tasks List */}
-                <div className="lg:col-span-2 bg-white rounded-3xl border border-gray-100 shadow-sm p-8 space-y-6">
-                    <div className="flex justify-between items-center pb-4 border-b border-gray-50">
-                        <div>
-                            <h2 className="text-xl font-extrabold text-gray-900">Approvals Central Console</h2>
-                            <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mt-0.5">Approve or reject doctor qualifications and seller profile changes</p>
+                <div className="lg:col-span-2 bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 p-6 space-y-6">
+                    <div className="flex justify-between items-center pb-4 border-b border-neutral-950/5">
+                        <div className="space-y-1">
+                            <h2 className="text-base font-semibold text-neutral-900">Approvals Central Console</h2>
+                            <p className="text-xs text-neutral-400 font-normal">Approve or reject doctor qualifications and seller profile changes</p>
                         </div>
-                        <span className="flex items-center text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-xl border border-amber-100 gap-1.5 animate-pulse">
+                        <span className="flex items-center text-xs font-medium text-neutral-700 bg-neutral-50 px-2.5 py-1 rounded-[10px] border border-neutral-950/10 gap-1.5">
                             <Clock size={12} />
                             {stats?.total_pending_approvals || 0} Pending
                         </span>
                     </div>
 
-                    <div className="divide-y divide-gray-100">
+                    <div className="divide-y divide-neutral-950/5">
                         {approvalSections.map((sec, idx) => (
-                            <div key={idx} className="py-5 first:pt-0 last:pb-0 flex items-center justify-between gap-6 group">
-                                <div className="space-y-1.5 flex-1 min-w-0">
+                            <div key={idx} className="py-4 first:pt-0 last:pb-0 flex items-center justify-between gap-6 group">
+                                <div className="space-y-1 flex-1 min-w-0">
                                     <div className="flex items-center gap-2.5">
-                                        <h4 className="font-extrabold text-gray-800 text-sm truncate">{sec.title}</h4>
+                                        <h4 className="font-semibold text-neutral-800 text-sm truncate">{sec.title}</h4>
                                         {sec.count > 0 ? (
-                                            <span className="bg-amber-100 text-amber-800 text-[10px] font-black px-2 py-0.5 rounded-md border border-amber-200">
-                                                {sec.count} PENDING
+                                            <span className="bg-black text-white text-[10px] font-semibold px-2 py-0.5 rounded-[4px]">
+                                                {sec.count} Pending
                                             </span>
                                         ) : (
-                                            <span className="bg-gray-100 text-gray-450 text-[10px] font-black px-2 py-0.5 rounded-md border border-gray-150">
-                                                CLEARED
+                                            <span className="bg-neutral-50 text-neutral-400 text-[10px] font-medium px-2 py-0.5 rounded-[4px] border border-neutral-950/5">
+                                                Cleared
                                             </span>
                                         )}
                                     </div>
-                                    <p className="text-xs text-gray-450 leading-relaxed max-w-xl">{sec.desc}</p>
+                                    <p className="text-xs text-neutral-500 leading-relaxed max-w-xl font-normal">{sec.desc}</p>
                                 </div>
                                 <div className="shrink-0">
                                     <Link 
                                         href={sec.link} 
-                                        className={`inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider px-4 py-2 rounded-xl border transition-all ${
+                                        className={`inline-flex items-center gap-1.5 text-xs font-medium px-4 py-2 rounded-[10px] border transition-all ${
                                             sec.count > 0 
-                                                ? 'bg-gray-900 text-white border-gray-900 hover:bg-black hover:scale-[1.02] active:scale-[0.98]'
-                                                : 'bg-white text-gray-400 border-gray-200 hover:bg-gray-50'
+                                                ? 'bg-black text-white border-black hover:bg-neutral-900'
+                                                : 'bg-white text-neutral-500 border-neutral-950/10 hover:bg-neutral-50'
                                         }`}
                                     >
                                         Review
@@ -216,63 +217,63 @@ export default function UserManagementOverview() {
                     </div>
                 </div>
 
-                {/* Right: Quick Action Hub & Help */}
-                <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-8 space-y-6">
-                    <div className="pb-4 border-b border-gray-50">
-                        <h3 className="text-lg font-extrabold text-gray-900">Quick Shortcuts</h3>
-                        <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mt-0.5">Quickly manage roles or add user accounts</p>
+                {/* Right: Quick Action Hub */}
+                <div className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 p-6 space-y-6">
+                    <div className="pb-4 border-b border-neutral-950/5 space-y-1">
+                        <h3 className="text-base font-semibold text-neutral-900">Quick Shortcuts</h3>
+                        <p className="text-xs text-neutral-400 font-normal">Quickly manage roles or add user accounts</p>
                     </div>
 
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-3">
                         <Link 
                             href="/superadmin/dashboard/users/create?type=customer"
-                            className="p-4 rounded-2xl border border-gray-100 hover:border-purple-200 hover:bg-purple-50/10 transition-all flex items-center gap-3.5 group"
+                            className="p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 hover:border-neutral-950/20 hover:bg-neutral-50 transition-all flex items-center gap-3.5 group"
                         >
-                            <div className="p-3 bg-purple-50 text-purple-650 rounded-xl group-hover:scale-105 transition-transform">
-                                <Users size={18} />
+                            <div className="p-2.5 bg-neutral-100 text-neutral-900 rounded-lg group-hover:scale-105 transition-transform">
+                                <Users size={16} />
                             </div>
                             <div className="text-left">
-                                <p className="text-xs font-bold text-gray-800">Add Customer</p>
-                                <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider mt-0.5">Create customer profile</p>
+                                <p className="text-xs font-medium text-neutral-900">Add Customer</p>
+                                <p className="text-[10px] text-neutral-400 font-normal mt-0.5">Create Customer Profile</p>
                             </div>
                         </Link>
 
                         <Link 
                             href="/superadmin/dashboard/users/create?type=doctor"
-                            className="p-4 rounded-2xl border border-gray-100 hover:border-blue-200 hover:bg-blue-50/10 transition-all flex items-center gap-3.5 group"
+                            className="p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 hover:border-neutral-950/20 hover:bg-neutral-50 transition-all flex items-center gap-3.5 group"
                         >
-                            <div className="p-3 bg-blue-50 text-blue-650 rounded-xl group-hover:scale-105 transition-transform">
-                                <Stethoscope size={18} />
+                            <div className="p-2.5 bg-neutral-100 text-neutral-900 rounded-lg group-hover:scale-105 transition-transform">
+                                <Stethoscope size={16} />
                             </div>
                             <div className="text-left">
-                                <p className="text-xs font-bold text-gray-800">Add Doctor</p>
-                                <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider mt-0.5">Onboard medical practitioner</p>
+                                <p className="text-xs font-medium text-neutral-900">Add Doctor</p>
+                                <p className="text-[10px] text-neutral-400 font-normal mt-0.5">Onboard Medical Practitioner</p>
                             </div>
                         </Link>
 
                         <Link 
                             href="/superadmin/dashboard/users/create?type=seller"
-                            className="p-4 rounded-2xl border border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/10 transition-all flex items-center gap-3.5 group"
+                            className="p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 hover:border-neutral-950/20 hover:bg-neutral-50 transition-all flex items-center gap-3.5 group"
                         >
-                            <div className="p-3 bg-emerald-50 text-emerald-650 rounded-xl group-hover:scale-105 transition-transform">
-                                <Store size={18} />
+                            <div className="p-2.5 bg-neutral-100 text-neutral-900 rounded-lg group-hover:scale-105 transition-transform">
+                                <Store size={16} />
                             </div>
                             <div className="text-left">
-                                <p className="text-xs font-bold text-gray-800">Add Seller</p>
-                                <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider mt-0.5">Register corporate merchant</p>
+                                <p className="text-xs font-medium text-neutral-900">Add Seller</p>
+                                <p className="text-[10px] text-neutral-400 font-normal mt-0.5">Register Corporate Merchant</p>
                             </div>
                         </Link>
 
                         <Link 
                             href="/superadmin/dashboard/users/team"
-                            className="p-4 rounded-2xl border border-gray-100 hover:border-indigo-200 hover:bg-indigo-50/10 transition-all flex items-center gap-3.5 group"
+                            className="p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 hover:border-neutral-950/20 hover:bg-neutral-50 transition-all flex items-center gap-3.5 group"
                         >
-                            <div className="p-3 bg-indigo-50 text-indigo-650 rounded-xl group-hover:scale-105 transition-transform">
-                                <ShieldCheck size={18} />
+                            <div className="p-3 bg-neutral-100 text-neutral-900 rounded-lg group-hover:scale-105 transition-transform">
+                                <ShieldCheck size={16} />
                             </div>
                             <div className="text-left">
-                                <p className="text-xs font-bold text-gray-800">Configure RBAC Roles</p>
-                                <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider mt-0.5">Edit permissions and team access</p>
+                                <p className="text-xs font-medium text-neutral-900">Configure RBAC Roles</p>
+                                <p className="text-[10px] text-neutral-400 font-normal mt-0.5">Edit Permissions and Team Access</p>
                             </div>
                         </Link>
                     </div>

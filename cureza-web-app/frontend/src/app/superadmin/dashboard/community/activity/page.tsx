@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Clock, Search, ArrowUpRight, ArrowDownLeft, Calendar } from 'lucide-react';
+import { Clock, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import api from '@/lib/api';
 
 export default function AdminActivityPage() {
@@ -42,31 +42,26 @@ export default function AdminActivityPage() {
 
     return (
         <div className="space-y-6">
-            <div>
-                <h1 className="text-2xl font-bold text-gray-900">Points & XP Activity Log</h1>
-                <p className="text-gray-500">Audit trail of all points credited and debited across the system.</p>
-            </div>
-
             {/* Filters */}
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
-                <form onSubmit={handleSearchSubmit} className="flex gap-2 w-full md:max-w-md">
+            <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 flex flex-col sm:flex-row gap-3 items-center justify-between">
+                <form onSubmit={handleSearchSubmit} className="flex gap-2 w-full sm:max-w-md">
                     <input
                         type="text"
                         placeholder="Search by user name or email..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-[#052326] focus:border-[#052326]"
+                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white"
                     />
-                    <button type="submit" className="bg-[#052326] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-opacity-90">
+                    <button type="submit" className="bg-black text-white px-3 py-1.5 rounded-[10px] text-xs font-medium hover:bg-neutral-800 transition-colors">
                         Search
                     </button>
                 </form>
 
-                <div className="flex gap-4 w-full md:w-auto shrink-0 justify-end">
+                <div className="flex gap-4 w-full sm:w-auto shrink-0 justify-end">
                     <select
                         value={type}
                         onChange={(e) => { setType(e.target.value); setPage(1); }}
-                        className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-[#052326] focus:border-[#052326]"
+                        className="px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white"
                     >
                         <option value="">All Transactions</option>
                         <option value="credit">Credits Only</option>
@@ -76,24 +71,24 @@ export default function AdminActivityPage() {
             </div>
 
             {/* Audit Log Table */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 overflow-hidden">
                 {loading ? (
-                    <div className="p-8 text-center text-gray-500 animate-pulse">Loading activity logs...</div>
+                    <div className="p-8 text-center text-xs text-gray-500 animate-pulse">Loading activity logs...</div>
                 ) : activities.length === 0 ? (
-                    <div className="p-8 text-center text-gray-500">No activities recorded matching criteria.</div>
+                    <div className="p-8 text-center text-xs text-gray-500">No activities recorded matching criteria.</div>
                 ) : (
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left text-sm">
-                            <thead className="bg-gray-50 border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                        <table className="w-full text-left text-xs">
+                            <thead className="bg-neutral-50 border-b-[0.5px] border-neutral-950/10 text-gray-500 font-medium">
                                 <tr>
-                                    <th className="p-4">User</th>
-                                    <th className="p-4">Action</th>
-                                    <th className="p-4">Description</th>
-                                    <th className="p-4">Points</th>
-                                    <th className="p-4">Timestamp</th>
+                                    <th className="p-3">User</th>
+                                    <th className="p-3">Action</th>
+                                    <th className="p-3">Description</th>
+                                    <th className="p-3">Points</th>
+                                    <th className="p-3">Timestamp</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-200">
+                            <tbody className="divide-y-[0.5px] divide-neutral-950/10">
                                 {activities.map((item) => {
                                     const isEarn = item.type === 'credit';
                                     const user = item.wallet?.user;
@@ -106,31 +101,36 @@ export default function AdminActivityPage() {
                                     });
 
                                     return (
-                                        <tr key={item.id} className="hover:bg-gray-50/50 transition-colors">
-                                            <td className="p-4">
+                                        <tr key={item.id} className="hover:bg-neutral-50/50 transition-colors">
+                                            <td className="p-3">
                                                 {user ? (
                                                     <div>
-                                                        <p className="font-bold text-gray-900">{user.name}</p>
-                                                        <p className="text-xs text-gray-400">{user.email}</p>
+                                                        <p className="font-medium text-gray-900">{user.name}</p>
+                                                        <p className="text-[10px] text-gray-400 mt-0.5">{user.email}</p>
                                                     </div>
                                                 ) : (
-                                                    <span className="text-gray-400 font-medium">System / Seed User</span>
+                                                    <span className="text-gray-400 font-normal">System / Seed User</span>
                                                 )}
                                             </td>
-                                            <td className="p-4">
-                                                <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                                                    isEarn ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                            <td className="p-3">
+                                                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[6px] text-[10px] font-medium border-[0.5px] ${
+                                                    isEarn 
+                                                        ? 'bg-green-50 text-green-800 border-green-200/50' 
+                                                        : 'bg-red-50 text-red-800 border-red-200/50'
                                                 }`}>
-                                                    {isEarn ? <ArrowUpRight size={12} /> : <ArrowDownLeft size={12} />}
+                                                    {isEarn ? <ArrowUpRight size={10} /> : <ArrowDownLeft size={10} />}
                                                     {isEarn ? 'Credit' : 'Debit'}
                                                 </span>
                                             </td>
-                                            <td className="p-4 text-gray-600 font-medium">{item.description}</td>
-                                            <td className={`p-4 font-bold text-base ${isEarn ? 'text-green-600' : 'text-red-600'}`}>
+                                            <td className="p-3 text-gray-600 font-normal">{item.description}</td>
+                                            <td className={`p-3 font-semibold text-sm ${isEarn ? 'text-green-600' : 'text-red-600'}`}>
                                                 {isEarn ? '+' : '-'}{item.points} XP
                                             </td>
-                                            <td className="p-4 text-xs text-gray-400 flex items-center gap-1.5 mt-2.5">
-                                                <Clock size={14} /> {formattedDate}
+                                            <td className="p-3 text-gray-400">
+                                                <div className="flex items-center gap-1.5">
+                                                    <Clock size={12} />
+                                                    <span>{formattedDate}</span>
+                                                </div>
                                             </td>
                                         </tr>
                                     );
@@ -144,20 +144,20 @@ export default function AdminActivityPage() {
             {/* Pagination Controls */}
             {pagination && pagination.last_page > 1 && (
                 <div className="flex items-center justify-between pt-4">
-                    <p className="text-xs text-gray-500 font-medium">Total: {pagination.total} records</p>
+                    <p className="text-xs text-gray-400 font-normal">Total: {pagination.total} records</p>
                     <div className="flex gap-2">
                         <button
                             disabled={page <= 1}
                             onClick={() => setPage(page - 1)}
-                            className="px-3 py-1 border border-gray-200 rounded-lg text-xs font-semibold hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-2.5 py-1 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs font-medium hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                             Previous
                         </button>
-                        <span className="text-xs font-bold self-center px-2">Page {page} of {pagination.last_page}</span>
+                        <span className="text-xs font-medium self-center px-2 text-gray-600">Page {page} of {pagination.last_page}</span>
                         <button
                             disabled={page >= pagination.last_page}
                             onClick={() => setPage(page + 1)}
-                            className="px-3 py-1 border border-gray-200 rounded-lg text-xs font-semibold hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-2.5 py-1 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs font-medium hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                             Next
                         </button>

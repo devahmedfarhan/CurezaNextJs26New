@@ -465,17 +465,17 @@ function NotificationSettingsContent() {
             const emailSubject = template.subject ? template.subject.replace('{{order_id}}', 'CZ20261802') : '';
             return (
                 <div className="space-y-4">
-                    <div className="border border-gray-200 rounded-lg p-3 bg-gray-50">
-                        <p className="text-xs text-gray-500 font-semibold uppercase">Subject Line:</p>
-                        <p className="text-sm font-bold text-gray-800">{emailSubject || '(No Subject Line)'}</p>
+                    <div className="border-[0.5px] border-black/10 rounded-[10px] p-3 bg-neutral-50">
+                        <p className="text-[10px] text-neutral-500 font-medium">Subject Line:</p>
+                        <p className="text-xs font-semibold text-neutral-900 mt-0.5">{emailSubject || '(No Subject Line)'}</p>
                     </div>
-                    <div className="border border-gray-200 rounded-xl overflow-hidden bg-white">
-                        <div className="bg-gray-100 px-4 py-2 border-b border-gray-200 flex items-center justify-between">
-                            <span className="text-xs text-gray-500 font-mono">HTML Sandbox Sandbox Container</span>
-                            <div className="flex gap-1">
-                                <span className="w-2.5 h-2.5 bg-red-400 rounded-full"></span>
-                                <span className="w-2.5 h-2.5 bg-yellow-400 rounded-full"></span>
-                                <span className="w-2.5 h-2.5 bg-green-400 rounded-full"></span>
+                    <div className="border-[0.5px] border-black/10 rounded-[10px] overflow-hidden bg-white">
+                        <div className="bg-neutral-50 px-4 py-2 border-b-[0.5px] border-black/10 flex items-center justify-between">
+                            <span className="text-xs text-neutral-500 font-mono">HTML Sandbox Container</span>
+                            <div className="flex gap-1.5">
+                                <span className="w-2 h-2 bg-neutral-300 rounded-full"></span>
+                                <span className="w-2 h-2 bg-neutral-250 rounded-full"></span>
+                                <span className="w-2 h-2 bg-neutral-200 rounded-full"></span>
                             </div>
                         </div>
                         <iframe 
@@ -489,21 +489,21 @@ function NotificationSettingsContent() {
         } else {
             // Render as a WhatsApp chat bubble
             return (
-                <div className="bg-[#efeae2] p-6 rounded-2xl border border-gray-200 min-h-[350px] flex flex-col justify-end relative shadow-inner font-sans" style={{ backgroundImage: "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')" }}>
-                    <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-white/85 text-[10px] px-3 py-1 text-gray-600 rounded-lg font-medium shadow-sm">
-                        🔒 Messages are simulated through AISensy API
+                <div className="bg-neutral-50 p-6 rounded-[10px] border-[0.5px] border-black/10 min-h-[350px] flex flex-col justify-end relative font-sans">
+                    <div className="absolute top-3 left-1/2 -translate-x-1/2 bg-white text-[10px] px-3 py-1 text-neutral-500 rounded-[10px] font-medium border-[0.5px] border-black/10">
+                        Messages are simulated through AISensy API
                     </div>
-                    <div className="max-w-[85%] bg-white rounded-xl shadow-md p-3.5 self-start text-[14px] text-gray-800 leading-normal relative before:content-[''] before:absolute before:left-[-6px] before:top-3 before:border-[6px] before:border-transparent before:border-r-white before:border-t-white">
+                    <div className="max-w-[85%] bg-white rounded-[10px] border-[0.5px] border-black/10 p-3.5 self-start text-[13px] text-neutral-800 leading-relaxed relative">
                         {template.whatsapp_template_name && (
-                            <div className="text-[11px] text-cureza-green font-bold mb-1 uppercase tracking-wider">
+                            <div className="text-[10px] text-neutral-500 font-medium mb-1.5">
                                 Campaign: {template.whatsapp_template_name}
                             </div>
                         )}
-                        <div className="whitespace-pre-line font-medium text-gray-900">
+                        <div className="whitespace-pre-line font-normal text-neutral-900">
                             {content}
                         </div>
-                        <div className="text-right text-[10px] text-gray-400 mt-1.5 flex justify-end items-center gap-0.5">
-                            12:00 PM <Check size={12} className="text-blue-500" />
+                        <div className="text-right text-[10px] text-neutral-400 mt-2 flex justify-end items-center gap-0.5">
+                            12:00 PM <Check size={12} className="text-neutral-500" />
                         </div>
                     </div>
                 </div>
@@ -512,14 +512,14 @@ function NotificationSettingsContent() {
     };
 
     return (
-        <div className="space-y-6 pb-20">
+        <div className="space-y-6 pb-20 font-sans text-neutral-900">
             {/* Header section with Stats */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-100 pb-5">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-black/10 pb-5">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight flex items-center gap-2">
-                        <Sliders className="text-[#052326]" size={30} /> Notifications & Flows
+                    <h1 className="text-xl font-semibold text-neutral-900 tracking-tight flex items-center gap-2">
+                        <Sliders className="text-black" size={22} /> Notifications & Flows
                     </h1>
-                    <p className="text-gray-500 text-sm mt-1">
+                    <p className="text-neutral-500 text-xs mt-1">
                         Full-control system for email SMTP and WhatsApp AISensy campaign dispatches
                     </p>
                 </div>
@@ -527,9 +527,9 @@ function NotificationSettingsContent() {
                     <button 
                         onClick={handleTriggerCronFlows}
                         disabled={saving}
-                        className="bg-white hover:bg-gray-50 text-gray-700 px-4 py-2.5 rounded-lg border border-gray-300 flex items-center gap-2 text-sm font-semibold transition shadow-sm disabled:opacity-50"
+                        className="bg-white hover:bg-neutral-50 text-neutral-800 px-4 py-2 border-[0.5px] border-black/10 rounded-[10px] flex items-center gap-2 text-xs font-medium transition-all disabled:opacity-50"
                     >
-                        <RefreshCw size={16} className={saving ? 'animate-spin' : ''} />
+                        <RefreshCw size={14} className={saving ? 'animate-spin' : ''} />
                         Run Flows Evaluation
                     </button>
                     <button 
@@ -553,9 +553,9 @@ function NotificationSettingsContent() {
                             setPreviewMode('edit');
                             setEditorOpen(true);
                         }}
-                        className="bg-[#052326] hover:bg-green-950 text-white px-4 py-2.5 rounded-lg flex items-center gap-2 text-sm font-semibold transition shadow-sm"
+                        className="bg-black hover:bg-neutral-900 text-white px-4 py-2 rounded-[10px] flex items-center gap-2 text-xs font-medium transition-all"
                     >
-                        <Plus size={16} />
+                        <Plus size={14} />
                         New Template
                     </button>
                 </div>
@@ -563,106 +563,77 @@ function NotificationSettingsContent() {
 
             {/* Alert messages */}
             {successMessage && (
-                <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-xl shadow-sm flex items-center gap-3 animate-fadeIn">
-                    <CheckCircle className="text-green-500 flex-shrink-0" size={20} />
-                    <span className="text-green-800 text-sm font-semibold">{successMessage}</span>
+                <div className="bg-green-50 border-l-2 border-green-600 p-4 rounded-[10px] flex items-center gap-3">
+                    <CheckCircle className="text-green-600 flex-shrink-0" size={16} />
+                    <span className="text-green-800 text-xs font-medium">{successMessage}</span>
                 </div>
             )}
             {errorMessage && (
-                <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-xl shadow-sm flex items-center gap-3 animate-fadeIn">
-                    <AlertCircle className="text-red-500 flex-shrink-0" size={20} />
-                    <span className="text-red-800 text-sm font-semibold">{errorMessage}</span>
+                <div className="bg-red-50 border-l-2 border-red-600 p-4 rounded-[10px] flex items-center gap-3">
+                    <AlertCircle className="text-red-600 flex-shrink-0" size={16} />
+                    <span className="text-red-800 text-xs font-medium">{errorMessage}</span>
                 </div>
             )}
 
             {/* Stats Dashboard Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="bg-white p-5 rounded-[10px] border-[0.5px] border-black/10 flex items-center justify-between">
                     <div>
-                        <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Campaigns Sent</p>
-                        <h3 className="text-2xl font-extrabold text-gray-900 mt-1">{stats.total_sent}</h3>
-                        <p className="text-[10px] text-green-600 font-bold mt-1">Successfully dispatched</p>
+                        <p className="text-xs font-medium text-neutral-500">Campaigns Sent</p>
+                        <h3 className="text-xl font-semibold text-neutral-900 mt-1">{stats.total_sent}</h3>
+                        <p className="text-[10px] text-green-600 font-medium mt-1">Successfully dispatched</p>
                     </div>
-                    <div className="p-3 bg-green-50 text-green-600 rounded-xl">
-                        <Send size={20} />
+                    <div className="p-2.5 bg-neutral-50 text-neutral-900 border-[0.5px] border-black/10 rounded-[10px]">
+                        <Send size={18} />
                     </div>
                 </div>
-                <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+                <div className="bg-white p-5 rounded-[10px] border-[0.5px] border-black/10 flex items-center justify-between">
                     <div>
-                        <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Failed Dispatches</p>
-                        <h3 className="text-2xl font-extrabold text-gray-900 mt-1">{stats.total_failed}</h3>
-                        <p className="text-[10px] text-red-500 font-bold mt-1">Errors logged in history</p>
+                        <p className="text-xs font-medium text-neutral-500">Failed Dispatches</p>
+                        <h3 className="text-xl font-semibold text-neutral-900 mt-1">{stats.total_failed}</h3>
+                        <p className="text-[10px] text-red-500 font-medium mt-1">Errors logged in history</p>
                     </div>
-                    <div className="p-3 bg-red-50 text-red-600 rounded-xl">
-                        <AlertCircle size={20} />
+                    <div className="p-2.5 bg-red-50/50 text-red-600 border-[0.5px] border-red-250/20 rounded-[10px]">
+                        <AlertCircle size={18} />
                     </div>
                 </div>
-                <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+                <div className="bg-white p-5 rounded-[10px] border-[0.5px] border-black/10 flex items-center justify-between">
                     <div>
-                        <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Restock Waitlist</p>
-                        <h3 className="text-2xl font-extrabold text-gray-900 mt-1">{stats.waitlist_subscribers}</h3>
-                        <p className="text-[10px] text-blue-600 font-bold mt-1">Customers waiting for stock</p>
+                        <p className="text-xs font-medium text-neutral-500">Restock Waitlist</p>
+                        <h3 className="text-xl font-semibold text-neutral-900 mt-1">{stats.waitlist_subscribers}</h3>
+                        <p className="text-[10px] text-neutral-500 font-medium mt-1">Customers waiting for stock</p>
                     </div>
-                    <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
-                        <Clock size={20} />
+                    <div className="p-2.5 bg-neutral-50 text-neutral-900 border-[0.5px] border-black/10 rounded-[10px]">
+                        <Clock size={18} />
                     </div>
                 </div>
-                <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+                <div className="bg-white p-5 rounded-[10px] border-[0.5px] border-black/10 flex items-center justify-between">
                     <div>
-                        <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Active Templates</p>
-                        <h3 className="text-2xl font-extrabold text-gray-900 mt-1">{stats.active_templates} <span className="text-sm font-normal text-gray-400">/ {stats.total_templates}</span></h3>
-                        <p className="text-[10px] text-gray-500 font-bold mt-1">Templates actively running</p>
+                        <p className="text-xs font-medium text-neutral-500">Active Templates</p>
+                        <h3 className="text-xl font-semibold text-neutral-900 mt-1">{stats.active_templates} <span className="text-xs font-normal text-neutral-450">/ {stats.total_templates}</span></h3>
+                        <p className="text-[10px] text-neutral-500 font-medium mt-1">Templates actively running</p>
                     </div>
-                    <div className="p-3 bg-purple-50 text-purple-600 rounded-xl">
-                        <Activity size={20} />
+                    <div className="p-2.5 bg-neutral-50 text-neutral-900 border-[0.5px] border-black/10 rounded-[10px]">
+                        <Activity size={18} />
                     </div>
                 </div>
-            </div>
-
-            {/* Subpages Tab Navigation */}
-            <div className="flex border-b border-gray-200 overflow-x-auto gap-2">
-                {[
-                    { id: 'templates', label: 'Campaign Templates', icon: Mail },
-                    { id: 'flows', label: 'Automated Flow Rules', icon: Clock },
-                    { id: 'waitlist', label: 'Product Waitlist', icon: List },
-                    { id: 'whatsapp', label: 'AISensy API Configuration', icon: Settings },
-                    { id: 'logs', label: 'Delivery Audit Logs', icon: Activity },
-                    { id: 'guide', label: 'System Integration Guide', icon: HelpCircle }
-                ].map((tab) => {
-                    const Icon = tab.icon;
-                    const isActive = activeTab === tab.id;
-                    return (
-                        <button
-                            key={tab.id}
-                            onClick={() => handleTabChange(tab.id as any)}
-                            className={`flex items-center gap-2 px-5 py-3 text-sm font-bold border-b-2 whitespace-nowrap transition-all ${
-                                isActive 
-                                    ? 'border-[#052326] text-[#052326] bg-[#052326]/5 rounded-t-lg font-extrabold' 
-                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                            }`}
-                        >
-                            <Icon size={16} />
-                            {tab.label}
-                        </button>
-                    );
-                })}
             </div>
 
             {/* TAB CONTENT SANDBOX */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 p-6">
                 
                 {/* 1. TEMPLATES TAB */}
                 {activeTab === 'templates' && (
                     <div className="space-y-6">
-                        <div className="flex justify-between items-center border-b border-gray-100 pb-3">
-                            <h3 className="font-bold text-gray-900 text-lg">Notification Templates</h3>
-                            <p className="text-xs text-gray-500 font-medium">Click on any template to preview, edit copy parameters, or run dispatches.</p>
+                        <div className="flex justify-between items-center border-b border-black/10 pb-3">
+                            <h3 className="font-semibold text-neutral-900 text-base">Notification Templates</h3>
+                            <p className="text-xs text-neutral-500 font-normal">Click on any template to preview, edit copy parameters, or run dispatches.</p>
                         </div>
 
                         {loading && templates.length === 0 ? (
-                            <div className="py-10 text-center text-gray-500 flex flex-col justify-center items-center gap-2">
-                                <RefreshCw size={24} className="animate-spin text-gray-400" />
-                                <span>Loading template registries...</span>
+                            <div className="py-10 text-center text-neutral-500 flex flex-col justify-center items-center gap-2">
+                                <RefreshCw size={20} className="animate-spin text-neutral-450" />
+                                <span className="text-xs font-normal">Loading template registries...</span>
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -678,47 +649,45 @@ function NotificationSettingsContent() {
                                     };
 
                                     return (
-                                        <div key={flowType} className="border border-gray-150 rounded-xl p-5 bg-gray-50/50 space-y-4">
-                                            <h4 className="font-extrabold text-[#052326] text-sm tracking-wide uppercase border-b border-gray-200 pb-2">
+                                        <div key={flowType} className="border-[0.5px] border-black/10 rounded-[10px] p-5 bg-neutral-50/30 space-y-4">
+                                            <h4 className="font-medium text-neutral-800 text-xs border-b border-black/10 pb-2">
                                                 {flowLabels[flowType] || flowType}
                                             </h4>
                                             <div className="space-y-3">
                                                 {flowTemplates.map((tmpl) => (
                                                     <div 
                                                         key={tmpl.id} 
-                                                        className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:border-gray-300 transition-all flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+                                                        className="bg-white border-[0.5px] border-black/10 rounded-[10px] p-4 transition-all hover:border-black/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
                                                     >
                                                         <div className="space-y-1.5 flex-1">
                                                             <div className="flex items-center gap-2">
-                                                                <span className="font-bold text-sm text-gray-900">{tmpl.name}</span>
-                                                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold flex items-center gap-1 ${
-                                                                    tmpl.channel === 'email' ? 'bg-blue-50 text-blue-600' : 'bg-green-50 text-green-600'
-                                                                }`}>
+                                                                <span className="font-medium text-sm text-neutral-900">{tmpl.name}</span>
+                                                                <span className="text-[10px] px-2 py-0.5 rounded-[10px] font-medium border-[0.5px] border-black/10 bg-neutral-50 text-neutral-800 flex items-center gap-1">
                                                                     {tmpl.channel === 'email' ? <Mail size={10} /> : <MessageSquare size={10} />}
-                                                                    {tmpl.channel.toUpperCase()}
+                                                                    {tmpl.channel === 'email' ? 'Email' : 'WhatsApp'}
                                                                 </span>
                                                             </div>
-                                                            <p className="text-xs text-gray-500 font-mono font-medium truncate max-w-xs sm:max-w-md">
+                                                            <p className="text-xs text-neutral-500 font-mono font-normal truncate max-w-xs sm:max-w-md">
                                                                 Code: {tmpl.code}
                                                             </p>
                                                             {tmpl.trigger_type === 'delay' && (
-                                                                <p className="text-[11px] text-gray-600 font-semibold flex items-center gap-1">
+                                                                <p className="text-[11px] text-neutral-550 font-normal flex items-center gap-1">
                                                                     <Clock size={11} /> Delay: {tmpl.delay_value} {tmpl.delay_unit}
                                                                 </p>
                                                             )}
                                                         </div>
 
-                                                        <div className="flex items-center gap-3 self-end sm:self-center">
+                                                        <div className="flex items-center gap-2.5 self-end sm:self-center">
                                                             {/* Status Toggle */}
                                                             <button
                                                                 onClick={() => handleToggleStatus(tmpl)}
-                                                                className={`text-xs px-2.5 py-1 rounded-full font-bold transition-all ${
+                                                                className={`text-[10px] px-2.5 py-1 rounded-[10px] font-medium border transition-all ${
                                                                     tmpl.status === 'active' 
-                                                                        ? 'bg-green-100 text-green-800 hover:bg-green-200' 
-                                                                        : 'bg-gray-150 text-gray-600 hover:bg-gray-200'
+                                                                        ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100/50' 
+                                                                        : 'bg-neutral-50 text-neutral-600 border-black/10 hover:bg-neutral-100'
                                                                 }`}
                                                             >
-                                                                {tmpl.status.toUpperCase()}
+                                                                {tmpl.status === 'active' ? 'Active' : 'Inactive'}
                                                             </button>
 
                                                             {/* Actions */}
@@ -728,20 +697,20 @@ function NotificationSettingsContent() {
                                                                     setPreviewMode('edit');
                                                                     setEditorOpen(true);
                                                                 }}
-                                                                className="text-gray-600 hover:text-blue-600 p-1.5 rounded-md hover:bg-gray-100 transition"
+                                                                className="text-neutral-500 hover:text-black p-1.5 rounded-[10px] hover:bg-neutral-50 border border-transparent hover:border-black/5 transition"
                                                                 title="Edit content & rules"
                                                             >
-                                                                <Edit size={16} />
+                                                                <Edit size={14} />
                                                             </button>
                                                             <button 
                                                                 onClick={() => {
                                                                     setSelectedTemplate(tmpl);
                                                                     setTestModalOpen(true);
                                                                 }}
-                                                                className="text-[#052326] hover:text-green-800 p-1.5 rounded-md hover:bg-gray-100 transition"
+                                                                className="text-neutral-550 hover:text-black p-1.5 rounded-[10px] hover:bg-neutral-50 border border-transparent hover:border-black/5 transition"
                                                                 title="Trigger test message"
                                                             >
-                                                                <Send size={16} />
+                                                                <Send size={14} />
                                                             </button>
                                                         </div>
                                                     </div>
@@ -758,106 +727,106 @@ function NotificationSettingsContent() {
                 {/* 2. AUTOMATED FLOWS CONFIG */}
                 {activeTab === 'flows' && (
                     <div className="space-y-6">
-                        <div className="border-b border-gray-100 pb-3">
-                            <h3 className="font-bold text-gray-900 text-lg">Automated Triggers Configuration</h3>
-                            <p className="text-gray-500 text-xs mt-1">Configure intervals and conditions for automatic system schedules</p>
+                        <div className="border-b border-black/10 pb-3">
+                            <h3 className="font-semibold text-neutral-900 text-base">Automated Triggers Configuration</h3>
+                            <p className="text-neutral-500 text-xs mt-1">Configure intervals and conditions for automatic system schedules</p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* Abandoned Cart Box */}
-                            <div className="border border-gray-200 rounded-xl p-5 bg-gray-50 space-y-4">
-                                <h4 className="font-bold text-[#052326] text-base flex items-center gap-2">
-                                    <Clock className="text-cureza-green" size={20} />
+                            <div className="border-[0.5px] border-black/10 rounded-[10px] p-5 bg-neutral-50/30 space-y-4">
+                                <h4 className="font-medium text-neutral-900 text-sm flex items-center gap-2">
+                                    <Clock className="text-black" size={18} />
                                     Abandoned Cart Sequences
                                 </h4>
-                                <p className="text-xs text-gray-500">
+                                <p className="text-xs text-neutral-500 font-normal">
                                     Triggered automatically when a registered user leaves items in their shopping cart without completing an order.
                                 </p>
                                 
-                                <div className="space-y-4 bg-white p-4 rounded-lg border border-gray-150 shadow-sm">
+                                <div className="space-y-4 bg-white p-4 rounded-[10px] border-[0.5px] border-black/10">
                                     <div className="flex items-center justify-between">
                                         <div className="space-y-0.5">
-                                            <p className="text-xs font-bold text-gray-700">Step 1: Soft Warning</p>
-                                            <p className="text-[10px] text-gray-500">Friendly reminder of cart items</p>
+                                            <p className="text-xs font-medium text-neutral-800">Step 1: Soft Warning</p>
+                                            <p className="text-[10px] text-neutral-450 font-normal">Friendly reminder of cart items</p>
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <input 
                                                 type="number" 
                                                 defaultValue="1" 
-                                                className="w-12 px-2 py-1 text-xs border border-gray-300 rounded text-center" 
+                                                className="w-12 px-2 py-1 text-xs border border-black/10 bg-neutral-50 rounded-[10px] text-center text-neutral-600" 
                                                 disabled 
                                             />
-                                            <span className="text-xs text-gray-600 font-bold">hour(s)</span>
+                                            <span className="text-xs text-neutral-650 font-medium">hour(s)</span>
                                         </div>
                                     </div>
-                                    <div className="flex items-center justify-between border-t border-gray-100 pt-3">
+                                    <div className="flex items-center justify-between border-t border-black/10 pt-3">
                                         <div className="space-y-0.5">
-                                            <p className="text-xs font-bold text-gray-700">Step 2: Incentivized Recovery</p>
-                                            <p className="text-[10px] text-gray-500">Dispatches 10% coupon code (CUREZA10)</p>
+                                            <p className="text-xs font-medium text-neutral-800">Step 2: Incentivized Recovery</p>
+                                            <p className="text-[10px] text-neutral-450 font-normal">Dispatches 10% coupon code (CUREZA10)</p>
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <input 
                                                 type="number" 
                                                 defaultValue="24" 
-                                                className="w-12 px-2 py-1 text-xs border border-gray-300 rounded text-center" 
+                                                className="w-12 px-2 py-1 text-xs border border-black/10 bg-neutral-50 rounded-[10px] text-center text-neutral-600" 
                                                 disabled 
                                             />
-                                            <span className="text-xs text-gray-600 font-bold">hour(s)</span>
+                                            <span className="text-xs text-neutral-650 font-medium">hour(s)</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Customer Loyalty Box */}
-                            <div className="border border-gray-200 rounded-xl p-5 bg-gray-50 space-y-4">
-                                <h4 className="font-bold text-[#052326] text-base flex items-center gap-2">
-                                    <Activity className="text-cureza-green" size={20} />
+                            <div className="border-[0.5px] border-black/10 rounded-[10px] p-5 bg-neutral-50/30 space-y-4">
+                                <h4 className="font-medium text-neutral-900 text-sm flex items-center gap-2">
+                                    <Activity className="text-black" size={18} />
                                     Loyalty & Retention Reminders
                                 </h4>
-                                <p className="text-xs text-gray-500">
+                                <p className="text-xs text-neutral-500 font-normal">
                                     Follow-up events triggered relative to delivery and order status changes.
                                 </p>
                                 
-                                <div className="space-y-4 bg-white p-4 rounded-lg border border-gray-150 shadow-sm">
+                                <div className="space-y-4 bg-white p-4 rounded-[10px] border-[0.5px] border-black/10">
                                     <div className="flex items-center justify-between">
                                         <div className="space-y-0.5">
-                                            <p className="text-xs font-bold text-gray-700">Review Request Alert</p>
-                                            <p className="text-[10px] text-gray-500">Sent after package is delivered</p>
+                                            <p className="text-xs font-medium text-neutral-800">Review Request Alert</p>
+                                            <p className="text-[10px] text-neutral-450 font-normal">Sent after package is delivered</p>
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <input 
                                                 type="number" 
                                                 defaultValue="3" 
-                                                className="w-12 px-2 py-1 text-xs border border-gray-300 rounded text-center" 
+                                                className="w-12 px-2 py-1 text-xs border border-black/10 bg-neutral-50 rounded-[10px] text-center text-neutral-600" 
                                                 disabled 
                                             />
-                                            <span className="text-xs text-gray-600 font-bold">day(s)</span>
+                                            <span className="text-xs text-neutral-650 font-medium">day(s)</span>
                                         </div>
                                     </div>
-                                    <div className="flex items-center justify-between border-t border-gray-100 pt-3">
+                                    <div className="flex items-center justify-between border-t border-black/10 pt-3">
                                         <div className="space-y-0.5">
-                                            <p className="text-xs font-bold text-gray-700">Replenishment Reminder</p>
-                                            <p className="text-[10px] text-gray-500">Suggest re-purchasing wellness products</p>
+                                            <p className="text-xs font-medium text-neutral-800">Replenishment Reminder</p>
+                                            <p className="text-[10px] text-neutral-450 font-normal">Suggest re-purchasing wellness products</p>
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <input 
                                                 type="number" 
                                                 defaultValue="30" 
-                                                className="w-12 px-2 py-1 text-xs border border-gray-300 rounded text-center" 
+                                                className="w-12 px-2 py-1 text-xs border border-black/10 bg-neutral-50 rounded-[10px] text-center text-neutral-600" 
                                                 disabled 
                                             />
-                                            <span className="text-xs text-gray-600 font-bold">day(s)</span>
+                                            <span className="text-xs text-neutral-650 font-medium">day(s)</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl flex gap-3 text-sm text-blue-900">
-                            <HelpCircle className="text-blue-600 flex-shrink-0 mt-0.5" size={20} />
+                        <div className="bg-neutral-50 border-[0.5px] border-black/10 p-4 rounded-[10px] flex gap-3 text-xs text-neutral-600">
+                            <HelpCircle className="text-neutral-500 flex-shrink-0 mt-0.5" size={16} />
                             <div>
-                                <p className="font-bold">Scheduler Information</p>
-                                <p className="text-xs mt-0.5">
+                                <p className="font-medium text-neutral-900">Scheduler Information</p>
+                                <p className="text-[11px] text-neutral-500 mt-0.5">
                                     These delays are registered via Laravel Scheduler commands. You can adjust the exact delay values on a per-template basis directly by clicking Edit on a template in the Campaign Templates tab.
                                 </p>
                             </div>
@@ -868,14 +837,14 @@ function NotificationSettingsContent() {
                 {/* 3. PRODUCT WAITLIST TAB */}
                 {activeTab === 'waitlist' && (
                     <div className="space-y-6">
-                        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-gray-100 pb-3">
+                        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-black/10 pb-3">
                             <div>
-                                <h3 className="font-bold text-gray-900 text-lg">Product Restock Waitlists</h3>
-                                <p className="text-gray-500 text-xs mt-1">Notify customers automatically when out-of-stock items become available</p>
+                                <h3 className="font-semibold text-neutral-900 text-base">Product Restock Waitlists</h3>
+                                <p className="text-neutral-500 text-xs mt-1">Notify customers automatically when out-of-stock items become available</p>
                             </div>
                             <button
                                 onClick={() => setWaitlistModalOpen(true)}
-                                className="bg-[#052326] hover:bg-green-950 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 self-start"
+                                className="bg-black hover:bg-neutral-900 text-white px-4 py-2 rounded-[10px] text-xs font-medium flex items-center gap-1.5 self-start transition-all"
                             >
                                 <UserPlus size={14} /> Add Subscriber Manually
                             </button>
@@ -891,77 +860,77 @@ function NotificationSettingsContent() {
                                     value={searchWaitlist}
                                     onChange={(e) => setSearchWaitlist(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && loadWaitlist()}
-                                    className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-cureza-green"
+                                    className="w-full pl-9 pr-4 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs bg-neutral-50/20 outline-none focus:border-black transition-colors"
                                 />
                             </div>
                             <button 
                                 onClick={loadWaitlist}
-                                className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-xs font-bold"
+                                className="bg-neutral-50 hover:bg-neutral-100 text-neutral-900 border-[0.5px] border-black/10 px-4 py-2 rounded-[10px] text-xs font-medium transition-all"
                             >
                                 Search
                             </button>
                         </div>
 
                         {/* Waitlist table */}
-                        <div className="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
-                                    <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Product ID & Name</th>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Subscriber Details</th>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Date Registered</th>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
-                                        <th className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
+                        <div className="border-[0.5px] border-black/10 rounded-[10px] overflow-hidden">
+                            <table className="min-w-full divide-y divide-black/10">
+                                <thead className="bg-neutral-50">
+                                    <tr className="border-b-[0.5px] border-black/10">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500">Product ID & Name</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500">Subscriber Details</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500">Date Registered</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500">Status</th>
+                                        <th className="px-6 py-3 text-right text-xs font-medium text-neutral-500">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
+                                <tbody className="bg-white divide-y divide-black/10">
                                     {waitlist.length === 0 ? (
                                         <tr>
-                                            <td colSpan={5} className="px-6 py-10 text-center text-gray-500 text-xs font-medium">
+                                            <td colSpan={5} className="px-6 py-10 text-center text-neutral-500 text-xs font-normal">
                                                 No active restock waitlist signups found.
                                             </td>
                                         </tr>
                                     ) : (
                                         waitlist.map((sub) => (
-                                            <tr key={sub.id} className="hover:bg-gray-50">
+                                            <tr key={sub.id} className="hover:bg-neutral-50/40 transition-colors">
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <div className="flex items-center gap-3">
                                                         <div className="text-xs">
-                                                            <p className="font-bold text-gray-900">{sub.product?.name || 'Unknown Product'}</p>
-                                                            <p className="text-[10px] text-gray-400 font-mono">ID: {sub.product_id}</p>
+                                                            <p className="font-medium text-neutral-900">{sub.product?.name || 'Unknown Product'}</p>
+                                                            <p className="text-[10px] text-neutral-450 font-mono">ID: {sub.product_id}</p>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <div className="text-xs">
-                                                        <p className="font-semibold text-gray-800">{sub.email}</p>
-                                                        <p className="text-gray-500">{sub.phone || '(No phone number)'}</p>
+                                                        <p className="font-medium text-neutral-800">{sub.email}</p>
+                                                        <p className="text-neutral-500">{sub.phone || '(No phone number)'}</p>
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-xs text-gray-500">
+                                                <td className="px-6 py-4 whitespace-nowrap text-xs text-neutral-500">
                                                     {new Date(sub.created_at).toLocaleDateString()}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full ${
+                                                    <span className={`px-2 py-0.5 text-[10px] font-medium rounded-[10px] border ${
                                                         sub.notified 
-                                                            ? 'bg-green-100 text-green-800' 
-                                                            : 'bg-yellow-100 text-yellow-800'
+                                                            ? 'bg-green-50 text-green-700 border-green-200' 
+                                                            : 'bg-neutral-50 text-neutral-700 border-black/10'
                                                     }`}>
-                                                        {sub.notified ? 'NOTIFIED' : 'PENDING'}
+                                                        {sub.notified ? 'Notified' : 'Pending'}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-right text-xs font-medium space-x-2">
                                                     {!sub.notified && (
                                                         <button 
                                                             onClick={() => handleNotifyRestock(sub.product_id)}
-                                                            className="text-cureza-green hover:underline font-bold"
+                                                            className="text-neutral-800 hover:text-black font-medium hover:underline"
                                                         >
                                                             Trigger Restock Alert
                                                         </button>
                                                     )}
                                                     <button 
                                                         onClick={() => handleRemoveWaitlist(sub.id)}
-                                                        className="text-red-500 hover:text-red-700 font-bold"
+                                                        className="text-red-500 hover:text-red-700 font-semibold"
                                                     >
                                                         Delete
                                                     </button>
@@ -976,19 +945,19 @@ function NotificationSettingsContent() {
                         {/* Pagination */}
                         {waitlistTotalPages > 1 && (
                             <div className="flex justify-between items-center text-xs">
-                                <span className="text-gray-500">Page {waitlistPage} of {waitlistTotalPages}</span>
+                                <span className="text-neutral-500">Page {waitlistPage} of {waitlistTotalPages}</span>
                                 <div className="flex gap-2">
                                     <button 
                                         onClick={() => setWaitlistPage(p => Math.max(1, p - 1))}
                                         disabled={waitlistPage === 1}
-                                        className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50"
+                                        className="px-3 py-1 bg-white hover:bg-neutral-50 border-[0.5px] border-black/10 rounded-[10px] disabled:opacity-50 text-neutral-700 font-medium transition-all"
                                     >
                                         Prev
                                     </button>
                                     <button 
                                         onClick={() => setWaitlistPage(p => Math.min(waitlistTotalPages, p + 1))}
                                         disabled={waitlistPage === waitlistTotalPages}
-                                        className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50"
+                                        className="px-3 py-1 bg-white hover:bg-neutral-50 border-[0.5px] border-black/10 rounded-[10px] disabled:opacity-50 text-neutral-700 font-medium transition-all"
                                     >
                                         Next
                                     </button>
@@ -1001,13 +970,13 @@ function NotificationSettingsContent() {
                 {/* 4. WHATSAPP API CONFIG */}
                 {activeTab === 'whatsapp' && (
                     <div className="space-y-6">
-                        <div className="border-b border-gray-100 pb-3 flex justify-between items-start">
+                        <div className="border-b border-black/10 pb-3 flex justify-between items-start">
                             <div>
-                                <h3 className="font-bold text-gray-900 text-lg">WhatsApp API (AISensy Campaign Provider)</h3>
-                                <p className="text-gray-500 text-xs mt-1">Configure credentials for automated AISensy campaigns and test connection</p>
+                                <h3 className="font-semibold text-neutral-900 text-base">WhatsApp API (AISensy Campaign Provider)</h3>
+                                <p className="text-neutral-500 text-xs mt-1">Configure credentials for automated AISensy campaigns and test connection</p>
                             </div>
                             <div className="flex items-center gap-2">
-                                <span className={`text-xs font-bold ${whatsappSettings.whatsapp_enabled === '1' ? 'text-green-600' : 'text-gray-400'}`}>
+                                <span className="text-xs font-medium text-neutral-600">
                                     {whatsappSettings.whatsapp_enabled === '1' ? 'Active' : 'Deactivated'}
                                 </span>
                                 <button
@@ -1017,11 +986,11 @@ function NotificationSettingsContent() {
                                         whatsapp_enabled: whatsappSettings.whatsapp_enabled === '1' ? '0' : '1'
                                     })}
                                     className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                        whatsappSettings.whatsapp_enabled === '1' ? 'bg-cureza-green' : 'bg-gray-200'
+                                        whatsappSettings.whatsapp_enabled === '1' ? 'bg-black' : 'bg-neutral-200'
                                     }`}
                                 >
                                     <span
-                                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white transition duration-200 ease-in-out ${
                                             whatsappSettings.whatsapp_enabled === '1' ? 'translate-x-5' : 'translate-x-0'
                                         }`}
                                     />
@@ -1032,35 +1001,35 @@ function NotificationSettingsContent() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-700 mb-1">WhatsApp Campaign Provider</label>
+                                    <label className="block text-xs font-medium text-neutral-700 mb-1">WhatsApp Campaign Provider</label>
                                     <select 
                                         value={whatsappSettings.whatsapp_provider}
                                         onChange={(e) => setWhatsappSettings({ ...whatsappSettings, whatsapp_provider: e.target.value })}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none bg-white focus:ring-2 focus:ring-cureza-green"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs outline-none bg-white focus:border-black transition-colors"
                                     >
                                         <option value="aisensy">AISensy Business Cloud API</option>
                                         <option value="meta_cloud" disabled>Meta WhatsApp Cloud API (Direct)</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-700 mb-1">AISensy Developer API Key</label>
+                                    <label className="block text-xs font-medium text-neutral-700 mb-1">AISensy Developer API Key</label>
                                     <input 
                                         type="password" 
                                         placeholder="Enter AISensy apiKey string (or enter 'simulate' for dry-run logger)" 
                                         value={whatsappSettings.whatsapp_aisensy_api_key}
                                         onChange={(e) => setWhatsappSettings({ ...whatsappSettings, whatsapp_aisensy_api_key: e.target.value })}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none font-mono focus:ring-2 focus:ring-cureza-green"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs bg-neutral-50/10 outline-none font-mono focus:border-black transition-colors"
                                     />
-                                    <p className="text-[10px] text-gray-400 mt-1">Found in AISensy Dashboard under Campaign / API integration page.</p>
+                                    <p className="text-[10px] text-neutral-450 mt-1">Found in AISensy Dashboard under Campaign / API integration page.</p>
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-700 mb-1">Default Sender Phone Number</label>
+                                    <label className="block text-xs font-medium text-neutral-700 mb-1">Default Sender Phone Number</label>
                                     <input 
                                         type="text" 
                                         placeholder="+919999999999" 
                                         value={whatsappSettings.whatsapp_sender_number}
                                         onChange={(e) => setWhatsappSettings({ ...whatsappSettings, whatsapp_sender_number: e.target.value })}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-cureza-green"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs bg-neutral-50/10 outline-none focus:border-black transition-colors"
                                     />
                                 </div>
 
@@ -1068,14 +1037,14 @@ function NotificationSettingsContent() {
                                     <button
                                         onClick={handleSaveWhatsappSettings}
                                         disabled={saving}
-                                        className="bg-[#052326] hover:bg-green-950 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 transition shadow"
+                                        className="bg-black hover:bg-neutral-900 text-white px-4 py-2 rounded-[10px] text-xs font-medium flex items-center gap-1.5 transition-all"
                                     >
                                         <Save size={14} /> Save API Settings
                                     </button>
                                     <button
                                         onClick={handleTestWhatsAppPing}
                                         disabled={pingStatus === 'testing'}
-                                        className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 transition"
+                                        className="bg-neutral-50 hover:bg-neutral-100 text-neutral-800 border-[0.5px] border-black/10 px-4 py-2 rounded-[10px] text-xs font-medium flex items-center gap-1.5 transition-all"
                                     >
                                         {pingStatus === 'testing' && <RefreshCw size={14} className="animate-spin" />}
                                         Test API Status
@@ -1084,38 +1053,38 @@ function NotificationSettingsContent() {
                             </div>
 
                             {/* Status Card Panel */}
-                            <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 flex flex-col justify-between">
+                            <div className="bg-neutral-50/50 border-[0.5px] border-black/10 rounded-[10px] p-5 flex flex-col justify-between">
                                 <div className="space-y-3">
-                                    <h4 className="font-bold text-xs text-gray-700 uppercase tracking-wider">Integration Connection Status</h4>
+                                    <h4 className="font-medium text-xs text-neutral-500">Integration Connection Status</h4>
                                     
                                     {pingStatus === 'idle' && (
-                                        <div className="p-3 bg-gray-100 text-gray-700 rounded-lg text-xs font-semibold flex items-center gap-2">
-                                            <HelpCircle size={18} /> Enter credentials and click Test to verify ping connection.
+                                        <div className="p-3 bg-neutral-50 border-[0.5px] border-black/10 text-neutral-650 rounded-[10px] text-xs font-medium flex items-center gap-2">
+                                            <HelpCircle size={16} /> Enter credentials and click Test to verify ping connection.
                                         </div>
                                     )}
                                     {pingStatus === 'testing' && (
-                                        <div className="p-3 bg-blue-50 text-blue-700 rounded-lg text-xs font-semibold flex items-center gap-2">
-                                            <RefreshCw size={18} className="animate-spin" /> Querying AISensy single campaign webhook dispatcher...
+                                        <div className="p-3 bg-neutral-50 border-[0.5px] border-black/10 text-neutral-650 rounded-[10px] text-xs font-medium flex items-center gap-2 animate-pulse">
+                                            <RefreshCw size={16} className="animate-spin" /> Querying AISensy single campaign webhook dispatcher...
                                         </div>
                                     )}
                                     {pingStatus === 'success' && (
-                                        <div className="p-3 bg-green-50 text-green-700 rounded-lg text-xs font-semibold flex items-center gap-2">
-                                            <CheckCircle size={18} /> API Connected! AISensy Developer Token is authenticated successfully.
+                                        <div className="p-3 bg-green-50 border-[0.5px] border-green-200 text-green-700 rounded-[10px] text-xs font-medium flex items-center gap-2">
+                                            <CheckCircle size={16} /> API Connected! AISensy Developer Token is authenticated successfully.
                                         </div>
                                     )}
                                     {pingStatus === 'failed' && (
-                                        <div className="p-3 bg-red-50 text-red-700 rounded-lg text-xs font-semibold flex items-center gap-2">
-                                            <AlertCircle size={18} /> API Key check failed. Please check your token string parameters.
+                                        <div className="p-3 bg-red-50 border-[0.5px] border-red-200 text-red-700 rounded-[10px] text-xs font-medium flex items-center gap-2">
+                                            <AlertCircle size={16} /> API Key check failed. Please check your token string parameters.
                                         </div>
                                     )}
                                 </div>
 
-                                <div className="border-t border-gray-200 pt-4 mt-4 text-xs text-gray-500 space-y-2">
-                                    <p className="font-bold text-gray-700">Webhook Integration Callback (for delivery statuses):</p>
-                                    <div className="p-2 bg-white rounded border border-gray-200 font-mono text-[10px] break-all select-all">
+                                <div className="border-t border-black/10 pt-4 mt-4 text-xs text-neutral-500 space-y-2">
+                                    <p className="font-medium text-neutral-700">Webhook Integration Callback (for delivery statuses):</p>
+                                    <div className="p-2 bg-white rounded border-[0.5px] border-black/10 font-mono text-[10px] break-all select-all">
                                         {config('app.url', 'http://localhost:8000')}/api/payments/webhook
                                     </div>
-                                    <p className="text-[10px]">Configure this URL in AISensy webhook panel to receive Delivery Reports and Opt-out status updates.</p>
+                                    <p className="text-[10px] text-neutral-450">Configure this URL in AISensy webhook panel to receive Delivery Reports and Opt-out status updates.</p>
                                 </div>
                             </div>
                         </div>
@@ -1125,14 +1094,14 @@ function NotificationSettingsContent() {
                 {/* 5. LOGS TAB */}
                 {activeTab === 'logs' && (
                     <div className="space-y-6">
-                        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-gray-100 pb-3">
+                        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-black/10 pb-3">
                             <div>
-                                <h3 className="font-bold text-gray-900 text-lg">Delivery Logs Audit Trail</h3>
-                                <p className="text-gray-500 text-xs mt-1">Audit log of all email and whatsapp messages dispatched by the system</p>
+                                <h3 className="font-semibold text-neutral-900 text-base">Delivery Logs Audit Trail</h3>
+                                <p className="text-neutral-500 text-xs mt-1">Audit log of all email and whatsapp messages dispatched by the system</p>
                             </div>
                             <button
                                 onClick={handleClearLogs}
-                                className="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 self-start"
+                                className="bg-red-50 border-[0.5px] border-red-200 hover:bg-red-100 text-red-650 px-4 py-2 rounded-[10px] text-xs font-medium flex items-center gap-1.5 self-start transition-all"
                             >
                                 <Trash2 size={14} /> Flush All Logs
                             </button>
@@ -1148,80 +1117,76 @@ function NotificationSettingsContent() {
                                     value={searchLog}
                                     onChange={(e) => setSearchLog(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && loadLogs()}
-                                    className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-cureza-green"
+                                    className="w-full pl-9 pr-4 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs bg-neutral-50/20 outline-none focus:border-black transition-colors"
                                 />
                             </div>
                             <button 
                                 onClick={loadLogs}
-                                className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-xs font-bold"
+                                className="bg-neutral-50 hover:bg-neutral-100 text-neutral-900 border-[0.5px] border-black/10 px-4 py-2 rounded-[10px] text-xs font-medium transition-all"
                             >
                                 Search
                             </button>
                         </div>
 
                         {/* Logs table */}
-                        <div className="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
-                                    <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Recipient Name</th>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Contact</th>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Template Code / Flow</th>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Channel</th>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
-                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Sent Time</th>
-                                        <th className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Action</th>
+                        <div className="border-[0.5px] border-black/10 rounded-[10px] overflow-hidden">
+                            <table className="min-w-full divide-y divide-black/10">
+                                <thead className="bg-neutral-50">
+                                    <tr className="border-b-[0.5px] border-black/10">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500">Recipient Name</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500">Contact</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500">Template Code / Flow</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500">Channel</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500">Status</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500">Sent Time</th>
+                                        <th className="px-6 py-3 text-right text-xs font-medium text-neutral-500">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
+                                <tbody className="bg-white divide-y divide-black/10">
                                     {logs.length === 0 ? (
                                         <tr>
-                                            <td colSpan={7} className="px-6 py-10 text-center text-gray-500 text-xs font-medium">
+                                            <td colSpan={7} className="px-6 py-10 text-center text-neutral-500 text-xs font-normal">
                                                 No delivery log history found.
                                             </td>
                                         </tr>
                                     ) : (
                                         logs.map((log) => (
-                                            <tr key={log.id} className="hover:bg-gray-50">
-                                                <td className="px-6 py-4 whitespace-nowrap text-xs font-bold text-gray-900">
+                                            <tr key={log.id} className="hover:bg-neutral-50/40 transition-colors">
+                                                <td className="px-6 py-4 whitespace-nowrap text-xs font-medium text-neutral-900">
                                                     {log.recipient_name || 'Customer'}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-xs text-gray-700">
+                                                <td className="px-6 py-4 whitespace-nowrap text-xs text-neutral-600">
                                                     {log.channel === 'email' ? log.recipient_email : log.recipient_phone}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <div className="text-xs">
-                                                        <p className="font-semibold text-gray-800">{log.template_code}</p>
-                                                        <p className="text-[10px] text-gray-400 font-mono tracking-wider uppercase font-bold">{log.flow}</p>
+                                                        <p className="font-medium text-neutral-800">{log.template_code}</p>
+                                                        <p className="text-[10px] text-neutral-450 font-mono tracking-wider font-normal">{log.flow}</p>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full ${
-                                                        log.channel === 'email' 
-                                                            ? 'bg-blue-100 text-blue-800' 
-                                                            : 'bg-green-100 text-green-800'
-                                                    }`}>
-                                                        {log.channel.toUpperCase()}
+                                                    <span className="px-2 py-0.5 text-[10px] font-medium rounded-[10px] border border-black/10 bg-neutral-50 text-neutral-700">
+                                                        {log.channel === 'email' ? 'Email' : 'WhatsApp'}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full ${
+                                                    <span className={`px-2 py-0.5 text-[10px] font-medium rounded-[10px] border ${
                                                         log.status === 'sent' 
-                                                            ? 'bg-green-100 text-green-800' 
+                                                            ? 'bg-green-50 text-green-700 border-green-200' 
                                                             : log.status === 'failed'
-                                                            ? 'bg-red-105 text-red-800'
-                                                            : 'bg-yellow-100 text-yellow-800'
+                                                            ? 'bg-red-50 text-red-700 border-red-200'
+                                                            : 'bg-neutral-50 text-neutral-700 border-black/10'
                                                     }`}>
-                                                        {log.status.toUpperCase()}
+                                                        {log.status === 'sent' ? 'Sent' : log.status === 'failed' ? 'Failed' : 'Queued'}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-xs text-gray-500">
+                                                <td className="px-6 py-4 whitespace-nowrap text-xs text-neutral-500">
                                                     {new Date(log.created_at).toLocaleString()}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-right text-xs font-medium">
                                                     <button 
                                                         onClick={() => setLogDetailsModal(log)}
-                                                        className="text-[#052326] hover:underline font-bold flex items-center gap-1 ml-auto"
+                                                        className="text-neutral-800 hover:text-black hover:underline font-semibold flex items-center gap-1 ml-auto"
                                                     >
                                                         <Eye size={12} /> View Content
                                                     </button>
@@ -1236,19 +1201,19 @@ function NotificationSettingsContent() {
                         {/* Pagination */}
                         {logTotalPages > 1 && (
                             <div className="flex justify-between items-center text-xs">
-                                <span className="text-gray-500">Page {logPage} of {logTotalPages}</span>
+                                <span className="text-neutral-500">Page {logPage} of {logTotalPages}</span>
                                 <div className="flex gap-2">
                                     <button 
                                         onClick={() => setLogPage(p => Math.max(1, p - 1))}
                                         disabled={logPage === 1}
-                                        className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50"
+                                        className="px-3 py-1 bg-white hover:bg-neutral-50 border-[0.5px] border-black/10 rounded-[10px] disabled:opacity-50 text-neutral-750 font-medium transition-all"
                                     >
                                         Prev
                                     </button>
                                     <button 
                                         onClick={() => setLogPage(p => Math.min(logTotalPages, p + 1))}
                                         disabled={logPage === logTotalPages}
-                                        className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50"
+                                        className="px-3 py-1 bg-white hover:bg-neutral-50 border-[0.5px] border-black/10 rounded-[10px] disabled:opacity-50 text-neutral-750 font-medium transition-all"
                                     >
                                         Next
                                     </button>
@@ -1261,60 +1226,60 @@ function NotificationSettingsContent() {
                 {/* 6. SYSTEM DOCUMENTATION GUIDE TAB */}
                 {activeTab === 'guide' && (
                     <div className="space-y-6 animate-fadeIn">
-                        <div className="border-b border-gray-100 pb-3">
-                            <h3 className="font-bold text-gray-900 text-lg">System Documentation & Help Guide</h3>
-                            <p className="text-gray-500 text-xs mt-1">Full operational manual for SMTP emails and AISensy WhatsApp campaigns</p>
+                        <div className="border-b border-black/10 pb-3">
+                            <h3 className="font-semibold text-neutral-900 text-base">System Documentation & Help Guide</h3>
+                            <p className="text-neutral-500 text-xs mt-1">Full operational manual for SMTP emails and AISensy WhatsApp campaigns</p>
                         </div>
                         
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             {/* Left Col: Core Architecture & Flows */}
                             <div className="lg:col-span-2 space-y-6">
-                                <div className="bg-[#052326]/5 border border-[#052326]/10 rounded-xl p-5 space-y-3">
-                                    <h4 className="font-extrabold text-[#052326] text-sm uppercase tracking-wide">1. Introduction to the Engine</h4>
-                                    <p className="text-xs text-gray-600 leading-relaxed">
+                                <div className="bg-neutral-50 border-[0.5px] border-black/10 rounded-[10px] p-5 space-y-3">
+                                    <h4 className="font-medium text-neutral-800 text-sm">1. Introduction to the Engine</h4>
+                                    <p className="text-xs text-neutral-500 leading-relaxed">
                                         The Cureza Notification Engine automates both transaction-critical triggers (like order confirmation and fulfillment tracking updates) and customer engagement retention campaigns (like cart recovery alerts, restock waitlists, and review prompts).
                                     </p>
-                                    <p className="text-xs text-gray-600 leading-relaxed">
+                                    <p className="text-xs text-neutral-500 leading-relaxed">
                                         Each flow category compiles template variables dynamically using direct data mapping. The transport defaults to high-quality SMTP formats for Email and AISensy Cloud campaigns for WhatsApp.
                                     </p>
                                 </div>
 
                                 <div className="space-y-4">
-                                    <h4 className="font-bold text-gray-800 text-sm border-b pb-1">2. Customer Lifecycle Flows Details</h4>
+                                    <h4 className="font-medium text-neutral-800 text-sm border-b pb-1">2. Customer Lifecycle Flows Details</h4>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm space-y-2">
-                                            <span className="font-bold text-xs text-gray-900 block">📦 Order Tracking Flow</span>
-                                            <p className="text-[11px] text-gray-500 leading-relaxed">
+                                        <div className="bg-white border-[0.5px] border-black/10 rounded-[10px] p-4 space-y-2">
+                                            <span className="font-medium text-xs text-neutral-900 block">📦 Order Tracking Flow</span>
+                                            <p className="text-[11px] text-neutral-500 leading-relaxed">
                                                 Event-driven transactional notifications triggered immediately upon checkout events: Confirmed, Handed to courier (shipped), and Delivered. These bypass marketing opt-out blocks.
                                             </p>
                                         </div>
-                                        <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm space-y-2">
-                                            <span className="font-bold text-xs text-gray-900 block">🛒 Abandoned Cart Recovery</span>
-                                            <p className="text-[11px] text-gray-500 leading-relaxed">
+                                        <div className="bg-white border-[0.5px] border-black/10 rounded-[10px] p-4 space-y-2">
+                                            <span className="font-medium text-xs text-neutral-900 block">🛒 Abandoned Cart Recovery</span>
+                                            <p className="text-[11px] text-neutral-500 leading-relaxed">
                                                 Delay-driven alerts evaluating active carts. Step 1 dispatches after 1 hour. Step 2 dispatches after 24 hours, automatically attaching an exclusive 10% coupon code (CUREZA10).
                                             </p>
                                         </div>
-                                        <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm space-y-2">
-                                            <span className="font-bold text-xs text-gray-900 block">🔔 Restock Waitlist</span>
-                                            <p className="text-[11px] text-gray-500 leading-relaxed">
+                                        <div className="bg-white border-[0.5px] border-black/10 rounded-[10px] p-4 space-y-2">
+                                            <span className="font-medium text-xs text-neutral-900 block">🔔 Restock Waitlist</span>
+                                            <p className="text-[11px] text-neutral-500 leading-relaxed">
                                                 Allows guest and logged-in users to register for out-of-stock items. Once stock updates, a restock campaign is dispatched automatically (or manually via the Waitlist tab).
                                             </p>
                                         </div>
-                                        <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm space-y-2">
-                                            <span className="font-bold text-xs text-gray-900 block">⏰ Feedback & Replenishments</span>
-                                            <p className="text-[11px] text-gray-500 leading-relaxed">
+                                        <div className="bg-white border-[0.5px] border-black/10 rounded-[10px] p-4 space-y-2">
+                                            <span className="font-medium text-xs text-neutral-900 block">⏰ Feedback & Replenishments</span>
+                                            <p className="text-[11px] text-neutral-500 leading-relaxed">
                                                 Review prompts go out 3 days post-delivery. Subscription consumable alerts go out after 30 days to remind members to replenish their supply.
                                             </p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="space-y-3 bg-gray-50 border border-gray-200 rounded-xl p-5">
-                                    <h4 className="font-bold text-gray-800 text-sm">3. AISensy API Integration Schema</h4>
-                                    <p className="text-xs text-gray-600 leading-relaxed">
+                                <div className="space-y-3 bg-neutral-50/50 border-[0.5px] border-black/10 rounded-[10px] p-5">
+                                    <h4 className="font-medium text-neutral-800 text-sm">3. AISensy API Integration Schema</h4>
+                                    <p className="text-xs text-neutral-550 leading-relaxed">
                                         AISensy requires positional parameter arrays for text replacements (e.g. <code>templateParams</code>: <code>["Rahul", "CZ120"]</code>). The system automates this by reading the variables schema array mapped inside each WhatsApp template.
                                     </p>
-                                    <p className="text-xs text-gray-600 leading-relaxed">
+                                    <p className="text-xs text-neutral-550 leading-relaxed">
                                         To integrate templates, configure your Meta Developer settings inside the **AISensy API Configuration** tab and map the templates by campaign name. Set status to "Approved" to enable sync.
                                     </p>
                                 </div>
@@ -1322,17 +1287,17 @@ function NotificationSettingsContent() {
 
                             {/* Right Col: Code Snippets & Variables */}
                             <div className="space-y-6">
-                                <div className="border border-gray-200 bg-white rounded-xl p-5 space-y-4 shadow-sm">
-                                    <h4 className="font-bold text-xs text-gray-700 uppercase tracking-wider">Template Variables Dictionary</h4>
-                                    <div className="overflow-x-auto max-h-[300px] overflow-y-auto border border-gray-150 rounded-lg">
-                                        <table className="min-w-full divide-y divide-gray-200 text-[11px] font-sans">
-                                            <thead className="bg-gray-50">
-                                                <tr>
-                                                    <th className="px-3 py-2 text-left font-bold text-gray-500">Variable</th>
-                                                    <th className="px-3 py-2 text-left font-bold text-gray-500">Description</th>
+                                <div className="border-[0.5px] border-black/10 bg-white rounded-[10px] p-5 space-y-4">
+                                    <h4 className="font-medium text-xs text-neutral-500">Template Variables Dictionary</h4>
+                                    <div className="overflow-x-auto max-h-[300px] overflow-y-auto border-[0.5px] border-black/10 rounded-[10px]">
+                                        <table className="min-w-full divide-y divide-black/10 text-[11px] font-sans">
+                                            <thead className="bg-neutral-50">
+                                                <tr className="border-b-[0.5px] border-black/10">
+                                                    <th className="px-3 py-2 text-left font-medium text-neutral-500">Variable</th>
+                                                    <th className="px-3 py-2 text-left font-medium text-neutral-500">Description</th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="bg-white divide-y divide-gray-100">
+                                            <tbody className="bg-white divide-y divide-black/5">
                                                 {[
                                                     { v: 'customer_name', d: 'Display name of recipient' },
                                                     { v: 'order_id', d: 'Unique sequential order key' },
@@ -1348,9 +1313,9 @@ function NotificationSettingsContent() {
                                                     { v: 'product_link', d: 'Direct catalog detail URL link' },
                                                     { v: 'unsubscribe_link', d: 'Email subscription opt-out link' }
                                                 ].map(item => (
-                                                    <tr key={item.v}>
-                                                        <td className="px-3 py-2 font-mono font-bold text-red-600 bg-red-50/20">{`{{${item.v}}}`}</td>
-                                                        <td className="px-3 py-2 text-gray-500 font-medium">{item.d}</td>
+                                                    <tr key={item.v} className="hover:bg-neutral-50/40">
+                                                        <td className="px-3 py-2 font-mono font-medium text-neutral-800 bg-neutral-50/50 border-r border-black/5">{`{{${item.v}}}`}</td>
+                                                        <td className="px-3 py-2 text-neutral-500 font-normal">{item.d}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -1358,19 +1323,19 @@ function NotificationSettingsContent() {
                                     </div>
                                 </div>
 
-                                <div className="border border-gray-200 bg-white rounded-xl p-5 space-y-3 shadow-sm">
-                                    <h4 className="font-bold text-xs text-gray-700 uppercase tracking-wider">Cron Job Command Console</h4>
-                                    <p className="text-[11px] text-gray-500">
+                                <div className="border-[0.5px] border-black/10 bg-white rounded-[10px] p-5 space-y-3">
+                                    <h4 className="font-medium text-xs text-neutral-500">Cron Job Command Console</h4>
+                                    <p className="text-[11px] text-neutral-500">
                                         Trigger evaluation scripts via console shells.
                                     </p>
-                                    <div className="p-3 bg-gray-900 text-green-400 font-mono text-[10px] rounded-lg break-all select-all shadow-inner border border-gray-950">
+                                    <div className="p-3 bg-neutral-900 text-neutral-200 font-mono text-[10px] rounded-[10px] break-all select-all border border-black">
                                         php artisan notifications:process-flows
                                     </div>
                                 </div>
 
-                                <div className="border border-gray-200 bg-white rounded-xl p-5 space-y-2 shadow-sm text-xs">
-                                    <h4 className="font-bold text-xs text-gray-700 uppercase tracking-wider">Preference Opt-Outs</h4>
-                                    <p className="text-gray-500 leading-relaxed">
+                                <div className="border-[0.5px] border-black/10 bg-white rounded-[10px] p-5 space-y-2 text-xs">
+                                    <h4 className="font-medium text-xs text-neutral-500">Preference Opt-Outs</h4>
+                                    <p className="text-neutral-500 leading-relaxed text-[11px]">
                                         When a user ticks the unsubscribed preference (equivalent to setting column <code>users.unsubscribed_marketing = 1</code> in DB), the system bypasses marketing dispatches but continues delivery notifications.
                                     </p>
                                 </div>
@@ -1382,21 +1347,21 @@ function NotificationSettingsContent() {
 
             {/* EDIT TEMPLATE MODAL */}
             {editorOpen && selectedTemplate && (
-                <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex justify-center items-center p-4">
-                    <div className="bg-white w-full max-w-4xl rounded-2xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col max-h-[90vh]">
+                <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm flex justify-center items-center p-4">
+                    <div className="bg-white w-full max-w-4xl rounded-[10px] border-[0.5px] border-black/10 overflow-hidden flex flex-col max-h-[90vh]">
                         {/* Header */}
-                        <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                        <div className="bg-neutral-50 px-6 py-4 border-b-[0.5px] border-black/10 flex justify-between items-center">
                             <div>
-                                <h3 className="font-extrabold text-[#052326] text-lg">
+                                <h3 className="font-semibold text-neutral-900 text-base">
                                     {selectedTemplate.id ? 'Edit Template' : 'Create New Notification Template'}
                                 </h3>
-                                <p className="text-xs text-gray-500">Configure layout copy parameters and automated schedule delays</p>
+                                <p className="text-xs text-neutral-500 mt-1 font-normal">Configure layout copy parameters and automated schedule delays</p>
                             </div>
                             <button 
                                 onClick={() => setEditorOpen(false)}
-                                className="text-gray-400 hover:text-gray-600 p-1.5 rounded-full hover:bg-gray-200 transition"
+                                className="text-neutral-400 hover:text-neutral-900 p-1.5 rounded-[10px] hover:bg-neutral-50 border border-transparent hover:border-black/5 transition"
                             >
-                                <X size={20} />
+                                <X size={18} />
                             </button>
                         </div>
 
@@ -1407,22 +1372,22 @@ function NotificationSettingsContent() {
                             <div className="space-y-4">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-700 mb-1">Friendly Name</label>
+                                        <label className="block text-xs font-medium text-neutral-700 mb-1">Friendly Name</label>
                                         <input 
                                             type="text" 
                                             value={selectedTemplate.name}
                                             onChange={(e) => setSelectedTemplate({ ...selectedTemplate, name: e.target.value })}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-cureza-green"
+                                            className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs bg-neutral-50/20 outline-none focus:border-black transition-colors"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-700 mb-1">Unique Code identifier</label>
+                                        <label className="block text-xs font-medium text-neutral-700 mb-1">Unique Code identifier</label>
                                         <input 
                                             type="text" 
                                             value={selectedTemplate.code}
                                             onChange={(e) => setSelectedTemplate({ ...selectedTemplate, code: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '_') })}
                                             placeholder="e.g. order_confirmed"
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none font-mono focus:ring-2 focus:ring-cureza-green"
+                                            className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs bg-neutral-50/20 outline-none font-mono focus:border-black transition-colors"
                                             disabled={!!selectedTemplate.id}
                                         />
                                     </div>
@@ -1430,11 +1395,11 @@ function NotificationSettingsContent() {
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-700 mb-1">Target Flow Category</label>
+                                        <label className="block text-xs font-medium text-neutral-700 mb-1">Target Flow Category</label>
                                         <select 
                                             value={selectedTemplate.flow}
                                             onChange={(e) => setSelectedTemplate({ ...selectedTemplate, flow: e.target.value as any })}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none bg-white focus:ring-2 focus:ring-cureza-green"
+                                            className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs outline-none bg-white focus:border-black transition-colors"
                                         >
                                             <option value="order">Order Transactional Flow</option>
                                             <option value="abandoned_cart">Abandoned Cart Flow</option>
@@ -1443,11 +1408,11 @@ function NotificationSettingsContent() {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-700 mb-1">Delivery Channel</label>
+                                        <label className="block text-xs font-medium text-neutral-700 mb-1">Delivery Channel</label>
                                         <select 
                                             value={selectedTemplate.channel}
                                             onChange={(e) => setSelectedTemplate({ ...selectedTemplate, channel: e.target.value as any, subject: e.target.value === 'whatsapp' ? '' : selectedTemplate.subject })}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none bg-white focus:ring-2 focus:ring-cureza-green"
+                                            className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs outline-none bg-white focus:border-black transition-colors"
                                         >
                                             <option value="email">Email</option>
                                             <option value="whatsapp">WhatsApp Campaign (AISensy)</option>
@@ -1457,33 +1422,33 @@ function NotificationSettingsContent() {
 
                                 {selectedTemplate.channel === 'email' ? (
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-700 mb-1">Email Subject Line</label>
+                                        <label className="block text-xs font-medium text-neutral-700 mb-1">Email Subject Line</label>
                                         <input 
                                             type="text" 
                                             value={selectedTemplate.subject || ''}
                                             onChange={(e) => setSelectedTemplate({ ...selectedTemplate, subject: e.target.value })}
                                             placeholder="Enter mail subject template..."
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-cureza-green"
+                                            className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs bg-neutral-50/20 outline-none focus:border-black transition-colors"
                                         />
                                     </div>
                                 ) : (
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-xs font-bold text-gray-700 mb-1">AISensy Campaign Name</label>
+                                            <label className="block text-xs font-medium text-neutral-700 mb-1">AISensy Campaign Name</label>
                                             <input 
                                                 type="text" 
                                                 value={selectedTemplate.whatsapp_template_name || ''}
                                                 onChange={(e) => setSelectedTemplate({ ...selectedTemplate, whatsapp_template_name: e.target.value })}
                                                 placeholder="e.g. order_shipped_v1"
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none font-mono focus:ring-2 focus:ring-cureza-green"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs bg-neutral-50/20 outline-none font-mono focus:border-black transition-colors"
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-bold text-gray-700 mb-1">Approval Status</label>
+                                            <label className="block text-xs font-medium text-neutral-700 mb-1">Approval Status</label>
                                             <select 
                                                 value={selectedTemplate.whatsapp_status}
                                                 onChange={(e) => setSelectedTemplate({ ...selectedTemplate, whatsapp_status: e.target.value as any })}
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none bg-white focus:ring-2 focus:ring-cureza-green"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs outline-none bg-white focus:border-black transition-colors"
                                             >
                                                 <option value="approved">Approved (Meta sync active)</option>
                                                 <option value="pending">Pending Meta Approval</option>
@@ -1493,35 +1458,35 @@ function NotificationSettingsContent() {
                                     </div>
                                 )}
 
-                                <div className="grid grid-cols-3 gap-3 border-t border-gray-100 pt-3">
+                                <div className="grid grid-cols-3 gap-3 border-t border-black/10 pt-3">
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-700 mb-1">Trigger Type</label>
+                                        <label className="block text-xs font-medium text-neutral-700 mb-1">Trigger Type</label>
                                         <select 
                                             value={selectedTemplate.trigger_type}
                                             onChange={(e) => setSelectedTemplate({ ...selectedTemplate, trigger_type: e.target.value as any })}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none bg-white focus:ring-2 focus:ring-cureza-green"
+                                            className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs outline-none bg-white focus:border-black transition-colors"
                                         >
                                             <option value="event">Event-driven</option>
                                             <option value="delay">Delay Interval</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-700 mb-1">Delay Value</label>
+                                        <label className="block text-xs font-medium text-neutral-700 mb-1">Delay Value</label>
                                         <input 
                                             type="number" 
                                             value={selectedTemplate.delay_value}
                                             onChange={(e) => setSelectedTemplate({ ...selectedTemplate, delay_value: parseInt(e.target.value) || 0 })}
                                             disabled={selectedTemplate.trigger_type === 'event'}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-cureza-green disabled:bg-gray-100 disabled:text-gray-400"
+                                            className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs outline-none bg-neutral-50/20 focus:border-black transition-colors disabled:bg-neutral-100 disabled:text-neutral-400"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-700 mb-1">Delay Unit</label>
+                                        <label className="block text-xs font-medium text-neutral-700 mb-1">Delay Unit</label>
                                         <select 
                                             value={selectedTemplate.delay_unit}
                                             onChange={(e) => setSelectedTemplate({ ...selectedTemplate, delay_unit: e.target.value as any })}
                                             disabled={selectedTemplate.trigger_type === 'event'}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none bg-white focus:ring-2 focus:ring-cureza-green disabled:bg-gray-100 disabled:text-gray-400"
+                                            className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs outline-none bg-white focus:border-black transition-colors disabled:bg-neutral-100 disabled:text-neutral-400"
                                         >
                                             <option value="hours">Hour(s)</option>
                                             <option value="days">Day(s)</option>
@@ -1529,14 +1494,14 @@ function NotificationSettingsContent() {
                                     </div>
                                 </div>
 
-                                <div className="border-t border-gray-100 pt-3">
+                                <div className="border-t border-black/10 pt-3">
                                     <div className="flex justify-between items-center mb-1">
-                                        <label className="block text-xs font-bold text-gray-700">Body Copy Template</label>
-                                        <span className="text-[10px] text-gray-400">Click chips to insert placeholders</span>
+                                        <label className="block text-xs font-medium text-neutral-700">Body Copy Template</label>
+                                        <span className="text-[10px] text-neutral-400">Click chips to insert placeholders</span>
                                     </div>
                                     
                                     {/* Placeholders Variable helper chips */}
-                                    <div className="flex flex-wrap gap-1.5 mb-2 p-2 bg-gray-50 border border-gray-200 rounded-lg max-h-[80px] overflow-y-auto">
+                                    <div className="flex flex-wrap gap-1.5 mb-2 p-2 bg-neutral-50 border-[0.5px] border-black/10 rounded-[10px] max-h-[80px] overflow-y-auto">
                                         {[
                                             'customer_name', 'order_id', 'order_amount', 'payment_status', 
                                             'carrier', 'tracking_number', 'est_delivery_date', 'tracking_link', 
@@ -1546,7 +1511,7 @@ function NotificationSettingsContent() {
                                                 key={placeholder}
                                                 type="button"
                                                 onClick={() => handleInsertPlaceholder(placeholder)}
-                                                className="bg-white hover:bg-gray-100 border border-gray-300 text-gray-700 text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold"
+                                                className="bg-white hover:bg-neutral-50 border-[0.5px] border-black/10 text-neutral-700 text-[10px] px-1.5 py-0.5 rounded-[10px] font-mono font-medium transition-colors"
                                             >
                                                 {placeholder}
                                             </button>
@@ -1558,20 +1523,20 @@ function NotificationSettingsContent() {
                                         rows={10}
                                         value={selectedTemplate.content}
                                         onChange={(e) => setSelectedTemplate({ ...selectedTemplate, content: e.target.value })}
-                                        className="w-full p-3 border border-gray-300 rounded-lg text-xs font-mono outline-none focus:ring-2 focus:ring-cureza-green"
-                                        placeholder={selectedTemplate.channel === 'email' ? 'Enter HTML body context...' : 'Enter whatsapp message text...'}
+                                        className="w-full p-3 border-[0.5px] border-black/10 rounded-[10px] text-xs font-mono bg-neutral-50/20 outline-none focus:border-black transition-colors"
+                                        placeholder={selectedTemplate.channel === 'email' ? 'Enter HTML body context...' : 'Enter WhatsApp message text...'}
                                     />
                                 </div>
                             </div>
 
                             {/* Right Side: Tabbed Preview */}
-                            <div className="border-l border-gray-200 pl-6 space-y-4">
-                                <div className="flex border-b border-gray-200">
+                            <div className="lg:border-l-[0.5px] lg:border-black/10 lg:pl-6 space-y-4">
+                                <div className="flex border-b-[0.5px] border-black/10">
                                     <button
                                         type="button"
                                         onClick={() => setPreviewMode('edit')}
-                                        className={`px-4 py-2 text-xs font-bold border-b-2 ${
-                                            previewMode === 'edit' ? 'border-[#052326] text-[#052326]' : 'border-transparent text-gray-400'
+                                        className={`px-4 py-2 text-xs font-medium border-b-2 transition-all ${
+                                            previewMode === 'edit' ? 'border-black text-black' : 'border-transparent text-neutral-400 hover:text-neutral-900'
                                         }`}
                                     >
                                         Guidelines & Variables
@@ -1579,8 +1544,8 @@ function NotificationSettingsContent() {
                                     <button
                                         type="button"
                                         onClick={() => setPreviewMode('preview')}
-                                        className={`px-4 py-2 text-xs font-bold border-b-2 ${
-                                            previewMode === 'preview' ? 'border-[#052326] text-[#052326]' : 'border-transparent text-gray-400'
+                                        className={`px-4 py-2 text-xs font-medium border-b-2 transition-all ${
+                                            previewMode === 'preview' ? 'border-black text-black' : 'border-transparent text-neutral-400 hover:text-neutral-900'
                                         }`}
                                     >
                                         Live Compilation Preview
@@ -1588,10 +1553,10 @@ function NotificationSettingsContent() {
                                 </div>
 
                                 {previewMode === 'edit' ? (
-                                    <div className="space-y-4 text-xs text-gray-600 bg-gray-50 p-5 rounded-xl border border-gray-200 h-full overflow-y-auto">
-                                        <h4 className="font-bold text-gray-800">Template Instructions</h4>
-                                        <ul className="list-disc pl-4 space-y-2">
-                                            <li>Use standard curly brackets tags <code className="bg-white px-1.5 py-0.5 border rounded font-mono font-bold text-red-600">{"{{variable_name}}"}</code> to print dynamic database columns.</li>
+                                    <div className="space-y-4 text-xs text-neutral-600 bg-neutral-50 p-5 rounded-[10px] border-[0.5px] border-black/10 h-full overflow-y-auto">
+                                        <h4 className="font-medium text-neutral-850">Template Instructions</h4>
+                                        <ul className="list-disc pl-4 space-y-2 text-neutral-500 font-normal">
+                                            <li>Use standard curly brackets tags <code className="bg-white px-1.5 py-0.5 border-[0.5px] border-black/10 rounded font-mono font-medium text-red-650">{"{{variable_name}}"}</code> to print dynamic database columns.</li>
                                             <li>For **WhatsApp Campaign**, ensure you map variables in the exact sequence in the copy. AISensy API accepts positional parameters in sequence.</li>
                                             <li>For **Emails**, you can use full inline styling HTML tags (e.g. table structures, inline CSS wrappers). Standard layout header and footer are seeded automatically.</li>
                                             <li>Marketing/Reminder flows automatically check customer preferences and won't send if users request to opt-out.</li>
@@ -1606,7 +1571,7 @@ function NotificationSettingsContent() {
                         </div>
 
                         {/* Footer */}
-                        <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-between items-center">
+                        <div className="bg-neutral-50 px-6 py-4 border-t-[0.5px] border-black/10 flex justify-between items-center">
                             <div>
                                 {selectedTemplate.id !== 0 && (
                                     <button 
@@ -1619,7 +1584,7 @@ function NotificationSettingsContent() {
                                                 loadStats();
                                             }
                                         }}
-                                        className="text-red-500 hover:text-red-700 text-xs font-bold flex items-center gap-1.5"
+                                        className="text-red-600 hover:text-red-800 text-xs font-medium flex items-center gap-1.5 transition-colors"
                                     >
                                         <Trash2 size={14} /> Delete Template
                                     </button>
@@ -1628,14 +1593,14 @@ function NotificationSettingsContent() {
                             <div className="flex gap-3">
                                 <button 
                                     onClick={() => setEditorOpen(false)}
-                                    className="bg-white hover:bg-gray-100 text-gray-700 px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold"
+                                    className="bg-white hover:bg-neutral-50 text-neutral-800 px-4 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs font-medium transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button 
                                     onClick={() => handleSaveTemplate(selectedTemplate)}
                                     disabled={saving}
-                                    className="bg-[#052326] hover:bg-green-950 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow"
+                                    className="bg-black hover:bg-neutral-900 text-white px-4 py-2 border-[0.5px] border-black/15 rounded-[10px] text-xs font-medium flex items-center gap-1.5 transition-colors disabled:opacity-50"
                                 >
                                     {saving && <RefreshCw size={12} className="animate-spin" />}
                                     Save Template
@@ -1648,64 +1613,64 @@ function NotificationSettingsContent() {
 
             {/* SEND TEST MODAL */}
             {testModalOpen && selectedTemplate && (
-                <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex justify-center items-center p-4">
-                    <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
-                        <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                            <h3 className="font-extrabold text-[#052326] text-sm uppercase tracking-wide">
+                <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm flex justify-center items-center p-4">
+                    <div className="bg-white w-full max-w-md rounded-[10px] border-[0.5px] border-black/10 overflow-hidden">
+                        <div className="bg-neutral-50 px-6 py-4 border-b-[0.5px] border-black/10 flex justify-between items-center">
+                            <h3 className="font-semibold text-neutral-900 text-sm">
                                 Test Dispatch Campaign
                             </h3>
-                            <button onClick={() => setTestModalOpen(false)} className="text-gray-400 hover:text-gray-600">
-                                <X size={20} />
+                            <button onClick={() => setTestModalOpen(false)} className="text-neutral-400 hover:text-neutral-900">
+                                <X size={18} />
                             </button>
                         </div>
                         <div className="p-6 space-y-4">
-                            <p className="text-xs text-gray-500 font-medium">
+                            <p className="text-xs text-neutral-500 font-normal">
                                 Provide a test destination to evaluate compiler placeholders and dispatch rules.
                             </p>
                             <div>
-                                <label className="block text-xs font-bold text-gray-700 mb-1">Recipient Name</label>
+                                <label className="block text-xs font-medium text-neutral-700 mb-1">Recipient Name</label>
                                 <input 
                                     type="text" 
                                     value={testRecipient.name}
                                     onChange={(e) => setTestRecipient({ ...testRecipient, name: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-cureza-green"
+                                    className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs bg-neutral-50/20 outline-none focus:border-black transition-colors"
                                 />
                             </div>
                             {selectedTemplate.channel === 'email' ? (
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-700 mb-1">Destination Email</label>
+                                    <label className="block text-xs font-medium text-neutral-700 mb-1">Destination Email</label>
                                     <input 
                                         type="email" 
                                         value={testRecipient.email}
                                         onChange={(e) => setTestRecipient({ ...testRecipient, email: e.target.value })}
                                         placeholder="test@example.com"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-cureza-green"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs bg-neutral-50/20 outline-none focus:border-black transition-colors"
                                     />
                                 </div>
                             ) : (
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-700 mb-1">Destination Phone Number</label>
+                                    <label className="block text-xs font-medium text-neutral-700 mb-1">Destination Phone Number</label>
                                     <input 
                                         type="text" 
                                         value={testRecipient.phone}
                                         onChange={(e) => setTestRecipient({ ...testRecipient, phone: e.target.value })}
                                         placeholder="919999999999 (include country code)"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-cureza-green"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs bg-neutral-50/20 outline-none focus:border-black transition-colors"
                                     />
                                 </div>
                             )}
                         </div>
-                        <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
+                        <div className="bg-neutral-50 px-6 py-4 border-t-[0.5px] border-black/10 flex justify-end gap-3">
                             <button 
                                 onClick={() => setTestModalOpen(false)}
-                                className="bg-white hover:bg-gray-100 text-gray-700 px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold"
+                                className="bg-white hover:bg-neutral-50 text-neutral-800 px-4 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs font-medium transition-colors"
                             >
                                 Cancel
                             </button>
                             <button 
                                 onClick={handleSendTest}
                                 disabled={saving}
-                                className="bg-[#052326] hover:bg-green-950 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow"
+                                className="bg-black hover:bg-neutral-900 text-white px-4 py-2 border-[0.5px] border-black/15 rounded-[10px] text-xs font-medium flex items-center gap-1.5 transition-colors disabled:opacity-50"
                             >
                                 {saving && <RefreshCw size={12} className="animate-spin" />}
                                 Send Test Campaign
@@ -1717,45 +1682,45 @@ function NotificationSettingsContent() {
 
             {/* AUDIT LOG DETAILS MODAL */}
             {logDetailsModal && (
-                <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex justify-center items-center p-4">
-                    <div className="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col max-h-[85vh]">
-                        <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm flex justify-center items-center p-4">
+                    <div className="bg-white w-full max-w-2xl rounded-[10px] border-[0.5px] border-black/10 overflow-hidden flex flex-col max-h-[85vh]">
+                        <div className="bg-neutral-50 px-6 py-4 border-b-[0.5px] border-black/10 flex justify-between items-center">
                             <div>
-                                <h3 className="font-extrabold text-[#052326] text-sm uppercase tracking-wide">
+                                <h3 className="font-semibold text-neutral-900 text-sm">
                                     Dispatched Message Payload
                                 </h3>
-                                <p className="text-xs text-gray-500">Log ID: {logDetailsModal.id} | Sent on {new Date(logDetailsModal.created_at).toLocaleString()}</p>
+                                <p className="text-xs text-neutral-500 mt-1 font-normal">Log ID: {logDetailsModal.id} | Sent on {new Date(logDetailsModal.created_at).toLocaleString()}</p>
                             </div>
-                            <button onClick={() => setLogDetailsModal(null)} className="text-gray-400 hover:text-gray-600">
-                                <X size={20} />
+                            <button onClick={() => setLogDetailsModal(null)} className="text-neutral-400 hover:text-neutral-900">
+                                <X size={18} />
                             </button>
                         </div>
                         <div className="p-6 overflow-y-auto flex-1 space-y-4">
-                            <div className="grid grid-cols-2 gap-4 text-xs bg-gray-50 p-4 rounded-xl border border-gray-200">
+                            <div className="grid grid-cols-2 gap-4 text-xs bg-neutral-50 p-4 rounded-[10px] border-[0.5px] border-black/10">
                                 <div>
-                                    <p className="text-gray-400 font-bold uppercase tracking-wide">Recipient</p>
-                                    <p className="font-semibold text-gray-800">{logDetailsModal.recipient_name || 'Customer'}</p>
-                                    <p className="text-gray-600 font-mono mt-0.5">{logDetailsModal.channel === 'email' ? logDetailsModal.recipient_email : logDetailsModal.recipient_phone}</p>
+                                    <p className="text-neutral-500 font-medium">Recipient</p>
+                                    <p className="font-medium text-neutral-900 mt-0.5">{logDetailsModal.recipient_name || 'Customer'}</p>
+                                    <p className="text-neutral-500 font-mono text-[11px] mt-0.5">{logDetailsModal.channel === 'email' ? logDetailsModal.recipient_email : logDetailsModal.recipient_phone}</p>
                                 </div>
                                 <div>
-                                    <p className="text-gray-400 font-bold uppercase tracking-wide">Template / Flow</p>
-                                    <p className="font-semibold text-gray-800">{logDetailsModal.template_code}</p>
-                                    <p className="text-cureza-green font-mono uppercase text-[10px] mt-0.5">{logDetailsModal.flow}</p>
+                                    <p className="text-neutral-500 font-medium">Template / Flow</p>
+                                    <p className="font-medium text-neutral-900 mt-0.5">{logDetailsModal.template_code}</p>
+                                    <p className="text-green-600 font-mono text-[10px] mt-0.5">{logDetailsModal.flow}</p>
                                 </div>
                             </div>
 
                             {logDetailsModal.error_message && (
-                                <div className="p-3 bg-red-50 border border-red-200 text-red-800 rounded-lg text-xs font-semibold flex items-center gap-2">
+                                <div className="p-3 bg-red-50 border-[0.5px] border-red-200 text-red-700 rounded-[10px] text-xs font-medium flex items-center gap-2">
                                     <AlertCircle className="text-red-500" size={16} />
                                     Error Details: {logDetailsModal.error_message}
                                 </div>
                             )}
 
                             <div>
-                                <p className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">Rendered Content Output</p>
+                                <p className="text-xs font-medium text-neutral-500 mb-2">Rendered Content Output</p>
                                 {logDetailsModal.channel === 'email' ? (
-                                    <div className="border border-gray-200 rounded-xl overflow-hidden">
-                                        <div className="bg-gray-100 px-4 py-1.5 border-b border-gray-200 text-xs font-bold text-gray-700">
+                                    <div className="border-[0.5px] border-black/10 rounded-[10px] overflow-hidden">
+                                        <div className="bg-neutral-50 px-4 py-1.5 border-b-[0.5px] border-black/10 text-xs font-medium text-neutral-800">
                                             Subject: {logDetailsModal.subject || '(No Subject Line)'}
                                         </div>
                                         <iframe 
@@ -1765,18 +1730,18 @@ function NotificationSettingsContent() {
                                         />
                                     </div>
                                 ) : (
-                                    <div className="bg-[#efeae2] p-5 rounded-2xl border border-gray-200 font-sans" style={{ backgroundImage: "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')" }}>
-                                        <div className="max-w-[85%] bg-white rounded-xl shadow p-3 text-xs text-gray-800 whitespace-pre-line leading-relaxed">
+                                    <div className="bg-neutral-50 p-5 rounded-[10px] border-[0.5px] border-black/10 font-sans">
+                                        <div className="max-w-[85%] bg-white rounded-[10px] border-[0.5px] border-black/10 p-3 text-xs text-neutral-800 whitespace-pre-line leading-relaxed">
                                             {logDetailsModal.content}
                                         </div>
                                     </div>
                                 )}
                             </div>
                         </div>
-                        <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-end">
+                        <div className="bg-neutral-50 px-6 py-4 border-t-[0.5px] border-black/10 flex justify-end">
                             <button 
                                 onClick={() => setLogDetailsModal(null)}
-                                className="bg-[#052326] hover:bg-green-950 text-white px-5 py-2 rounded-lg text-xs font-bold"
+                                className="bg-black hover:bg-neutral-900 text-white px-5 py-2 border-[0.5px] border-black/15 rounded-[10px] text-xs font-medium transition-colors"
                             >
                                 Close Log
                             </button>
@@ -1787,23 +1752,23 @@ function NotificationSettingsContent() {
 
             {/* MANUAL WAITLIST SUBSCRIBER MODAL */}
             {waitlistModalOpen && (
-                <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex justify-center items-center p-4">
-                    <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
-                        <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                            <h3 className="font-extrabold text-[#052326] text-sm uppercase tracking-wide">
+                <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm flex justify-center items-center p-4">
+                    <div className="bg-white w-full max-w-md rounded-[10px] border-[0.5px] border-black/10 overflow-hidden">
+                        <div className="bg-neutral-50 px-6 py-4 border-b-[0.5px] border-black/10 flex justify-between items-center">
+                            <h3 className="font-semibold text-neutral-900 text-sm">
                                 Add Restock Waitlist Entry
                             </h3>
-                            <button onClick={() => setWaitlistModalOpen(false)} className="text-gray-400 hover:text-gray-600">
-                                <X size={20} />
+                            <button onClick={() => setWaitlistModalOpen(false)} className="text-neutral-400 hover:text-neutral-900">
+                                <X size={18} />
                             </button>
                         </div>
                         <div className="p-6 space-y-4">
                             <div>
-                                <label className="block text-xs font-bold text-gray-700 mb-1">Target Product</label>
+                                <label className="block text-xs font-medium text-neutral-700 mb-1">Target Product</label>
                                 <select 
                                     value={newWaitlistEntry.product_id}
                                     onChange={(e) => setNewWaitlistEntry({ ...newWaitlistEntry, product_id: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none bg-white focus:ring-2 focus:ring-cureza-green"
+                                    className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs outline-none bg-white focus:border-black transition-colors"
                                 >
                                     <option value="">-- Choose Out of stock product --</option>
                                     {products.map((p) => (
@@ -1812,37 +1777,37 @@ function NotificationSettingsContent() {
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-xs font-bold text-gray-700 mb-1">Customer Email</label>
+                                <label className="block text-xs font-medium text-neutral-700 mb-1">Customer Email</label>
                                 <input 
                                     type="email" 
                                     value={newWaitlistEntry.email}
                                     onChange={(e) => setNewWaitlistEntry({ ...newWaitlistEntry, email: e.target.value })}
                                     placeholder="customer@example.com"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-cureza-green"
+                                    className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs bg-neutral-50/20 outline-none focus:border-black transition-colors"
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-bold text-gray-700 mb-1">Customer Phone (WhatsApp)</label>
+                                <label className="block text-xs font-medium text-neutral-700 mb-1">Customer Phone (WhatsApp)</label>
                                 <input 
                                     type="text" 
                                     value={newWaitlistEntry.phone}
                                     onChange={(e) => setNewWaitlistEntry({ ...newWaitlistEntry, phone: e.target.value })}
                                     placeholder="e.g. 919999999999"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-cureza-green"
+                                    className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs bg-neutral-50/20 outline-none focus:border-black transition-colors"
                                 />
                             </div>
                         </div>
-                        <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
+                        <div className="bg-neutral-50 px-6 py-4 border-t-[0.5px] border-black/10 flex justify-end gap-3">
                             <button 
                                 onClick={() => setWaitlistModalOpen(false)}
-                                className="bg-white hover:bg-gray-100 text-gray-700 px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold"
+                                className="bg-white hover:bg-neutral-50 text-neutral-800 px-4 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs font-medium transition-colors"
                             >
                                 Cancel
                             </button>
                             <button 
                                 onClick={handleAddWaitlist}
                                 disabled={saving || !newWaitlistEntry.product_id || !newWaitlistEntry.email}
-                                className="bg-[#052326] hover:bg-green-950 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow disabled:opacity-50"
+                                className="bg-black hover:bg-neutral-900 text-white px-4 py-2 border-[0.5px] border-black/15 rounded-[10px] text-xs font-medium flex items-center gap-1.5 transition-colors disabled:opacity-50"
                             >
                                 {saving && <RefreshCw size={12} className="animate-spin" />}
                                 Add Subscriber

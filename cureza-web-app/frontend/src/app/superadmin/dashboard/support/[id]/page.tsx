@@ -27,14 +27,14 @@ export default function TicketChatPage() {
         }
     };
 
-    if (loading) return <div>Loading...</div>;
-    if (!ticket) return <div>Ticket not found</div>;
+    if (loading) return <div className="text-xs text-gray-500 font-medium p-8">Loading...</div>;
+    if (!ticket) return <div className="text-xs text-gray-500 font-medium p-8">Ticket not found</div>;
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">Ticket #{ticket.id}</h1>
-                <span className="text-sm text-gray-500">Managing as Admin</span>
+        <div className="w-full mx-auto px-4 md:px-6 lg:px-8 py-6 space-y-6">
+            <div className="flex justify-between items-center border-b-[0.35px] border-neutral-950/10 pb-4">
+                <h1 className="text-xl font-semibold text-gray-900 tracking-tight">Ticket #{ticket.id}</h1>
+                <span className="text-xs text-gray-550 font-medium">Managing as Admin</span>
             </div>
             <TicketChat
                 ticket={ticket}

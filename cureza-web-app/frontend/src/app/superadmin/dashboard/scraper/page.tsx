@@ -395,137 +395,137 @@ export default function ScraperDashboard() {
   const progressPercent = total > 0 ? Math.round((processed / total) * 100) : 0;
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 font-outfit">
+    <div className="w-full space-y-6 animate-in fade-in duration-500 font-outfit">
       {/* 1. Header Banner */}
-      <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-3xl p-8 border border-gray-100 dark:border-gray-800 shadow-sm">
-        <div className="relative flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div className="space-y-2">
+      <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border border-neutral-950/10 dark:border-gray-800">
+        <div className="relative flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="space-y-1.5">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-cureza-green/10 rounded-2xl text-cureza-green">
-                <Globe size={24} />
+              <div className="p-2.5 bg-neutral-100 text-black rounded-lg">
+                <Globe size={20} />
               </div>
-              <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
-                Web Catalog <span className="text-cureza-green">Scraper</span>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
+                Web Catalog Scraper
               </h1>
             </div>
-            <p className="text-gray-500 dark:text-gray-400 max-w-xl font-medium text-sm">
-              Batch import product details automatically from Shopify, WooCommerce, or raw HTML websites directly into Cureza's verified queue.
+            <p className="text-gray-550 dark:text-gray-400 max-w-xl font-normal text-xs">
+              Batch import product details automatically from Shopify, WooCommerce, or raw HTML websites directly into the queue.
             </p>
           </div>
           <button 
             onClick={handleExportCsv}
-            className="flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-5 py-3 rounded-2xl font-black text-xs hover:bg-gray-50 dark:hover:bg-gray-750 transition-all shadow-sm"
+            className="flex items-center gap-2 bg-white dark:bg-gray-800 border border-neutral-950/15 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2.5 rounded-[10px] font-semibold text-xs hover:bg-neutral-50 dark:hover:bg-gray-750 transition-all"
           >
-            <Download size={14} className="text-gray-400" /> EXPORT SCRAPED LIST (CSV)
+            <Download size={14} className="text-gray-450" /> Export Scraped List (CSV)
           </button>
         </div>
       </div>
 
       {/* Messages */}
       {message && (
-        <div className={`p-5 rounded-2xl border flex items-start gap-3 text-xs font-semibold shadow-sm animate-in slide-in-from-top-4 duration-300 ${
+        <div className={`p-4 rounded-[10px] border flex items-start gap-3 text-xs font-semibold animate-in slide-in-from-top-4 duration-300 ${
           message.type === 'success' 
-            ? 'bg-green-50 dark:bg-green-950/20 border-green-100 dark:border-green-900/30 text-green-700 dark:text-green-400' 
+            ? 'bg-green-50 dark:bg-green-950/20 border-green-200 text-green-700 dark:text-green-400' 
             : message.type === 'error'
-            ? 'bg-red-50 dark:bg-red-950/20 border-red-100 dark:border-red-900/30 text-red-700 dark:text-red-400'
-            : 'bg-blue-50 dark:bg-blue-950/20 border-blue-100 dark:border-blue-900/30 text-blue-700 dark:text-blue-400'
+            ? 'bg-red-50 dark:bg-red-950/20 border-red-200 text-red-700 dark:text-red-400'
+            : 'bg-neutral-50 dark:bg-gray-850/50 border-neutral-950/15 text-gray-750 dark:text-gray-300'
         }`}>
-          {message.type === 'success' ? <CheckCircle2 size={18} className="shrink-0 text-emerald-550" /> : <AlertCircle size={18} className="shrink-0 text-amber-550" />}
-          <div className="space-y-1">
-            <h4 className="font-bold text-sm uppercase tracking-wider">Scraper Engine Notification</h4>
-            <p className="font-medium text-xs leading-relaxed">{message.text}</p>
+          {message.type === 'success' ? <CheckCircle2 size={16} className="shrink-0" /> : <AlertCircle size={16} className="shrink-0" />}
+          <div className="space-y-0.5">
+            <h4 className="font-semibold text-xs">Scraper Engine Notification</h4>
+            <p className="font-normal text-xs leading-relaxed">{message.text}</p>
           </div>
         </div>
       )}
 
       {/* 2. Active Scraping Progress Panel */}
       {activeTask && (
-        <div className="bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-800 p-8 rounded-3xl shadow-sm space-y-5 animate-in zoom-in-95 duration-300">
+        <div className="bg-white dark:bg-gray-900 border border-neutral-950/10 dark:border-gray-800 p-6 rounded-[10px] space-y-4 animate-in zoom-in-95 duration-300">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className={`w-3 h-3 rounded-full ${
+              <span className={`w-2.5 h-2.5 rounded-full ${
                 activeTask.status === 'running' 
-                  ? 'bg-amber-500 animate-pulse ring-4 ring-amber-100 dark:ring-amber-950' 
+                  ? 'bg-amber-500 animate-pulse' 
                   : activeTask.status === 'completed'
-                  ? 'bg-emerald-500 ring-4 ring-emerald-100 dark:ring-emerald-950'
-                  : 'bg-red-500 ring-4 ring-red-100 dark:ring-red-950'
+                  ? 'bg-green-500'
+                  : 'bg-red-500'
               }`} />
-              <h3 className="font-black text-sm uppercase tracking-widest text-gray-950 dark:text-white">
-                Scraper Run Status: <span className={activeTask.status === 'running' ? 'text-amber-550' : 'text-emerald-650 dark:text-emerald-400'}>{activeTask.status}</span>
+              <h3 className="font-semibold text-xs tracking-wider text-gray-950 dark:text-white">
+                Scraper Run Status: <span className={activeTask.status === 'running' ? 'text-amber-550' : activeTask.status === 'completed' ? 'text-green-600' : 'text-red-650'}>{activeTask.status}</span>
               </h3>
             </div>
-            <div className="flex flex-wrap items-center gap-3 text-xs font-black text-gray-400 uppercase tracking-wider">
+            <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-gray-500 tracking-wider">
               {activeTask.status === 'running' && (
                 <button
                   onClick={() => handleCancelTask(activeTask.id)}
                   disabled={isCancelLoading}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 border border-rose-100 text-rose-600 rounded-xl hover:bg-rose-100/50 transition-all disabled:opacity-50 font-black"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 border border-red-200 text-red-600 rounded-lg hover:bg-red-100/50 transition-all disabled:opacity-50 font-semibold"
                 >
                   {isCancelLoading ? (
                     <Loader2 size={10} className="animate-spin" />
                   ) : (
                     <>
-                      <X size={12} /> CANCEL SCRAPE
+                      <X size={12} /> Cancel Scrape
                     </>
                   )}
                 </button>
               )}
-              <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-gray-850 px-3 py-1.5 rounded-xl text-gray-650 dark:text-gray-300">
-                <Clock size={12} className="text-cureza-green" />
-                <span>ELAPSED: {formatTime(timerSeconds)}</span>
+              <div className="flex items-center gap-1.5 bg-neutral-50 dark:bg-gray-850 px-3 py-1.5 rounded-lg text-gray-650 dark:text-gray-300 border border-neutral-950/5">
+                <Clock size={12} className="text-gray-400" />
+                <span>Elapsed: {formatTime(timerSeconds)}</span>
               </div>
-              <div className="bg-gray-50 dark:bg-gray-850 px-3 py-1.5 rounded-xl text-gray-650 dark:text-gray-300">
-                PROGRESS: {processed}/{total} PAGES
+              <div className="bg-neutral-50 dark:bg-gray-850 px-3 py-1.5 rounded-lg text-gray-650 dark:text-gray-300 border border-neutral-950/5">
+                Progress: {processed}/{activeTask.total_count || 0} Pages
               </div>
             </div>
           </div>
 
           {/* Metadata Display */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50/50 dark:bg-gray-850/20 p-5 rounded-2xl border border-gray-100 dark:border-gray-800 text-xs">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-neutral-50/50 dark:bg-gray-850/20 p-4 rounded-[10px] border border-neutral-950/5 dark:border-gray-800 text-xs">
             <div className="space-y-1.5">
-              <span className="font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest text-[10px] block">Target Endpoint URI:</span>
+              <span className="font-semibold text-gray-400 dark:text-gray-500 tracking-wider text-[10px] block">Target Endpoint URI:</span>
               <a 
                 href={activeTask.url} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="text-cureza-green hover:underline flex items-center gap-1.5 font-bold truncate text-sm"
+                className="text-black dark:text-white underline flex items-center gap-1.5 font-semibold truncate text-xs"
               >
                 {activeTask.url} <ExternalLink size={13} className="shrink-0 text-gray-400" />
               </a>
             </div>
             <div className="grid grid-cols-3 gap-2">
               <div>
-                <span className="font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest text-[10px] block">Brand Mapping:</span>
-                <span className="font-extrabold text-gray-950 dark:text-gray-100 text-xs">{activeTask.brand?.name || 'Auto-Detect'}</span>
+                <span className="font-semibold text-gray-400 dark:text-gray-500 tracking-wider text-[10px] block">Brand Mapping:</span>
+                <span className="font-bold text-gray-950 dark:text-gray-100 text-xs">{activeTask.brand?.name || 'Auto-Detect'}</span>
               </div>
               <div>
-                <span className="font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest text-[10px] block">Category Mapping:</span>
-                <span className="font-extrabold text-gray-950 dark:text-gray-100 text-xs">{activeTask.category?.name || 'Auto-Detect'}</span>
+                <span className="font-semibold text-gray-400 dark:text-gray-500 tracking-wider text-[10px] block">Category Mapping:</span>
+                <span className="font-bold text-gray-950 dark:text-gray-100 text-xs">{activeTask.category?.name || 'Auto-Detect'}</span>
               </div>
               <div>
-                <span className="font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest text-[10px] block">Est. Time Remaining:</span>
-                <span className="font-extrabold text-gray-950 dark:text-gray-100 text-xs">{getEta() || 'Calculating...'}</span>
+                <span className="font-semibold text-gray-400 dark:text-gray-500 tracking-wider text-[10px] block">Est. Time Remaining:</span>
+                <span className="font-bold text-gray-950 dark:text-gray-100 text-xs">{getEta() || 'Calculating...'}</span>
               </div>
             </div>
           </div>
 
-          {/* Progress Bar with emerald theme */}
+          {/* Progress Bar */}
           {activeTask.status === 'running' && (
-            <div className="w-full bg-gray-100 dark:bg-gray-800 h-3 rounded-full overflow-hidden border border-gray-100 dark:border-gray-700">
+            <div className="w-full bg-neutral-100 dark:bg-gray-800 h-2.5 rounded-lg overflow-hidden border border-neutral-950/5 dark:border-gray-700">
               <div 
-                className="bg-cureza-green h-full transition-all duration-500 rounded-full"
+                className="bg-black dark:bg-white h-full transition-all duration-500 rounded-lg"
                 style={{ width: `${Math.max(progressPercent, total > 0 ? 5 : 0)}%` }}
               />
             </div>
           )}
 
-          {/* Live Logs Terminal with subtle green neon glow */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
-              <Terminal size={14} className="text-cureza-green animate-pulse" />
-              <span>Crawl worker console</span>
+          {/* Live Logs Terminal */}
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 dark:text-gray-400 tracking-wider">
+              <Terminal size={14} className="text-gray-450" />
+              <span>Crawl Worker Console</span>
             </div>
-            <div className="bg-neutral-950 text-emerald-400 font-mono p-5 rounded-2xl text-xs overflow-y-auto h-48 space-y-1.5 shadow-2xl border border-neutral-800 shadow-emerald-950/5">
+            <div className="bg-neutral-950 text-neutral-300 font-mono p-4 rounded-[10px] text-xs overflow-y-auto h-48 space-y-1 border border-neutral-800">
               {activeTask.logs && activeTask.logs.length > 0 ? (
                 activeTask.logs.map((log, i) => (
                   <div key={i} className="leading-relaxed whitespace-pre-wrap flex gap-3">
@@ -534,11 +534,11 @@ export default function ScraperDashboard() {
                   </div>
                 ))
               ) : (
-                <div className="text-neutral-500 italic space-y-3">
+                <div className="text-neutral-500 italic space-y-2">
                   <div>Establishing logs stream from background queue...</div>
-                  <div className="text-amber-500 font-semibold text-[11px] mt-2 border border-amber-950/40 p-3.5 rounded-xl bg-amber-950/15 max-w-xl leading-relaxed">
+                  <div className="text-amber-500 font-semibold text-[11px] mt-2 border border-amber-950/40 p-3 rounded-lg bg-amber-950/15 max-w-xl leading-relaxed">
                     💡 Tip: Live console output updates require the queue server to be running.
-                    Verify that <code className="bg-black/60 px-1.5 py-0.5 rounded text-white border border-neutral-800 font-mono">php artisan queue:work</code> is running in the Laravel backend terminal.
+                    Verify that <code className="bg-black/60 px-1.5 py-0.5 rounded text-white border border-neutral-800 font-mono">php artisan queue:work</code> is running.
                   </div>
                 </div>
               )}
@@ -548,42 +548,42 @@ export default function ScraperDashboard() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* 3. Left side: Form configurations */}
-        <div className="lg:col-span-4 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-6 rounded-3xl shadow-sm space-y-6">
-          <div className="flex items-center justify-between border-b border-gray-50 dark:border-gray-850 pb-4">
-            <h2 className="font-black text-xs tracking-widest uppercase text-gray-450 dark:text-gray-400">Scrape Parameters</h2>
+        <div className="lg:col-span-4 bg-white dark:bg-gray-900 border border-neutral-950/10 dark:border-gray-800 p-5 rounded-[10px] space-y-5">
+          <div className="flex items-center justify-between border-b border-neutral-950/5 dark:border-gray-850 pb-3">
+            <h2 className="font-semibold text-xs tracking-wider text-gray-500 dark:text-gray-400">Scrape Parameters</h2>
             {activeTaskId && (
-              <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-100 text-yellow-750 rounded-full animate-pulse">
-                <Loader2 size={10} className="animate-spin" /> RUNNING
+              <span className="flex items-center gap-1.5 text-[10px] font-semibold tracking-wider px-2.5 py-0.5 bg-neutral-100 text-black border border-neutral-950/10 rounded-lg animate-pulse">
+                <Loader2 size={10} className="animate-spin" /> Running
               </span>
             )}
           </div>
 
           <form onSubmit={handleStartScrape} className="space-y-4">
             {/* Target URL */}
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block">Source Storefront URL</label>
+            <div className="space-y-1">
+              <label className="text-[10px] font-semibold text-gray-550 dark:text-gray-400 tracking-wider block">Source Storefront URL</label>
               <div className="relative">
                 <input 
                   type="url"
                   placeholder="https://merchant.com/products/example"
                   value={targetUrl}
                   onChange={(e) => setTargetUrl(e.target.value)}
-                  className="w-full h-11 pl-10 pr-4 text-xs font-semibold bg-gray-50/50 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700 rounded-xl focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-cureza-green/15 focus:border-cureza-green transition-all outline-none"
+                  className="w-full h-10 pl-9 pr-4 text-xs font-normal bg-neutral-50/50 dark:bg-gray-800/30 border border-neutral-950/15 dark:border-gray-700 rounded-lg focus:bg-white dark:focus:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black transition-all outline-none"
                   required
                 />
-                <Globe size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                <Globe size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               </div>
             </div>
 
             {/* Target Platform */}
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block">CMS platform type</label>
+            <div className="space-y-1">
+              <label className="text-[10px] font-semibold text-gray-550 dark:text-gray-400 tracking-wider block">CMS Platform Type</label>
               <select
                 value={platform}
                 onChange={(e) => setPlatform(e.target.value)}
-                className="w-full h-11 px-3.5 text-xs font-semibold bg-gray-50/50 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700 rounded-xl focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-cureza-green/15 focus:border-cureza-green transition-all outline-none cursor-pointer"
+                className="w-full h-10 px-3 text-xs font-normal bg-neutral-50/50 dark:bg-gray-800/30 border border-neutral-950/15 dark:border-gray-700 rounded-lg focus:bg-white dark:focus:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black transition-all outline-none cursor-pointer"
               >
                 <option value="auto">Auto-Detect CMS Platform</option>
                 <option value="shopify">Shopify Store (JSON Schema API)</option>
@@ -593,12 +593,12 @@ export default function ScraperDashboard() {
             </div>
 
             {/* Default Brand mapping */}
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block">Default Brand Assignee</label>
+            <div className="space-y-1">
+              <label className="text-[10px] font-semibold text-gray-550 dark:text-gray-400 tracking-wider block">Default Brand Assignee</label>
               <select
                 value={selectedBrand}
                 onChange={(e) => setSelectedBrand(e.target.value)}
-                className="w-full h-11 px-3.5 text-xs font-semibold bg-gray-50/50 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700 rounded-xl focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-cureza-green/15 focus:border-cureza-green transition-all outline-none cursor-pointer"
+                className="w-full h-10 px-3 text-xs font-normal bg-neutral-50/50 dark:bg-gray-800/30 border border-neutral-950/15 dark:border-gray-700 rounded-lg focus:bg-white dark:focus:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black transition-all outline-none cursor-pointer"
               >
                 <option value="">-- Choose Brand --</option>
                 {brands.map(b => (
@@ -608,12 +608,12 @@ export default function ScraperDashboard() {
             </div>
 
             {/* Default Category mapping */}
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block">Default Category Assignee</label>
+            <div className="space-y-1">
+              <label className="text-[10px] font-semibold text-gray-550 dark:text-gray-400 tracking-wider block">Default Category Assignee</label>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full h-11 px-3.5 text-xs font-semibold bg-gray-50/50 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700 rounded-xl focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-cureza-green/15 focus:border-cureza-green transition-all outline-none cursor-pointer"
+                className="w-full h-10 px-3 text-xs font-normal bg-neutral-50/50 dark:bg-gray-800/30 border border-neutral-950/15 dark:border-gray-700 rounded-lg focus:bg-white dark:focus:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black transition-all outline-none cursor-pointer"
               >
                 <option value="">-- Choose Category --</option>
                 {categories.map(c => (
@@ -623,16 +623,16 @@ export default function ScraperDashboard() {
             </div>
 
             {/* Depth parameters */}
-            <div className="space-y-2 pt-2">
-              <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block">Crawl Depth Scope</label>
-              <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5 pt-1">
+              <label className="text-[10px] font-semibold text-gray-550 dark:text-gray-400 tracking-wider block">Crawl Depth Scope</label>
+              <div className="grid grid-cols-2 gap-3.5">
                 <button
                   type="button"
                   onClick={() => setDepth('single')}
-                  className={`flex items-center justify-center gap-1.5 h-11 text-xs font-black uppercase tracking-wider rounded-xl border transition-all ${
+                  className={`flex items-center justify-center gap-1.5 h-10 text-xs font-semibold rounded-lg border transition-all cursor-pointer ${
                     depth === 'single'
-                      ? 'bg-cureza-green text-white border-transparent shadow-lg shadow-green-100 dark:shadow-none'
-                      : 'bg-gray-50/50 dark:bg-gray-800/30 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-750'
+                      ? 'bg-black text-white border-transparent'
+                      : 'bg-neutral-50/50 dark:bg-gray-800/30 text-gray-700 dark:text-gray-300 border-neutral-950/15 dark:border-gray-700 hover:bg-neutral-100 dark:hover:bg-gray-750'
                   }`}
                 >
                   <Globe size={13} /> Single Item
@@ -640,10 +640,10 @@ export default function ScraperDashboard() {
                 <button
                   type="button"
                   onClick={() => setDepth('catalog')}
-                  className={`flex items-center justify-center gap-1.5 h-11 text-xs font-black uppercase tracking-wider rounded-xl border transition-all ${
+                  className={`flex items-center justify-center gap-1.5 h-10 text-xs font-semibold rounded-lg border transition-all cursor-pointer ${
                     depth === 'catalog'
-                      ? 'bg-cureza-green text-white border-transparent shadow-lg shadow-green-100 dark:shadow-none'
-                      : 'bg-gray-50/50 dark:bg-gray-800/30 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-750'
+                      ? 'bg-black text-white border-transparent'
+                      : 'bg-neutral-50/50 dark:bg-gray-800/30 text-gray-700 dark:text-gray-300 border-neutral-950/15 dark:border-gray-700 hover:bg-neutral-100 dark:hover:bg-gray-750'
                   }`}
                 >
                   <Layers size={13} /> Whole Shop
@@ -652,15 +652,15 @@ export default function ScraperDashboard() {
             </div>
 
             {/* Direct execution fallback option */}
-            <div className="flex items-center gap-2.5 pt-3 pb-1">
+            <div className="flex items-center gap-2 pt-2">
               <input
                 type="checkbox"
                 id="run-directly"
                 checked={runDirectly}
                 onChange={(e) => setRunDirectly(e.target.checked)}
-                className="w-4 h-4 rounded border-gray-300 dark:border-gray-700 text-cureza-green focus:ring-cureza-green/20"
+                className="w-4 h-4 rounded-[3px] border-neutral-300 text-black focus:ring-black/10"
               />
-              <label htmlFor="run-directly" className="text-xs font-bold text-gray-650 dark:text-gray-300 cursor-pointer select-none">
+              <label htmlFor="run-directly" className="text-xs font-semibold text-gray-650 dark:text-gray-300 cursor-pointer select-none">
                 Direct Sync Mode <span className="text-[10px] font-normal text-gray-400">(Bypass background queue)</span>
               </label>
             </div>
@@ -668,13 +668,13 @@ export default function ScraperDashboard() {
             <button
               type="submit"
               disabled={isSubmitLoading || !targetUrl || activeTaskId !== null}
-              className="w-full h-12 bg-cureza-green hover:bg-green-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-extrabold text-xs uppercase tracking-wider rounded-2xl transition-all shadow-lg shadow-green-100 dark:shadow-none hover:-translate-y-0.5 active:scale-95 flex justify-center items-center gap-2 mt-4 cursor-pointer"
+              className="w-full h-11 bg-black hover:bg-neutral-900 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold text-xs tracking-wider rounded-lg transition-all flex justify-center items-center gap-2 mt-3 cursor-pointer"
             >
               {isSubmitLoading ? (
                 <Loader2 size={16} className="animate-spin" />
               ) : (
                 <>
-                  <Play size={12} className="fill-white" /> Start Scraper job
+                  <Play size={12} className="fill-white text-white" /> Start Scraper Job
                 </>
               )}
             </button>
@@ -682,23 +682,23 @@ export default function ScraperDashboard() {
         </div>
 
         {/* 4. Right side: Interactive Review Drafts Panel */}
-        <div className="lg:col-span-8 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-6 rounded-3xl shadow-sm space-y-6">
-          <div className="flex items-center justify-between border-b border-gray-50 dark:border-gray-850 pb-4">
-            <h2 className="font-black text-xs tracking-widest uppercase text-gray-450 dark:text-gray-400">Scraped Draft Queue</h2>
-            <span className="text-xs font-black text-cureza-green uppercase tracking-wider bg-cureza-green/5 border border-cureza-green/10 px-3 py-1 rounded-full">{drafts.length} Pending Approval</span>
+        <div className="lg:col-span-8 bg-white dark:bg-gray-900 border border-neutral-950/10 dark:border-gray-800 p-5 rounded-[10px] space-y-5">
+          <div className="flex items-center justify-between border-b border-neutral-950/5 dark:border-gray-850 pb-3">
+            <h2 className="font-semibold text-xs tracking-wider text-gray-500 dark:text-gray-400">Scraped Draft Queue</h2>
+            <span className="text-xs font-semibold text-black dark:text-white tracking-wider bg-neutral-100 dark:bg-neutral-800 px-3 py-1 rounded-lg border border-neutral-955/10">{drafts.length} Pending Approval</span>
           </div>
 
           {/* Bulk actions bar */}
           {selectedDraftIds.length > 0 && (
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gray-50/50 dark:bg-gray-850/20 p-5 rounded-2xl border border-gray-150 dark:border-gray-800 text-xs animate-in slide-in-from-top-3 duration-300">
-              <div className="font-extrabold text-gray-950 dark:text-gray-100 uppercase tracking-wider text-[11px]">
-                Selected <span className="text-cureza-green">{selectedDraftIds.length}</span> draft product(s)
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-neutral-50/50 dark:bg-gray-850/20 p-4 rounded-[10px] border border-neutral-950/10 dark:border-gray-800 text-xs animate-in slide-in-from-top-3 duration-300">
+              <div className="font-semibold text-gray-950 dark:text-gray-100 tracking-wider text-[11px]">
+                Selected <span className="text-black font-bold underline dark:text-white">{selectedDraftIds.length}</span> draft product(s)
               </div>
               <div className="flex gap-2 w-full sm:w-auto">
                 <button
                   onClick={handleBulkApprove}
                   disabled={isBulkActionLoading}
-                  className="flex items-center justify-center gap-1.5 px-4 h-10 bg-cureza-green text-white font-bold rounded-xl hover:bg-green-700 transition-all disabled:opacity-50 text-xs w-1/2 sm:w-auto cursor-pointer shadow-md shadow-green-50 dark:shadow-none"
+                  className="flex items-center justify-center gap-1.5 px-4 h-9 bg-black text-white font-semibold rounded-lg hover:bg-neutral-900 transition-all disabled:opacity-50 text-xs w-1/2 sm:w-auto cursor-pointer"
                 >
                   {isBulkActionLoading ? <Loader2 size={12} className="animate-spin" /> : <Check size={12} />}
                   Bulk Import & Publish
@@ -706,7 +706,7 @@ export default function ScraperDashboard() {
                 <button
                   onClick={handleBulkDelete}
                   disabled={isBulkActionLoading}
-                  className="flex items-center justify-center gap-1.5 px-4 h-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-rose-600 font-bold rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-all disabled:opacity-50 text-xs w-1/2 sm:w-auto cursor-pointer shadow-sm"
+                  className="flex items-center justify-center gap-1.5 px-4 h-9 bg-white dark:bg-gray-800 border border-neutral-950/15 dark:border-gray-700 text-red-655 font-semibold rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-850 transition-all disabled:opacity-50 text-xs w-1/2 sm:w-auto cursor-pointer"
                 >
                   {isBulkActionLoading ? <Loader2 size={12} className="animate-spin" /> : <Trash2 size={12} />}
                   Bulk Discard
@@ -717,40 +717,40 @@ export default function ScraperDashboard() {
 
           {isDraftsLoading ? (
             <div className="py-20 flex flex-col items-center justify-center text-gray-400 gap-2">
-              <Loader2 size={32} className="animate-spin text-cureza-green" />
-              <span className="text-xs font-black uppercase tracking-widest text-gray-400">Loading drafts catalog...</span>
+              <Loader2 size={28} className="animate-spin text-black dark:text-white" />
+              <span className="text-xs font-semibold tracking-wider text-gray-400">Loading drafts catalog...</span>
             </div>
           ) : drafts.length === 0 ? (
-            <div className="py-20 flex flex-col items-center justify-center text-gray-400 border border-dashed border-gray-200 dark:border-gray-800 rounded-3xl bg-gray-50/30 dark:bg-gray-850/10">
-              <Globe size={40} className="mb-3 text-gray-300 dark:text-gray-700" />
-              <span className="text-sm font-extrabold text-gray-900 dark:text-white">No pending scraped product drafts to review.</span>
-              <p className="text-xs text-center max-w-xs mt-1.5 font-medium text-gray-450 dark:text-gray-400 leading-relaxed">Enter a store URL in the left form and run the scraper to populate this list.</p>
+            <div className="py-20 flex flex-col items-center justify-center text-gray-450 border border-dashed border-neutral-950/10 dark:border-gray-800 rounded-[10px] bg-neutral-50/30 dark:bg-gray-850/10">
+              <Globe size={36} className="mb-3 text-gray-300 dark:text-gray-700" />
+              <span className="text-sm font-semibold text-gray-900 dark:text-white">No pending scraped product drafts to review.</span>
+              <p className="text-xs text-center max-w-xs mt-1.5 font-normal text-gray-450 dark:text-gray-400 leading-relaxed">Enter a store URL in the left form and run the scraper to populate this list.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto border border-gray-100 dark:border-gray-800 rounded-2xl shadow-sm">
-              <table className="min-w-full divide-y divide-gray-100 dark:divide-gray-800">
-                <thead className="bg-gray-50/50 dark:bg-gray-850/50">
-                  <tr className="font-black uppercase text-[10px] tracking-wider text-gray-400">
-                    <th className="px-5 py-4 w-12 text-left">
+            <div className="overflow-x-auto border border-neutral-950/10 dark:border-gray-800 rounded-lg">
+              <table className="min-w-full divide-y divide-neutral-950/10 dark:divide-gray-800">
+                <thead className="bg-neutral-50/50 dark:bg-gray-850/50">
+                  <tr className="font-semibold text-[10px] tracking-wider text-gray-500">
+                    <th className="px-5 py-3 w-12 text-left">
                       <input 
                         type="checkbox" 
                         checked={selectedDraftIds.length === drafts.length && drafts.length > 0}
                         onChange={handleSelectAllDrafts}
-                        className="w-4 h-4 rounded border-gray-300 dark:border-gray-700 text-cureza-green focus:ring-cureza-green/20 cursor-pointer"
+                        className="w-4 h-4 rounded-[3px] border-neutral-300 text-black focus:ring-black/10 cursor-pointer"
                       />
                     </th>
-                    <th className="px-5 py-4 text-left">Product Details</th>
-                    <th className="px-5 py-4 text-left">Suggested Price</th>
-                    <th className="px-5 py-4 text-left">SKU</th>
-                    <th className="px-5 py-4 text-right">Actions</th>
+                    <th className="px-5 py-3 text-left">Product Details</th>
+                    <th className="px-5 py-3 text-left">Suggested Price</th>
+                    <th className="px-5 py-3 text-left">SKU</th>
+                    <th className="px-5 py-3 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50 dark:divide-gray-850 font-bold text-sm">
+                <tbody className="divide-y divide-neutral-955/5 dark:divide-gray-850 font-semibold text-sm">
                   {drafts.map(draft => (
                     <tr 
                       key={draft.id} 
-                      className={`hover:bg-gray-50/40 dark:hover:bg-gray-850/20 transition-colors group ${
-                        selectedDraftIds.includes(draft.id) ? 'bg-emerald-50/10 dark:bg-emerald-950/5' : ''
+                      className={`hover:bg-neutral-50/40 dark:hover:bg-gray-850/20 transition-colors group ${
+                        selectedDraftIds.includes(draft.id) ? 'bg-neutral-50 dark:bg-gray-850/10' : ''
                       }`}
                     >
                       <td className="px-5 py-4 whitespace-nowrap">
@@ -758,12 +758,12 @@ export default function ScraperDashboard() {
                           type="checkbox" 
                           checked={selectedDraftIds.includes(draft.id)}
                           onChange={() => handleSelectDraft(draft.id)}
-                          className="w-4 h-4 rounded border-gray-300 dark:border-gray-700 text-cureza-green focus:ring-cureza-green/20 cursor-pointer"
+                          className="w-4 h-4 rounded-[3px] border-neutral-300 text-black focus:ring-black/10 cursor-pointer"
                         />
                       </td>
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl overflow-hidden border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 flex items-center justify-center shrink-0 shadow-sm">
+                          <div className="w-10 h-10 rounded-lg overflow-hidden border border-neutral-950/10 dark:border-gray-800 bg-neutral-50 dark:bg-gray-800 flex items-center justify-center shrink-0">
                             {draft.images && draft.images.length > 0 ? (
                               <img src={draft.images[0]} alt="" className="w-full h-full object-cover" />
                             ) : (
@@ -771,30 +771,30 @@ export default function ScraperDashboard() {
                             )}
                           </div>
                           <div className="max-w-[280px] min-w-0">
-                            <p className="font-extrabold truncate text-gray-950 dark:text-white" title={draft.title}>{draft.title}</p>
+                            <p className="font-bold truncate text-gray-950 dark:text-white" title={draft.title}>{draft.title}</p>
                             <a 
                               href={draft.source_url} 
                               target="_blank" 
                               rel="noopener noreferrer" 
-                              className="text-[10px] text-cureza-green font-black uppercase tracking-wider flex items-center gap-1 mt-0.5 hover:underline"
+                              className="text-[10px] text-black dark:text-white font-semibold tracking-wider flex items-center gap-1 mt-0.5 hover:underline"
                             >
                               Source Link <ExternalLink size={10} />
                             </a>
                           </div>
                         </div>
                       </td>
-                      <td className="px-5 py-4 whitespace-nowrap text-gray-950 dark:text-white font-extrabold">
+                      <td className="px-5 py-4 whitespace-nowrap text-gray-955 dark:text-white font-bold">
                         {draft.price ? `₹${parseFloat(draft.price).toLocaleString('en-IN')}` : 'N/A'}
                       </td>
                       <td className="px-5 py-4 whitespace-nowrap text-gray-450 dark:text-gray-400 text-xs font-mono">
                         {draft.sku || 'N/A'}
                       </td>
                       <td className="px-5 py-4 whitespace-nowrap text-right">
-                        <div className="flex items-center justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 transition-transform">
+                        <div className="flex items-center justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity translate-x-1 group-hover:translate-x-0 transition-transform">
                           <button
                             onClick={() => handleOpenEdit(draft)}
                             disabled={isActionLoading === draft.id}
-                            className="p-2 text-gray-400 hover:text-cureza-green hover:bg-green-50 dark:hover:bg-green-950/20 rounded-xl transition-all"
+                            className="p-2 text-gray-400 hover:text-black dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg transition-all"
                             title="Verify & Map Import"
                           >
                             <Edit2 size={15} />
@@ -802,7 +802,7 @@ export default function ScraperDashboard() {
                           <button
                             onClick={() => handleDeleteDraft(draft.id)}
                             disabled={isActionLoading === draft.id}
-                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-xl transition-all"
+                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg transition-all"
                             title="Discard Draft"
                           >
                             <Trash2 size={15} />
@@ -818,19 +818,19 @@ export default function ScraperDashboard() {
 
           {/* Pagination */}
           {pagination.last_page > 1 && (
-            <div className="flex justify-between items-center border-t border-gray-100 dark:border-gray-800 pt-4 rounded-b-3xl">
+            <div className="flex justify-between items-center border-t border-neutral-950/10 dark:border-gray-800 pt-4">
               <button
                 disabled={pagination.current_page === 1}
                 onClick={() => fetchDrafts(pagination.current_page - 1)}
-                className="px-4 py-2 border border-gray-200 dark:border-gray-700 text-xs font-black uppercase tracking-wider rounded-xl disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-850 transition-colors"
+                className="px-3.5 py-1.5 border border-neutral-950/15 dark:border-gray-700 text-xs font-semibold rounded-lg disabled:opacity-50 hover:bg-neutral-50 dark:hover:bg-gray-850 transition-colors"
               >
                 Previous
               </button>
-              <span className="text-xs font-bold text-gray-450 dark:text-gray-400 uppercase tracking-wide">Page {pagination.current_page} of {pagination.last_page}</span>
+              <span className="text-xs font-semibold text-gray-450 dark:text-gray-400 tracking-wide">Page {pagination.current_page} of {pagination.last_page}</span>
               <button
                 disabled={pagination.current_page === pagination.last_page}
                 onClick={() => fetchDrafts(pagination.current_page + 1)}
-                className="px-4 py-2 border border-gray-200 dark:border-gray-700 text-xs font-black uppercase tracking-wider rounded-xl disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-850 transition-colors"
+                className="px-3.5 py-1.5 border border-neutral-950/15 dark:border-gray-700 text-xs font-semibold rounded-lg disabled:opacity-50 hover:bg-neutral-50 dark:hover:bg-gray-850 transition-colors"
               >
                 Next
               </button>
@@ -839,16 +839,16 @@ export default function ScraperDashboard() {
         </div>
       </div>
 
-      {/* 5. Edit, Verify & Map Approval Modal with Premium design */}
+      {/* 5. Edit, Verify & Map Approval Modal */}
       {editingDraft && (
-        <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-300">
-            <div className="bg-gray-50 dark:bg-gray-850/50 px-6 py-4 flex justify-between items-center border-b border-gray-100 dark:border-gray-800">
+        <div className="fixed inset-0 bg-black/50 dark:bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
+          <div className="bg-white dark:bg-gray-900 border border-neutral-955/15 dark:border-gray-800 rounded-[10px] w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-300">
+            <div className="bg-neutral-50 dark:bg-gray-850/50 px-6 py-4 flex justify-between items-center border-b border-neutral-955/10 dark:border-gray-800">
               <div>
-                <h3 className="font-extrabold text-sm uppercase tracking-widest text-gray-950 dark:text-white">Verify & Map Product</h3>
-                <p className="text-[10px] text-gray-400 font-semibold mt-0.5">Approve and publish draft item to catalog</p>
+                <h3 className="font-bold text-sm text-gray-950 dark:text-white">Verify & Map Product</h3>
+                <p className="text-[10px] text-gray-400 font-normal mt-0.5">Approve and publish draft item to catalog</p>
               </div>
-              <button onClick={() => setEditingDraft(null)} className="h-8 w-8 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 border border-gray-150 dark:border-gray-700 shadow-sm transition-colors cursor-pointer">
+              <button onClick={() => setEditingDraft(null)} className="h-8 w-8 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-500 hover:text-gray-750 dark:hover:text-gray-300 border border-neutral-950/15 dark:border-gray-700 transition-colors cursor-pointer">
                 <X size={16} />
               </button>
             </div>
@@ -856,36 +856,36 @@ export default function ScraperDashboard() {
             <form onSubmit={handleApproveImport} className="p-6 overflow-y-auto space-y-4 flex-1 font-semibold text-sm">
               {/* Product Title */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block">Verified Product Title</label>
+                <label className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 tracking-wider block">Verified Product Title</label>
                 <input 
                   type="text"
                   value={editTitle}
                   onChange={(e) => setEditTitle(e.target.value)}
-                  className="w-full h-11 px-4 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-cureza-green/15 focus:border-cureza-green outline-none font-bold text-sm text-gray-950 dark:text-gray-100 transition-all"
+                  className="w-full h-10 px-3.5 border border-neutral-950/15 dark:border-gray-700 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black outline-none font-bold text-xs text-gray-950 dark:text-gray-100 transition-all"
                   required
                 />
               </div>
 
               {/* Product Price */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block">Selling Price (INR)</label>
+                <label className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 tracking-wider block">Selling Price (INR)</label>
                 <input 
                   type="number"
                   step="0.01"
                   value={editPrice}
                   onChange={(e) => setEditPrice(e.target.value)}
-                  className="w-full h-11 px-4 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-cureza-green/15 focus:border-cureza-green outline-none font-bold text-sm text-gray-950 dark:text-gray-100 transition-all"
+                  className="w-full h-10 px-3.5 border border-neutral-950/15 dark:border-gray-700 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black outline-none font-bold text-xs text-gray-950 dark:text-gray-100 transition-all"
                   required
                 />
               </div>
 
               {/* Target Brand mapping */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block">Assign Brand Registry</label>
+                <label className="text-[10px] font-semibold text-gray-550 dark:text-gray-400 tracking-wider block">Assign Brand Registry</label>
                 <select
                   value={editBrand}
                   onChange={(e) => setEditBrand(e.target.value)}
-                  className="w-full h-11 px-4 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-cureza-green/15 focus:border-cureza-green outline-none font-bold text-sm text-gray-950 dark:text-gray-100 transition-all cursor-pointer"
+                  className="w-full h-10 px-3.5 border border-neutral-950/15 dark:border-gray-700 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black outline-none font-bold text-xs text-gray-950 dark:text-gray-100 transition-all cursor-pointer"
                   required
                 >
                   <option value="">-- Choose Brand --</option>
@@ -897,11 +897,11 @@ export default function ScraperDashboard() {
 
               {/* Target Category mapping */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block">Assign Category Category</label>
+                <label className="text-[10px] font-semibold text-gray-550 dark:text-gray-400 tracking-wider block">Assign Category Category</label>
                 <select
                   value={editCategory}
                   onChange={(e) => setEditCategory(e.target.value)}
-                  className="w-full h-11 px-4 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-cureza-green/15 focus:border-cureza-green outline-none font-bold text-sm text-gray-955 dark:text-gray-100 transition-all cursor-pointer"
+                  className="w-full h-10 px-3.5 border border-neutral-950/15 dark:border-gray-700 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black outline-none font-bold text-xs text-gray-955 dark:text-gray-100 transition-all cursor-pointer"
                   required
                 >
                   <option value="">-- Choose Category --</option>
@@ -913,12 +913,12 @@ export default function ScraperDashboard() {
 
               {/* Description */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block">Parsed Product Description</label>
+                <label className="text-[10px] font-semibold text-gray-550 dark:text-gray-400 tracking-wider block">Parsed Product Description</label>
                 <textarea 
                   rows={4}
                   value={editDescription}
                   onChange={(e) => setEditDescription(e.target.value)}
-                  className="w-full p-4 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-cureza-green/15 focus:border-cureza-green outline-none font-medium text-sm text-gray-750 dark:text-gray-300 resize-none transition-all leading-relaxed"
+                  className="w-full p-3 border border-neutral-950/15 dark:border-gray-700 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black outline-none font-normal text-xs text-gray-750 dark:text-gray-300 resize-none transition-all leading-relaxed"
                 />
               </div>
 
@@ -926,13 +926,13 @@ export default function ScraperDashboard() {
                 <button
                   type="button"
                   onClick={() => setEditingDraft(null)}
-                  className="w-1/2 h-11 text-xs font-black uppercase tracking-wider border border-gray-200 dark:border-gray-700 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-850 transition-colors"
+                  className="w-1/2 h-10 text-xs font-semibold tracking-wider border border-neutral-950/15 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-neutral-50 dark:hover:bg-gray-850 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="w-1/2 h-11 text-xs font-black uppercase tracking-wider rounded-xl bg-cureza-green text-white flex items-center justify-center gap-1.5 hover:bg-green-700 transition-all shadow-md shadow-green-50 dark:shadow-none"
+                  className="w-1/2 h-10 text-xs font-semibold tracking-wider rounded-lg bg-black text-white flex items-center justify-center gap-1.5 hover:bg-neutral-900 transition-all"
                 >
                   <Check size={14} /> Import & Publish
                 </button>

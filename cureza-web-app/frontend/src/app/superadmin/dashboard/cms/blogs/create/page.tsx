@@ -178,20 +178,24 @@ export default function CreateBlogPostPage() {
     };
 
     return (
-        <div className="space-y-6 max-w-5xl mx-auto pb-10">
+        <div className="w-full space-y-6 pb-12">
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                     <Link href="/superadmin/dashboard/cms/blogs">
-                        <Button variant="outline" size="icon">
-                            <ArrowLeft className="h-4 w-4" />
+                        <Button variant="outline" size="icon" className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none h-8 w-8 hover:bg-gray-100">
+                            <ArrowLeft className="h-4 w-4 text-black" />
                         </Button>
                     </Link>
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Create Blog Post</h1>
-                        <p className="text-muted-foreground">Write and publish new content.</p>
+                        <h1 className="text-2xl font-semibold tracking-tight text-black">Create Blog Post</h1>
+                        <p className="text-gray-500 text-sm">Write and publish new content.</p>
                     </div>
                 </div>
-                <Button onClick={handleSubmit} disabled={loading}>
+                <Button 
+                    onClick={handleSubmit} 
+                    disabled={loading}
+                    className="bg-black hover:bg-black/80 text-white rounded-[10px] border-none shadow-none font-medium text-sm"
+                >
                     <Save className="mr-2 h-4 w-4" />
                     {loading ? 'Saving...' : 'Save Post'}
                 </Button>
@@ -200,82 +204,90 @@ export default function CreateBlogPostPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2 space-y-6">
                     <div className="space-y-2">
-                        <Label htmlFor="title">Title</Label>
+                        <Label htmlFor="title" className="text-xs font-medium text-gray-700">Title</Label>
                         <Input
                             id="title"
                             value={formData.title}
                             onChange={handleTitleChange}
                             placeholder="Enter post title"
                             required
+                            className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="slug">Slug</Label>
+                        <Label htmlFor="slug" className="text-xs font-medium text-gray-700">Slug</Label>
                         <Input
                             id="slug"
                             value={formData.slug}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, slug: e.target.value })}
                             placeholder="url-friendly-slug"
                             required
+                            className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <Label>Content</Label>
-                        <TiptapEditor
-                            content={formData.content}
-                            onChange={(content) => setFormData({ ...formData, content })}
-                        />
+                        <Label className="text-xs font-medium text-gray-700">Content</Label>
+                        <div className="border-[0.5px] border-gray-200/50 rounded-[10px] overflow-hidden">
+                            <TiptapEditor
+                                content={formData.content}
+                                onChange={(content) => setFormData({ ...formData, content })}
+                            />
+                        </div>
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="excerpt">Excerpt</Label>
+                        <Label htmlFor="excerpt" className="text-xs font-medium text-gray-700">Excerpt</Label>
                         <Textarea
                             id="excerpt"
                             value={formData.excerpt}
                             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData({ ...formData, excerpt: e.target.value })}
                             placeholder="Short summary of the post..."
                             rows={3}
+                            className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                         />
                     </div>
 
-                    <div className="border rounded-lg p-4 space-y-4 bg-white">
-                        <h3 className="font-semibold text-lg text-[#052326]">Fact-Checking & Reviewer Details</h3>
+                    <div className="border-[0.5px] border-gray-200/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
+                        <h3 className="font-medium text-base text-black">Fact-Checking & Reviewer Details</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label htmlFor="fact_checked_by">Reviewed By (Doctor Name)</Label>
+                                <Label htmlFor="fact_checked_by" className="text-xs font-medium text-gray-700">Reviewed By (Doctor Name)</Label>
                                 <Input
                                     id="fact_checked_by"
                                     value={formData.fact_checked_by}
                                     onChange={(e) => setFormData({ ...formData, fact_checked_by: e.target.value })}
                                     placeholder="e.g. Dr. Anjali Sharma"
+                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="fact_checker_title">Reviewer Title/Degree</Label>
+                                <Label htmlFor="fact_checker_title" className="text-xs font-medium text-gray-700">Reviewer Title/Degree</Label>
                                 <Input
                                     id="fact_checker_title"
                                     value={formData.fact_checker_title}
                                     onChange={(e) => setFormData({ ...formData, fact_checker_title: e.target.value })}
                                     placeholder="e.g. BAMS, MD (Ayurveda)"
+                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="fact_checker_credentials">Reviewer Credentials & Bio</Label>
+                            <Label htmlFor="fact_checker_credentials" className="text-xs font-medium text-gray-700">Reviewer Credentials & Bio</Label>
                             <Textarea
                                 id="fact_checker_credentials"
                                 value={formData.fact_checker_credentials}
                                 onChange={(e) => setFormData({ ...formData, fact_checker_credentials: e.target.value })}
                                 placeholder="e.g. 15+ years experience in clinical Panchakarma..."
                                 rows={2}
+                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="fact_checker_image">Reviewer Avatar</Label>
+                            <Label htmlFor="fact_checker_image" className="text-xs font-medium text-gray-700">Reviewer Avatar</Label>
                             <Input
                                 id="fact_checker_image"
                                 type="file"
@@ -285,9 +297,10 @@ export default function CreateBlogPostPage() {
                                         setFormData({ ...formData, fact_checker_image: e.target.files[0] });
                                     }
                                 }}
+                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black file:mr-4 file:py-1 file:px-3 file:rounded-[10px] file:border-[0.5px] file:border-gray-200 file:bg-gray-50 file:text-xs file:font-medium"
                             />
                             {formData.fact_checker_image && (
-                                <div className="mt-2 w-16 h-16 rounded-full overflow-hidden border">
+                                <div className="mt-2 w-16 h-16 rounded-full overflow-hidden border-[0.5px] border-gray-200/50">
                                     <img
                                         src={
                                             formData.fact_checker_image instanceof File
@@ -304,9 +317,9 @@ export default function CreateBlogPostPage() {
                         </div>
                     </div>
 
-                    <div className="border rounded-lg p-4 space-y-4 bg-white">
+                    <div className="border-[0.5px] border-gray-200/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
                         <div className="flex justify-between items-center">
-                            <h3 className="font-semibold text-lg text-[#052326]">Citations & Scientific References</h3>
+                            <h3 className="font-medium text-base text-black">Citations & Scientific References</h3>
                             <Button 
                                 type="button" 
                                 variant="outline" 
@@ -317,8 +330,9 @@ export default function CreateBlogPostPage() {
                                         citations: [...formData.citations, { title: '', url: '', source: '' }]
                                     });
                                 }}
+                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-medium text-black bg-white hover:bg-gray-50"
                             >
-                                <Plus className="mr-1 h-3 w-3" /> Add Citation
+                                <Plus className="mr-1 h-3.5 w-3.5" /> Add Citation
                             </Button>
                         </div>
                         
@@ -327,9 +341,9 @@ export default function CreateBlogPostPage() {
                         ) : (
                             <div className="space-y-3">
                                 {formData.citations.map((citation, idx) => (
-                                    <div key={idx} className="flex gap-3 items-end border-b pb-3 last:border-0 last:pb-0">
+                                    <div key={idx} className="flex gap-3 items-end border-b-[0.5px] border-gray-150 pb-3 last:border-0 last:pb-0">
                                         <div className="flex-1 space-y-1">
-                                            <Label className="text-xs">Citation Title</Label>
+                                            <Label className="text-[10px] font-medium text-gray-500">Citation Title</Label>
                                             <Input
                                                 value={citation.title}
                                                 onChange={(e) => {
@@ -338,10 +352,11 @@ export default function CreateBlogPostPage() {
                                                     setFormData({ ...formData, citations: updated });
                                                 }}
                                                 placeholder="e.g. Clinical study of Amla"
+                                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs focus-visible:ring-1 focus-visible:ring-black"
                                             />
                                         </div>
                                         <div className="flex-1 space-y-1">
-                                            <Label className="text-xs">URL (Optional)</Label>
+                                            <Label className="text-[10px] font-medium text-gray-500">URL (Optional)</Label>
                                             <Input
                                                 value={citation.url}
                                                 onChange={(e) => {
@@ -350,10 +365,11 @@ export default function CreateBlogPostPage() {
                                                     setFormData({ ...formData, citations: updated });
                                                 }}
                                                 placeholder="https://pubmed..."
+                                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs focus-visible:ring-1 focus-visible:ring-black"
                                             />
                                         </div>
                                         <div className="w-1/4 space-y-1">
-                                            <Label className="text-xs">Source</Label>
+                                            <Label className="text-[10px] font-medium text-gray-500">Source</Label>
                                             <Input
                                                 value={citation.source}
                                                 onChange={(e) => {
@@ -362,13 +378,13 @@ export default function CreateBlogPostPage() {
                                                     setFormData({ ...formData, citations: updated });
                                                 }}
                                                 placeholder="PubMed"
+                                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs focus-visible:ring-1 focus-visible:ring-black"
                                             />
                                         </div>
                                         <Button
                                             type="button"
                                             variant="ghost"
-                                            className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                                            size="icon"
+                                            className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded-[10px] h-8 w-8 p-0"
                                             onClick={() => {
                                                 const updated = formData.citations.filter((_, i) => i !== idx);
                                                 setFormData({ ...formData, citations: updated });
@@ -382,24 +398,24 @@ export default function CreateBlogPostPage() {
                         )}
                     </div>
 
-                    <div className="border rounded-lg p-4 space-y-4 bg-white">
-                        <h3 className="font-semibold text-lg text-[#052326]">Recommended Products</h3>
+                    <div className="border-[0.5px] border-gray-200/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
+                        <h3 className="font-medium text-base text-black">Recommended Products</h3>
                         <div className="space-y-2">
-                            <Label>Select Products to Recommend (Grouped by Category)</Label>
-                            <div className="space-y-6 max-h-96 overflow-y-auto p-3 border rounded-md bg-gray-50/50">
+                            <Label className="text-xs font-medium text-gray-700">Select Products to Recommend (Grouped by Category)</Label>
+                            <div className="space-y-6 max-h-96 overflow-y-auto p-4 border-[0.5px] border-gray-200/50 rounded-[10px] bg-gray-50/50">
                                 {Object.entries(groupedProducts).map(([categoryName, items]) => (
                                     <div key={categoryName} className="space-y-2">
-                                        <h4 className="text-[10px] font-bold text-cureza-green uppercase tracking-wider border-b pb-1 mb-2">
+                                        <h4 className="text-xs font-medium text-black border-b-[0.5px] border-gray-200/50 pb-1 mb-2">
                                             {categoryName}
                                         </h4>
                                         <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                                             {items.map((product) => (
                                                 <div 
                                                     key={product.id}
-                                                    className={`flex items-center space-x-2 p-2 rounded border cursor-pointer transition-colors ${
+                                                    className={`flex items-center space-x-2 p-2 rounded-[10px] border-[0.5px] cursor-pointer transition-colors ${
                                                         formData.recommended_products.includes(product.id)
-                                                            ? "bg-cureza-green/10 border-cureza-green"
-                                                            : "bg-white hover:bg-gray-50 border-gray-100"
+                                                            ? "bg-black text-white border-black"
+                                                            : "bg-white hover:bg-gray-50 border-gray-150 text-gray-900"
                                                     }`}
                                                     onClick={() => {
                                                         const isSelected = formData.recommended_products.includes(product.id);
@@ -413,7 +429,7 @@ export default function CreateBlogPostPage() {
                                                         type="checkbox"
                                                         checked={formData.recommended_products.includes(product.id)}
                                                         onChange={() => {}} // handled by div click
-                                                        className="h-4 w-4 text-cureza-green border-gray-300 rounded focus:ring-cureza-green"
+                                                        className="h-3.5 w-3.5 text-black border-gray-300 rounded focus:ring-black accent-black"
                                                     />
                                                     <span className="text-xs font-medium truncate">{product.title}</span>
                                                 </div>
@@ -425,52 +441,55 @@ export default function CreateBlogPostPage() {
                         </div>
                     </div>
 
-                    <div className="border rounded-lg p-4 space-y-4">
-                        <h3 className="font-semibold">SEO Settings</h3>
+                    <div className="border-[0.5px] border-gray-200/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
+                        <h3 className="font-medium text-base text-black">SEO Settings</h3>
                         <div className="space-y-2">
-                            <Label htmlFor="meta_title">Meta Title</Label>
+                            <Label htmlFor="meta_title" className="text-xs font-medium text-gray-700">Meta Title</Label>
                             <Input
                                 id="meta_title"
                                 value={formData.meta_title}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, meta_title: e.target.value })}
                                 placeholder="SEO Title"
+                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="meta_description">Meta Description</Label>
+                            <Label htmlFor="meta_description" className="text-xs font-medium text-gray-700">Meta Description</Label>
                             <Textarea
                                 id="meta_description"
                                 value={formData.meta_description}
                                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData({ ...formData, meta_description: e.target.value })}
                                 placeholder="SEO Description"
                                 rows={2}
+                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="meta_keywords">Meta Keywords</Label>
+                            <Label htmlFor="meta_keywords" className="text-xs font-medium text-gray-700">Meta Keywords</Label>
                             <Input
                                 id="meta_keywords"
                                 value={formData.meta_keywords}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, meta_keywords: e.target.value })}
                                 placeholder="keyword1, keyword2, keyword3"
+                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                             />
                         </div>
                     </div>
                 </div>
 
                 <div className="space-y-6">
-                    <div className="border rounded-lg p-4 space-y-4 bg-white">
-                        <h3 className="font-semibold">Publishing</h3>
+                    <div className="border-[0.5px] border-gray-200/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
+                        <h3 className="font-medium text-base text-black">Publishing</h3>
                         <div className="space-y-2">
-                            <Label>Status</Label>
+                            <Label className="text-xs font-medium text-gray-700">Status</Label>
                             <Select
                                 value={formData.status}
                                 onValueChange={(value: string) => setFormData({ ...formData, status: value })}
                             >
-                                <SelectTrigger>
+                                <SelectTrigger className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm focus:ring-1 focus:ring-black">
                                     <SelectValue placeholder="Select status" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none">
                                     <SelectItem value="draft">Draft</SelectItem>
                                     <SelectItem value="published">Published</SelectItem>
                                     <SelectItem value="archived">Archived</SelectItem>
@@ -478,28 +497,29 @@ export default function CreateBlogPostPage() {
                             </Select>
                         </div>
 
-                        <div className="flex items-center justify-between">
-                            <Label htmlFor="is_featured">Featured Post</Label>
+                        <div className="flex items-center justify-between pt-2">
+                            <Label htmlFor="is_featured" className="text-sm font-normal text-gray-700">Featured Post</Label>
                             <Switch
                                 id="is_featured"
                                 checked={formData.is_featured}
                                 onCheckedChange={(checked: boolean) => setFormData({ ...formData, is_featured: checked })}
+                                className="data-[state=checked]:bg-black"
                             />
                         </div>
                     </div>
 
-                    <div className="border rounded-lg p-4 space-y-4 bg-white">
-                        <h3 className="font-semibold">Organization</h3>
+                    <div className="border-[0.5px] border-gray-200/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
+                        <h3 className="font-medium text-base text-black">Organization</h3>
                         <div className="space-y-2">
-                            <Label>Category</Label>
+                            <Label className="text-xs font-medium text-gray-700">Category</Label>
                             <Select
                                 value={formData.category_id}
                                 onValueChange={(value: string) => setFormData({ ...formData, category_id: value })}
                             >
-                                <SelectTrigger>
+                                <SelectTrigger className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm focus:ring-1 focus:ring-black">
                                     <SelectValue placeholder="Select category" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none">
                                     {categories.map((category) => (
                                         <SelectItem key={category.id} value={category.id.toString()}>
                                             {category.name}
@@ -510,15 +530,15 @@ export default function CreateBlogPostPage() {
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Author</Label>
+                            <Label className="text-xs font-medium text-gray-700">Author</Label>
                             <Select
                                 value={formData.author_id}
                                 onValueChange={(value: string) => setFormData({ ...formData, author_id: value })}
                             >
-                                <SelectTrigger>
+                                <SelectTrigger className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm focus:ring-1 focus:ring-black">
                                     <SelectValue placeholder="Select author" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none">
                                     {authors.map((author) => (
                                         <SelectItem key={author.id} value={author.id.toString()}>
                                             {author.name}
@@ -529,13 +549,17 @@ export default function CreateBlogPostPage() {
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Tags</Label>
-                            <div className="flex flex-wrap gap-2">
+                            <Label className="text-xs font-medium text-gray-700">Tags</Label>
+                            <div className="flex flex-wrap gap-2 pt-1">
                                 {availableTags.map((tag) => (
                                     <Badge
                                         key={tag.id}
                                         variant={formData.tags.includes(tag.id) ? 'default' : 'outline'}
-                                        className="cursor-pointer"
+                                        className={`cursor-pointer rounded-[10px] px-2 py-0.5 border-[0.5px] font-normal text-xs shadow-none transition-colors ${
+                                            formData.tags.includes(tag.id)
+                                                ? 'bg-black text-white border-black'
+                                                : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+                                        }`}
                                         onClick={() => {
                                             const newTags = formData.tags.includes(tag.id)
                                                 ? formData.tags.filter(id => id !== tag.id)
@@ -550,10 +574,10 @@ export default function CreateBlogPostPage() {
                         </div>
                     </div>
 
-                    <div className="border rounded-lg p-4 space-y-4 bg-white">
-                        <h3 className="font-semibold">Featured Image</h3>
+                    <div className="border-[0.5px] border-gray-200/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
+                        <h3 className="font-medium text-base text-black">Featured Image</h3>
                         <div className="space-y-2">
-                            <Label htmlFor="featured_image">Featured Image</Label>
+                            <Label htmlFor="featured_image" className="text-xs font-medium text-gray-700 font-medium">Featured Image</Label>
                             <Input
                                 id="featured_image"
                                 type="file"
@@ -563,10 +587,11 @@ export default function CreateBlogPostPage() {
                                         setFormData({ ...formData, featured_image: e.target.files[0] });
                                     }
                                 }}
+                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black file:mr-4 file:py-1 file:px-3 file:rounded-[10px] file:border-[0.5px] file:border-gray-200 file:bg-gray-50 file:text-xs file:font-medium"
                             />
                         </div>
                         {formData.featured_image && (
-                            <div className="mt-2 relative aspect-video rounded-lg overflow-hidden border">
+                            <div className="mt-2 relative aspect-video rounded-[10px] overflow-hidden border-[0.5px] border-gray-200/50">
                                 <img
                                     src={
                                         formData.featured_image instanceof File

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Mail, Send, Users, BarChart2, Plus, X, Eye, CheckCircle2, Inbox, ArrowRight } from 'lucide-react';
+import { Mail, Send, Users, BarChart2, Plus, X, Eye, CheckCircle2, Inbox, ArrowRight, HelpCircle } from 'lucide-react';
 import { useToast } from '@/contexts/ToastContext';
 
 interface Campaign {
@@ -62,7 +62,7 @@ export default function AdminEmailPage() {
                     <div style="text-align: center; margin-bottom: 20px;">
                         <span style="font-weight: bold; color: ${primaryColor}; font-size: 24px;">CUREZA</span>
                     </div>
-                    <div style="background-color: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+                    <div style="background-color: white; padding: 25px; border-radius: 12px; border: 0.35px solid rgba(0,0,0,0.5);">
                         <h2 style="color: #111827; margin-top: 0;">Introducing Our New Product Line! 🌿</h2>
                         <p style="color: #4B5563; line-height: 1.6;">We are excited to launch our new premium wellness collection designed specifically for your daily health routine.</p>
                         <div style="text-align: center; margin: 30px 0;">
@@ -178,76 +178,76 @@ export default function AdminEmailPage() {
                 }
                 return next;
             });
-        }, 300);
+        }, 150);
     };
 
     return (
-        <div className="space-y-8 p-6 max-w-7xl mx-auto">
+        <div className="space-y-6 pb-12">
             {/* Header */}
-            <div className="flex justify-between items-center bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                <div>
-                    <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Email Campaign Builder</h1>
-                    <p className="text-gray-500 mt-1">Design, segment, and dispatch promotional newsletters</p>
+            <div className="flex justify-between items-center bg-white p-6 rounded-[10px] border-[0.35px] border-neutral-950/10">
+                <div className="space-y-1.5">
+                    <h1 className="text-xl font-semibold text-gray-900 tracking-tight">Email Campaign Builder</h1>
+                    <p className="text-xs text-gray-500 font-normal">Design, segment, and dispatch promotional newsletters</p>
                 </div>
                 <button 
                     onClick={handleCreateCampaign}
-                    className="bg-cureza-green text-white px-5 py-2.5 rounded-xl flex items-center gap-2 hover:bg-green-700 transition font-bold shadow-sm"
+                    className="bg-black text-white px-4 py-2.5 rounded-[10px] flex items-center gap-2 hover:bg-neutral-900 transition-colors font-medium text-xs"
                 >
-                    <Plus size={18} />
+                    <Plus size={14} />
                     New Campaign
                 </button>
             </div>
 
             {/* Metrics cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white border border-gray-100 p-6 rounded-2xl shadow-sm space-y-2">
-                    <span className="text-xs text-gray-400 font-bold uppercase tracking-wider block">Sent Newsletters</span>
-                    <h3 className="text-3xl font-extrabold text-gray-900">25,100</h3>
-                    <p className="text-xs text-gray-400">Total delivered email units this month</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-white border-[0.35px] border-neutral-950/10 p-5 rounded-[10px] space-y-2">
+                    <span className="text-[10px] text-gray-550 font-medium tracking-normal block">Sent Newsletters</span>
+                    <h3 className="text-2xl font-semibold text-gray-900">25,100</h3>
+                    <p className="text-xs text-gray-400 font-normal">Total delivered email units this month</p>
                 </div>
-                <div className="bg-white border border-gray-100 p-6 rounded-2xl shadow-sm space-y-2">
-                    <span className="text-xs text-gray-400 font-bold uppercase tracking-wider block">Avg. Open Rate</span>
-                    <h3 className="text-3xl font-extrabold text-blue-650 text-blue-600">27.6%</h3>
-                    <p className="text-xs text-gray-400">Benchmark average is 21.3%</p>
+                <div className="bg-white border-[0.35px] border-neutral-950/10 p-5 rounded-[10px] space-y-2">
+                    <span className="text-[10px] text-gray-550 font-medium tracking-normal block">Avg. Open Rate</span>
+                    <h3 className="text-2xl font-semibold text-gray-900">27.6%</h3>
+                    <p className="text-xs text-gray-400 font-normal">Benchmark average is 21.3%</p>
                 </div>
-                <div className="bg-white border border-gray-100 p-6 rounded-2xl shadow-sm space-y-2">
-                    <span className="text-xs text-gray-400 font-bold uppercase tracking-wider block">Delivery Success</span>
-                    <h3 className="text-3xl font-extrabold text-green-600">98.0%</h3>
-                    <p className="text-xs text-gray-400">SMTP Server bounce rate is 2.0%</p>
+                <div className="bg-white border-[0.35px] border-neutral-950/10 p-5 rounded-[10px] space-y-2">
+                    <span className="text-[10px] text-gray-550 font-medium tracking-normal block">Delivery Success</span>
+                    <h3 className="text-2xl font-semibold text-emerald-700">98.0%</h3>
+                    <p className="text-xs text-gray-400 font-normal">SMTP Server bounce rate is 2.0%</p>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Recent Campaigns list */}
                 <div className="lg:col-span-2 space-y-4">
-                    <h3 className="font-extrabold text-xl text-gray-900">Sent Campaigns Log</h3>
-                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm divide-y divide-gray-100 overflow-hidden">
+                    <h3 className="font-semibold text-sm text-gray-900">Sent Campaigns Log</h3>
+                    <div className="bg-white rounded-[10px] border-[0.35px] border-neutral-950/10 divide-y-[0.35px] divide-neutral-950/10 overflow-hidden">
                         {campaigns.map((c) => (
-                            <div key={c.id} className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-gray-50/50 transition-colors">
+                            <div key={c.id} className="p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-neutral-50/50 transition-colors">
                                 <div className="flex items-start gap-4">
-                                    <div className="p-3 bg-blue-50 text-blue-600 rounded-xl mt-0.5">
-                                        <Mail size={22} />
+                                    <div className="p-2.5 bg-neutral-50 text-black border-[0.35px] border-neutral-950/10 rounded-[10px] mt-0.5">
+                                        <Mail size={18} />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-gray-900 text-base">{c.title}</h4>
-                                        <p className="text-xs text-gray-400 mt-0.5">Subject: "{c.subject}"</p>
+                                        <h4 className="font-semibold text-gray-900 text-sm">{c.title}</h4>
+                                        <p className="text-xs text-gray-400 mt-0.5 font-normal">Subject: "{c.subject}"</p>
                                         <div className="flex flex-wrap items-center gap-2 mt-2">
-                                            <span className="text-[10px] font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full">{c.segment}</span>
-                                            <span className="text-[10px] font-bold bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">{c.template}</span>
-                                            <span className="text-xs text-gray-400 font-semibold">• Sent {c.sentAt} • {c.recipients.toLocaleString()} Recipients</span>
+                                            <span className="text-[9px] font-medium bg-neutral-50 border-[0.35px] border-neutral-950/10 text-neutral-800 px-2 py-0.5 rounded-[10px]">{c.segment}</span>
+                                            <span className="text-[9px] font-medium bg-neutral-100 text-gray-655 px-2 py-0.5 rounded-[10px]">{c.template}</span>
+                                            <span className="text-xs text-gray-400 font-normal">• Sent {c.sentAt} • {c.recipients.toLocaleString()} Recipients</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-gray-50">
-                                    <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-100">
+                                <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-gray-100">
+                                    <span className="text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-[10px] border-[0.35px] border-emerald-500/50">
                                         {c.delivered}% Delivered
                                     </span>
                                     {c.openRate > 0 ? (
-                                        <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100 sm:mt-1.5">
+                                        <span className="text-xs font-medium text-gray-700 bg-gray-50 px-2.5 py-0.5 rounded-[10px] border-[0.35px] border-neutral-950/10 sm:mt-1.5">
                                             {c.openRate}% Open Rate
                                         </span>
                                     ) : (
-                                        <span className="text-xs text-gray-400 sm:mt-1.5 italic">Gathering metrics...</span>
+                                        <span className="text-xs text-gray-400 sm:mt-1.5 italic font-normal">Gathering metrics...</span>
                                     )}
                                 </div>
                             </div>
@@ -257,20 +257,20 @@ export default function AdminEmailPage() {
 
                 {/* Newsletter design template presets */}
                 <div className="space-y-4">
-                    <h3 className="font-extrabold text-xl text-gray-900">Email Presets</h3>
+                    <h3 className="font-semibold text-sm text-gray-900">Email Presets</h3>
                     <div className="grid grid-cols-1 gap-4">
                         {templates.map((t) => (
                             <div 
                                 key={t.id} 
-                                className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:border-cureza-green cursor-pointer transition-all duration-300 relative group"
+                                className="bg-white p-5 rounded-[10px] border-[0.35px] border-neutral-950/10 hover:border-neutral-950 cursor-pointer transition-all duration-300 relative group"
                                 onClick={() => setPreviewTemplate(t.name)}
                             >
-                                <div className="absolute top-4 right-4 p-1 bg-gray-50 text-gray-400 group-hover:text-cureza-green rounded-lg hover:bg-gray-100 transition-colors">
-                                    <Eye size={16} />
+                                <div className="absolute top-4 right-4 p-1 bg-neutral-50 text-gray-400 group-hover:text-black rounded-lg hover:bg-neutral-100 transition-colors border-[0.35px] border-transparent hover:border-neutral-950/10">
+                                    <Eye size={14} />
                                 </div>
-                                <h4 className="font-bold text-gray-900 group-hover:text-cureza-green transition-colors text-base">{t.name}</h4>
-                                <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">{t.desc}</p>
-                                <div className="mt-4 flex items-center gap-1 text-xs text-cureza-green font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                                <h4 className="font-semibold text-gray-900 group-hover:text-black transition-colors text-sm">{t.name}</h4>
+                                <p className="text-xs text-gray-500 mt-1.5 leading-relaxed font-normal">{t.desc}</p>
+                                <div className="mt-4 flex items-center gap-1 text-xs text-black font-medium opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span>Preview Preset Template</span>
                                     <ArrowRight size={12} />
                                 </div>
@@ -282,23 +282,23 @@ export default function AdminEmailPage() {
 
             {/* New Campaign Creation Modal */}
             {isCreating && (
-                <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-white rounded-2xl p-7 w-full max-w-4xl shadow-2xl flex flex-col lg:flex-row gap-6 max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white rounded-[10px] p-6 w-full max-w-4xl border-[0.35px] border-neutral-950/10 flex flex-col lg:flex-row gap-6 max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
                         {/* Editor Form */}
                         <div className="flex-1 space-y-5">
-                            <div className="flex justify-between items-center border-b border-gray-100 pb-3">
-                                <h2 className="text-xl font-extrabold text-gray-900">Configure Campaign</h2>
+                            <div className="flex justify-between items-center border-b-[0.35px] border-neutral-950/10 pb-3">
+                                <h2 className="text-base font-semibold text-gray-900">Configure Campaign</h2>
                                 <button onClick={() => setIsCreating(false)} className="text-gray-400 hover:text-gray-600 p-1.5 hover:bg-gray-50 rounded-lg lg:hidden">
-                                    <X size={18} />
+                                    <X size={16} />
                                 </button>
                             </div>
 
                             <div className="space-y-4">
                                 <div className="space-y-1">
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide">Campaign Title</label>
+                                    <label className="block text-[10px] font-semibold text-gray-500 tracking-normal">Campaign Title</label>
                                     <input
                                         type="text"
-                                        className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green font-semibold"
+                                        className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 text-xs focus:ring-1 focus:ring-black focus:border-black font-semibold outline-none"
                                         placeholder="e.g. Winter Clearance Promo"
                                         value={formData.title}
                                         onChange={e => setFormData({ ...formData, title: e.target.value })}
@@ -306,10 +306,10 @@ export default function AdminEmailPage() {
                                 </div>
 
                                 <div className="space-y-1">
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide">Email Subject Line</label>
+                                    <label className="block text-[10px] font-semibold text-gray-500 tracking-normal">Email Subject Line</label>
                                     <input
                                         type="text"
-                                        className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green"
+                                        className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 text-xs focus:ring-1 focus:ring-black focus:border-black outline-none"
                                         placeholder="e.g. Get 20% off winter health essentials!"
                                         value={formData.subject}
                                         onChange={e => setFormData({ ...formData, subject: e.target.value })}
@@ -318,9 +318,9 @@ export default function AdminEmailPage() {
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-1">
-                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide">Target Segment</label>
+                                        <label className="block text-[10px] font-semibold text-gray-500 tracking-normal">Target Segment</label>
                                         <select
-                                            className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white"
+                                            className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 text-xs bg-white focus:ring-1 focus:ring-black focus:border-black outline-none"
                                             value={formData.segment}
                                             onChange={e => setFormData({ ...formData, segment: e.target.value })}
                                         >
@@ -330,9 +330,9 @@ export default function AdminEmailPage() {
                                         </select>
                                     </div>
                                     <div className="space-y-1">
-                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide">Template Layout</label>
+                                        <label className="block text-[10px] font-semibold text-gray-500 tracking-normal">Template Layout</label>
                                         <select
-                                            className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white"
+                                            className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 text-xs bg-white focus:ring-1 focus:ring-black focus:border-black outline-none"
                                             value={formData.template}
                                             onChange={e => handleTemplateChange(e.target.value)}
                                         >
@@ -345,27 +345,27 @@ export default function AdminEmailPage() {
                             </div>
 
                             {/* Actions */}
-                            <div className="flex justify-end gap-3 pt-5 border-t border-gray-100 mt-6">
+                            <div className="flex justify-end gap-3 pt-5 border-t-[0.35px] border-neutral-950/10 mt-6">
                                 <button
                                     onClick={() => setIsCreating(false)}
                                     disabled={isSending}
-                                    className="px-5 py-2.5 text-gray-700 hover:bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold disabled:opacity-50"
+                                    className="px-4 py-2 text-gray-700 hover:bg-gray-50 border-[0.35px] border-neutral-950/10 rounded-[10px] text-xs font-medium disabled:opacity-50"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleSendSimulate}
                                     disabled={isSending}
-                                    className="px-5 py-2.5 bg-cureza-green text-white rounded-xl hover:bg-green-700 text-sm font-bold flex items-center gap-2 shadow-sm disabled:opacity-50"
+                                    className="px-4 py-2 bg-black text-white rounded-[10px] hover:bg-neutral-900 text-xs font-medium flex items-center gap-2 disabled:opacity-50"
                                 >
                                     {isSending ? (
                                         <>
-                                            <span className="h-4 w-4 border-2 border-white border-t-transparent animate-spin rounded-full" />
+                                            <span className="h-3 w-3 border-2 border-white border-t-transparent animate-spin rounded-full" />
                                             <span>Sending...</span>
                                         </>
                                     ) : (
                                         <>
-                                            <Send size={16} />
+                                            <Send size={14} />
                                             <span>Dispatch Campaign</span>
                                         </>
                                     )}
@@ -374,14 +374,14 @@ export default function AdminEmailPage() {
                         </div>
 
                         {/* Interactive Preview Pane */}
-                        <div className="w-full lg:w-96 border-t lg:border-t-0 lg:border-l border-gray-100 pt-6 lg:pt-0 lg:pl-6 space-y-4">
-                            <h4 className="font-bold text-gray-900 text-sm flex items-center gap-1.5">
-                                <Eye size={16} className="text-gray-400" />
+                        <div className="w-full lg:w-96 border-t-[0.35px] lg:border-t-0 lg:border-l-[0.35px] border-neutral-950/10 pt-6 lg:pt-0 lg:pl-6 space-y-4">
+                            <h4 className="font-semibold text-gray-900 text-xs flex items-center gap-1.5">
+                                <Eye size={14} className="text-gray-400" />
                                 Live Newsletter Preview
                             </h4>
-                            <div className="border border-gray-200 rounded-2xl overflow-hidden p-1 bg-gray-50 h-[380px] overflow-y-auto">
+                            <div className="border-[0.35px] border-neutral-950/10 rounded-[10px] overflow-hidden p-1 bg-neutral-50 h-[380px] overflow-y-auto">
                                 <div 
-                                    className="bg-white rounded-xl shadow-inner p-3 min-h-full"
+                                    className="bg-white rounded-lg p-3 min-h-full"
                                     dangerouslySetInnerHTML={{ 
                                         __html: getTemplateHTML(
                                             templates.find(t => t.id === formData.template)?.name || '', 
@@ -397,24 +397,24 @@ export default function AdminEmailPage() {
 
             {/* Simulated progress overlay */}
             {isSending && (
-                <div className="fixed inset-0 bg-black/75 flex items-center justify-center z-55 p-4 backdrop-blur-md animate-in fade-in duration-300">
-                    <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl text-center space-y-6">
-                        <div className="w-16 h-16 bg-green-50 text-cureza-green rounded-2xl flex items-center justify-center mx-auto border border-green-100 animate-bounce">
-                            <Send size={28} />
+                <div className="fixed inset-0 bg-black/75 flex items-center justify-center z-[60] p-4 backdrop-blur-md animate-in fade-in duration-300">
+                    <div className="bg-white rounded-[10px] p-6 max-w-md w-full border-[0.35px] border-neutral-950/10 text-center space-y-6">
+                        <div className="w-12 h-12 bg-neutral-50 border-[0.35px] border-neutral-950/10 text-black rounded-[10px] flex items-center justify-center mx-auto animate-bounce">
+                            <Send size={20} />
                         </div>
                         <div className="space-y-2">
-                            <h3 className="font-extrabold text-xl text-gray-900">Dispatching Newsletter</h3>
-                            <p className="text-sm text-gray-500 font-semibold">{sendingStage}</p>
+                            <h3 className="font-semibold text-base text-gray-900">Dispatching Newsletter</h3>
+                            <p className="text-xs text-gray-500 font-normal">{sendingStage}</p>
                         </div>
                         
                         <div className="space-y-2">
-                            <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+                            <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
                                 <div 
-                                    className="bg-cureza-green h-full transition-all duration-300 rounded-full"
+                                    className="bg-black h-full transition-all duration-300 rounded-full"
                                     style={{ width: `${sendProgress}%` }}
                                 />
                             </div>
-                            <span className="text-xs text-gray-400 font-bold">{sendProgress}% complete</span>
+                            <span className="text-[10px] text-gray-450 font-medium">{sendProgress}% complete</span>
                         </div>
                     </div>
                 </div>
@@ -423,16 +423,16 @@ export default function AdminEmailPage() {
             {/* Template Presets Preview Dialog */}
             {previewTemplate && (
                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4 animate-in zoom-in-95 duration-200">
-                        <div className="flex justify-between items-center border-b border-gray-100 pb-3">
-                            <h3 className="font-extrabold text-lg text-gray-900">Preset Layout: {previewTemplate}</h3>
+                    <div className="bg-white rounded-[10px] p-6 w-full max-w-lg border-[0.35px] border-neutral-950/10 space-y-4 animate-in zoom-in-95 duration-200">
+                        <div className="flex justify-between items-center border-b-[0.35px] border-neutral-950/10 pb-3">
+                            <h3 className="font-semibold text-sm text-gray-900">Preset Layout: {previewTemplate}</h3>
                             <button onClick={() => setPreviewTemplate(null)} className="text-gray-400 hover:text-gray-600 p-1.5 hover:bg-gray-50 rounded-lg">
-                                <X size={18} />
+                                <X size={16} />
                             </button>
                         </div>
-                        <div className="border border-gray-200 rounded-xl overflow-hidden bg-gray-50 p-3 max-h-[450px] overflow-y-auto">
+                        <div className="border-[0.35px] border-neutral-950/10 rounded-[10px] overflow-hidden bg-neutral-50 p-3 max-h-[450px] overflow-y-auto">
                             <div 
-                                className="bg-white p-4 rounded-lg shadow-inner"
+                                className="bg-white p-4 rounded-lg"
                                 dangerouslySetInnerHTML={{ 
                                     __html: getTemplateHTML(previewTemplate, 'Preset Subject') 
                                 }}
@@ -441,7 +441,7 @@ export default function AdminEmailPage() {
                         <div className="flex justify-end pt-2">
                             <button
                                 onClick={() => setPreviewTemplate(null)}
-                                className="px-5 py-2.5 bg-gray-950 text-white font-bold rounded-xl hover:bg-gray-800 text-sm shadow-sm"
+                                className="px-4 py-2 bg-black text-white font-medium rounded-[10px] hover:bg-neutral-900 text-xs"
                             >
                                 Close Preview
                             </button>
@@ -449,6 +449,34 @@ export default function AdminEmailPage() {
                     </div>
                 </div>
             )}
+
+            {/* Tutorial / Guidelines Section */}
+            <div className="bg-neutral-50 border-[0.35px] border-neutral-950/10 rounded-[10px] p-6 space-y-4">
+                <div className="flex items-center gap-2">
+                    <HelpCircle className="h-5 w-5 text-black" />
+                    <h3 className="text-sm font-semibold text-gray-900">How It Works & Guidelines | Email Campaigns Builder</h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-xs text-gray-600 leading-relaxed font-normal">
+                    <div className="space-y-2">
+                        <h4 className="font-medium text-gray-900">1. Segment Targeting (List Segmentation)</h4>
+                        <p>
+                            Newsletter bhejne se pehle sahi target segment select karein. "All Customers" ke ilawa aap "Repeat Buyers" (jo bar-bar khareedte hain) aur "Inactive Users" (jinhone 30 din se order nahi kiya) ko target kar sakte hain.
+                        </p>
+                    </div>
+                    <div className="space-y-2">
+                        <h4 className="font-medium text-gray-900">2. Layout Presets Preview</h4>
+                        <p>
+                            Right menu me preset templates hain jaise "Product Launch" aur "Flash Sale Alert". Kisi par bhi click karke live preview dekhein ke email customer ke inbox me kaisa dikhega.
+                        </p>
+                    </div>
+                    <div className="space-y-2">
+                        <h4 className="font-medium text-gray-900">3. Simulated SMTP Dispatch</h4>
+                        <p>
+                            Jab aap "Dispatch Campaign" par click karte hain, toh system background process start karke recipient users ko emails queue aur send karta hai. Logs me conversion rates aur delivery reports real-time update hote hain.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

@@ -84,100 +84,100 @@ export default function AttributesPage() {
     };
 
     return (
-        <div className="p-4 md:p-8 space-y-8 animate-in fade-in duration-500">
+        <div className="w-full space-y-6 animate-in fade-in duration-500">
             {/* Header Section */}
-            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-3xl p-8 border border-gray-100 dark:border-gray-800 shadow-sm">
-                <div className="absolute top-0 right-0 p-8 opacity-5">
-                    <Sparkles size={120} />
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-lg p-6 border border-neutral-200 dark:border-neutral-800">
+                <div className="absolute top-0 right-0 p-6 opacity-5">
+                    <Sparkles size={80} />
                 </div>
-                <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            <div className="p-3 bg-cureza-green/10 rounded-2xl text-cureza-green">
-                                <Settings2 size={24} />
+                <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                            <div className="p-2 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-neutral-900 dark:text-neutral-100">
+                                <Settings2 size={18} />
                             </div>
-                            <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
-                                Product <span className="text-cureza-green">Attributes</span>
+                            <h1 className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">
+                                Product Attributes
                             </h1>
                         </div>
-                        <p className="text-gray-500 dark:text-gray-400 max-w-xl font-medium">
+                        <p className="text-gray-500 dark:text-gray-400 max-w-xl font-normal text-xs">
                             Configure global product properties like size, color, and weight to power your store&apos;s filtration and variant systems.
                         </p>
                     </div>
 
                     <button
                         onClick={openCreateModal}
-                        className="flex items-center justify-center gap-2 bg-cureza-green text-white px-8 py-4 rounded-2xl font-black shadow-lg shadow-green-200 dark:shadow-none hover:bg-green-700 transition-all active:scale-95 text-sm"
+                        className="flex items-center justify-center gap-1.5 bg-neutral-950 dark:bg-white text-white dark:text-neutral-950 px-4 py-2 rounded-lg font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-all active:scale-95 text-xs"
                     >
-                        <Plus size={20} />
-                        CREATE NEW ATTRIBUTE
+                        <Plus size={16} />
+                        Create New Attribute
                     </button>
                 </div>
             </div>
 
             {loading ? (
-                <div className="flex flex-col items-center justify-center h-64 space-y-4">
-                    <Loader2 className="animate-spin text-cureza-green" size={40} />
-                    <p className="text-sm font-bold text-gray-400 animate-pulse">SYNCHRONIZING ATTRIBUTES...</p>
+                <div className="flex flex-col items-center justify-center h-64 space-y-3">
+                    <Loader2 className="animate-spin text-neutral-900 dark:text-white" size={32} />
+                    <p className="text-xs font-semibold text-neutral-500 animate-pulse">Synchronizing Attributes...</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {attributes.map((attr) => (
-                        <div key={attr.id} className="group bg-white dark:bg-gray-900 rounded-3xl p-6 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl hover:border-cureza-green/20 transition-all duration-300">
-                            <div className="flex items-start justify-between mb-6">
+                        <div key={attr.id} className="group bg-white dark:bg-gray-900 rounded-lg p-5 border border-neutral-200 dark:border-neutral-800 transition-all duration-200">
+                            <div className="flex items-start justify-between mb-4">
                                 <div className="space-y-1">
                                     <div className="flex items-center gap-2">
-                                        <h3 className="text-xl font-black text-gray-900 dark:text-white tracking-tight leading-none uppercase">
+                                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white tracking-tight leading-none">
                                             {attr.name}
                                         </h3>
-                                        <div className={`w-2 h-2 rounded-full ${attr.is_active ? 'bg-green-500' : 'bg-gray-300'}`} />
+                                        <div className={`w-1.5 h-1.5 rounded-full ${attr.is_active ? 'bg-green-500' : 'bg-neutral-300 dark:bg-neutral-700'}`} />
                                     </div>
-                                    <div className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-gray-50 dark:bg-gray-800 text-gray-400 group-hover:bg-cureza-green/10 group-hover:text-cureza-green transition-colors">
-                                        Type: {attr.type}
+                                    <div className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-medium bg-neutral-50 dark:bg-neutral-850 text-neutral-500 border border-neutral-200/60 dark:border-neutral-700">
+                                        Type: <span className="capitalize ml-0.5">{attr.type}</span>
                                     </div>
                                 </div>
-                                <div className="flex gap-1">
+                                <div className="flex gap-0.5">
                                     <button
                                         onClick={() => openEditModal(attr)}
-                                        className="p-2.5 text-gray-400 hover:text-cureza-green hover:bg-green-50 dark:hover:bg-green-900/10 rounded-xl transition-all"
+                                        className="p-1.5 text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-all"
                                         title="Edit"
                                     >
-                                        <Edit size={18} />
+                                        <Edit size={16} />
                                     </button>
                                     <button
                                         onClick={() => handleDelete(attr.id)}
-                                        className="p-2.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-xl transition-all"
+                                        className="p-1.5 text-neutral-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-md transition-all"
                                         title="Delete"
                                     >
-                                        <Trash2 size={18} />
+                                        <Trash2 size={16} />
                                     </button>
                                 </div>
                             </div>
 
-                            <div className="mb-6 h-[72px] overflow-hidden">
-                                <div className="flex flex-wrap gap-2">
+                            <div className="mb-4 h-[60px] overflow-hidden">
+                                <div className="flex flex-wrap gap-1.5">
                                     {attr.terms?.length > 0 ? (
                                         <>
                                             {attr.terms.slice(0, 6).map((term: any) => (
                                                 <div
                                                     key={term.id}
-                                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl text-xs font-bold text-gray-600 dark:text-gray-300"
+                                                    className="inline-flex items-center gap-1 px-2 py-1 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-md text-[11px] font-medium text-neutral-600 dark:text-neutral-300"
                                                 >
                                                     {attr.type === 'color' && term.value && (
-                                                        <div className="w-2.5 h-2.5 rounded-full border border-black/5 shadow-sm" style={{ backgroundColor: term.value }} />
+                                                        <div className="w-2 h-2 rounded-full border border-black/5" style={{ backgroundColor: term.value }} />
                                                     )}
                                                     {term.name}
                                                 </div>
                                             ))}
                                             {attr.terms.length > 6 && (
-                                                <div className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 rounded-xl text-[10px] font-black text-gray-400 uppercase">
-                                                    +{attr.terms.length - 6} MORE
+                                                <div className="px-2 py-1 bg-neutral-100 dark:bg-neutral-800 rounded-md text-[9px] font-semibold text-neutral-500 uppercase">
+                                                    +{attr.terms.length - 6} more
                                                 </div>
                                             )}
                                         </>
                                     ) : (
-                                        <div className="flex items-center gap-2 text-gray-300 italic text-xs font-medium">
-                                            <AlertCircle size={14} />
+                                        <div className="flex items-center gap-1.5 text-neutral-400 italic text-xs font-normal">
+                                            <AlertCircle size={12} />
                                             No terms configured yet
                                         </div>
                                     )}
@@ -186,82 +186,81 @@ export default function AttributesPage() {
 
                             <Link
                                 href={`/superadmin/dashboard/attributes/${attr.id}`}
-                                className="group/btn flex items-center justify-between w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl hover:bg-cureza-green hover:text-white transition-all duration-300 font-black text-xs tracking-widest uppercase"
+                                className="group/btn flex items-center justify-between w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-md hover:bg-neutral-950 hover:text-white dark:hover:bg-white dark:hover:text-neutral-950 border border-neutral-200 dark:border-neutral-700 transition-all duration-200 font-semibold text-xs"
                             >
-                                Manage Terms
-                                <ChevronRight size={18} className="translate-x-0 group-hover/btn:translate-x-1 transition-transform" />
+                                <span>Manage Terms</span>
+                                <ChevronRight size={14} className="translate-x-0 group-hover/btn:translate-x-0.5 transition-transform" />
                             </Link>
                         </div>
                     ))}
 
                     {attributes.length === 0 && (
-                        <div className="col-span-full py-20 bg-gray-50/50 dark:bg-gray-800/20 rounded-[40px] border-2 border-dashed border-gray-100 dark:border-gray-800 flex flex-col items-center justify-center text-center space-y-4">
-                            <div className="w-20 h-20 bg-white dark:bg-gray-900 rounded-3xl flex items-center justify-center shadow-lg text-gray-200">
-                                <Settings2 size={40} />
+                        <div className="col-span-full py-16 bg-neutral-50/50 dark:bg-neutral-800/10 rounded-lg border border-dashed border-neutral-200 dark:border-neutral-800 flex flex-col items-center justify-center text-center space-y-3">
+                            <div className="w-12 h-12 bg-white dark:bg-gray-900 rounded-lg flex items-center justify-center border border-neutral-200 dark:border-neutral-800 text-neutral-400">
+                                <Settings2 size={24} />
                             </div>
-                            <div className="space-y-1">
-                                <h3 className="text-xl font-black text-gray-900 dark:text-white">SYSTEM READY</h3>
-                                <p className="text-gray-400 text-sm font-medium">No attributes found. Start by creating a new category property.</p>
+                            <div className="space-y-0.5">
+                                <h3 className="text-sm font-semibold text-neutral-900 dark:text-white">System Ready</h3>
+                                <p className="text-neutral-400 text-xs font-normal">No attributes found. Start by creating a new category property.</p>
                             </div>
                             <button
                                 onClick={openCreateModal}
-                                className="text-cureza-green font-black text-sm uppercase tracking-widest hover:underline pt-2"
+                                className="text-neutral-950 dark:text-white font-semibold text-xs hover:underline pt-1.5"
                             >
-                                + INITIALIZE FIRST ATTRIBUTE
+                                + Initialize First Attribute
                             </button>
                         </div>
                     )}
                 </div>
             )}
 
-            {/* Premium Modal */}
             {showModal && (
-                <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-md flex items-center justify-center z-[60] p-4 animate-in fade-in zoom-in duration-200">
-                    <div className="bg-white dark:bg-gray-900 rounded-[32px] w-full max-w-lg overflow-hidden border border-white/20 shadow-2xl">
-                        <div className="relative p-8">
+                <div className="fixed inset-0 bg-neutral-950/40 backdrop-blur-sm flex items-center justify-center z-[60] p-4 animate-in fade-in zoom-in-95 duration-150">
+                    <div className="bg-white dark:bg-gray-900 rounded-lg w-full max-w-md overflow-hidden border border-neutral-200 dark:border-neutral-800">
+                        <div className="relative p-5">
                             <button
                                 onClick={() => setShowModal(false)}
-                                className="absolute top-6 right-6 p-2 text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-all"
+                                className="absolute top-4 right-4 p-1.5 text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-850 rounded-md transition-all"
                             >
-                                <X size={20} />
+                                <X size={16} />
                             </button>
 
-                            <div className="flex items-center gap-3 mb-8">
-                                <div className="p-3 bg-cureza-green/10 rounded-2xl text-cureza-green">
-                                    <Sparkles size={20} />
+                            <div className="flex items-center gap-2.5 mb-5">
+                                <div className="p-2 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-neutral-900 dark:text-neutral-100">
+                                    <Sparkles size={16} />
                                 </div>
                                 <div>
-                                    <h2 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight uppercase leading-none">
-                                        {isEditing ? 'EDIT' : 'NEW'} ATTRIBUTE
+                                    <h2 className="text-sm font-semibold text-gray-900 dark:text-white tracking-tight">
+                                        {isEditing ? 'Edit Attribute' : 'New Attribute'}
                                     </h2>
-                                    <p className="text-xs font-bold text-gray-400 tracking-wider pt-1 uppercase">CONFIGURE GLOBAL PROPERTY</p>
+                                    <p className="text-[10px] font-normal text-neutral-400">Configure global product properties</p>
                                 </div>
                             </div>
 
-                            <form onSubmit={handleSubmit} className="space-y-6">
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Attribute Name</label>
+                            <form onSubmit={handleSubmit} className="space-y-4">
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-neutral-500 px-0.5">Attribute Name</label>
                                     <input
                                         type="text"
                                         required
                                         value={formData.name}
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                        className="w-full bg-gray-50 dark:bg-gray-800 rounded-2xl border-2 border-transparent focus:border-cureza-green focus:bg-white dark:focus:bg-gray-900 transition-all px-6 py-4 font-bold text-gray-900 dark:text-white placeholder:text-gray-300"
-                                        placeholder="e.g. SIZE, MATERIAL, COLOR"
+                                        className="w-full bg-neutral-50 dark:bg-neutral-850 rounded-md border border-neutral-200 dark:border-neutral-700 focus:border-neutral-950 dark:focus:border-white focus:bg-white dark:focus:bg-gray-900 transition-all px-3 py-2 text-sm font-normal text-neutral-900 dark:text-white placeholder:text-neutral-400"
+                                        placeholder="e.g. Size, Material, Color"
                                     />
                                 </div>
 
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Control Type</label>
-                                    <div className="grid grid-cols-3 gap-3">
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-semibold text-neutral-500 px-0.5">Control Type</label>
+                                    <div className="grid grid-cols-3 gap-2">
                                         {['select', 'button', 'color'].map((type) => (
                                             <button
                                                 key={type}
                                                 type="button"
                                                 onClick={() => setFormData({ ...formData, type })}
-                                                className={`py-6 rounded-2xl border-2 font-black text-[10px] uppercase tracking-widest transition-all ${formData.type === type
-                                                        ? 'border-cureza-green bg-green-50 dark:bg-green-900/10 text-cureza-green shadow-sm'
-                                                        : 'border-gray-50 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 text-gray-400'
+                                                className={`py-2 rounded-md border text-xs font-semibold transition-all ${formData.type === type
+                                                        ? 'border-neutral-950 dark:border-white bg-neutral-950 dark:bg-white text-white dark:text-neutral-950'
+                                                        : 'border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-850 text-neutral-500'
                                                     }`}
                                             >
                                                 {type === 'select' && 'Dropdown'}
@@ -272,34 +271,34 @@ export default function AttributesPage() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-2xl">
+                                <div className="flex items-center justify-between p-3 bg-neutral-50 dark:bg-neutral-850 rounded-md border border-neutral-200 dark:border-neutral-800">
                                     <div className="space-y-0.5">
-                                        <p className="text-xs font-black text-gray-900 dark:text-white uppercase tracking-tight">Active Visibility</p>
-                                        <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Enable this across the store</p>
+                                        <p className="text-xs font-semibold text-neutral-950 dark:text-white">Active Visibility</p>
+                                        <p className="text-[10px] font-normal text-neutral-400">Enable this across the store</p>
                                     </div>
                                     <button
                                         type="button"
                                         onClick={() => setFormData({ ...formData, is_active: !formData.is_active })}
-                                        className={`w-14 h-8 rounded-full transition-all flex items-center px-1 ${formData.is_active ? 'bg-cureza-green' : 'bg-gray-200 dark:bg-gray-700'
+                                        className={`w-11 h-6 rounded-full transition-all flex items-center px-0.5 ${formData.is_active ? 'bg-neutral-950 dark:bg-white' : 'bg-neutral-200 dark:bg-neutral-700'
                                             }`}
                                     >
-                                        <div className={`w-6 h-6 rounded-full bg-white shadow-md transition-all transform ${formData.is_active ? 'translate-x-6' : 'translate-x-0'
+                                        <div className={`w-5 h-5 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200/50 shadow-sm transition-all transform ${formData.is_active ? 'translate-x-5' : 'translate-x-0'
                                             }`} />
                                     </button>
                                 </div>
 
-                                <div className="flex gap-4 pt-4">
+                                <div className="flex gap-2 pt-2">
                                     <button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="flex-1 flex items-center justify-center gap-2 bg-gray-900 dark:bg-white dark:text-gray-900 text-white px-8 py-5 rounded-3xl font-black shadow-xl hover:bg-black dark:hover:bg-gray-100 transition-all active:scale-95 disabled:opacity-50 text-sm italic"
+                                        className="flex-1 flex items-center justify-center gap-1.5 bg-neutral-950 dark:bg-white text-white dark:text-neutral-950 px-4 py-2.5 rounded-md font-semibold hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-all active:scale-95 disabled:opacity-50 text-xs"
                                     >
                                         {isSubmitting ? (
-                                            <Loader2 size={20} className="animate-spin" />
+                                            <Loader2 size={14} className="animate-spin" />
                                         ) : (
                                             <>
-                                                <Check size={20} />
-                                                {isEditing ? 'COMMIT UPDATES' : 'SAVE ATTRIBUTE'}
+                                                <Check size={14} />
+                                                {isEditing ? 'Commit Updates' : 'Save Attribute'}
                                             </>
                                         )}
                                     </button>

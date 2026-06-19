@@ -14,6 +14,9 @@ class BlogAuthor extends Model
         'bio',
         'image',
         'social_links',
+        'meta_title',
+        'meta_description',
+        'meta_keywords',
     ];
 
     protected $casts = [

@@ -46,9 +46,42 @@ interface AccordionCardProps {
     isOpen: boolean;
     onToggle: () => void;
     children: React.ReactNode;
+    isSuperAdmin?: boolean;
 }
 
-function AccordionCard({ title, description, icon, isOpen, onToggle, children }: AccordionCardProps) {
+function AccordionCard({ title, description, icon, isOpen, onToggle, children, isSuperAdmin }: AccordionCardProps) {
+    if (isSuperAdmin) {
+        return (
+            <div className="overflow-hidden transition-all duration-300 border-[0.5px] border-neutral-950/15 dark:border-gray-800 rounded-[10px] bg-white dark:bg-gray-900">
+                <button
+                    type="button"
+                    onClick={onToggle}
+                    className="w-full px-6 py-4 flex items-center justify-between bg-neutral-50/50 hover:bg-neutral-50 dark:bg-gray-900 dark:hover:bg-gray-850 transition-all text-left outline-none cursor-pointer"
+                >
+                    <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-md bg-neutral-100 dark:bg-gray-800 flex items-center justify-center text-black dark:text-white border-[0.5px] border-neutral-950/10">
+                            {icon}
+                        </div>
+                        <div>
+                            <h3 className="text-xs font-outfit font-extrabold text-gray-950 dark:text-gray-100 tracking-tight">{title}</h3>
+                            <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5 font-medium">{description}</p>
+                        </div>
+                    </div>
+                    <div className="w-8 h-8 rounded bg-white dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-550 border-[0.5px] border-neutral-950/10">
+                        <span className={`text-[9px] transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
+                            ▼
+                        </span>
+                    </div>
+                </button>
+                {isOpen && (
+                    <div className="border-t border-neutral-950/10 dark:border-gray-800 p-6 bg-white dark:bg-gray-900 animate-in fade-in duration-200">
+                        {children}
+                    </div>
+                )}
+            </div>
+        );
+    }
+
     return (
         <div className="premium-card overflow-hidden transition-all duration-300 border border-gray-200 dark:border-gray-800 shadow-sm rounded-3xl bg-white dark:bg-gray-900">
             <button
@@ -65,7 +98,7 @@ function AccordionCard({ title, description, icon, isOpen, onToggle, children }:
                         <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">{description}</p>
                     </div>
                 </div>
-                <div className="w-8 h-8 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-500 border border-gray-100 dark:border-gray-700 shadow-sm">
+                <div className="w-8 h-8 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-550 border border-gray-100 dark:border-gray-700 shadow-sm">
                     <span className={`text-[10px] transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
                         ▼
                     </span>
@@ -584,23 +617,22 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
         }
     };
 
-
     return (
-        <form onSubmit={handleSubmit} className="w-full space-y-6 pb-24">
+        <form onSubmit={handleSubmit} className="w-full space-y-6 pb-24 animate-in fade-in duration-550">
             {/* Header */}
-            <div className="sticky top-16 z-[5] rounded-3xl border border-gray-200 bg-white/95 px-5 py-4 shadow-sm backdrop-blur-md dark:border-gray-800 dark:bg-gray-900/95">
+            <div className={`sticky top-0 z-[5] ${isSuperAdmin ? 'rounded-[10px] border-[0.5px] border-neutral-950/15' : 'rounded-3xl border border-gray-200 shadow-sm'} bg-white/95 px-5 py-4 backdrop-blur-md dark:border-gray-800 dark:bg-gray-900/95`}>
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                     <div className="flex items-start gap-4">
                         <button
                             type="button"
                             onClick={() => router.back()}
-                            className="mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-gray-200 bg-gray-50 text-gray-600 shadow-sm transition-all hover:border-cureza-green hover:text-cureza-green hover:bg-emerald-50 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
+                            className={`mt-1 flex h-11 w-11 shrink-0 items-center justify-center transition-all ${isSuperAdmin ? 'rounded-lg border-[0.5px] border-neutral-950/15 bg-gray-50 text-gray-655 hover:bg-neutral-100 hover:text-black hover:border-black' : 'rounded-2xl border border-gray-200 bg-gray-50 text-gray-600 shadow-sm hover:border-cureza-green hover:text-cureza-green hover:bg-emerald-50'} dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300`}
                         >
                             <ArrowLeft size={16} />
                         </button>
                         <div className="min-w-0">
                             <p className="text-[10px] font-black uppercase tracking-[0.24em] text-gray-400">
-                                Seller Product Form
+                                {isSuperAdmin ? 'Product Configuration Form' : 'Seller Product Form'}
                             </p>
                             <h1 className="truncate text-xl font-outfit font-extrabold text-gray-950 dark:text-gray-100 tracking-tight">
                                 {initialData ? 'Edit Product' : 'Add New Product'}
@@ -610,26 +642,28 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                             </p>
                         </div>
                     </div>
-
+ 
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                        <div className="flex items-center gap-2 rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 dark:border-emerald-900/30 dark:bg-emerald-950/20">
-                            <div className="h-2 w-2 rounded-full bg-emerald-500" />
-                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-300">
-                                Review required before publish
-                            </p>
-                        </div>
+                        {!isSuperAdmin && (
+                            <div className="flex items-center gap-2 rounded-2xl border border-emerald-100 bg-emerald-50 text-emerald-700 px-4 py-3 dark:bg-emerald-950/20">
+                                <div className="h-2 w-2 rounded-full bg-neutral-500" />
+                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-300">
+                                    Review required before publish
+                                </p>
+                            </div>
+                        )}
                         <div className="flex gap-3">
                             <button
                                 type="button"
                                 onClick={() => router.back()}
-                                className="flex-1 sm:flex-none px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-2xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-850 font-bold text-xs transition-all shadow-sm"
+                                className={`flex-1 sm:flex-none px-4 py-2.5 border-[0.5px] border-neutral-950/15 ${isSuperAdmin ? 'rounded-lg' : 'rounded-2xl'} text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 hover:bg-neutral-50 dark:hover:bg-gray-850 font-bold text-xs transition-all`}
                             >
                                 Discard
                             </button>
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="flex-1 sm:flex-none px-5 py-2.5 bg-cureza-green hover:bg-green-700 text-white rounded-2xl font-bold text-xs flex items-center justify-center gap-2 disabled:opacity-50 shadow-md hover:-translate-y-0.5 transition-all"
+                                className={`flex-1 sm:flex-none px-5 py-2.5 ${isSuperAdmin ? 'bg-black text-white hover:bg-neutral-900 rounded-lg dark:bg-white dark:text-black dark:hover:bg-neutral-100' : 'bg-cureza-green hover:bg-green-700 text-white rounded-2xl shadow-md'} font-bold text-xs flex items-center justify-center gap-2 disabled:opacity-50 transition-all cursor-pointer`}
                             >
                                 {isSubmitting ? 'Saving...' : 'Save & Publish'}
                                 <Save size={14} />
@@ -644,7 +678,7 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                 <button
                     type="button"
                     onClick={() => toggleAllSections(true)}
-                    className="text-xs font-black uppercase tracking-[0.18em] text-cureza-green hover:underline cursor-pointer transition-all"
+                    className={`text-xs font-black uppercase tracking-[0.18em] ${isSuperAdmin ? 'text-black dark:text-white' : 'text-cureza-green'} hover:underline cursor-pointer transition-all`}
                 >
                     Expand All
                 </button>
@@ -652,7 +686,7 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                 <button
                     type="button"
                     onClick={() => toggleAllSections(false)}
-                    className="text-xs font-black uppercase tracking-[0.18em] text-gray-500 hover:text-gray-700 hover:underline cursor-pointer transition-all"
+                    className="text-xs font-black uppercase tracking-[0.18em] text-gray-500 hover:text-gray-750 hover:underline cursor-pointer transition-all"
                 >
                     Collapse All
                 </button>
@@ -666,6 +700,7 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                     icon={<FileText size={16} />}
                     isOpen={openSections.basic}
                     onToggle={() => toggleSection('basic')}
+                    isSuperAdmin={isSuperAdmin}
                 >
                     <BasicInfo
                         formData={formData}
@@ -687,11 +722,13 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                     icon={<ImageIcon size={16} />}
                     isOpen={openSections.media}
                     onToggle={() => toggleSection('media')}
+                    isSuperAdmin={isSuperAdmin}
                 >
                     <MediaUpload
                         formData={formData}
                         setFormData={setFormData}
                         handleFileChange={handleFileChange}
+                        isSuperAdmin={isSuperAdmin}
                     />
                 </AccordionCard>
 
@@ -702,10 +739,12 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                     icon={<Coins size={16} />}
                     isOpen={openSections.pricing}
                     onToggle={() => toggleSection('pricing')}
+                    isSuperAdmin={isSuperAdmin}
                 >
                     <PricingInventory
                         formData={formData}
                         handleInputChange={handleInputChange}
+                        isSuperAdmin={isSuperAdmin}
                     />
                 </AccordionCard>
 
@@ -716,6 +755,7 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                     icon={<Layers size={16} />}
                     isOpen={openSections.variants}
                     onToggle={() => toggleSection('variants')}
+                    isSuperAdmin={isSuperAdmin}
                 >
                     <Variants
                         enableVariants={enableVariants}
@@ -725,21 +765,24 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                         handleAttributeToggle={handleAttributeToggle}
                         productVariants={productVariants}
                         updateVariant={updateVariant}
+                        isSuperAdmin={isSuperAdmin}
                     />
                 </AccordionCard>
 
-                {/* 5. Product Tags */}
+                {/* 5. Product Discovery Tags */}
                 <AccordionCard
                     title="Product Discovery Tags"
                     description="Add search keywords and categorizations to optimize store rankings"
                     icon={<TagIcon size={16} />}
                     isOpen={openSections.tags}
                     onToggle={() => toggleSection('tags')}
+                    isSuperAdmin={isSuperAdmin}
                 >
                     <Tags
                         availableTags={tags}
                         selectedTags={formData.selected_tags}
                         onTagToggle={handleTagToggle}
+                        isSuperAdmin={isSuperAdmin}
                     />
                 </AccordionCard>
 
@@ -750,10 +793,12 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                     icon={<Globe size={16} />}
                     isOpen={openSections.seo}
                     onToggle={() => toggleSection('seo')}
+                    isSuperAdmin={isSuperAdmin}
                 >
                     <SEOSettings
                         formData={formData}
                         handleInputChange={handleInputChange}
+                        isSuperAdmin={isSuperAdmin}
                     />
                 </AccordionCard>
 
@@ -764,6 +809,7 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                     icon={<Sparkles size={16} />}
                     isOpen={openSections.specs}
                     onToggle={() => toggleSection('specs')}
+                    isSuperAdmin={isSuperAdmin}
                 >
                     <HighlightsSpecs
                         highlights={formData.highlights}
@@ -774,6 +820,7 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                         handleSpecChange={handleSpecChange}
                         addSpec={addSpec}
                         removeSpec={removeSpec}
+                        isSuperAdmin={isSuperAdmin}
                     />
                 </AccordionCard>
 
@@ -784,6 +831,7 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                     icon={<FolderOpen size={16} />}
                     isOpen={openSections.tabs}
                     onToggle={() => toggleSection('tabs')}
+                    isSuperAdmin={isSuperAdmin}
                 >
                     <AdditionalTabs
                         additionalTabs={additionalTabs}
@@ -792,6 +840,7 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                         updateTabTitle={updateTabTitle}
                         deleteTab={deleteTab}
                         toggleTabVisibility={toggleTabVisibility}
+                        isSuperAdmin={isSuperAdmin}
                     />
                 </AccordionCard>
 
@@ -802,19 +851,22 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                     icon={<HelpCircle size={16} />}
                     isOpen={openSections.bannersFaq}
                     onToggle={() => toggleSection('bannersFaq')}
+                    isSuperAdmin={isSuperAdmin}
                 >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <ABanners
                             banners={formData.banners}
                             handleBannerChange={handleBannerChange}
+                            isSuperAdmin={isSuperAdmin}
                         />
                         <FAQ
                             faqs={formData.faqs}
                             setFaqs={(newFaqs) => setFormData(prev => ({ ...prev, faqs: newFaqs }))}
+                            isSuperAdmin={isSuperAdmin}
                         />
                     </div>
                 </AccordionCard>
             </div>
-        </form >
+        </form>
     );
 }

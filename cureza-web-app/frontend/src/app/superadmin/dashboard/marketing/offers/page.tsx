@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import axios from '@/lib/api';
-import { Plus, Trash2, Tag, Calendar, Percent, IndianRupee, Pencil, Search, Filter, X, CheckCircle, AlertCircle } from 'lucide-react';
+import { Plus, Trash2, Tag, Calendar, Percent, IndianRupee, Pencil, Search, Filter, X, CheckCircle, AlertCircle, HelpCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { useToast } from '@/contexts/ToastContext';
 
@@ -174,71 +174,71 @@ export default function OffersPage() {
     const fixedCount = coupons.filter(c => c.type === 'fixed').length;
 
     return (
-        <div className="space-y-8 p-6 max-w-7xl mx-auto">
+        <div className="space-y-6 pb-12">
             {/* Header */}
-            <div className="flex justify-between items-center bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                <div>
-                    <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Offers & Coupons</h1>
-                    <p className="text-gray-500 mt-1">Manage coupon promo codes, fixed discounts, and purchase thresholds</p>
+            <div className="flex justify-between items-center bg-white p-6 rounded-[10px] border-[0.35px] border-neutral-950/10">
+                <div className="space-y-1.5">
+                    <h1 className="text-xl font-semibold text-gray-900 tracking-tight">Offers & Coupons</h1>
+                    <p className="text-xs text-gray-500 font-normal">Manage coupon promo codes, fixed discounts, and purchase thresholds</p>
                 </div>
                 <button
                     onClick={() => setIsCreating(true)}
-                    className="bg-cureza-green text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-green-700 transition shadow-sm"
+                    className="bg-black text-white px-4 py-2.5 rounded-[10px] font-medium flex items-center gap-2 hover:bg-neutral-900 transition text-xs"
                 >
-                    <Plus size={18} /> Create Coupon
+                    <Plus size={14} /> Create Coupon
                 </button>
             </div>
 
             {/* Metrics Row */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="bg-white border border-gray-100 p-5 rounded-2xl shadow-sm flex items-center gap-4">
-                    <div className="p-3.5 bg-green-50 text-cureza-green rounded-xl">
-                        <Tag className="h-6 w-6" />
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="bg-white border-[0.35px] border-neutral-950/10 p-5 rounded-[10px] flex items-center gap-4">
+                    <div className="p-3 bg-neutral-50 text-black border-[0.35px] border-neutral-950/10 rounded-[10px]">
+                        <Tag className="h-5 w-5" />
                     </div>
                     <div>
-                        <span className="text-xs text-gray-400 font-bold uppercase tracking-wider block">Total Coupons</span>
-                        <span className="text-2xl font-extrabold text-gray-900">{totalCount}</span>
+                        <span className="text-xs text-gray-500 font-normal tracking-normal block">Total Coupons</span>
+                        <span className="text-2xl font-semibold text-gray-900">{totalCount}</span>
                     </div>
                 </div>
-                <div className="bg-white border border-gray-100 p-5 rounded-2xl shadow-sm flex items-center gap-4">
-                    <div className="p-3.5 bg-blue-50 text-blue-600 rounded-xl">
-                        <CheckCircle className="h-6 w-6" />
+                <div className="bg-white border-[0.35px] border-neutral-950/10 p-5 rounded-[10px] flex items-center gap-4">
+                    <div className="p-3 bg-neutral-50 text-black border-[0.35px] border-neutral-950/10 rounded-[10px]">
+                        <CheckCircle className="h-5 w-5" />
                     </div>
                     <div>
-                        <span className="text-xs text-gray-400 font-bold uppercase tracking-wider block">Active Codes</span>
-                        <span className="text-2xl font-extrabold text-gray-900">{activeCount}</span>
+                        <span className="text-xs text-gray-500 font-normal tracking-normal block">Active Codes</span>
+                        <span className="text-2xl font-semibold text-gray-900">{activeCount}</span>
                     </div>
                 </div>
-                <div className="bg-white border border-gray-100 p-5 rounded-2xl shadow-sm flex items-center gap-4">
-                    <div className="p-3.5 bg-indigo-50 text-indigo-600 rounded-xl">
-                        <Percent className="h-6 w-6" />
+                <div className="bg-white border-[0.35px] border-neutral-950/10 p-5 rounded-[10px] flex items-center gap-4">
+                    <div className="p-3 bg-neutral-50 text-black border-[0.35px] border-neutral-950/10 rounded-[10px]">
+                        <Percent className="h-5 w-5" />
                     </div>
                     <div>
-                        <span className="text-xs text-gray-400 font-bold uppercase tracking-wider block">Percent Discount</span>
-                        <span className="text-2xl font-extrabold text-gray-900">{percentCount}</span>
+                        <span className="text-xs text-gray-500 font-normal tracking-normal block">Percent Discount</span>
+                        <span className="text-2xl font-semibold text-gray-900">{percentCount}</span>
                     </div>
                 </div>
-                <div className="bg-white border border-gray-100 p-5 rounded-2xl shadow-sm flex items-center gap-4">
-                    <div className="p-3.5 bg-violet-50 text-violet-600 rounded-xl">
-                        <IndianRupee className="h-6 w-6" />
+                <div className="bg-white border-[0.35px] border-neutral-950/10 p-5 rounded-[10px] flex items-center gap-4">
+                    <div className="p-3 bg-neutral-50 text-black border-[0.35px] border-neutral-950/10 rounded-[10px]">
+                        <IndianRupee className="h-5 w-5" />
                     </div>
                     <div>
-                        <span className="text-xs text-gray-400 font-bold uppercase tracking-wider block">Fixed Discount</span>
-                        <span className="text-2xl font-extrabold text-gray-900">{fixedCount}</span>
+                        <span className="text-xs text-gray-500 font-normal tracking-normal block">Fixed Discount</span>
+                        <span className="text-2xl font-semibold text-gray-900">{fixedCount}</span>
                     </div>
                 </div>
             </div>
 
             {/* Filter and Search Bar */}
-            <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div className="bg-white p-5 rounded-[10px] border-[0.35px] border-neutral-950/10 flex flex-col md:flex-row gap-4 items-center justify-between">
                 <div className="relative w-full md:w-80">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                        <Search size={16} />
+                        <Search size={14} />
                     </div>
                     <input
                         type="text"
                         placeholder="Search coupon codes..."
-                        className="pl-9 pr-4 py-2 w-full border border-gray-200 rounded-xl focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green text-sm"
+                        className="pl-9 pr-4 py-2 w-full border-[0.35px] border-neutral-950/10 rounded-[10px] focus:border-black text-xs font-normal outline-none"
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
                     />
@@ -246,24 +246,24 @@ export default function OffersPage() {
 
                 <div className="flex flex-wrap gap-3 w-full md:w-auto items-center">
                     <div className="flex items-center gap-2">
-                        <Filter size={14} className="text-gray-400" />
-                        <span className="text-xs font-bold text-gray-500">Filters:</span>
+                        <Filter size={12} className="text-gray-400" />
+                        <span className="text-xs font-medium text-gray-500">Filters:</span>
                     </div>
 
                     {/* Status filter */}
                     <select
-                        className="border border-gray-200 rounded-xl px-3 py-1.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-cureza-green/20 bg-white"
+                        className="border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 text-xs font-normal focus:outline-none focus:border-black bg-white"
                         value={statusFilter}
                         onChange={e => setStatusFilter(e.target.value as any)}
                     >
                         <option value="all">All Statuses</option>
-                        <option value="active">Active only</option>
-                        <option value="inactive">Inactive only</option>
+                        <option value="active">Active Only</option>
+                        <option value="inactive">Inactive Only</option>
                     </select>
 
                     {/* Type filter */}
                     <select
-                        className="border border-gray-200 rounded-xl px-3 py-1.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-cureza-green/20 bg-white"
+                        className="border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 text-xs font-normal focus:outline-none focus:border-black bg-white"
                         value={typeFilter}
                         onChange={e => setTypeFilter(e.target.value as any)}
                     >
@@ -276,50 +276,50 @@ export default function OffersPage() {
 
             {/* Create/Edit Modal */}
             {isCreating && (
-                <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-white rounded-2xl p-7 w-full max-w-md shadow-2xl space-y-5 animate-in zoom-in-95 duration-200">
-                        <div className="flex justify-between items-center border-b border-gray-100 pb-3">
-                            <h2 className="text-xl font-extrabold text-gray-900">
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white rounded-[10px] p-6 w-full max-w-md border-[0.35px] border-neutral-950/10 space-y-5 animate-in zoom-in-95 duration-200">
+                        <div className="flex justify-between items-center border-b-[0.35px] border-neutral-950/10 pb-3">
+                            <h2 className="text-base font-semibold text-gray-900">
                                 {isEditing ? 'Edit Coupon Promo' : 'Create New Coupon'}
                             </h2>
-                            <button onClick={closeModal} className="text-gray-400 hover:text-gray-600 p-1.5 hover:bg-gray-50 rounded-lg">
-                                <X size={18} />
+                            <button onClick={closeModal} className="text-gray-400 hover:text-gray-600 p-1.5 hover:bg-neutral-50 rounded-lg">
+                                <X size={16} />
                             </button>
                         </div>
                         <form onSubmit={handleSave} className="space-y-4">
                             <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Coupon Code</label>
+                                <label className="block text-[10px] font-medium text-gray-500 uppercase tracking-wide mb-1">Coupon Code</label>
                                 <input
                                     type="text"
                                     required
                                     value={formData.code}
                                     onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-                                    className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 bg-white text-gray-900 text-sm focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green font-bold uppercase tracking-wider"
+                                    className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3.5 py-2 bg-white text-gray-900 text-xs focus:border-black font-semibold uppercase tracking-wider outline-none"
                                     placeholder="e.g. SUMMER25"
                                 />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Discount Type</label>
+                                    <label className="block text-[10px] font-medium text-gray-500 uppercase tracking-wide mb-1">Discount Type</label>
                                     <select
                                         value={formData.type}
                                         onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                                        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 bg-white text-gray-900 text-sm focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green"
+                                        className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 bg-white text-gray-900 text-xs focus:border-black outline-none"
                                     >
                                         <option value="percent">Percentage (%)</option>
                                         <option value="fixed">Fixed Amount (₹)</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Value</label>
+                                    <label className="block text-[10px] font-medium text-gray-500 uppercase tracking-wide mb-1">Value</label>
                                     <input
                                         type="number"
                                         required
                                         min="0"
                                         value={formData.value}
                                         onChange={(e) => setFormData({ ...formData, value: e.target.value })}
-                                        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green"
+                                        className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 text-xs focus:border-black outline-none"
                                         placeholder={formData.type === 'percent' ? 'e.g. 15' : 'e.g. 200'}
                                     />
                                 </div>
@@ -327,23 +327,23 @@ export default function OffersPage() {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Min. Cart Value</label>
+                                    <label className="block text-[10px] font-medium text-gray-500 uppercase tracking-wide mb-1">Min. Cart Value</label>
                                     <input
                                         type="number"
                                         min="0"
                                         value={formData.min_cart_value}
                                         onChange={(e) => setFormData({ ...formData, min_cart_value: e.target.value })}
-                                        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green"
+                                        className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 text-xs focus:border-black outline-none"
                                         placeholder="Optional"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Expires At</label>
+                                    <label className="block text-[10px] font-medium text-gray-500 uppercase tracking-wide mb-1">Expires At</label>
                                     <input
                                         type="datetime-local"
                                         value={formData.expires_at}
                                         onChange={(e) => setFormData({ ...formData, expires_at: e.target.value })}
-                                        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-xs focus:ring-2 focus:ring-cureza-green/20 focus:border-cureza-green"
+                                        className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 text-xs focus:border-black outline-none"
                                     />
                                 </div>
                             </div>
@@ -354,22 +354,23 @@ export default function OffersPage() {
                                     id="is_active"
                                     checked={formData.is_active}
                                     onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                                    className="rounded text-cureza-green focus:ring-cureza-green h-4 w-4 border-gray-300"
+                                    className="rounded text-black focus:ring-black h-4 w-4 border-neutral-950/20"
+                                    style={{ borderRadius: '4px' }}
                                 />
-                                <label htmlFor="is_active" className="text-sm font-bold text-gray-700 cursor-pointer">Mark coupon active</label>
+                                <label htmlFor="is_active" className="text-xs font-medium text-gray-700 cursor-pointer">Mark coupon active</label>
                             </div>
 
-                            <div className="flex justify-end gap-3 mt-6 pt-3 border-t border-gray-100">
+                            <div className="flex justify-end gap-3 mt-6 pt-3 border-t-[0.35px] border-neutral-950/10">
                                 <button
                                     type="button"
                                     onClick={closeModal}
-                                    className="px-5 py-2.5 text-gray-700 hover:bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold"
+                                    className="px-4 py-2 text-gray-700 hover:bg-neutral-50 border-[0.35px] border-neutral-950/10 rounded-[10px] text-xs font-medium"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-5 py-2.5 bg-cureza-green text-white rounded-xl hover:bg-green-700 text-sm font-bold shadow-sm"
+                                    className="px-4 py-2 bg-black text-white rounded-[10px] hover:bg-neutral-900 text-xs font-medium"
                                 >
                                     {isEditing ? 'Update Coupon' : 'Create Coupon'}
                                 </button>
@@ -380,89 +381,89 @@ export default function OffersPage() {
             )}
 
             {/* Coupons List */}
-            <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+            <div className="bg-white rounded-[10px] border-[0.35px] border-neutral-950/10 overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left">
-                        <thead className="bg-gray-50/50 text-gray-500 font-bold uppercase tracking-wider text-xs border-b border-gray-100">
+                    <table className="w-full text-xs text-left">
+                        <thead className="bg-neutral-50/50 text-gray-500 font-medium tracking-normal text-xs border-b-[0.35px] border-neutral-950/10">
                             <tr>
-                                <th className="px-6 py-4.5">Code</th>
-                                <th className="px-6 py-4.5">Discount Offer</th>
-                                <th className="px-6 py-4.5">Min. Cart Value</th>
-                                <th className="px-6 py-4.5">Expiry Date</th>
-                                <th className="px-6 py-4.5">Status</th>
-                                <th className="px-6 py-4.5 text-right">Actions</th>
+                                <th className="px-6 py-4">Code</th>
+                                <th className="px-6 py-4">Discount Offer</th>
+                                <th className="px-6 py-4">Min. Cart Value</th>
+                                <th className="px-6 py-4">Expiry Date</th>
+                                <th className="px-6 py-4">Status</th>
+                                <th className="px-6 py-4 text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100">
+                        <tbody className="divide-y-[0.35px] divide-neutral-950/10">
                             {isLoading ? (
                                 <tr>
                                     <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
                                         <div className="flex flex-col items-center justify-center gap-2">
-                                            <div className="animate-spin rounded-full h-7 w-7 border-b-2 border-cureza-green"></div>
-                                            <span className="text-xs font-semibold">Loading coupons list...</span>
+                                            <div className="animate-spin rounded-full h-7 w-7 border-b-2 border-black"></div>
+                                            <span className="text-[10px] font-medium">Loading coupons list...</span>
                                         </div>
                                     </td>
                                 </tr>
                             ) : filteredCoupons.length === 0 ? (
                                 <tr>
-                                    <td colSpan={6} className="px-6 py-12 text-center text-gray-400">
-                                        <AlertCircle className="h-9 w-9 mx-auto mb-2 text-gray-300" />
-                                        <p className="font-bold text-sm text-gray-500">No coupons matches the current filters.</p>
-                                        <p className="text-xs text-gray-400 mt-0.5">Try clearing search parameters or make a new one.</p>
+                                    <td colSpan={6} className="px-6 py-12 text-center text-gray-450">
+                                        <AlertCircle className="h-8 w-8 mx-auto mb-2 text-gray-350" />
+                                        <p className="font-semibold text-xs text-gray-500">No coupons matches the current filters.</p>
+                                        <p className="text-[10px] text-gray-400 mt-0.5">Try clearing search parameters or make a new one.</p>
                                     </td>
                                 </tr>
                             ) : (
                                 filteredCoupons.map((coupon) => {
                                     const isExpired = coupon.expires_at ? new Date(coupon.expires_at) < new Date() : false;
                                     return (
-                                        <tr key={coupon.id} className="hover:bg-gray-50/40 transition">
+                                        <tr key={coupon.id} className="hover:bg-neutral-50/40 transition-colors">
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-2.5">
-                                                    <div className="p-1.5 bg-green-50 text-cureza-green rounded-lg border border-green-100">
-                                                        <Tag size={15} />
+                                                    <div className="p-1.5 bg-neutral-50 text-black rounded-[10px] border-[0.35px] border-neutral-950/10">
+                                                        <Tag size={13} />
                                                     </div>
-                                                    <span className="font-extrabold text-gray-900 tracking-wider">{coupon.code}</span>
+                                                    <span className="font-semibold text-gray-900 tracking-wider">{coupon.code}</span>
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <div className="flex items-center gap-1 font-bold text-gray-700">
+                                                <div className="flex items-center gap-1 font-semibold text-gray-700">
                                                     {coupon.type === 'percent' ? (
-                                                        <span className="flex items-center gap-1.5 text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full text-xs">
-                                                            <Percent size={12} /> {coupon.value}% OFF
+                                                        <span className="flex items-center gap-1.5 text-neutral-800 bg-neutral-100 px-2.5 py-0.5 rounded-[10px] text-[10px] border-[0.35px] border-neutral-950/10">
+                                                            <Percent size={10} /> {coupon.value}% OFF
                                                         </span>
                                                     ) : (
-                                                        <span className="flex items-center gap-1.5 text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-full text-xs">
-                                                            <IndianRupee size={12} /> ₹{coupon.value} OFF
+                                                        <span className="flex items-center gap-1.5 text-neutral-700 bg-neutral-50 px-2.5 py-0.5 rounded-[10px] text-[10px] border-[0.35px] border-neutral-950/10">
+                                                            <IndianRupee size={10} /> ₹{coupon.value} OFF
                                                         </span>
                                                     )}
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 text-gray-500 font-semibold">
+                                            <td className="px-6 py-4 text-gray-500 font-medium">
                                                 {coupon.min_cart_value ? `₹${coupon.min_cart_value}` : (
                                                     <span className="text-gray-300 font-normal">None</span>
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 text-gray-500">
                                                 {coupon.expires_at ? (
-                                                    <div className={`flex items-center gap-1.5 text-xs font-semibold ${isExpired ? 'text-red-500' : 'text-gray-600'}`}>
-                                                        <Calendar size={13} />
+                                                    <div className={`flex items-center gap-1.5 text-[10px] font-medium ${isExpired ? 'text-rose-700 bg-rose-50 border-[0.35px] border-rose-500/10 px-2 py-0.5 rounded-[10px]' : 'text-gray-655'}`}>
+                                                        <Calendar size={11} />
                                                         {format(new Date(coupon.expires_at), 'MMM d, yyyy h:mm a')}
-                                                        {isExpired && <span className="text-[10px] bg-red-50 text-red-600 px-1.5 py-0.2 rounded-md">Expired</span>}
+                                                        {isExpired && <span className="text-[9px] font-semibold uppercase tracking-wider ml-1">Expired</span>}
                                                     </div>
                                                 ) : (
-                                                    <span className="text-[10px] text-green-600 bg-green-50 px-2 py-0.5 rounded-full font-bold border border-green-100">No Expiry</span>
+                                                    <span className="text-[10px] text-neutral-700 bg-neutral-100 px-2 py-0.5 rounded-[10px] font-medium border-[0.35px] border-neutral-950/10">No Expiry</span>
                                                 )}
                                             </td>
                                             <td className="px-6 py-4">
                                                 <button
                                                     onClick={() => handleToggleActive(coupon)}
-                                                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all border ${
+                                                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-[10px] text-[10px] font-medium transition-all border-[0.35px] ${
                                                         coupon.is_active 
-                                                            ? 'bg-green-50 text-green-700 border-green-100 hover:bg-green-100' 
-                                                            : 'bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100'
+                                                            ? 'bg-emerald-50 text-emerald-700 border-emerald-500/10 hover:bg-emerald-100/50' 
+                                                            : 'bg-neutral-50 text-gray-550 border-neutral-950/10 hover:bg-neutral-100'
                                                     }`}
                                                 >
-                                                    <span className={`h-1.5 w-1.5 rounded-full ${coupon.is_active ? 'bg-green-600' : 'bg-gray-400'}`} />
+                                                    <span className={`h-1.5 w-1.5 rounded-full ${coupon.is_active ? 'bg-emerald-600' : 'bg-gray-400'}`} />
                                                     {coupon.is_active ? 'Active' : 'Inactive'}
                                                 </button>
                                             </td>
@@ -470,17 +471,17 @@ export default function OffersPage() {
                                                 <div className="flex items-center justify-end gap-1.5">
                                                     <button
                                                         onClick={() => handleEdit(coupon)}
-                                                        className="text-blue-500 hover:text-blue-700 hover:bg-blue-50 p-2 rounded-xl transition-colors"
+                                                        className="text-gray-500 hover:text-black hover:bg-neutral-50 p-2 rounded-[10px] transition-colors border-[0.35px] border-transparent hover:border-neutral-950/10"
                                                         title="Edit Coupon"
                                                     >
-                                                        <Pencil size={15} />
+                                                        <Pencil size={13} />
                                                     </button>
                                                     <button
                                                         onClick={() => handleDelete(coupon.id)}
-                                                        className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-xl transition-colors"
+                                                        className="text-rose-500 hover:text-rose-700 hover:bg-rose-50 p-2 rounded-[10px] transition-colors border-[0.35px] border-transparent hover:border-rose-500/10"
                                                         title="Delete Coupon"
                                                     >
-                                                        <Trash2 size={15} />
+                                                        <Trash2 size={13} />
                                                     </button>
                                                 </div>
                                             </td>
@@ -490,6 +491,34 @@ export default function OffersPage() {
                             )}
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            {/* Tutorial / Guidelines Section */}
+            <div className="bg-neutral-50 border-[0.35px] border-neutral-950/10 rounded-[10px] p-6 space-y-4">
+                <div className="flex items-center gap-2">
+                    <HelpCircle className="h-5 w-5 text-black" />
+                    <h3 className="text-sm font-semibold text-gray-900">How It Works & Guidelines | Offers & Coupons Setup</h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-xs text-gray-600 leading-relaxed font-normal">
+                    <div className="space-y-2">
+                        <h4 className="font-medium text-gray-900">1. Coupon Creation (Naye Coupon Kaise Banayein)</h4>
+                        <p>
+                            Aap top right par "Create Coupon" button par click karke naya code configure kar sakte hain. Code hamesha automatic uppercase banega (jaise: FESTIVE20).
+                        </p>
+                    </div>
+                    <div className="space-y-2">
+                        <h4 className="font-medium text-gray-900">2. Discount Types & Values</h4>
+                        <p>
+                            Aap percentage discount select kar sakte hain (jaise 15% off) ya phir ek flat fixed amount discount (jaise ₹200 off). Min. Cart Value define karke aap check laga sakte hain ke customer ki cart me utni price ki items hon tabhi ye discount active ho.
+                        </p>
+                    </div>
+                    <div className="space-y-2">
+                        <h4 className="font-medium text-gray-900">3. Expiry & Active Status</h4>
+                        <p>
+                            Expires At field se aap future date set kar sakte hain jiske baad coupon code expire ho jayega. "Mark coupon active" check karke aap isko checkout par use karne ke liye activate kar sakte hain. Active status ko table se direct toggle bhi kiya ja sakta hai.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
