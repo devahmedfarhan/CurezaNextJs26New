@@ -552,3 +552,12 @@ body {
   margin-top: 2rem !important;
   margin-bottom: 2rem !important;
 }
+
+/* Hide scrollbars utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}

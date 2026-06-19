@@ -508,7 +508,7 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
                 </header>
 
                 {/* Dashboard Children Pages */}
-                <div className="flex flex-1 flex-col gap-4 p-6 md:p-8 overflow-y-auto">
+                <div className="flex flex-1 flex-col gap-4 p-6 md:p-8 overflow-y-auto no-scrollbar">
                     {children}
                 </div>
             </SidebarInset>
