@@ -513,6 +513,12 @@ function ProfileTab({ settings, refresh }: any) {
             state: settings?.profile?.state || '',
             country: settings?.profile?.country || 'India',
             pin_code: settings?.profile?.pin_code || '',
+            pickup_address_line_1: settings?.profile?.pickup_address_line_1 || '',
+            pickup_address_line_2: settings?.profile?.pickup_address_line_2 || '',
+            pickup_address_city: settings?.profile?.pickup_address_city || '',
+            pickup_address_state: settings?.profile?.pickup_address_state || '',
+            pickup_address_country: settings?.profile?.pickup_address_country || 'India',
+            pickup_address_pin_code: settings?.profile?.pickup_address_pin_code || '',
             business_type: settings?.profile?.registering_as || '',
             annual_turnover: settings?.profile?.annual_turnover || '',
             sourcing_method: settings?.profile?.sourcing_method || '',
@@ -533,6 +539,9 @@ function ProfileTab({ settings, refresh }: any) {
     const selectedState = watch('state');
     const defaultCity = settings?.profile?.city || '';
 
+    const selectedPickupState = watch('pickup_address_state');
+    const defaultPickupCity = settings?.profile?.pickup_address_city || '';
+
     const watchedBrandName = watch('brand_name');
     const watchedPhone = watch('phone');
     const watchedBusinessType = watch('business_type');
@@ -542,6 +551,13 @@ function ProfileTab({ settings, refresh }: any) {
     const watchedState = watch('state');
     const watchedCountry = watch('country');
     const watchedPinCode = watch('pin_code');
+
+    const watchedPickupAddressLine1 = watch('pickup_address_line_1');
+    const watchedPickupAddressLine2 = watch('pickup_address_line_2');
+    const watchedPickupCity = watch('pickup_address_city');
+    const watchedPickupState = watch('pickup_address_state');
+    const watchedPickupCountry = watch('pickup_address_country');
+    const watchedPickupPinCode = watch('pickup_address_pin_code');
 
     const handleBusinessTypeChange = (val: string, checked: boolean) => {
         let updated = [...selectedBusinessTypes];
@@ -600,11 +616,20 @@ function ProfileTab({ settings, refresh }: any) {
                             )}
                             <div className="pt-4 border-t border-gray-100">
                                 <span className="text-xs text-gray-500 capitalize font-semibold block mb-2">Registered Address</span>
-                                <p className="text-sm font-semibold text-gray-800 leading-relaxed">
+                                <p className="text-sm font-semibold text-gray-800 leading-relaxed mb-4">
                                     {watchedAddressLine1 || 'LOC_NOT_SET'}
                                     {watchedAddressLine2 ? `, ${watchedAddressLine2}` : ''} <br />
                                     {watchedCity || 'CITY_NOT_SET'}, {watchedState || 'STATE_NOT_SET'} <br />
                                     {watchedCountry || 'India'} - {watchedPinCode || '000000'}
+                                </p>
+                            </div>
+                            <div className="pt-4 border-t border-gray-100">
+                                <span className="text-xs text-gray-500 capitalize font-semibold block mb-2">Default Pickup Point</span>
+                                <p className="text-sm font-semibold text-gray-800 leading-relaxed">
+                                    {watchedPickupAddressLine1 || 'PICKUP_LOC_NOT_SET'}
+                                    {watchedPickupAddressLine2 ? `, ${watchedPickupAddressLine2}` : ''} <br />
+                                    {watchedPickupCity || 'CITY_NOT_SET'}, {watchedPickupState || 'STATE_NOT_SET'} <br />
+                                    {watchedPickupCountry || 'India'} - {watchedPickupPinCode || '000000'}
                                 </p>
                             </div>
                         </div>
@@ -796,6 +821,63 @@ function ProfileTab({ settings, refresh }: any) {
                                 <div className="space-y-2">
                                     <label className="text-xs font-semibold text-gray-500 capitalize px-1">Pincode</label>
                                     <input {...register('pin_code', { required: true })} className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="6 digit pincode" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-6 border-t border-gray-100 pt-6">
+                            <label className="text-xs font-semibold text-gray-500 capitalize block px-1 font-bold text-gray-700">Default Pickup Point (India Only)</label>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="md:col-span-2 space-y-2">
+                                    <label className="text-xs font-semibold text-gray-500 capitalize px-1">Pickup Address Line 1</label>
+                                    <input {...register('pickup_address_line_1', { required: true })} className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="House/Shop No, Building, Street..." />
+                                </div>
+                                <div className="md:col-span-2 space-y-2">
+                                    <label className="text-xs font-semibold text-gray-500 capitalize px-1">Pickup Address Line 2 (Optional)</label>
+                                    <input {...register('pickup_address_line_2')} className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="Apartment, Landlord, Locality..." />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-xs font-semibold text-gray-500 capitalize px-1">Pickup State</label>
+                                    <div className="relative">
+                                        <select
+                                            {...register('pickup_address_state', { 
+                                                 required: true,
+                                                 onChange: () => setValue('pickup_address_city', '')
+                                             })} 
+                                            className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all appearance-none"
+                                        >
+                                            <option value="">Select State</option>
+                                            {Object.keys(indianLocations).map(st => (
+                                                <option key={st} value={st}>{st}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-xs font-semibold text-gray-500 capitalize px-1">Pickup City</label>
+                                    <div className="relative">
+                                        <select 
+                                            {...register('pickup_address_city', { required: true })} 
+                                            className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all appearance-none"
+                                        >
+                                            <option value="">Select City</option>
+                                            {selectedPickupState && indianLocations[selectedPickupState] ? (
+                                                indianLocations[selectedPickupState].map(ct => (
+                                                    <option key={ct} value={ct}>{ct}</option>
+                                                ))
+                                            ) : (
+                                                defaultPickupCity ? <option value={defaultPickupCity}>{defaultPickupCity}</option> : null
+                                            )}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-xs font-semibold text-gray-500 capitalize px-1">Pickup Country</label>
+                                    <input {...register('pickup_address_country')} readOnly className="w-full h-11 px-4 rounded-xl bg-gray-100 border border-gray-100 text-sm font-semibold outline-none text-gray-500 cursor-not-allowed" />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-xs font-semibold text-gray-500 capitalize px-1">Pickup Pincode</label>
+                                    <input {...register('pickup_address_pin_code', { required: true })} className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all" placeholder="6 digit pincode" />
                                 </div>
                             </div>
                         </div>

@@ -155,6 +155,8 @@ class SellerOrderController extends Controller
 
         \Illuminate\Support\Facades\Gate::authorize('view', $order);
 
+        $order->setRelation('sellerProfile', Auth::user()->sellerProfile);
+
         return response()->json($order);
     }
 
@@ -348,6 +350,164 @@ class SellerOrderController extends Controller
 
         return response()->json([
             'message' => 'Tracking information updated successfully',
+            'order' => $order
+        ]);
+    }
+
+    /**
+     * Get available pickup slots from mock courier.
+     */
+    public function getPickupSlots($id)
+    {
+        $sellerId = Auth::id();
+        
+        $orderExists = Order::whereHas('items', function ($q) use ($sellerId) {
+            $q->where('seller_id', $sellerId);
+        })->where('id', $id)->exists();
+
+        if (!$orderExists) {
+            return response()->json(['message' => 'Order not found or access denied.'], 404);
+        }
+
+        return (new MockCourierController())->getSlots();
+    }
+
+    /**
+     * Book shipment with Delhivery mock courier partner.
+     */
+    public function bookShipment(Request $request, $id)
+    {
+        $request->validate([
+            'pickup_slot' => 'required|string',
+            'weight' => 'required|numeric|min:0.01',
+            'dimensions_l' => 'required|integer|min:1',
+            'dimensions_w' => 'required|integer|min:1',
+            'dimensions_h' => 'required|integer|min:1',
+        ]);
+
+        $sellerId = Auth::id();
+
+        $order = Order::whereHas('items', function ($q) use ($sellerId) {
+            $q->where('seller_id', $sellerId);
+        })->findOrFail($id);
+
+        \Illuminate\Support\Facades\Gate::authorize('update', $order);
+
+        // Get details from mock courier booking service
+        $courierRes = (new MockCourierController())->book($request);
+        $courierData = $courierRes->getData(true);
+
+        if (empty($courierData['tracking_number'])) {
+            return response()->json(['message' => 'Failed to book shipment with courier partner.'], 500);
+        }
+
+        // Create or update the Shipment
+        $shipment = \App\Models\Shipment::updateOrCreate(
+            [
+                'order_id' => $order->id,
+                'seller_id' => $sellerId,
+            ],
+            [
+                'courier_name' => $courierData['courier_name'],
+                'tracking_number' => $courierData['tracking_number'],
+                'status' => 'pickup_scheduled',
+                'pickup_time_slot' => $request->pickup_slot,
+                'pickup_scheduled_at' => now(),
+                'weight' => $request->weight,
+                'dimensions_l' => $request->dimensions_l,
+                'dimensions_w' => $request->dimensions_w,
+                'dimensions_h' => $request->dimensions_h,
+                'shipping_charge' => $courierData['shipping_charge'],
+                'remittance_status' => 'pending',
+                'payout_status' => 'pending',
+            ]
+        );
+
+        // Update the order tracking info and status
+        $order->tracking_id = $courierData['tracking_number'];
+        $order->tracking_provider = $courierData['courier_name'];
+        $order->status = 'processing';
+        $order->save();
+
+        return response()->json([
+            'message' => 'Shipment booked successfully with Delhivery.',
+            'shipment' => $shipment,
+            'order' => $order
+        ]);
+    }
+
+    /**
+     * Get shipment info for the seller's order.
+     */
+    public function getShipmentInfo($id)
+    {
+        $sellerId = Auth::id();
+        
+        $shipment = \App\Models\Shipment::where('order_id', $id)
+            ->where('seller_id', $sellerId)
+            ->first();
+
+        return response()->json([
+            'shipment' => $shipment
+        ]);
+    }
+
+    /**
+     * Simulate shipment status updates by the seller (picked_up, out_for_delivery, delivered, cancelled).
+     */
+    public function simulateShipmentStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:picked_up,out_for_delivery,delivered,cancelled'
+        ]);
+
+        $sellerId = Auth::id();
+        $shipment = \App\Models\Shipment::where('seller_id', $sellerId)->findOrFail($id);
+        $order = $shipment->order;
+        $newStatus = $request->status;
+
+        $shipment->status = $newStatus;
+
+        if ($newStatus === 'picked_up') {
+            $shipment->shipped_at = now();
+        } elseif ($newStatus === 'delivered') {
+            $shipment->delivered_at = now();
+            
+            // For COD, mark remittance as received from courier partner
+            if (strtolower($order->payment_method) === 'cod') {
+                $shipment->remittance_status = 'remitted';
+                $shipment->remitted_at = now();
+            }
+        }
+
+        $shipment->save();
+
+        if ($newStatus === 'picked_up') {
+            $order->status = 'shipped';
+            $order->save();
+        } elseif ($newStatus === 'out_for_delivery') {
+            $order->status = 'out_for_delivery';
+            $order->save();
+        } elseif ($newStatus === 'delivered') {
+            if (strtolower($order->payment_method) === 'cod') {
+                $order->payment_status = 'paid';
+                $order->save();
+            }
+
+            // Check if all shipments of this order are delivered
+            $allDelivered = $order->shipments()->where('status', '!=', 'delivered')->count() === 0;
+            if ($allDelivered) {
+                $order->status = 'delivered';
+                $order->save();
+            }
+        } elseif ($newStatus === 'cancelled') {
+            $order->status = 'cancelled';
+            $order->save();
+        }
+
+        return response()->json([
+            'message' => "Shipment status simulated to {$newStatus}.",
+            'shipment' => $shipment,
             'order' => $order
         ]);
     }

@@ -112,6 +112,7 @@ Route::get('/debug-auth', function (Request $request) {
 // Public Order Placement (Guest Checkout Support)
 Route::post('/orders', [OrderController::class, 'store'])->middleware('throttle:sensitive');
 Route::get('/orders/{id}', [OrderController::class, 'show']); // Public order view for guests
+Route::get('/orders/{id}/track', [\App\Http\Controllers\OrderTrackingController::class, 'track']);
 
 // Payment Webhook Callback
 Route::post('/payments/webhook', [\App\Http\Controllers\PaymentController::class, 'handleWebhook']);
@@ -212,6 +213,12 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/orders/bulk-shipping-labels', [\App\Http\Controllers\SellerOrderController::class, 'bulkDownloadShippingLabels']);
             Route::put('/orders/{id}/tracking', [\App\Http\Controllers\SellerOrderController::class, 'updateTracking']);
             
+            // Courier Shipping & Simulation Routes
+            Route::get('/orders/{id}/pickup-slots', [\App\Http\Controllers\SellerOrderController::class, 'getPickupSlots']);
+            Route::post('/orders/{id}/book-shipment', [\App\Http\Controllers\SellerOrderController::class, 'bookShipment']);
+            Route::get('/orders/{id}/shipment', [\App\Http\Controllers\SellerOrderController::class, 'getShipmentInfo']);
+            Route::post('/orders/{id}/simulate-shipment', [\App\Http\Controllers\SellerOrderController::class, 'simulateShipmentStatus']);
+            
             // Seller Dashboard Routes
             Route::prefix('dashboard')->group(function () {
                 Route::get('/summary', [\App\Http\Controllers\SellerDashboardController::class, 'summary']);
@@ -248,7 +255,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Order Routes (Authenticated)
     Route::get('/orders', [OrderController::class, 'index']); // List user's orders
-    Route::get('/orders/{id}/track', [\App\Http\Controllers\OrderTrackingController::class, 'track']);
     Route::get('/orders/{id}/invoice', [OrderController::class, 'downloadInvoice']);
     Route::get('/user/reviews', [ReviewController::class, 'userIndex']);
     
@@ -597,6 +603,7 @@ Route::middleware('auth:sanctum')->group(function () {
         
         // Shipments (Super Admin)
         Route::get('/shipments', [\App\Http\Controllers\Admin\SuperAdminShipmentController::class, 'index']);
+        Route::post('/shipments/{id}/simulate', [\App\Http\Controllers\Admin\SuperAdminShipmentController::class, 'simulateStatusUpdate']);
         
         // Refunds (Super Admin)
         Route::get('/refunds', [\App\Http\Controllers\Admin\SuperAdminRefundController::class, 'index']);

@@ -27,6 +27,12 @@ class SellerProfile extends Model
         'state',
         'country',
         'pin_code',
+        'pickup_address_line_1',
+        'pickup_address_line_2',
+        'pickup_address_city',
+        'pickup_address_state',
+        'pickup_address_country',
+        'pickup_address_pin_code',
         'sourcing_method',
         'sell_on_other_platforms',
         'brand_started_on',
@@ -62,6 +68,7 @@ class SellerProfile extends Model
         'kyc_document_statuses',
         'kyc_document_reasons',
         'selected_licenses',
+        'is_verified',
     ];
 
     protected $casts = [

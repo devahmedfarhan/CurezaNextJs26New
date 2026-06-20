@@ -362,19 +362,28 @@ export default function SellerFinancePage() {
                                             </div>
                                             <span className="text-[10px] font-semibold capitalize text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-100">Liquid Now</span>
                                         </div>
-                                        <p className="text-[11px] font-semibold text-gray-500 capitalize mb-1">Settlement Ready</p>
+                                        <p className="text-[11px] font-semibold text-gray-500 capitalize mb-1">Withdrawable Balance (Net)</p>
                                         <h3 className="text-2xl font-bold text-gray-800 mb-2 tracking-tight">
                                             ₹{netDisbursableYield.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                         </h3>
-                                        <p className="text-xs text-gray-500 font-medium normal-case mb-4">Raw Balance: ₹{summary.wallet.available_balance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                                        <p className="text-xs text-gray-500 font-medium normal-case mb-4">Total Wallet Balance: ₹{summary.wallet.available_balance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
                                     </div>
                                     
-                                    <div className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-[11px] font-medium text-gray-550 leading-relaxed mb-4">
-                                        <p className="font-semibold capitalize text-[10px] text-gray-400 mb-1">Card Logic & Source</p>
-                                        <p className="mb-2 text-[10.5px]">Your net wallet balance available for withdrawal after statutory taxes (GST, TCS, TDS) are deducted.</p>
-                                        <div className="pt-1.5 border-t border-gray-200/50 flex justify-between text-[10px] font-semibold capitalize text-gray-400">
-                                            <span>Formula</span>
-                                            <span>Raw Balance - Taxes</span>
+                                    <div className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-[10.5px] font-medium text-gray-550 leading-relaxed mb-4">
+                                        <p className="font-semibold capitalize text-[10px] text-gray-400 mb-1.5">Detailed Breakdown</p>
+                                        <div className="space-y-1 text-gray-600">
+                                            <div className="flex justify-between">
+                                                <span>Total Balance (Gross):</span>
+                                                <span className="font-semibold text-gray-800">₹{summary.wallet.available_balance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                            </div>
+                                            <div className="flex justify-between text-rose-500">
+                                                <span>Compliance Taxes (GST/TCS/TDS):</span>
+                                                <span className="font-semibold">-₹{estimatedTaxesOnBalance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                            </div>
+                                            <div className="pt-1.5 mt-1 border-t border-gray-200 flex justify-between font-bold text-emerald-600 text-[11px]">
+                                                <span>Final Payout (Withdrawable):</span>
+                                                <span>₹{netDisbursableYield.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -671,7 +680,7 @@ export default function SellerFinancePage() {
                                             Live Revenue Architecture Logic
                                         </div>
                                     </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6">
                                         <div className="p-5 bg-gray-50 rounded-xl border border-gray-100 shadow-inner group hover:bg-white hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-500 flex flex-col justify-between h-[250px]">
                                             <div>
                                                 <p className="text-xs font-semibold text-gray-500 capitalize mb-1">Market Aggregate</p>
@@ -688,6 +697,35 @@ export default function SellerFinancePage() {
                                             <div className="flex items-center justify-between">
                                                 <span className="px-2 py-0.5 bg-white text-gray-500 text-[10px] font-semibold rounded-lg shadow-sm border border-gray-100 group-hover:border-emerald-600 group-hover:text-emerald-600 transition-all">{summary.summary.order_count} Nodes</span>
                                             </div>
+                                        </div>
+
+                                        <div className="p-5 bg-amber-50/20 rounded-xl border border-amber-100 group hover:bg-white hover:shadow-2xl hover:shadow-amber-100/50 transition-all duration-500 h-[250px] flex flex-col justify-between">
+                                            <div>
+                                                <p className="text-xs font-semibold text-amber-600 capitalize mb-1">Compliance Taxes (GST/TCS/TDS)</p>
+                                                <p className="text-2xl font-bold text-amber-700 tracking-tight mb-2">
+                                                    -₹{(gst + tcs + tds).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                </p>
+                                            </div>
+
+                                            <div className="p-3 bg-white/80 rounded-xl border border-amber-100/50 text-[11px] font-medium text-amber-700 leading-normal mb-2">
+                                                <p className="font-semibold capitalize text-[10px] text-amber-600 mb-0.5">Tax Split Summary</p>
+                                                <div className="space-y-0.5 text-[9.5px]">
+                                                    <div className="flex justify-between">
+                                                        <span>GST (18% on Comm):</span>
+                                                        <span className="font-semibold">₹{gst.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                    </div>
+                                                    <div className="flex justify-between">
+                                                        <span>TCS (1% on Gross):</span>
+                                                        <span className="font-semibold">₹{tcs.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                    </div>
+                                                    <div className="flex justify-between">
+                                                        <span>TDS (1% on Gross):</span>
+                                                        <span className="font-semibold">₹{tds.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="w-12 h-1 bg-amber-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
                                         </div>
 
                                         <div className="p-5 bg-rose-50/20 rounded-xl border border-rose-100 group hover:bg-white hover:shadow-2xl hover:shadow-rose-100/50 transition-all duration-500 h-[250px] flex flex-col justify-between">

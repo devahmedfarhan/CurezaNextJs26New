@@ -84,10 +84,16 @@ class CommissionService
             $sellerTotal = $items->sum('total');
             $commission = $this->getSellerCommissionRate($sellerId, $order->created_at);
 
+            // Get shipping charge for this seller's shipment
+            $shipment = \App\Models\Shipment::where('order_id', $order->id)
+                ->where('seller_id', $sellerId)
+                ->first();
+            $shippingCharge = $shipment ? (float)$shipment->shipping_charge : 0.00;
+
             $platformCommission = $sellerTotal * ($commission->base_commission_percentage / 100);
             $isCOD = strtolower($order->payment_method ?? '') === 'cod';
             $gatewayFee = $isCOD ? 0 : ($sellerTotal * ($commission->payment_gateway_percentage / 100));
-            $sellerEarnings = $sellerTotal - $platformCommission - $gatewayFee;
+            $sellerEarnings = $sellerTotal - $platformCommission - $gatewayFee - $shippingCharge;
 
             $breakdown[$sellerId] = [
                 'seller_id' => $sellerId,
@@ -96,7 +102,8 @@ class CommissionService
                 'payment_gateway_percentage' => $isCOD ? 0 : $commission->payment_gateway_percentage,
                 'platform_commission_amount' => round($platformCommission, 2),
                 'payment_gateway_fee' => round($gatewayFee, 2),
-                'total_deduction' => round($platformCommission + $gatewayFee, 2),
+                'shipping_charge' => round($shippingCharge, 2),
+                'total_deduction' => round($platformCommission + $gatewayFee + $shippingCharge, 2),
                 'seller_earnings' => round($sellerEarnings, 2),
             ];
 
@@ -145,17 +152,33 @@ class CommissionService
             $walletService = new WalletService();
             
             foreach ($commissionData['breakdown'] as $sellerId => $data) {
+                // Update payout status on shipment
+                $shipment = \App\Models\Shipment::where('order_id', $order->id)
+                    ->where('seller_id', $sellerId)
+                    ->first();
+                
+                $payoutTxnId = null;
+                if ($shipment) {
+                    $payoutTxnId = 'TXN-' . strtoupper(\Illuminate\Support\Str::random(12));
+                    $shipment->payout_status = 'paid';
+                    $shipment->payout_amount = $data['seller_earnings'];
+                    $shipment->payout_transaction_id = $payoutTxnId;
+                    $shipment->save();
+                }
+
                 $walletService->creditEarnings(
                     $sellerId,
                     $order->id,
                     $data['seller_earnings'],
-                    "Earnings from Order #{$order->order_number}",
+                    "Earnings from Order #{$order->order_number} (Deducted platform fee & shipping)",
                     [
                         'order_total' => $data['order_total'],
                         'platform_commission' => $data['platform_commission_amount'],
                         'gateway_fee' => $data['payment_gateway_fee'],
+                        'shipping_charge' => $data['shipping_charge'],
                         'commission_percentage' => $data['platform_commission_percentage'],
                         'gateway_percentage' => $data['payment_gateway_percentage'],
+                        'payout_transaction_id' => $payoutTxnId
                     ]
                 );
             }

@@ -859,7 +859,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                     {activeTab === 'overview' && (
                         <div className="space-y-6">
                             {/* Statistics Cards */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {/* Gross Platform Volume */}
                                 <div className="p-6 bg-white flex flex-col justify-between h-auto rounded-[10px] border-[0.5px] border-neutral-950/15">
                                     <div className="relative flex-1 flex flex-col justify-between">
@@ -979,6 +979,68 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                             <div className="pt-1.5 mt-1.5 border-t border-neutral-200/50 flex justify-between font-medium text-red-700">
                                                 <span>Formula</span>
                                                 <span>Sellers Pending + Doctors Unreleased</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Seller Ecosystem */}
+                                <div className="p-6 bg-white flex flex-col justify-between h-auto rounded-[10px] border-[0.5px] border-neutral-950/15">
+                                    <div className="relative flex-1 flex flex-col justify-between">
+                                        <div>
+                                            <div className="flex justify-between items-start mb-4">
+                                                <div className="p-2.5 bg-neutral-50 border border-neutral-950/10 text-neutral-900 rounded-[10px] transition-all duration-300">
+                                                    <Briefcase size={20} />
+                                                </div>
+                                                <span className="text-[10px] font-medium text-blue-700 bg-blue-50 px-2.5 py-1 rounded-[10px] border border-blue-150">
+                                                    Seller Ecosystem
+                                                </span>
+                                            </div>
+                                            <p className="text-[11px] font-normal text-neutral-500 mb-1">Product Merchant Yield</p>
+                                            <h3 className="text-2xl font-semibold text-neutral-900 tracking-tight">
+                                                ₹{(overview?.revenue?.seller_earnings || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                            </h3>
+                                            <p className="text-[10px] text-neutral-400 mt-2 mb-4 font-normal tracking-wide">
+                                                Gross: ₹{productSalesTotal.toLocaleString('en-IN')} | Active: {systemStats?.active_sellers || 0}
+                                            </p>
+                                        </div>
+                                        <div className="p-3 bg-neutral-50 rounded-[10px] border border-neutral-950/10 text-[10px] font-normal text-neutral-500 leading-relaxed">
+                                            <p className="font-medium text-neutral-400 mb-0.5 tracking-wide text-[9px]">Card Logic & Source</p>
+                                            <p>Total earnings allocated to product merchants after platform commission and gateway fee deductions.</p>
+                                            <div className="pt-1.5 mt-1.5 border-t border-neutral-200/50 flex justify-between font-medium text-blue-700">
+                                                <span>Formula</span>
+                                                <span>Gross Product Sales - Commission - PG Fee</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Doctor Ecosystem */}
+                                <div className="p-6 bg-white flex flex-col justify-between h-auto rounded-[10px] border-[0.5px] border-neutral-950/15">
+                                    <div className="relative flex-1 flex flex-col justify-between">
+                                        <div>
+                                            <div className="flex justify-between items-start mb-4">
+                                                <div className="p-2.5 bg-neutral-50 border border-neutral-950/10 text-neutral-900 rounded-[10px] transition-all duration-300">
+                                                    <Stethoscope size={20} />
+                                                </div>
+                                                <span className="text-[10px] font-medium text-purple-700 bg-purple-50 px-2.5 py-1 rounded-[10px] border border-purple-150">
+                                                    Doctor Ecosystem
+                                                </span>
+                                            </div>
+                                            <p className="text-[11px] font-normal text-neutral-500 mb-1">Clinical Practice Yield</p>
+                                            <h3 className="text-2xl font-semibold text-neutral-900 tracking-tight">
+                                                ₹{(doctorAggregates?.total_doctor_earnings || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                            </h3>
+                                            <p className="text-[10px] text-neutral-400 mt-2 mb-4 font-normal tracking-wide">
+                                                Gross: ₹{docSalesTotal.toLocaleString('en-IN')} | Active: {systemStats?.active_doctors || 0}
+                                            </p>
+                                        </div>
+                                        <div className="p-3 bg-neutral-50 rounded-[10px] border border-neutral-950/10 text-[10px] font-normal text-neutral-500 leading-relaxed">
+                                            <p className="font-medium text-neutral-400 mb-0.5 tracking-wide text-[9px]">Card Logic & Source</p>
+                                            <p>Total clinical earnings realized by medical consultants based on consultation type sharing agreements.</p>
+                                            <div className="pt-1.5 mt-1.5 border-t border-neutral-200/50 flex justify-between font-medium text-purple-700">
+                                                <span>Formula</span>
+                                                <span>Booking Sales * Consultation Split Rate</span>
                                             </div>
                                         </div>
                                     </div>

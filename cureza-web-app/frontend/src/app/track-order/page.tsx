@@ -33,23 +33,17 @@ export default function PublicTrackOrderPage() {
         const cleanId = orderId.trim();
 
         try {
-            const numericId = cleanId.replace(/\D/g, '');
-            const queryId = numericId || cleanId;
-
-            const res = await api.get(`/orders/${queryId}/track`);
-            if (res.data) {
+            const res = await api.get(`/orders/${cleanId}/track`);
+            if (res.data && res.data.timeline) {
                 setTrackingData(res.data);
-                setIsLoading(false);
             } else {
                 throw new Error('No tracking data returned');
             }
         } catch (err: any) {
-            console.warn('Real API lookup failed, falling back to simulated data:', err);
-            
-            // Auto-fallback simulation for a premium experience
-            setTimeout(() => {
-                simulateTracking(cleanId);
-            }, 800);
+            console.error('API lookup failed:', err);
+            setError(err.response?.data?.message || 'Order not found. Please check your Order Number / ID.');
+        } finally {
+            setIsLoading(false);
         }
     };
 

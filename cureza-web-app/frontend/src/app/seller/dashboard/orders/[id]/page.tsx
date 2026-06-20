@@ -14,6 +14,17 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
     const [isEditingTracking, setIsEditingTracking] = useState(false);
     const [isSavingTracking, setIsSavingTracking] = useState(false);
 
+    // Delhivery Courier Flow States
+    const [shipment, setShipment] = useState<any>(null);
+    const [pickupSlots, setPickupSlots] = useState<any[]>([]);
+    const [selectedSlot, setSelectedSlot] = useState('');
+    const [weight, setWeight] = useState('0.5');
+    const [length, setLength] = useState('10');
+    const [width, setWidth] = useState('10');
+    const [height, setHeight] = useState('10');
+    const [isBooking, setIsBooking] = useState(false);
+    const [isSimulating, setIsSimulating] = useState(false);
+
     useEffect(() => {
         if (id) {
             fetchOrder();
@@ -27,10 +38,80 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
         }
     }, [order]);
 
+    const fetchShipmentInfo = async () => {
+        try {
+            const response = await axios.get(`/seller/orders/${id}/shipment`);
+            if (response.data && response.data.shipment) {
+                setShipment(response.data.shipment);
+            } else {
+                setShipment(null);
+                fetchPickupSlots();
+            }
+        } catch (error) {
+            console.error('Failed to fetch shipment details:', error);
+        }
+    };
+
+    const fetchPickupSlots = async () => {
+        try {
+            const response = await axios.get(`/seller/orders/${id}/pickup-slots`);
+            if (response.data && response.data.slots) {
+                setPickupSlots(response.data.slots);
+                if (response.data.slots.length > 0) {
+                    setSelectedSlot(response.data.slots[0].time);
+                }
+            }
+        } catch (error) {
+            console.error('Failed to fetch pickup slots:', error);
+        }
+    };
+
+    const handleBookShipment = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!selectedSlot) {
+            alert('Please select a pickup time slot');
+            return;
+        }
+        setIsBooking(true);
+        try {
+            const response = await axios.post(`/seller/orders/${id}/book-shipment`, {
+                pickup_slot: selectedSlot,
+                weight: parseFloat(weight),
+                dimensions_l: parseInt(length),
+                dimensions_w: parseInt(width),
+                dimensions_h: parseInt(height),
+            });
+            alert('Shipment booked successfully with Delhivery!');
+            setShipment(response.data.shipment);
+            fetchOrder();
+        } catch (error: any) {
+            console.error('Failed to book shipment:', error);
+            alert(error.response?.data?.message || 'Failed to book shipment');
+        } finally {
+            setIsBooking(false);
+        }
+    };
+
+    const handleSimulateStatus = async (status: string) => {
+        if (!shipment) return;
+        setIsSimulating(true);
+        try {
+            await axios.post(`/seller/orders/${shipment.id}/simulate-shipment`, { status });
+            alert(status === 'picked_up' ? 'Package handover acknowledged. Shipment is now marked as Picked Up.' : `Shipment status updated to: ${status}`);
+            fetchOrder();
+        } catch (error: any) {
+            console.error('Failed to update shipment status:', error);
+            alert(error.response?.data?.message || 'Failed to update status');
+        } finally {
+            setIsSimulating(false);
+        }
+    };
+
     const fetchOrder = async () => {
         try {
             const response = await axios.get(`/seller/orders/${id}`);
             setOrder(response.data);
+            fetchShipmentInfo();
         } catch (error) {
             console.error('Failed to fetch order details:', error);
         } finally {
@@ -41,6 +122,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
     const itemsTotal = order ? order.items.reduce((acc: number, item: any) => acc + parseFloat(item.total), 0) : 0;
     const shippingAddress = order ? (order.shipping_address_json || {}) : {};
     const billingAddress = order ? (order.billing_address_json || {}) : {};
+    const sellerProfile = order?.seller_profile || order?.sellerProfile || {};
 
     const handlePrintInvoice = () => {
         // Generate invoice number from order number
@@ -372,34 +454,6 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                             Print Shipping Label
                         </button>
 
-                        {/* Status Update Buttons */}
-                        {order.status === 'pending' && (
-                            <button
-                                onClick={() => handleUpdateStatus('processing')}
-                                className="flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition-colors border border-transparent shadow-sm"
-                            >
-                                <Clock size={14} />
-                                Mark as Processing
-                            </button>
-                        )}
-                        {order.status === 'processing' && (
-                            <button
-                                onClick={() => handleUpdateStatus('shipped')}
-                                className="flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition-colors border border-transparent shadow-sm"
-                            >
-                                <Truck size={14} />
-                                Mark as Shipped
-                            </button>
-                        )}
-                        {order.status === 'shipped' && (
-                            <button
-                                onClick={() => handleUpdateStatus('delivered')}
-                                className="flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition-colors border border-transparent shadow-sm"
-                            >
-                                <CheckCircle size={14} />
-                                Mark as Delivered
-                            </button>
-                        )}
                     </div>
                 </div>
             </div>
@@ -473,6 +527,263 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Left Column - Order Items & Summary (2/3 width) */}
                 <div className="lg:col-span-2 space-y-6">
+                    {/* Delhivery Shipping Integration Card */}
+                    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-100 dark:border-gray-800 p-6">
+                        <h3 className="font-bold text-base text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-2 border-b border-gray-100 dark:border-gray-800 pb-4">
+                            <Truck size={18} className="text-emerald-600" />
+                            Delhivery Logistics & Payout Flow
+                        </h3>
+
+                        {/* Seller Default Pickup Point */}
+                        <div className="mb-6 p-4 bg-emerald-50/50 dark:bg-emerald-950/10 border border-emerald-100 dark:border-emerald-900/30 rounded-xl">
+                            <h4 className="text-xs font-bold text-emerald-800 dark:text-emerald-400 flex items-center gap-1.5 uppercase tracking-wide mb-2">
+                                <MapPin size={14} />
+                                Default Pickup Address (Delhivery Agent Location)
+                            </h4>
+                            {sellerProfile?.pickup_address_line_1 ? (
+                                <div className="text-xs text-gray-700 dark:text-gray-300 font-medium space-y-1">
+                                    <p className="font-bold text-gray-900 dark:text-gray-100">
+                                        {sellerProfile.pickup_address_line_1}
+                                        {sellerProfile.pickup_address_line_2 ? `, ${sellerProfile.pickup_address_line_2}` : ''}
+                                    </p>
+                                    <p>{sellerProfile.pickup_address_city}, {sellerProfile.pickup_address_state} - {sellerProfile.pickup_address_pin_code}</p>
+                                    <p className="text-[10px] text-gray-400 dark:text-gray-500 font-semibold">{sellerProfile.pickup_address_country || 'India'}</p>
+                                </div>
+                            ) : (
+                                <p className="text-xs text-red-500 font-semibold">
+                                    No default pickup address configured. Please go to <Link href="/seller/dashboard/settings" className="underline hover:text-red-700 font-bold">Settings</Link> to configure your pickup point.
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Step Timeline Container */}
+                        <div className="relative border-l border-gray-200 dark:border-gray-800 ml-4 pl-8 space-y-8">
+                            
+                            {/* Step 1: Pack & Prep */}
+                            <div className="relative">
+                                <span className="absolute -left-[41px] top-0 bg-emerald-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-sm">
+                                    ✓
+                                </span>
+                                <div>
+                                    <h4 className="font-bold text-sm text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                                        <Package size={15} className="text-emerald-600" />
+                                        Step 1: Order Received & Packed
+                                    </h4>
+                                    <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                                        Prepare and pack the items securely in standard packaging. Ensure the correct products are enclosed inside.
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Step 2: Book Courier Pickup & AWB */}
+                            <div className="relative">
+                                <span className={`absolute -left-[41px] top-0 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-sm ${
+                                    shipment 
+                                        ? 'bg-emerald-600 text-white' 
+                                        : 'bg-emerald-500 text-white border-2 border-emerald-100 animate-pulse'
+                                }`}>
+                                    {shipment ? '✓' : '2'}
+                                </span>
+                                <div>
+                                    <h4 className="font-bold text-sm text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                                        <Calendar size={15} className="text-emerald-600" />
+                                        Step 2: Schedule Courier Pickup
+                                    </h4>
+                                    
+                                    {!shipment ? (
+                                        /* Booking Form if shipment doesn't exist */
+                                        order.status !== 'cancelled' && order.status !== 'delivered' ? (
+                                            <div className="mt-3 bg-gray-50 dark:bg-gray-800/40 p-4 rounded-xl border border-gray-200/50 dark:border-gray-800">
+                                                <p className="text-[11px] text-gray-500 font-semibold mb-3">Configure package dimensions and choose your convenient pickup window to generate the AWB tracking number.</p>
+                                                <form onSubmit={handleBookShipment} className="space-y-4">
+                                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                                        <div>
+                                                            <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Weight (kg)</label>
+                                                            <input 
+                                                                type="number" step="0.01" value={weight} onChange={e => setWeight(e.target.value)}
+                                                                className="w-full px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-850 text-xs font-bold focus:ring-emerald-500 focus:border-emerald-500 text-black dark:text-white" 
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Length (cm)</label>
+                                                            <input 
+                                                                type="number" value={length} onChange={e => setLength(e.target.value)}
+                                                                className="w-full px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-850 text-xs font-bold text-black dark:text-white" 
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Width (cm)</label>
+                                                            <input 
+                                                                type="number" value={width} onChange={e => setWidth(e.target.value)}
+                                                                className="w-full px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-850 text-xs font-bold text-black dark:text-white" 
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Height (cm)</label>
+                                                            <input 
+                                                                type="number" value={height} onChange={e => setHeight(e.target.value)}
+                                                                className="w-full px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-850 text-xs font-bold text-black dark:text-white" 
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Select Pickup Slot</label>
+                                                        {pickupSlots.length > 0 ? (
+                                                            <select 
+                                                                value={selectedSlot} onChange={e => setSelectedSlot(e.target.value)}
+                                                                className="w-full px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-850 text-xs font-bold text-black dark:text-white"
+                                                            >
+                                                                {pickupSlots.map(s => (
+                                                                    <option key={s.id} value={s.time}>{s.label}</option>
+                                                                ))}
+                                                            </select>
+                                                        ) : (
+                                                            <p className="text-xs text-red-500 font-semibold">Loading available pickup slots...</p>
+                                                        )}
+                                                    </div>
+
+                                                    <button
+                                                        type="submit" disabled={isBooking}
+                                                        className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 shadow"
+                                                    >
+                                                        {isBooking ? 'Booking Pickup...' : 'Schedule Pickup & Get AWB'}
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        ) : (
+                                            <p className="text-xs text-gray-400 mt-2 font-medium">Delhivery pickup cannot be scheduled for cancelled or delivered orders.</p>
+                                        )
+                                    ) : (
+                                        /* Display Shipment Details & Status */
+                                        <div className="mt-3 space-y-4 bg-gray-50/50 dark:bg-gray-800/20 p-4 rounded-xl border border-gray-200/50 dark:border-gray-800">
+                                            <div className="grid grid-cols-2 gap-3 text-xs">
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">AWB / Tracking Number</p>
+                                                    <p className="font-mono font-bold text-sm text-gray-900 dark:text-gray-150 mt-0.5">{shipment.tracking_number}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Courier Partner</p>
+                                                    <p className="font-semibold text-gray-800 dark:text-gray-200 mt-0.5">{shipment.courier_name}</p>
+                                                </div>
+                                                <div className="col-span-2">
+                                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Booked Pickup Window</p>
+                                                    <p className="font-semibold text-gray-800 dark:text-gray-200 mt-0.5">{shipment.pickup_time_slot}</p>
+                                                </div>
+                                            </div>
+
+                                            <div className="border-t border-gray-100 dark:border-gray-800 pt-3">
+                                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Package Dimensions</p>
+                                                <div className="flex gap-4 text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                                    <span>Weight: {parseFloat(shipment.weight).toFixed(2)} kg</span>
+                                                    <span>Size: {shipment.dimensions_l}x{shipment.dimensions_w}x{shipment.dimensions_h} cm</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Step 3: Courier Agent Handover */}
+                            <div className="relative">
+                                <span className={`absolute -left-[41px] top-0 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-sm ${
+                                    !shipment 
+                                        ? 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-600'
+                                        : shipment.status === 'delivered' 
+                                            ? 'bg-emerald-600 text-white' 
+                                            : 'bg-emerald-500 text-white border-2 border-emerald-100'
+                                }`}>
+                                    {shipment && shipment.status === 'delivered' ? '✓' : '3'}
+                                </span>
+                                <div>
+                                    <h4 className={`font-bold text-sm flex items-center gap-2 ${
+                                        shipment ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400'
+                                    }`}>
+                                        <Truck size={15} />
+                                        Step 3: Handover to Delhivery Courier
+                                    </h4>
+                                    <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                                        The Delhivery agent will arrive at your pickup address during the scheduled time window. Please handover the packed order with the printed shipping label affixed.
+                                    </p>
+
+                                    {shipment && (
+                                        <div className="mt-3 bg-white dark:bg-gray-850 p-4 rounded-xl border border-gray-200/50 dark:border-gray-800 space-y-3">
+                                            <div className="flex justify-between items-center text-xs">
+                                                <span className="font-semibold text-gray-500">Courier Tracking Status</span>
+                                                <span className="font-extrabold capitalize text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 px-2.5 py-0.5 rounded-full border border-emerald-100 dark:border-emerald-900/30 text-[10px]">
+                                                    {shipment.status.replace(/_/g, ' ')}
+                                                </span>
+                                            </div>
+
+                                            {shipment.status === 'pickup_scheduled' && (
+                                                <button
+                                                    onClick={() => handleSimulateStatus('picked_up')}
+                                                    disabled={isSimulating}
+                                                    className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 shadow cursor-pointer mt-2"
+                                                >
+                                                    {isSimulating ? 'Acknowledging...' : 'I Have Handed Over Package to Delivery Boy'}
+                                                </button>
+                                            )}
+
+                                            <p className="text-[10px] text-gray-400 italic">This timeline updates automatically as Delhivery scans the package status.</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Step 4: Payout Settlement */}
+                            <div className="relative">
+                                <span className={`absolute -left-[41px] top-0 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-sm ${
+                                    shipment && shipment.status === 'delivered' 
+                                        ? 'bg-emerald-600 text-white' 
+                                        : 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-600'
+                                }`}>
+                                    {shipment && shipment.status === 'delivered' ? '✓' : '4'}
+                                </span>
+                                <div>
+                                    <h4 className={`font-bold text-sm flex items-center gap-2 ${
+                                        shipment && shipment.status === 'delivered' ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400'
+                                    }`}>
+                                        <CreditCard size={15} />
+                                        Step 4: Customer Delivery & Payout
+                                    </h4>
+                                    <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                                        Once delivered to the customer, shipping charges & platform commission are programmatically deducted. The net earnings credit instantly to your Cureza wallet.
+                                    </p>
+
+                                    {shipment && (
+                                        <div className="mt-3 bg-gray-50/50 dark:bg-gray-800/10 p-3 rounded-lg border border-gray-200/40 dark:border-gray-800 space-y-1.5 text-[11px]">
+                                            <div className="flex justify-between items-center text-gray-500">
+                                                <span>COD Remittance</span>
+                                                <span className="font-bold capitalize text-gray-800 dark:text-gray-200">{shipment.remittance_status}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center text-gray-500">
+                                                <span>Seller Wallet Payout</span>
+                                                <span className={`font-bold capitalize ${shipment.payout_status === 'paid' ? 'text-emerald-600' : 'text-gray-800 dark:text-gray-200'}`}>
+                                                    {shipment.payout_status}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Logistics SLA & Guidelines Section */}
+                        <div className="mt-8 bg-amber-50/40 dark:bg-amber-950/10 border border-amber-200/40 dark:border-amber-900/30 rounded-xl p-4 space-y-3">
+                            <h4 className="font-bold text-xs text-amber-800 dark:text-amber-400 flex items-center gap-1.5 uppercase tracking-wide">
+                                <AlertCircle size={14} />
+                                Logistics SLA & Seller Guidelines
+                            </h4>
+                            <ul className="text-xs text-amber-900/75 dark:text-amber-400/80 space-y-2 list-disc pl-4 leading-normal font-medium">
+                                <li><strong>Package Dimensions:</strong> Enter precise package size and weight. Errors might lead to courier pickup rejection or payout adjustments.</li>
+                                <li><strong>AWB Shipping Label:</strong> Print the generated shipping label from the button above, cut it out, and paste it clearly on top of the box.</li>
+                                <li><strong>Dispatch SLA:</strong> You must schedule your pickup slot within 24 hours of order confirmation to maintain your seller score rating.</li>
+                                <li><strong>Wallet Payout Math:</strong> Payout is automatically calculated upon courier delivery as: <code>Subtotal (Items) - Platform Commission - Gateway Fees - Shipping Charge</code>.</li>
+                            </ul>
+                        </div>
+                    </div>
+
                     <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-100 dark:border-gray-800 overflow-hidden">
                         <div className="p-6 border-b border-gray-100 dark:border-gray-800">
                             <h3 className="font-bold text-base text-gray-900 dark:text-gray-100">Order Items</h3>
@@ -564,12 +875,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                                     </div>
                                 )}
 
-                                <div className="flex justify-between text-xs font-medium">
-                                    <span className="text-gray-500 dark:text-gray-400">Shipping Charges</span>
-                                    <span className="font-bold text-gray-900 dark:text-gray-100">
-                                        {order.shipping_amount > 0 ? `₹${parseFloat(order.shipping_amount).toFixed(2)}` : 'Free'}
-                                    </span>
-                                </div>
+
 
                                 <div className="pt-3 border-t border-gray-200 dark:border-gray-800 mt-4">
                                     <div className="flex justify-between items-center">
@@ -746,99 +1052,6 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                                             Estimated Delivery: {order.shippingMethod.estimated_days}
                                         </p>
                                     </div>
-                                </div>
-                            </>
-                        )}
-
-                        {/* Tracking Details */}
-                        {(order.status === 'shipped' || order.status === 'processing' || order.status === 'delivered') && (
-                            <>
-                                <div className="border-t border-gray-100 dark:border-gray-800"></div>
-                                <div>
-                                    <div className="flex justify-between items-center mb-4">
-                                        <h3 className="font-bold text-base text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                                            <Truck size={18} className="text-emerald-600" />
-                                            Tracking Information
-                                        </h3>
-                                        {!isEditingTracking && (
-                                            <button
-                                                onClick={() => setIsEditingTracking(true)}
-                                                className="text-xs font-bold text-emerald-600 hover:text-emerald-700 hover:underline flex items-center gap-1.5"
-                                            >
-                                                <Edit2 size={14} />
-                                                {order.tracking_id ? 'Edit' : 'Add'}
-                                            </button>
-                                        )}
-                                    </div>
-
-                                    {isEditingTracking ? (
-                                        <div className="space-y-3">
-                                            <div>
-                                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
-                                                    Tracking ID
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={trackingId}
-                                                    onChange={(e) => setTrackingId(e.target.value)}
-                                                    placeholder="Enter tracking number"
-                                                    className="w-full px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-850 text-sm font-semibold text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
-                                                    Courier Provider
-                                                </label>
-                                                <select
-                                                    value={trackingProvider}
-                                                    onChange={(e) => setTrackingProvider(e.target.value)}
-                                                    className="w-full px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-850 text-sm font-semibold text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
-                                                >
-                                                    <option value="">Select Provider</option>
-                                                    <option value="Shiprocket">Shiprocket</option>
-                                                    <option value="Delhivery">Delhivery</option>
-                                                    <option value="BlueDart">BlueDart</option>
-                                                    <option value="DTDC">DTDC</option>
-                                                    <option value="Other">Other</option>
-                                                </select>
-                                            </div>
-                                            <div className="flex gap-2 justify-end pt-1">
-                                                <button
-                                                    onClick={() => setIsEditingTracking(false)}
-                                                    className="px-3 py-1.5 border border-gray-200 dark:border-gray-700 rounded-lg text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
-                                                >
-                                                    Cancel
-                                                </button>
-                                                <button
-                                                    onClick={handleSaveTracking}
-                                                    disabled={isSavingTracking}
-                                                    className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 disabled:opacity-50"
-                                                >
-                                                    <Save size={14} />
-                                                    Save
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className="bg-gray-50 dark:bg-gray-800/40 rounded-lg p-4 border border-gray-100 dark:border-gray-800">
-                                            {order.tracking_id ? (
-                                                <div className="space-y-3">
-                                                    <div>
-                                                        <p className="text-[10px] font-bold text-gray-400 tracking-wider">Tracking ID</p>
-                                                        <p className="font-mono font-medium text-base text-gray-900 dark:text-gray-100 mt-0.5">{order.tracking_id}</p>
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-[10px] font-bold text-gray-400 tracking-wider">Courier</p>
-                                                        <p className="font-semibold text-sm text-gray-800 dark:text-gray-200 mt-0.5">{order.tracking_provider || 'Not specified'}</p>
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <div className="text-center text-gray-500 py-1">
-                                                    <p className="text-xs font-semibold">No tracking information added yet.</p>
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
                                 </div>
                             </>
                         )}

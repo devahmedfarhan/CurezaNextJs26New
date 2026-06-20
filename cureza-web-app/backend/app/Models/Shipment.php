@@ -13,12 +13,26 @@ class Shipment extends Model
         'tracking_number',
         'status',
         'shipped_at',
-        'delivered_at'
+        'delivered_at',
+        'pickup_time_slot',
+        'pickup_scheduled_at',
+        'weight',
+        'dimensions_l',
+        'dimensions_w',
+        'dimensions_h',
+        'shipping_charge',
+        'remittance_status',
+        'remitted_at',
+        'payout_status',
+        'payout_amount',
+        'payout_transaction_id'
     ];
 
     protected $casts = [
         'shipped_at' => 'datetime',
         'delivered_at' => 'datetime',
+        'pickup_scheduled_at' => 'datetime',
+        'remitted_at' => 'datetime',
     ];
 
     public function order()

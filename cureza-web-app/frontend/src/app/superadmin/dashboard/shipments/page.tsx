@@ -12,6 +12,10 @@ interface Shipment {
     status: string;
     shipped_at: string | null;
     delivered_at: string | null;
+    pickup_time_slot: string | null;
+    shipping_charge: string | number;
+    remittance_status: string;
+    payout_status: string;
     order: {
         id: number;
         order_number: string;
@@ -60,6 +64,12 @@ export default function AdminShipmentsPage() {
                 return 'bg-green-50 text-green-700 border border-green-200/50 dark:bg-green-950/20 dark:text-green-400 dark:border-green-900/30';
             case 'cancelled':
                 return 'bg-red-50 text-red-700 border border-red-200/50 dark:bg-red-950/20 dark:text-red-400 dark:border-red-900/30';
+            case 'pickup_scheduled':
+                return 'bg-blue-50 text-blue-700 border border-blue-200/50 dark:bg-blue-950/20 dark:text-blue-400 dark:border-blue-900/30';
+            case 'picked_up':
+                return 'bg-indigo-50 text-indigo-700 border border-indigo-200/50 dark:bg-indigo-950/20 dark:text-indigo-400 dark:border-indigo-900/30';
+            case 'out_for_delivery':
+                return 'bg-amber-50 text-amber-700 border border-amber-200/50 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30';
             default:
                 return 'bg-neutral-50 text-neutral-750 border border-neutral-200 dark:bg-neutral-850 dark:text-neutral-350 dark:border-neutral-800';
         }
@@ -89,12 +99,10 @@ export default function AdminShipmentsPage() {
                 </div>
             </div>
 
-
-
             {/* Filters */}
             <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-neutral-950/10 dark:border-neutral-800 shadow-none">
                 <div className="flex flex-wrap gap-2 text-xs font-medium overflow-x-auto pb-2 sm:pb-0">
-                    {['All', 'pending', 'shipped', 'delivered', 'cancelled'].map((status) => (
+                    {['All', 'pickup_scheduled', 'picked_up', 'out_for_delivery', 'delivered', 'cancelled'].map((status) => (
                         <button
                             key={status}
                             onClick={() => { setStatusFilter(status); setPage(1); }}
@@ -104,7 +112,7 @@ export default function AdminShipmentsPage() {
                                     : 'bg-white text-neutral-600 border-neutral-955/15 hover:bg-neutral-50 dark:bg-gray-900 dark:text-neutral-350 dark:border-neutral-800 dark:hover:bg-neutral-800'
                             }`}
                         >
-                            {status}
+                            {status.replace(/_/g, ' ')}
                         </button>
                     ))}
                 </div>
@@ -121,19 +129,22 @@ export default function AdminShipmentsPage() {
                                 <th scope="col" className="px-6 py-3.5 text-left tracking-wide">Seller</th>
                                 <th scope="col" className="px-6 py-3.5 text-left tracking-wide">Courier</th>
                                 <th scope="col" className="px-6 py-3.5 text-left tracking-wide">Status</th>
-                                <th scope="col" className="px-6 py-3.5 text-left tracking-wide">Shipped At</th>
-                                <th scope="col" className="px-6 py-3.5 text-left tracking-wide">Delivered At</th>
+                                <th scope="col" className="px-6 py-3.5 text-left tracking-wide">Pickup Slot</th>
+                                <th scope="col" className="px-6 py-3.5 text-left tracking-wide">Shipping Fee</th>
+                                <th scope="col" className="px-6 py-3.5 text-left tracking-wide">Remittance (COD)</th>
+                                <th scope="col" className="px-6 py-3.5 text-left tracking-wide">Payout Status</th>
+                                <th scope="col" className="px-6 py-3.5 text-left tracking-wide">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-neutral-955/5 dark:divide-gray-850 font-normal text-xs text-gray-700 dark:text-gray-300">
                             {loading ? (
-                                <tr><td colSpan={7} className="px-6 py-8 text-center text-neutral-500 font-normal">Loading...</td></tr>
+                                <tr><td colSpan={10} className="px-6 py-8 text-center text-neutral-500 font-normal">Loading...</td></tr>
                             ) : shipments.length === 0 ? (
-                                <tr><td colSpan={7} className="px-6 py-8 text-center text-neutral-500 font-normal">No shipments found.</td></tr>
+                                <tr><td colSpan={10} className="px-6 py-8 text-center text-neutral-500 font-normal">No shipments found.</td></tr>
                             ) : (
                                 shipments.map((shipment) => (
                                     <tr key={shipment.id} className="hover:bg-neutral-50/40 dark:hover:bg-gray-850/20 transition-colors">
-                                        <td className="px-6 py-4 whitespace-nowrap font-medium text-black dark:text-white">
+                                        <td className="px-6 py-4 whitespace-nowrap font-mono font-medium text-black dark:text-white">
                                             {shipment.tracking_number || '-'}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-black dark:text-white hover:underline cursor-pointer">
@@ -149,14 +160,44 @@ export default function AdminShipmentsPage() {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <span className={`px-2 py-0.5 inline-flex text-[10px] leading-5 font-semibold rounded-full capitalize ${getStatusColor(shipment.status)}`}>
-                                                {shipment.status}
+                                                {shipment.status.replace(/_/g, ' ')}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-neutral-500 dark:text-neutral-400 font-normal">
-                                            {shipment.shipped_at ? new Date(shipment.shipped_at).toLocaleDateString() : '-'}
+                                            {shipment.pickup_time_slot || '-'}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-neutral-500 dark:text-neutral-400 font-normal">
-                                            {shipment.delivered_at ? new Date(shipment.delivered_at).toLocaleDateString() : '-'}
+                                        <td className="px-6 py-4 whitespace-nowrap text-neutral-900 dark:text-neutral-100 font-semibold">
+                                            {shipment.shipping_charge ? `₹${parseFloat(shipment.shipping_charge.toString()).toFixed(2)}` : '-'}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-neutral-500 dark:text-neutral-400 font-normal capitalize">
+                                            {shipment.remittance_status || '-'}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-neutral-500 dark:text-neutral-400 font-normal capitalize">
+                                            {shipment.payout_status || '-'}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-xs font-medium">
+                                            {shipment.status !== 'delivered' && shipment.status !== 'cancelled' && (
+                                                <select
+                                                    onChange={async (e) => {
+                                                        const status = e.target.value;
+                                                        if (!status) return;
+                                                        try {
+                                                            await api.post(`/admin/shipments/${shipment.id}/simulate`, { status });
+                                                            alert(`Successfully simulated status to ${status.replace(/_/g, ' ')}`);
+                                                            fetchShipments();
+                                                        } catch (err: any) {
+                                                            alert(err.response?.data?.message || 'Failed to simulate status');
+                                                        }
+                                                        e.target.value = '';
+                                                    }}
+                                                    className="px-2 py-1 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-white rounded text-[10px] focus:outline-none cursor-pointer"
+                                                >
+                                                    <option value="">Simulate Status</option>
+                                                    <option value="picked_up" disabled={shipment.status === 'picked_up'}>Mark Picked Up</option>
+                                                    <option value="out_for_delivery" disabled={shipment.status === 'out_for_delivery' || shipment.status === 'pickup_scheduled'}>Mark Out for Delivery</option>
+                                                    <option value="delivered" disabled={shipment.status === 'delivered' || shipment.status === 'pickup_scheduled'}>Mark Delivered</option>
+                                                </select>
+                                            )}
                                         </td>
                                     </tr>
                                 ))

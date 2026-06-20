@@ -291,17 +291,35 @@ class SuperAdminOrderController extends Controller
             $order->load('items');
             $firstItem = $order->items->first();
 
-            // Auto-create/update Shipment Record if status is 'shipped' or if tracking info is provided
-            if ($request->status === 'shipped' || $request->filled('tracking_id') || $request->filled('tracking_provider')) {
+            // Auto-create/update Shipment Record if status is updated or if tracking info is provided
+            if ($request->filled('status') || $request->filled('tracking_id') || $request->filled('tracking_provider')) {
+                $shipmentStatus = 'pending';
+                if ($order->status === 'processing') {
+                    $shipmentStatus = 'pickup_scheduled';
+                } elseif ($order->status === 'shipped') {
+                    $shipmentStatus = 'picked_up';
+                } elseif ($order->status === 'delivered') {
+                    $shipmentStatus = 'delivered';
+                } elseif ($order->status === 'cancelled') {
+                    $shipmentStatus = 'cancelled';
+                }
+
+                $shipmentData = [
+                    'seller_id' => $firstItem ? $firstItem->seller_id : null,
+                    'courier_name' => $request->tracking_provider ?? $order->tracking_provider ?? 'Manual Update',
+                    'tracking_number' => $request->tracking_id ?? $order->tracking_id ?? 'N/A',
+                    'status' => $shipmentStatus,
+                ];
+
+                if ($shipmentStatus === 'shipped' || $shipmentStatus === 'picked_up') {
+                    $shipmentData['shipped_at'] = now();
+                } elseif ($shipmentStatus === 'delivered') {
+                    $shipmentData['delivered_at'] = now();
+                }
+
                 \App\Models\Shipment::updateOrCreate(
                     ['order_id' => $order->id],
-                    [
-                        'seller_id' => $firstItem ? $firstItem->seller_id : null,
-                        'courier_name' => $request->tracking_provider ?? $order->tracking_provider ?? 'Manual Update',
-                        'tracking_number' => $request->tracking_id ?? $order->tracking_id ?? 'N/A',
-                        'status' => $request->status ?? $order->status ?? 'shipped',
-                        'shipped_at' => now(),
-                    ]
+                    $shipmentData
                 );
             }
             

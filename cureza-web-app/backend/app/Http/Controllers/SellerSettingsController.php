@@ -166,6 +166,15 @@ class SellerSettingsController extends Controller
             'state' => 'nullable|string|max:255',
             'country' => 'nullable|string|max:255',
             'pin_code' => 'nullable|string|max:255',
+            
+            // Pickup Details
+            'pickup_address_line_1' => 'nullable|string|max:255',
+            'pickup_address_line_2' => 'nullable|string|max:255',
+            'pickup_address_city' => 'nullable|string|max:255',
+            'pickup_address_state' => 'nullable|string|max:255',
+            'pickup_address_country' => 'nullable|string|in:India',
+            'pickup_address_pin_code' => 'nullable|string|max:255',
+
             'business_type' => 'nullable|string|max:255',
             'sourcing_method' => 'nullable|string|max:255',
             'annual_turnover' => 'nullable|string|max:255',
@@ -189,6 +198,12 @@ class SellerSettingsController extends Controller
             'state' => $profile->state ?? '',
             'country' => $profile->country ?? '',
             'pin_code' => $profile->pin_code ?? '',
+            'pickup_address_line_1' => $profile->pickup_address_line_1 ?? '',
+            'pickup_address_line_2' => $profile->pickup_address_line_2 ?? '',
+            'pickup_address_city' => $profile->pickup_address_city ?? '',
+            'pickup_address_state' => $profile->pickup_address_state ?? '',
+            'pickup_address_country' => $profile->pickup_address_country ?? 'India',
+            'pickup_address_pin_code' => $profile->pickup_address_pin_code ?? '',
             'business_type' => $profile->registering_as ?? '',
             'sourcing_method' => $profile->sourcing_method ?? '',
             'annual_turnover' => $profile->annual_turnover ?? '',

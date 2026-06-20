@@ -269,18 +269,19 @@ export default function SellerOrdersPage() {
             {showBulkActions && selectedOrders.length > 0 && (
                 <div className="premium-card p-6 grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in zoom-in-95 duration-200">
                     <div>
-                        <p className="text-[9px] font-extrabold text-gray-400 tracking-widest mb-4">Transition Pipeline</p>
+                        <p className="text-[9px] font-extrabold text-gray-400 tracking-widest mb-4">Fulfillment Pipeline</p>
                         <div className="space-y-2">
-                            {['processing', 'shipped', 'delivered', 'cancelled'].map((status) => (
-                                <button
-                                    key={status}
-                                    onClick={() => bulkUpdateStatus(status)}
-                                    className="w-full text-left px-4 py-2.5 text-xs font-bold bg-gray-50 hover:bg-gray-105 dark:bg-gray-800 dark:hover:bg-gray-750 rounded-lg flex items-center gap-2 transition-all border border-gray-100 dark:border-gray-800 group"
-                                >
-                                    <div className="w-1.5 h-1.5 rounded-full bg-gray-300 group-hover:bg-cureza-green transition-colors"></div>
-                                    Mark as {status.charAt(0).toUpperCase() + status.slice(1)}
-                                </button>
-                            ))}
+                            <button
+                                onClick={() => {
+                                    if (confirm("Are you sure you want to cancel the selected orders?")) {
+                                        bulkUpdateStatus('cancelled');
+                                    }
+                                }}
+                                className="w-full text-left px-4 py-2.5 text-xs font-bold bg-rose-50 text-rose-600 hover:bg-rose-105 dark:bg-rose-950/20 dark:hover:bg-rose-900/30 rounded-lg flex items-center gap-2 transition-all border border-rose-100 dark:border-rose-900/30"
+                            >
+                                <div className="w-1.5 h-1.5 rounded-full bg-rose-550"></div>
+                                Bulk Cancel Orders
+                            </button>
                         </div>
                     </div>
 
@@ -467,21 +468,20 @@ export default function SellerOrdersPage() {
 
                                                     {openDropdown === order.id && (
                                                         <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-900 rounded-lg shadow-xl border border-gray-100 dark:border-gray-800 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                                                            {/* Status Change Options */}
+                                                            {/* Status Change Options - Only Cancel is manually allowed */}
                                                             {order.status !== 'delivered' && order.status !== 'cancelled' ? (
                                                                 <div className="p-1.5 border-b border-gray-100 dark:border-gray-800">
-                                                                    <p className="px-2 py-1 text-[8px] font-bold text-gray-400 tracking-wider">Change Status</p>
-                                                                    {['pending', 'processing', 'shipped', 'delivered', 'cancelled'].map((status) => (
-                                                                        order.status !== status && (
-                                                                            <button
-                                                                                key={status}
-                                                                                onClick={() => updateOrderStatus(order.id, status)}
-                                                                                className="w-full text-left px-2 py-1.5 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded transition-colors font-semibold"
-                                                                            >
-                                                                                Mark as {status.charAt(0).toUpperCase() + status.slice(1)}
-                                                                            </button>
-                                                                        )
-                                                                    ))}
+                                                                    <p className="px-2 py-1 text-[8px] font-bold text-gray-400 tracking-wider">Fulfillment Actions</p>
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            if (confirm('Are you sure you want to cancel this order?')) {
+                                                                                updateOrderStatus(order.id, 'cancelled');
+                                                                            }
+                                                                        }}
+                                                                        className="w-full text-left px-2 py-1.5 text-xs text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded transition-colors font-bold"
+                                                                    >
+                                                                        Cancel Order
+                                                                    </button>
                                                                 </div>
                                                             ) : (
                                                                 <div className="p-3 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/25">
