@@ -188,16 +188,18 @@ export default function ShopfloCheckout({ isModal = false, onClose, prefetchedDa
 
                 setPaymentMethod(defaultPayment);
             } catch (error: any) {
-                console.error('Failed to fetch checkout data:', error);
                 if (error.response?.status === 400 && error.response?.data?.message === 'Cart is empty') {
                     showToast('Your cart is empty', 'error');
                     if (onClose) onClose();
                     else router.push('/cart');
-                } else if (error.response?.status === 401) {
-                    if (onClose) {
-                        logout(true);
-                    } else {
-                        router.push('/login?redirect=/checkout');
+                } else {
+                    console.error('Failed to fetch checkout data:', error);
+                    if (error.response?.status === 401) {
+                        if (onClose) {
+                            logout(true);
+                        } else {
+                            router.push('/login?redirect=/checkout');
+                        }
                     }
                 }
             } finally {
