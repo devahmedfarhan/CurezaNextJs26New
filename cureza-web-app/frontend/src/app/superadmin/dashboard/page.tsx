@@ -57,7 +57,11 @@ export default function SuperAdminDashboardHome() {
         fetchDashboardData();
     }, []);
 
-    const stats = dashboardData?.stats || {
+    const stats = dashboardData?.stats ? {
+        ...dashboardData.stats,
+        total_revenue: dashboardData.stats.platform_gross_sales || 0,
+        today_revenue: dashboardData.stats.today_platform_gross_sales || 0
+    } : {
         total_sellers: 0,
         active_sellers: 0,
         pending_approvals: 0,
@@ -67,7 +71,33 @@ export default function SuperAdminDashboardHome() {
         total_revenue: 0,
         total_orders: 0,
         today_orders: 0,
-        today_revenue: 0
+        today_revenue: 0,
+        platform_gross_sales: 0,
+        platform_net_revenue: 0,
+        today_platform_gross_sales: 0,
+        today_platform_net_revenue: 0,
+        seller_gross_sales: 0,
+        seller_net_earnings: 0,
+        seller_platform_commission: 0,
+        today_seller_gross_sales: 0,
+        today_seller_net_earnings: 0,
+        today_seller_platform_commission: 0,
+        doctor_gross_sales: 0,
+        doctor_net_earnings: 0,
+        doctor_platform_commission: 0,
+        today_doctor_gross_sales: 0,
+        today_doctor_net_earnings: 0,
+        today_doctor_platform_commission: 0,
+        today_sellers: 0,
+        today_doctors: 0,
+        total_cod_orders: 0,
+        today_cod_orders: 0,
+        total_cod_amount: 0,
+        today_cod_amount: 0,
+        total_paid_orders: 0,
+        today_paid_orders: 0,
+        total_paid_amount: 0,
+        today_paid_amount: 0
     };
 
     const recentOrders = dashboardData?.recent_orders || [];
@@ -413,102 +443,244 @@ export default function SuperAdminDashboardHome() {
             </div>
 
             {/* Core Highlight KPIs Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {/* Revenue Card */}
-                <div className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 p-6 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform text-neutral-400">
-                        <DollarSign size={80} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* Card 1: Platform Total Revenue */}
+                <div className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 p-6 relative overflow-hidden group hover:border-black/35 transition-all">
+                    <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.07] group-hover:scale-110 transition-all text-neutral-900">
+                        <TrendingUp size={80} />
                     </div>
                     <div className="flex justify-between items-start">
-                        <div className="p-3 bg-neutral-50 text-neutral-900 rounded-lg border-[0.5px] border-neutral-950/10">
-                            <DollarSign size={22} />
+                        <div className="p-3 bg-neutral-900 text-white rounded-lg border-[0.5px] border-neutral-900/10">
+                            <TrendingUp size={22} />
                         </div>
-                        <span className="flex items-center text-xs font-bold text-emerald-705 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200 gap-1">
-                            <TrendingUp size={12} />
-                            Active
+                        <span className="flex items-center text-[10px] font-bold text-neutral-800 bg-neutral-100 px-2 py-0.5 rounded-lg border border-neutral-200 uppercase tracking-wider">
+                            Platform
                         </span>
                     </div>
-                    <div className="mt-4 space-y-1">
-                        <p className="text-neutral-400 text-[10px] font-bold tracking-widest">Total Sales Revenue</p>
-                        <h3 className="text-2xl font-black text-gray-900">₹{parseFloat(stats.total_revenue).toLocaleString('en-IN')}</h3>
-                        <p className="text-xs font-semibold text-gray-550 flex items-center gap-1">
-                            <span className="text-emerald-600 font-extrabold">₹{parseFloat(stats.today_revenue).toLocaleString('en-IN')}</span> today
-                        </p>
+                    <div className="mt-4 space-y-1.5">
+                        <p className="text-neutral-400 text-[10px] font-bold tracking-widest uppercase">Total Platform Sales (Gross)</p>
+                        <h3 className="text-2xl font-black text-gray-900">₹{parseFloat(stats.platform_gross_sales).toLocaleString('en-IN')}</h3>
+                        <div className="text-xs font-semibold text-gray-550 pt-1 border-t border-neutral-100 mt-2 space-y-1">
+                            <div className="flex justify-between">
+                                <span>Cureza Net Earnings:</span>
+                                <span className="font-extrabold text-neutral-950">₹{parseFloat(stats.platform_net_revenue).toLocaleString('en-IN')}</span>
+                            </div>
+                            <div className="flex justify-between text-[11px] text-emerald-600 font-bold">
+                                <span>Today's Sales:</span>
+                                <span>+₹{parseFloat(stats.today_platform_gross_sales).toLocaleString('en-IN')}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                {/* Orders Card */}
-                <div className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 p-6 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform text-neutral-400">
+                {/* Card 2: Seller Sales */}
+                <div className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 p-6 relative overflow-hidden group hover:border-emerald-500/50 transition-all">
+                    <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.07] group-hover:scale-110 transition-all text-emerald-900">
+                        <Store size={80} />
+                    </div>
+                    <div className="flex justify-between items-start">
+                        <div className="p-3 bg-emerald-50 text-emerald-700 rounded-lg border-[0.5px] border-emerald-950/10">
+                            <Store size={22} />
+                        </div>
+                        <Link href="/superadmin/dashboard/finance" className="text-gray-400 hover:text-gray-650 transition-colors">
+                            <ArrowUpRight size={18} />
+                        </Link>
+                    </div>
+                    <div className="mt-4 space-y-1.5">
+                        <p className="text-neutral-400 text-[10px] font-bold tracking-widest uppercase">Seller Sales (Gross)</p>
+                        <h3 className="text-2xl font-black text-gray-900">₹{parseFloat(stats.seller_gross_sales).toLocaleString('en-IN')}</h3>
+                        <div className="text-xs font-semibold text-gray-550 pt-1 border-t border-neutral-100 mt-2 space-y-1">
+                            <div className="flex justify-between">
+                                <span>Seller Net:</span>
+                                <span className="font-bold text-gray-800">₹{parseFloat(stats.seller_net_earnings).toLocaleString('en-IN')}</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span>Platform Share:</span>
+                                <span className="font-bold text-gray-800">₹{parseFloat(stats.seller_platform_commission).toLocaleString('en-IN')}</span>
+                            </div>
+                            <div className="flex justify-between text-[11px] text-emerald-600 font-bold">
+                                <span>Today Gross:</span>
+                                <span>+₹{parseFloat(stats.today_seller_gross_sales).toLocaleString('en-IN')}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Card 3: Doctor Sales */}
+                <div className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 p-6 relative overflow-hidden group hover:border-blue-500/50 transition-all">
+                    <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.07] group-hover:scale-110 transition-all text-blue-900">
+                        <Activity size={80} />
+                    </div>
+                    <div className="flex justify-between items-start">
+                        <div className="p-3 bg-blue-50 text-blue-700 rounded-lg border-[0.5px] border-neutral-950/10">
+                            <Activity size={22} />
+                        </div>
+                        <Link href="/superadmin/dashboard/finance" className="text-gray-400 hover:text-gray-650 transition-colors">
+                            <ArrowUpRight size={18} />
+                        </Link>
+                    </div>
+                    <div className="mt-4 space-y-1.5">
+                        <p className="text-neutral-400 text-[10px] font-bold tracking-widest uppercase">Doctor Sales (Gross)</p>
+                        <h3 className="text-2xl font-black text-gray-900">₹{parseFloat(stats.doctor_gross_sales).toLocaleString('en-IN')}</h3>
+                        <div className="text-xs font-semibold text-gray-550 pt-1 border-t border-neutral-100 mt-2 space-y-1">
+                            <div className="flex justify-between">
+                                <span>Doctor Net:</span>
+                                <span className="font-bold text-gray-800">₹{parseFloat(stats.doctor_net_earnings).toLocaleString('en-IN')}</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span>Platform Share:</span>
+                                <span className="font-bold text-gray-800">₹{parseFloat(stats.doctor_platform_commission).toLocaleString('en-IN')}</span>
+                            </div>
+                            <div className="flex justify-between text-[11px] text-emerald-600 font-bold">
+                                <span>Today Gross:</span>
+                                <span>+₹{parseFloat(stats.today_doctor_gross_sales).toLocaleString('en-IN')}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Card 4: Orders overview */}
+                <div className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 p-6 relative overflow-hidden group hover:border-rose-500/50 transition-all">
+                    <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.07] group-hover:scale-110 transition-all text-rose-900">
                         <ShoppingBag size={80} />
                     </div>
                     <div className="flex justify-between items-start">
-                        <div className="p-3 bg-neutral-50 text-neutral-900 rounded-lg border-[0.5px] border-neutral-950/10">
+                        <div className="p-3 bg-rose-50 text-rose-700 rounded-lg border-[0.5px] border-neutral-950/10">
                             <ShoppingBag size={22} />
                         </div>
                         <Link href="/superadmin/dashboard/orders" className="text-gray-400 hover:text-gray-650 transition-colors">
                             <ArrowUpRight size={18} />
                         </Link>
                     </div>
-                    <div className="mt-4 space-y-1">
-                        <p className="text-neutral-400 text-[10px] font-bold tracking-widest">Total Orders Placed</p>
+                    <div className="mt-4 space-y-1.5">
+                        <p className="text-neutral-400 text-[10px] font-bold tracking-widest uppercase">Total Orders</p>
                         <h3 className="text-2xl font-black text-gray-900">{stats.total_orders}</h3>
-                        <p className="text-xs font-semibold text-gray-550 flex items-center gap-1">
-                            <span className="text-emerald-600 font-extrabold">{stats.today_orders}</span> new orders today
-                        </p>
+                        <div className="text-xs font-semibold text-gray-550 pt-1 border-t border-neutral-100 mt-2 space-y-1">
+                            <div className="flex justify-between text-emerald-600 font-bold">
+                                <span>Added Today:</span>
+                                <span>+{stats.today_orders} orders</span>
+                            </div>
+                            <div className="flex justify-between text-[10px] text-neutral-400">
+                                <span>Average/Day:</span>
+                                <span>{stats.total_orders > 0 ? (stats.total_orders / 30).toFixed(1) : 0} orders</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                {/* Sellers Card */}
-                <div className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 p-6 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform text-neutral-400">
-                        <Store size={80} />
+                {/* Card 5: Sellers Added Today */}
+                <div className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 p-6 relative overflow-hidden group hover:border-violet-500/55 transition-all">
+                    <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.07] group-hover:scale-110 transition-all text-violet-900">
+                        <Users size={80} />
                     </div>
                     <div className="flex justify-between items-start">
-                        <div className="p-3 bg-neutral-50 text-neutral-900 rounded-lg border-[0.5px] border-neutral-950/10">
-                            <Store size={22} />
+                        <div className="p-3 bg-violet-50 text-violet-700 rounded-lg border-[0.5px] border-violet-950/10">
+                            <Users size={22} />
                         </div>
                         <Link href="/superadmin/dashboard/users/sellers" className="text-gray-400 hover:text-gray-650 transition-colors">
                             <ArrowUpRight size={18} />
                         </Link>
                     </div>
-                    <div className="mt-4 space-y-1">
-                        <p className="text-neutral-400 text-[10px] font-bold tracking-widest">Registered Sellers</p>
+                    <div className="mt-4 space-y-1.5">
+                        <p className="text-neutral-400 text-[10px] font-bold tracking-widest uppercase">Sellers Registration</p>
                         <h3 className="text-2xl font-black text-gray-900">{stats.total_sellers}</h3>
-                        <p className="text-xs font-semibold text-gray-550 flex items-center gap-1.5">
-                            <span className="text-emerald-600 font-extrabold">{stats.active_sellers} active</span>
-                            <span>•</span>
-                            <span className="text-red-600 font-bold flex items-center gap-0.5">
-                                <Clock size={10} />
-                                {stats.pending_approvals} pending
-                            </span>
-                        </p>
+                        <div className="text-xs font-semibold text-gray-550 pt-1 border-t border-neutral-100 mt-2 space-y-1">
+                            <div className="flex justify-between text-emerald-600 font-bold">
+                                <span>Registered Today:</span>
+                                <span>+{stats.today_sellers} today</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span>Active / Pending:</span>
+                                <span>{stats.active_sellers} / {stats.pending_approvals}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                {/* Users/Doctors Card */}
-                <div className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 p-6 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform text-neutral-400">
+                {/* Card 6: Doctors Added Today */}
+                <div className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 p-6 relative overflow-hidden group hover:border-teal-500/50 transition-all">
+                    <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.07] group-hover:scale-110 transition-all text-teal-900">
                         <Users size={80} />
                     </div>
                     <div className="flex justify-between items-start">
-                        <div className="p-3 bg-neutral-50 text-neutral-900 rounded-lg border-[0.5px] border-neutral-950/10">
+                        <div className="p-3 bg-teal-50 text-teal-700 rounded-lg border-[0.5px] border-teal-950/10">
                             <Users size={22} />
                         </div>
-                        <Link href="/superadmin/dashboard/users/customers" className="text-gray-400 hover:text-gray-650 transition-colors">
+                        <Link href="/superadmin/dashboard/users/doctors" className="text-gray-400 hover:text-gray-650 transition-colors">
                             <ArrowUpRight size={18} />
                         </Link>
                     </div>
-                    <div className="mt-4 space-y-1">
-                        <p className="text-neutral-400 text-[10px] font-bold tracking-widest">Doctors & Customers</p>
-                        <h3 className="text-2xl font-black text-gray-900">
-                            {stats.total_users + stats.total_doctors}
-                        </h3>
-                        <p className="text-xs font-semibold text-gray-550 flex items-center gap-1.5">
-                            <span className="text-neutral-800 font-extrabold">{stats.total_doctors} Doctors</span>
-                            <span>•</span>
-                            <span className="text-neutral-850 font-extrabold">{stats.total_users} Customers</span>
-                        </p>
+                    <div className="mt-4 space-y-1.5">
+                        <p className="text-neutral-400 text-[10px] font-bold tracking-widest uppercase">Doctors Onboarding</p>
+                        <h3 className="text-2xl font-black text-gray-900">{stats.total_doctors}</h3>
+                        <div className="text-xs font-semibold text-gray-550 pt-1 border-t border-neutral-100 mt-2 space-y-1">
+                            <div className="flex justify-between text-emerald-600 font-bold">
+                                <span>Onboarded Today:</span>
+                                <span>+{stats.today_doctors} today</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span>Verified / Active:</span>
+                                <span>{stats.active_doctors} Doctors</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Card 7: COD Orders */}
+                <div className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 p-6 relative overflow-hidden group hover:border-amber-500/50 transition-all">
+                    <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.07] group-hover:scale-110 transition-all text-amber-900">
+                        <Truck size={80} />
+                    </div>
+                    <div className="flex justify-between items-start">
+                        <div className="p-3 bg-amber-50 text-amber-700 rounded-lg border-[0.5px] border-neutral-950/10">
+                            <Truck size={22} />
+                        </div>
+                        <span className="flex items-center text-[10px] font-bold text-amber-805 bg-amber-50 px-2 py-0.5 rounded-lg border border-amber-200 uppercase tracking-wider">
+                            COD
+                        </span>
+                    </div>
+                    <div className="mt-4 space-y-1.5">
+                        <p className="text-neutral-400 text-[10px] font-bold tracking-widest uppercase">COD Orders Count</p>
+                        <h3 className="text-2xl font-black text-gray-900">{stats.total_cod_orders}</h3>
+                        <div className="text-xs font-semibold text-gray-550 pt-1 border-t border-neutral-100 mt-2 space-y-1">
+                            <div className="flex justify-between">
+                                <span>COD Paid Amount:</span>
+                                <span className="font-bold">₹{parseFloat(stats.total_cod_amount).toLocaleString('en-IN')}</span>
+                            </div>
+                            <div className="flex justify-between text-emerald-600 font-bold">
+                                <span>Today's COD Orders:</span>
+                                <span>+{stats.today_cod_orders} (₹{parseFloat(stats.today_cod_amount).toLocaleString('en-IN')})</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Card 8: Paid Orders (Online Prepaid) */}
+                <div className="bg-white rounded-lg border-[0.5px] border-neutral-950/10 p-6 relative overflow-hidden group hover:border-slate-500/50 transition-all">
+                    <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.07] group-hover:scale-110 transition-all text-slate-900">
+                        <CreditCard size={80} />
+                    </div>
+                    <div className="flex justify-between items-start">
+                        <div className="p-3 bg-slate-50 text-slate-700 rounded-lg border-[0.5px] border-neutral-950/10">
+                            <CreditCard size={22} />
+                        </div>
+                        <span className="flex items-center text-[10px] font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200 uppercase tracking-wider">
+                            Prepaid
+                        </span>
+                    </div>
+                    <div className="mt-4 space-y-1.5">
+                        <p className="text-neutral-400 text-[10px] font-bold tracking-widest uppercase">Prepaid Orders Count</p>
+                        <h3 className="text-2xl font-black text-gray-900">{stats.total_paid_orders}</h3>
+                        <div className="text-xs font-semibold text-gray-550 pt-1 border-t border-neutral-100 mt-2 space-y-1">
+                            <div className="flex justify-between">
+                                <span>Prepaid Sales Value:</span>
+                                <span className="font-bold">₹{parseFloat(stats.total_paid_amount).toLocaleString('en-IN')}</span>
+                            </div>
+                            <div className="flex justify-between text-emerald-600 font-bold">
+                                <span>Today's Prepaid Orders:</span>
+                                <span>+{stats.today_paid_orders} (₹{parseFloat(stats.today_paid_amount).toLocaleString('en-IN')})</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

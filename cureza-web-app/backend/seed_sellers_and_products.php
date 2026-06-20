@@ -25,9 +25,7 @@ try {
     }
 
     $sellerNames = [
-        "Aura Wellness", "Vedic Pure", "Hemp Horizon", "Prana Naturals",
-        "Somya Herbals", "Green Elements", "Pure Ayur", "Ojas Organics",
-        "Sattva Remedies", "Amrit Life"
+        "Aura Wellness"
     ];
 
     $productTemplates = [

@@ -41,26 +41,6 @@ class UsersSeeder extends Seeder
             ]
         );
 
-        // 3. Main Seller
-        $mainSeller = User::updateOrCreate(
-            ['email' => 'seller@cureza.com'],
-            [
-                'name' => 'AyurLife Organics',
-                'password' => Hash::make('password'),
-                'role' => 'vendor',
-                'phone' => '9876543211',
-                'email_verified_at' => now(),
-            ]
-        );
-        Brand::updateOrCreate(
-            ['user_id' => $mainSeller->id],
-            [
-                'name' => 'AyurLife Organics',
-                'slug' => 'ayurlife-organics',
-                'is_active' => true,
-            ]
-        );
-
         // 4. Customer
         User::updateOrCreate(
             ['email' => 'customer@cureza.com'],
@@ -73,20 +53,9 @@ class UsersSeeder extends Seeder
             ]
         );
 
-        // 5. Create 10 Sellers listed in Cred.txt + 2 additional ones for homepage products
+        // 5. Create Aura Wellness seller
         $credSellers = [
             ['name' => 'Aura Wellness', 'email' => 'aurawellness@cureza-seller.com', 'pwd' => 'password123', 'slug' => 'aura-wellness'],
-            ['name' => 'Vedic Pure', 'email' => 'vedicpure@cureza-seller.com', 'pwd' => 'password123', 'slug' => 'vedic-pure'],
-            ['name' => 'Hemp Horizon', 'email' => 'hemphorizon@cureza-seller.com', 'pwd' => 'password123', 'slug' => 'hemp-horizon'],
-            ['name' => 'Prana Naturals', 'email' => 'prananaturals@cureza-seller.com', 'pwd' => 'password123', 'slug' => 'prana-naturals'],
-            ['name' => 'Somya Herbals', 'email' => 'somyaherbals@cureza-seller.com', 'pwd' => 'password123', 'slug' => 'somya-herbals'],
-            ['name' => 'Green Elements', 'email' => 'greenelements@cureza-seller.com', 'pwd' => 'password123', 'slug' => 'green-elements'],
-            ['name' => 'Pure Ayur', 'email' => 'pureayur@cureza-seller.com', 'pwd' => 'password123', 'slug' => 'pure-ayur'],
-            ['name' => 'Ojas Organics', 'email' => 'ojasorganics@cureza-seller.com', 'pwd' => 'password123', 'slug' => 'ojas-organics'],
-            ['name' => 'Sattva Remedies', 'email' => 'sattvaremedies@cureza-seller.com', 'pwd' => 'password123', 'slug' => 'sattva-remedies'],
-            ['name' => 'Amrit Life', 'email' => 'amritlife@cureza-seller.com', 'pwd' => 'password123', 'slug' => 'amrit-life'],
-            ['name' => 'Noelle Rosa', 'email' => 'noellerosa@cureza-seller.com', 'pwd' => 'password123', 'slug' => 'noelle-rosa'],
-            ['name' => 'Green Earth', 'email' => 'greenearth@cureza-seller.com', 'pwd' => 'password123', 'slug' => 'green-earth'],
         ];
 
         foreach ($credSellers as $s) {

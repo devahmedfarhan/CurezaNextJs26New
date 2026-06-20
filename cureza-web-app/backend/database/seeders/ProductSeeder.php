@@ -63,43 +63,26 @@ class ProductSeeder extends Seeder
         );
 
         // --- 2. SETUP BRANDS ---
-        $noelleRosa = Brand::where('slug', 'noelle-rosa')->first();
-        if (!$noelleRosa) {
-            $noelleRosaSeller = User::firstOrCreate(
-                ['email' => 'noellerosa@cureza-seller.com'],
+        $auraWellness = Brand::where('slug', 'aura-wellness')->first();
+        if (!$auraWellness) {
+            $auraWellnessSeller = User::firstOrCreate(
+                ['email' => 'aurawellness@cureza-seller.com'],
                 [
-                    'name' => 'Noelle Rosa',
+                    'name' => 'Aura Wellness',
                     'password' => bcrypt('password123'),
                     'role' => 'vendor',
                     'email_verified_at' => now(),
                 ]
             );
-            $noelleRosa = Brand::create([
-                'slug' => 'noelle-rosa',
-                'name' => 'Noelle Rosa',
+            $auraWellness = Brand::create([
+                'slug' => 'aura-wellness',
+                'name' => 'Aura Wellness',
                 'is_active' => true,
-                'user_id' => $noelleRosaSeller->id,
+                'user_id' => $auraWellnessSeller->id,
             ]);
         }
-
-        $greenEarth = Brand::where('slug', 'green-earth')->first();
-        if (!$greenEarth) {
-            $greenEarthSeller = User::firstOrCreate(
-                ['email' => 'greenearth@cureza-seller.com'],
-                [
-                    'name' => 'Green Earth',
-                    'password' => bcrypt('password123'),
-                    'role' => 'vendor',
-                    'email_verified_at' => now(),
-                ]
-            );
-            $greenEarth = Brand::create([
-                'slug' => 'green-earth',
-                'name' => 'Green Earth',
-                'is_active' => true,
-                'user_id' => $greenEarthSeller->id,
-            ]);
-        }
+        $noelleRosa = $auraWellness;
+        $greenEarth = $auraWellness;
 
         $productsData = [
             // --- NOELLE ROSA (User Request) ---
