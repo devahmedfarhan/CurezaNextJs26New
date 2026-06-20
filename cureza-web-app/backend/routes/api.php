@@ -200,6 +200,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/bank', [\App\Http\Controllers\SellerSettingsController::class, 'updateBank']);
             Route::post('/profile', [\App\Http\Controllers\SellerSettingsController::class, 'updateProfile']);
             Route::post('/kyc', [\App\Http\Controllers\SellerSettingsController::class, 'updateKYC']);
+            Route::post('/tax', [\App\Http\Controllers\SellerSettingsController::class, 'updateTaxSettings']);
         });
         
         // Seller Order Routes
@@ -239,6 +240,15 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::get('/export', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'export']);
             });
 
+            // Seller Reports Routes
+            Route::prefix('reports')->group(function () {
+                Route::get('/gst', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'gstReport']);
+                Route::get('/settlement', [\App\Http\Controllers\Api\Seller\SellerFinanceController::class, 'settlementReport']);
+            });
+
+            // Seller GSTIN Verification Route
+            Route::post('/kyc/verify-gstin', [\App\Http\Controllers\SellerSettingsController::class, 'verifyGstin']);
+
             // Seller Review Routes
             Route::prefix('reviews')->group(function () {
                 Route::get('/', [\App\Http\Controllers\Api\Seller\ReviewController::class, 'index']);
@@ -256,6 +266,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Order Routes (Authenticated)
     Route::get('/orders', [OrderController::class, 'index']); // List user's orders
     Route::get('/orders/{id}/invoice', [OrderController::class, 'downloadInvoice']);
+    Route::get('/orders/{id}/commission-invoice', [OrderController::class, 'downloadCommissionInvoice']);
     Route::get('/user/reviews', [ReviewController::class, 'userIndex']);
     
     // Prescription Routes
@@ -563,6 +574,7 @@ Route::middleware('auth:sanctum')->group(function () {
         // Finance & Payouts
         Route::prefix('finance')->group(function () {
             Route::get('/overview', [\App\Http\Controllers\Api\Admin\AdminFinanceController::class, 'overview']);
+            Route::get('/dashboard', [\App\Http\Controllers\Api\Admin\AdminFinanceController::class, 'dashboard']);
             Route::get('/sellers', [\App\Http\Controllers\Api\Admin\AdminFinanceController::class, 'sellers']);
             Route::get('/doctors', [\App\Http\Controllers\Api\Admin\AdminFinanceController::class, 'doctors']);
             Route::get('/commission-breakdown', [\App\Http\Controllers\Api\Admin\AdminFinanceController::class, 'commissionBreakdown']);

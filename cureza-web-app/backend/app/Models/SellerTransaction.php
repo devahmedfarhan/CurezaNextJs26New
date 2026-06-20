@@ -18,6 +18,9 @@ class SellerTransaction extends Model
         'payout_id',
         'type',
         'amount',
+        'tcs_deduction',
+        'tds_deduction',
+        'reconciliation_status',
         'balance_before',
         'balance_after',
         'description',
@@ -26,6 +29,8 @@ class SellerTransaction extends Model
 
     protected $casts = [
         'amount' => 'decimal:2',
+        'tcs_deduction' => 'decimal:2',
+        'tds_deduction' => 'decimal:2',
         'balance_before' => 'decimal:2',
         'balance_after' => 'decimal:2',
         'metadata' => 'array',

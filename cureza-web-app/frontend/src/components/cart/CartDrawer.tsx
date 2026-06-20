@@ -69,7 +69,8 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     const res = await axios.get('/checkout/initiate');
                     setPrefetchedCheckoutData(res.data);
                 } catch (e) {
-                    console.error("Failed to prefetch checkout details", e);
+                    // Log as a warning instead of console.error to avoid Next.js overlay errors in dev mode
+                    console.warn("Failed to prefetch checkout details (handled):", e);
                 }
             };
             prefetchCheckout();
@@ -171,6 +172,19 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     const walletBalance = summary?.wallet_balance || 0;
     const shippingCost = summary?.shipping_cost || 0;
     const rewards = summary?.rewards || null;
+
+    const getTaxLabel = () => {
+        const isIgst = Number(summary?.igst || 0) > 0;
+        const slabs = Object.values((summary as any)?.items_breakdown || {})
+            .map((item: any) => Number(item.gst_slab || 0))
+            .filter(slab => slab > 0);
+        const uniqueSlabs = Array.from(new Set(slabs));
+        const slabStr = uniqueSlabs.length > 0 
+            ? uniqueSlabs.map(s => `${s}%`).join(' & ') 
+            : '';
+        const taxType = isIgst ? 'IGST' : 'CGST + SGST';
+        return slabStr ? `Taxes (${taxType} ${slabStr})` : `Taxes (${taxType})`;
+    };
 
     // Helper calculations for milestone reward descriptions
     const nextLockedSlab = rewards?.active_slabs.find((s: any) => !s.unlocked);
@@ -383,7 +397,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                                 Add <span className="font-bold">₹{amountToFreeShipping}</span> more for <span className="font-bold">FREE shipping</span>!
                                             </p>
                                         ) : (
-                                            <p className="text-[9.5px] font-bold text-green-700 dark:text-green-300 flex items-center gap-0.5">
+                                            <p className="text-[9.5px] font-bold text-green-705 dark:text-green-300 flex items-center gap-0.5">
                                                 🎉 FREE shipping unlocked!
                                             </p>
                                         )}
@@ -395,7 +409,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                     {items.map((item) => (
                                         <div
                                             key={item.id}
-                                            className={`flex gap-3 p-2.5 bg-gray-50/40 dark:bg-gray-900/10 hover:bg-gray-50/80 dark:hover:bg-gray-900/20 border border-gray-100/50 dark:border-gray-900/40 rounded-lg transition-all duration-200 ${item.id < 0 ? 'opacity-60 pointer-events-none animate-pulse' : ''}`}
+                                            className={`flex gap-3 p-2.5 bg-gray-55/40 dark:bg-gray-900/10 hover:bg-gray-55/80 dark:hover:bg-gray-900/20 border border-gray-100/50 dark:border-gray-900/40 rounded-lg transition-all duration-200 ${item.id < 0 ? 'opacity-60 pointer-events-none animate-pulse' : ''}`}
                                         >
                                             {/* Thumbnail */}
                                             <div className="w-14 h-14 bg-gray-50 dark:bg-gray-800 rounded-lg flex-shrink-0 overflow-hidden border border-gray-200/60 dark:border-gray-800 relative">
@@ -422,7 +436,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                                             {item.is_gift ? 'FREE' : `₹${(item.price * item.quantity).toFixed(2)}`}
                                                         </span>
                                                     </div>
-                                                    <p className="text-[9.5px] text-gray-400 dark:text-gray-500 font-medium mt-0.5">{item.brand}</p>
+                                                    <p className="text-[9.5px] text-gray-400 dark:text-gray-550 font-medium mt-0.5">{item.brand}</p>
                                                     
                                                     {item.patientDetails && (
                                                         <div className="mt-1 text-[8.5px] text-gray-500 bg-gray-100/50 dark:bg-gray-900 p-1.5 rounded-lg border border-gray-200/50 dark:border-gray-800/80 leading-tight">
@@ -666,20 +680,19 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     {/* Footer Section */}
                     {items.length > 0 && (
                         <div className="border-t border-gray-100 dark:border-gray-900 p-4 bg-white dark:bg-gray-955 sticky bottom-0 z-10">
-                            {/* Summary breakdown expander */}
                             <div className="mb-3.5">
                                 <div
                                     onClick={() => setShowBreakdown(!showBreakdown)}
                                     className="flex justify-between items-center cursor-pointer select-none py-0.5 group"
                                 >
-                                    <span className="text-[9.5px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider group-hover:text-gray-600 transition">Estimated Total</span>
+                                    <span className="text-[9.5px] font-bold text-gray-400 dark:text-gray-550 uppercase tracking-wider group-hover:text-gray-600 transition">Estimated Total</span>
                                     <div className="flex items-center gap-1.5">
                                         {totalSavings > 0 && (
                                             <span className="text-[11px] line-through text-gray-400 font-semibold">
                                                 ₹{(finalTotal + totalSavings + walletDeduction).toFixed(2)}
                                             </span>
                                         )}
-                                        <span className="text-sm font-black text-gray-900 dark:text-gray-100">
+                                        <span className="text-sm font-black text-gray-900 dark:text-gray-105">
                                             ₹{finalTotal.toFixed(2)}
                                         </span>
                                         <span className="text-[9px] text-gray-400 group-hover:text-gray-600 transition">{showBreakdown ? '▲' : '▼'}</span>
@@ -687,45 +700,57 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                 </div>
 
                                 {showBreakdown && (
-                                    <div className="mt-2.5 space-y-2 border-t border-dashed border-gray-200 dark:border-gray-800 pt-2.5 text-[10.5px] text-gray-555 dark:text-gray-400 transition-all">
-                                        <div className="flex justify-between">
-                                            <span>Subtotal</span>
-                                            <span className="font-semibold">₹{totalPrice.toFixed(2)}</span>
-                                        </div>
-                                        {discount > 0 && (
-                                            <div className="flex justify-between text-green-600 dark:text-green-400 font-semibold">
-                                                <span>Coupon / Bundle Discounts</span>
-                                                <span>-₹{discount.toFixed(2)}</span>
-                                            </div>
-                                        )}
-                                        {milestoneDiscount > 0 && (
-                                            <div className="flex justify-between text-green-600 dark:text-green-400 font-semibold animate-pulse">
-                                                <span>Milestone Reward Discount</span>
-                                                <span>-₹{milestoneDiscount.toFixed(2)}</span>
-                                            </div>
-                                        )}
-                                        {walletDeduction > 0 && (
-                                            <div className="flex justify-between text-orange-600 dark:text-orange-400 font-semibold">
-                                                <span>Loyalty Coins Applied</span>
-                                                <span>-₹{walletDeduction.toFixed(2)}</span>
-                                            </div>
-                                        )}
-                                        <div className="flex justify-between">
-                                            <span>GST / Taxes</span>
-                                            <span>₹{(summary?.total_tax || 0).toFixed(2)}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span>Delivery fee</span>
-                                            <span className="font-semibold">
-                                                {summary?.milestone_free_shipping 
-                                                    ? 'FREE (Milestone Reward 🎉)' 
-                                                    : (shippingCost > 0 ? `₹${shippingCost.toFixed(2)}` : 'FREE')}
-                                            </span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span>Platform Convenience Fee</span>
-                                            <span>₹{(summary?.platform_fee || 10.00).toFixed(2)}</span>
-                                        </div>
+                                    <div className="mt-2.5 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-850">
+                                        <table className="w-full text-left border-collapse text-[10.5px]">
+                                            <tbody>
+                                                <tr className="border-b border-gray-150 dark:border-gray-850 bg-gray-50/50 dark:bg-gray-950/20">
+                                                    <td className="p-2 font-medium text-gray-600 dark:text-gray-400">Taxable Value (Base Price)</td>
+                                                    <td className="p-2 text-right font-semibold text-gray-900 dark:text-white">₹{(totalPrice - (summary?.total_tax || 0)).toFixed(2)}</td>
+                                                </tr>
+                                                {discount > 0 && (
+                                                    <tr className="border-b border-gray-150 dark:border-gray-850">
+                                                        <td className="p-2 font-medium text-green-600 dark:text-green-400 font-bold">Coupon / Bundle Discounts</td>
+                                                        <td className="p-2 text-right font-bold text-green-600 dark:text-green-400">-₹{discount.toFixed(2)}</td>
+                                                    </tr>
+                                                )}
+                                                {milestoneDiscount > 0 && (
+                                                    <tr className="border-b border-gray-150 dark:border-gray-850">
+                                                        <td className="p-2 font-medium text-green-600 dark:text-green-400 font-bold">Milestone Reward Discount</td>
+                                                        <td className="p-2 text-right font-bold text-green-600 dark:text-green-400">-₹{milestoneDiscount.toFixed(2)}</td>
+                                                    </tr>
+                                                )}
+                                                {walletDeduction > 0 && (
+                                                    <tr className="border-b border-gray-150 dark:border-gray-850">
+                                                        <td className="p-2 font-medium text-orange-600 dark:text-orange-400 font-bold">Loyalty Coins Applied</td>
+                                                        <td className="p-2 text-right font-bold text-orange-600 dark:text-orange-400">-₹{walletDeduction.toFixed(2)}</td>
+                                                    </tr>
+                                                )}
+                                                <tr className="border-b border-gray-150 dark:border-gray-850">
+                                                    <td className="p-2 font-medium text-gray-600 dark:text-gray-400">
+                                                        {getTaxLabel()}
+                                                    </td>
+                                                    <td className="p-2 text-right font-semibold text-gray-900 dark:text-white">₹{(summary?.total_tax || 0).toFixed(2)}</td>
+                                                </tr>
+                                                {summary?.platform_fee !== undefined && Number(summary.platform_fee) > 0 && (
+                                                    <tr className="border-b border-gray-150 dark:border-gray-850">
+                                                        <td className="p-2 font-medium text-gray-600 dark:text-gray-400">Convenience Fee</td>
+                                                        <td className="p-2 text-right font-semibold text-gray-900 dark:text-white">₹{Number(summary.platform_fee).toFixed(2)}</td>
+                                                    </tr>
+                                                )}
+                                                <tr className="border-b border-gray-150 dark:border-gray-850">
+                                                    <td className="p-2 font-medium text-gray-600 dark:text-gray-400">Delivery Charge</td>
+                                                    <td className="p-2 text-right font-semibold text-gray-900 dark:text-white">
+                                                        {summary?.milestone_free_shipping 
+                                                            ? 'FREE' 
+                                                            : (shippingCost > 0 ? `₹${shippingCost.toFixed(2)}` : 'FREE')}
+                                                    </td>
+                                                </tr>
+                                                <tr className="bg-gray-50/50 dark:bg-gray-950/40">
+                                                    <td className="p-2 font-bold text-gray-905 dark:text-white">Total Price (Inclusive of all taxes)</td>
+                                                    <td className="p-2 text-right font-black text-gray-905 dark:text-white">₹{finalTotal.toFixed(2)}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 )}
                             </div>

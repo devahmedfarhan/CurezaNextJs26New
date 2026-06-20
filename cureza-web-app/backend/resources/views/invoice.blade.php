@@ -237,6 +237,16 @@
   </style>
 </head>
 <body>
+@php
+  $firstItem = $order->items->first();
+  $seller = $firstItem ? $firstItem->seller : null;
+  $sellerProfile = $seller ? $seller->sellerProfile : null;
+  $brandName = ($seller && $seller->brand) ? $seller->brand->name : ($seller ? $seller->name : 'Cureza Healthcare');
+  $sellerAddress = $sellerProfile ? ($sellerProfile->address_line_1 . ', ' . $sellerProfile->city . ', ' . $sellerProfile->state . ' - ' . $sellerProfile->pin_code) : '54/3 Kumar Mohalla, Inside Delhi Gate, Ajmer, Rajasthan';
+  $sellerGst = $sellerProfile ? $sellerProfile->gst_number : '08CZRPA3578H1ZY';
+  $sellerPhone = $sellerProfile ? ($seller->phone ?? '9887860015') : '9887860015';
+  $sellerEmail = $seller ? $seller->email : 'info@cureza.in';
+@endphp
 <div class="invoice-1-1">
 <div class="decoration-2"></div>
 <div class="wrapper-3">
@@ -292,9 +302,10 @@
 @foreach($order->items as $item)
 <div class="roll-37">
 <p class="text-single-200-semi-bold"><span class="text-rgb-93-100-129">{{ $item->product_name }}</span>
-@if($item->product->sku)
-<br><span style="font-size: 8px; color: #868da6; font-weight: normal;">SKU: {{ $item->product->sku }}</span>
-@endif
+<br><span style="font-size: 8px; color: #868da6; font-weight: normal;">
+@if($item->product && $item->product->sku) SKU: {{ $item->product->sku }} | @endif
+GST: {{ number_format($item->gst_slab ?? 18, 0) }}% | Base: ₹{{ number_format($item->base_price ?? ($item->price / 1.18), 2) }} | Tax: ₹{{ number_format($item->gst_amount ?? ($item->price - ($item->price / 1.18)), 2) }}
+</span>
 </p>
 <div class="wrap-39">
 <p class="text-single-200-semi-bold"><span class="text-rgb-134-141-166">{{ $item->quantity }}</span></p>
@@ -339,7 +350,7 @@
 
 @if($order->igst > 0)
 <div class="roll-37">
-<p class="text-single-200-semi-bold"><span class="text-rgb-93-100-129">IGST (5%)</span></p>
+<p class="text-single-200-semi-bold"><span class="text-rgb-93-100-129">IGST</span></p>
 <div class="wrap-39">
 <p class="text-single-200-semi-bold"><span class="text-rgb-134-141-166">-</span></p>
 <div class="amounts-41">
@@ -358,9 +369,11 @@
 </div>
 </div>
 </div>
-@else
+@endif
+
+@if($order->cgst > 0)
 <div class="roll-37">
-<p class="text-single-200-semi-bold"><span class="text-rgb-93-100-129">CGST (2.5%)</span></p>
+<p class="text-single-200-semi-bold"><span class="text-rgb-93-100-129">CGST</span></p>
 <div class="wrap-39">
 <p class="text-single-200-semi-bold"><span class="text-rgb-134-141-166">-</span></p>
 <div class="amounts-41">
@@ -379,8 +392,11 @@
 </div>
 </div>
 </div>
+@endif
+
+@if($order->sgst > 0)
 <div class="roll-37">
-<p class="text-single-200-semi-bold"><span class="text-rgb-93-100-129">SGST (2.5%)</span></p>
+<p class="text-single-200-semi-bold"><span class="text-rgb-93-100-129">SGST</span></p>
 <div class="wrap-39">
 <p class="text-single-200-semi-bold"><span class="text-rgb-134-141-166">-</span></p>
 <div class="amounts-41">
@@ -436,16 +452,16 @@
 </div>
 <div class="co-tax-117">
 <div class="company-name">
-<p class="text-single-200-semi-bold"><span class="text-white">Cureza Healthcare</span></p>
+<p class="text-single-200-semi-bold"><span class="text-white">{{ $brandName }}</span></p>
 </div>
 <div class="company-tax-number">
-<p class="text-single-200-regular"><span class="text-white">54/3 Kumar Mohalla, Dargah Nazim Building,<br>Inside Delhi Gate, Ajmer, Rajasthan</span></p>
+<p class="text-single-200-regular"><span class="text-white">{!! nl2br(e($sellerAddress)) !!}</span></p>
 </div>
 <div class="company-tax-number">
-<p class="text-single-200-regular"><span class="text-white">GSTIN: 08CZRPA3578H1ZY</span></p>
+<p class="text-single-200-regular"><span class="text-white">GSTIN: {{ $sellerGst }}</span></p>
 </div>
 <div class="company-tax-number">
-<p class="text-single-200-regular"><span class="text-white">Phone: 9887860015 | Email: info@cureza.in</span></p>
+<p class="text-single-200-regular"><span class="text-white">Phone: {{ $sellerPhone }} | Email: {{ $sellerEmail }}</span></p>
 </div>
 </div>
 </div>

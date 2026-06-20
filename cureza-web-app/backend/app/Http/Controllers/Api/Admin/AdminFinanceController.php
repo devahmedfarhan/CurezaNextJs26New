@@ -165,10 +165,13 @@ class AdminFinanceController extends Controller
                 $totalSales += $sellerTotal;
                 $platformCommission += $commAmount;
                 $gatewayFee += $gwFee;
-                $sellerEarnings += ($sellerTotal - $commAmount - $gwFee);
             }
 
             $currentCommission = $getCommissionRate($seller->id, now());
+            $gstOnComm = $platformCommission * 0.18;
+            $tcsVal = $totalSales * 0.01;
+            $tdsVal = $totalSales * 0.01;
+            $sellerEarnings = $totalSales - $platformCommission - $gstOnComm - $gatewayFee - $tcsVal - $tdsVal;
 
             return [
                 'seller_id' => $seller->id,
@@ -176,6 +179,9 @@ class AdminFinanceController extends Controller
                 'brand_name' => $seller->sellerProfile->brand_name ?? 'N/A',
                 'total_sales' => round($totalSales, 2),
                 'platform_commission' => round($platformCommission, 2),
+                'gst_on_commission' => round($gstOnComm, 2),
+                'tcs_amount' => round($tcsVal, 2),
+                'tds_amount' => round($tdsVal, 2),
                 'gateway_fee' => round($gatewayFee, 2),
                 'seller_earnings' => round($sellerEarnings, 2),
                 'wallet_balance' => round($seller->sellerWallet->available_balance ?? 0, 2),
@@ -693,6 +699,68 @@ class AdminFinanceController extends Controller
                 'last_page' => $doctors->lastPage(),
                 'per_page' => $doctors->perPage(),
                 'total' => $doctors->total(),
+            ]
+        ]);
+    }
+
+    /**
+     * Get platform finance dashboard summary
+     * GET /api/admin/finance/dashboard
+     */
+    public function dashboard(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        // Aggregated marketplace revenue query (delivered orders)
+        $orderQuery = Order::where('status', 'delivered')
+            ->whereNotNull('commission_calculated_at');
+
+        if ($startDate) $orderQuery->where('created_at', '>=', $startDate);
+        if ($endDate) $orderQuery->where('created_at', '<=', $endDate);
+
+        $totalRevenue = (float)$orderQuery->sum('final_amount');
+        $commissionEarnings = (float)$orderQuery->sum('platform_commission_amount');
+        $gatewayFees = (float)$orderQuery->sum('payment_gateway_fee');
+
+        // Pending Escrows (sum of pending_amount from seller_wallets)
+        $pendingEscrows = (float)SellerWallet::sum('pending_amount');
+
+        // Total Payouts (sum of paid_amount from seller_wallets)
+        $totalSellerPayouts = (float)SellerWallet::sum('paid_amount');
+        // Let's also check payouts table for approved doctor payouts, if any
+        $totalDoctorPayouts = (float)\App\Models\Payout::where('status', 'approved')
+            ->whereHas('user', function($q) {
+                $q->where('role', 'doctor');
+            })->sum('approved_amount');
+        $totalPayouts = $totalSellerPayouts + $totalDoctorPayouts;
+
+        // Accumulated TCS & TDS deductions from seller_transactions
+        $txnQuery = SellerTransaction::query();
+        if ($startDate) $txnQuery->where('created_at', '>=', $startDate);
+        if ($endDate) $txnQuery->where('created_at', '<=', $endDate);
+
+        $accumulatedTcs = (float)$txnQuery->sum('tcs_deduction');
+        $accumulatedTds = (float)$txnQuery->sum('tds_deduction');
+
+        return response()->json([
+            'revenue' => [
+                'marketplace_revenue' => round($totalRevenue, 2),
+                'commission_earnings' => round($commissionEarnings, 2),
+                'gateway_fees' => round($gatewayFees, 2),
+                'net_platform_earnings' => round($commissionEarnings - $gatewayFees, 2),
+            ],
+            'escrow' => [
+                'pending_escrows' => round($pendingEscrows, 2),
+            ],
+            'payouts' => [
+                'total_payouts' => round($totalPayouts, 2),
+                'seller_payouts' => round($totalSellerPayouts, 2),
+                'doctor_payouts' => round($totalDoctorPayouts, 2),
+            ],
+            'compliance' => [
+                'accumulated_tcs' => round($accumulatedTcs, 2),
+                'accumulated_tds' => round($accumulatedTds, 2),
             ]
         ]);
     }

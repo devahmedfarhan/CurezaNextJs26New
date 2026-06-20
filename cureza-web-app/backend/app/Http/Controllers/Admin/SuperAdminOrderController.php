@@ -222,9 +222,9 @@ class SuperAdminOrderController extends Controller
                 ];
             }
 
-            $taxAmount = $totalAmount * 0.18; // Approx 18% GST default
+            $taxAmount = $totalAmount - ($totalAmount / 1.18); // Approx 18% GST inclusive default
             $shippingAmount = $request->shipping_amount ?? 50; // Default shipping
-            $finalAmount = $totalAmount + $taxAmount + $shippingAmount;
+            $finalAmount = $totalAmount + $shippingAmount;
 
             // Create Order
             $order = Order::create([
@@ -396,9 +396,9 @@ class SuperAdminOrderController extends Controller
                 // Recalculate totals for this seller's subset of items
                 $subtotal = $filteredItems->sum('total');
                 $order->total_amount = $subtotal;
-                $order->tax_amount = $subtotal * 0.18; // approx 18% GST
+                $order->tax_amount = $subtotal - ($subtotal / 1.18); // approx 18% GST inclusive
                 $order->discount_amount = 0; // reset for seller view
-                $order->final_amount = $order->total_amount + $order->tax_amount + $order->shipping_amount;
+                $order->final_amount = $order->total_amount + $order->shipping_amount;
             }
         }
 

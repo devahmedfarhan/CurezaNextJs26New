@@ -19,12 +19,16 @@ class ProductChangeRequest extends Model
         'rejection_reason',
         'reviewed_by',
         'reviewed_at',
+        'gst_slab',
+        'gst_inclusive',
     ];
 
     protected $casts = [
         'proposed_data' => 'array',
         'original_data' => 'array',
         'reviewed_at' => 'datetime',
+        'gst_slab' => 'decimal:2',
+        'gst_inclusive' => 'boolean',
     ];
 
     /**

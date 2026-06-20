@@ -57,7 +57,11 @@ class SellerFinanceController extends Controller
             'summary' => [
                 'total_sales' => $commissionSummary['total_sales'],
                 'platform_commission' => $commissionSummary['total_platform_commission'],
+                'platform_commission_gst' => $commissionSummary['total_platform_commission_gst'] ?? 0,
                 'gateway_fee' => $commissionSummary['total_gateway_fee'],
+                'shipping_charge' => $commissionSummary['total_shipping_charge'] ?? 0,
+                'tcs_deduction' => $commissionSummary['total_tcs'] ?? 0,
+                'tds_deduction' => $commissionSummary['total_tds'] ?? 0,
                 'net_earnings' => $commissionSummary['total_earnings'],
                 'order_count' => $commissionSummary['order_count'],
             ],
@@ -274,5 +278,147 @@ class SellerFinanceController extends Controller
                     'end' => now()
                 ];
         }
+    }
+
+    /**
+     * Get GSTR compliance report
+     * GET /api/seller/reports/gst
+     */
+    public function gstReport(Request $request)
+    {
+        $sellerId = Auth::id();
+        $range = $request->input('range', '30_days');
+        $dates = $this->getDateRange($range);
+
+        $query = \App\Models\OrderItem::where('seller_id', $sellerId)
+            ->whereHas('order', function ($q) use ($dates) {
+                $q->whereIn('status', ['delivered', 'cod_reconciled']);
+                if ($dates['start']) {
+                    $q->where('created_at', '>=', $dates['start']);
+                }
+                if ($dates['end']) {
+                    $q->where('created_at', '<=', $dates['end']);
+                }
+            })
+            ->with(['order']);
+
+        $items = $query->get();
+
+        $taxableAmount = $items->sum('base_price');
+        $cgst = $items->sum('cgst');
+        $sgst = $items->sum('sgst');
+        $igst = $items->sum('igst');
+        $totalGst = $items->sum('gst_amount');
+        $grossAmount = $items->sum('net_amount');
+
+        // Group by GST slab
+        $bySlab = $items->groupBy('gst_slab')->map(function ($items, $slab) {
+            return [
+                'gst_slab' => (float)$slab,
+                'taxable_amount' => round($items->sum('base_price'), 2),
+                'cgst' => round($items->sum('cgst'), 2),
+                'sgst' => round($items->sum('sgst'), 2),
+                'igst' => round($items->sum('igst'), 2),
+                'gst_amount' => round($items->sum('gst_amount'), 2),
+                'gross_amount' => round($items->sum('net_amount'), 2),
+            ];
+        })->values();
+
+        return response()->json([
+            'summary' => [
+                'taxable_amount' => round($taxableAmount, 2),
+                'cgst' => round($cgst, 2),
+                'sgst' => round($sgst, 2),
+                'igst' => round($igst, 2),
+                'total_gst' => round($totalGst, 2),
+                'gross_amount' => round($grossAmount, 2),
+            ],
+            'by_slab' => $bySlab,
+            'items' => $items->map(function ($item) {
+                return [
+                    'order_number' => $item->order->order_number ?? 'N/A',
+                    'product_name' => $item->product_name,
+                    'price' => (float)$item->price,
+                    'gst_slab' => (float)$item->gst_slab,
+                    'base_price' => (float)$item->base_price,
+                    'cgst' => (float)$item->cgst,
+                    'sgst' => (float)$item->sgst,
+                    'igst' => (float)$item->igst,
+                    'gst_amount' => (float)$item->gst_amount,
+                    'net_amount' => (float)$item->net_amount,
+                    'created_at' => $item->created_at->format('Y-m-d H:i:s'),
+                ];
+            })
+        ]);
+    }
+
+    /**
+     * Get settlement logs and payout detail reports
+     * GET /api/seller/reports/settlement
+     */
+    public function settlementReport(Request $request)
+    {
+        $sellerId = Auth::id();
+        $range = $request->input('range', '30_days');
+        $dates = $this->getDateRange($range);
+
+        $query = \App\Models\SellerTransaction::where('seller_id', $sellerId)
+            ->whereIn('type', [
+                \App\Models\SellerTransaction::TYPE_EARNING,
+                \App\Models\SellerTransaction::TYPE_PAYOUT,
+                \App\Models\SellerTransaction::TYPE_REFUND
+            ])
+            ->where(function($q) use ($dates) {
+                if ($dates['start']) {
+                    $q->where('created_at', '>=', $dates['start']);
+                }
+                if ($dates['end']) {
+                    $q->where('created_at', '<=', $dates['end']);
+                }
+            })
+            ->with(['order', 'payout'])
+            ->orderBy('created_at', 'desc');
+
+        $transactions = $query->get();
+
+        $report = $transactions->map(function ($txn) use ($sellerId) {
+            $order = $txn->order;
+
+            $payoutDetails = null;
+            if ($txn->type === \App\Models\SellerTransaction::TYPE_EARNING) {
+                $meta = $txn->metadata ?? [];
+                $payoutDetails = [
+                    'order_total' => $meta['order_total'] ?? 0.00,
+                    'platform_commission' => $meta['platform_commission'] ?? 0.00,
+                    'gateway_fee' => $meta['gateway_fee'] ?? 0.00,
+                    'shipping_charge' => $meta['shipping_charge'] ?? 0.00,
+                    'tcs_amount' => (float)$txn->tcs_deduction,
+                    'tds_amount' => (float)$txn->tds_deduction,
+                    'net_earnings' => (float)$txn->amount,
+                    'hold_until' => $meta['hold_until'] ?? null,
+                    'escrow_status' => $meta['escrow_status'] ?? 'N/A',
+                ];
+            }
+
+            return [
+                'transaction_id' => $txn->id,
+                'type' => $txn->type,
+                'description' => $txn->description,
+                'amount' => (float)$txn->amount,
+                'tcs_deduction' => (float)$txn->tcs_deduction,
+                'tds_deduction' => (float)$txn->tds_deduction,
+                'reconciliation_status' => $txn->reconciliation_status,
+                'balance_before' => (float)$txn->balance_before,
+                'balance_after' => (float)$txn->balance_after,
+                'created_at' => $txn->created_at->format('Y-m-d H:i:s'),
+                'order_number' => $order->order_number ?? 'N/A',
+                'payout_details' => $payoutDetails,
+                'payout_status' => $txn->payout->status ?? 'N/A',
+            ];
+        });
+
+        return response()->json([
+            'settlements' => $report
+        ]);
     }
 }

@@ -63,6 +63,8 @@ class Product extends Model
         'banners',
         'faqs',
         'is_prescription_required',
+        'gst_slab',
+        'gst_inclusive',
     ];
 
     protected $casts = [
@@ -79,6 +81,8 @@ class Product extends Model
         'original_price' => 'decimal:2',
         'rating' => 'decimal:2',
         'is_prescription_required' => 'boolean',
+        'gst_slab' => 'decimal:2',
+        'gst_inclusive' => 'boolean',
     ];
 
 

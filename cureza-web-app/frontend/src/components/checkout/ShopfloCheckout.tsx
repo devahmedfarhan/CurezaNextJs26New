@@ -101,6 +101,19 @@ export default function ShopfloCheckout({ isModal = false, onClose, prefetchedDa
     const [showAddressForm, setShowAddressForm] = useState(false);
     const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
 
+    const getTaxLabel = () => {
+        const isIgst = Number(checkoutSummary?.igst || 0) > 0;
+        const slabs = Object.values(checkoutSummary?.items_breakdown || {})
+            .map((item: any) => Number(item.gst_slab || 0))
+            .filter(slab => slab > 0);
+        const uniqueSlabs = Array.from(new Set(slabs));
+        const slabStr = uniqueSlabs.length > 0 
+            ? uniqueSlabs.map(s => `${s}%`).join(' & ') 
+            : '';
+        const taxType = isIgst ? 'IGST' : 'CGST + SGST';
+        return slabStr ? `Taxes (${taxType} ${slabStr})` : `Taxes (${taxType})`;
+    };
+
     const [shippingMethods, setShippingMethods] = useState<ShippingMethod[]>([]);
     const [selectedShippingMethodId, setSelectedShippingMethodId] = useState<number | null>(null);
 
@@ -922,28 +935,56 @@ export default function ShopfloCheckout({ isModal = false, onClose, prefetchedDa
                                         </div>
                                     ))}
                                 </div>
-                                
-                                <div className="border-t border-dashed border-gray-200 dark:border-gray-800 pt-3 space-y-1.5 text-[11px] text-gray-550">
-                                    <div className="flex justify-between">
-                                        <span>Subtotal</span>
-                                        <span className="font-bold text-gray-700 dark:text-gray-300">₹{checkoutSummary.subtotal}</span>
-                                    </div>
-                                    {checkoutSummary.discount > 0 && (
-                                        <div className="flex justify-between text-green-600 font-bold">
-                                            <span>Discount</span>
-                                            <span>-₹{checkoutSummary.discount}</span>
-                                        </div>
-                                    )}
-                                    <div className="flex justify-between">
-                                        <span>Shipping</span>
-                                        <span className="font-bold text-gray-700 dark:text-gray-300">
-                                            {Number(checkoutSummary.shipping_cost) === 0 ? 'Free' : `₹${checkoutSummary.shipping_cost}`}
-                                        </span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span>Tax (CGST/SGST/IGST)</span>
-                                        <span className="font-bold text-gray-700 dark:text-gray-300">₹{checkoutSummary.total_tax}</span>
-                                    </div>
+
+                                <div className="mt-3 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-800">
+                                    <table className="w-full text-left border-collapse text-[10.5px]">
+                                        <tbody>
+                                            <tr className="border-b border-gray-150 dark:border-gray-850 bg-gray-50/50 dark:bg-gray-950/20">
+                                                <td className="p-2 font-medium text-gray-600 dark:text-gray-400">Taxable Value (Base Price)</td>
+                                                <td className="p-2 text-right font-semibold text-gray-900 dark:text-white">₹{(Number(checkoutSummary.subtotal || 0) - Number(checkoutSummary.total_tax || 0)).toFixed(2)}</td>
+                                            </tr>
+                                            {Number(checkoutSummary.discount || 0) > 0 && (
+                                                <tr className="border-b border-gray-150 dark:border-gray-850">
+                                                    <td className="p-2 font-medium text-green-600 dark:text-green-400 font-bold">Coupon/Promo Discount</td>
+                                                    <td className="p-2 text-right font-bold text-green-600 dark:text-green-400">-₹{Number(checkoutSummary.discount).toFixed(2)}</td>
+                                                </tr>
+                                            )}
+                                            {Number(checkoutSummary.milestone_discount || 0) > 0 && (
+                                                <tr className="border-b border-gray-150 dark:border-gray-850">
+                                                    <td className="p-2 font-medium text-green-600 dark:text-green-400 font-bold">Milestone Reward Discount</td>
+                                                    <td className="p-2 text-right font-bold text-green-600 dark:text-green-400">-₹{Number(checkoutSummary.milestone_discount).toFixed(2)}</td>
+                                                </tr>
+                                            )}
+                                            {Number(checkoutSummary.wallet_deduction || 0) > 0 && (
+                                                <tr className="border-b border-gray-150 dark:border-gray-850">
+                                                    <td className="p-2 font-medium text-orange-600 dark:text-orange-400 font-bold">Wallet Coins Applied</td>
+                                                    <td className="p-2 text-right font-bold text-orange-600 dark:text-orange-400">-₹{Number(checkoutSummary.wallet_deduction).toFixed(2)}</td>
+                                                </tr>
+                                            )}
+                                            <tr className="border-b border-gray-150 dark:border-gray-850">
+                                                <td className="p-2 font-medium text-gray-600 dark:text-gray-400">
+                                                    {getTaxLabel()}
+                                                </td>
+                                                <td className="p-2 text-right font-semibold text-gray-900 dark:text-white">₹{Number(checkoutSummary.total_tax || 0).toFixed(2)}</td>
+                                            </tr>
+                                            {Number(checkoutSummary.platform_fee || 0) > 0 && (
+                                                <tr className="border-b border-gray-150 dark:border-gray-850">
+                                                    <td className="p-2 font-medium text-gray-600 dark:text-gray-400">Convenience Fee</td>
+                                                    <td className="p-2 text-right font-semibold text-gray-900 dark:text-white">₹{Number(checkoutSummary.platform_fee).toFixed(2)}</td>
+                                                </tr>
+                                            )}
+                                            <tr className="border-b border-gray-150 dark:border-gray-850">
+                                                <td className="p-2 font-medium text-gray-600 dark:text-gray-400">Delivery Charge</td>
+                                                <td className="p-2 text-right font-semibold text-gray-900 dark:text-white">
+                                                    {Number(checkoutSummary.shipping_cost || 0) === 0 ? 'FREE' : `₹${Number(checkoutSummary.shipping_cost).toFixed(2)}`}
+                                                </td>
+                                            </tr>
+                                            <tr className="bg-gray-55/50 dark:bg-gray-950/40">
+                                                <td className="p-2 font-bold text-gray-900 dark:text-white">Total Price (Inclusive of all taxes)</td>
+                                                <td className="p-2 text-right font-black text-gray-900 dark:text-white">₹{Number(checkoutSummary.final_total || checkoutSummary.total || 0).toFixed(2)}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         )}

@@ -71,7 +71,7 @@ export default function CartItem({ item }: CartItemProps) {
                                 </div>
                             )}
                         </div>
-                        <span className="font-bold text-charcoal dark:text-gray-100">₹{item.price * item.quantity}</span>
+                        <span className="font-bold text-charcoal dark:text-gray-100">₹{(item.price * item.quantity).toFixed(2)}</span>
                     </div>
                 </div>
 

@@ -21,6 +21,17 @@ export interface DashboardSummary {
         pending_payout: number; 
         paid_payout: number; 
     };
+    conversion_yield?: {
+        value: number;
+        trend: string;
+        sub: string;
+    };
+    cod_ratio?: number;
+    commission_rate?: {
+        platform: number;
+        gateway: number;
+        total: number;
+    };
     orders_breakdown?: {
         pending: number;
         processing: number;

@@ -88,6 +88,14 @@ export default function SellerAnalyticsPage() {
         loadData();
     }, [range]);
 
+    useEffect(() => {
+        if (summary) {
+            if (summary.cod_ratio !== undefined) {
+                setForecastCodRatio(Math.round(summary.cod_ratio));
+            }
+        }
+    }, [summary]);
+
     const loadData = async () => {
         setLoading(true);
         try {
@@ -123,18 +131,18 @@ export default function SellerAnalyticsPage() {
     };
 
     // Forecaster Calculations
-    const baseRevenue = summary?.revenue?.gross || 124500;
+    const baseRevenue = summary?.revenue?.gross ?? 0;
     const projectedGross = baseRevenue * (1 + forecastGrowth / 100);
-    const platRate = 25; // platform standard rate
-    const gateRate = 2.5; // gateway standard rate
+    const platRate = summary?.commission_rate?.platform ?? 25; // platform active rate
+    const gateRate = summary?.commission_rate?.gateway ?? 2.5; // gateway active rate
 
     const projectedPlatformComm = projectedGross * (platRate / 100);
     const prepaidPortion = projectedGross * (1 - forecastCodRatio / 100);
     const projectedGatewayFee = prepaidPortion * (gateRate / 100);
     
-    // Tax split on projected
+    // Tax split on projected (TCS is 1% of GST-exclusive base; TDS is 1% of gross total)
     const projectedGst = projectedPlatformComm * 0.18;
-    const projectedTcs = projectedGross * 0.01;
+    const projectedTcs = (projectedGross / 1.18) * 0.01;
     const projectedTds = projectedGross * 0.01;
     
     const projectedNetEarnings = Math.max(0, projectedGross - projectedPlatformComm - projectedGatewayFee - projectedGst - projectedTcs - projectedTds);
@@ -150,7 +158,7 @@ export default function SellerAnalyticsPage() {
 
     const simComm = simulatedSalePrice * (platRate / 100);
     const simGst = simComm * 0.18;
-    const simTcs = simulatedSalePrice * 0.01;
+    const simTcs = (simulatedSalePrice / 1.18) * 0.01;
     const simTds = simulatedSalePrice * 0.01;
     // assume average gateway fee based on cod ratio
     const simGate = simulatedSalePrice * (1 - forecastCodRatio / 100) * (gateRate / 100);
@@ -161,13 +169,13 @@ export default function SellerAnalyticsPage() {
     const simRoi = costPriceVal > 0 ? (simProfit / costPriceVal) * 100 : 0;
     
     // Break-even price calculator (solve where NetEarnings = CostPrice)
-    const retentionRatio = 1 - (platRate / 100) - ((platRate / 100) * 0.18) - 0.01 - 0.01 - ((1 - forecastCodRatio / 100) * (gateRate / 100));
+    const retentionRatio = 1 - (platRate / 100) - ((platRate / 100) * 0.18) - (0.01 / 1.18) - 0.01 - ((1 - forecastCodRatio / 100) * (gateRate / 100));
     const breakEvenPrice = retentionRatio > 0 ? (costPriceVal / retentionRatio) : 0;
 
     // Goal Planner Calculations
     const targetPayoutVal = Number(simTargetPayout) || 50000;
     const requiredGrossSales = retentionRatio > 0 ? (targetPayoutVal / retentionRatio) : 0;
-    const avgOrderVal = summary?.avg_order_value?.value || 798;
+    const avgOrderVal = summary?.avg_order_value?.value ?? 0;
     const requiredOrders = avgOrderVal > 0 ? Math.ceil(requiredGrossSales / avgOrderVal) : 0;
     const requiredCommission = requiredGrossSales * (platRate / 100);
 
@@ -218,10 +226,10 @@ export default function SellerAnalyticsPage() {
             {/* Top Stat Nodes */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 {[
-                    { label: 'Gross Sales Volume', value: `₹${(summary?.revenue?.gross || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, icon: TrendingUp, color: 'text-emerald-600', bg: 'bg-emerald-50 border-emerald-100', trend: `+${summary?.sales?.change || 0}%`, sub: 'Sales pipeline gross' },
+                    { label: 'Gross Sales Volume', value: `₹${(summary?.revenue?.gross || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, icon: TrendingUp, color: 'text-emerald-600', bg: 'bg-emerald-50 border-emerald-100', trend: `+${(summary?.sales?.change || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`, sub: 'Sales pipeline gross' },
                     { label: 'Active Pipeline Nodes', value: `${summary?.orders?.value || 0} Orders`, icon: ShoppingCart, color: 'text-blue-600', bg: 'bg-blue-50 border-blue-100', trend: `+${summary?.orders?.change || 0}%`, sub: 'Fulfillment operations' },
-                    { label: 'Net Wallet Balance', value: `₹${(summary?.revenue?.net || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, icon: Layers, color: 'text-indigo-600', bg: 'bg-indigo-50 border-indigo-100', trend: 'Cleared', sub: 'Ready for withdrawal' },
-                    { label: 'Conversion Yield', value: '3.2%', icon: BarChart2, color: 'text-amber-600', bg: 'bg-amber-50 border-amber-100', trend: 'Healthy', sub: 'Calculated index rate' },
+                    { label: 'Net Wallet Balance', value: `₹${(summary?.revenue?.net || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, icon: Layers, color: 'text-indigo-600', bg: 'bg-indigo-50 border-indigo-100', trend: 'Cleared', sub: 'Ready for withdrawal' },
+                    { label: 'Conversion Yield', value: `${(summary?.conversion_yield?.value || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`, icon: BarChart2, color: 'text-amber-600', bg: 'bg-amber-50 border-amber-100', trend: summary?.conversion_yield?.trend || 'Healthy', sub: summary?.conversion_yield?.sub || 'Calculated index rate' },
                 ].map((stat) => (
                     <div key={stat.label} className="premium-card p-5 sm:p-8 group relative overflow-hidden bg-white border border-gray-100 shadow-sm rounded-3xl">
                         <div className="absolute top-0 right-0 w-24 h-24 bg-gray-50 rounded-full -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150"></div>
@@ -289,7 +297,7 @@ export default function SellerAnalyticsPage() {
                                     />
                                     <ChartTooltip
                                         contentStyle={{ borderRadius: '16px', border: '1px solid #E5E7EB', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.05)' }}
-                                        formatter={(value: any) => [`₹${Number(value).toFixed(2)}`, 'Sales Volume']}
+                                        formatter={(value: any) => [`₹${Number(value).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 'Sales Volume']}
                                     />
                                     <Area
                                         type="monotone"
@@ -346,7 +354,7 @@ export default function SellerAnalyticsPage() {
                                     {(() => {
                                         const totalOrdersCount = pieData.reduce((acc, curr) => acc + curr.value, 0);
                                         return pieData.map((entry, index) => {
-                                            const pct = totalOrdersCount > 0 ? ((entry.value / totalOrdersCount) * 100).toFixed(1) : '0';
+                                            const pct = totalOrdersCount > 0 ? ((entry.value / totalOrdersCount) * 100).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00';
                                             return (
                                                 <div key={entry.name} className="flex items-center gap-3 text-xs font-bold text-gray-700">
                                                     <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
@@ -469,14 +477,14 @@ export default function SellerAnalyticsPage() {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
                                         <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest block mb-1">Projected Gross Volume</span>
-                                        <h3 className="text-xl font-black text-gray-900">₹{projectedGross.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</h3>
-                                        <p className="text-[8px] font-bold text-gray-400 mt-1 uppercase">Based on ₹{baseRevenue.toLocaleString('en-IN')} base</p>
+                                        <h3 className="text-xl font-black text-gray-900">₹{projectedGross.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
+                                        <p className="text-[8px] font-bold text-gray-400 mt-1 uppercase">Based on ₹{baseRevenue.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} base</p>
                                     </div>
 
                                     <div className="p-5 bg-emerald-50/20 border border-emerald-100 rounded-2xl shadow-sm">
                                         <span className="text-[8px] font-black text-[#00bba7] uppercase tracking-widest block mb-1">Projected Net Payout (Actual Yield)</span>
-                                        <h3 className="text-xl font-black text-[#00bba7]">₹{projectedNetEarnings.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</h3>
-                                        <p className="text-[8px] font-bold text-emerald-600 mt-1 uppercase">Approx {projectedGross > 0 ? ((projectedNetEarnings / projectedGross) * 100).toFixed(1) : '0.0'}% retention rate</p>
+                                        <h3 className="text-xl font-black text-[#00bba7]">₹{projectedNetEarnings.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
+                                        <p className="text-[8px] font-bold text-emerald-600 mt-1 uppercase">Approx {projectedGross > 0 ? ((projectedNetEarnings / projectedGross) * 100).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}% retention rate</p>
                                     </div>
                                 </div>
 
@@ -484,29 +492,29 @@ export default function SellerAnalyticsPage() {
                                     <h5 className="text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-50 pb-2">Deductions Breakdown Simulator</h5>
                                     
                                     <div className="flex justify-between items-center text-xs font-bold text-gray-500">
-                                        <span>Platform Commission ({platRate}%)</span>
-                                        <span>-₹{projectedPlatformComm.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                        <span>Platform Commission ({platRate.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%)</span>
+                                        <span>-₹{projectedPlatformComm.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
                                     <div className="flex justify-between items-center text-xs font-bold text-gray-500">
                                         <span>GST on Commission (18%)</span>
-                                        <span>-₹{projectedGst.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                        <span>-₹{projectedGst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
                                     <div className="flex justify-between items-center text-xs font-bold text-gray-500">
                                         <span>TCS Levy (1%)</span>
-                                        <span>-₹{projectedTcs.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                        <span>-₹{projectedTcs.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
                                     <div className="flex justify-between items-center text-xs font-bold text-gray-500">
                                         <span>TDS Levy (1%)</span>
-                                        <span>-₹{projectedTds.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                        <span>-₹{projectedTds.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
                                     <div className="flex justify-between items-center text-xs font-bold text-gray-500">
-                                        <span>Gateway Fee ({gateRate}% on {100 - forecastCodRatio}% prepaid)</span>
-                                        <span>-₹{projectedGatewayFee.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                        <span>Gateway Fee ({gateRate.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}% on {(100 - forecastCodRatio).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}% prepaid)</span>
+                                        <span>-₹{projectedGatewayFee.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
 
                                     <div className="border-t border-gray-100 pt-3 flex justify-between items-center text-sm font-black text-gray-900">
                                         <span>Total Estimated Deductions</span>
-                                        <span className="text-rose-600">₹{(projectedGross - projectedNetEarnings).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                        <span className="text-rose-600">₹{(projectedGross - projectedNetEarnings).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
                                 </div>
                             </div>
@@ -573,46 +581,46 @@ export default function SellerAnalyticsPage() {
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                     <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
                                         <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest block mb-1">Simulated Sale Price</span>
-                                        <h3 className="text-xl font-black text-gray-900">₹{simulatedSalePrice.toFixed(2)}</h3>
-                                        <p className="text-[8px] font-bold text-red-500 mt-1 uppercase">Saved ₹{discountAmt.toFixed(2)} for client</p>
+                                        <h3 className="text-xl font-black text-gray-900">₹{simulatedSalePrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
+                                        <p className="text-[8px] font-bold text-red-500 mt-1 uppercase">Saved ₹{discountAmt.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} for client</p>
                                     </div>
 
                                     <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
                                         <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest block mb-1">Simulated Net Profit</span>
                                         <h3 className={`text-xl font-black ${simProfit >= 0 ? 'text-[#00bba7]' : 'text-red-600'}`}>
-                                            {simProfit >= 0 ? '' : '-'}₹{Math.abs(simProfit).toFixed(2)}
+                                            {simProfit >= 0 ? '' : '-'}₹{Math.abs(simProfit).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </h3>
-                                        <p className="text-[8px] font-bold text-gray-400 mt-1 uppercase">ROI: <span className={simRoi >= 0 ? 'text-[#00bba7] font-extrabold' : 'text-red-500 font-extrabold'}>{simRoi.toFixed(1)}%</span></p>
+                                        <p className="text-[8px] font-bold text-gray-400 mt-1 uppercase">ROI: <span className={simRoi >= 0 ? 'text-[#00bba7] font-extrabold' : 'text-red-500 font-extrabold'}>{simRoi.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</span></p>
                                     </div>
 
                                     <div className="p-5 bg-indigo-50/10 border border-indigo-100 rounded-2xl shadow-sm">
                                         <span className="text-[8px] font-black text-indigo-600 uppercase tracking-widest block mb-1">Calculated Break-Even</span>
-                                        <h3 className="text-xl font-black text-indigo-900">₹{breakEvenPrice.toFixed(2)}</h3>
+                                        <h3 className="text-xl font-black text-indigo-900">₹{breakEvenPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
                                         <p className="text-[8px] font-bold text-indigo-500 mt-1 uppercase">Min Selling Price to cover costs</p>
                                     </div>
                                 </div>
 
                                 <div className="p-6 border border-gray-100 rounded-2xl space-y-2">
-                                    <h5 className="text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-50 pb-2">Single Order Retention Breakdowns</h5>
+                                    <h5 className="text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-55 pb-2">Single Order Retention Breakdowns</h5>
                                     <div className="flex justify-between items-center text-xs font-bold text-gray-500">
                                         <span>Product Cost Price</span>
-                                        <span>₹{costPriceVal.toFixed(2)}</span>
+                                        <span>₹{costPriceVal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
                                     <div className="flex justify-between items-center text-xs font-bold text-gray-500">
                                         <span>Platform Commission & GST</span>
-                                        <span className="text-red-500">-₹{(simComm + simGst).toFixed(2)}</span>
+                                        <span className="text-red-500">-₹{(simComm + simGst).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
                                     <div className="flex justify-between items-center text-xs font-bold text-gray-500">
                                         <span>Compliance Taxes (TCS + TDS)</span>
-                                        <span className="text-red-500">-₹{(simTcs + simTds).toFixed(2)}</span>
+                                        <span className="text-red-500">-₹{(simTcs + simTds).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
                                     <div className="flex justify-between items-center text-xs font-bold text-gray-500">
                                         <span>Gateway Fee (Weighted)</span>
-                                        <span className="text-red-500">-₹{simGate.toFixed(2)}</span>
+                                        <span className="text-red-500">-₹{simGate.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
                                     <div className="border-t border-gray-100 pt-2 flex justify-between items-center text-xs font-black text-gray-900">
                                         <span>Net Disbursable Order Value</span>
-                                        <span className="text-[#00bba7]">₹{simNetEarnings.toFixed(2)}</span>
+                                        <span className="text-[#00bba7]">₹{simNetEarnings.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
                                 </div>
                             </div>
@@ -653,7 +661,7 @@ export default function SellerAnalyticsPage() {
                                             <div className="grid grid-cols-2 gap-4 text-[10px] font-bold text-gray-500">
                                                 <div className="p-3 bg-gray-50 rounded-xl">
                                                     <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Velocity</span>
-                                                    <span className="text-gray-900 font-black">{velocity.toFixed(2)} units/day</span>
+                                                    <span className="text-gray-900 font-black">{velocity.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} units/day</span>
                                                 </div>
                                                 <div className="p-3 bg-gray-50 rounded-xl">
                                                     <span className="block text-[8px] text-gray-400 uppercase tracking-widest mb-1">Stock Left</span>
@@ -708,28 +716,25 @@ export default function SellerAnalyticsPage() {
                                     <p>• Platform Cut: {platRate}% (+18% GST)</p>
                                     <p>• Gateway Charge: {gateRate}% on Prepaid</p>
                                     <p>• Prepaid vs COD mix: {100 - forecastCodRatio}% / {forecastCodRatio}%</p>
-                                </div>
-                            </div>
-
-                            {/* Planner Outputs Panel */}
+                                           {/* Planner Outputs Panel */}
                             <div className="lg:col-span-2 space-y-6">
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                     <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
                                         <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest block mb-1">Target Net Payout</span>
-                                        <h3 className="text-xl font-black text-emerald-600">₹{targetPayoutVal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</h3>
+                                        <h3 className="text-xl font-black text-emerald-600">₹{targetPayoutVal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
                                         <p className="text-[8px] font-bold text-gray-400 mt-1 uppercase">Your Monthly Bank Payout Goal</p>
                                     </div>
 
                                     <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
                                         <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest block mb-1">Required Gross Sales</span>
-                                        <h3 className="text-xl font-black text-gray-900">₹{requiredGrossSales.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</h3>
+                                        <h3 className="text-xl font-black text-gray-900">₹{requiredGrossSales.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
                                         <p className="text-[8px] font-bold text-indigo-500 mt-1 uppercase">Sales target to hit payout</p>
                                     </div>
 
                                     <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
                                         <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest block mb-1">Estimated Orders Count</span>
                                         <h3 className="text-xl font-black text-gray-900">{requiredOrders} Orders</h3>
-                                        <p className="text-[8px] font-bold text-gray-400 mt-1 uppercase">Based on ₹{avgOrderVal.toFixed(0)} Average Order Value</p>
+                                        <p className="text-[8px] font-bold text-gray-400 mt-1 uppercase">Based on ₹{avgOrderVal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Average Order Value</p>
                                     </div>
                                 </div>
 
@@ -738,21 +743,22 @@ export default function SellerAnalyticsPage() {
                                     
                                     <div className="flex justify-between items-center text-xs font-bold text-gray-500">
                                         <span>Required Gross Revenue</span>
-                                        <span>₹{requiredGrossSales.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                        <span>₹{requiredGrossSales.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
                                     <div className="flex justify-between items-center text-xs font-bold text-gray-500">
                                         <span>Estimated Platform Commission</span>
-                                        <span className="text-rose-600">-₹{requiredCommission.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                        <span className="text-rose-600">-₹{requiredCommission.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
                                     <div className="flex justify-between items-center text-xs font-bold text-gray-500">
                                         <span>Estimated Taxes & Gateway Fees</span>
-                                        <span className="text-rose-600">-₹{(requiredGrossSales - targetPayoutVal - requiredCommission).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                        <span className="text-rose-600">-₹{(requiredGrossSales - targetPayoutVal - requiredCommission).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
 
                                     <div className="border-t border-gray-100 pt-3 flex justify-between items-center text-sm font-black text-gray-900">
                                         <span>Estimated Take-Home (Net Payout)</span>
-                                        <span className="text-[#00bba7]">₹{targetPayoutVal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                        <span className="text-[#00bba7]">₹{targetPayoutVal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
+                                </div>                             </div>
                                 </div>
                             </div>
                         </div>
@@ -805,7 +811,7 @@ export default function SellerAnalyticsPage() {
                                                 </span>
                                             </td>
                                             <td className="px-4 sm:px-8 py-4 text-right">
-                                                <p className="font-black text-gray-950 text-base">₹{Number(prod.revenue).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                                                <p className="font-black text-gray-950 text-base">₹{Number(prod.revenue).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                                                 <span className="text-[8px] font-black text-emerald-600 uppercase tracking-widest mt-0.5">Success Injected</span>
                                             </td>
                                             <td className="px-4 sm:px-8 py-4 text-right">

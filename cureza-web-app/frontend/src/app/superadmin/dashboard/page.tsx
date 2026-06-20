@@ -97,7 +97,8 @@ export default function SuperAdminDashboardHome() {
         total_paid_orders: 0,
         today_paid_orders: 0,
         total_paid_amount: 0,
-        today_paid_amount: 0
+        today_paid_amount: 0,
+        pending_payout_amount: 0
     };
 
     const recentOrders = dashboardData?.recent_orders || [];
@@ -226,7 +227,7 @@ export default function SuperAdminDashboardHome() {
             description: 'Review ledgers, handle payouts, commission policies and audit simulator configs.',
             metrics: [
                 { label: 'Total Revenue', value: `₹${parseFloat(stats.total_revenue).toLocaleString('en-IN')}` },
-                { label: 'Payout Releases', value: '₹42,500 Pending', warning: true },
+                { label: 'Payout Releases', value: `₹${parseFloat(stats.pending_payout_amount || 0).toLocaleString('en-IN')} Pending`, warning: (stats.pending_payout_amount || 0) > 0 },
                 { label: 'Today\'s Revenue', value: `₹${parseFloat(stats.today_revenue).toLocaleString('en-IN')}`, success: stats.today_revenue > 0 }
             ],
             links: [

@@ -209,6 +209,8 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
         banners: initialData?.banners || [{ desktop: null, mobile: null }, { desktop: null, mobile: null }, { desktop: null, mobile: null }],
         faqs: initialData?.faqs || [] as { question: string; answer: string }[],
         is_prescription_required: initialData?.is_prescription_required || false,
+        gst_slab: initialData?.gst_slab !== undefined ? String(initialData.gst_slab) : '18',
+        gst_inclusive: initialData?.gst_inclusive ?? true,
         status: initialData?.status || 'draft',
     }));
 
@@ -272,6 +274,8 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                 faqs: dataToUse.faqs || [],
                 is_prescription_required: dataToUse.is_prescription_required || false,
                 video_cover: dataToUse.video_cover || null,
+                gst_slab: dataToUse.gst_slab !== undefined ? String(dataToUse.gst_slab) : '18',
+                gst_inclusive: dataToUse.gst_inclusive ?? true,
                 status: dataToUse.status || 'draft',
             }));
 
@@ -307,8 +311,8 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
 
     const fetchOptions = async () => {
         try {
-            const catsPromise = api.get('/categories?type=category');
-            const concernsPromise = api.get('/categories?type=concern');
+            const catsPromise = api.get('/categories?type=category&all=true');
+            const concernsPromise = api.get('/categories?type=concern&all=true');
             const attrsPromise = api.get('/attributes');
 
             if (isSuperAdmin) {
@@ -327,18 +331,28 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                 setSellers(sRes.data?.data || []);
                 setTags(tRes.data || []);
             } else {
-                const [sbRes, cRes, cnRes, aRes, tRes] = await Promise.all([
+                const [sbRes, cRes, cnRes, aRes, tRes, sSettings] = await Promise.all([
                     api.get('/seller/brand'),
                     catsPromise,
                     concernsPromise,
                     attrsPromise,
-                    api.get('/tags').catch(() => ({ data: [] }))
+                    api.get('/tags').catch(() => ({ data: [] })),
+                    api.get('/seller/settings').catch(() => ({ data: null }))
                 ]);
                 setSellerBrand(sbRes.data);
                 setCategories(cRes.data);
                 setConcerns(cnRes.data);
                 setAttributes(aRes.data);
                 setTags(tRes.data || []);
+
+                if (!initialData && sSettings?.data?.profile) {
+                    const profile = sSettings.data.profile;
+                    setFormData(prev => ({
+                        ...prev,
+                        gst_slab: profile.default_gst_slab !== undefined ? String(profile.default_gst_slab) : '18',
+                        gst_inclusive: profile.default_gst_inclusive ?? true
+                    }));
+                }
             }
         } catch (error) {
             console.error('Failed to fetch options', error);
@@ -542,6 +556,8 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
             if (formData.seo_title) data.append('seo_title', formData.seo_title);
             if (formData.seo_description) data.append('seo_description', formData.seo_description);
             data.append('is_prescription_required', formData.is_prescription_required ? '1' : '0');
+            if (formData.gst_slab) data.append('gst_slab', formData.gst_slab);
+            data.append('gst_inclusive', formData.gst_inclusive ? '1' : '0');
             data.append('status', formData.status);
 
             // Arrays

@@ -69,6 +69,12 @@ class SellerProfile extends Model
         'kyc_document_reasons',
         'selected_licenses',
         'is_verified',
+        'gstin_verified',
+        'gstin_verified_at',
+        'tcs_rate',
+        'tds_rate',
+        'default_gst_slab',
+        'default_gst_inclusive',
     ];
 
     protected $casts = [
@@ -90,6 +96,12 @@ class SellerProfile extends Model
         'bank_account_number' => 'encrypted',
         'account_holder_name' => 'encrypted',
         'ifsc_code' => 'encrypted',
+        'gstin_verified' => 'boolean',
+        'gstin_verified_at' => 'datetime',
+        'tcs_rate' => 'decimal:2',
+        'tds_rate' => 'decimal:2',
+        'default_gst_slab' => 'decimal:2',
+        'default_gst_inclusive' => 'boolean',
     ];
 
     public function user()

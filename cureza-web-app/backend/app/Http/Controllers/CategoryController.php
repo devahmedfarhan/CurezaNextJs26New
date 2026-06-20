@@ -134,6 +134,16 @@ class CategoryController extends Controller
     public function publicIndex(Request $request)
     {
         $type = $request->input('type', 'all');
+        $all = filter_var($request->input('all', false), FILTER_VALIDATE_BOOLEAN) || auth('sanctum')->check();
+
+        if ($all) {
+            $query = Category::where('is_active', true);
+            if ($request->has('type')) {
+                $query->where('type', $request->type);
+            }
+            return response()->json($query->orderBy('name', 'asc')->get());
+        }
+
         $cacheKey = "public_categories_" . $type;
 
         $categories = \Illuminate\Support\Facades\Cache::remember($cacheKey, 900, function() use ($request) {

@@ -26,7 +26,7 @@ class CartCalculationService
      */
     public function calculate(Cart $cart, ?string $couponCode = null, ?string $state = null, ?int $shippingMethodId = null, ?string $paymentMethod = null): array
     {
-        $cart->load(['items.product.brand', 'items.product.seller']);
+        $cart->load(['items.product.brand', 'items.product.seller.sellerProfile']);
 
         // --- 1. Milestone Reward Slabs Gift Auto-Sync ---
         $slabs = RewardSlab::where('is_active', true)
@@ -224,22 +224,81 @@ class CartCalculationService
         }
 
         // --- 6. Tax Calculation (GST) ---
-        $taxableAmount = max(0, $subtotal - $discount - $bundleDiscount - $milestoneDiscount - $walletDeduction);
-        
-        $cgst = 0;
-        $sgst = 0;
-        $igst = 0;
+        $totalOrderDiscount = $discount + $bundleDiscount + $milestoneDiscount + $walletDeduction;
 
-        $isRajasthan = $state && strtolower($state) === 'rajasthan';
+        $totalCgst = 0;
+        $totalSgst = 0;
+        $totalIgst = 0;
+        $totalTaxAmount = 0;
+        $totalTaxableAmount = 0;
+        $itemsBreakdown = [];
 
-        if ($isRajasthan) {
-            $cgst = $taxableAmount * 0.025; // 2.5%
-            $sgst = $taxableAmount * 0.025; // 2.5%
-        } else {
-            $igst = $taxableAmount * 0.05;  // 5%
+        foreach ($cart->items as $item) {
+            if (!$item->product) continue;
+
+            $itemSubtotal = $item->quantity * $item->price;
+            // Pro-rata discount allocation
+            $itemDiscount = $subtotal > 0 ? ($totalOrderDiscount * ($itemSubtotal / $subtotal)) : 0;
+            $itemNetAmount = max(0, $itemSubtotal - $itemDiscount);
+
+            // Get product GST rate (slab) and inclusive flag
+            $gstSlab = (float)($item->product->gst_slab ?? 18.00);
+            $gstInclusive = true;
+
+            $itemBasePrice = $itemNetAmount / (1 + ($gstSlab / 100));
+            $itemGstAmount = $itemNetAmount - $itemBasePrice;
+
+            // Get seller state
+            $seller = $item->product->seller;
+            $sellerProfile = $seller ? $seller->sellerProfile : null;
+            $sellerState = $sellerProfile ? ($sellerProfile->pickup_address_state ?? $sellerProfile->state) : null;
+            
+            // Compare seller state with delivery state
+            $deliveryState = $state;
+            if (empty($deliveryState)) {
+                // If no delivery state selected yet, default to the seller's state to estimate CGST/SGST
+                $deliveryState = $sellerState ?? 'Rajasthan';
+            }
+
+            $isIntraState = $sellerState && strtolower(trim($sellerState)) === strtolower(trim($deliveryState));
+
+            if ($isIntraState) {
+                $itemCgst = $itemGstAmount / 2;
+                $itemSgst = $itemGstAmount / 2;
+                $itemIgst = 0.00;
+            } else {
+                $itemCgst = 0.00;
+                $itemSgst = 0.00;
+                $itemIgst = $itemGstAmount;
+            }
+
+            $totalCgst += $itemCgst;
+            $totalSgst += $itemSgst;
+            $totalIgst += $itemIgst;
+            $totalTaxAmount += $itemGstAmount;
+            $totalTaxableAmount += $itemBasePrice;
+
+            $itemsBreakdown[$item->id] = [
+                'product_id' => $item->product_id,
+                'quantity' => $item->quantity,
+                'price' => $item->price,
+                'subtotal' => $itemSubtotal,
+                'discount' => $itemDiscount,
+                'net_amount' => $itemNetAmount,
+                'gst_slab' => $gstSlab,
+                'base_price' => $itemBasePrice,
+                'gst_amount' => $itemGstAmount,
+                'cgst' => $itemCgst,
+                'sgst' => $itemSgst,
+                'igst' => $itemIgst,
+            ];
         }
 
-        $tax = $cgst + $sgst + $igst;
+        $taxableAmount = $totalTaxableAmount;
+        $cgst = $totalCgst;
+        $sgst = $totalSgst;
+        $igst = $totalIgst;
+        $tax = $totalTaxAmount;
 
         // --- 7. Shipping Logic ---
         $shippingCost = 0;
@@ -329,8 +388,8 @@ class CartCalculationService
 
         // --- 9. Grand Total ---
         // Let's add platform convenience fee
-        $platformFee = 10.00; // default fee
-        $total = $subtotal - $discount - $bundleDiscount - $milestoneDiscount - $walletDeduction + $tax + $shippingCost + $platformFee;
+        $platformFee = 0.00; // default fee (set to 0)
+        $total = $subtotal - $discount - $bundleDiscount - $milestoneDiscount - $walletDeduction + $shippingCost + $platformFee;
 
         return [
             'subtotal' => round($subtotal, 2),
@@ -352,6 +411,7 @@ class CartCalculationService
             'projected_cashback' => round($projectedCoins, 2),
             'wallet_balance' => round($walletBalance, 2),
             'rewards' => $rewardsData,
+            'items_breakdown' => $itemsBreakdown,
             'total' => round($total, 2),
             'final_total' => round($total, 2)
         ];

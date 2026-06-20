@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\SellerProfile;
 use App\Models\ActivityLog;
+use App\Models\Payout;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -88,6 +89,8 @@ class DashboardController extends Controller
         $totalPaidAmount = (float) Order::where('payment_method', '!=', 'cod')->where('payment_status', 'paid')->sum('final_amount');
         $todayPaidAmount = (float) Order::where('payment_method', '!=', 'cod')->where('payment_status', 'paid')->whereDate('created_at', Carbon::today())->sum('final_amount');
 
+        $pendingPayoutAmount = (float) Payout::where('status', 'pending')->sum('requested_amount');
+
         // Recent Activity
         $recentActivities = ActivityLog::with('user')->latest()->limit(5)->get();
         $recentOrders = Order::with('user')->latest()->limit(5)->get();
@@ -134,6 +137,7 @@ class DashboardController extends Controller
                 'today_paid_orders' => $todayPaidOrders,
                 'total_paid_amount' => $totalPaidAmount,
                 'today_paid_amount' => $todayPaidAmount,
+                'pending_payout_amount' => $pendingPayoutAmount,
             ],
             'recent_activities' => $recentActivities,
             'recent_orders' => $recentOrders

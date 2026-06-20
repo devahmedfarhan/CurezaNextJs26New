@@ -9,6 +9,7 @@ import {
 import axios from '@/lib/api';
 import { useToast } from '@/contexts/ToastContext';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import SellerGstDashboard from '../components/SellerGstDashboard';
 
 interface FinanceSummary {
     summary: {
@@ -84,7 +85,7 @@ export default function SellerFinancePage() {
     const [payoutRequests, setPayoutRequests] = useState<PayoutRequest[]>([]);
     const [loading, setLoading] = useState(true);
     const [range, setRange] = useState('30_days');
-    const [activeTab, setActiveTab] = useState<'overview' | 'withdraw' | 'ledger'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'withdraw' | 'ledger' | 'gst'>('overview');
     
     // Payout request states
     const [payoutAmount, setPayoutAmount] = useState('');
@@ -119,18 +120,10 @@ export default function SellerFinancePage() {
             setTransactions(transactionsRes.data.data || []);
             setPayoutRequests(payoutsRes.data.data || []);
             
-            // Auto-fill payout amount with net yield after taxes
+            // Auto-fill payout amount with available balance
             if (summaryRes.data) {
                 const summaryData = summaryRes.data;
-                const gross = summaryData.summary.total_sales;
-                const platformCommission = summaryData.summary.platform_commission;
-                const gst = platformCommission * 0.18;
-                const tcs = gross * 0.01;
-                const tds = gross * 0.01;
-                const totalTaxes = gst + tcs + tds;
-                const taxRatio = summaryData.summary.net_earnings > 0 ? totalTaxes / summaryData.summary.net_earnings : 0;
-                const estimatedTaxesOnBalance = summaryData.wallet.available_balance * taxRatio;
-                const netDisbursableYieldOnLoad = Math.max(0, Math.floor((summaryData.wallet.available_balance - estimatedTaxesOnBalance) * 100) / 100);
+                const netDisbursableYieldOnLoad = summaryData.wallet.available_balance;
                 setPayoutAmount(netDisbursableYieldOnLoad > 0 ? netDisbursableYieldOnLoad.toFixed(2) : '');
             }
             
@@ -263,21 +256,16 @@ export default function SellerFinancePage() {
     let estimatedTaxesOnBalance = 0;
     let taxRatio = 0;
     if (summary) {
-        const gross = summary.summary.total_sales;
-        const platformCommission = summary.summary.platform_commission;
-        const gst = platformCommission * 0.18;
-        const tcs = gross * 0.01;
-        const tds = gross * 0.01;
-        const totalTaxes = gst + tcs + tds;
-        taxRatio = summary.summary.net_earnings > 0 ? totalTaxes / summary.summary.net_earnings : 0;
-        estimatedTaxesOnBalance = summary.wallet.available_balance * taxRatio;
-        netDisbursableYield = Math.max(0, Math.floor((summary.wallet.available_balance - estimatedTaxesOnBalance) * 100) / 100);
+        // Wallet balance is already net of all commissions, GST, and statutory withholdings (deducted at source).
+        netDisbursableYield = summary.wallet.available_balance;
+        estimatedTaxesOnBalance = 0;
     }
 
     const tabs = [
         { id: 'overview', label: 'Financial Overview', icon: BarChart3 },
         { id: 'withdraw', label: 'Withdrawals & Payouts', icon: Landmark },
         { id: 'ledger', label: 'Operational Ledger', icon: CreditCard },
+        { id: 'gst', label: 'GST Compliance (GSTR)', icon: Calculator },
     ] as const;
 
     return (
@@ -364,9 +352,9 @@ export default function SellerFinancePage() {
                                         </div>
                                         <p className="text-[11px] font-semibold text-gray-500 capitalize mb-1">Withdrawable Balance (Net)</p>
                                         <h3 className="text-2xl font-bold text-gray-800 mb-2 tracking-tight">
-                                            ₹{netDisbursableYield.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                            ₹{netDisbursableYield.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </h3>
-                                        <p className="text-xs text-gray-500 font-medium normal-case mb-4">Total Wallet Balance: ₹{summary.wallet.available_balance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                                        <p className="text-xs text-gray-500 font-medium normal-case mb-4">Total Wallet Balance: ₹{summary.wallet.available_balance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                                     </div>
                                     
                                     <div className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-[10.5px] font-medium text-gray-550 leading-relaxed mb-4">
@@ -374,15 +362,15 @@ export default function SellerFinancePage() {
                                         <div className="space-y-1 text-gray-600">
                                             <div className="flex justify-between">
                                                 <span>Total Balance (Gross):</span>
-                                                <span className="font-semibold text-gray-800">₹{summary.wallet.available_balance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                <span className="font-semibold text-gray-800">₹{summary.wallet.available_balance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                             </div>
                                             <div className="flex justify-between text-rose-500">
                                                 <span>Compliance Taxes (GST/TCS/TDS):</span>
-                                                <span className="font-semibold">-₹{estimatedTaxesOnBalance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                <span className="font-semibold">-₹{estimatedTaxesOnBalance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                             </div>
                                             <div className="pt-1.5 mt-1 border-t border-gray-200 flex justify-between font-bold text-emerald-600 text-[11px]">
                                                 <span>Final Payout (Withdrawable):</span>
-                                                <span>₹{netDisbursableYield.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                <span>₹{netDisbursableYield.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -410,9 +398,9 @@ export default function SellerFinancePage() {
                                                     </div>
                                                     <p className="text-[11px] font-semibold text-gray-500 capitalize mb-1">Total Value Locked</p>
                                                     <h3 className="text-2xl font-bold text-gray-800 mb-2 tracking-tight">
-                                                        ₹{tvlNet.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                        ₹{tvlNet.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                     </h3>
-                                                    <p className="text-xs text-gray-500 font-medium normal-case mb-4">Raw Value: ₹{tvlRaw.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                                                    <p className="text-xs text-gray-500 font-medium normal-case mb-4">Raw Value: ₹{tvlRaw.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                                                 </div>
 
                                                 <div className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-[11px] font-medium text-gray-550 leading-relaxed mb-4">
@@ -447,12 +435,12 @@ export default function SellerFinancePage() {
                                                     </div>
                                                     <p className="text-[11px] font-semibold text-gray-500 capitalize mb-1">Successfully Injected</p>
                                                     <h3 className="text-2xl font-bold text-gray-800 mb-2 tracking-tight">
-                                                        ₹{paidNet.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                        ₹{paidNet.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                     </h3>
-                                                    <p className="text-xs text-gray-500 font-medium normal-case mb-4">Raw Paid: ₹{paidRaw.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                                                    <p className="text-xs text-gray-500 font-medium normal-case mb-4">Raw Paid: ₹{paidRaw.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                                                 </div>
 
-                                                <div className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-[11px] font-medium text-gray-550 leading-relaxed mb-4">
+                                                <div className="p-3 bg-gray-50 rounded-xl border border-gray-105 text-[11px] font-medium text-gray-550 leading-relaxed mb-4">
                                                     <p className="font-semibold capitalize text-[10px] text-gray-400 mb-1">Card Logic & Source</p>
                                                     <p className="mb-2 text-[10.5px]">Earnings successfully processed, approved, and transferred to your bank account after tax withholding.</p>
                                                     <div className="pt-1.5 border-t border-gray-200/50 flex justify-between text-[10px] font-semibold capitalize text-gray-400">
@@ -484,9 +472,9 @@ export default function SellerFinancePage() {
                                                     </div>
                                                     <p className="text-[11px] font-semibold text-gray-500 capitalize mb-1">In-Flight Pipeline</p>
                                                     <h3 className="text-2xl font-bold text-gray-800 mb-2 tracking-tight">
-                                                        ₹{pendingNet.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                        ₹{pendingNet.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                     </h3>
-                                                    <p className="text-xs text-gray-500 font-medium normal-case mb-4">Raw Pending: ₹{pendingRaw.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                                                    <p className="text-xs text-gray-500 font-medium normal-case mb-4">Raw Pending: ₹{pendingRaw.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                                                 </div>
 
                                                 <div className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-[11px] font-medium text-gray-550 leading-relaxed mb-4">
@@ -666,7 +654,7 @@ export default function SellerFinancePage() {
                             const gst = platformCommission * 0.18;
                             const tcs = gross * 0.01;
                             const tds = gross * 0.01;
-                            const actualHandYield = Math.max(0, netEarnings - gst - tcs - tds);
+                            const actualHandYield = Math.max(0, gross - platformCommission - gst - gatewayFee - tcs - tds);
 
                             return (
                                 <div className="premium-card p-6 bg-white border-b-8 border-b-gray-900 rounded-xl border border-gray-100 shadow-sm">
@@ -680,101 +668,110 @@ export default function SellerFinancePage() {
                                             Live Revenue Architecture Logic
                                         </div>
                                     </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6">
-                                        <div className="p-5 bg-gray-50 rounded-xl border border-gray-100 shadow-inner group hover:bg-white hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-500 flex flex-col justify-between h-[250px]">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+                                        {/* Card 1: Gross Sales */}
+                                        <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 shadow-inner group hover:bg-white hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-500 flex flex-col justify-between h-[260px]">
                                             <div>
-                                                <p className="text-xs font-semibold text-gray-500 capitalize mb-1">Market Aggregate</p>
-                                                <p className="text-2xl font-bold text-gray-800 tracking-tight mb-2">
-                                                    ₹{gross.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                <p className="text-[10px] font-bold text-gray-550 capitalize mb-1">Total Sales (Gross)</p>
+                                                <p className="text-xl font-extrabold text-gray-800 tracking-tight mb-2">
+                                                    ₹{gross.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                 </p>
                                             </div>
                                             
-                                            <div className="p-3 bg-white rounded-xl border border-gray-100/50 text-[11px] font-medium text-gray-550 leading-normal mb-2">
-                                                <p className="font-semibold capitalize text-[10px] text-gray-400 mb-0.5">Segment Details</p>
-                                                <p>Total gross sales before commissions for the selected audit cycle.</p>
+                                            <div className="p-2.5 bg-white rounded-xl border border-gray-100/50 text-[10px] font-medium text-gray-550 leading-normal mb-2">
+                                                <p className="font-semibold capitalize text-[9px] text-gray-400 mb-0.5">Details</p>
+                                                <p>Total gross customer sales volume before platform fee deductions.</p>
                                             </div>
 
                                             <div className="flex items-center justify-between">
-                                                <span className="px-2 py-0.5 bg-white text-gray-500 text-[10px] font-semibold rounded-lg shadow-sm border border-gray-100 group-hover:border-emerald-600 group-hover:text-emerald-600 transition-all">{summary.summary.order_count} Nodes</span>
+                                                <span className="px-2 py-0.5 bg-white text-gray-500 text-[9px] font-bold rounded-lg shadow-sm border border-gray-100 group-hover:border-emerald-600 group-hover:text-emerald-600 transition-all">{summary.summary.order_count} Nodes</span>
                                             </div>
                                         </div>
 
-                                        <div className="p-5 bg-amber-50/20 rounded-xl border border-amber-100 group hover:bg-white hover:shadow-2xl hover:shadow-amber-100/50 transition-all duration-500 h-[250px] flex flex-col justify-between">
+                                        {/* Card 2: Platform Charge */}
+                                        <div className="p-4 bg-rose-50/20 rounded-xl border border-rose-100 group hover:bg-white hover:shadow-2xl hover:shadow-rose-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
                                             <div>
-                                                <p className="text-xs font-semibold text-amber-600 capitalize mb-1">Compliance Taxes (GST/TCS/TDS)</p>
-                                                <p className="text-2xl font-bold text-amber-700 tracking-tight mb-2">
-                                                    -₹{(gst + tcs + tds).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                <p className="text-[10px] font-bold text-rose-500 capitalize mb-1">Platform Commission ({summary.commission_rate.platform}%)</p>
+                                                <p className="text-xl font-extrabold text-rose-600 tracking-tight mb-2">
+                                                    -₹{platformCommission.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                 </p>
                                             </div>
 
-                                            <div className="p-3 bg-white/80 rounded-xl border border-amber-100/50 text-[11px] font-medium text-amber-700 leading-normal mb-2">
-                                                <p className="font-semibold capitalize text-[10px] text-amber-600 mb-0.5">Tax Split Summary</p>
-                                                <div className="space-y-0.5 text-[9.5px]">
-                                                    <div className="flex justify-between">
-                                                        <span>GST (18% on Comm):</span>
-                                                        <span className="font-semibold">₹{gst.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
-                                                    </div>
-                                                    <div className="flex justify-between">
-                                                        <span>TCS (1% on Gross):</span>
-                                                        <span className="font-semibold">₹{tcs.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
-                                                    </div>
-                                                    <div className="flex justify-between">
-                                                        <span>TDS (1% on Gross):</span>
-                                                        <span className="font-semibold">₹{tds.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
-                                                    </div>
-                                                </div>
+                                            <div className="p-2.5 bg-white/80 rounded-xl border border-rose-100/50 text-[10px] font-medium text-rose-500 leading-normal mb-2">
+                                                <p className="font-semibold capitalize text-[9px] text-rose-450 mb-0.5">Details</p>
+                                                <p>Standard B2B platform commission of {Number(summary.commission_rate.platform).toFixed(2)}% applied on gross sales.</p>
+                                            </div>
+
+                                            <div className="w-12 h-1 bg-rose-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
+                                        </div>
+
+                                        {/* Card 3: GST on Commission */}
+                                        <div className="p-4 bg-rose-50/25 rounded-xl border border-rose-100 group hover:bg-white hover:shadow-2xl hover:shadow-rose-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
+                                            <div>
+                                                <p className="text-[10px] font-bold text-rose-500 capitalize mb-1">GST on Commission (18%)</p>
+                                                <p className="text-xl font-extrabold text-rose-600 tracking-tight mb-2">
+                                                    -₹{gst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                </p>
+                                            </div>
+
+                                            <div className="p-2.5 bg-white/80 rounded-xl border border-rose-100/50 text-[10px] font-medium text-rose-500 leading-normal mb-2">
+                                                <p className="font-semibold capitalize text-[9px] text-rose-450 mb-0.5">Details</p>
+                                                <p>18% Goods and Services Tax (GST) applied on platform commission fee.</p>
+                                            </div>
+
+                                            <div className="w-12 h-1 bg-rose-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
+                                        </div>
+
+                                        {/* Card 4: Gateway Fee */}
+                                        <div className="p-4 bg-rose-50/20 rounded-xl border border-rose-100 group hover:bg-white hover:shadow-2xl hover:shadow-rose-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
+                                            <div>
+                                                <p className="text-[10px] font-bold text-rose-500 capitalize mb-1">Gateway Fee ({summary.commission_rate.gateway}%)</p>
+                                                <p className="text-xl font-extrabold text-rose-600 tracking-tight mb-2">
+                                                    -₹{gatewayFee.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                </p>
+                                            </div>
+
+                                            <div className="p-2.5 bg-white/80 rounded-xl border border-rose-100/50 text-[10px] font-medium text-rose-500 leading-normal mb-2">
+                                                <p className="font-semibold capitalize text-[9px] text-rose-450 mb-0.5">Details</p>
+                                                <p>Gateway fee for online transactions. 0% is charged for cash-on-delivery (COD).</p>
+                                            </div>
+
+                                            <div className="w-12 h-1 bg-rose-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
+                                        </div>
+
+                                        {/* Card 5: TCS & TDS */}
+                                        <div className="p-4 bg-amber-50/20 rounded-xl border border-amber-100 group hover:bg-white hover:shadow-2xl hover:shadow-amber-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
+                                            <div>
+                                                <p className="text-[10px] font-bold text-amber-600 capitalize mb-1">Statutory Taxes (2%)</p>
+                                                <p className="text-xl font-extrabold text-amber-700 tracking-tight mb-2">
+                                                    -₹{(tcs + tds).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                </p>
+                                            </div>
+
+                                            <div className="p-2.5 bg-white/80 rounded-xl border border-amber-100/50 text-[10px] font-medium text-amber-700 leading-normal mb-2 font-mono">
+                                                <p className="font-semibold capitalize text-[9px] text-amber-600 mb-0.5">TCS: ₹{tcs.toFixed(2)} | TDS: ₹{tds.toFixed(2)}</p>
+                                                <p>Tax Collection at Source (1% TCS) and Tax Deducted at Source (1% TDS) withheld at source.</p>
                                             </div>
 
                                             <div className="w-12 h-1 bg-amber-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
                                         </div>
 
-                                        <div className="p-5 bg-rose-50/20 rounded-xl border border-rose-100 group hover:bg-white hover:shadow-2xl hover:shadow-rose-100/50 transition-all duration-500 h-[250px] flex flex-col justify-between">
-                                            <div>
-                                                <p className="text-xs font-semibold text-rose-500 capitalize mb-1">Platform Charge ({summary.commission_rate.platform}%)</p>
-                                                <p className="text-2xl font-bold text-rose-600 tracking-tight mb-2">
-                                                    -₹{platformCommission.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                                                </p>
-                                            </div>
-
-                                            <div className="p-3 bg-white/80 rounded-xl border border-rose-100/50 text-[11px] font-medium text-rose-500 leading-normal mb-2">
-                                                <p className="font-semibold capitalize text-[10px] text-rose-450 mb-0.5">Segment Details</p>
-                                                <p>Platform commission fee applied on gross sales for the selected audit cycle ({Number(summary.commission_rate.platform).toFixed(2)}% standard rate).</p>
-                                            </div>
-
-                                            <div className="w-12 h-1 bg-rose-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
-                                        </div>
-
-                                        <div className="p-5 bg-rose-50/20 rounded-xl border border-rose-100 group hover:bg-white hover:shadow-2xl hover:shadow-rose-100/50 transition-all duration-500 h-[250px] flex flex-col justify-between">
-                                            <div>
-                                                <p className="text-xs font-semibold text-rose-500 capitalize mb-1">Gateway Protocol ({summary.commission_rate.gateway}%)</p>
-                                                <p className="text-2xl font-bold text-rose-600 tracking-tight mb-2">
-                                                    -₹{gatewayFee.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                                                </p>
-                                            </div>
-
-                                            <div className="p-3 bg-white/80 rounded-xl border border-rose-100/50 text-[11px] font-medium text-rose-500 leading-normal mb-2">
-                                                <p className="font-semibold capitalize text-[10px] text-rose-450 mb-0.5">Segment Details</p>
-                                                <p>Payment processor gateway fee on gross sales for the selected audit cycle ({Number(summary.commission_rate.gateway).toFixed(2)}% standard rate for online payments, 0% for COD).</p>
-                                            </div>
-
-                                            <div className="w-12 h-1 bg-rose-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
-                                        </div>
-
-                                        <div className="p-5 bg-emerald-50 text-emerald-900 rounded-xl border border-emerald-100 group hover:shadow-2xl hover:shadow-emerald-200/50 transition-all duration-700 h-[250px] flex flex-col justify-between relative overflow-hidden">
+                                        {/* Card 6: Net Payout */}
+                                        <div className="p-4 bg-emerald-50 text-emerald-900 rounded-xl border border-emerald-100 group hover:shadow-2xl hover:shadow-emerald-200/50 transition-all duration-700 h-[260px] flex flex-col justify-between relative overflow-hidden">
                                             <div className="absolute top-0 right-0 w-24 h-24 bg-white/20 blur-3xl rounded-full -mr-12 -mt-12"></div>
                                             <div>
-                                                <p className="text-xs font-semibold text-emerald-700 capitalize mb-1">Net Payout (Actual Yield)</p>
-                                                <p className="text-2xl font-bold text-gray-800 tracking-tight mb-2">
-                                                    ₹{actualHandYield.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                <p className="text-[10px] font-bold text-emerald-700 capitalize mb-1">Net Payout (Actual Yield)</p>
+                                                <p className="text-xl font-extrabold text-gray-800 tracking-tight mb-2">
+                                                    ₹{actualHandYield.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                 </p>
                                             </div>
 
-                                            <div className="p-3 bg-white/80 rounded-xl border border-emerald-100/50 text-[11px] font-medium text-emerald-700 leading-normal mb-2 z-10">
-                                                <p className="font-semibold capitalize text-[10px] text-emerald-600 mb-0.5">Segment Details</p>
-                                                <p>Actual earnings credited to your balance after Platform Commission, GST on Commission, TCS, and TDS deductions for the selected audit cycle.</p>
+                                            <div className="p-2.5 bg-white/80 rounded-xl border border-emerald-100/50 text-[10px] font-medium text-emerald-700 leading-normal mb-2 z-10">
+                                                <p className="font-semibold capitalize text-[9px] text-emerald-600 mb-0.5">Yield Formula</p>
+                                                <p>Net balance generated after all commissions, GST on Commission, gateway cuts, and TCS/TDS withholdings.</p>
                                             </div>
 
-                                            <p className="text-[10px] font-semibold text-emerald-600 capitalize bg-white/50 w-fit px-2 py-0.5 rounded-lg shadow-sm border border-emerald-100 z-10">Calculated Yield</p>
+                                            <p className="text-[9px] font-bold text-emerald-600 capitalize bg-white/50 w-fit px-2 py-0.5 rounded-lg shadow-sm border border-emerald-100 z-10">Calculated Net Payout</p>
                                         </div>
                                     </div>
                                 </div>
@@ -858,7 +855,7 @@ export default function SellerFinancePage() {
                                             {payoutAmount && parseFloat(payoutAmount) > netDisbursableYield && (
                                                 <p className="text-xs font-semibold text-rose-500 normal-case px-1 mt-1.5 flex items-center gap-1.5 leading-tight">
                                                     <AlertCircle size={12} className="shrink-0" />
-                                                    Your maximum disbursable amount is ₹{netDisbursableYield.toLocaleString('en-IN', { minimumFractionDigits: 2 })} after tax adjustments.
+                                                    Your maximum disbursable amount is ₹{netDisbursableYield.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.
                                                 </p>
                                             )}
                                         </div>
@@ -881,30 +878,23 @@ export default function SellerFinancePage() {
                                     
                                     <div className="space-y-4">
                                         <div className="flex justify-between items-center pb-3 border-b border-gray-50">
-                                            <span className="text-xs font-semibold text-gray-500 capitalize">Liquid Balance (Raw)</span>
-                                            <span className="text-lg font-bold text-gray-800">₹{summary.wallet.available_balance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                            <span className="text-xs font-semibold text-gray-500 capitalize">Liquid Balance (Net)</span>
+                                            <span className="text-lg font-bold text-gray-800">₹{summary.wallet.available_balance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                         </div>
                                         {(() => {
-                                            const gross = summary.summary.total_sales;
-                                            const platformCommission = summary.summary.platform_commission;
-                                            const gst = platformCommission * 0.18;
-                                            const tcs = gross * 0.01;
-                                            const tds = gross * 0.01;
-                                            const totalTaxes = gst + tcs + tds;
-                                            
-                                            const taxRatio = summary.summary.net_earnings > 0 ? totalTaxes / summary.summary.net_earnings : 0;
-                                            const estimatedTaxesOnBalance = summary.wallet.available_balance * taxRatio;
-                                            const netDisbursableYield = Math.max(0, summary.wallet.available_balance - estimatedTaxesOnBalance);
-
+                                            const netDisbursableYield = summary.wallet.available_balance;
                                             return (
                                                 <>
                                                     <div className="flex justify-between items-center text-rose-500 pb-3 border-b border-gray-50">
-                                                        <span className="text-xs font-semibold capitalize">Est. Taxes (GST + TCS + TDS)</span>
-                                                        <span className="text-sm font-semibold">-₹{estimatedTaxesOnBalance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                        <div className="flex flex-col">
+                                                            <span className="text-xs font-semibold capitalize">Est. Taxes (GST + TCS + TDS)</span>
+                                                            <span className="text-[9px] text-gray-400 font-semibold normal-case">Deducted immediately at source</span>
+                                                        </div>
+                                                        <span className="text-sm font-semibold">-₹0.00</span>
                                                     </div>
                                                     <div className="flex justify-between items-center text-emerald-600 pb-3 border-b border-gray-50 bg-emerald-50/20 px-3 py-2 rounded-xl">
                                                         <span className="text-xs font-semibold capitalize">Net Disbursable Yield</span>
-                                                        <span className="text-md font-bold">₹{netDisbursableYield.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                        <span className="text-md font-bold">₹{netDisbursableYield.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                                     </div>
                                                 </>
                                             );
@@ -979,19 +969,9 @@ export default function SellerFinancePage() {
                                                         </div>
                                                     </td>
                                                     <td className="px-8 py-5">
-                                                        {(() => {
-                                                            const reqNet = Number(req.requested_amount) - (Number(req.requested_amount) * taxRatio);
-                                                            return (
-                                                                <div className="flex flex-col gap-0.5 whitespace-nowrap">
-                                                                    <span className="text-sm font-bold text-gray-900">
-                                                                        ₹{reqNet.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                                                                    </span>
-                                                                    <span className="text-[8px] text-gray-400 font-semibold capitalize tracking-wide">
-                                                                        Raw: ₹{Number(req.requested_amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                                                                    </span>
-                                                                </div>
-                                                            );
-                                                        })()}
+                                                        <span className="text-sm font-bold text-gray-900">
+                                                            ₹{Number(req.requested_amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                        </span>
                                                     </td>
                                                     <td className="px-8 py-5">
                                                         <span className="text-xs font-bold text-gray-500">{req.transaction_id || req.notes || '—'}</span>
@@ -1128,27 +1108,31 @@ export default function SellerFinancePage() {
                                                         ? Number(txn.metadata.platform_commission) 
                                                         : gross * (platRate / 100);
                                                         
-                                                    gst = platformFee * 0.18;
-                                                    tcs = gross * 0.01;
-                                                    tds = gross * 0.01;
+                                                    gst = txn.metadata?.platform_commission_gst 
+                                                        ? Number(txn.metadata.platform_commission_gst) 
+                                                        : platformFee * 0.18;
+                                                    tcs = txn.metadata?.tcs_amount 
+                                                        ? Number(txn.metadata.tcs_amount) 
+                                                        : gross * 0.01;
+                                                    tds = txn.metadata?.tds_amount 
+                                                        ? Number(txn.metadata.tds_amount) 
+                                                        : gross * 0.01;
+                                                    
+                                                    const shippingCharge = txn.metadata?.shipping_charge
+                                                        ? Number(txn.metadata.shipping_charge)
+                                                        : 0;
                                                     
                                                     const isCOD = txn.order ? (txn.order as any).payment_method?.toLowerCase() === 'cod' : false;
                                                     gatewayFee = txn.metadata?.gateway_fee 
                                                         ? Number(txn.metadata.gateway_fee) 
                                                         : (isCOD ? 0 : gross * (gateRate / 100));
                                                         
-                                                    netDisbursable = gross - platformFee - gst - tcs - tds - gatewayFee;
+                                                    netDisbursable = gross - platformFee - gst - tcs - tds - gatewayFee - shippingCharge;
                                                 }
 
-                                                // Calculate proportional balance reductions for taxes
-                                                const grossTotal = summary.summary.total_sales;
-                                                const platCommTotal = summary.summary.platform_commission;
-                                                const totalTaxes = (platCommTotal * 0.18) + (grossTotal * 0.01) + (grossTotal * 0.01);
-                                                const taxRatio = summary.summary.net_earnings > 0 ? totalTaxes / summary.summary.net_earnings : 0;
-                                                
-                                                const balanceBeforeNet = Number(txn.balance_before) - (Number(txn.balance_before) * taxRatio);
-                                                const balanceAfterNet = Number(txn.balance_after) - (Number(txn.balance_after) * taxRatio);
-                                                const deltaNet = txn.type === 'earning' ? netDisbursable : (txn.type === 'payout' ? Math.abs(txn.amount) - (Math.abs(txn.amount) * taxRatio) : Math.abs(txn.amount));
+                                                const balanceBeforeNet = Number(txn.balance_before);
+                                                const balanceAfterNet = Number(txn.balance_after);
+                                                const deltaNet = Math.abs(Number(txn.amount));
 
                                                 return (
                                                 <tr key={txn.id} className="group hover:bg-gray-50/30 transition-all">
@@ -1213,42 +1197,21 @@ export default function SellerFinancePage() {
                                                     </td>
                                                     {/* Interactive Delta */}
                                                     <td className="px-6 py-5">
-                                                        {txn.type === 'earning' || txn.type === 'payout' ? (
-                                                            <div className="flex flex-col gap-0.5 whitespace-nowrap">
-                                                                <span className={`text-xs font-bold tracking-tight ${isCredit ? 'text-cureza-green' : 'text-rose-600'}`}>
-                                                                    {isCredit ? '+' : '-'}₹{deltaNet.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                                                                </span>
-                                                                <span className="text-[8px] text-gray-400 font-semibold capitalize tracking-wide">
-                                                                    Raw: ₹{Math.abs(txn.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                                                                </span>
-                                                            </div>
-                                                        ) : (
-                                                            <div className={`text-sm font-bold flex items-center gap-1 whitespace-nowrap ${isCredit ? 'text-cureza-green' : 'text-rose-600'}`}>
-                                                                <span className="tracking-tighter">{isCredit ? '+' : '-'}₹{Math.abs(txn.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
-                                                            </div>
-                                                        )}
+                                                        <div className={`text-xs font-extrabold flex items-center gap-1 whitespace-nowrap ${isCredit ? 'text-cureza-green' : 'text-rose-600'}`}>
+                                                            <span className="tracking-tighter">{isCredit ? '+' : '-'}₹{deltaNet.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                                        </div>
                                                     </td>
                                                     {/* Balance Before */}
                                                     <td className="px-6 py-5">
-                                                        <div className="flex flex-col gap-0.5 whitespace-nowrap">
-                                                            <span className="text-xs font-bold text-gray-600 tracking-tighter">
-                                                                ₹{balanceBeforeNet.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                                                            </span>
-                                                            <span className="text-[8px] text-gray-400 font-bold uppercase tracking-wider">
-                                                                Raw: ₹{Number(txn.balance_before).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                                                            </span>
-                                                        </div>
+                                                        <span className="text-xs font-semibold text-gray-600 tracking-tighter">
+                                                            ₹{balanceBeforeNet.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                        </span>
                                                     </td>
                                                     {/* Balance After */}
                                                     <td className="px-6 py-5">
-                                                        <div className="flex flex-col gap-0.5 whitespace-nowrap">
-                                                            <span className="text-sm font-bold text-gray-900 group-hover:bg-gray-900 group-hover:text-white px-2 py-0.5 rounded transition-all tracking-tight">
-                                                                ₹{balanceAfterNet.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                                                            </span>
-                                                            <span className="text-[8px] text-gray-400 font-semibold capitalize tracking-wide">
-                                                                Raw: ₹{Number(txn.balance_after).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                                                            </span>
-                                                        </div>
+                                                        <span className="text-sm font-bold text-gray-900 group-hover:bg-gray-900 group-hover:text-white px-2 py-0.5 rounded transition-all tracking-tight">
+                                                            ₹{balanceAfterNet.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                        </span>
                                                     </td>
                                                     {/* Revenue Flow Pipeline */}
                                                     <td className="px-6 py-5">
@@ -1343,6 +1306,8 @@ export default function SellerFinancePage() {
                         </div>
                     </div>
                 )}
+
+                {activeTab === 'gst' && <SellerGstDashboard />}
             </div>
         </div>
     );

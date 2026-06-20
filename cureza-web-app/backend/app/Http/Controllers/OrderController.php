@@ -138,6 +138,7 @@ class OrderController extends Controller
         $cgst = 0;
         $sgst = 0;
         $igst = 0;
+        $summary = null;
 
         if ($cart) {
             $summary = $this->cartService->calculate(
@@ -157,8 +158,9 @@ class OrderController extends Controller
         } else {
             // fallback simple calculation if cart is missing
             $taxRate = 0.18; // 18% GST
-            $taxAmount = $subtotal * $taxRate;
-            $finalTotal = $subtotal + $shippingCost + $taxAmount;
+            $basePrice = $subtotal / (1 + $taxRate);
+            $taxAmount = $subtotal - $basePrice;
+            $finalTotal = $subtotal + $shippingCost;
             if ($state && strtolower($state) === 'rajasthan') {
                 $cgst = $taxAmount / 2;
                 $sgst = $taxAmount / 2;
@@ -221,6 +223,51 @@ class OrderController extends Controller
             ]);
 
             foreach ($orderItems as $itemData) {
+                // Find matching item breakdown from summary
+                $itemBreakdown = null;
+                if ($summary && !empty($summary['items_breakdown'])) {
+                    foreach ($summary['items_breakdown'] as $breakdown) {
+                        if ($breakdown['product_id'] == $itemData['product']->id) {
+                            $itemBreakdown = $breakdown;
+                            break;
+                        }
+                    }
+                }
+
+                if (!$itemBreakdown) {
+                    $gstSlab = (float)($itemData['product']->gst_slab ?? 18.00);
+                    $itemTotal = $itemData['total'];
+
+                    $basePrice = $itemTotal / (1 + ($gstSlab / 100));
+                    $gstAmount = $itemTotal - $basePrice;
+
+                    $deliveryState = $state ?? 'Rajasthan';
+                    $seller = $itemData['product']->seller;
+                    $sellerProfile = $seller ? $seller->sellerProfile : null;
+                    $sellerState = $sellerProfile ? ($sellerProfile->pickup_address_state ?? $sellerProfile->state) : null;
+                    $isIntraState = $sellerState && strtolower(trim($sellerState)) === strtolower(trim($deliveryState));
+
+                    if ($isIntraState) {
+                        $cgstVal = $gstAmount / 2;
+                        $sgstVal = $gstAmount / 2;
+                        $igstVal = 0.00;
+                    } else {
+                        $cgstVal = 0.00;
+                        $sgstVal = 0.00;
+                        $igstVal = $gstAmount;
+                    }
+
+                    $itemBreakdown = [
+                        'base_price' => $basePrice,
+                        'gst_slab' => $gstSlab,
+                        'gst_amount' => $gstAmount,
+                        'cgst' => $cgstVal,
+                        'sgst' => $sgstVal,
+                        'igst' => $igstVal,
+                        'net_amount' => $itemTotal,
+                    ];
+                }
+
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $itemData['product']->id,
@@ -235,6 +282,13 @@ class OrderController extends Controller
                     'health_concern' => $itemData['health_concern'],
                     'prescription_path' => $itemData['prescription_path'],
                     'doctor_id' => $itemData['doctor_id'],
+                    'base_price' => $itemBreakdown['base_price'],
+                    'gst_slab' => $itemBreakdown['gst_slab'],
+                    'gst_amount' => $itemBreakdown['gst_amount'],
+                    'cgst' => $itemBreakdown['cgst'],
+                    'sgst' => $itemBreakdown['sgst'],
+                    'igst' => $itemBreakdown['igst'],
+                    'net_amount' => $itemBreakdown['net_amount'],
                 ]);
 
                 // Deduct Stock
@@ -330,6 +384,38 @@ class OrderController extends Controller
         return response($html)
             ->header('Content-Type', 'text/html')
             ->header('Content-Disposition', 'attachment; filename="invoice-' . $order->order_number . '.html"');
+    }
+
+    public function downloadCommissionInvoice($id)
+    {
+        $order = Order::with(['items.product.seller.sellerProfile', 'shippingMethod'])
+            ->where('id', $id)
+            ->orWhere('order_number', $id)
+            ->firstOrFail();
+        
+        $user = Auth::guard('sanctum')->user();
+        if ($user) {
+            $isSellerOfOrder = $order->items->where('seller_id', $user->id)->isNotEmpty();
+            if ($user->role !== 'super_admin' && $user->role !== 'admin' && !$isSellerOfOrder) {
+                return response()->json(['message' => 'Unauthorized'], 403);
+            }
+        } else {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $logoPath = public_path('storage/images/logo.png');
+        $logoBase64 = '';
+        if (file_exists($logoPath)) {
+            $type = pathinfo($logoPath, PATHINFO_EXTENSION);
+            $data = file_get_contents($logoPath);
+            $logoBase64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        }
+
+        $html = view('commission-invoice', compact('order', 'logoBase64'))->render();
+
+        return response($html)
+            ->header('Content-Type', 'text/html')
+            ->header('Content-Disposition', 'attachment; filename="commission-invoice-' . $order->order_number . '.html"');
     }
 
     /**

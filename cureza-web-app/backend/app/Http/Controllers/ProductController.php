@@ -126,6 +126,8 @@ class ProductController extends Controller
             'is_prescription_required' => 'nullable|boolean',
             'banners' => 'nullable|array',
             'faqs' => 'nullable|array',
+            'gst_slab' => 'nullable|numeric|in:0,5,12,18,28',
+            'gst_inclusive' => 'nullable|boolean',
         ];
 
         // Role-based validation for Brand and Seller
@@ -156,6 +158,22 @@ class ProductController extends Controller
             $data['seller_id'] = $user->id;
             $data['brand_id'] = $user->brand->id; // Auto-assign brand
             $data['status'] = 'draft'; // Pending approval
+        }
+
+        // Fetch seller profile to get default tax settings if not set
+        $targetSellerId = $isAdmin ? ($validated['seller_id'] ?? $user->id) : $user->id;
+        $sellerProfile = \App\Models\SellerProfile::where('user_id', $targetSellerId)->first();
+        
+        if (!isset($data['gst_slab']) || $data['gst_slab'] === null) {
+            $data['gst_slab'] = $sellerProfile && $sellerProfile->default_gst_slab !== null
+                ? (float)$sellerProfile->default_gst_slab
+                : 18.00;
+        }
+        
+        if (!isset($data['gst_inclusive']) || $data['gst_inclusive'] === null) {
+            $data['gst_inclusive'] = $sellerProfile && $sellerProfile->default_gst_inclusive !== null
+                ? (bool)$sellerProfile->default_gst_inclusive
+                : true;
         }
 
         // Remove tags from data as it's not a column anymore
@@ -320,6 +338,8 @@ class ProductController extends Controller
             'is_prescription_required' => 'nullable|boolean',
             'banners' => 'nullable|array',
             'faqs' => 'nullable|array',
+            'gst_slab' => 'nullable|numeric|in:0,5,12,18,28',
+            'gst_inclusive' => 'nullable|boolean',
         ];
 
         if ($isAdmin) {
@@ -662,6 +682,26 @@ class ProductController extends Controller
             );
         }
 
+        // Add tax_breakdown
+        $gstSlab = (float)($product->gst_slab ?? 18.00);
+        $isInclusive = (bool)($product->gst_inclusive ?? true);
+        $price = (float)$product->price;
+
+        if ($isInclusive) {
+            $basePrice = round($price / (1 + ($gstSlab / 100)), 2);
+            $gstAmount = round($price - $basePrice, 2);
+        } else {
+            $basePrice = $price;
+            $gstAmount = round($price * ($gstSlab / 100), 2);
+        }
+
+        $product->tax_breakdown = [
+            'base_price' => $basePrice,
+            'gst_slab' => $gstSlab,
+            'gst_amount' => $gstAmount,
+            'gst_inclusive' => $isInclusive,
+        ];
+
         return response()->json($product);
     }
 
@@ -689,6 +729,11 @@ class ProductController extends Controller
     {
         $user = $request->user();
         \Illuminate\Support\Facades\Log::info('Recording view for product ' . $id . ' by user ' . ($user ? $user->id : 'guest'));
+        
+        $product = Product::find($id);
+        if ($product) {
+            $product->increment('views_count');
+        }
         
         if ($user) {
             \App\Models\RecentlyViewedProduct::updateOrCreate(

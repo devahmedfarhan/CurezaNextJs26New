@@ -21,13 +21,23 @@ class OrderObserver
      */
     public function updated(Order $order)
     {
-        // Check if status changed to 'delivered'
-        if ($order->isDirty('status') && $order->status === 'delivered') {
+        $isCOD = strtolower($order->payment_method ?? '') === 'cod';
+        $triggerSettlement = false;
+        
+        if ($order->isDirty('status')) {
+            if (!$isCOD && $order->status === 'delivered') {
+                $triggerSettlement = true;
+            } elseif ($isCOD && $order->status === 'cod_reconciled') {
+                $triggerSettlement = true;
+            }
+        }
+
+        if ($triggerSettlement) {
             try {
                 $this->commissionService->processOrderCommission($order);
-                Log::info("Commission auto-calculated for order #{$order->order_number}");
+                Log::info("Settlement and commission auto-calculated for order #{$order->order_number}");
             } catch (\Exception $e) {
-                Log::error("Failed to auto-calculate commission for order #{$order->order_number}: " . $e->getMessage());
+                Log::error("Failed to auto-calculate settlement for order #{$order->order_number}: " . $e->getMessage());
             }
         }
 

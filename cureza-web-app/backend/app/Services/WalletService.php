@@ -46,25 +46,28 @@ class WalletService
     }
 
     /**
-     * Credit earnings to seller wallet
+     * Credit earnings to seller wallet (with 7-day escrow hold)
      * 
      * @param int $sellerId
      * @param int $orderId
      * @param float $amount
      * @param string $description
      * @param array $metadata
+     * @param float $tcs
+     * @param float $tds
+     * @param string $reconciliationStatus
      * @return bool
      */
-    public function creditEarnings($sellerId, $orderId, $amount, $description, $metadata = [])
+    public function creditEarnings($sellerId, $orderId, $amount, $description, $metadata = [], $tcs = 0.00, $tds = 0.00, $reconciliationStatus = 'pending')
     {
         DB::beginTransaction();
         try {
             $wallet = $this->getWalletForUpdate($sellerId);
             $balanceBefore = $wallet->available_balance;
 
-            // Update wallet
+            // Credit to pending_amount for the 7-day escrow period
             $wallet->total_earnings += $amount;
-            $wallet->available_balance += $amount;
+            $wallet->pending_amount += $amount;
             $wallet->save();
 
             // Record transaction
@@ -73,17 +76,23 @@ class WalletService
                 'order_id' => $orderId,
                 'type' => SellerTransaction::TYPE_EARNING,
                 'amount' => $amount,
+                'tcs_deduction' => $tcs,
+                'tds_deduction' => $tds,
+                'reconciliation_status' => $reconciliationStatus,
                 'balance_before' => $balanceBefore,
-                'balance_after' => $wallet->available_balance,
+                'balance_after' => $wallet->available_balance, // available_balance unchanged
                 'description' => $description,
-                'metadata' => $metadata,
+                'metadata' => array_merge($metadata, [
+                    'hold_until' => now()->addDays(7)->toDateTimeString(),
+                    'escrow_status' => 'held'
+                ]),
             ]);
 
             // Audit transaction log
             DB::table('transaction_logs')->insert([
                 'wallet_type' => 'seller',
                 'wallet_id' => $wallet->id,
-                'action' => 'credit_earnings',
+                'action' => 'credit_earnings_escrow',
                 'amount' => $amount,
                 'balance_before' => $balanceBefore,
                 'balance_after' => $wallet->available_balance,
@@ -94,7 +103,7 @@ class WalletService
             ]);
 
             DB::commit();
-            Log::info("Credited ₹{$amount} to seller {$sellerId} wallet");
+            Log::info("Credited ₹{$amount} to seller {$sellerId} wallet pending_amount (held for 7 days escrow)");
             return true;
 
         } catch (\Exception $e) {
@@ -123,11 +132,15 @@ class WalletService
             $balanceBefore = $wallet->available_balance;
 
             if ($wallet->available_balance < $amount) {
-                throw new \Exception("Insufficient balance. Available: ₹{$wallet->available_balance}, Required: ₹{$amount}");
+                // If it's a refund and the money is still pending, we should deduct from pending!
+                if ($type === 'refund' && $wallet->pending_amount >= $amount) {
+                    $wallet->pending_amount -= $amount;
+                } else {
+                    throw new \Exception("Insufficient balance. Available: ₹{$wallet->available_balance}, Required: ₹{$amount}");
+                }
+            } else {
+                $wallet->available_balance -= $amount;
             }
-
-            // Update wallet
-            $wallet->available_balance -= $amount;
             $wallet->save();
 
             // Record transaction
@@ -394,6 +407,76 @@ class WalletService
 
         } catch (\Exception $e) {
             DB::rollBack();
+            throw $e;
+        }
+    }
+
+    /**
+     * Release escrowed balances older than 7 days
+     */
+    public function releaseEscrowBalances()
+    {
+        DB::beginTransaction();
+        try {
+            $cutoff = now()->subDays(7);
+            
+            // Find transactions held that are past the cutoff
+            $transactions = SellerTransaction::where('type', SellerTransaction::TYPE_EARNING)
+                ->where('created_at', '<=', $cutoff)
+                ->get()
+                ->filter(function ($tx) {
+                    $meta = $tx->metadata ?? [];
+                    return isset($meta['escrow_status']) && $meta['escrow_status'] === 'held';
+                });
+
+            $releasedCount = 0;
+            $releasedAmount = 0;
+
+            foreach ($transactions as $tx) {
+                $wallet = $this->getWalletForUpdate($tx->seller_id);
+                $amount = (float)$tx->amount;
+
+                if ($wallet->pending_amount >= $amount) {
+                    $balanceBefore = $wallet->available_balance;
+                    
+                    // Move from pending to available
+                    $wallet->pending_amount -= $amount;
+                    $wallet->available_balance += $amount;
+                    $wallet->save();
+
+                    // Mark transaction metadata as released
+                    $meta = $tx->metadata ?? [];
+                    $meta['escrow_status'] = 'released';
+                    $meta['released_at'] = now()->toDateTimeString();
+                    $tx->metadata = $meta;
+                    $tx->save();
+
+                    // Record adjustment transaction for auditability
+                    SellerTransaction::create([
+                        'seller_id' => $tx->seller_id,
+                        'order_id' => $tx->order_id,
+                        'type' => SellerTransaction::TYPE_ADJUSTMENT,
+                        'amount' => $amount,
+                        'balance_before' => $balanceBefore,
+                        'balance_after' => $wallet->available_balance,
+                        'description' => "Escrow released for Order #{$tx->order_id}",
+                        'metadata' => ['original_transaction_id' => $tx->id],
+                    ]);
+
+                    $releasedCount++;
+                    $releasedAmount += $amount;
+                }
+            }
+
+            DB::commit();
+            Log::info("Released escrow for {$releasedCount} transactions, total amount: ₹{$releasedAmount}");
+            return [
+                'released_count' => $releasedCount,
+                'released_amount' => $releasedAmount
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Failed to release escrow balances: " . $e->getMessage());
             throw $e;
         }
     }

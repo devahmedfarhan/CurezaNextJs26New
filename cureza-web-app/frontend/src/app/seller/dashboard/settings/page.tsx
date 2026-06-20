@@ -97,11 +97,17 @@ export default function SellerSettingsPage() {
                         icon={User}
                         label="Business Profile"
                     />
-                    <TabButton
+                     <TabButton
                         active={activeTab === 'kyc'}
                         onClick={() => handleTabChange('kyc')}
                         icon={FileText}
                         label="KYC & Documents"
+                    />
+                    <TabButton
+                        active={activeTab === 'tax'}
+                        onClick={() => handleTabChange('tax')}
+                        icon={Landmark}
+                        label="Tax Settings"
                     />
                 </div>
 
@@ -113,6 +119,7 @@ export default function SellerSettingsPage() {
                         {activeTab === 'bank' && <BankTab settings={settings} refresh={fetchSettings} />}
                         {activeTab === 'profile' && <ProfileTab settings={settings} refresh={fetchSettings} />}
                         {activeTab === 'kyc' && <KYCTab settings={settings} refresh={fetchSettings} />}
+                        {activeTab === 'tax' && <TaxTab settings={settings} refresh={fetchSettings} />}
                     </div>
                 </div>
             </div>
@@ -1462,6 +1469,119 @@ function KYCTab({ settings, refresh }: any) {
                     </button>
                 </div>
             </form>
+        </div>
+    );
+}
+
+function TaxTab({ settings, refresh }: any) {
+    const { showToast } = useToast();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    
+    const [defaultGstSlab, setDefaultGstSlab] = useState(() => 
+        settings?.profile?.default_gst_slab !== undefined ? String(settings.profile.default_gst_slab) : '18'
+    );
+    const [defaultGstInclusive, setDefaultGstInclusive] = useState(() => 
+        settings?.profile?.default_gst_inclusive ?? true
+    );
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        try {
+            await axios.post('/seller/settings/tax', {
+                default_gst_slab: Number(defaultGstSlab),
+                default_gst_inclusive: defaultGstInclusive,
+            });
+            showToast("Default GST settings updated successfully", "success");
+            refresh();
+        } catch (err: any) {
+            showToast(err.response?.data?.message || "Failed to update default GST settings", "error");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    return (
+        <div className="p-4 sm:p-10 space-y-6 sm:space-y-10">
+            <div className="border-b border-gray-50 pb-6">
+                <h2 className="text-xl font-bold text-gray-800 tracking-tight">Default GST & Tax Parameters</h2>
+                <p className="text-gray-500 text-sm font-medium">Configure global default tax rates to auto-apply on all newly listed products.</p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                <div className="lg:col-span-1 space-y-6">
+                    <div className="bg-gray-50 rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm space-y-4">
+                        <h3 className="text-xs font-semibold text-gray-550 capitalize tracking-wider flex items-center gap-2">
+                            <span className="p-1.5 bg-cureza-green/10 text-cureza-green rounded-lg">
+                                <Info size={14} />
+                            </span>
+                            Tax Hierarchy Logic
+                        </h3>
+                        <p className="text-xs text-gray-600 leading-relaxed font-medium">
+                            1. **Global Default:** The settings defined here will be pre-filled automatically whenever you add new products to your shop.
+                        </p>
+                        <p className="text-xs text-gray-600 leading-relaxed font-medium">
+                            2. **Individual Overrides:** If a specific product falls under a different tax rate, you can edit that product's specific GST Slab and treatment directly within the Product Editor.
+                        </p>
+                    </div>
+                </div>
+
+                <div className="lg:col-span-2">
+                    <form onSubmit={handleSubmit} className="space-y-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-gray-700 uppercase tracking-wider block">Default GST Slab <span className="text-red-500">*</span></label>
+                                <select
+                                    name="default_gst_slab"
+                                    value={defaultGstSlab}
+                                    onChange={(e) => setDefaultGstSlab(e.target.value)}
+                                    className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all cursor-pointer text-gray-800"
+                                >
+                                    <option value="0">0% (GST Exempt / Nil Rate)</option>
+                                    <option value="5">5% (GST)</option>
+                                    <option value="12">12% (GST)</option>
+                                    <option value="18">18% (GST Standard)</option>
+                                    <option value="28">28% (GST Luxury)</option>
+                                </select>
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-gray-700 uppercase tracking-wider block">Default GST Treatment</label>
+                                <div className="flex items-center gap-3 h-11">
+                                    <label className="relative inline-flex items-center cursor-pointer select-none">
+                                        <input
+                                            type="checkbox"
+                                            name="default_gst_inclusive"
+                                            checked={defaultGstInclusive}
+                                            onChange={(e) => setDefaultGstInclusive(e.target.checked)}
+                                            className="sr-only peer"
+                                        />
+                                        <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:after:bg-gray-900 dark:after:border-gray-600 peer-checked:bg-cureza-green"></div>
+                                        <span className="ml-3 text-xs font-bold text-gray-900 dark:text-gray-100">
+                                            {defaultGstInclusive ? 'Inclusive (GST Included in Price)' : 'Exclusive (GST Added on Top)'}
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex justify-end pt-4">
+                            <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm capitalize shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all disabled:bg-gray-200 disabled:text-gray-400 flex items-center gap-3"
+                            >
+                                {isSubmitting ? (
+                                    <Loader2 className="animate-spin" size={16} />
+                                ) : (
+                                    <Save size={16} className="text-white" />
+                                )}
+                                Save Default Settings
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     );
 }

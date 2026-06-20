@@ -119,6 +119,19 @@ export default function CartPage() {
     const totalTax = summary?.total_tax || 0;
     const rewards = summary?.rewards || null;
 
+    const getTaxLabel = () => {
+        const isIgst = Number(summary?.igst || 0) > 0;
+        const slabs = Object.values((summary as any)?.items_breakdown || {})
+            .map((item: any) => Number(item.gst_slab || 0))
+            .filter(slab => slab > 0);
+        const uniqueSlabs = Array.from(new Set(slabs));
+        const slabStr = uniqueSlabs.length > 0 
+            ? uniqueSlabs.map(s => `${s}%`).join(' & ') 
+            : '';
+        const taxType = isIgst ? 'IGST' : 'CGST + SGST';
+        return slabStr ? `Taxes (${taxType} ${slabStr})` : `Taxes (${taxType})`;
+    };
+
     // Load admin toggles
     const enableRewards = publicSettings?.cart_drawer_enable_rewards !== false;
     const enableCoupons = publicSettings?.cart_drawer_enable_coupons !== false;
@@ -397,51 +410,57 @@ export default function CartPage() {
                                         </div>
                                     )}
 
-                                    <div className="space-y-2.5 pt-2">
-                                        <div className="flex justify-between text-xs text-[#052326]/70">
-                                            <span>Subtotal ({items.reduce((sum, item) => sum + item.quantity, 0)} items)</span>
-                                            <span className="font-semibold">₹{subtotal.toFixed(2)}</span>
-                                        </div>
-                                        
-                                        {discount > 0 && (
-                                            <div className="flex justify-between text-xs text-green-700 bg-green-50/50 p-2.5 rounded-[8px] border border-green-100/30">
-                                                <span className="font-medium">Discount Applied</span>
-                                                <span className="font-bold">-₹{discount.toFixed(2)}</span>
-                                            </div>
-                                        )}
-
-                                        {milestoneDiscount > 0 && (
-                                            <div className="flex justify-between text-xs text-green-700 bg-green-50/50 p-2.5 rounded-[8px] border border-green-100/30">
-                                                <span className="font-medium">Milestone Reward Discount</span>
-                                                <span className="font-bold">-₹{milestoneDiscount.toFixed(2)}</span>
-                                            </div>
-                                        )}
-
-                                        {walletDeduction > 0 && (
-                                            <div className="flex justify-between text-xs text-amber-700 bg-amber-50/50 p-2.5 rounded-[8px] border border-amber-100/30">
-                                                <span className="font-medium">Loyalty Coins Applied</span>
-                                                <span className="font-bold">-₹{walletDeduction.toFixed(2)}</span>
-                                            </div>
-                                        )}
-
-                                        <div className="flex justify-between text-xs text-[#052326]/70">
-                                            <span>GST / Taxes</span>
-                                            <span>₹{totalTax.toFixed(2)}</span>
-                                        </div>
-
-                                        <div className="flex justify-between text-xs text-[#052326]/70">
-                                            <span>Delivery fee</span>
-                                            <span className="font-semibold">
-                                                {summary?.milestone_free_shipping 
-                                                    ? 'FREE (Milestone Reward)' 
-                                                    : (shippingCost > 0 ? `₹${shippingCost.toFixed(2)}` : 'FREE')}
-                                            </span>
-                                        </div>
-
-                                        <div className="flex justify-between text-xs text-[#052326]/70">
-                                            <span>Convenience Fee</span>
-                                            <span>₹{(summary?.platform_fee || 10.00).toFixed(2)}</span>
-                                        </div>
+                                    <div className="overflow-hidden rounded-lg border border-[#052326]/12 text-xs text-[#052326]">
+                                        <table className="w-full text-left border-collapse">
+                                            <tbody>
+                                                <tr className="border-b border-[#052326]/8 bg-[#F8F3EF]/30">
+                                                    <td className="p-3 font-medium text-[#052326]/70">Taxable Value (Base Price)</td>
+                                                    <td className="p-3 text-right font-semibold">₹{(subtotal - totalTax).toFixed(2)}</td>
+                                                </tr>
+                                                {discount > 0 && (
+                                                    <tr className="border-b border-[#052326]/8">
+                                                        <td className="p-3 font-medium text-green-700 font-bold">Coupon/Promo Discount</td>
+                                                        <td className="p-3 text-right font-bold text-green-700">-₹{discount.toFixed(2)}</td>
+                                                    </tr>
+                                                )}
+                                                {milestoneDiscount > 0 && (
+                                                    <tr className="border-b border-[#052326]/8">
+                                                        <td className="p-3 font-medium text-green-700 font-bold">Milestone Reward Discount</td>
+                                                        <td className="p-3 text-right font-bold text-green-700">-₹{milestoneDiscount.toFixed(2)}</td>
+                                                    </tr>
+                                                )}
+                                                {walletDeduction > 0 && (
+                                                    <tr className="border-b border-[#052326]/8">
+                                                        <td className="p-3 font-medium text-amber-700 font-bold">Loyalty Coins Applied</td>
+                                                        <td className="p-3 text-right font-bold text-amber-700">-₹{walletDeduction.toFixed(2)}</td>
+                                                    </tr>
+                                                )}
+                                                <tr className="border-b border-[#052326]/8">
+                                                    <td className="p-3 font-medium text-[#052326]/70">
+                                                        {getTaxLabel()}
+                                                    </td>
+                                                    <td className="p-3 text-right font-semibold">₹{totalTax.toFixed(2)}</td>
+                                                </tr>
+                                                {summary?.platform_fee !== undefined && Number(summary.platform_fee) > 0 && (
+                                                    <tr className="border-b border-[#052326]/8">
+                                                        <td className="p-3 font-medium text-[#052326]/70">Convenience Fee</td>
+                                                        <td className="p-3 text-right font-semibold">₹{Number(summary.platform_fee).toFixed(2)}</td>
+                                                    </tr>
+                                                )}
+                                                <tr className="border-b border-[#052326]/8">
+                                                    <td className="p-3 font-medium text-[#052326]/70">Delivery Charge</td>
+                                                    <td className="p-3 text-right font-semibold">
+                                                        {summary?.milestone_free_shipping 
+                                                            ? 'FREE' 
+                                                            : (shippingCost > 0 ? `₹${shippingCost.toFixed(2)}` : 'FREE')}
+                                                    </td>
+                                                </tr>
+                                                <tr className="bg-[#F8F3EF]/50">
+                                                    <td className="p-3 font-black text-sm">Total Price (Inclusive of all taxes)</td>
+                                                    <td className="p-3 text-right font-extrabold text-sm">₹{total.toFixed(2)}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
 
                                     {/* Coupon Section (Controlled by super admin enable coupons flag) */}
@@ -525,10 +544,7 @@ export default function CartPage() {
                                         </div>
                                     )}
 
-                                    <div className="border-t border-[#052326]/8 pt-4 flex justify-between font-bold text-sm text-[#052326]">
-                                        <span>Total <span className="text-[10px] font-light text-[#052326]/50 block">(GST & Platform taxes included)</span></span>
-                                        <span className="text-base font-extrabold">₹{total.toFixed(2)}</span>
-                                    </div>
+
                                 </div>
 
                                 <Button

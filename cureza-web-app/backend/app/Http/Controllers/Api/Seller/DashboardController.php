@@ -20,51 +20,20 @@ class DashboardController extends Controller
         $sellerId = auth()->id();
         $dateRange = $this->getDateRange($request);
 
-        // 1. Total Sales (Revenue) - Include all non-cancelled orders (handling COD)
-        $totalSales = OrderItem::where('seller_id', $sellerId)
-            ->whereHas('order', function ($q) use ($dateRange) {
-                if ($dateRange['start'] && $dateRange['end']) {
-                    $q->whereBetween('created_at', [$dateRange['start'], $dateRange['end']]);
-                }
-                $q->where('status', '!=', 'cancelled'); // Count confirmed/pending/shipped/delivered
-            })
-            ->sum('total');
+        // Use CommissionService as the single source of truth for settled finance metrics
+        $commissionService = new \App\Services\CommissionService();
+        $commissionSummary = $commissionService->getSellerCommissionSummary($sellerId, $dateRange['start'], $dateRange['end']);
+
+        $totalSales = $commissionSummary['total_sales'];
+        $totalOrders = $commissionSummary['order_count'];
 
         // Previous Period for % Change
         $previousRange = $this->getPreviousDateRange($request);
-        $previousSales = OrderItem::where('seller_id', $sellerId)
-            ->whereHas('order', function ($q) use ($previousRange) {
-                if ($previousRange['start'] && $previousRange['end']) {
-                    $q->whereBetween('created_at', [$previousRange['start'], $previousRange['end']]);
-                }
-                $q->where('status', '!=', 'cancelled');
-            })
-            ->sum('total');
+        $previousSummary = $commissionService->getSellerCommissionSummary($sellerId, $previousRange['start'], $previousRange['end']);
+        $previousSales = $previousSummary['total_sales'];
+        $previousOrders = $previousSummary['order_count'];
 
         $salesChange = $previousSales > 0 ? (($totalSales - $previousSales) / $previousSales) * 100 : ($totalSales > 0 ? 100 : 0);
-
-        // 2. Total Orders (Distinct Orders containing seller's items)
-        $totalOrders = OrderItem::where('seller_id', $sellerId)
-            ->whereHas('order', function ($q) use ($dateRange) {
-                if ($dateRange['start'] && $dateRange['end']) {
-                    $q->whereBetween('created_at', [$dateRange['start'], $dateRange['end']]);
-                }
-                $q->where('status', '!=', 'cancelled');
-            })
-            ->distinct('order_id')
-            ->count('order_id');
-            
-        // Previous Orders for % Change
-        $previousOrders = OrderItem::where('seller_id', $sellerId)
-             ->whereHas('order', function ($q) use ($previousRange) {
-                if ($previousRange['start'] && $previousRange['end']) {
-                    $q->whereBetween('created_at', [$previousRange['start'], $previousRange['end']]);
-                }
-                $q->where('status', '!=', 'cancelled');
-            })
-            ->distinct('order_id')
-            ->count('order_id');
-            
         $ordersChange = $previousOrders > 0 ? (($totalOrders - $previousOrders) / $previousOrders) * 100 : ($totalOrders > 0 ? 100 : 0);
 
         // 3. Average Order Value
@@ -103,14 +72,10 @@ class DashboardController extends Controller
         $wallet = \App\Models\SellerWallet::where('seller_id', $sellerId)->first();
         $availableBalance = $wallet ? $wallet->available_balance : 0;
 
-        // Use CommissionService
-        $commissionService = new \App\Services\CommissionService();
-        $commissionSummary = $commissionService->getSellerCommissionSummary($sellerId, $dateRange['start'], $dateRange['end']);
-
         $totalCommission = $commissionSummary['total_platform_commission'];
         $gatewayFee = $commissionSummary['total_gateway_fee'];
-        $tcs = $totalSales * 0.01;
-        $tds = $totalSales * 0.01;
+        $tcs = $commissionSummary['total_tcs'];
+        $tds = $commissionSummary['total_tds'];
 
         // 7. Orders Breakdown by Status
         $orderStats = OrderItem::where('seller_id', $sellerId)
@@ -297,7 +262,8 @@ class DashboardController extends Controller
 
         $query = OrderItem::where('seller_id', $sellerId)
             ->join('orders', 'order_items.order_id', '=', 'orders.id')
-            ->where('orders.status', '!=', 'cancelled')
+            ->where('orders.status', 'delivered')
+            ->whereNotNull('orders.commission_calculated_at')
             ->select(
                 DB::raw('DATE(orders.created_at) as date'),
                 DB::raw('SUM(order_items.total) as total_sales')

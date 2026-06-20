@@ -73,6 +73,8 @@ class CommissionService
         $breakdown = [];
         $totalPlatformCommission = 0;
         $totalGatewayFee = 0;
+        $totalTcs = 0;
+        $totalTds = 0;
         $totalSellerEarnings = 0;
 
         // Group order items by seller
@@ -90,25 +92,50 @@ class CommissionService
                 ->first();
             $shippingCharge = $shipment ? (float)$shipment->shipping_charge : 0.00;
 
+            // Fetch seller profile to get TCS/TDS rates
+            $sellerUser = \App\Models\User::find($sellerId);
+            $sellerProfile = $sellerUser ? $sellerUser->sellerProfile : null;
+            $tcsRate = (float)($sellerProfile->tcs_rate ?? 1.00);
+            $tdsRate = (float)($sellerProfile->tds_rate ?? 1.00);
+
+            // Compute TCS and TDS at item level and sum
+            $tcsAmount = 0.00;
+            $tdsAmount = 0.00;
+            foreach ($items as $item) {
+                $itemBasePrice = (float)($item->base_price ?? $item->total);
+                $itemNetAmount = (float)($item->net_amount ?? $item->total);
+                $tcsAmount += $itemBasePrice * ($tcsRate / 100);
+                $tdsAmount += $itemNetAmount * ($tdsRate / 100);
+            }
+
             $platformCommission = $sellerTotal * ($commission->base_commission_percentage / 100);
-            $isCOD = strtolower($order->payment_method ?? '') === 'cod';
-            $gatewayFee = $isCOD ? 0 : ($sellerTotal * ($commission->payment_gateway_percentage / 100));
-            $sellerEarnings = $sellerTotal - $platformCommission - $gatewayFee - $shippingCharge;
+            $platformCommissionGst = $platformCommission * 0.18;
+            $isPrepaid = !in_array(strtolower($order->payment_method ?? ''), ['cod']);
+            $gatewayFee = $isPrepaid ? ($sellerTotal * ($commission->payment_gateway_percentage / 100)) : 0;
+            
+            // Settlement Formula: net amount - commission - GST on commission - gateway fee - shipping - TCS - TDS
+            $sellerEarnings = $sellerTotal - $platformCommission - $platformCommissionGst - $gatewayFee - $shippingCharge - $tcsAmount - $tdsAmount;
 
             $breakdown[$sellerId] = [
                 'seller_id' => $sellerId,
                 'order_total' => round($sellerTotal, 2),
                 'platform_commission_percentage' => $commission->base_commission_percentage,
-                'payment_gateway_percentage' => $isCOD ? 0 : $commission->payment_gateway_percentage,
+                'payment_gateway_percentage' => $isPrepaid ? $commission->payment_gateway_percentage : 0,
                 'platform_commission_amount' => round($platformCommission, 2),
+                'platform_commission_gst' => round($platformCommissionGst, 2),
                 'payment_gateway_fee' => round($gatewayFee, 2),
                 'shipping_charge' => round($shippingCharge, 2),
-                'total_deduction' => round($platformCommission + $gatewayFee + $shippingCharge, 2),
+                'tcs_amount' => round($tcsAmount, 2),
+                'tds_amount' => round($tdsAmount, 2),
+                'total_deduction' => round($platformCommission + $platformCommissionGst + $gatewayFee + $shippingCharge + $tcsAmount + $tdsAmount, 2),
                 'seller_earnings' => round($sellerEarnings, 2),
             ];
 
             $totalPlatformCommission += $platformCommission;
+            $totalPlatformCommissionGst = ($totalPlatformCommissionGst ?? 0) + $platformCommissionGst;
             $totalGatewayFee += $gatewayFee;
+            $totalTcs += $tcsAmount;
+            $totalTds += $tdsAmount;
             $totalSellerEarnings += $sellerEarnings;
         }
 
@@ -116,7 +143,10 @@ class CommissionService
             'breakdown' => $breakdown,
             'totals' => [
                 'platform_commission' => round($totalPlatformCommission, 2),
+                'platform_commission_gst' => round($totalPlatformCommissionGst ?? 0, 2),
                 'gateway_fee' => round($totalGatewayFee, 2),
+                'tcs_deduction' => round($totalTcs, 2),
+                'tds_deduction' => round($totalTds, 2),
                 'seller_earnings' => round($totalSellerEarnings, 2),
             ]
         ];
@@ -131,8 +161,10 @@ class CommissionService
      */
     public function processOrderCommission(Order $order)
     {
-        // Only process if order is delivered and commission not yet calculated
-        if ($order->status !== 'delivered' || $order->commission_calculated_at) {
+        $isCOD = strtolower($order->payment_method ?? '') === 'cod';
+        $expectedStatus = $isCOD ? 'cod_reconciled' : 'delivered';
+
+        if ($order->status !== $expectedStatus || $order->commission_calculated_at) {
             return false;
         }
 
@@ -166,6 +198,9 @@ class CommissionService
                     $shipment->save();
                 }
 
+                $isCOD = strtolower($order->payment_method ?? '') === 'cod';
+                $reconciliationStatus = $isCOD ? 'pending' : 'reconciled';
+
                 $walletService->creditEarnings(
                     $sellerId,
                     $order->id,
@@ -174,12 +209,16 @@ class CommissionService
                     [
                         'order_total' => $data['order_total'],
                         'platform_commission' => $data['platform_commission_amount'],
+                        'platform_commission_gst' => $data['platform_commission_gst'],
                         'gateway_fee' => $data['payment_gateway_fee'],
                         'shipping_charge' => $data['shipping_charge'],
                         'commission_percentage' => $data['platform_commission_percentage'],
                         'gateway_percentage' => $data['payment_gateway_percentage'],
                         'payout_transaction_id' => $payoutTxnId
-                    ]
+                    ],
+                    $data['tcs_amount'],
+                    $data['tds_amount'],
+                    $reconciliationStatus
                 );
             }
 
@@ -217,22 +256,23 @@ class CommissionService
             foreach ($itemsBySeller as $sellerId => $items) {
                 if (!$sellerId) continue;
 
-                $sellerTotal = $items->sum('total');
-                $commission = $this->getSellerCommissionRate($sellerId, $order->created_at);
+                // Find original credit transaction to get exact amount
+                $originalTx = \App\Models\SellerTransaction::where('seller_id', $sellerId)
+                    ->where('order_id', $order->id)
+                    ->where('type', \App\Models\SellerTransaction::TYPE_EARNING)
+                    ->first();
 
-                $platformCommission = $sellerTotal * ($commission->base_commission_percentage / 100);
-                $isCOD = strtolower($order->payment_method ?? '') === 'cod';
-                $gatewayFee = $isCOD ? 0 : ($sellerTotal * ($commission->payment_gateway_percentage / 100));
-                $sellerEarnings = $sellerTotal - $platformCommission - $gatewayFee;
+                $refundAmount = $originalTx ? (float)$originalTx->amount : 0.00;
 
-                // Reverse the earnings
-                $walletService->debitAmount(
-                    $sellerId,
-                    $order->id,
-                    $sellerEarnings,
-                    "Refund reversal for Order #{$order->order_number}",
-                    'refund'
-                );
+                if ($refundAmount > 0) {
+                    $walletService->debitAmount(
+                        $sellerId,
+                        $order->id,
+                        $refundAmount,
+                        "Refund reversal for Order #{$order->order_number}",
+                        'refund'
+                    );
+                }
             }
 
             // Clear commission calculation
@@ -261,11 +301,8 @@ class CommissionService
      */
     public function getSellerCommissionSummary($sellerId, $startDate = null, $endDate = null)
     {
-        $query = Order::whereHas('items', function ($q) use ($sellerId) {
-            $q->where('seller_id', $sellerId);
-        })
-        ->where('status', 'delivered')
-        ->whereNotNull('commission_calculated_at');
+        $query = \App\Models\SellerTransaction::where('seller_id', $sellerId)
+            ->where('type', \App\Models\SellerTransaction::TYPE_EARNING);
 
         if ($startDate) {
             $query->where('created_at', '>=', $startDate);
@@ -275,27 +312,31 @@ class CommissionService
             $query->where('created_at', '<=', $endDate);
         }
 
-        $orders = $query->get();
+        $transactions = $query->get();
 
         $totalSales = 0;
         $totalPlatformCommission = 0;
+        $totalPlatformCommissionGst = 0;
         $totalGatewayFee = 0;
+        $totalShippingCharge = 0;
+        $totalTcs = 0;
+        $totalTds = 0;
         $totalEarnings = 0;
+        $orderIds = [];
 
-        foreach ($orders as $order) {
-            $sellerItems = $order->items->where('seller_id', $sellerId);
-            $sellerTotal = $sellerItems->sum('total');
-            
-            $commission = $this->getSellerCommissionRate($sellerId, $order->created_at);
-            $platformCommission = $sellerTotal * ($commission->base_commission_percentage / 100);
-            $isCOD = strtolower($order->payment_method ?? '') === 'cod';
-            $gatewayFee = $isCOD ? 0 : ($sellerTotal * ($commission->payment_gateway_percentage / 100));
-            $earnings = $sellerTotal - $platformCommission - $gatewayFee;
-
-            $totalSales += $sellerTotal;
-            $totalPlatformCommission += $platformCommission;
-            $totalGatewayFee += $gatewayFee;
-            $totalEarnings += $earnings;
+        foreach ($transactions as $txn) {
+            $meta = $txn->metadata ?? [];
+            $totalSales += (float)($meta['order_total'] ?? $txn->amount);
+            $totalPlatformCommission += (float)($meta['platform_commission'] ?? 0);
+            $totalPlatformCommissionGst += (float)($meta['platform_commission_gst'] ?? 0);
+            $totalGatewayFee += (float)($meta['gateway_fee'] ?? 0);
+            $totalShippingCharge += (float)($meta['shipping_charge'] ?? 0);
+            $totalTcs += (float)($txn->tcs_deduction);
+            $totalTds += (float)($txn->tds_deduction);
+            $totalEarnings += (float)$txn->amount;
+            if ($txn->order_id) {
+                $orderIds[$txn->order_id] = true;
+            }
         }
 
         $currentCommission = $this->getSellerCommissionRate($sellerId);
@@ -303,14 +344,18 @@ class CommissionService
         return [
             'total_sales' => round($totalSales, 2),
             'total_platform_commission' => round($totalPlatformCommission, 2),
+            'total_platform_commission_gst' => round($totalPlatformCommissionGst, 2),
             'total_gateway_fee' => round($totalGatewayFee, 2),
+            'total_shipping_charge' => round($totalShippingCharge, 2),
+            'total_tcs' => round($totalTcs, 2),
+            'total_tds' => round($totalTds, 2),
             'total_earnings' => round($totalEarnings, 2),
             'current_commission_rate' => [
                 'platform' => $currentCommission->base_commission_percentage,
                 'gateway' => $currentCommission->payment_gateway_percentage,
                 'total' => $currentCommission->effective_commission_percentage,
             ],
-            'order_count' => $orders->count(),
+            'order_count' => count($orderIds),
         ];
     }
 }

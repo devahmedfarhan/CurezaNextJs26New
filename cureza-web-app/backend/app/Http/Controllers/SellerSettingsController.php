@@ -342,4 +342,69 @@ class SellerSettingsController extends Controller
 
         return response()->json(['message' => 'KYC documents submitted for approval.']);
     }
+
+    public function verifyGstin(Request $request)
+    {
+        $request->validate([
+            'gstin' => 'sometimes|required|string',
+        ]);
+
+        $user = Auth::user();
+        $profile = $user->sellerProfile;
+
+        if (!$profile) {
+            return response()->json(['message' => 'Seller profile not found.'], 404);
+        }
+
+        $gstin = $request->input('gstin') ?: $profile->gst_number;
+
+        if (empty($gstin)) {
+            return response()->json(['message' => 'No GSTIN provided or onboarded.'], 422);
+        }
+
+        $verifier = new \App\Services\GstinVerificationService();
+        $result = $verifier->verify($gstin);
+
+        if ($result['success']) {
+            $profile->update([
+                'gst_number' => strtoupper($gstin),
+                'gstin_verified' => true,
+                'gstin_verified_at' => now(),
+            ]);
+
+            return response()->json([
+                'message' => 'GSTIN verified successfully.',
+                'data' => $result['data']
+            ]);
+        }
+
+        return response()->json([
+            'message' => $result['message'],
+        ], 422);
+    }
+
+    public function updateTaxSettings(Request $request)
+    {
+        $validated = $request->validate([
+            'default_gst_slab' => 'required|numeric|in:0,5,12,18,28',
+            'default_gst_inclusive' => 'required|boolean',
+        ]);
+
+        $user = Auth::user();
+        $profile = $user->sellerProfile;
+
+        if (!$profile) {
+            $profile = SellerProfile::create([
+                'user_id' => $user->id,
+                'status' => 'pending',
+            ]);
+        }
+
+        $profile->update($validated);
+
+        return response()->json([
+            'message' => 'Default GST settings updated successfully.',
+            'profile' => $profile
+        ]);
+    }
 }
