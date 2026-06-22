@@ -266,7 +266,7 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
     }
 
     return (
-        <SidebarProvider>
+        <SidebarProvider className="superadmin-theme">
             <AppSidebar />
             <SidebarInset className="bg-neutral-50/20">
                 {/* Premium Detailed Super Admin Header */}
