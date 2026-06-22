@@ -38,30 +38,6 @@ export default function PricingInventory({ formData, handleInputChange, isSuperA
                                 min="0"
                             />
                         </div>
-                        {(() => {
-                            const gstSlab = Number(formData.gst_slab || 18);
-                            const price = Number(formData.price || 0);
-                            let basePrice = 0;
-                            let gstAmount = 0;
-                            if (price > 0) {
-                                if (formData.gst_inclusive) {
-                                    basePrice = price / (1 + (gstSlab / 100));
-                                    gstAmount = price - basePrice;
-                                } else {
-                                    basePrice = price;
-                                    gstAmount = price * (gstSlab / 100);
-                                }
-                                return (
-                                    <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-1.5 font-semibold">
-                                        {formData.gst_inclusive 
-                                            ? `Tax Breakdown: Base ₹${basePrice.toFixed(2)} + GST (${gstSlab}%) ₹${gstAmount.toFixed(2)}`
-                                            : `Tax Breakdown: Base ₹${basePrice.toFixed(2)} + GST (${gstSlab}%) ₹${gstAmount.toFixed(2)} = Total ₹${(basePrice + gstAmount).toFixed(2)}`
-                                        }
-                                    </p>
-                                );
-                            }
-                            return null;
-                        })()}
                     </div>
 
                     {/* MRP */}
@@ -84,46 +60,6 @@ export default function PricingInventory({ formData, handleInputChange, isSuperA
                                 {(100 - (Number(formData.price) / Number(formData.original_price) * 100)).toFixed(0)}% OFF SAVINGS
                             </p>
                         )}
-                    </div>
-                </div>
-
-                {/* GST Slab & Type Row */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* GST Slab */}
-                    <div className="space-y-2">
-                        <label className={labelClass}>GST Tax Slab <span className="text-red-500">*</span></label>
-                        <select
-                            name="gst_slab"
-                            value={formData.gst_slab}
-                            onChange={handleInputChange}
-                            className={`w-full h-12 ${roundedClass} border ${isSuperAdmin ? 'border-neutral-950/15 focus:ring-black/10 focus:border-black' : 'border-gray-200 dark:border-gray-700 focus:ring-cureza-green/15 focus:border-cureza-green'} bg-white dark:bg-gray-900 focus:ring-4 px-4 font-bold text-gray-900 dark:text-gray-100 transition-all outline-none cursor-pointer`}
-                        >
-                            <option value="0">0% (GST Exempt / Nil Rate)</option>
-                            <option value="5">5% (GST)</option>
-                            <option value="12">12% (GST)</option>
-                            <option value="18">18% (GST Standard)</option>
-                            <option value="28">28% (GST Luxury)</option>
-                        </select>
-                    </div>
-
-                    {/* GST Inclusive/Exclusive Switch */}
-                    <div className="space-y-2">
-                        <label className={labelClass}>GST Tax Treatment</label>
-                        <div className="flex items-center gap-3 h-12">
-                            <label className="relative inline-flex items-center cursor-pointer select-none">
-                                <input
-                                    type="checkbox"
-                                    name="gst_inclusive"
-                                    checked={formData.gst_inclusive}
-                                    onChange={handleInputChange}
-                                    className="sr-only peer"
-                                />
-                                <div className={`w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:after:bg-gray-900 dark:after:border-gray-600 ${isSuperAdmin ? 'peer-checked:bg-black dark:peer-checked:bg-white' : 'peer-checked:bg-cureza-green'}`}></div>
-                                <span className="ml-3 text-xs font-bold text-gray-900 dark:text-gray-100">
-                                    {formData.gst_inclusive ? 'Inclusive (GST Included in Price)' : 'Exclusive (GST Added on Top)'}
-                                </span>
-                            </label>
-                        </div>
                     </div>
                 </div>
 
