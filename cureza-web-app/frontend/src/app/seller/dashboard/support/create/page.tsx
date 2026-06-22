@@ -54,7 +54,7 @@ export default function CreateTicketPage() {
             <div className="flex items-center gap-3">
                 <Link 
                     href="/seller/dashboard/support"
-                    className="p-2 border border-black/[0.05] dark:border-white/[0.05] hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-all text-gray-500"
+                    className="p-2 border-[0.5px] border-black/[0.05] dark:border-white/[0.05] hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-all text-gray-500"
                 >
                     <ArrowLeft size={16} />
                 </Link>
@@ -65,7 +65,7 @@ export default function CreateTicketPage() {
             </div>
 
             {/* Form Card */}
-            <div className="bg-white dark:bg-gray-900 border border-gray-150 dark:border-white/[0.05] rounded-2xl p-6 space-y-6 shadow-sm">
+            <div className="bg-white dark:bg-gray-900 border-[0.5px] border-black/50 dark:border-white/[0.05] rounded-2xl p-6 space-y-6 shadow-none">
                 <form onSubmit={handleSubmit} className="space-y-5">
                     <div>
                         <label className="block text-xs font-semibold text-gray-500 capitalize mb-1.5 px-1">Subject</label>
@@ -73,7 +73,7 @@ export default function CreateTicketPage() {
                             type="text"
                             name="subject"
                             required
-                            className="w-full border border-gray-200 focus:border-cureza-green rounded-xl px-4 py-2.5 text-xs outline-none bg-white dark:bg-gray-900 font-semibold"
+                            className="w-full border-[0.5px] border-black/50 focus:border-cureza-green rounded-xl px-4 py-2.5 text-xs outline-none bg-white dark:bg-gray-900 font-semibold"
                             value={formData.subject}
                             onChange={handleChange}
                             placeholder="Brief summary of the issue (e.g., payout delay, listing discrepancy)"
@@ -85,7 +85,7 @@ export default function CreateTicketPage() {
                             <label className="block text-xs font-semibold text-gray-500 capitalize mb-1.5 px-1">Category</label>
                             <select
                                 name="category"
-                                className="w-full border border-gray-200 focus:border-cureza-green rounded-xl px-4 py-2.5 text-xs font-semibold bg-white dark:bg-gray-900 outline-none cursor-pointer"
+                                className="w-full border-[0.5px] border-black/50 focus:border-cureza-green rounded-xl px-4 py-2.5 text-xs font-semibold bg-white dark:bg-gray-900 outline-none cursor-pointer"
                                 value={formData.category}
                                 onChange={handleChange}
                             >
@@ -100,7 +100,7 @@ export default function CreateTicketPage() {
                             <label className="block text-xs font-semibold text-gray-500 capitalize mb-1.5 px-1">Priority</label>
                             <select
                                 name="priority"
-                                className="w-full border border-gray-200 focus:border-cureza-green rounded-xl px-4 py-2.5 text-xs font-semibold bg-white dark:bg-gray-900 outline-none cursor-pointer"
+                                className="w-full border-[0.5px] border-black/50 focus:border-cureza-green rounded-xl px-4 py-2.5 text-xs font-semibold bg-white dark:bg-gray-900 outline-none cursor-pointer"
                                 value={formData.priority}
                                 onChange={handleChange}
                             >
@@ -116,7 +116,7 @@ export default function CreateTicketPage() {
                         <input
                             type="number"
                             name="related_id"
-                            className="w-full border border-gray-200 focus:border-cureza-green rounded-xl px-4 py-2.5 text-xs outline-none bg-white dark:bg-gray-900 font-semibold"
+                            className="w-full border-[0.5px] border-black/50 focus:border-cureza-green rounded-xl px-4 py-2.5 text-xs outline-none bg-white dark:bg-gray-900 font-semibold"
                             value={formData.related_id}
                             onChange={handleChange}
                             placeholder="E.g., 12345"
@@ -130,7 +130,7 @@ export default function CreateTicketPage() {
                             name="message"
                             required
                             rows={5}
-                            className="w-full border border-gray-200 focus:border-cureza-green rounded-xl px-4 py-2.5 text-xs outline-none bg-white dark:bg-gray-900 font-medium leading-relaxed"
+                            className="w-full border-[0.5px] border-black/50 focus:border-cureza-green rounded-xl px-4 py-2.5 text-xs outline-none bg-white dark:bg-gray-900 font-medium leading-relaxed"
                             value={formData.message}
                             onChange={handleChange}
                             placeholder="Describe your issue in detail so our support executives can assist you quickly..."
@@ -148,17 +148,17 @@ export default function CreateTicketPage() {
                         <p className="text-[10px] text-gray-400 mt-1.5 px-1">Maximum 10MB per file. Formats allowed: PNG, JPG, PDF.</p>
                     </div>
 
-                    <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+                    <div className="flex justify-end gap-3 pt-4 border-t-[0.5px] border-black/50">
                         <Link 
                             href="/seller/dashboard/support" 
-                            className="px-4 py-2 border border-gray-200 rounded-xl hover:bg-gray-50 text-xs font-semibold text-gray-650 dark:text-gray-300 capitalize"
+                            className="px-4 py-2 border-[0.5px] border-black/50 rounded-xl hover:bg-gray-50 text-xs font-semibold text-gray-650 dark:text-gray-300 capitalize"
                         >
                             Cancel
                         </Link>
                         <button 
                             type="submit" 
                             disabled={loading} 
-                            className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl disabled:opacity-50 text-xs font-semibold transition-all flex items-center gap-1.5 active:scale-95 shadow-sm"
+                            className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl disabled:opacity-50 text-xs font-semibold transition-all flex items-center gap-1.5 active:scale-95 shadow-none border-black/50 border-[0.5px]"
                         >
                             {loading ? 'Submitting...' : 'Submit Request'}
                             <Send size={12} />

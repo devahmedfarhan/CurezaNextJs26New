@@ -18,27 +18,27 @@ export default function AdminAffiliatesPage() {
 
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                <div className="bg-white p-4 rounded-xl border-[0.5px] border-black/50 shadow-none">
                     <p className="text-sm text-gray-500">Total Affiliates</p>
                     <h3 className="text-2xl font-bold text-gray-900">124</h3>
                 </div>
-                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                <div className="bg-white p-4 rounded-xl border-[0.5px] border-black/50 shadow-none">
                     <p className="text-sm text-gray-500">Active Campaigns</p>
                     <h3 className="text-2xl font-bold text-gray-900">8</h3>
                 </div>
-                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                <div className="bg-white p-4 rounded-xl border-[0.5px] border-black/50 shadow-none">
                     <p className="text-sm text-gray-500">Total Clicks (Nov)</p>
                     <h3 className="text-2xl font-bold text-gray-900">45.2K</h3>
                 </div>
-                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                <div className="bg-white p-4 rounded-xl border-[0.5px] border-black/50 shadow-none">
                     <p className="text-sm text-gray-500">Commission Paid</p>
                     <h3 className="text-2xl font-bold text-cureza-green">₹1.2L</h3>
                 </div>
             </div>
 
             {/* Influencer List */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-gray-200 bg-gray-50">
+            <div className="bg-white rounded-xl border-[0.5px] border-black/50 shadow-none overflow-hidden">
+                <div className="p-4 border-b-[0.5px] border-black/50 bg-gray-50">
                     <h3 className="font-bold text-gray-700">Top Performing Influencers</h3>
                 </div>
                 <table className="min-w-full divide-y divide-gray-200">

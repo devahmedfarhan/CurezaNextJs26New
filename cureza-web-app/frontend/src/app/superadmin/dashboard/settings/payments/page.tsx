@@ -133,7 +133,7 @@ export default function AdminPaymentSettingsPage() {
     return (
         <div className="w-full space-y-6 pb-20 font-sans text-neutral-900">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-black/10 pb-5">
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b-[0.5px] border-black/10 pb-5">
                 <div>
                     <h2 className="text-sm font-medium text-neutral-900 tracking-tight">Payment Gateways</h2>
                     <p className="text-neutral-500 text-xs mt-0.5">Activate, toggle, and configure credentials for payment methods.</p>
@@ -150,13 +150,13 @@ export default function AdminPaymentSettingsPage() {
 
             {/* Notifications */}
             {successMessage && (
-                <div className="bg-green-50 border-l-2 border-green-600 p-4 rounded-[10px] flex items-center gap-3 animate-fadeIn">
+                <div className="bg-green-50 border-l-[0.5px] border-black/50 p-4 rounded-[10px] flex items-center gap-3 animate-fadeIn">
                     <CheckCircle className="text-green-600 flex-shrink-0" size={16} />
                     <span className="text-green-800 text-xs font-medium">{successMessage}</span>
                 </div>
             )}
             {errorMessage && (
-                <div className="bg-red-50 border-l-2 border-red-600 p-4 rounded-[10px] flex items-center gap-3 animate-fadeIn">
+                <div className="bg-red-50 border-l-[0.5px] border-black/50 p-4 rounded-[10px] flex items-center gap-3 animate-fadeIn">
                     <AlertCircle className="text-red-600 flex-shrink-0" size={16} />
                     <span className="text-red-800 text-xs font-medium">{errorMessage}</span>
                 </div>
@@ -164,15 +164,15 @@ export default function AdminPaymentSettingsPage() {
 
             {/* 1. RAZORPAY GATEWAY */}
             <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 overflow-hidden transition-all duration-200">
-                <div className="p-5 flex justify-between items-start border-b border-black/10 bg-neutral-50/50">
+                <div className="p-5 flex justify-between items-start border-b-[0.5px] border-black/10 bg-neutral-50/50">
                     <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-white border border-black/10 rounded-[10px] flex items-center justify-center text-black font-bold text-base shadow-none">
+                        <div className="w-10 h-10 bg-white border-[0.5px] border-black/10 rounded-[10px] flex items-center justify-center text-black font-bold text-base shadow-none">
                             R
                         </div>
                         <div>
                             <h3 className="font-medium text-neutral-900 text-sm flex items-center gap-2">
                                 Razorpay
-                                <span className="text-[10px] bg-neutral-100 text-neutral-850 font-medium px-2 py-0.5 rounded-full border border-black/5">UPI & Cards</span>
+                                <span className="text-[10px] bg-neutral-100 text-neutral-850 font-medium px-2 py-0.5 rounded-full border-[0.5px] border-black/5">UPI & Cards</span>
                             </h3>
                             <p className="text-xs text-neutral-500 font-normal">Credit Card, Netbanking, UPI, and Wallet integrations for Indian sellers</p>
                         </div>
@@ -184,7 +184,7 @@ export default function AdminPaymentSettingsPage() {
                         <button
                             type="button"
                             onClick={() => handleToggleChange('razorpay_enabled')}
-                            className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                            className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-[0.5px] border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
                                 settings.razorpay_enabled === '1' ? 'bg-black' : 'bg-neutral-200'
                             }`}
                         >
@@ -199,7 +199,7 @@ export default function AdminPaymentSettingsPage() {
 
                 {settings.razorpay_enabled === '1' && (
                     <div className="p-5 space-y-4 bg-white">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-neutral-50/30 p-4 rounded-[10px] border border-black/10">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-neutral-50/30 p-4 rounded-[10px] border-[0.5px] border-black/10">
                             <div>
                                 <label className="block text-xs font-medium text-neutral-600 mb-1.5">Key ID</label>
                                 <div className="relative">
@@ -209,7 +209,7 @@ export default function AdminPaymentSettingsPage() {
                                         value={settings.razorpay_key}
                                         onChange={(e) => handleInputChange('razorpay_key', e.target.value)}
                                         placeholder="rzp_test_xxxxxxxxx"
-                                        className="w-full pl-9 pr-3 py-2 bg-white border border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
+                                        className="w-full pl-9 pr-3 py-2 bg-white border-[0.5px] border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
                                     />
                                 </div>
                             </div>
@@ -222,7 +222,7 @@ export default function AdminPaymentSettingsPage() {
                                         value={settings.razorpay_secret}
                                         onChange={(e) => handleInputChange('razorpay_secret', e.target.value)}
                                         placeholder="••••••••"
-                                        className="w-full pl-9 pr-9 py-2 bg-white border border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
+                                        className="w-full pl-9 pr-9 py-2 bg-white border-[0.5px] border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
                                     />
                                     <button 
                                         type="button"
@@ -242,7 +242,7 @@ export default function AdminPaymentSettingsPage() {
                                         value={settings.razorpay_webhook_secret}
                                         onChange={(e) => handleInputChange('razorpay_webhook_secret', e.target.value)}
                                         placeholder="••••••••"
-                                        className="w-full pl-9 pr-9 py-2 bg-white border border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
+                                        className="w-full pl-9 pr-9 py-2 bg-white border-[0.5px] border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
                                     />
                                     <button 
                                         type="button"
@@ -260,15 +260,15 @@ export default function AdminPaymentSettingsPage() {
 
             {/* 2. STRIPE GATEWAY */}
             <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 overflow-hidden transition-all duration-200">
-                <div className="p-5 flex justify-between items-start border-b border-black/10 bg-neutral-50/50">
+                <div className="p-5 flex justify-between items-start border-b-[0.5px] border-black/10 bg-neutral-50/50">
                     <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-white border border-black/10 rounded-[10px] flex items-center justify-center text-black font-bold text-base shadow-none">
+                        <div className="w-10 h-10 bg-white border-[0.5px] border-black/10 rounded-[10px] flex items-center justify-center text-black font-bold text-base shadow-none">
                             S
                         </div>
                         <div>
                             <h3 className="font-medium text-neutral-900 text-sm flex items-center gap-2">
                                 Stripe
-                                <span className="text-[10px] bg-neutral-100 text-neutral-850 font-medium px-2 py-0.5 rounded-full border border-black/5">Global Payments</span>
+                                <span className="text-[10px] bg-neutral-100 text-neutral-850 font-medium px-2 py-0.5 rounded-full border-[0.5px] border-black/5">Global Payments</span>
                             </h3>
                             <p className="text-xs text-neutral-500 font-normal">Accept worldwide Credit Cards, Apple Pay, and Google Pay wallets</p>
                         </div>
@@ -280,7 +280,7 @@ export default function AdminPaymentSettingsPage() {
                         <button
                             type="button"
                             onClick={() => handleToggleChange('stripe_enabled')}
-                            className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                            className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-[0.5px] border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
                                 settings.stripe_enabled === '1' ? 'bg-black' : 'bg-neutral-200'
                             }`}
                         >
@@ -295,7 +295,7 @@ export default function AdminPaymentSettingsPage() {
 
                 {settings.stripe_enabled === '1' && (
                     <div className="p-5 space-y-4 bg-white">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-neutral-50/30 p-4 rounded-[10px] border border-black/10">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-neutral-50/30 p-4 rounded-[10px] border-[0.5px] border-black/10">
                             <div>
                                 <label className="block text-xs font-medium text-neutral-600 mb-1.5">Publishable Key</label>
                                 <div className="relative">
@@ -305,7 +305,7 @@ export default function AdminPaymentSettingsPage() {
                                         value={settings.stripe_key}
                                         onChange={(e) => handleInputChange('stripe_key', e.target.value)}
                                         placeholder="pk_test_xxxxxxxxx"
-                                        className="w-full pl-9 pr-3 py-2 bg-white border border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
+                                        className="w-full pl-9 pr-3 py-2 bg-white border-[0.5px] border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
                                     />
                                 </div>
                             </div>
@@ -318,7 +318,7 @@ export default function AdminPaymentSettingsPage() {
                                         value={settings.stripe_secret}
                                         onChange={(e) => handleInputChange('stripe_secret', e.target.value)}
                                         placeholder="••••••••"
-                                        className="w-full pl-9 pr-9 py-2 bg-white border border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
+                                        className="w-full pl-9 pr-9 py-2 bg-white border-[0.5px] border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
                                     />
                                     <button 
                                         type="button"
@@ -338,7 +338,7 @@ export default function AdminPaymentSettingsPage() {
                                         value={settings.stripe_secret}
                                         onChange={(e) => handleInputChange('stripe_webhook_secret', e.target.value)}
                                         placeholder="••••••••"
-                                        className="w-full pl-9 pr-9 py-2 bg-white border border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
+                                        className="w-full pl-9 pr-9 py-2 bg-white border-[0.5px] border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
                                     />
                                     <button 
                                         type="button"
@@ -356,15 +356,15 @@ export default function AdminPaymentSettingsPage() {
 
             {/* 3. PAYU GATEWAY */}
             <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 overflow-hidden transition-all duration-200">
-                <div className="p-5 flex justify-between items-start border-b border-black/10 bg-neutral-50/50">
+                <div className="p-5 flex justify-between items-start border-b-[0.5px] border-black/10 bg-neutral-50/50">
                     <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-white border border-black/10 rounded-[10px] flex items-center justify-center text-black font-bold text-base shadow-none">
+                        <div className="w-10 h-10 bg-white border-[0.5px] border-black/10 rounded-[10px] flex items-center justify-center text-black font-bold text-base shadow-none">
                             P
                         </div>
                         <div>
                             <h3 className="font-medium text-neutral-900 text-sm flex items-center gap-2">
                                 PayU
-                                <span className="text-[10px] bg-neutral-100 text-neutral-850 font-medium px-2 py-0.5 rounded-full border border-black/5">Enterprise Merchant</span>
+                                <span className="text-[10px] bg-neutral-100 text-neutral-850 font-medium px-2 py-0.5 rounded-full border-[0.5px] border-black/5">Enterprise Merchant</span>
                             </h3>
                             <p className="text-xs text-neutral-500 font-normal">Popular Indian gateway offering UPI, Cards, Netbanking & EMI options</p>
                         </div>
@@ -376,7 +376,7 @@ export default function AdminPaymentSettingsPage() {
                         <button
                             type="button"
                             onClick={() => handleToggleChange('payu_enabled')}
-                            className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                            className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-[0.5px] border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
                                 settings.payu_enabled === '1' ? 'bg-black' : 'bg-neutral-200'
                             }`}
                         >
@@ -391,7 +391,7 @@ export default function AdminPaymentSettingsPage() {
 
                 {settings.payu_enabled === '1' && (
                     <div className="p-5 space-y-4 bg-white">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-neutral-50/30 p-4 rounded-[10px] border border-black/10">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-neutral-50/30 p-4 rounded-[10px] border-[0.5px] border-black/10">
                             <div>
                                 <label className="block text-xs font-medium text-neutral-600 mb-1.5">Merchant Key</label>
                                 <div className="relative">
@@ -401,7 +401,7 @@ export default function AdminPaymentSettingsPage() {
                                         value={settings.payu_merchant_key}
                                         onChange={(e) => handleInputChange('payu_merchant_key', e.target.value)}
                                         placeholder="Merchant Key"
-                                        className="w-full pl-9 pr-3 py-2 bg-white border border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
+                                        className="w-full pl-9 pr-3 py-2 bg-white border-[0.5px] border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
                                     />
                                 </div>
                             </div>
@@ -414,7 +414,7 @@ export default function AdminPaymentSettingsPage() {
                                         value={settings.payu_merchant_salt}
                                         onChange={(e) => handleInputChange('payu_merchant_salt', e.target.value)}
                                         placeholder="••••••••"
-                                        className="w-full pl-9 pr-9 py-2 bg-white border border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
+                                        className="w-full pl-9 pr-9 py-2 bg-white border-[0.5px] border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
                                     />
                                     <button 
                                         type="button"
@@ -432,7 +432,7 @@ export default function AdminPaymentSettingsPage() {
                                     <select 
                                         value={settings.payu_mode} 
                                         onChange={(e) => handleInputChange('payu_mode', e.target.value)}
-                                        className="w-full pl-9 pr-3 py-2 bg-white border border-black/10 rounded-[10px] outline-none text-xs text-neutral-900"
+                                        className="w-full pl-9 pr-3 py-2 bg-white border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs text-neutral-900"
                                     >
                                         <option value="sandbox">Sandbox (Testing)</option>
                                         <option value="production">Production (Live)</option>
@@ -446,15 +446,15 @@ export default function AdminPaymentSettingsPage() {
 
             {/* 4. PHONEPE GATEWAY */}
             <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 overflow-hidden transition-all duration-200">
-                <div className="p-5 flex justify-between items-start border-b border-black/10 bg-neutral-50/50">
+                <div className="p-5 flex justify-between items-start border-b-[0.5px] border-black/10 bg-neutral-50/50">
                     <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-white border border-black/10 rounded-[10px] flex items-center justify-center text-black font-bold text-base shadow-none">
+                        <div className="w-10 h-10 bg-white border-[0.5px] border-black/10 rounded-[10px] flex items-center justify-center text-black font-bold text-base shadow-none">
                             Ph
                         </div>
                         <div>
                             <h3 className="font-medium text-neutral-900 text-sm flex items-center gap-2">
                                 PhonePe
-                                <span className="text-[10px] bg-neutral-100 text-neutral-850 font-medium px-2 py-0.5 rounded-full border border-black/5">Fast UPI</span>
+                                <span className="text-[10px] bg-neutral-100 text-neutral-850 font-medium px-2 py-0.5 rounded-full border-[0.5px] border-black/5">Fast UPI</span>
                             </h3>
                             <p className="text-xs text-neutral-500 font-normal">Direct integration with India's leading UPI payment container apps</p>
                         </div>
@@ -466,7 +466,7 @@ export default function AdminPaymentSettingsPage() {
                         <button
                             type="button"
                             onClick={() => handleToggleChange('phonepe_enabled')}
-                            className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                            className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-[0.5px] border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
                                 settings.phonepe_enabled === '1' ? 'bg-black' : 'bg-neutral-200'
                             }`}
                         >
@@ -481,7 +481,7 @@ export default function AdminPaymentSettingsPage() {
 
                 {settings.phonepe_enabled === '1' && (
                     <div className="p-5 space-y-4 bg-white">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-neutral-50/30 p-4 rounded-[10px] border border-black/10">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-neutral-50/30 p-4 rounded-[10px] border-[0.5px] border-black/10">
                             <div>
                                 <label className="block text-xs font-medium text-neutral-600 mb-1.5">Merchant ID</label>
                                 <div className="relative">
@@ -491,7 +491,7 @@ export default function AdminPaymentSettingsPage() {
                                         value={settings.phonepe_merchant_id}
                                         onChange={(e) => handleInputChange('phonepe_merchant_id', e.target.value)}
                                         placeholder="MIDxxxxxxxxxxxx"
-                                        className="w-full pl-9 pr-3 py-2 bg-white border border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
+                                        className="w-full pl-9 pr-3 py-2 bg-white border-[0.5px] border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
                                     />
                                 </div>
                             </div>
@@ -504,7 +504,7 @@ export default function AdminPaymentSettingsPage() {
                                         value={settings.phonepe_salt_key}
                                         onChange={(e) => handleInputChange('phonepe_salt_key', e.target.value)}
                                         placeholder="••••••••"
-                                        className="w-full pl-9 pr-9 py-2 bg-white border border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
+                                        className="w-full pl-9 pr-9 py-2 bg-white border-[0.5px] border-black/10 rounded-[10px] outline-none font-mono text-xs font-normal text-neutral-900" 
                                     />
                                     <button 
                                         type="button"
@@ -524,7 +524,7 @@ export default function AdminPaymentSettingsPage() {
                                         value={settings.phonepe_salt_index}
                                         onChange={(e) => handleInputChange('phonepe_salt_index', e.target.value)}
                                         placeholder="1"
-                                        className="w-full pl-9 pr-3 py-2 bg-white border border-black/10 rounded-[10px] outline-none text-xs text-neutral-900 font-semibold" 
+                                        className="w-full pl-9 pr-3 py-2 bg-white border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs text-neutral-900 font-semibold" 
                                     />
                                 </div>
                             </div>
@@ -535,7 +535,7 @@ export default function AdminPaymentSettingsPage() {
                                     <select 
                                         value={settings.phonepe_mode} 
                                         onChange={(e) => handleInputChange('phonepe_mode', e.target.value)}
-                                        className="w-full pl-9 pr-3 py-2 bg-white border border-black/10 rounded-[10px] outline-none text-xs text-neutral-900 font-normal"
+                                        className="w-full pl-9 pr-3 py-2 bg-white border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs text-neutral-900 font-normal"
                                     >
                                         <option value="sandbox">UAT (Sandbox Testing)</option>
                                         <option value="production">Production (Live)</option>
@@ -551,13 +551,13 @@ export default function AdminPaymentSettingsPage() {
             <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 overflow-hidden transition-all duration-200 animate-fadeIn">
                 <div className="p-5 flex justify-between items-start bg-neutral-50/10">
                     <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-white border border-black/10 rounded-[10px] flex items-center justify-center text-black shadow-none">
+                        <div className="w-10 h-10 bg-white border-[0.5px] border-black/10 rounded-[10px] flex items-center justify-center text-black shadow-none">
                             <CreditCard size={18} />
                         </div>
                         <div>
                             <h3 className="font-medium text-neutral-900 text-sm flex items-center gap-2">
                                 Cash on Delivery (COD)
-                                <span className="text-[10px] bg-neutral-100 text-neutral-850 font-medium px-2 py-0.5 rounded-full border border-black/5">Manual Payment</span>
+                                <span className="text-[10px] bg-neutral-100 text-neutral-850 font-medium px-2 py-0.5 rounded-full border-[0.5px] border-black/5">Manual Payment</span>
                             </h3>
                             <p className="text-xs text-neutral-500 font-normal">Allow customers to pay in cash upon package delivery</p>
                         </div>
@@ -569,7 +569,7 @@ export default function AdminPaymentSettingsPage() {
                         <button
                             type="button"
                             onClick={() => handleToggleChange('cod_enabled')}
-                            className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                            className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-[0.5px] border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
                                 settings.cod_enabled === '1' ? 'bg-black' : 'bg-neutral-200'
                             }`}
                         >

@@ -152,7 +152,7 @@ export default function AdminGeneralSettingsPage() {
     return (
         <div className="w-full space-y-6 pb-20 font-sans text-neutral-900">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-black/10 pb-5">
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b-[0.5px] border-black/10 pb-5">
                 <div>
                     <h2 className="text-sm font-medium text-neutral-900 tracking-tight">Configure General Settings</h2>
                     <p className="text-neutral-500 text-xs mt-0.5">SMTP dispatchers, Google OAuth keys, branding parameters, and OTP rules.</p>
@@ -169,13 +169,13 @@ export default function AdminGeneralSettingsPage() {
 
             {/* Notifications */}
             {successMessage && (
-                <div className="bg-green-50 border-l-2 border-green-600 p-4 rounded-[10px] flex items-center gap-3 animate-fadeIn">
+                <div className="bg-green-50 border-l-[0.5px] border-black/50 p-4 rounded-[10px] flex items-center gap-3 animate-fadeIn">
                     <CheckCircle className="text-green-600 flex-shrink-0" size={16} />
                     <span className="text-green-800 text-xs font-medium">{successMessage}</span>
                 </div>
             )}
             {errorMessage && (
-                <div className="bg-red-50 border-l-2 border-red-600 p-4 rounded-[10px] flex items-center gap-3 animate-fadeIn">
+                <div className="bg-red-50 border-l-[0.5px] border-black/50 p-4 rounded-[10px] flex items-center gap-3 animate-fadeIn">
                     <AlertCircle className="text-red-600 flex-shrink-0" size={16} />
                     <span className="text-red-800 text-xs font-medium">{errorMessage}</span>
                 </div>
@@ -191,7 +191,7 @@ export default function AdminGeneralSettingsPage() {
                             key={tab.id}
                             type="button"
                             onClick={() => setActiveTab(tab.id)}
-                            className={`flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-[10px] transition-all whitespace-nowrap border ${
+                            className={`flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-[10px] transition-all whitespace-nowrap border-[0.5px] ${
                                 isActive 
                                     ? 'bg-black border-black text-white' 
                                     : 'border-black/10 text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 bg-white'
@@ -210,24 +210,24 @@ export default function AdminGeneralSettingsPage() {
                 {/* BRANDING TAB */}
                 {activeTab === 'branding' && (
                     <div className="space-y-6">
-                        <div className="border-b border-black/10 pb-3">
+                        <div className="border-b-[0.5px] border-black/10 pb-3">
                             <h3 className="font-medium text-neutral-900 text-sm">Branding & Localization</h3>
                             <p className="text-neutral-500 text-[11px] mt-0.5">Basic platform metadata and location details</p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label className="block text-xs font-medium text-neutral-600 mb-1.5">Platform Name</label>
-                                <input type="text" defaultValue="Cureza" className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none bg-neutral-50 text-neutral-400 cursor-not-allowed text-xs font-normal" disabled />
+                                <input type="text" defaultValue="Cureza" className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none bg-neutral-50 text-neutral-400 cursor-not-allowed text-xs font-normal" disabled />
                             </div>
                             <div>
                                 <label className="block text-xs font-medium text-neutral-600 mb-1.5">Support Email</label>
-                                <input type="email" defaultValue="support@cureza.com" className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none bg-neutral-50 text-neutral-400 cursor-not-allowed text-xs font-normal" disabled />
+                                <input type="email" defaultValue="support@cureza.com" className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none bg-neutral-50 text-neutral-400 cursor-not-allowed text-xs font-normal" disabled />
                             </div>
                             <div>
                                 <label className="block text-xs font-medium text-neutral-600 mb-1.5">Base Currency</label>
                                 <div className="relative">
                                     <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={14} />
-                                    <select className="w-full pl-9 pr-3 py-2 border border-black/10 rounded-[10px] outline-none bg-neutral-50 text-neutral-400 cursor-not-allowed text-xs font-normal" disabled>
+                                    <select className="w-full pl-9 pr-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none bg-neutral-50 text-neutral-400 cursor-not-allowed text-xs font-normal" disabled>
                                         <option>INR (₹)</option>
                                     </select>
                                 </div>
@@ -236,12 +236,12 @@ export default function AdminGeneralSettingsPage() {
                                 <label className="block text-xs font-medium text-neutral-600 mb-1.5">Default GST %</label>
                                 <div className="relative">
                                     <Percent className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={14} />
-                                    <input type="number" defaultValue="18" className="w-full pl-9 pr-3 py-2 border border-black/10 rounded-[10px] outline-none bg-neutral-50 text-neutral-400 cursor-not-allowed text-xs font-normal" disabled />
+                                    <input type="number" defaultValue="18" className="w-full pl-9 pr-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none bg-neutral-50 text-neutral-400 cursor-not-allowed text-xs font-normal" disabled />
                                 </div>
                             </div>
                         </div>
 
-                        <div className="border-t border-black/10 pt-6 mt-6">
+                        <div className="border-t-[0.5px] border-black/10 pt-6 mt-6">
                             <h4 className="font-medium text-neutral-900 text-sm mb-0.5">Order Number Configuration</h4>
                             <p className="text-neutral-500 text-[11px] mb-4">Choose how customer order numbers are displayed on invoices and pages</p>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -250,7 +250,7 @@ export default function AdminGeneralSettingsPage() {
                                     <select 
                                         value={settings.order_number_format.value} 
                                         onChange={(e) => handleInputChange('order_number_format', e.target.value)}
-                                        className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none bg-white text-neutral-900 text-xs font-normal"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none bg-white text-neutral-900 text-xs font-normal"
                                     >
                                         <option value="custom">Sequential Custom (e.g. CZ15260001)</option>
                                         <option value="default">Default Random Alphanumeric (e.g. ORD-M6R77BV3TZ)</option>
@@ -263,7 +263,7 @@ export default function AdminGeneralSettingsPage() {
                                         value={settings.order_number_prefix.value} 
                                         onChange={(e) => handleInputChange('order_number_prefix', e.target.value)}
                                         placeholder="CZ"
-                                        className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-neutral-900 bg-white font-mono text-xs uppercase font-normal"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-neutral-900 bg-white font-mono text-xs uppercase font-normal"
                                         disabled={settings.order_number_format.value !== 'custom'}
                                     />
                                 </div>
@@ -272,7 +272,7 @@ export default function AdminGeneralSettingsPage() {
                                     <select 
                                         value={settings.order_number_year.value} 
                                         onChange={(e) => handleInputChange('order_number_year', e.target.value)}
-                                        className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none bg-white text-neutral-900 text-xs font-normal"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none bg-white text-neutral-900 text-xs font-normal"
                                         disabled={settings.order_number_format.value !== 'custom'}
                                     >
                                         <option value="auto">Current Year (Auto)</option>
@@ -292,7 +292,7 @@ export default function AdminGeneralSettingsPage() {
                         </div>
 
                         {/* Theme Styling & Reordering Section */}
-                        <div className="border-t border-black/10 pt-6 mt-6">
+                        <div className="border-t-[0.5px] border-black/10 pt-6 mt-6">
                             <div className="flex items-center gap-2 mb-4">
                                 <Palette className="text-black" size={18} />
                                 <div>
@@ -304,7 +304,7 @@ export default function AdminGeneralSettingsPage() {
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                                 {/* Left column: style controls */}
                                 <div className="space-y-6">
-                                    <div className="bg-neutral-50/50 p-5 rounded-[10px] border border-black/10 space-y-4">
+                                    <div className="bg-neutral-50/50 p-5 rounded-[10px] border-[0.5px] border-black/10 space-y-4">
                                         <h5 className="font-medium text-xs text-neutral-800 flex items-center gap-2">
                                             <Palette size={14} /> Color & Border Settings
                                         </h5>
@@ -316,14 +316,14 @@ export default function AdminGeneralSettingsPage() {
                                                         type="color" 
                                                         value={settings.theme_primary_color.value} 
                                                         onChange={(e) => handleInputChange('theme_primary_color', e.target.value)}
-                                                        className="w-8 h-8 border border-black/10 rounded-[10px] cursor-pointer bg-transparent overflow-hidden"
+                                                        className="w-8 h-8 border-[0.5px] border-black/10 rounded-[10px] cursor-pointer bg-transparent overflow-hidden"
                                                     />
                                                     <input 
                                                         type="text" 
                                                         value={settings.theme_primary_color.value} 
                                                         onChange={(e) => handleInputChange('theme_primary_color', e.target.value)}
                                                         placeholder="#052326"
-                                                        className="w-full px-2.5 py-1 border border-black/10 rounded-[10px] text-xs font-mono outline-none focus:border-black"
+                                                        className="w-full px-2.5 py-1 border-[0.5px] border-black/10 rounded-[10px] text-xs font-mono outline-none focus:border-black"
                                                     />
                                                 </div>
                                             </div>
@@ -334,14 +334,14 @@ export default function AdminGeneralSettingsPage() {
                                                         type="color" 
                                                         value={settings.theme_background_color.value} 
                                                         onChange={(e) => handleInputChange('theme_background_color', e.target.value)}
-                                                        className="w-8 h-8 border border-black/10 rounded-[10px] cursor-pointer bg-transparent overflow-hidden"
+                                                        className="w-8 h-8 border-[0.5px] border-black/10 rounded-[10px] cursor-pointer bg-transparent overflow-hidden"
                                                     />
                                                     <input 
                                                         type="text" 
                                                         value={settings.theme_background_color.value} 
                                                         onChange={(e) => handleInputChange('theme_background_color', e.target.value)}
                                                         placeholder="#F8F3EF"
-                                                        className="w-full px-2.5 py-1 border border-black/10 rounded-[10px] text-xs font-mono outline-none focus:border-black"
+                                                        className="w-full px-2.5 py-1 border-[0.5px] border-black/10 rounded-[10px] text-xs font-mono outline-none focus:border-black"
                                                     />
                                                 </div>
                                             </div>
@@ -351,7 +351,7 @@ export default function AdminGeneralSettingsPage() {
                                             <select 
                                                 value={settings.theme_border_radius.value} 
                                                 onChange={(e) => handleInputChange('theme_border_radius', e.target.value)}
-                                                className="w-full px-2.5 py-1.5 border border-black/10 rounded-[10px] text-xs outline-none bg-white focus:border-black"
+                                                className="w-full px-2.5 py-1.5 border-[0.5px] border-black/10 rounded-[10px] text-xs outline-none bg-white focus:border-black"
                                             >
                                                 <option value="10px">10px (Slim Accent Corners)</option>
                                                 <option value="12px">12px (Standard Soft Corners)</option>
@@ -360,7 +360,7 @@ export default function AdminGeneralSettingsPage() {
                                         </div>
                                     </div>
 
-                                    <div className="bg-neutral-50/50 p-5 rounded-[10px] border border-black/10 space-y-4">
+                                    <div className="bg-neutral-50/50 p-5 rounded-[10px] border-[0.5px] border-black/10 space-y-4">
                                         <h5 className="font-medium text-xs text-neutral-800 flex items-center gap-2">
                                             <Type size={14} /> Font Configurations
                                         </h5>
@@ -370,7 +370,7 @@ export default function AdminGeneralSettingsPage() {
                                                 <select 
                                                     value={settings.theme_font_heading.value} 
                                                     onChange={(e) => handleInputChange('theme_font_heading', e.target.value)}
-                                                    className="w-full px-2.5 py-1.5 border border-black/10 rounded-[10px] text-xs outline-none bg-white focus:border-black"
+                                                    className="w-full px-2.5 py-1.5 border-[0.5px] border-black/10 rounded-[10px] text-xs outline-none bg-white focus:border-black"
                                                 >
                                                     <option value="Manrope">Manrope (Modern Clinic Bold)</option>
                                                     <option value="Instrument Sans">Instrument Sans (Premium Editorial Sans)</option>
@@ -383,7 +383,7 @@ export default function AdminGeneralSettingsPage() {
                                                 <select 
                                                     value={settings.theme_font_body.value} 
                                                     onChange={(e) => handleInputChange('theme_font_body', e.target.value)}
-                                                    className="w-full px-2.5 py-1.5 border border-black/10 rounded-[10px] text-xs outline-none bg-white focus:border-black"
+                                                    className="w-full px-2.5 py-1.5 border-[0.5px] border-black/10 rounded-[10px] text-xs outline-none bg-white focus:border-black"
                                                 >
                                                     <option value="Inter">Inter (High-legibility Default)</option>
                                                     <option value="Instrument Sans">Instrument Sans (Cohesive Editorial Sans)</option>
@@ -433,11 +433,11 @@ export default function AdminGeneralSettingsPage() {
                                                 return (
                                                     <div 
                                                         key={secKey}
-                                                        className="flex items-center justify-between p-3 border border-black/10 bg-white hover:border-black/30 transition-all rounded-[10px] shadow-none"
+                                                        className="flex items-center justify-between p-3 border-[0.5px] border-black/10 bg-white hover:border-black/30 transition-all rounded-[10px] shadow-none"
                                                     >
                                                         <div className="flex-1 min-w-0 pr-4">
                                                             <div className="flex items-center gap-2">
-                                                                <span className="text-[9px] font-medium px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-800 border border-black/5">
+                                                                <span className="text-[9px] font-medium px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-800 border-[0.5px] border-black/5">
                                                                     Rank {index + 1}
                                                                 </span>
                                                                 <span className="font-medium text-xs text-neutral-900 truncate">{details.title}</span>
@@ -449,7 +449,7 @@ export default function AdminGeneralSettingsPage() {
                                                                 type="button"
                                                                 onClick={() => moveSection(index, 'up')}
                                                                 disabled={index === 0}
-                                                                className="p-1 rounded-full border border-black/10 text-neutral-600 hover:bg-neutral-50 transition-all disabled:opacity-30"
+                                                                className="p-1 rounded-full border-[0.5px] border-black/10 text-neutral-600 hover:bg-neutral-50 transition-all disabled:opacity-30"
                                                             >
                                                                 <ArrowUp size={12} />
                                                             </button>
@@ -457,7 +457,7 @@ export default function AdminGeneralSettingsPage() {
                                                                 type="button"
                                                                 onClick={() => moveSection(index, 'down')}
                                                                 disabled={index === homepageSections.length - 1}
-                                                                className="p-1 rounded-full border border-black/10 text-neutral-600 hover:bg-neutral-50 transition-all disabled:opacity-30"
+                                                                className="p-1 rounded-full border-[0.5px] border-black/10 text-neutral-600 hover:bg-neutral-50 transition-all disabled:opacity-30"
                                                             >
                                                                 <ArrowDown size={12} />
                                                             </button>
@@ -476,7 +476,7 @@ export default function AdminGeneralSettingsPage() {
                 {/* EMAIL SMTP TAB */}
                 {activeTab === 'email' && (
                     <div className="space-y-6">
-                        <div className="border-b border-black/10 pb-3 flex items-center gap-2">
+                        <div className="border-b-[0.5px] border-black/10 pb-3 flex items-center gap-2">
                             <Server className="text-black" size={18} />
                             <div>
                                 <h3 className="font-medium text-neutral-900 text-sm">SMTP Mailer Settings</h3>
@@ -491,7 +491,7 @@ export default function AdminGeneralSettingsPage() {
                                     placeholder="smtp.mailtrap.io" 
                                     value={settings.mail_host.value}
                                     onChange={(e) => handleInputChange('mail_host', e.target.value)}
-                                    className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs text-neutral-900 bg-white" 
+                                    className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs text-neutral-900 bg-white" 
                                 />
                             </div>
                             <div>
@@ -501,7 +501,7 @@ export default function AdminGeneralSettingsPage() {
                                     placeholder="2525" 
                                     value={settings.mail_port.value}
                                     onChange={(e) => handleInputChange('mail_port', e.target.value)}
-                                    className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs text-neutral-900 bg-white" 
+                                    className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs text-neutral-900 bg-white" 
                                 />
                             </div>
                             <div>
@@ -511,7 +511,7 @@ export default function AdminGeneralSettingsPage() {
                                     placeholder="smtp-username" 
                                     value={settings.mail_username.value}
                                     onChange={(e) => handleInputChange('mail_username', e.target.value)}
-                                    className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs text-neutral-900 bg-white" 
+                                    className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs text-neutral-900 bg-white" 
                                 />
                             </div>
                             <div>
@@ -522,7 +522,7 @@ export default function AdminGeneralSettingsPage() {
                                         placeholder="••••••••" 
                                         value={settings.mail_password.value}
                                         onChange={(e) => handleInputChange('mail_password', e.target.value)}
-                                        className="w-full pl-3 pr-9 py-2 border border-black/10 rounded-[10px] outline-none text-xs text-neutral-900 bg-white" 
+                                        className="w-full pl-3 pr-9 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs text-neutral-900 bg-white" 
                                     />
                                     <button 
                                         type="button"
@@ -538,7 +538,7 @@ export default function AdminGeneralSettingsPage() {
                                 <select 
                                     value={settings.mail_encryption.value} 
                                     onChange={(e) => handleInputChange('mail_encryption', e.target.value)}
-                                    className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none bg-white text-neutral-900 text-xs font-normal"
+                                    className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none bg-white text-neutral-900 text-xs font-normal"
                                 >
                                     <option value="">None (tls / ssl fallback)</option>
                                     <option value="tls">TLS</option>
@@ -552,7 +552,7 @@ export default function AdminGeneralSettingsPage() {
                                     placeholder="hello@cureza.com" 
                                     value={settings.mail_from_address.value}
                                     onChange={(e) => handleInputChange('mail_from_address', e.target.value)}
-                                    className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs text-neutral-900 bg-white" 
+                                    className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs text-neutral-900 bg-white" 
                                 />
                             </div>
                             <div className="md:col-span-2">
@@ -562,7 +562,7 @@ export default function AdminGeneralSettingsPage() {
                                     placeholder="Cureza Wellness" 
                                     value={settings.mail_from_name.value}
                                     onChange={(e) => handleInputChange('mail_from_name', e.target.value)}
-                                    className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs text-neutral-900 bg-white" 
+                                    className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs text-neutral-900 bg-white" 
                                 />
                             </div>
                         </div>
@@ -572,7 +572,7 @@ export default function AdminGeneralSettingsPage() {
                 {/* GOOGLE OAUTH TAB */}
                 {activeTab === 'google' && (
                     <div className="space-y-6">
-                        <div className="border-b border-black/10 pb-3 flex justify-between items-start">
+                        <div className="border-b-[0.5px] border-black/10 pb-3 flex justify-between items-start">
                             <div>
                                 <h3 className="font-medium text-neutral-900 text-sm">Google Sign-In Settings</h3>
                                 <p className="text-neutral-500 text-[11px] mt-0.5">Configure client details for Google authentication flows</p>
@@ -584,7 +584,7 @@ export default function AdminGeneralSettingsPage() {
                                 <button
                                     type="button"
                                     onClick={() => handleInputChange('google_auth_enabled', settings.google_auth_enabled.value === '1' ? '0' : '1')}
-                                    className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                    className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-[0.5px] border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
                                         settings.google_auth_enabled.value === '1' ? 'bg-black' : 'bg-neutral-200'
                                     }`}
                                 >
@@ -604,7 +604,7 @@ export default function AdminGeneralSettingsPage() {
                                     placeholder="xxxxxx-xxxxxx.apps.googleusercontent.com" 
                                     value={settings.google_client_id.value}
                                     onChange={(e) => handleInputChange('google_client_id', e.target.value)}
-                                    className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none font-mono text-xs bg-white text-neutral-900" 
+                                    className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none font-mono text-xs bg-white text-neutral-900" 
                                 />
                             </div>
                             <div>
@@ -615,7 +615,7 @@ export default function AdminGeneralSettingsPage() {
                                         placeholder="••••••••" 
                                         value={settings.google_client_secret.value}
                                         onChange={(e) => handleInputChange('google_client_secret', e.target.value)}
-                                        className="w-full pl-3 pr-9 py-2 border border-black/10 rounded-[10px] outline-none font-mono text-xs bg-white text-neutral-900" 
+                                        className="w-full pl-3 pr-9 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none font-mono text-xs bg-white text-neutral-900" 
                                     />
                                     <button 
                                         type="button"
@@ -633,7 +633,7 @@ export default function AdminGeneralSettingsPage() {
                 {/* OTP TAB */}
                 {activeTab === 'otp' && (
                     <div className="space-y-6">
-                        <div className="border-b border-black/10 pb-3 flex justify-between items-start">
+                        <div className="border-b-[0.5px] border-black/10 pb-3 flex justify-between items-start">
                             <div>
                                 <h3 className="font-medium text-neutral-900 text-sm">OTP Authentication Rules</h3>
                                 <p className="text-neutral-500 text-[11px] mt-0.5">Toggle and structure OTP limits on login & password flows</p>
@@ -645,7 +645,7 @@ export default function AdminGeneralSettingsPage() {
                                 <button
                                     type="button"
                                     onClick={() => handleInputChange('otp_enabled', settings.otp_enabled.value === '1' ? '0' : '1')}
-                                    className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                    className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-[0.5px] border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
                                         settings.otp_enabled.value === '1' ? 'bg-black' : 'bg-neutral-200'
                                     }`}
                                 >
@@ -666,7 +666,7 @@ export default function AdminGeneralSettingsPage() {
                                     max="30" 
                                     value={settings.otp_expiry_minutes.value}
                                     onChange={(e) => handleInputChange('otp_expiry_minutes', e.target.value)}
-                                    className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs text-neutral-900 bg-white" 
+                                    className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs text-neutral-900 bg-white" 
                                 />
                             </div>
                             <div>
@@ -674,7 +674,7 @@ export default function AdminGeneralSettingsPage() {
                                 <select 
                                     value={settings.otp_length.value}
                                     onChange={(e) => handleInputChange('otp_length', e.target.value)}
-                                    className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none bg-white text-neutral-900 text-xs font-normal"
+                                    className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none bg-white text-neutral-900 text-xs font-normal"
                                 >
                                     <option value="4">4 Digits (Standard)</option>
                                     <option value="6">6 Digits (High Security)</option>

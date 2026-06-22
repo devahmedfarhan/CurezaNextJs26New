@@ -36,15 +36,15 @@ export default function UserManagementOverview() {
     if (isLoading) {
         return (
             <div className="flex flex-col gap-6 animate-pulse">
-                <div className="h-28 bg-white border-[0.5px] border-neutral-950/10 rounded-[10px]" />
+                <div className="h-28 bg-white border-[0.5px] border-black/50 rounded-[10px]" />
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     {[1, 2, 3, 4].map((n) => (
-                        <div key={n} className="h-32 bg-neutral-50 border-[0.5px] border-neutral-950/10 rounded-[10px]" />
+                        <div key={n} className="h-32 bg-neutral-50 border-[0.5px] border-black/50 rounded-[10px]" />
                     ))}
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div className="h-96 lg:col-span-2 bg-neutral-50 border-[0.5px] border-neutral-950/10 rounded-[10px]" />
-                    <div className="h-96 bg-neutral-50 border-[0.5px] border-neutral-950/10 rounded-[10px]" />
+                    <div className="h-96 lg:col-span-2 bg-neutral-50 border-[0.5px] border-black/50 rounded-[10px]" />
+                    <div className="h-96 bg-neutral-50 border-[0.5px] border-black/50 rounded-[10px]" />
                 </div>
             </div>
         );
@@ -117,7 +117,7 @@ export default function UserManagementOverview() {
     return (
         <div className="space-y-6">
             {/* Page Header */}
-            <div className="relative overflow-hidden bg-white rounded-[10px] p-6 border-[0.5px] border-neutral-950/10">
+            <div className="relative overflow-hidden bg-white rounded-[10px] p-6 border-[0.5px] border-black/50">
                 <div className="absolute top-0 right-0 p-8 opacity-5">
                     <Users size={120} />
                 </div>
@@ -144,12 +144,12 @@ export default function UserManagementOverview() {
                     const Icon = card.icon;
 
                     return (
-                        <div key={idx} className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 p-5 relative overflow-hidden group">
+                        <div key={idx} className="bg-white rounded-[10px] border-[0.5px] border-black/50 p-5 relative overflow-hidden group">
                             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-115 transition-transform text-neutral-900">
                                 <Icon size={72} />
                             </div>
                             <div className="flex justify-between items-start">
-                                <div className="p-2.5 rounded-lg border-[0.5px] border-neutral-950/10 bg-neutral-50 text-neutral-900">
+                                <div className="p-2.5 rounded-lg border-[0.5px] border-black/50 bg-neutral-50 text-neutral-900">
                                     <Icon size={20} />
                                 </div>
                                 <Link href={card.link} className="text-neutral-400 hover:text-neutral-900 transition-colors">
@@ -169,13 +169,13 @@ export default function UserManagementOverview() {
             {/* Approvals Central Console */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Left: Pending Tasks List */}
-                <div className="lg:col-span-2 bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 p-6 space-y-6">
-                    <div className="flex justify-between items-center pb-4 border-b border-neutral-950/5">
+                <div className="lg:col-span-2 bg-white rounded-[10px] border-[0.5px] border-black/50 p-6 space-y-6">
+                    <div className="flex justify-between items-center pb-4 border-b-[0.5px] border-black/50">
                         <div className="space-y-1">
                             <h2 className="text-base font-semibold text-neutral-900">Approvals Central Console</h2>
                             <p className="text-xs text-neutral-400 font-normal">Approve or reject doctor qualifications and seller profile changes</p>
                         </div>
-                        <span className="flex items-center text-xs font-medium text-neutral-700 bg-neutral-50 px-2.5 py-1 rounded-[10px] border border-neutral-950/10 gap-1.5">
+                        <span className="flex items-center text-xs font-medium text-neutral-700 bg-neutral-50 px-2.5 py-1 rounded-[10px] border-[0.5px] border-black/50 gap-1.5">
                             <Clock size={12} />
                             {stats?.total_pending_approvals || 0} Pending
                         </span>
@@ -192,7 +192,7 @@ export default function UserManagementOverview() {
                                                 {sec.count} Pending
                                             </span>
                                         ) : (
-                                            <span className="bg-neutral-50 text-neutral-400 text-[10px] font-medium px-2 py-0.5 rounded-[4px] border border-neutral-950/5">
+                                            <span className="bg-neutral-50 text-neutral-400 text-[10px] font-medium px-2 py-0.5 rounded-[4px] border-[0.5px] border-black/50">
                                                 Cleared
                                             </span>
                                         )}
@@ -202,10 +202,10 @@ export default function UserManagementOverview() {
                                 <div className="shrink-0">
                                     <Link 
                                         href={sec.link} 
-                                        className={`inline-flex items-center gap-1.5 text-xs font-medium px-4 py-2 rounded-[10px] border transition-all ${
+                                        className={`inline-flex items-center gap-1.5 text-xs font-medium px-4 py-2 rounded-[10px] border-[0.5px] transition-all ${
                                             sec.count > 0 
                                                 ? 'bg-black text-white border-black hover:bg-neutral-900'
-                                                : 'bg-white text-neutral-500 border-neutral-950/10 hover:bg-neutral-50'
+                                                : 'bg-white text-neutral-500 border-black/50 hover:bg-neutral-50'
                                         }`}
                                     >
                                         Review
@@ -218,8 +218,8 @@ export default function UserManagementOverview() {
                 </div>
 
                 {/* Right: Quick Action Hub */}
-                <div className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 p-6 space-y-6">
-                    <div className="pb-4 border-b border-neutral-950/5 space-y-1">
+                <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 p-6 space-y-6">
+                    <div className="pb-4 border-b-[0.5px] border-black/50 space-y-1">
                         <h3 className="text-base font-semibold text-neutral-900">Quick Shortcuts</h3>
                         <p className="text-xs text-neutral-400 font-normal">Quickly manage roles or add user accounts</p>
                     </div>
@@ -227,7 +227,7 @@ export default function UserManagementOverview() {
                     <div className="flex flex-col gap-3">
                         <Link 
                             href="/superadmin/dashboard/users/create?type=customer"
-                            className="p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 hover:border-neutral-950/20 hover:bg-neutral-50 transition-all flex items-center gap-3.5 group"
+                            className="p-4 rounded-[10px] border-[0.5px] border-black/50 hover:border-neutral-950/20 hover:bg-neutral-50 transition-all flex items-center gap-3.5 group"
                         >
                             <div className="p-2.5 bg-neutral-100 text-neutral-900 rounded-lg group-hover:scale-105 transition-transform">
                                 <Users size={16} />
@@ -240,7 +240,7 @@ export default function UserManagementOverview() {
 
                         <Link 
                             href="/superadmin/dashboard/users/create?type=doctor"
-                            className="p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 hover:border-neutral-950/20 hover:bg-neutral-50 transition-all flex items-center gap-3.5 group"
+                            className="p-4 rounded-[10px] border-[0.5px] border-black/50 hover:border-neutral-950/20 hover:bg-neutral-50 transition-all flex items-center gap-3.5 group"
                         >
                             <div className="p-2.5 bg-neutral-100 text-neutral-900 rounded-lg group-hover:scale-105 transition-transform">
                                 <Stethoscope size={16} />
@@ -253,7 +253,7 @@ export default function UserManagementOverview() {
 
                         <Link 
                             href="/superadmin/dashboard/users/create?type=seller"
-                            className="p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 hover:border-neutral-950/20 hover:bg-neutral-50 transition-all flex items-center gap-3.5 group"
+                            className="p-4 rounded-[10px] border-[0.5px] border-black/50 hover:border-neutral-950/20 hover:bg-neutral-50 transition-all flex items-center gap-3.5 group"
                         >
                             <div className="p-2.5 bg-neutral-100 text-neutral-900 rounded-lg group-hover:scale-105 transition-transform">
                                 <Store size={16} />
@@ -266,7 +266,7 @@ export default function UserManagementOverview() {
 
                         <Link 
                             href="/superadmin/dashboard/users/team"
-                            className="p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 hover:border-neutral-950/20 hover:bg-neutral-50 transition-all flex items-center gap-3.5 group"
+                            className="p-4 rounded-[10px] border-[0.5px] border-black/50 hover:border-neutral-950/20 hover:bg-neutral-50 transition-all flex items-center gap-3.5 group"
                         >
                             <div className="p-3 bg-neutral-100 text-neutral-900 rounded-lg group-hover:scale-105 transition-transform">
                                 <ShieldCheck size={16} />

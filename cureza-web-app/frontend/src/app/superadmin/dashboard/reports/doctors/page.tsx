@@ -13,7 +13,7 @@ export default function AdminDoctorReportPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <div className="bg-white p-6 rounded-xl border-[0.5px] border-black/50 shadow-none">
                     <div className="flex items-center gap-3 mb-4">
                         <div className="p-3 bg-blue-50 text-blue-600 rounded-lg"><Calendar size={24} /></div>
                         <div>
@@ -27,7 +27,7 @@ export default function AdminDoctorReportPage() {
                     <p className="text-xs text-gray-500 mt-2">70% Completed successfully</p>
                 </div>
 
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <div className="bg-white p-6 rounded-xl border-[0.5px] border-black/50 shadow-none">
                     <div className="flex items-center gap-3 mb-4">
                         <div className="p-3 bg-yellow-50 text-yellow-600 rounded-lg"><Star size={24} /></div>
                         <div>
@@ -41,7 +41,7 @@ export default function AdminDoctorReportPage() {
                     <p className="text-xs text-gray-500 mt-2">Based on 420 reviews</p>
                 </div>
 
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <div className="bg-white p-6 rounded-xl border-[0.5px] border-black/50 shadow-none">
                     <div className="flex items-center gap-3 mb-4">
                         <div className="p-3 bg-green-50 text-green-600 rounded-lg"><Activity size={24} /></div>
                         <div>
@@ -53,8 +53,8 @@ export default function AdminDoctorReportPage() {
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-gray-200">
+            <div className="bg-white rounded-xl border-[0.5px] border-black/50 shadow-none overflow-hidden">
+                <div className="p-4 border-b-[0.5px] border-black/50">
                     <h3 className="font-bold text-gray-900">Top Doctors</h3>
                 </div>
                 <table className="min-w-full divide-y divide-gray-200">

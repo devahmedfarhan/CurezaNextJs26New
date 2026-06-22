@@ -187,7 +187,7 @@ export default function BlogAuthorsPage() {
                             <Plus className="mr-2 h-4 w-4" /> Add Author
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none max-w-lg max-h-[85vh] overflow-y-auto">
+                    <DialogContent className="rounded-[10px] border-[0.5px] border-black/50 shadow-none max-w-lg max-h-[85vh] overflow-y-auto">
                         <DialogHeader>
                             <DialogTitle className="text-base font-medium text-black">{editingId ? 'Edit Author' : 'Add Author'}</DialogTitle>
                         </DialogHeader>
@@ -199,7 +199,7 @@ export default function BlogAuthorsPage() {
                                     value={formData.name}
                                     onChange={handleNameChange}
                                     required
-                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                    className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
                             <div className="space-y-2">
@@ -209,7 +209,7 @@ export default function BlogAuthorsPage() {
                                     value={formData.slug}
                                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                                     required
-                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                    className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
                             <div className="space-y-2">
@@ -219,7 +219,7 @@ export default function BlogAuthorsPage() {
                                     value={formData.bio}
                                     onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
                                     rows={3}
-                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                    className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
                             <div className="space-y-2">
@@ -228,7 +228,7 @@ export default function BlogAuthorsPage() {
                                     id="image"
                                     value={formData.image}
                                     onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                    className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
                             <div className="space-y-2">
@@ -238,11 +238,11 @@ export default function BlogAuthorsPage() {
                                     value={formData.social_links}
                                     onChange={(e) => setFormData({ ...formData, social_links: e.target.value })}
                                     rows={3}
-                                    className="font-mono text-xs rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                    className="font-mono text-xs rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
 
-                            <div className="border-[0.5px] border-gray-150 p-4 rounded-[10px] space-y-4 bg-gray-50/30">
+                            <div className="border-[0.5px] border-black/50 p-4 rounded-[10px] space-y-4 bg-gray-50/30">
                                 <h4 className="font-medium text-xs text-black">SEO Settings</h4>
                                 <div className="space-y-2">
                                     <Label htmlFor="meta_title" className="text-[10px] font-medium text-gray-700">Meta Title</Label>
@@ -251,7 +251,7 @@ export default function BlogAuthorsPage() {
                                         value={formData.meta_title}
                                         onChange={(e) => setFormData({ ...formData, meta_title: e.target.value })}
                                         placeholder="SEO Author Title"
-                                        className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                        className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -262,7 +262,7 @@ export default function BlogAuthorsPage() {
                                         onChange={(e) => setFormData({ ...formData, meta_description: e.target.value })}
                                         placeholder="SEO Author Description"
                                         rows={2}
-                                        className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                        className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -272,7 +272,7 @@ export default function BlogAuthorsPage() {
                                         value={formData.meta_keywords}
                                         onChange={(e) => setFormData({ ...formData, meta_keywords: e.target.value })}
                                         placeholder="keyword1, keyword2"
-                                        className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                        className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
                                     />
                                 </div>
                             </div>
@@ -285,10 +285,10 @@ export default function BlogAuthorsPage() {
                 </Dialog>
             </div>
 
-            <div className="border-[0.5px] border-gray-200/50 rounded-[10px] overflow-hidden bg-white shadow-none">
+            <div className="border-[0.5px] border-black/50 rounded-[10px] overflow-hidden bg-white shadow-none">
                 <Table>
                     <TableHeader className="bg-gray-50/50">
-                        <TableRow className="border-b-[0.5px] border-gray-200/50">
+                        <TableRow className="border-b-[0.5px] border-black/50">
                             <TableHead className="text-gray-500 font-medium text-xs">Name</TableHead>
                             <TableHead className="text-gray-500 font-medium text-xs">Slug</TableHead>
                             <TableHead className="text-gray-500 font-medium text-xs">Bio</TableHead>
@@ -306,7 +306,7 @@ export default function BlogAuthorsPage() {
                             </TableRow>
                         ) : (
                             authors.map((author) => (
-                                <TableRow key={author.id} className="border-b-[0.5px] border-gray-200/50 hover:bg-gray-50/30">
+                                <TableRow key={author.id} className="border-b-[0.5px] border-black/50 hover:bg-gray-50/30">
                                     <TableCell className="font-medium text-sm text-black">{author.name}</TableCell>
                                     <TableCell className="text-gray-500 text-sm">{author.slug}</TableCell>
                                     <TableCell className="truncate max-w-xs text-gray-500 text-sm">{author.bio}</TableCell>

@@ -763,7 +763,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
                 <div className="text-center space-y-4">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0f4c3a] mx-auto"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-[0.5px] border-[#0f4c3a] mx-auto"></div>
                     <p className="text-gray-500 font-medium">Loading Platform Financial registers...</p>
                 </div>
             </div>
@@ -773,10 +773,10 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
     return (
         <div className="w-full space-y-6">
             {/* Unified Command Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-neutral-950/10 pb-5">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-[0.5px] border-black/50 pb-5">
                 <div>
                     <h1 className="text-2xl font-semibold text-black tracking-tight flex items-center gap-2">
-                        Platform Finance Command Center <span className="text-xs bg-neutral-100 text-black px-2.5 py-1 rounded-[10px] font-medium uppercase border border-neutral-950/10">Superadmin Desk</span>
+                        Platform Finance Command Center <span className="text-xs bg-neutral-100 text-black px-2.5 py-1 rounded-[10px] font-medium uppercase border-[0.5px] border-black/50">Superadmin Desk</span>
                     </h1>
                     <p className="text-neutral-500 text-xs mt-1">
                         Platform lifetime revenue splits, seller ledgers, doctor consulting splits, customer sales databases, tax processors, and payout releases.
@@ -785,7 +785,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
 
                 <div className="flex flex-wrap items-center gap-3">
                     {/* Date filter ranges */}
-                    <div className="flex items-center bg-white border border-neutral-950/10 rounded-[10px] px-3 py-1.5 text-xs gap-2">
+                    <div className="flex items-center bg-white border-[0.5px] border-black/50 rounded-[10px] px-3 py-1.5 text-xs gap-2">
                         <Calendar size={14} className="text-neutral-400" />
                         <input
                             type="date"
@@ -812,7 +812,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
 
                     <button
                         onClick={handleExport}
-                        className="flex items-center gap-2 bg-white border border-neutral-950/10 text-neutral-700 px-4 py-2 rounded-[10px] hover:bg-neutral-50 transition-all font-medium text-xs"
+                        className="flex items-center gap-2 bg-white border-[0.5px] border-black/50 text-neutral-700 px-4 py-2 rounded-[10px] hover:bg-neutral-50 transition-all font-medium text-xs"
                     >
                         <Download size={16} />
                         Export {subTabLedgers.charAt(0).toUpperCase() + subTabLedgers.slice(1)} Ledger
@@ -821,7 +821,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
             </div>
 
             {/* Horizontal Submenu Navigation */}
-            <div className="flex flex-wrap gap-2 pb-4 border-b border-neutral-950/10">
+            <div className="flex flex-wrap gap-2 pb-4 border-b-[0.5px] border-black/50">
                 {[
                     { id: 'overview', label: 'Finance Overview', path: '/superadmin/dashboard/finance' },
                     { id: 'sellers', label: 'Business Ledgers', path: '/superadmin/dashboard/finance/sellers' },
@@ -836,10 +836,10 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                         <Link
                             key={tab.id}
                             href={tab.path}
-                            className={`px-4 py-2 text-xs font-medium rounded-[10px] transition-all border ${
+                            className={`px-4 py-2 text-xs font-medium rounded-[10px] transition-all border-[0.5px] ${
                                 isActive
                                     ? 'bg-black text-white border-black'
-                                    : 'bg-white text-neutral-700 border-neutral-950/10 hover:bg-neutral-50'
+                                    : 'bg-white text-neutral-700 border-black/50 hover:bg-neutral-50'
                             }`}
                         >
                             {tab.label}
@@ -862,14 +862,14 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                             {/* Statistics Cards */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {/* Gross Platform Volume */}
-                                <div className="p-6 bg-white flex flex-col justify-between h-auto rounded-[10px] border-[0.5px] border-neutral-950/15">
+                                <div className="p-6 bg-white flex flex-col justify-between h-auto rounded-[10px] border-[0.5px] border-black/50">
                                     <div className="relative flex-1 flex flex-col justify-between">
                                         <div>
                                             <div className="flex justify-between items-start mb-4">
-                                                <div className="p-2.5 bg-neutral-50 border border-neutral-950/10 text-neutral-900 rounded-[10px] transition-all duration-300">
+                                                <div className="p-2.5 bg-neutral-50 border-[0.5px] border-black/50 text-neutral-900 rounded-[10px] transition-all duration-300">
                                                     <DollarSign size={20} />
                                                 </div>
-                                                <span className="text-[10px] font-medium text-neutral-500 bg-neutral-50 px-2.5 py-1 rounded-[10px] border border-neutral-950/10">
+                                                <span className="text-[10px] font-medium text-neutral-500 bg-neutral-50 px-2.5 py-1 rounded-[10px] border-[0.5px] border-black/50">
                                                     Platform Volume
                                                 </span>
                                             </div>
@@ -881,10 +881,10 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                 Products: ₹{productSalesTotal.toLocaleString('en-IN')} | Consults: ₹{docSalesTotal.toLocaleString('en-IN')}
                                             </p>
                                         </div>
-                                        <div className="p-3 bg-neutral-50 rounded-[10px] border border-neutral-950/10 text-[10px] font-normal text-neutral-500 leading-relaxed">
+                                        <div className="p-3 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/50 text-[10px] font-normal text-neutral-500 leading-relaxed">
                                             <p className="font-medium text-neutral-400 mb-0.5 tracking-wide text-[9px]">Card Logic & Source</p>
                                             <p>Aggregated marketplace product sales and doctor teleconsultation bookings before split processing.</p>
-                                            <div className="pt-1.5 mt-1.5 border-t border-neutral-200/50 flex justify-between font-medium text-neutral-900">
+                                            <div className="pt-1.5 mt-1.5 border-t-[0.5px] border-black/50 flex justify-between font-medium text-neutral-900">
                                                 <span>Formula</span>
                                                 <span>Product Gross + Booking Gross</span>
                                             </div>
@@ -893,14 +893,14 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                 </div>
 
                                 {/* Platform Commission Retained */}
-                                <div className="p-6 bg-white flex flex-col justify-between h-auto rounded-[10px] border-[0.5px] border-neutral-950/15">
+                                <div className="p-6 bg-white flex flex-col justify-between h-auto rounded-[10px] border-[0.5px] border-black/50">
                                     <div className="relative flex-1 flex flex-col justify-between">
                                         <div>
                                             <div className="flex justify-between items-start mb-4">
-                                                <div className="p-2.5 bg-neutral-50 border border-neutral-950/10 text-neutral-900 rounded-[10px] transition-all duration-300">
+                                                <div className="p-2.5 bg-neutral-50 border-[0.5px] border-black/50 text-neutral-900 rounded-[10px] transition-all duration-300">
                                                     <TrendingUp size={20} />
                                                 </div>
-                                                <span className="text-[10px] font-medium text-neutral-500 bg-neutral-50 px-2.5 py-1 rounded-[10px] border border-neutral-950/10">
+                                                <span className="text-[10px] font-medium text-neutral-500 bg-neutral-50 px-2.5 py-1 rounded-[10px] border-[0.5px] border-black/50">
                                                     Platform Commission
                                                 </span>
                                             </div>
@@ -912,10 +912,10 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                 Products: ₹{productCommissionTotal.toLocaleString('en-IN')} | Doctors: ₹{docCommissionTotal.toLocaleString('en-IN')}
                                             </p>
                                         </div>
-                                        <div className="p-3 bg-neutral-50 rounded-[10px] border border-neutral-950/10 text-[10px] font-normal text-neutral-500 leading-relaxed">
+                                        <div className="p-3 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/50 text-[10px] font-normal text-neutral-500 leading-relaxed">
                                             <p className="font-medium text-neutral-400 mb-0.5 tracking-wide text-[9px]">Card Logic & Source</p>
                                             <p>Platform service share retained from third-party vendor transactions and clinical consultations split.</p>
-                                            <div className="pt-1.5 mt-1.5 border-t border-neutral-200/50 flex justify-between font-medium text-neutral-900">
+                                            <div className="pt-1.5 mt-1.5 border-t-[0.5px] border-black/50 flex justify-between font-medium text-neutral-900">
                                                 <span>Formula</span>
                                                 <span>Vendor Comm + Doctor Split Cuts</span>
                                             </div>
@@ -924,14 +924,14 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                 </div>
 
                                 {/* Net profit */}
-                                <div className="p-6 bg-white flex flex-col justify-between h-auto rounded-[10px] border-[0.5px] border-neutral-950/15">
+                                <div className="p-6 bg-white flex flex-col justify-between h-auto rounded-[10px] border-[0.5px] border-black/50">
                                     <div className="relative flex-1 flex flex-col justify-between">
                                         <div>
                                             <div className="flex justify-between items-start mb-4">
-                                                <div className="p-2.5 bg-neutral-50 border border-neutral-950/10 text-neutral-900 rounded-[10px] transition-all duration-300">
+                                                <div className="p-2.5 bg-neutral-50 border-[0.5px] border-black/50 text-neutral-900 rounded-[10px] transition-all duration-300">
                                                     <CheckCircle2 size={20} />
                                                 </div>
-                                                <span className="text-[10px] font-medium text-green-700 bg-green-50 px-2.5 py-1 rounded-[10px] border border-green-150">
+                                                <span className="text-[10px] font-medium text-green-700 bg-green-50 px-2.5 py-1 rounded-[10px] border-[0.5px] border-black/50">
                                                     Net Earnings
                                                 </span>
                                             </div>
@@ -943,10 +943,10 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                 Gateway: ₹{gatewayFeesTotal.toLocaleString('en-IN')} | Refunds: ₹{refundsTotal.toLocaleString('en-IN')}
                                             </p>
                                         </div>
-                                        <div className="p-3 bg-neutral-50 rounded-[10px] border border-neutral-950/10 text-[10px] font-normal text-neutral-500 leading-relaxed">
+                                        <div className="p-3 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/50 text-[10px] font-normal text-neutral-500 leading-relaxed">
                                             <p className="font-medium text-neutral-400 mb-0.5 tracking-wide text-[9px]">Card Logic & Source</p>
                                             <p>Realized platform profit after deducting PG router overheads and customer refunds.</p>
-                                            <div className="pt-1.5 mt-1.5 border-t border-neutral-200/50 flex justify-between font-medium text-green-700">
+                                            <div className="pt-1.5 mt-1.5 border-t-[0.5px] border-black/50 flex justify-between font-medium text-green-700">
                                                 <span>Formula</span>
                                                 <span>Commission - Gateway Fee - Refunds</span>
                                             </div>
@@ -955,14 +955,14 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                 </div>
 
                                 {/* Payout Liabilities */}
-                                <div className="p-6 bg-white flex flex-col justify-between h-auto rounded-[10px] border-[0.5px] border-neutral-950/15">
+                                <div className="p-6 bg-white flex flex-col justify-between h-auto rounded-[10px] border-[0.5px] border-black/50">
                                     <div className="relative flex-1 flex flex-col justify-between">
                                         <div>
                                             <div className="flex justify-between items-start mb-4">
-                                                <div className="p-2.5 bg-neutral-50 border border-neutral-950/10 text-neutral-900 rounded-[10px] transition-all duration-300">
+                                                <div className="p-2.5 bg-neutral-50 border-[0.5px] border-black/50 text-neutral-900 rounded-[10px] transition-all duration-300">
                                                     <TrendingDown size={20} />
                                                 </div>
-                                                <span className="text-[10px] font-medium text-red-700 bg-red-50 px-2.5 py-1 rounded-[10px] border border-red-100">
+                                                <span className="text-[10px] font-medium text-red-700 bg-red-50 px-2.5 py-1 rounded-[10px] border-[0.5px] border-black/50">
                                                     Payout Liabilities
                                                 </span>
                                             </div>
@@ -974,10 +974,10 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                 Sellers: ₹{sellerPendingPayouts.toLocaleString('en-IN')} | Doctors: ₹{doctorPendingPayouts.toLocaleString('en-IN')}
                                             </p>
                                         </div>
-                                        <div className="p-3 bg-neutral-50 rounded-[10px] border border-neutral-950/10 text-[10px] font-normal text-neutral-500 leading-relaxed">
+                                        <div className="p-3 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/50 text-[10px] font-normal text-neutral-500 leading-relaxed">
                                             <p className="font-medium text-neutral-400 mb-0.5 tracking-wide text-[9px]">Card Logic & Source</p>
                                             <p>Accumulated earnings locked in the system that are scheduled for external bank settlement release.</p>
-                                            <div className="pt-1.5 mt-1.5 border-t border-neutral-200/50 flex justify-between font-medium text-red-700">
+                                            <div className="pt-1.5 mt-1.5 border-t-[0.5px] border-black/50 flex justify-between font-medium text-red-700">
                                                 <span>Formula</span>
                                                 <span>Sellers Pending + Doctors Unreleased</span>
                                             </div>
@@ -986,14 +986,14 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                 </div>
 
                                 {/* Seller Ecosystem */}
-                                <div className="p-6 bg-white flex flex-col justify-between h-auto rounded-[10px] border-[0.5px] border-neutral-950/15">
+                                <div className="p-6 bg-white flex flex-col justify-between h-auto rounded-[10px] border-[0.5px] border-black/50">
                                     <div className="relative flex-1 flex flex-col justify-between">
                                         <div>
                                             <div className="flex justify-between items-start mb-4">
-                                                <div className="p-2.5 bg-neutral-50 border border-neutral-950/10 text-neutral-900 rounded-[10px] transition-all duration-300">
+                                                <div className="p-2.5 bg-neutral-50 border-[0.5px] border-black/50 text-neutral-900 rounded-[10px] transition-all duration-300">
                                                     <Briefcase size={20} />
                                                 </div>
-                                                <span className="text-[10px] font-medium text-blue-700 bg-blue-50 px-2.5 py-1 rounded-[10px] border border-blue-150">
+                                                <span className="text-[10px] font-medium text-blue-700 bg-blue-50 px-2.5 py-1 rounded-[10px] border-[0.5px] border-black/50">
                                                     Seller Ecosystem
                                                 </span>
                                             </div>
@@ -1005,10 +1005,10 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                 Gross: ₹{productSalesTotal.toLocaleString('en-IN')} | Active: {systemStats?.active_sellers || 0}
                                             </p>
                                         </div>
-                                        <div className="p-3 bg-neutral-50 rounded-[10px] border border-neutral-950/10 text-[10px] font-normal text-neutral-500 leading-relaxed">
+                                        <div className="p-3 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/50 text-[10px] font-normal text-neutral-500 leading-relaxed">
                                             <p className="font-medium text-neutral-400 mb-0.5 tracking-wide text-[9px]">Card Logic & Source</p>
                                             <p>Total earnings allocated to product merchants after platform commission and gateway fee deductions.</p>
-                                            <div className="pt-1.5 mt-1.5 border-t border-neutral-200/50 flex justify-between font-medium text-blue-700">
+                                            <div className="pt-1.5 mt-1.5 border-t-[0.5px] border-black/50 flex justify-between font-medium text-blue-700">
                                                 <span>Formula</span>
                                                 <span>Gross Product Sales - Commission - PG Fee</span>
                                             </div>
@@ -1017,14 +1017,14 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                 </div>
 
                                 {/* Doctor Ecosystem */}
-                                <div className="p-6 bg-white flex flex-col justify-between h-auto rounded-[10px] border-[0.5px] border-neutral-950/15">
+                                <div className="p-6 bg-white flex flex-col justify-between h-auto rounded-[10px] border-[0.5px] border-black/50">
                                     <div className="relative flex-1 flex flex-col justify-between">
                                         <div>
                                             <div className="flex justify-between items-start mb-4">
-                                                <div className="p-2.5 bg-neutral-50 border border-neutral-950/10 text-neutral-900 rounded-[10px] transition-all duration-300">
+                                                <div className="p-2.5 bg-neutral-50 border-[0.5px] border-black/50 text-neutral-900 rounded-[10px] transition-all duration-300">
                                                     <Stethoscope size={20} />
                                                 </div>
-                                                <span className="text-[10px] font-medium text-purple-700 bg-purple-50 px-2.5 py-1 rounded-[10px] border border-purple-150">
+                                                <span className="text-[10px] font-medium text-purple-700 bg-purple-50 px-2.5 py-1 rounded-[10px] border-[0.5px] border-black/50">
                                                     Doctor Ecosystem
                                                 </span>
                                             </div>
@@ -1036,10 +1036,10 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                 Gross: ₹{docSalesTotal.toLocaleString('en-IN')} | Active: {systemStats?.active_doctors || 0}
                                             </p>
                                         </div>
-                                        <div className="p-3 bg-neutral-50 rounded-[10px] border border-neutral-950/10 text-[10px] font-normal text-neutral-500 leading-relaxed">
+                                        <div className="p-3 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/50 text-[10px] font-normal text-neutral-500 leading-relaxed">
                                             <p className="font-medium text-neutral-400 mb-0.5 tracking-wide text-[9px]">Card Logic & Source</p>
                                             <p>Total clinical earnings realized by medical consultants based on consultation type sharing agreements.</p>
-                                            <div className="pt-1.5 mt-1.5 border-t border-neutral-200/50 flex justify-between font-medium text-purple-700">
+                                            <div className="pt-1.5 mt-1.5 border-t-[0.5px] border-black/50 flex justify-between font-medium text-purple-700">
                                                 <span>Formula</span>
                                                 <span>Booking Sales * Consultation Split Rate</span>
                                             </div>
@@ -1049,19 +1049,19 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                             </div>
 
                             {/* Section: Segmented Analytics Portfolio */}
-                            <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 space-y-4">
-                                <h3 className="text-sm font-medium text-black tracking-tight border-b pb-2 flex items-center gap-2">
+                            <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-black/50 space-y-4">
+                                <h3 className="text-sm font-medium text-black tracking-tight border-b-[0.5px] pb-2 flex items-center gap-2">
                                     <Sliders size={16} /> Segmented Analytics Portfolio (Lifecycle Audits)
                                 </h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                                     {/* 1. Product Marketplace */}
-                                    <div className="p-5 bg-neutral-50 rounded-[10px] border border-neutral-950/10 flex flex-col justify-between min-h-[220px]">
+                                    <div className="p-5 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/50 flex flex-col justify-between min-h-[220px]">
                                         <div>
-                                            <span className="text-[10px] font-medium text-neutral-700 bg-white border border-neutral-950/10 px-2 py-0.5 rounded-[10px] uppercase tracking-wider">Product Marketplace</span>
+                                            <span className="text-[10px] font-medium text-neutral-700 bg-white border-[0.5px] border-black/50 px-2 py-0.5 rounded-[10px] uppercase tracking-wider">Product Marketplace</span>
                                             <h4 className="font-medium text-gray-900 mt-3 text-sm">Sellers Overview</h4>
                                             <p className="text-[11px] text-gray-400 mt-1 leading-relaxed">Platform performance and commissions collected from third-party vendor listings.</p>
                                         </div>
-                                        <div className="space-y-1.5 pt-3 border-t text-[11px] font-medium text-gray-600">
+                                        <div className="space-y-1.5 pt-3 border-t-[0.5px] text-[11px] font-medium text-gray-600">
                                             <div className="flex justify-between"><span>Gross Volume</span><span className="text-gray-900 font-semibold font-mono">₹{productSalesTotal.toLocaleString('en-IN')}</span></div>
                                             <div className="flex justify-between"><span>Commission Retained</span><span className="text-neutral-950 font-semibold font-mono">₹{productCommissionTotal.toLocaleString('en-IN')}</span></div>
                                             <div className="flex justify-between"><span>Gateway Charges</span><span className="text-neutral-500 font-mono">₹{gatewayFeesTotal.toLocaleString('en-IN')}</span></div>
@@ -1069,13 +1069,13 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                     </div>
 
                                     {/* 2. Doctor Consultation Practice */}
-                                    <div className="p-5 bg-neutral-50 rounded-[10px] border border-neutral-950/10 flex flex-col justify-between min-h-[220px]">
+                                    <div className="p-5 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/50 flex flex-col justify-between min-h-[220px]">
                                         <div>
-                                            <span className="text-[10px] font-medium text-neutral-700 bg-white border border-neutral-950/10 px-2 py-0.5 rounded-[10px] uppercase tracking-wider">Tele-Consulting</span>
+                                            <span className="text-[10px] font-medium text-neutral-700 bg-white border-[0.5px] border-black/50 px-2 py-0.5 rounded-[10px] uppercase tracking-wider">Tele-Consulting</span>
                                             <h4 className="font-medium text-gray-900 mt-3 text-sm">Doctors Splits</h4>
                                             <p className="text-[11px] text-gray-400 mt-1 leading-relaxed">Settlement split logs, professional commissions, and withheld payouts.</p>
                                         </div>
-                                        <div className="space-y-1.5 pt-3 border-t text-[11px] font-medium text-gray-600">
+                                        <div className="space-y-1.5 pt-3 border-t-[0.5px] text-[11px] font-medium text-gray-600">
                                             <div className="flex justify-between"><span>Consultations Volume</span><span className="text-gray-900 font-semibold font-mono">₹{docSalesTotal.toLocaleString('en-IN')}</span></div>
                                             <div className="flex justify-between"><span>Platform Share</span><span className="text-neutral-900 font-semibold font-mono">₹{docCommissionTotal.toLocaleString('en-IN')}</span></div>
                                             <div className="flex justify-between"><span>TDS Deducted ({doctorTdsRate}%)</span><span className="text-red-650 font-semibold font-mono">₹{Math.round(doctorPendingPayouts * (doctorTdsRate / 100)).toLocaleString('en-IN')}</span></div>
@@ -1083,13 +1083,13 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                     </div>
 
                                     {/* 3. Customer Purchases (B2C) */}
-                                    <div className="p-5 bg-neutral-50 rounded-[10px] border border-neutral-950/10 flex flex-col justify-between min-h-[220px]">
+                                    <div className="p-5 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/50 flex flex-col justify-between min-h-[220px]">
                                         <div>
-                                            <span className="text-[10px] font-medium text-neutral-700 bg-white border border-neutral-950/10 px-2 py-0.5 rounded-[10px] uppercase tracking-wider">B2C Commerce</span>
+                                            <span className="text-[10px] font-medium text-neutral-700 bg-white border-[0.5px] border-black/50 px-2 py-0.5 rounded-[10px] uppercase tracking-wider">B2C Commerce</span>
                                             <h4 className="font-medium text-gray-900 mt-3 text-sm">Customer Database</h4>
                                             <p className="text-[11px] text-gray-400 mt-1 leading-relaxed">Aggregated buyer metrics, checkout conversions, and average invoice size.</p>
                                         </div>
-                                        <div className="space-y-1.5 pt-3 border-t text-[11px] font-medium text-gray-600">
+                                        <div className="space-y-1.5 pt-3 border-t-[0.5px] text-[11px] font-medium text-gray-600">
                                             <div className="flex justify-between"><span>Total Buyers Database</span><span className="text-gray-900 font-semibold">{systemStats?.total_users || 0} accounts</span></div>
                                             <div className="flex justify-between"><span>Total Purchases</span><span className="text-gray-900 font-semibold">{systemStats?.total_orders || 0} orders</span></div>
                                             <div className="flex justify-between"><span>Average Ticket Size</span><span className="text-neutral-900 font-semibold font-mono">₹{Math.round(totalPlatformVolume / (systemStats?.total_orders || 1)).toLocaleString('en-IN')}</span></div>
@@ -1097,13 +1097,13 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                     </div>
 
                                     {/* 4. Platform Treasury */}
-                                    <div className="p-5 bg-neutral-50 rounded-[10px] border border-neutral-950/10 flex flex-col justify-between min-h-[220px]">
+                                    <div className="p-5 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/50 flex flex-col justify-between min-h-[220px]">
                                         <div>
-                                            <span className="text-[10px] font-medium text-neutral-700 bg-white border border-neutral-950/10 px-2 py-0.5 rounded-[10px] uppercase tracking-wider">Treasury Reserves</span>
+                                            <span className="text-[10px] font-medium text-neutral-700 bg-white border-[0.5px] border-black/50 px-2 py-0.5 rounded-[10px] uppercase tracking-wider">Treasury Reserves</span>
                                             <h4 className="font-medium text-gray-900 mt-3 text-sm">Overall Balance Sheet</h4>
                                             <p className="text-[11px] text-gray-400 mt-1 leading-relaxed">Platform treasury net margins, liquidity ratio, and payout reserves.</p>
                                         </div>
-                                        <div className="space-y-1.5 pt-3 border-t text-[11px] font-medium text-gray-650">
+                                        <div className="space-y-1.5 pt-3 border-t-[0.5px] text-[11px] font-medium text-gray-650">
                                             <div className="flex justify-between"><span>Treasury Margin</span><span className="text-green-700 font-semibold">{totalPlatformVolume > 0 ? ((netPlatformProfit / totalPlatformVolume) * 100).toFixed(1) : '0.0'}%</span></div>
                                             <div className="flex justify-between"><span>Liquidity Locked</span><span className="text-gray-900 font-semibold font-mono">₹{netPlatformProfit.toLocaleString('en-IN')}</span></div>
                                             <div className="flex justify-between"><span>Pending Payouts</span><span className="text-red-650 font-semibold font-mono">₹{totalPendingPayouts.toLocaleString('en-IN')}</span></div>
@@ -1115,7 +1115,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                             {/* Charts visualization */}
                             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                 {/* sales trend area chart */}
-                                <div className="lg:col-span-2 bg-white p-6 rounded-[10px] border-[0.5px] border-neutral-950/15">
+                                <div className="lg:col-span-2 bg-white p-6 rounded-[10px] border-[0.5px] border-black/50">
                                     <h4 className="font-medium text-gray-900 text-sm mb-4">Gross Sales & Net Earnings Timeline</h4>
                                     <div className="h-72 w-full">
                                         {isMounted && (
@@ -1151,7 +1151,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                 </div>
 
                                 {/* Pie chart splits */}
-                                <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-neutral-950/10 flex flex-col justify-between">
+                                <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-black/50 flex flex-col justify-between">
                                     <div>
                                         <h4 className="font-medium text-black text-sm mb-4">Volume Contribution Split</h4>
                                         <div className="h-56 w-full flex items-center justify-center">
@@ -1182,7 +1182,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                     </div>
                                     <div className="space-y-2 text-xs">
                                         {salesBreakdownData.map((s, idx) => (
-                                            <div key={idx} className="flex justify-between items-center border-t border-neutral-100 pt-2">
+                                            <div key={idx} className="flex justify-between items-center border-t-[0.5px] border-black/50 pt-2">
                                                 <span className="flex items-center gap-2 font-normal text-neutral-500">
                                                     <span className="h-3 w-3 rounded-full" style={{ backgroundColor: s.color }}></span>
                                                     {s.name}
@@ -1197,13 +1197,13 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                             </div>
 
                             {/* Database Scale Overview Card */}
-                            <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-neutral-950/10 space-y-4">
-                                <h4 className="font-medium text-black text-sm border-b border-neutral-950/10 pb-2 mb-2 flex items-center gap-2">
+                            <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-black/50 space-y-4">
+                                <h4 className="font-medium text-black text-sm border-b-[0.5px] border-black/50 pb-2 mb-2 flex items-center gap-2">
                                     <Users size={18} className="text-black" />
                                     Platform Scale & Active Operations (Real Database Statistics)
                                 </h4>
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                                    <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/10">
+                                    <div className="bg-neutral-50 p-4 rounded-[10px] border-[0.5px] border-black/50">
                                         <div className="flex items-center gap-2 text-xs text-neutral-500 font-normal">
                                             <Briefcase size={14} className="text-black" />
                                             Active Sellers
@@ -1216,7 +1216,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                         </p>
                                     </div>
 
-                                    <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/10">
+                                    <div className="bg-neutral-50 p-4 rounded-[10px] border-[0.5px] border-black/50">
                                         <div className="flex items-center gap-2 text-xs text-neutral-500 font-normal">
                                             <Stethoscope size={14} className="text-black" />
                                             Active Doctors
@@ -1229,7 +1229,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                         </p>
                                     </div>
 
-                                    <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/10">
+                                    <div className="bg-neutral-50 p-4 rounded-[10px] border-[0.5px] border-black/50">
                                         <div className="flex items-center gap-2 text-xs text-neutral-500 font-normal">
                                             <Users size={14} className="text-black" />
                                             Customer Accounts
@@ -1242,7 +1242,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                         </p>
                                     </div>
 
-                                    <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/10">
+                                    <div className="bg-neutral-50 p-4 rounded-[10px] border-[0.5px] border-black/50">
                                         <div className="flex items-center gap-2 text-xs text-neutral-500 font-normal">
                                             <Receipt size={14} className="text-black" />
                                             Total Orders Placed
@@ -1263,7 +1263,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                     {activeTab === 'sellers' && (
                         <div className="space-y-6">
                             {/* Sub tab selectors for ledgers */}
-                            <div className="flex bg-neutral-50 p-1 rounded-[10px] w-fit gap-1 text-xs font-medium border border-neutral-950/10">
+                            <div className="flex bg-neutral-50 p-1 rounded-[10px] w-fit gap-1 text-xs font-medium border-[0.5px] border-black/50">
                                 <button
                                     onClick={() => { setSubTabLedgers('sellers'); setSearchTerm(''); }}
                                     className={`px-4 py-2 rounded-[10px] transition-all ${subTabLedgers === 'sellers' ? 'bg-black text-white' : 'text-neutral-500 hover:text-neutral-900'}`}
@@ -1285,7 +1285,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                             </div>
 
                             {/* Search filter input */}
-                            <div className="flex gap-4 items-center bg-white p-4 rounded-[10px] border border-neutral-950/10 justify-between">
+                            <div className="flex gap-4 items-center bg-white p-4 rounded-[10px] border-[0.5px] border-black/50 justify-between">
                                 <div className="relative flex-1 max-w-md">
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" size={16} />
                                     <input
@@ -1293,7 +1293,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                         placeholder={`Search ${subTabLedgers} registry...`}
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="pl-9 pr-4 py-2 border border-neutral-950/10 rounded-[10px] text-xs w-full focus:outline-none focus:ring-1 focus:ring-black"
+                                        className="pl-9 pr-4 py-2 border-[0.5px] border-black/50 rounded-[10px] text-xs w-full focus:outline-none focus:ring-1 focus:ring-black"
                                     />
                                 </div>
                             </div>
@@ -1305,11 +1305,11 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
 
                             {/* Sub Ledger Tab 2: Doctors */}
                             {subTabLedgers === 'doctors' && (
-                                <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-neutral-950/10 overflow-hidden">
+                                <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-black/50 overflow-hidden">
                                     <div className="overflow-x-auto">
                                         <table className="min-w-full divide-y divide-neutral-100 text-left text-xs">
                                             <thead>
-                                                <tr className="text-neutral-500 font-medium border-b border-neutral-950/10">
+                                                <tr className="text-neutral-500 font-medium border-b-[0.5px] border-black/50">
                                                     <th className="py-3 px-4 font-medium">Doctor Name</th>
                                                     <th className="py-3 px-4 font-medium">Consultation Specialty</th>
                                                     <th className="py-3 px-4 text-center font-medium">Consultations</th>
@@ -1342,7 +1342,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                                             setInvoiceType('doctor');
                                                                             setInvoiceModalOpen(true);
                                                                         }}
-                                                                        className="px-2.5 py-1 bg-white text-black border border-neutral-950/10 rounded-[10px] hover:bg-neutral-50 transition-all font-medium"
+                                                                        className="px-2.5 py-1 bg-white text-black border-[0.5px] border-black/50 rounded-[10px] hover:bg-neutral-50 transition-all font-medium"
                                                                     >
                                                                         Split Bill
                                                                     </button>
@@ -1359,11 +1359,11 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
 
                             {/* Sub Ledger Tab 3: Customers */}
                             {subTabLedgers === 'customers' && (
-                                <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-neutral-950/10 overflow-hidden">
+                                <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-black/50 overflow-hidden">
                                     <div className="overflow-x-auto">
                                         <table className="min-w-full divide-y divide-neutral-100 text-left text-xs">
                                             <thead>
-                                                <tr className="text-neutral-500 font-medium border-b border-neutral-950/10">
+                                                <tr className="text-neutral-500 font-medium border-b-[0.5px] border-black/50">
                                                     <th className="py-3 px-4 font-medium">Customer Account Details</th>
                                                     <th className="py-3 px-4 font-medium">Email</th>
                                                     <th className="py-3 px-4 text-center font-medium">Total Orders Count</th>
@@ -1397,7 +1397,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                     {activeTab === 'payouts' && (
                         <div className="space-y-6">
                             {/* Sub Tab switchers */}
-                            <div className="flex bg-neutral-50 p-1 rounded-[10px] w-fit gap-1 text-xs font-medium border border-neutral-950/10">
+                            <div className="flex bg-neutral-50 p-1 rounded-[10px] w-fit gap-1 text-xs font-medium border-[0.5px] border-black/50">
                                 <button
                                     onClick={() => setSubTabPayouts('sellers')}
                                     className={`px-4 py-2 rounded-[10px] transition-all ${subTabPayouts === 'sellers' ? 'bg-black text-white' : 'text-neutral-500 hover:text-neutral-900'}`}
@@ -1418,7 +1418,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
 
                             {/* Payout subtab 2: Doctor release list */}
                             {subTabPayouts === 'doctors' && (
-                                <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-neutral-950/10 space-y-6">
+                                <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-black/50 space-y-6">
                                     <div>
                                         <h3 className="font-medium text-black text-base">Doctor Booking Earnings Release Desk</h3>
                                         <p className="text-xs text-neutral-400">Check auto-release eligibility parameters. Releases are subject to 10% TDS withholding under Section 194J.</p>
@@ -1427,7 +1427,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                     <div className="overflow-x-auto">
                                         <table className="min-w-full divide-y divide-neutral-100 text-left text-xs">
                                             <thead>
-                                                <tr className="text-neutral-500 font-medium border-b border-neutral-950/10">
+                                                <tr className="text-neutral-500 font-medium border-b-[0.5px] border-black/50">
                                                     <th className="py-3 px-4 font-medium">Doctor Details</th>
                                                     <th className="py-3 px-4 font-medium">Accumulated Earning</th>
                                                     <th className="py-3 px-4 font-medium">Withheld Payout</th>
@@ -1464,9 +1464,9 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                             </td>
                                                             <td className="py-3 px-4">
                                                                 {ready ? (
-                                                                    <span className="px-2 py-0.5 bg-green-50 text-green-700 rounded-[10px] text-[9px] font-medium border border-green-150">Release Ready (₹1000+)</span>
+                                                                    <span className="px-2 py-0.5 bg-green-50 text-green-700 rounded-[10px] text-[9px] font-medium border-[0.5px] border-black/50">Release Ready (₹1000+)</span>
                                                                 ) : (
-                                                                    <span className="px-2 py-0.5 bg-neutral-50 text-neutral-500 rounded-[10px] text-[9px] font-normal border border-neutral-950/10">Threshold Hold</span>
+                                                                    <span className="px-2 py-0.5 bg-neutral-50 text-neutral-500 rounded-[10px] text-[9px] font-normal border-[0.5px] border-black/50">Threshold Hold</span>
                                                                 )}
                                                             </td>
                                                             <td className="py-3 px-4 text-center">
@@ -1498,22 +1498,22 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                     {activeTab === 'tax' && (
                         <div className="space-y-6">
                             {/* Sub headers and tax settings */}
-                            <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-neutral-950/10 space-y-4">
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-950/10 pb-4">
+                            <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-black/50 space-y-4">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-[0.5px] border-black/50 pb-4">
                                     <div>
                                         <h3 className="font-medium text-black text-base">Platform Compliance Invoice Generator</h3>
                                         <p className="text-xs text-neutral-450">Generate legally compliant B2C and B2B GST tax invoices dynamically.</p>
                                     </div>
 
                                     {/* Editable tax setting */}
-                                    <div className="flex items-center gap-2 bg-neutral-50 px-3 py-1.5 rounded-[10px] border border-neutral-950/10">
+                                    <div className="flex items-center gap-2 bg-neutral-50 px-3 py-1.5 rounded-[10px] border-[0.5px] border-black/50">
                                         <Percent size={14} className="text-black" />
                                         <span className="text-xs text-black font-medium">GST Rate:</span>
                                         <input
                                             type="number"
                                             value={gstRate}
                                             onChange={(e) => setGstRate(Number(e.target.value))}
-                                            className="w-12 bg-white border border-neutral-950/10 rounded-[10px] px-1.5 py-0.5 text-xs text-center font-bold text-gray-800 focus:outline-none focus:border-black"
+                                            className="w-12 bg-white border-[0.5px] border-black/50 rounded-[10px] px-1.5 py-0.5 text-xs text-center font-bold text-gray-800 focus:outline-none focus:border-black"
                                             min={0}
                                             max={100}
                                         />
@@ -1522,28 +1522,28 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                 </div>
 
                                 {/* Invoice Type selector */}
-                                <div className="flex bg-neutral-50 p-1 rounded-[10px] w-fit gap-1 text-xs font-medium border border-neutral-950/10">
+                                <div className="flex bg-neutral-50 p-1 rounded-[10px] w-fit gap-1 text-xs font-medium border-[0.5px] border-black/50">
                                     <button
                                         onClick={() => { setInvoiceType('customer'); setSearchTerm(''); }}
-                                        className={`px-4 py-2 rounded-[10px] transition-all ${invoiceType === 'customer' ? 'bg-black text-white shadow-sm' : 'text-neutral-500 hover:text-neutral-900'}`}
+                                        className={`px-4 py-2 rounded-[10px] transition-all ${invoiceType === 'customer' ? 'bg-black text-white shadow-none border-black/50 border-[0.5px]' : 'text-neutral-500 hover:text-neutral-900'}`}
                                     >
                                         Customer Sales (B2C)
                                     </button>
                                     <button
                                         onClick={() => { setInvoiceType('seller'); setSearchTerm(''); }}
-                                        className={`px-4 py-2 rounded-[10px] transition-all ${invoiceType === 'seller' ? 'bg-black text-white shadow-sm' : 'text-neutral-500 hover:text-neutral-900'}`}
+                                        className={`px-4 py-2 rounded-[10px] transition-all ${invoiceType === 'seller' ? 'bg-black text-white shadow-none border-black/50 border-[0.5px]' : 'text-neutral-500 hover:text-neutral-900'}`}
                                     >
                                         Seller Commissions (B2B)
                                     </button>
                                     <button
                                         onClick={() => { setInvoiceType('doctor'); setSearchTerm(''); }}
-                                        className={`px-4 py-2 rounded-[10px] transition-all ${invoiceType === 'doctor' ? 'bg-black text-white shadow-sm' : 'text-neutral-500 hover:text-neutral-900'}`}
+                                        className={`px-4 py-2 rounded-[10px] transition-all ${invoiceType === 'doctor' ? 'bg-black text-white shadow-none border-black/50 border-[0.5px]' : 'text-neutral-500 hover:text-neutral-900'}`}
                                     >
                                         Doctor Consultation Splits
                                     </button>
                                     <button
                                         onClick={() => { setInvoiceType('settings'); setSearchTerm(''); }}
-                                        className={`px-4 py-2 rounded-[10px] transition-all ${invoiceType === 'settings' ? 'bg-black text-white shadow-sm' : 'text-neutral-500 hover:text-neutral-900'}`}
+                                        className={`px-4 py-2 rounded-[10px] transition-all ${invoiceType === 'settings' ? 'bg-black text-white shadow-none border-black/50 border-[0.5px]' : 'text-neutral-500 hover:text-neutral-900'}`}
                                     >
                                         Compliance Settings
                                     </button>
@@ -1552,8 +1552,8 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
 
                             {/* Compliance Config Form / Invoice Listings */}
                             {invoiceType === 'settings' ? (
-                                <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-neutral-950/10 space-y-6">
-                                    <div className="border-b border-neutral-950/10 pb-3">
+                                <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-black/50 space-y-6">
+                                    <div className="border-b-[0.5px] border-black/50 pb-3">
                                         <h4 className="font-medium text-black text-sm">Compliance & Invoice Parameter Settings</h4>
                                         <p className="text-[11px] text-neutral-450">Configure corporate identity and tax parameters. These settings are stored locally and injected dynamically into all B2C, B2B, and Split invoices.</p>
                                     </div>
@@ -1564,7 +1564,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                 type="text" 
                                                 value={companyName} 
                                                 onChange={(e) => setCompanyName(e.target.value)} 
-                                                className="w-full p-2.5 border border-neutral-950/10 rounded-[10px] font-medium focus:border-black outline-none bg-white"
+                                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-[10px] font-medium focus:border-black outline-none bg-white"
                                             />
                                         </div>
                                         <div className="space-y-1">
@@ -1573,7 +1573,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                 type="text" 
                                                 value={companyGstin} 
                                                 onChange={(e) => setCompanyGstin(e.target.value)} 
-                                                className="w-full p-2.5 border border-neutral-950/10 rounded-[10px] font-mono focus:border-black outline-none bg-white"
+                                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-[10px] font-mono focus:border-black outline-none bg-white"
                                             />
                                         </div>
                                         <div className="space-y-1">
@@ -1582,7 +1582,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                 type="text" 
                                                 value={companyPan} 
                                                 onChange={(e) => setCompanyPan(e.target.value)} 
-                                                className="w-full p-2.5 border border-neutral-950/10 rounded-[10px] font-mono focus:border-black outline-none bg-white"
+                                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-[10px] font-mono focus:border-black outline-none bg-white"
                                             />
                                         </div>
                                         <div className="space-y-1">
@@ -1591,7 +1591,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                 type="text" 
                                                 value={authSignatory} 
                                                 onChange={(e) => setAuthSignatory(e.target.value)} 
-                                                className="w-full p-2.5 border border-neutral-950/10 rounded-[10px] font-medium focus:border-black outline-none bg-white"
+                                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-[10px] font-medium focus:border-black outline-none bg-white"
                                             />
                                         </div>
                                         <div className="space-y-1">
@@ -1600,7 +1600,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                 type="text" 
                                                 value={defaultHsn} 
                                                 onChange={(e) => setDefaultHsn(e.target.value)} 
-                                                className="w-full p-2.5 border border-neutral-950/10 rounded-[10px] font-mono focus:border-black outline-none bg-white"
+                                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-[10px] font-mono focus:border-black outline-none bg-white"
                                             />
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
@@ -1610,7 +1610,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                     type="number" 
                                                     value={doctorTdsRate} 
                                                     onChange={(e) => setDoctorTdsRate(Number(e.target.value))} 
-                                                    className="w-full p-2.5 border border-neutral-950/10 rounded-[10px] focus:border-black outline-none text-center bg-white"
+                                                    className="w-full p-2.5 border-[0.5px] border-black/50 rounded-[10px] focus:border-black outline-none text-center bg-white"
                                                 />
                                             </div>
                                             <div className="space-y-1">
@@ -1619,7 +1619,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                     type="text" 
                                                     value={stateOfOrigin} 
                                                     onChange={(e) => setStateOfOrigin(e.target.value)} 
-                                                    className="w-full p-2.5 border border-neutral-950/10 rounded-[10px] capitalize focus:border-black outline-none text-center font-medium bg-white"
+                                                    className="w-full p-2.5 border-[0.5px] border-black/50 rounded-[10px] capitalize focus:border-black outline-none text-center font-medium bg-white"
                                                 />
                                             </div>
                                         </div>
@@ -1628,12 +1628,12 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                             <textarea 
                                                 value={companyAddress} 
                                                 onChange={(e) => setCompanyAddress(e.target.value)} 
-                                                className="w-full p-2.5 border border-neutral-950/10 rounded-[10px] font-medium focus:border-black outline-none bg-white"
+                                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-[10px] font-medium focus:border-black outline-none bg-white"
                                                 rows={2}
                                             />
                                         </div>
                                     </div>
-                                    <div className="pt-4 border-t border-neutral-950/10 flex justify-end">
+                                    <div className="pt-4 border-t-[0.5px] border-black/50 flex justify-end">
                                         <button 
                                             onClick={handleSaveComplianceSettings}
                                             className="px-6 py-2.5 bg-black hover:bg-neutral-900 text-white font-medium rounded-[10px] text-xs transition-all active:scale-95"
@@ -1643,8 +1643,8 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                     </div>
                                 </div>
                             ) : (
-                                <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-neutral-950/10">
-                                    <div className="flex items-center justify-between border-b border-neutral-950/10 pb-4 mb-4">
+                                <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-black/50">
+                                    <div className="flex items-center justify-between border-b-[0.5px] border-black/50 pb-4 mb-4">
                                         <h4 className="font-medium text-black text-sm">Select Record for Invoice Generation</h4>
                                         <div className="relative">
                                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-450" size={14} />
@@ -1653,14 +1653,14 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                 placeholder="Search ledger..."
                                                 value={searchTerm}
                                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                                className="pl-8 pr-4 py-1.5 border border-neutral-950/10 rounded-[10px] text-xs w-full sm:w-48 focus:outline-none focus:border-black"
+                                                className="pl-8 pr-4 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs w-full sm:w-48 focus:outline-none focus:border-black"
                                             />
                                         </div>
                                     </div>
 
                                     {invoiceOrdersLoading ? (
                                         <div className="p-8 text-center text-neutral-500">
-                                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black mx-auto"></div>
+                                            <div className="animate-spin rounded-full h-8 w-8 border-b-[0.5px] border-black mx-auto"></div>
                                             <p className="mt-2 text-xs">Loading ledger items...</p>
                                         </div>
                                     ) : (
@@ -1669,7 +1669,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                             {invoiceType === 'customer' && (
                                                 <table className="min-w-full divide-y divide-neutral-100 text-left text-xs">
                                                     <thead>
-                                                        <tr className="text-neutral-500 font-medium border-b border-neutral-950/10">
+                                                        <tr className="text-neutral-500 font-medium border-b-[0.5px] border-black/50">
                                                             <th className="py-3 px-4 font-medium">Order #</th>
                                                             <th className="py-3 px-4 font-medium">Customer</th>
                                                             <th className="py-3 px-4 font-medium">Date</th>
@@ -1711,7 +1711,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                             {invoiceType === 'seller' && (
                                                 <table className="min-w-full divide-y divide-neutral-100 text-left text-xs">
                                                     <thead>
-                                                        <tr className="text-neutral-500 font-medium border-b border-neutral-950/10">
+                                                        <tr className="text-neutral-500 font-medium border-b-[0.5px] border-black/50">
                                                             <th className="py-3 px-4 font-medium">Seller Brand</th>
                                                             <th className="py-3 px-4 font-medium">Total Sales Volume</th>
                                                             <th className="py-3 px-4 font-medium">Platform Commission</th>
@@ -1752,7 +1752,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                             {invoiceType === 'doctor' && (
                                                 <table className="min-w-full divide-y divide-neutral-100 text-left text-xs">
                                                     <thead>
-                                                        <tr className="text-neutral-500 font-medium border-b border-neutral-950/10">
+                                                        <tr className="text-neutral-500 font-medium border-b-[0.5px] border-black/50">
                                                             <th className="py-3 px-4 font-medium">Doctor Name</th>
                                                             <th className="py-3 px-4 font-medium">Consultation Specialty</th>
                                                             <th className="py-3 px-4 text-center font-medium">Appointments</th>
@@ -1796,8 +1796,8 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                     {activeTab === 'simulators' && (
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             {/* Inputs Panel */}
-                            <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-neutral-950/10 space-y-6 lg:col-span-1">
-                                <div className="flex items-center gap-2.5 border-b border-neutral-950/10 pb-3">
+                            <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-black/50 space-y-6 lg:col-span-1">
+                                <div className="flex items-center gap-2.5 border-b-[0.5px] border-black/50 pb-3">
                                     <Calculator className="text-black" size={20} />
                                     <div>
                                         <h3 className="font-medium text-black text-sm">Financial Split Calculator</h3>
@@ -1812,13 +1812,13 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                         <div className="grid grid-cols-2 gap-2">
                                             <button
                                                 onClick={() => { setSimType('product'); setSimPrice('1000'); }}
-                                                className={`py-2 rounded-[10px] border text-center transition-all ${simType === 'product' ? 'bg-black text-white border-black font-semibold' : 'bg-white text-neutral-550 border-neutral-950/10 hover:bg-neutral-50'}`}
+                                                className={`py-2 rounded-[10px] border-[0.5px] text-center transition-all ${simType === 'product' ? 'bg-black text-white border-black font-semibold' : 'bg-white text-neutral-550 border-black/50 hover:bg-neutral-50'}`}
                                             >
                                                 Product Vendor Sale
                                             </button>
                                             <button
                                                 onClick={() => { setSimType('consultation'); setSimPrice('500'); }}
-                                                className={`py-2 rounded-[10px] border text-center transition-all ${simType === 'consultation' ? 'bg-black text-white border-black font-semibold' : 'bg-white text-neutral-550 border-neutral-950/10 hover:bg-neutral-50'}`}
+                                                className={`py-2 rounded-[10px] border-[0.5px] text-center transition-all ${simType === 'consultation' ? 'bg-black text-white border-black font-semibold' : 'bg-white text-neutral-550 border-black/50 hover:bg-neutral-50'}`}
                                             >
                                                 Doctor Consultation
                                             </button>
@@ -1834,7 +1834,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                 type="number"
                                                 value={simPrice}
                                                 onChange={(e) => setSimPrice(e.target.value)}
-                                                className="w-full pl-7 pr-3 py-2 border border-neutral-950/10 rounded-[10px] focus:outline-none focus:border-black text-sm text-black font-semibold bg-white outline-none"
+                                                className="w-full pl-7 pr-3 py-2 border-[0.5px] border-black/50 rounded-[10px] focus:outline-none focus:border-black text-sm text-black font-semibold bg-white outline-none"
                                             />
                                         </div>
                                     </div>
@@ -1847,13 +1847,13 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                 <div className="grid grid-cols-2 gap-2">
                                                     <button
                                                         onClick={() => setSimPaymentMode('prepaid')}
-                                                        className={`py-1.5 rounded-[10px] border text-center transition-all ${simPaymentMode === 'prepaid' ? 'bg-black text-white border-black font-semibold' : 'bg-white text-neutral-550 border-neutral-950/10 hover:bg-neutral-50'}`}
+                                                        className={`py-1.5 rounded-[10px] border-[0.5px] text-center transition-all ${simPaymentMode === 'prepaid' ? 'bg-black text-white border-black font-semibold' : 'bg-white text-neutral-550 border-black/50 hover:bg-neutral-50'}`}
                                                     >
                                                         Prepaid (Gateway Active)
                                                     </button>
                                                     <button
                                                         onClick={() => setSimPaymentMode('cod')}
-                                                        className={`py-1.5 rounded-[10px] border text-center transition-all ${simPaymentMode === 'cod' ? 'bg-black text-white border-black font-semibold' : 'bg-white text-neutral-550 border-neutral-950/10 hover:bg-neutral-50'}`}
+                                                        className={`py-1.5 rounded-[10px] border-[0.5px] text-center transition-all ${simPaymentMode === 'cod' ? 'bg-black text-white border-black font-semibold' : 'bg-white text-neutral-550 border-black/50 hover:bg-neutral-50'}`}
                                                     >
                                                         COD (Gateway Bypassed)
                                                     </button>
@@ -1868,7 +1868,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                         type="number"
                                                         value={simSellerBase}
                                                         onChange={(e) => setSimSellerBase(Number(e.target.value))}
-                                                        className="w-full p-2 border border-neutral-950/10 rounded-[10px] text-center font-semibold bg-white"
+                                                        className="w-full p-2 border-[0.5px] border-black/50 rounded-[10px] text-center font-semibold bg-white"
                                                         min={22}
                                                         max={27}
                                                     />
@@ -1879,7 +1879,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                         type="number"
                                                         value={simSellerGateway}
                                                         onChange={(e) => setSimSellerGateway(Number(e.target.value))}
-                                                        className="w-full p-2 border border-neutral-950/10 rounded-[10px] text-center font-semibold bg-white"
+                                                        className="w-full p-2 border-[0.5px] border-black/50 rounded-[10px] text-center font-semibold bg-white"
                                                         min={2}
                                                         max={3}
                                                     />
@@ -1893,19 +1893,19 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                             <div className="grid grid-cols-3 gap-1">
                                                 <button
                                                     onClick={() => setSimConsultType('video')}
-                                                    className={`py-1.5 rounded-[10px] border text-center transition-all text-[10px] ${simConsultType === 'video' ? 'bg-black text-white border-black font-semibold' : 'bg-white text-neutral-550 border-neutral-950/10 hover:bg-neutral-50'}`}
+                                                    className={`py-1.5 rounded-[10px] border-[0.5px] text-center transition-all text-[10px] ${simConsultType === 'video' ? 'bg-black text-white border-black font-semibold' : 'bg-white text-neutral-550 border-black/50 hover:bg-neutral-50'}`}
                                                 >
                                                     Video Split (85%)
                                                 </button>
                                                 <button
                                                     onClick={() => setSimConsultType('chat')}
-                                                    className={`py-1.5 rounded-[10px] border text-center transition-all text-[10px] ${simConsultType === 'chat' ? 'bg-black text-white border-black font-semibold' : 'bg-white text-neutral-550 border-neutral-950/10 hover:bg-neutral-50'}`}
+                                                    className={`py-1.5 rounded-[10px] border-[0.5px] text-center transition-all text-[10px] ${simConsultType === 'chat' ? 'bg-black text-white border-black font-semibold' : 'bg-white text-neutral-550 border-black/50 hover:bg-neutral-50'}`}
                                                 >
                                                     Chat Split (80%)
                                                 </button>
                                                 <button
                                                     onClick={() => setSimConsultType('followup')}
-                                                    className={`py-1.5 rounded-[10px] border text-center transition-all text-[10px] ${simConsultType === 'followup' ? 'bg-black text-white border-black font-semibold' : 'bg-white text-neutral-550 border-neutral-950/10 hover:bg-neutral-50'}`}
+                                                    className={`py-1.5 rounded-[10px] border-[0.5px] text-center transition-all text-[10px] ${simConsultType === 'followup' ? 'bg-black text-white border-black font-semibold' : 'bg-white text-neutral-550 border-black/50 hover:bg-neutral-50'}`}
                                                 >
                                                     Follow-Up (100%)
                                                 </button>
@@ -1916,50 +1916,50 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                             </div>
 
                             {/* Calculation output panel */}
-                            <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-neutral-950/10 space-y-6 lg:col-span-2">
-                                <h4 className="font-medium text-black text-sm border-b border-neutral-950/10 pb-3">Financial Settlement Breakdown</h4>
+                            <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-black/50 space-y-6 lg:col-span-2">
+                                <h4 className="font-medium text-black text-sm border-b-[0.5px] border-black/50 pb-3">Financial Settlement Breakdown</h4>
                                 
                                 {simType === 'product' ? (
                                     <div className="space-y-4 text-xs">
                                         <div className="grid grid-cols-2 gap-4">
-                                            <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/10">
+                                            <div className="bg-neutral-50 p-4 rounded-[10px] border-[0.5px] border-black/50">
                                                 <p className="text-neutral-450 font-medium uppercase text-[9px] mb-1">Gross Paid by Customer</p>
                                                 <h3 className="text-2xl font-semibold text-black">₹{simCalcs.price.toFixed(2)}</h3>
                                                 <p className="text-[9px] text-neutral-400 mt-1">Includes all taxes & delivery fees.</p>
                                             </div>
-                                            <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/10">
+                                            <div className="bg-neutral-50 p-4 rounded-[10px] border-[0.5px] border-black/50">
                                                 <p className="text-neutral-500 font-medium uppercase text-[9px] mb-1">Net Platform Revenue (Commission Retained)</p>
                                                 <h3 className="text-2xl font-semibold text-black">₹{simCalcs.netRevenue.toFixed(2)}</h3>
                                                 <p className="text-[9px] text-neutral-400 mt-1">Commission fee - gateway fees.</p>
                                             </div>
                                         </div>
 
-                                        <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/10 space-y-2.5 font-medium">
-                                            <div className="flex justify-between border-b border-neutral-200/50 pb-2 text-neutral-500">
+                                        <div className="bg-neutral-50 p-4 rounded-[10px] border-[0.5px] border-black/50 space-y-2.5 font-medium">
+                                            <div className="flex justify-between border-b-[0.5px] border-black/50 pb-2 text-neutral-500">
                                                 <span>Subtotal before platform commissions</span>
                                                 <span>₹{(simCalcs.price / 1.18).toFixed(2)} <span className="text-[9px] font-normal">(18% GST built-in)</span></span>
                                             </div>
-                                            <div className="flex justify-between border-b border-neutral-200/50 pb-2 text-red-650">
+                                            <div className="flex justify-between border-b-[0.5px] border-black/50 pb-2 text-red-650">
                                                 <span>Platform Marketplace Fee ({simSellerBase}%)</span>
                                                 <span>-₹{simCalcs.platformFee.toFixed(2)}</span>
                                             </div>
-                                            <div className="flex justify-between border-b border-neutral-200/50 pb-2 text-neutral-550">
+                                            <div className="flex justify-between border-b-[0.5px] border-black/50 pb-2 text-neutral-550">
                                                 <span>GST on Platform fee (18% GST)</span>
                                                 <span>-₹{simCalcs.gstOnFee.toFixed(2)}</span>
                                             </div>
-                                            <div className="flex justify-between border-b border-neutral-200/50 pb-2 text-red-650">
+                                            <div className="flex justify-between border-b-[0.5px] border-black/50 pb-2 text-red-650">
                                                 <span>Payment Gateway Fee ({simSellerGateway}%)</span>
                                                 <span>{simCalcs.gatewayFee > 0 ? `-₹${simCalcs.gatewayFee.toFixed(2)}` : '₹0.00 (COD Bypass)'}</span>
                                             </div>
-                                            <div className="flex justify-between border-b border-neutral-200/50 pb-2 text-neutral-550">
+                                            <div className="flex justify-between border-b-[0.5px] border-black/50 pb-2 text-neutral-550">
                                                 <span>TCS (1% statutory withholding)</span>
                                                 <span>-₹{simCalcs.tcs.toFixed(2)}</span>
                                             </div>
-                                            <div className="flex justify-between border-b border-neutral-200/50 pb-2 text-neutral-550">
+                                            <div className="flex justify-between border-b-[0.5px] border-black/50 pb-2 text-neutral-550">
                                                 <span>TDS (1% income tax withholding)</span>
                                                 <span>-₹{simCalcs.tds.toFixed(2)}</span>
                                             </div>
-                                            <div className="flex justify-between text-green-700 font-semibold text-sm pt-2 bg-green-50 p-2.5 rounded-[10px] border border-green-150">
+                                            <div className="flex justify-between text-green-700 font-semibold text-sm pt-2 bg-green-50 p-2.5 rounded-[10px] border-[0.5px] border-black/50">
                                                 <span>Settlement Payable to Seller Shop</span>
                                                 <span>₹{simCalcs.netPayout.toFixed(2)} <span className="text-xs font-semibold text-green-800 ml-1">({simCalcs.percentage.toFixed(1)}%)</span></span>
                                             </div>
@@ -1968,28 +1968,28 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                 ) : (
                                     <div className="space-y-4 text-xs">
                                         <div className="grid grid-cols-2 gap-4">
-                                            <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/10">
+                                            <div className="bg-neutral-50 p-4 rounded-[10px] border-[0.5px] border-black/50">
                                                 <p className="text-neutral-450 font-medium uppercase text-[9px] mb-1">Gross Booking Paid by Customer</p>
                                                 <h3 className="text-2xl font-semibold text-black">₹{simCalcs.price.toFixed(2)}</h3>
                                                 <p className="text-[9px] text-neutral-400 mt-1">Doctor professional consulting fee.</p>
                                             </div>
-                                            <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/10">
+                                            <div className="bg-neutral-50 p-4 rounded-[10px] border-[0.5px] border-black/50">
                                                 <p className="text-neutral-500 font-medium uppercase text-[9px] mb-1">Platform Commission Retained</p>
                                                 <h3 className="text-2xl font-semibold text-black">₹{simCalcs.netRevenue.toFixed(2)}</h3>
                                                 <p className="text-[9px] text-neutral-400 mt-1">Platform share splits.</p>
                                             </div>
                                         </div>
 
-                                        <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/10 space-y-2.5 font-medium">
-                                            <div className="flex justify-between border-b border-neutral-200/50 pb-2 text-neutral-550">
+                                        <div className="bg-neutral-50 p-4 rounded-[10px] border-[0.5px] border-black/50 space-y-2.5 font-medium">
+                                            <div className="flex justify-between border-b-[0.5px] border-black/50 pb-2 text-neutral-550">
                                                 <span>Doctor split gross share</span>
                                                 <span>₹{simCalcs.doctorGrossShare?.toFixed(2)}</span>
                                             </div>
-                                            <div className="flex justify-between border-b border-neutral-200/50 pb-2 text-red-650">
+                                            <div className="flex justify-between border-b-[0.5px] border-black/50 pb-2 text-red-650">
                                                 <span>Professional TDS Withholding (Section 194J at 10%)</span>
                                                 <span>-₹{simCalcs.tds194J?.toFixed(2)}</span>
                                             </div>
-                        <div className="flex justify-between text-green-700 font-semibold text-sm pt-2 bg-green-50 p-2.5 rounded-[10px] border border-green-150">
+                        <div className="flex justify-between text-green-700 font-semibold text-sm pt-2 bg-green-50 p-2.5 rounded-[10px] border-[0.5px] border-black/50">
                                                 <span>Net Settlement Released to Doctor Account</span>
                                                 <span>₹{simCalcs.netPayout?.toFixed(2)} <span className="text-xs font-semibold text-green-800 ml-1">({simCalcs.percentage?.toFixed(1)}%)</span></span>
                                             </div>
@@ -2010,7 +2010,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
             {/* MODAL 1: PAYOUT DETAILS & APPROVE DIALOG */}
             {payoutModalOpen && selectedPayout && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in p-4">
-                    <div className="bg-white rounded-[10px] p-6 max-w-lg w-full border-[0.5px] border-neutral-950/15 relative max-h-[90vh] overflow-y-auto">
+                    <div className="bg-white rounded-[10px] p-6 max-w-lg w-full border-[0.5px] border-black/50 relative max-h-[90vh] overflow-y-auto">
                         <button 
                             onClick={() => { setPayoutModalOpen(false); setSelectedPayout(null); setPayoutTxId(''); }}
                             className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-600"
@@ -2021,8 +2021,8 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                         <h3 className="text-lg font-semibold text-black mb-4">Seller Payout Request Release</h3>
                         
                         <div className="space-y-4 text-xs">
-                            <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/10">
-                                <h4 className="font-semibold text-black border-b border-neutral-950/10 pb-1 mb-2">Seller Account Profile</h4>
+                            <div className="bg-neutral-50 p-4 rounded-[10px] border-[0.5px] border-black/50">
+                                <h4 className="font-semibold text-black border-b-[0.5px] border-black/50 pb-1 mb-2">Seller Account Profile</h4>
                                 <div className="grid grid-cols-2 gap-2 text-neutral-600 font-medium">
                                     <div><p className="text-neutral-400 font-normal">Name</p><p className="font-semibold text-black">{selectedPayout.seller.name}</p></div>
                                     <div><p className="text-neutral-400 font-normal">Shop Brand</p><p className="font-semibold text-black">{selectedPayout.seller.seller_profile?.brand_name || 'N/A'}</p></div>
@@ -2031,18 +2031,18 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                 </div>
                             </div>
 
-                            <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/10">
-                                <h4 className="font-semibold text-black border-b border-neutral-950/10 pb-1 mb-2">Request Details</h4>
+                            <div className="bg-neutral-50 p-4 rounded-[10px] border-[0.5px] border-black/50">
+                                <h4 className="font-semibold text-black border-b-[0.5px] border-black/50 pb-1 mb-2">Request Details</h4>
                                 <div className="grid grid-cols-2 gap-2 text-neutral-600 font-medium">
                                     <div><p className="text-neutral-400 font-normal">Requested Amount</p><p className="font-bold text-lg text-black">₹{selectedPayout.requested_amount.toLocaleString('en-IN')}</p></div>
-                                    <div><p className="text-neutral-400 font-normal">Status</p><span className="inline-block bg-neutral-100 text-black px-2 py-0.5 rounded-[10px] border border-neutral-950/10 font-medium">{selectedPayout.status}</span></div>
+                                    <div><p className="text-neutral-400 font-normal">Status</p><span className="inline-block bg-neutral-100 text-black px-2 py-0.5 rounded-[10px] border-[0.5px] border-black/50 font-medium">{selectedPayout.status}</span></div>
                                     <div><p className="text-neutral-400 font-normal">Submitted Date</p><p className="font-normal text-neutral-700">{new Date(selectedPayout.requested_at).toLocaleString()}</p></div>
                                 </div>
                             </div>
 
                             {selectedPayout.bank_details ? (
-                                <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/10">
-                                    <h4 className="font-semibold text-black border-b border-neutral-950/10 pb-1 mb-2">Settlement Bank Routing</h4>
+                                <div className="bg-neutral-50 p-4 rounded-[10px] border-[0.5px] border-black/50">
+                                    <h4 className="font-semibold text-black border-b-[0.5px] border-black/50 pb-1 mb-2">Settlement Bank Routing</h4>
                                     <div className="grid grid-cols-2 gap-2 text-neutral-600 font-medium">
                                         <div><p className="text-neutral-400 font-normal">Account Holder</p><p className="font-semibold text-black">{selectedPayout.bank_details.account_holder_name}</p></div>
                                         <div><p className="text-neutral-400 font-normal">Bank Name</p><p className="font-semibold text-black">{selectedPayout.bank_details.bank_name}</p></div>
@@ -2051,14 +2051,14 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                     </div>
                                 </div>
                             ) : (
-                                <div className="bg-red-50 text-red-700 font-medium text-center border border-red-150 p-3 rounded-[10px]">
+                                <div className="bg-red-50 text-red-700 font-medium text-center border-[0.5px] border-black/50 p-3 rounded-[10px]">
                                     Warning: No verified bank accounts linked to this payout transaction.
                                 </div>
                             )}
 
                             {/* Release control form */}
                             {selectedPayout.status === 'pending' && (
-                                <div className="border-t border-neutral-950/10 pt-4 space-y-3">
+                                <div className="border-t-[0.5px] border-black/50 pt-4 space-y-3">
                                     <div>
                                         <label className="block text-xs font-semibold text-neutral-700 mb-1">Bank UTR Transaction Reference ID</label>
                                         <input
@@ -2066,7 +2066,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                             value={payoutTxId}
                                             onChange={(e) => setPayoutTxId(e.target.value)}
                                             placeholder="Enter bank transaction ID (e.g. UTR123456789)"
-                                            className="w-full px-3 py-2 border border-neutral-950/10 bg-white rounded-[10px] text-xs focus:ring-1 focus:ring-black focus:outline-none"
+                                            className="w-full px-3 py-2 border-[0.5px] border-black/50 bg-white rounded-[10px] text-xs focus:ring-1 focus:ring-black focus:outline-none"
                                         />
                                     </div>
                                     <div className="flex gap-2">
@@ -2078,7 +2078,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                         </button>
                                         <button
                                             onClick={() => handleRejectPayout(selectedPayout.id)}
-                                            className="px-4 py-2 bg-red-50 text-red-700 border border-red-150 rounded-[10px] font-medium hover:bg-red-100/50 transition-colors"
+                                            className="px-4 py-2 bg-red-50 text-red-700 border-[0.5px] border-black/50 rounded-[10px] font-medium hover:bg-red-100/50 transition-colors"
                                         >
                                             Reject
                                         </button>
@@ -2093,7 +2093,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
             {/* MODAL 2: COMMISSION PROFILE UPDATE DIALOG */}
             {commissionModalOpen && selectedSellerForComm && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-[10px] p-6 max-w-md w-full border-[0.5px] border-neutral-950/15 relative">
+                    <div className="bg-white rounded-[10px] p-6 max-w-md w-full border-[0.5px] border-black/50 relative">
                         <button 
                             onClick={() => { setCommissionModalOpen(false); setSelectedSellerForComm(null); }}
                             className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-600"
@@ -2112,7 +2112,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                         type="number"
                                         value={baseCommRate}
                                         onChange={(e) => setBaseCommRate(Number(e.target.value))}
-                                        className="w-full border border-neutral-950/10 rounded-[10px] p-2 font-semibold bg-white text-black focus:outline-none focus:border-black"
+                                        className="w-full border-[0.5px] border-black/50 rounded-[10px] p-2 font-semibold bg-white text-black focus:outline-none focus:border-black"
                                         min={22}
                                         max={27}
                                         required
@@ -2124,7 +2124,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                         type="number"
                                         value={gatewayCommRate}
                                         onChange={(e) => setGatewayCommRate(Number(e.target.value))}
-                                        className="w-full border border-neutral-950/10 rounded-[10px] p-2 font-semibold bg-white text-black focus:outline-none focus:border-black"
+                                        className="w-full border-[0.5px] border-black/50 rounded-[10px] p-2 font-semibold bg-white text-black focus:outline-none focus:border-black"
                                         min={2}
                                         max={3}
                                         required
@@ -2134,7 +2134,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
 
                             <div>
                                 <label className="block text-neutral-600 font-medium mb-1">Effective Split Charge %</label>
-                                <div className="p-2.5 bg-neutral-50 text-black font-semibold text-sm rounded-[10px] border border-neutral-950/10">
+                                <div className="p-2.5 bg-neutral-50 text-black font-semibold text-sm rounded-[10px] border-[0.5px] border-black/50">
                                     {baseCommRate + gatewayCommRate}% on all product orders
                                 </div>
                             </div>
@@ -2145,7 +2145,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                     type="date"
                                     value={commValidFrom}
                                     onChange={(e) => setCommValidFrom(e.target.value)}
-                                    className="w-full border border-neutral-950/10 rounded-[10px] p-2 font-medium bg-white text-black focus:outline-none focus:border-black"
+                                    className="w-full border-[0.5px] border-black/50 rounded-[10px] p-2 font-medium bg-white text-black focus:outline-none focus:border-black"
                                     required
                                 />
                             </div>
@@ -2155,7 +2155,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                 <textarea
                                     value={commNotes}
                                     onChange={(e) => setCommNotes(e.target.value)}
-                                    className="w-full border border-neutral-950/10 rounded-[10px] p-2 focus:outline-none bg-white text-black focus:border-black"
+                                    className="w-full border-[0.5px] border-black/50 rounded-[10px] p-2 focus:outline-none bg-white text-black focus:border-black"
                                     rows={3}
                                     placeholder="Enter reason or reference code for changing split models..."
                                 />
@@ -2176,9 +2176,9 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
             {/* MODAL 3: INVOICE PRINT PREVIEW MODAL */}
             {invoiceModalOpen && selectedItem && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-[10px] p-6 max-w-4xl w-full border-[0.5px] border-neutral-950/15 max-h-[95vh] overflow-y-auto relative flex flex-col justify-between">
+                    <div className="bg-white rounded-[10px] p-6 max-w-4xl w-full border-[0.5px] border-black/50 max-h-[95vh] overflow-y-auto relative flex flex-col justify-between">
                         {/* Header toolbar */}
-                        <div className="flex items-center justify-between border-b border-neutral-950/10 pb-3 mb-4">
+                        <div className="flex items-center justify-between border-b-[0.5px] border-black/50 pb-3 mb-4">
                             <h4 className="font-semibold text-xs text-neutral-800 uppercase tracking-wider">Dynamic GST Tax Invoice Preview</h4>
                             <div className="flex gap-2">
                                 <button
@@ -2189,7 +2189,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                 </button>
                                 <button 
                                     onClick={() => { setInvoiceModalOpen(false); setSelectedItem(null); }}
-                                    className="p-1.5 text-neutral-400 hover:text-neutral-600 bg-neutral-50 border border-neutral-950/10 rounded-[10px]"
+                                    className="p-1.5 text-neutral-400 hover:text-neutral-600 bg-neutral-50 border-[0.5px] border-black/50 rounded-[10px]"
                                 >
                                     <X size={18} />
                                 </button>
@@ -2200,8 +2200,8 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                         <div className="flex-1 overflow-y-auto px-1 py-4">
                             {/* SELLER INVOICES */}
                             {invoiceType === 'seller' && (
-                                <div id="printable-invoice-container" className="bg-white p-6 text-black border border-neutral-950/10 rounded-[10px] font-sans text-xs max-w-[800px] mx-auto print:border-none print:shadow-none">
-                                    <div className="grid grid-cols-2 border-b-2 border-neutral-205 pb-4 mb-4">
+                                <div id="printable-invoice-container" className="bg-white p-6 text-black border-[0.5px] border-black/50 rounded-[10px] font-sans text-xs max-w-[800px] mx-auto print:border-none print:shadow-none">
+                                    <div className="grid grid-cols-2 border-b-[0.5px] border-neutral-205 pb-4 mb-4">
                                         <div>
                                             <div className="flex items-center gap-2 mb-2">
                                                 <div className="h-8 w-8 bg-black text-white font-bold rounded flex items-center justify-center">C</div>
@@ -2220,7 +2220,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                         </div>
                                     </div>
 
-                                    <div className="border border-neutral-950/10 rounded-[10px] p-4 bg-neutral-50 mb-4">
+                                    <div className="border-[0.5px] border-black/50 rounded-[10px] p-4 bg-neutral-50 mb-4">
                                         <p className="font-semibold text-black">Stakeholder / Partner Shop Details:</p>
                                         <div className="grid grid-cols-2 gap-2 mt-2 text-[11px] text-neutral-600 font-medium">
                                             <div><p className="text-neutral-450 font-normal">Vendor Partner:</p><p className="font-semibold text-black">{selectedItem.seller_name}</p></div>
@@ -2228,8 +2228,8 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                         </div>
                                     </div>
 
-                                    <table className="w-full text-left border border-neutral-950/10 rounded-[10px] overflow-hidden mb-4">
-                                        <thead className="bg-neutral-50 font-semibold text-black border-b border-neutral-950/10">
+                                    <table className="w-full text-left border-[0.5px] border-black/50 rounded-[10px] overflow-hidden mb-4">
+                                        <thead className="bg-neutral-50 font-semibold text-black border-b-[0.5px] border-black/50">
                                             <tr>
                                                 <th className="p-3 font-semibold">Marketplace Service Description</th>
                                                 <th className="p-3 text-center font-semibold">Orders</th>
@@ -2268,20 +2268,20 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                         <div>
                                             <table className="w-full space-y-1 text-right text-neutral-600 font-medium">
                                                 <tbody>
-                                                    <tr className="border-b border-neutral-100"><td className="py-1 text-neutral-400 font-normal">Taxable Services Subtotal</td><td className="font-semibold text-black">₹{(selectedItem.platform_commission + selectedItem.gateway_fee).toFixed(2)}</td></tr>
-                                                    <tr className="border-b border-neutral-100"><td className="py-1 text-neutral-400 font-normal">Platform GST Charges ({gstRate}%)</td><td className="font-semibold text-black">₹{((selectedItem.platform_commission + selectedItem.gateway_fee) * (gstRate / 100)).toFixed(2)}</td></tr>
-                                                    <tr className="border-t border-b border-neutral-950/10 bg-neutral-50 text-black font-semibold"><td className="p-2 text-left">Net Service Fees Retained</td><td className="p-2 text-right">₹{((selectedItem.platform_commission + selectedItem.gateway_fee) * (1 + gstRate / 100)).toFixed(2)}</td></tr>
+                                                    <tr className="border-b-[0.5px] border-black/50"><td className="py-1 text-neutral-400 font-normal">Taxable Services Subtotal</td><td className="font-semibold text-black">₹{(selectedItem.platform_commission + selectedItem.gateway_fee).toFixed(2)}</td></tr>
+                                                    <tr className="border-b-[0.5px] border-black/50"><td className="py-1 text-neutral-400 font-normal">Platform GST Charges ({gstRate}%)</td><td className="font-semibold text-black">₹{((selectedItem.platform_commission + selectedItem.gateway_fee) * (gstRate / 100)).toFixed(2)}</td></tr>
+                                                    <tr className="border-t-[0.5px] border-b-[0.5px] border-black/50 bg-neutral-50 text-black font-semibold"><td className="p-2 text-left">Net Service Fees Retained</td><td className="p-2 text-right">₹{((selectedItem.platform_commission + selectedItem.gateway_fee) * (1 + gstRate / 100)).toFixed(2)}</td></tr>
                                                     <tr className="bg-neutral-105 font-bold text-black"><td className="p-2 text-left">Payable Seller Settlement Earning</td><td className="p-2 text-right">₹{(selectedItem.total_sales - ((selectedItem.platform_commission + selectedItem.gateway_fee) * (1 + gstRate / 100))).toFixed(2)}</td></tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
 
-                                    <div className="border-t border-neutral-200 mt-12 pt-4 flex justify-between items-end">
+                                    <div className="border-t-[0.5px] border-black/50 mt-12 pt-4 flex justify-between items-end">
                                         <div className="text-[9px] text-neutral-400">Authorized digital report validation. Subject to Mumbai Jurisdiction only.</div>
                                         <div className="text-center w-48">
                                             <div className="h-6 signature-font text-neutral-800 font-semibold text-lg">{authSignatory}</div>
-                                            <div className="border-b border-neutral-300 w-full mb-1"></div>
+                                            <div className="border-b-[0.5px] border-black/50 w-full mb-1"></div>
                                             <p className="text-[9px] text-neutral-400">Authorized Signatory, Cureza Finance</p>
                                         </div>
                                     </div>
@@ -2290,8 +2290,8 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
 
                             {/* DOCTOR SPLIT FEE INVOICES */}
                             {invoiceType === 'doctor' && (
-                                <div id="printable-invoice-container" className="bg-white p-6 text-black border border-neutral-950/10 rounded-[10px] font-sans text-xs max-w-[800px] mx-auto print:border-none print:shadow-none">
-                                    <div className="grid grid-cols-2 border-b-2 border-neutral-200 pb-4 mb-4">
+                                <div id="printable-invoice-container" className="bg-white p-6 text-black border-[0.5px] border-black/50 rounded-[10px] font-sans text-xs max-w-[800px] mx-auto print:border-none print:shadow-none">
+                                    <div className="grid grid-cols-2 border-b-[0.5px] border-black/50 pb-4 mb-4">
                                         <div>
                                             <div className="flex items-center gap-2 mb-2">
                                                 <div className="h-8 w-8 bg-black text-white font-bold rounded flex items-center justify-center">C</div>
@@ -2310,7 +2310,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                         </div>
                                     </div>
 
-                                    <div className="border border-neutral-950/10 rounded-[10px] p-4 bg-neutral-50 mb-4">
+                                    <div className="border-[0.5px] border-black/50 rounded-[10px] p-4 bg-neutral-50 mb-4">
                                         <p className="font-semibold text-black">Certified Medical Partner details:</p>
                                         <div className="grid grid-cols-2 gap-2 mt-2 text-[11px] text-neutral-600 font-medium">
                                             <div><p className="text-neutral-450 font-normal">Doctor Partner:</p><p className="font-semibold text-black">{selectedItem.doctor_name}</p></div>
@@ -2318,8 +2318,8 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                         </div>
                                     </div>
 
-                                    <table className="w-full text-left border border-neutral-950/10 rounded-[10px] overflow-hidden mb-4">
-                                        <thead className="bg-neutral-50 font-semibold text-black border-b border-neutral-950/10">
+                                    <table className="w-full text-left border-[0.5px] border-black/50 rounded-[10px] overflow-hidden mb-4">
+                                        <thead className="bg-neutral-50 font-semibold text-black border-b-[0.5px] border-black/50">
                                             <tr>
                                                 <th className="p-3 font-semibold">Consulting booking splits Particulars</th>
                                                 <th className="p-3 text-center font-semibold">Consultations</th>
@@ -2353,19 +2353,19 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                         <div>
                                             <table className="w-full space-y-1 text-right text-neutral-600 font-medium">
                                                 <tbody>
-                                                    <tr className="border-b border-neutral-100"><td className="py-1 text-neutral-400 font-normal">Consultation Earnings Share</td><td className="font-semibold text-black">₹{selectedItem.doctor_earnings.toFixed(2)}</td></tr>
-                                                    <tr className="border-b border-neutral-100"><td className="py-1 text-neutral-400 font-normal">TDS Deduction (Section 194J at {doctorTdsRate}%)</td><td className="font-semibold text-red-750">-₹{(selectedItem.doctor_earnings * (doctorTdsRate / 100)).toFixed(2)}</td></tr>
+                                                    <tr className="border-b-[0.5px] border-black/50"><td className="py-1 text-neutral-400 font-normal">Consultation Earnings Share</td><td className="font-semibold text-black">₹{selectedItem.doctor_earnings.toFixed(2)}</td></tr>
+                                                    <tr className="border-b-[0.5px] border-black/50"><td className="py-1 text-neutral-400 font-normal">TDS Deduction (Section 194J at {doctorTdsRate}%)</td><td className="font-semibold text-red-750">-₹{(selectedItem.doctor_earnings * (doctorTdsRate / 100)).toFixed(2)}</td></tr>
                                                     <tr className="bg-black text-white font-semibold"><td className="p-2 text-left">Net Released Payout</td><td className="p-2 text-right">₹{(selectedItem.doctor_earnings * (1 - doctorTdsRate / 100)).toFixed(2)}</td></tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
 
-                                    <div className="border-t border-neutral-200 mt-12 pt-4 flex justify-between items-end">
+                                    <div className="border-t-[0.5px] border-black/50 mt-12 pt-4 flex justify-between items-end">
                                         <div className="text-[9px] text-neutral-400 font-normal font-sans">Authorized digital settlement release ledger. AglowSciences Marketing LLP.</div>
                                         <div className="text-center w-48">
                                             <div className="h-6 signature-font text-neutral-800 font-semibold text-lg">{authSignatory}</div>
-                                            <div className="border-b border-gray-300 w-full mb-1"></div>
+                                            <div className="border-b-[0.5px] border-black/50 w-full mb-1"></div>
                                             <p className="text-[9px] text-neutral-400 font-normal">Authorized Signatory, Cureza Finance</p>
                                         </div>
                                     </div>
@@ -2374,8 +2374,8 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
 
                             {/* CUSTOMER B2C TAX INVOICES */}
                             {invoiceType === 'customer' && (
-                                <div id="printable-invoice-container" className="bg-white p-6 text-black border border-neutral-950/10 rounded-[10px] font-sans text-xs max-w-[800px] mx-auto print:border-none print:shadow-none">
-                                    <div className="grid grid-cols-2 border-b-2 border-neutral-200 pb-4 mb-4">
+                                <div id="printable-invoice-container" className="bg-white p-6 text-black border-[0.5px] border-black/50 rounded-[10px] font-sans text-xs max-w-[800px] mx-auto print:border-none print:shadow-none">
+                                    <div className="grid grid-cols-2 border-b-[0.5px] border-black/50 pb-4 mb-4">
                                         <div>
                                             <div className="flex items-center gap-2 mb-2">
                                                 <div className="h-8 w-8 bg-black text-white font-bold rounded flex items-center justify-center">C</div>
@@ -2396,8 +2396,8 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
 
                                     {/* Addresses */}
                                     <div className="grid grid-cols-2 gap-4 mb-4 text-[10px] text-neutral-600 font-medium">
-                                        <div className="border border-neutral-950/10 rounded-[10px] p-3 bg-neutral-50">
-                                            <p className="font-semibold text-black uppercase tracking-wider border-b border-neutral-900/10 pb-1 mb-1">Billing Address</p>
+                                        <div className="border-[0.5px] border-black/50 rounded-[10px] p-3 bg-neutral-50">
+                                            <p className="font-semibold text-black uppercase tracking-wider border-b-[0.5px] border-black/50 pb-1 mb-1">Billing Address</p>
                                             {selectedItem.billing_address_json ? (
                                                 <div className="space-y-0.5">
                                                     <p className="font-semibold text-black">{selectedItem.billing_address_json.name || selectedItem.user?.name}</p>
@@ -2409,8 +2409,8 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                 <p className="text-neutral-400 italic font-normal">No billing address specified</p>
                                             )}
                                         </div>
-                                        <div className="border border-neutral-950/10 rounded-[10px] p-3 bg-neutral-50">
-                                            <p className="font-semibold text-black uppercase tracking-wider border-b border-neutral-900/10 pb-1 mb-1">Shipping Address</p>
+                                        <div className="border-[0.5px] border-black/50 rounded-[10px] p-3 bg-neutral-50">
+                                            <p className="font-semibold text-black uppercase tracking-wider border-b-[0.5px] border-black/50 pb-1 mb-1">Shipping Address</p>
                                             {selectedItem.shipping_address_json ? (
                                                 <div className="space-y-0.5">
                                                     <p className="font-semibold text-black">{selectedItem.shipping_address_json.name || selectedItem.user?.name}</p>
@@ -2425,8 +2425,8 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                     </div>
 
                                     {/* Table list items */}
-                                    <table className="w-full text-left border border-neutral-950/10 rounded-[10px] overflow-hidden mb-4">
-                                        <thead className="bg-neutral-50 font-semibold text-black border-b border-neutral-950/10">
+                                    <table className="w-full text-left border-[0.5px] border-black/50 rounded-[10px] overflow-hidden mb-4">
+                                        <thead className="bg-neutral-50 font-semibold text-black border-b-[0.5px] border-black/50">
                                             <tr>
                                                 <th className="p-3 w-[5%] text-center font-semibold">#</th>
                                                 <th className="p-3 w-[45%] font-semibold">Product Details</th>
@@ -2487,17 +2487,17 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                 <div>
                                                     <table className="w-full space-y-1 text-right text-neutral-600 font-medium">
                                                         <tbody>
-                                                            <tr className="border-b border-neutral-100"><td className="py-1 text-neutral-400 font-normal">Taxable Subtotal</td><td className="font-semibold text-black">₹{subtotal.toFixed(2)}</td></tr>
+                                                            <tr className="border-b-[0.5px] border-black/50"><td className="py-1 text-neutral-400 font-normal">Taxable Subtotal</td><td className="font-semibold text-black">₹{subtotal.toFixed(2)}</td></tr>
                                                             {isMH ? (
                                                                 <>
-                                                                    <tr className="border-b border-neutral-100"><td className="py-1 text-neutral-400 font-normal">CGST ({(gstRate/2).toFixed(1)}%)</td><td className="font-semibold text-black">₹{halfTax.toFixed(2)}</td></tr>
-                                                                    <tr className="border-b border-neutral-100"><td className="py-1 text-neutral-400 font-normal">SGST ({(gstRate/2).toFixed(1)}%)</td><td className="font-semibold text-black">₹{halfTax.toFixed(2)}</td></tr>
+                                                                    <tr className="border-b-[0.5px] border-black/50"><td className="py-1 text-neutral-400 font-normal">CGST ({(gstRate/2).toFixed(1)}%)</td><td className="font-semibold text-black">₹{halfTax.toFixed(2)}</td></tr>
+                                                                    <tr className="border-b-[0.5px] border-black/50"><td className="py-1 text-neutral-400 font-normal">SGST ({(gstRate/2).toFixed(1)}%)</td><td className="font-semibold text-black">₹{halfTax.toFixed(2)}</td></tr>
                                                                 </>
                                                             ) : (
-                                                                <tr className="border-b border-neutral-100"><td className="py-1 text-neutral-400 font-normal">IGST ({gstRate}%)</td><td className="font-semibold text-black">₹{totalTax.toFixed(2)}</td></tr>
+                                                                <tr className="border-b-[0.5px] border-black/50"><td className="py-1 text-neutral-400 font-normal">IGST ({gstRate}%)</td><td className="font-semibold text-black">₹{totalTax.toFixed(2)}</td></tr>
                                                             )}
                                                             {selectedItem.shipping_amount > 0 && (
-                                                                <tr className="border-b border-neutral-100"><td className="py-1 text-neutral-400 font-normal">Shipping Charge</td><td className="font-semibold text-black">₹{selectedItem.shipping_amount.toFixed(2)}</td></tr>
+                                                                <tr className="border-b-[0.5px] border-black/50"><td className="py-1 text-neutral-400 font-normal">Shipping Charge</td><td className="font-semibold text-black">₹{selectedItem.shipping_amount.toFixed(2)}</td></tr>
                                                             )}
                                                             <tr className="bg-black text-white font-semibold"><td className="p-2 text-left">Total Invoice Value (Incl. Tax)</td><td className="p-2 text-right">₹{finalAmount.toFixed(2)}</td></tr>
                                                         </tbody>
@@ -2507,11 +2507,11 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                         );
                                     })()}
 
-                                    <div className="border-t border-neutral-200 mt-12 pt-4 flex justify-between items-end">
+                                    <div className="border-t-[0.5px] border-black/50 mt-12 pt-4 flex justify-between items-end">
                                         <div className="text-[9px] text-neutral-450 font-normal">Thank you for ordering with us. For support, contact support@cureza.com.</div>
                                         <div className="text-center w-48">
                                             <div className="h-6 signature-font text-neutral-850 font-semibold text-lg">{authSignatory}</div>
-                                            <div className="border-b border-neutral-350 w-full mb-1"></div>
+                                            <div className="border-b-[0.5px] border-neutral-350 w-full mb-1"></div>
                                             <p className="text-[9px] text-neutral-400 font-normal">Authorized Signatory, Cureza India</p>
                                         </div>
                                     </div>
@@ -2523,8 +2523,8 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
             )}
 
             {/* Dynamic Guidelines and Tutorial Card */}
-            <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 space-y-6">
-                <div className="border-b border-neutral-950/10 pb-4">
+            <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-black/50 space-y-6">
+                <div className="border-b-[0.5px] border-black/50 pb-4">
                     <h3 className="text-base font-semibold text-black tracking-tight">
                         Financial Operations Guide & Calculator Tutorial
                     </h3>
@@ -2535,44 +2535,44 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs font-normal leading-relaxed text-neutral-600">
                     <div className="space-y-4">
-                        <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/10">
+                        <div className="bg-neutral-50 p-4 rounded-[10px] border-[0.5px] border-black/50">
                             <h4 className="font-semibold text-black mb-1.5">1. Payout Release Rules & Eligibility</h4>
                             <p className="text-neutral-700">
                                 <strong>English:</strong> Standard payouts for both Sellers and Doctors require a minimum accumulated wallet balance of ₹1,000 to be eligible for manual or automated bank release. Payouts are checked against active KYC status and bank account verification.
                             </p>
-                            <p className="text-neutral-505 mt-2 italic border-t border-neutral-200 pt-2">
+                            <p className="text-neutral-505 mt-2 italic border-t-[0.5px] border-black/50 pt-2">
                                 <strong>Urdu/Hindi:</strong> Sellers aur Doctors ke payouts ko release karne ke liye wallet me kam se kam ₹1,000 ka balance hona zaroori hai. Payout tabhi process hoga jab bank account aur KYC status verified ho.
                             </p>
                         </div>
 
-                        <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/10">
+                        <div className="bg-neutral-50 p-4 rounded-[10px] border-[0.5px] border-black/50">
                             <h4 className="font-semibold text-black mb-1.5">2. Seller Tax Deductions (GST, TCS & TDS)</h4>
                             <p className="text-neutral-700">
                                 <strong>English:</strong> For product sales, a base commission (22% - 27%) and a gateway fee (2% - 3%) are charged by the platform. An 18% GST is applied to the platform fee amount. Additionally, statutory deductions are made: 1% TCS (Tax Collected at Source) under GST laws and 1% TDS under Section 194-O.
                             </p>
-                            <p className="text-neutral-505 mt-2 italic border-t border-neutral-200 pt-2">
+                            <p className="text-neutral-505 mt-2 italic border-t-[0.5px] border-black/50 pt-2">
                                 <strong>Urdu/Hindi:</strong> Product sales par platform base commission (22% - 27%) aur payment gateway charges (2% - 3%) lagata hai. Platform fee par 18% GST charge kiya jata hai. Iske sath hi 1% TCS (GST ke tehat) aur 1% TDS (Section 194-O ke tehat) kaat liya jata hai.
                             </p>
                         </div>
                     </div>
 
                     <div className="space-y-4">
-                        <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/10">
+                        <div className="bg-neutral-50 p-4 rounded-[10px] border-[0.5px] border-black/50">
                             <h4 className="font-semibold text-black mb-1.5">3. Doctor Consultation Splits & TDS</h4>
                             <p className="text-neutral-700">
                                 <strong>English:</strong> Doctor teleconsultations are split based on the consultation channel mode: Video splits (85% doctor / 15% platform), Chat splits (80% doctor / 20% platform), and Follow-up splits (100% doctor / 0% platform). The doctor's gross share is subject to 10% professional TDS withholding under Section 194J.
                             </p>
-                            <p className="text-neutral-505 mt-2 italic border-t border-neutral-200 pt-2">
+                            <p className="text-neutral-505 mt-2 italic border-t-[0.5px] border-black/50 pt-2">
                                 <strong>Urdu/Hindi:</strong> Doctors ki online fees mode ke hisab se split hoti hai: Video consulting par doctor ka share 85%, Chat par 80% aur Follow-up par 100% hota hai. Doctor ke share par Section 194J ke tehat 10% TDS professional service tax deduct kiya jata hai.
                             </p>
                         </div>
 
-                        <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/10">
+                        <div className="bg-neutral-50 p-4 rounded-[10px] border-[0.5px] border-black/50">
                             <h4 className="font-semibold text-black mb-1.5">4. Dynamic Audit Desk Simulator Guide</h4>
                             <p className="text-neutral-700">
                                 <strong>English:</strong> The Audit Desk simulator allows administrators to mock order amounts, payment methods, and channel options to estimate net payout balances and platform commissions prior to transaction finalization.
                             </p>
-                            <p className="text-neutral-505 mt-2 italic border-t border-neutral-200 pt-2">
+                            <p className="text-neutral-505 mt-2 italic border-t-[0.5px] border-black/50 pt-2">
                                 <strong>Urdu/Hindi:</strong> Audit Desk simulator se aap kisi bhi product ya consultation price ko daal kar platform split aur net payout ka andaza laga sakte hain, taaki calculations verify ki ja sakein.
                             </p>
                         </div>

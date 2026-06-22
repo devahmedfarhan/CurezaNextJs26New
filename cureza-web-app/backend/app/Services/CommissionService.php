@@ -199,7 +199,7 @@ class CommissionService
                 }
 
                 $isCOD = strtolower($order->payment_method ?? '') === 'cod';
-                $reconciliationStatus = $isCOD ? 'pending' : 'reconciled';
+                $reconciliationStatus = ($isCOD && $order->status !== 'cod_reconciled') ? 'pending' : 'reconciled';
 
                 $walletService->creditEarnings(
                     $sellerId,

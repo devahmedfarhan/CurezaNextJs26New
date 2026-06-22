@@ -202,13 +202,13 @@ export default function AdminMenuPage() {
     const flatItems = getFlatItems(menuItems);
 
     const renderItem = (item: MenuItem, depth = 0) => (
-        <div key={item.id} className="border-b-[0.5px] border-gray-100 last:border-0 bg-white">
+        <div key={item.id} className="border-b-[0.5px] border-black/50 last:border-0 bg-white">
             <div className={`flex items-center justify-between p-3 hover:bg-gray-50/50 ${depth > 0 ? 'bg-gray-50/20' : ''}`} style={{ paddingLeft: `${depth * 20 + 12}px` }}>
                 <div className="flex items-center gap-3">
                     {depth === 0 && <GripVertical size={16} className="text-gray-400 cursor-grab" />}
                     <span className="font-normal text-sm text-black">{item.title}</span>
-                    <span className="text-xs text-gray-400 bg-gray-50 border-[0.5px] border-gray-200/50 px-2 py-0.5 rounded-[10px]">{item.url}</span>
-                    {!item.is_active && <span className="text-[10px] font-medium text-red-500 bg-red-50 border-[0.5px] border-red-200/50 px-2 py-0.5 rounded-[10px]">Inactive</span>}
+                    <span className="text-xs text-gray-400 bg-gray-50 border-[0.5px] border-black/50 px-2 py-0.5 rounded-[10px]">{item.url}</span>
+                    {!item.is_active && <span className="text-[10px] font-medium text-red-500 bg-red-50 border-[0.5px] border-black/50 px-2 py-0.5 rounded-[10px]">Inactive</span>}
                 </div>
                 <div className="flex items-center gap-2">
                     <button onClick={() => handleOpenModal(item)} className="p-1 text-gray-400 hover:text-black transition-colors">
@@ -254,8 +254,8 @@ export default function AdminMenuPage() {
                 {/* Left Sidebar: Available Items */}
                 <div className="space-y-6">
                     {/* Pages */}
-                    <div className="bg-white rounded-[10px] border-[0.5px] border-gray-200/50 overflow-hidden shadow-none">
-                        <div className="p-3 border-b-[0.5px] border-gray-200/50 bg-gray-50/50 font-medium text-xs text-gray-500 uppercase tracking-wider">
+                    <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 overflow-hidden shadow-none">
+                        <div className="p-3 border-b-[0.5px] border-black/50 bg-gray-50/50 font-medium text-xs text-gray-500 uppercase tracking-wider">
                             Pages
                         </div>
                         <div className="max-h-60 overflow-y-auto divide-y-[0.5px] divide-gray-100">
@@ -264,7 +264,7 @@ export default function AdminMenuPage() {
                                     <span className="text-sm text-gray-700 font-normal">{page.title}</span>
                                     <button
                                         onClick={() => handleQuickAdd(page.title, page.url)}
-                                        className="text-xs bg-gray-50 hover:bg-black hover:text-white border-[0.5px] border-gray-200 hover:border-black px-2 py-1 rounded-[10px] transition-colors flex items-center gap-1 font-medium"
+                                        className="text-xs bg-gray-50 hover:bg-black hover:text-white border-[0.5px] border-black/50 hover:border-black px-2 py-1 rounded-[10px] transition-colors flex items-center gap-1 font-medium"
                                     >
                                         <Plus size={12} /> Add
                                     </button>
@@ -274,8 +274,8 @@ export default function AdminMenuPage() {
                     </div>
 
                     {/* Categories */}
-                    <div className="bg-white rounded-[10px] border-[0.5px] border-gray-200/50 overflow-hidden shadow-none">
-                        <div className="p-3 border-b-[0.5px] border-gray-200/50 bg-gray-50/50 font-medium text-xs text-gray-500 uppercase tracking-wider">
+                    <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 overflow-hidden shadow-none">
+                        <div className="p-3 border-b-[0.5px] border-black/50 bg-gray-50/50 font-medium text-xs text-gray-500 uppercase tracking-wider">
                             Categories
                         </div>
                         <div className="max-h-60 overflow-y-auto divide-y-[0.5px] divide-gray-100">
@@ -284,7 +284,7 @@ export default function AdminMenuPage() {
                                     <span className="text-sm text-gray-700 font-normal">{cat.name}</span>
                                     <button
                                         onClick={() => handleQuickAdd(cat.name, `/category/${cat.slug}`)}
-                                        className="text-xs bg-gray-50 hover:bg-black hover:text-white border-[0.5px] border-gray-200 hover:border-black px-2 py-1 rounded-[10px] transition-colors flex items-center gap-1 font-medium"
+                                        className="text-xs bg-gray-50 hover:bg-black hover:text-white border-[0.5px] border-black/50 hover:border-black px-2 py-1 rounded-[10px] transition-colors flex items-center gap-1 font-medium"
                                     >
                                         <Plus size={12} /> Add
                                     </button>
@@ -294,8 +294,8 @@ export default function AdminMenuPage() {
                     </div>
 
                     {/* Concerns */}
-                    <div className="bg-white rounded-[10px] border-[0.5px] border-gray-200/50 overflow-hidden shadow-none">
-                        <div className="p-3 border-b-[0.5px] border-gray-200/50 bg-gray-50/50 font-medium text-xs text-gray-500 uppercase tracking-wider">
+                    <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 overflow-hidden shadow-none">
+                        <div className="p-3 border-b-[0.5px] border-black/50 bg-gray-50/50 font-medium text-xs text-gray-500 uppercase tracking-wider">
                             Concerns
                         </div>
                         <div className="max-h-60 overflow-y-auto divide-y-[0.5px] divide-gray-100">
@@ -304,7 +304,7 @@ export default function AdminMenuPage() {
                                     <span className="text-sm text-gray-700 font-normal">{concern.name}</span>
                                     <button
                                         onClick={() => handleQuickAdd(concern.name, `/concern/${concern.slug}`)}
-                                        className="text-xs bg-gray-50 hover:bg-black hover:text-white border-[0.5px] border-gray-200 hover:border-black px-2 py-1 rounded-[10px] transition-colors flex items-center gap-1 font-medium"
+                                        className="text-xs bg-gray-50 hover:bg-black hover:text-white border-[0.5px] border-black/50 hover:border-black px-2 py-1 rounded-[10px] transition-colors flex items-center gap-1 font-medium"
                                     >
                                         <Plus size={12} /> Add
                                     </button>
@@ -316,8 +316,8 @@ export default function AdminMenuPage() {
 
                 {/* Right Column: Menu Structure */}
                 <div className="lg:col-span-2">
-                    <div className="bg-white rounded-[10px] border-[0.5px] border-gray-200/50 overflow-hidden min-h-[500px] shadow-none">
-                        <div className="p-4 border-b-[0.5px] border-gray-200/50 bg-gray-50/50 font-medium text-xs text-gray-500 flex justify-between uppercase tracking-wider">
+                    <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 overflow-hidden min-h-[500px] shadow-none">
+                        <div className="p-4 border-b-[0.5px] border-black/50 bg-gray-50/50 font-medium text-xs text-gray-500 flex justify-between uppercase tracking-wider">
                             <span>Menu Structure</span>
                             <span>Actions</span>
                         </div>
@@ -356,8 +356,8 @@ export default function AdminMenuPage() {
             {/* Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none max-w-md w-full overflow-hidden">
-                        <div className="p-4 border-b-[0.5px] border-gray-200/50 flex justify-between items-center bg-white">
+                    <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 shadow-none max-w-md w-full overflow-hidden">
+                        <div className="p-4 border-b-[0.5px] border-black/50 flex justify-between items-center bg-white">
                             <h2 className="font-medium text-base text-black">{editingItem ? 'Edit Item' : 'Add Item'}</h2>
                             <button onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-black transition-colors"><X size={18} /></button>
                         </div>
@@ -399,7 +399,7 @@ export default function AdminMenuPage() {
                                         type="text"
                                         value={formData.url}
                                         onChange={e => setFormData({ ...formData, url: e.target.value })}
-                                        className="w-full px-3 py-2 border-[0.5px] border-gray-200/50 rounded-[10px] text-sm focus:outline-none focus:ring-1 focus:ring-black bg-white"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/50 rounded-[10px] text-sm focus:outline-none focus:ring-1 focus:ring-black bg-white"
                                         placeholder="/shop or https://..."
                                     />
                                 </div>
@@ -408,7 +408,7 @@ export default function AdminMenuPage() {
                                     <label className="block text-xs font-medium text-gray-700 mb-1">Select {linkType === 'category' ? 'Category' : 'Concern'}</label>
                                     <select
                                         onChange={handleCategorySelect}
-                                        className="w-full px-3 py-2 border-[0.5px] border-gray-200/50 rounded-[10px] text-sm bg-white focus:outline-none focus:ring-1 focus:ring-black"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/50 rounded-[10px] text-sm bg-white focus:outline-none focus:ring-1 focus:ring-black"
                                         defaultValue=""
                                     >
                                         <option value="" disabled>Select a {linkType}</option>
@@ -426,7 +426,7 @@ export default function AdminMenuPage() {
                                     required
                                     value={formData.title}
                                     onChange={e => setFormData({ ...formData, title: e.target.value })}
-                                    className="w-full px-3 py-2 border-[0.5px] border-gray-200/50 rounded-[10px] text-sm focus:outline-none focus:ring-1 focus:ring-black bg-white"
+                                    className="w-full px-3 py-2 border-[0.5px] border-black/50 rounded-[10px] text-sm focus:outline-none focus:ring-1 focus:ring-black bg-white"
                                 />
                             </div>
 
@@ -435,7 +435,7 @@ export default function AdminMenuPage() {
                                 <select
                                     value={formData.parent_id}
                                     onChange={e => setFormData({ ...formData, parent_id: e.target.value })}
-                                    className="w-full px-3 py-2 border-[0.5px] border-gray-200/50 rounded-[10px] text-sm bg-white focus:outline-none focus:ring-1 focus:ring-black"
+                                    className="w-full px-3 py-2 border-[0.5px] border-black/50 rounded-[10px] text-sm bg-white focus:outline-none focus:ring-1 focus:ring-black"
                                 >
                                     <option value="">None (Top Level)</option>
                                     {flatItems.filter(i => i.id !== editingItem?.id).map(item => (
@@ -450,7 +450,7 @@ export default function AdminMenuPage() {
                                         type="number"
                                         value={formData.order}
                                         onChange={e => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
-                                        className="w-full px-3 py-2 border-[0.5px] border-gray-200/50 rounded-[10px] text-sm bg-white focus:outline-none focus:ring-1 focus:ring-black"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/50 rounded-[10px] text-sm bg-white focus:outline-none focus:ring-1 focus:ring-black"
                                     />
                                 </div>
                                 <div className="flex items-center gap-2 pt-6">
@@ -459,7 +459,7 @@ export default function AdminMenuPage() {
                                         id="is_active"
                                         checked={formData.is_active}
                                         onChange={e => setFormData({ ...formData, is_active: e.target.checked })}
-                                        className="w-4 h-4 text-black border-gray-300 rounded focus:ring-black accent-black"
+                                        className="w-4 h-4 text-black border-black/50 rounded focus:ring-black accent-black"
                                     />
                                     <label htmlFor="is_active" className="text-xs font-medium text-gray-700">Active</label>
                                 </div>

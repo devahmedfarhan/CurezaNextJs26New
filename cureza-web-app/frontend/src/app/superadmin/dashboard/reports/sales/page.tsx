@@ -12,7 +12,7 @@ export default function AdminSalesReportPage() {
                     <p className="text-gray-500">Daily and monthly sales performance analysis</p>
                 </div>
                 <div className="flex gap-2">
-                    <button className="flex items-center gap-2 bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+                    <button className="flex items-center gap-2 bg-white border-[0.5px] border-black/50 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
                         <Calendar size={18} />
                         Last 30 Days
                     </button>
@@ -25,28 +25,28 @@ export default function AdminSalesReportPage() {
 
             {/* Key Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                <div className="bg-white p-4 rounded-xl border-[0.5px] border-black/50 shadow-none">
                     <p className="text-sm text-gray-500">Total Revenue</p>
                     <h3 className="text-2xl font-bold text-gray-900">₹45.2L</h3>
                     <span className="text-green-600 text-xs font-medium flex items-center gap-1 mt-1">
                         <TrendingUp size={12} /> +12.5%
                     </span>
                 </div>
-                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                <div className="bg-white p-4 rounded-xl border-[0.5px] border-black/50 shadow-none">
                     <p className="text-sm text-gray-500">Total Orders</p>
                     <h3 className="text-2xl font-bold text-gray-900">1,250</h3>
                     <span className="text-green-600 text-xs font-medium flex items-center gap-1 mt-1">
                         <TrendingUp size={12} /> +8.2%
                     </span>
                 </div>
-                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                <div className="bg-white p-4 rounded-xl border-[0.5px] border-black/50 shadow-none">
                     <p className="text-sm text-gray-500">Avg. Order Value</p>
                     <h3 className="text-2xl font-bold text-gray-900">₹3,616</h3>
                     <span className="text-red-600 text-xs font-medium flex items-center gap-1 mt-1">
                         <TrendingUp size={12} className="rotate-180" /> -2.1%
                     </span>
                 </div>
-                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                <div className="bg-white p-4 rounded-xl border-[0.5px] border-black/50 shadow-none">
                     <p className="text-sm text-gray-500">Refund Rate</p>
                     <h3 className="text-2xl font-bold text-gray-900">2.4%</h3>
                     <span className="text-green-600 text-xs font-medium flex items-center gap-1 mt-1">
@@ -56,7 +56,7 @@ export default function AdminSalesReportPage() {
             </div>
 
             {/* Sales Chart Placeholder */}
-            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <div className="bg-white p-6 rounded-xl border-[0.5px] border-black/50 shadow-none">
                 <h3 className="font-bold text-gray-900 mb-6">Revenue Overview</h3>
                 <div className="h-64 flex items-end justify-between gap-2">
                     {[35, 45, 30, 60, 75, 50, 65, 80, 70, 90, 85, 95].map((h, i) => (
@@ -78,8 +78,8 @@ export default function AdminSalesReportPage() {
             </div>
 
             {/* Recent Transactions Table */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-gray-200">
+            <div className="bg-white rounded-xl border-[0.5px] border-black/50 shadow-none overflow-hidden">
+                <div className="p-4 border-b-[0.5px] border-black/50">
                     <h3 className="font-bold text-gray-900">Recent Transactions</h3>
                 </div>
                 <table className="min-w-full divide-y divide-gray-200">

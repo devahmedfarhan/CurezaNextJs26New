@@ -179,7 +179,7 @@ export default function BlogTagsPage() {
                 </Dialog>
             </div>
 
-            <div className="border rounded-md">
+            <div className="border-[0.5px] rounded-md">
                 <Table>
                     <TableHeader>
                         <TableRow>

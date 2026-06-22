@@ -155,11 +155,11 @@ export default function AdminBulkProductPage() {
     return (
         <div className="w-full space-y-6 animate-in fade-in duration-550">
             {/* Header section with flat look */}
-            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border-[0.5px] border-neutral-950/15 dark:border-gray-800">
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border-[0.5px] border-black/50 dark:border-gray-800">
                 <div className="relative flex items-center gap-4">
                     <Link 
                         href="/superadmin/dashboard/products" 
-                        className="flex h-10 w-10 items-center justify-center rounded-lg border-[0.5px] border-neutral-950/15 bg-gray-50 text-gray-650 hover:bg-neutral-100 hover:text-black dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
+                        className="flex h-10 w-10 items-center justify-center rounded-lg border-[0.5px] border-black/50 bg-gray-50 text-gray-650 hover:bg-neutral-100 hover:text-black dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
                     >
                         <ArrowLeft size={15} />
                     </Link>
@@ -175,7 +175,7 @@ export default function AdminBulkProductPage() {
             </div>
 
             {error && (
-                <div className="bg-red-50 dark:bg-red-950/20 border-[0.5px] border-red-200 text-red-700 dark:text-red-400 p-4 rounded-lg flex items-start gap-3 animate-in slide-in-from-top-4 duration-300">
+                <div className="bg-red-50 dark:bg-red-950/20 border-[0.5px] border-black/50 text-red-700 dark:text-red-400 p-4 rounded-lg flex items-start gap-3 animate-in slide-in-from-top-4 duration-300">
                     <AlertCircle size={18} className="shrink-0 mt-0.5" />
                     <div className="space-y-0.5">
                         <h4 className="font-semibold text-xs">Operation Failed</h4>
@@ -186,8 +186,8 @@ export default function AdminBulkProductPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Column 1 & 2: Import Card */}
-                <div className="lg:col-span-2 bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 space-y-6">
-                    <div className="flex items-center gap-3 border-b border-neutral-950/10 dark:border-gray-850 pb-4">
+                <div className="lg:col-span-2 bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 space-y-6">
+                    <div className="flex items-center gap-3 border-b-[0.5px] border-black/50 dark:border-gray-850 pb-4">
                         <div className="p-2.5 bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white rounded-lg">
                             <Upload size={18} />
                         </div>
@@ -204,7 +204,7 @@ export default function AdminBulkProductPage() {
                             <select
                                 value={selectedSellerId}
                                 onChange={(e) => setSelectedSellerId(e.target.value)}
-                                className="w-full h-10 px-3 border-[0.5px] border-neutral-950/15 dark:border-gray-700 rounded-lg bg-gray-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-[1.5px] focus:ring-black/10 focus:border-black dark:focus:ring-white/10 dark:focus:border-white outline-none font-semibold text-xs text-gray-950 dark:text-gray-100 transition-all cursor-pointer"
+                                className="w-full h-10 px-3 border-[0.5px] border-black/50 dark:border-gray-700 rounded-lg bg-gray-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:ring-[1.5px] focus:ring-black/10 focus:border-black dark:focus:ring-white/10 dark:focus:border-white outline-none font-semibold text-xs text-gray-950 dark:text-gray-100 transition-all cursor-pointer"
                                 disabled={loadingSellers}
                             >
                                 <option value="" className="text-gray-500">-- Select merchant assignee --</option>
@@ -222,10 +222,10 @@ export default function AdminBulkProductPage() {
                             onDragOver={handleDragOver}
                             onDragLeave={handleDragLeave}
                             onDrop={handleDrop}
-                            className={`relative border-2 border-dashed rounded-[10px] p-8 text-center transition-all duration-300 group flex flex-col items-center justify-center cursor-pointer ${
+                            className={`relative border-[0.5px] border-dashed rounded-[10px] p-8 text-center transition-all duration-300 group flex flex-col items-center justify-center cursor-pointer ${
                                 isDragOver 
                                 ? 'border-black bg-neutral-50/50 dark:bg-neutral-800/10' 
-                                : 'border-neutral-950/15 dark:border-gray-850 hover:border-black/50 hover:bg-neutral-50/30'
+                                : 'border-black/50 dark:border-gray-850 hover:border-black/50 hover:bg-neutral-50/30'
                             }`}
                         >
                             <input
@@ -265,7 +265,7 @@ export default function AdminBulkProductPage() {
                     </div>
 
                     {importResult && (
-                        <div className="mt-6 p-5 bg-neutral-50/50 dark:bg-gray-850/20 border-[0.5px] border-neutral-950/15 dark:border-gray-800 rounded-lg space-y-4">
+                        <div className="mt-6 p-5 bg-neutral-50/50 dark:bg-gray-850/20 border-[0.5px] border-black/50 dark:border-gray-800 rounded-lg space-y-4">
                             <h4 className="font-semibold text-xs text-gray-950 dark:text-white tracking-tight">Import Results Summary</h4>
                             <div className="flex items-center gap-2 text-green-600 dark:text-green-400 font-bold text-xs">
                                 <CheckCircle size={16} />
@@ -273,12 +273,12 @@ export default function AdminBulkProductPage() {
                             </div>
 
                             {importResult.errors && importResult.errors.length > 0 && (
-                                <div className="space-y-2 border-t border-neutral-950/10 dark:border-gray-800 pt-3">
+                                <div className="space-y-2 border-t-[0.5px] border-black/50 dark:border-gray-800 pt-3">
                                     <p className="text-red-600 dark:text-red-400 font-bold text-[10px] tracking-wider flex items-center gap-1.5">
                                         <AlertCircle size={12} />
                                         Errors encountered ({importResult.errors.length}):
                                     </p>
-                                    <div className="bg-white dark:bg-gray-900 border-[0.5px] border-neutral-950/15 dark:border-gray-800 rounded-lg p-3 max-h-40 overflow-y-auto space-y-1 font-mono text-[10px] text-red-500 leading-normal">
+                                    <div className="bg-white dark:bg-gray-900 border-[0.5px] border-black/50 dark:border-gray-800 rounded-lg p-3 max-h-40 overflow-y-auto space-y-1 font-mono text-[10px] text-red-500 leading-normal">
                                         {importResult.errors.map((err, i) => (
                                             <div key={i} className="flex gap-2">
                                                 <span className="text-gray-400 select-none">[{i+1}]</span>
@@ -295,8 +295,8 @@ export default function AdminBulkProductPage() {
                 {/* Column 3: Guide/Export Cards */}
                 <div className="space-y-6">
                     {/* Export/Template Card */}
-                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 space-y-5">
-                        <div className="flex items-center gap-3 border-b border-neutral-950/10 dark:border-gray-850 pb-4">
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 space-y-5">
+                        <div className="flex items-center gap-3 border-b-[0.5px] border-black/50 dark:border-gray-850 pb-4">
                             <div className="p-2.5 bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white rounded-lg">
                                 <Download size={18} />
                             </div>
@@ -309,7 +309,7 @@ export default function AdminBulkProductPage() {
                         <div className="space-y-3.5">
                             <button
                                 onClick={handleDownloadTemplate}
-                                className="w-full h-10 border-[0.5px] border-neutral-950/15 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 font-semibold text-xs tracking-wider rounded-lg hover:bg-neutral-50 dark:hover:bg-gray-850 transition-all flex items-center justify-center gap-2 border-dashed cursor-pointer"
+                                className="w-full h-10 border-[0.5px] border-black/50 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 font-semibold text-xs tracking-wider rounded-lg hover:bg-neutral-50 dark:hover:bg-gray-850 transition-all flex items-center justify-center gap-2 border-dashed cursor-pointer"
                             >
                                 <Download size={14} />
                                 Download CSV Template
@@ -329,23 +329,23 @@ export default function AdminBulkProductPage() {
                     </div>
 
                     {/* Step-by-Step Instructions card */}
-                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 space-y-4">
-                        <h4 className="font-semibold text-xs text-gray-950 dark:text-white tracking-wider border-b border-neutral-950/10 dark:border-gray-850 pb-2">CSV Upload Guideline</h4>
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 space-y-4">
+                        <h4 className="font-semibold text-xs text-gray-950 dark:text-white tracking-wider border-b-[0.5px] border-black/50 dark:border-gray-850 pb-2">CSV Upload Guideline</h4>
                         <ul className="space-y-3.5 text-[11px] font-normal text-gray-600 dark:text-gray-400">
                             <li className="flex gap-2.5 items-start">
-                                <div className="h-5 w-5 rounded bg-neutral-100 border border-neutral-250/20 text-black shrink-0 flex items-center justify-center font-semibold text-[10px]">1</div>
+                                <div className="h-5 w-5 rounded bg-neutral-100 border-[0.5px] border-black/50 text-black shrink-0 flex items-center justify-center font-semibold text-[10px]">1</div>
                                 <span>Download and open the standard **CSV Template** inside Google Sheets or Excel.</span>
                             </li>
                             <li className="flex gap-2.5 items-start">
-                                <div className="h-5 w-5 rounded bg-neutral-100 border border-neutral-250/20 text-black shrink-0 flex items-center justify-center font-semibold text-[10px]">2</div>
+                                <div className="h-5 w-5 rounded bg-neutral-100 border-[0.5px] border-black/50 text-black shrink-0 flex items-center justify-center font-semibold text-[10px]">2</div>
                                 <span>Populate columns exactly as shown (`title`, `sku`, `price`, `stock`, `status`, `short_description`).</span>
                             </li>
                             <li className="flex gap-2.5 items-start">
-                                <div className="h-5 w-5 rounded bg-neutral-100 border border-neutral-250/20 text-black shrink-0 flex items-center justify-center font-semibold text-[10px]">3</div>
+                                <div className="h-5 w-5 rounded bg-neutral-100 border-[0.5px] border-black/50 text-black shrink-0 flex items-center justify-center font-semibold text-[10px]">3</div>
                                 <span>Select a valid merchant assign from the dropdown before uploading the file.</span>
                             </li>
                             <li className="flex gap-2.5 items-start">
-                                <div className="h-5 w-5 rounded bg-neutral-100 border border-neutral-250/20 text-black shrink-0 flex items-center justify-center font-semibold text-[10px]">4</div>
+                                <div className="h-5 w-5 rounded bg-neutral-100 border-[0.5px] border-black/50 text-black shrink-0 flex items-center justify-center font-semibold text-[10px]">4</div>
                                 <span>Confirm upload. If validation errors occur, correct rows specified in the console box.</span>
                             </li>
                         </ul>

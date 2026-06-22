@@ -146,7 +146,7 @@ export default function SuperAdminReviewsPage() {
             {/* Statistics */}
             {statistics && (
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                    <div className="bg-white rounded-xl p-4 border border-gray-200">
+                    <div className="bg-white rounded-xl p-4 border-[0.5px] border-black/50">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-gray-600">Total Reviews</p>
@@ -158,7 +158,7 @@ export default function SuperAdminReviewsPage() {
                         </div>
                     </div>
 
-                    <div className="bg-green-50 rounded-xl p-4 border border-green-200">
+                    <div className="bg-green-50 rounded-xl p-4 border-[0.5px] border-black/50">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-green-700">Active</p>
@@ -170,7 +170,7 @@ export default function SuperAdminReviewsPage() {
                         </div>
                     </div>
 
-                    <div className="bg-orange-50 rounded-xl p-4 border border-orange-200">
+                    <div className="bg-orange-50 rounded-xl p-4 border-[0.5px] border-black/50">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-orange-700">Hidden</p>
@@ -182,7 +182,7 @@ export default function SuperAdminReviewsPage() {
                         </div>
                     </div>
 
-                    <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
+                    <div className="bg-blue-50 rounded-xl p-4 border-[0.5px] border-black/50">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-blue-700">Avg Rating</p>
@@ -194,7 +194,7 @@ export default function SuperAdminReviewsPage() {
                         </div>
                     </div>
 
-                    <div className="bg-purple-50 rounded-xl p-4 border border-purple-200">
+                    <div className="bg-purple-50 rounded-xl p-4 border-[0.5px] border-black/50">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-purple-700">Replies</p>
@@ -209,7 +209,7 @@ export default function SuperAdminReviewsPage() {
             )}
 
             {/* Filters */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
+            <div className="bg-white rounded-xl p-6 border-[0.5px] border-black/50">
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -218,7 +218,7 @@ export default function SuperAdminReviewsPage() {
                         <select
                             value={filterStatus}
                             onChange={(e) => setFilterStatus(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-2 border-[0.5px] border-black/50 rounded-lg focus:ring-2 focus:ring-blue-500"
                         >
                             <option value="all">All Statuses</option>
                             <option value="active">Active</option>
@@ -234,7 +234,7 @@ export default function SuperAdminReviewsPage() {
                         <select
                             value={filterType}
                             onChange={(e) => setFilterType(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-2 border-[0.5px] border-black/50 rounded-lg focus:ring-2 focus:ring-blue-500"
                         >
                             <option value="all">All Types</option>
                             <option value="product">Product</option>
@@ -251,7 +251,7 @@ export default function SuperAdminReviewsPage() {
                             onChange={(e) =>
                                 setFilterRating(e.target.value ? parseInt(e.target.value) : null)
                             }
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-2 border-[0.5px] border-black/50 rounded-lg focus:ring-2 focus:ring-blue-500"
                         >
                             <option value="">All Ratings</option>
                             <option value="5">5 Stars</option>
@@ -273,7 +273,7 @@ export default function SuperAdminReviewsPage() {
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 placeholder="Search reviews..."
-                                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                className="w-full pl-10 pr-4 py-2 border-[0.5px] border-black/50 rounded-lg focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
                     </div>
@@ -281,10 +281,10 @@ export default function SuperAdminReviewsPage() {
             </div>
 
             {/* Reviews Table */}
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            <div className="bg-white rounded-xl border-[0.5px] border-black/50 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full">
-                        <thead className="bg-gray-50 border-b border-gray-200">
+                        <thead className="bg-gray-50 border-b-[0.5px] border-black/50">
                             <tr>
                                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">
                                     Customer
@@ -414,11 +414,11 @@ export default function SuperAdminReviewsPage() {
                 </div>
 
                 {hasMore && (
-                    <div className="px-4 py-4 border-t border-gray-200 flex justify-center">
+                    <div className="px-4 py-4 border-t-[0.5px] border-black/50 flex justify-center">
                         <button
                             onClick={() => fetchReviews(currentPage + 1)}
                             disabled={loading}
-                            className="px-6 py-2 bg-white border border-gray-300 rounded-lg hover:border-blue-500 hover:text-blue-500 disabled:opacity-50"
+                            className="px-6 py-2 bg-white border-[0.5px] border-black/50 rounded-lg hover:border-blue-500 hover:text-blue-500 disabled:opacity-50"
                         >
                             {loading ? 'Loading...' : 'Load More'}
                         </button>
@@ -440,7 +440,7 @@ export default function SuperAdminReviewsPage() {
                                 <select
                                     value={editRating}
                                     onChange={(e) => setEditRating(parseInt(e.target.value))}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                                    className="w-full px-4 py-2 border-[0.5px] border-black/50 rounded-lg"
                                 >
                                     <option value={5}>5 Stars</option>
                                     <option value={4}>4 Stars</option>
@@ -458,7 +458,7 @@ export default function SuperAdminReviewsPage() {
                                     value={editText}
                                     onChange={(e) => setEditText(e.target.value)}
                                     rows={6}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none"
+                                    className="w-full px-4 py-2 border-[0.5px] border-black/50 rounded-lg resize-none"
                                 />
                             </div>
                         </div>
@@ -472,7 +472,7 @@ export default function SuperAdminReviewsPage() {
                             </button>
                             <button
                                 onClick={() => setEditingReview(null)}
-                                className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-100"
+                                className="px-6 py-3 border-[0.5px] border-black/50 rounded-lg hover:bg-gray-100"
                             >
                                 Cancel
                             </button>

@@ -106,7 +106,7 @@ export default function SellerReviewsPage() {
             {/* Statistics Cards */}
             {statistics && (
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div className="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-3xl p-6 text-white shadow-xl shadow-indigo-100 relative overflow-hidden group">
+                    <div className="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-3xl p-6 text-white shadow-none shadow-indigo-100 relative overflow-hidden group border-black/50 border-[0.5px]">
                         <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
                             <Star size={80} />
                         </div>
@@ -178,7 +178,7 @@ export default function SellerReviewsPage() {
                         <select
                             value={filterType}
                             onChange={(e) => setFilterType(e.target.value)}
-                            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green transition-all"
+                            className="w-full px-4 py-2.5 bg-gray-50 border-[0.5px] border-black/50 rounded-xl text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green transition-all"
                         >
                             <option value="all">All Channels</option>
                             <option value="product">Product Quality</option>
@@ -196,7 +196,7 @@ export default function SellerReviewsPage() {
                             onChange={(e) =>
                                 setFilterRating(e.target.value ? parseInt(e.target.value) : null)
                             }
-                            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green transition-all"
+                            className="w-full px-4 py-2.5 bg-gray-50 border-[0.5px] border-black/50 rounded-xl text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green transition-all"
                         >
                             <option value="">Any Satisfaction</option>
                             <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
@@ -215,7 +215,7 @@ export default function SellerReviewsPage() {
                         <select
                             value={filterReplied}
                             onChange={(e) => setFilterReplied(e.target.value)}
-                            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green transition-all"
+                            className="w-full px-4 py-2.5 bg-gray-50 border-[0.5px] border-black/50 rounded-xl text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green transition-all"
                         >
                             <option value="all">Everything</option>
                             <option value="replied">Responded</option>
@@ -235,7 +235,7 @@ export default function SellerReviewsPage() {
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 placeholder="Search comments..."
-                                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green transition-all"
+                                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-[0.5px] border-black/50 rounded-xl text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green transition-all"
                             />
                         </div>
                     </div>
@@ -309,8 +309,8 @@ export default function SellerReviewsPage() {
 
                                 {/* Reply Section */}
                                 {review.reply ? (
-                                    <div className="bg-indigo-50/50 rounded-2xl p-6 border border-indigo-100/50 ml-4 sm:ml-12 relative">
-                                        <div className="absolute -top-3 left-6 px-2 bg-indigo-500 text-white text-[8px] font-extrabold uppercase tracking-widest rounded-full py-0.5 shadow-sm">Merchant Response</div>
+                                    <div className="bg-indigo-50/50 rounded-2xl p-6 border-[0.5px] border-black/50 ml-4 sm:ml-12 relative">
+                                        <div className="absolute -top-3 left-6 px-2 bg-indigo-500 text-white text-[8px] font-extrabold uppercase tracking-widest rounded-full py-0.5 shadow-none border-black/50 border-[0.5px]">Merchant Response</div>
                                         <p className="text-sm font-bold text-indigo-900 mb-2 leading-relaxed">
                                             {review.reply.reply_text}
                                         </p>
@@ -319,19 +319,19 @@ export default function SellerReviewsPage() {
                                         </p>
                                     </div>
                                 ) : replyingTo === review.id ? (
-                                    <div className="bg-gray-50 rounded-2xl p-6 ml-4 sm:ml-12 border border-gray-100 animate-in slide-in-from-top-2 duration-300">
+                                    <div className="bg-gray-50 rounded-2xl p-6 ml-4 sm:ml-12 border-[0.5px] border-black/50 animate-in slide-in-from-top-2 duration-300">
                                         <textarea
                                             value={replyText}
                                             onChange={(e) => setReplyText(e.target.value)}
                                             placeholder="Compose a thoughtful response..."
                                             rows={4}
-                                            className="w-full px-6 py-4 bg-white border border-gray-200 rounded-xl text-sm font-medium focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 resize-none transition-all shadow-sm"
+                                            className="w-full px-6 py-4 bg-white border-[0.5px] border-black/50 rounded-xl text-sm font-medium focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 resize-none transition-all shadow-none"
                                         />
                                         <div className="flex gap-3 mt-4">
                                             <button
                                                 onClick={() => handleReply(review.id)}
                                                 disabled={submittingReply || !replyText.trim()}
-                                                className="px-6 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-bold text-sm shadow-lg shadow-indigo-100 transition-all hover:-translate-y-0.5"
+                                                className="px-6 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-bold text-sm shadow-none shadow-indigo-100 transition-all hover:-translate-y-0.5 border-black/50 border-[0.5px]"
                                             >
                                                 {submittingReply ? (
                                                     <>
@@ -347,14 +347,14 @@ export default function SellerReviewsPage() {
                                                     setReplyingTo(null);
                                                     setReplyText('');
                                                 }}
-                                                className="px-6 py-2.5 bg-white border border-gray-200 text-gray-500 rounded-xl hover:bg-gray-50 font-bold text-sm transition-all"
+                                                className="px-6 py-2.5 bg-white border-[0.5px] border-black/50 text-gray-500 rounded-xl hover:bg-gray-50 font-bold text-sm transition-all"
                                             >
                                                 Dismiss
                                             </button>
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="ml-4 sm:ml-12 border-t border-gray-50 pt-4">
+                                    <div className="ml-4 sm:ml-12 border-t-[0.5px] border-black/50 pt-4">
                                         <button
                                             onClick={() => setReplyingTo(review.id)}
                                             className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 font-extrabold text-xs uppercase tracking-widest transition-all hover:gap-3"
@@ -374,7 +374,7 @@ export default function SellerReviewsPage() {
                     <button
                         onClick={() => fetchReviews(currentPage + 1)}
                         disabled={loading}
-                        className="px-6 py-3 bg-white border-2 border-gray-300 rounded-lg font-medium text-gray-700 hover:border-blue-500 hover:text-blue-500 transition-all disabled:opacity-50"
+                        className="px-6 py-3 bg-white border-[0.5px] border-black/50 rounded-lg font-medium text-gray-700 hover:border-blue-500 hover:text-blue-500 transition-all disabled:opacity-50"
                     >
                         {loading ? 'Loading...' : 'Load More'}
                     </button>

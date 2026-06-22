@@ -346,7 +346,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-600"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-t-[0.5px] border-b-[0.5px] border-black/50"></div>
             </div>
         );
     }
@@ -408,7 +408,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
         <div className="space-y-6 pb-8 w-full">
             {/* Cancellation Banner */}
             {order.status.toLowerCase() === 'cancelled' && (
-                <div className="bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/30 rounded-lg p-4 flex items-center gap-3">
+                <div className="bg-rose-50 dark:bg-rose-950/20 border-[0.5px] border-black/50 dark:border-rose-900/30 rounded-lg p-4 flex items-center gap-3">
                     <AlertCircle className="text-rose-500 flex-shrink-0" size={20} />
                     <div>
                         <h3 className="font-bold text-rose-950 dark:text-rose-400 text-sm">Order Cancelled</h3>
@@ -418,10 +418,10 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
             )}
 
             {/* Header */}
-            <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-100 dark:border-gray-800 p-6">
+            <div className="bg-white dark:bg-gray-900 rounded-lg border-[0.5px] border-black/50 dark:border-gray-800 p-6">
                 <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
                     <div className="flex items-start gap-4">
-                        <Link href="/seller/dashboard/orders" className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors mt-1 border border-gray-200 dark:border-gray-700 flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300">
+                        <Link href="/seller/dashboard/orders" className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors mt-1 border-[0.5px] border-black/50 dark:border-gray-700 flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300">
                             <ArrowLeft size={16} />
                         </Link>
                         <div>
@@ -432,7 +432,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                                     <span>{new Date(order.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</span>
                                 </div>
                                 <span className="text-gray-300 dark:text-gray-700">•</span>
-                                <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold border capitalize ${statusColors[order.status.toLowerCase()] || statusColors.pending}`}>
+                                <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold border-[0.5px] capitalize ${statusColors[order.status.toLowerCase()] || statusColors.pending}`}>
                                     {getStatusLabel(order.status)}
                                 </span>
                             </div>
@@ -441,14 +441,14 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                     <div className="flex flex-wrap gap-2 w-full lg:w-auto">
                         <button
                             onClick={handlePrintInvoice}
-                            className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-lg text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors shadow-sm"
+                            className="flex items-center justify-center gap-2 px-4 py-2 border-[0.5px] border-black/50 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-lg text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors shadow-none"
                         >
                             <Printer size={14} className="text-gray-500 dark:text-gray-400" />
                             Print Invoice
                         </button>
                         <button
                             onClick={handlePrintShippingLabel}
-                            className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-lg text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors shadow-sm"
+                            className="flex items-center justify-center gap-2 px-4 py-2 border-[0.5px] border-black/50 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-lg text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors shadow-none"
                         >
                             <Package size={14} className="text-gray-500 dark:text-gray-400" />
                             Print Shipping Label
@@ -459,7 +459,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
             </div>
 
             {/* Order Timeline */}
-            <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-100 dark:border-gray-800 p-6">
+            <div className="bg-white dark:bg-gray-900 rounded-lg border-[0.5px] border-black/50 dark:border-gray-800 p-6">
                 <h2 className="text-base font-bold text-gray-900 dark:text-gray-100 mb-6">Order Timeline</h2>
                 <div className="relative px-4 md:px-8">
                     {/* Horizontal Line for Desktop */}
@@ -498,12 +498,12 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
 
                             return (
                                 <div key={stage.status} className="flex flex-row md:flex-col items-center gap-4 md:gap-0 flex-1">
-                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center border transition-all z-10 shrink-0 ${
+                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center border-[0.5px] transition-all z-10 shrink-0 ${
                                         isCurrent
-                                            ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm shadow-emerald-200'
+                                            ? 'bg-emerald-600 text-white border-black/50 shadow-none shadow-emerald-200 border-[0.5px]'
                                             : isCompleted
-                                                ? 'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-800/40'
-                                                : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-400'
+                                                ? 'bg-emerald-50 text-emerald-600 border-black/50 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-800/40'
+                                                : 'bg-white dark:bg-gray-800 border-black/50 dark:border-gray-700 text-gray-400'
                                     }`}>
                                         <Icon size={18} />
                                     </div>
@@ -528,14 +528,14 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                 {/* Left Column - Order Items & Summary (2/3 width) */}
                 <div className="lg:col-span-2 space-y-6">
                     {/* Delhivery Shipping Integration Card */}
-                    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-100 dark:border-gray-800 p-6">
-                        <h3 className="font-bold text-base text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-2 border-b border-gray-100 dark:border-gray-800 pb-4">
+                    <div className="bg-white dark:bg-gray-900 rounded-lg border-[0.5px] border-black/50 dark:border-gray-800 p-6">
+                        <h3 className="font-bold text-base text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-2 border-b-[0.5px] border-black/50 dark:border-gray-800 pb-4">
                             <Truck size={18} className="text-emerald-600" />
                             Delhivery Logistics & Payout Flow
                         </h3>
 
                         {/* Seller Default Pickup Point */}
-                        <div className="mb-6 p-4 bg-emerald-50/50 dark:bg-emerald-950/10 border border-emerald-100 dark:border-emerald-900/30 rounded-xl">
+                        <div className="mb-6 p-4 bg-emerald-50/50 dark:bg-emerald-950/10 border-[0.5px] border-black/50 dark:border-emerald-900/30 rounded-xl">
                             <h4 className="text-xs font-bold text-emerald-800 dark:text-emerald-400 flex items-center gap-1.5 uppercase tracking-wide mb-2">
                                 <MapPin size={14} />
                                 Default Pickup Address (Delhivery Agent Location)
@@ -557,11 +557,11 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                         </div>
 
                         {/* Step Timeline Container */}
-                        <div className="relative border-l border-gray-200 dark:border-gray-800 ml-4 pl-8 space-y-8">
+                        <div className="relative border-l-[0.5px] border-black/50 dark:border-gray-800 ml-4 pl-8 space-y-8">
                             
                             {/* Step 1: Pack & Prep */}
                             <div className="relative">
-                                <span className="absolute -left-[41px] top-0 bg-emerald-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-sm">
+                                <span className="absolute -left-[41px] top-0 bg-emerald-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-none border-black/50 border-[0.5px]">
                                     ✓
                                 </span>
                                 <div>
@@ -577,10 +577,10 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
 
                             {/* Step 2: Book Courier Pickup & AWB */}
                             <div className="relative">
-                                <span className={`absolute -left-[41px] top-0 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-sm ${
+                                <span className={`absolute -left-[41px] top-0 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-none border-black/50 border-[0.5px] ${
                                     shipment 
                                         ? 'bg-emerald-600 text-white' 
-                                        : 'bg-emerald-500 text-white border-2 border-emerald-100 animate-pulse'
+                                        : 'bg-emerald-500 text-white border-[0.5px] border-black/50 animate-pulse'
                                 }`}>
                                     {shipment ? '✓' : '2'}
                                 </span>
@@ -593,7 +593,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                                     {!shipment ? (
                                         /* Booking Form if shipment doesn't exist */
                                         order.status !== 'cancelled' && order.status !== 'delivered' ? (
-                                            <div className="mt-3 bg-gray-50 dark:bg-gray-800/40 p-4 rounded-xl border border-gray-200/50 dark:border-gray-800">
+                                            <div className="mt-3 bg-gray-50 dark:bg-gray-800/40 p-4 rounded-xl border-[0.5px] border-black/50 dark:border-gray-800">
                                                 <p className="text-[11px] text-gray-500 font-semibold mb-3">Configure package dimensions and choose your convenient pickup window to generate the AWB tracking number.</p>
                                                 <form onSubmit={handleBookShipment} className="space-y-4">
                                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -601,28 +601,28 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                                                             <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Weight (kg)</label>
                                                             <input 
                                                                 type="number" step="0.01" value={weight} onChange={e => setWeight(e.target.value)}
-                                                                className="w-full px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-850 text-xs font-bold focus:ring-emerald-500 focus:border-emerald-500 text-black dark:text-white" 
+                                                                className="w-full px-3 py-1.5 rounded-lg border-[0.5px] border-black/50 dark:border-gray-700 bg-white dark:bg-gray-850 text-xs font-bold focus:ring-emerald-500 focus:border-emerald-500 text-black dark:text-white" 
                                                             />
                                                         </div>
                                                         <div>
                                                             <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Length (cm)</label>
                                                             <input 
                                                                 type="number" value={length} onChange={e => setLength(e.target.value)}
-                                                                className="w-full px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-850 text-xs font-bold text-black dark:text-white" 
+                                                                className="w-full px-3 py-1.5 rounded-lg border-[0.5px] border-black/50 dark:border-gray-700 bg-white dark:bg-gray-850 text-xs font-bold text-black dark:text-white" 
                                                             />
                                                         </div>
                                                         <div>
                                                             <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Width (cm)</label>
                                                             <input 
                                                                 type="number" value={width} onChange={e => setWidth(e.target.value)}
-                                                                className="w-full px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-850 text-xs font-bold text-black dark:text-white" 
+                                                                className="w-full px-3 py-1.5 rounded-lg border-[0.5px] border-black/50 dark:border-gray-700 bg-white dark:bg-gray-850 text-xs font-bold text-black dark:text-white" 
                                                             />
                                                         </div>
                                                         <div>
                                                             <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Height (cm)</label>
                                                             <input 
                                                                 type="number" value={height} onChange={e => setHeight(e.target.value)}
-                                                                className="w-full px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-850 text-xs font-bold text-black dark:text-white" 
+                                                                className="w-full px-3 py-1.5 rounded-lg border-[0.5px] border-black/50 dark:border-gray-700 bg-white dark:bg-gray-850 text-xs font-bold text-black dark:text-white" 
                                                             />
                                                         </div>
                                                     </div>
@@ -632,7 +632,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                                                         {pickupSlots.length > 0 ? (
                                                             <select 
                                                                 value={selectedSlot} onChange={e => setSelectedSlot(e.target.value)}
-                                                                className="w-full px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-850 text-xs font-bold text-black dark:text-white"
+                                                                className="w-full px-3 py-1.5 rounded-lg border-[0.5px] border-black/50 dark:border-gray-700 bg-white dark:bg-gray-850 text-xs font-bold text-black dark:text-white"
                                                             >
                                                                 {pickupSlots.map(s => (
                                                                     <option key={s.id} value={s.time}>{s.label}</option>
@@ -645,7 +645,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
 
                                                     <button
                                                         type="submit" disabled={isBooking}
-                                                        className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 shadow"
+                                                        className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 shadow-none border-black/50 border-[0.5px]"
                                                     >
                                                         {isBooking ? 'Booking Pickup...' : 'Schedule Pickup & Get AWB'}
                                                     </button>
@@ -656,7 +656,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                                         )
                                     ) : (
                                         /* Display Shipment Details & Status */
-                                        <div className="mt-3 space-y-4 bg-gray-50/50 dark:bg-gray-800/20 p-4 rounded-xl border border-gray-200/50 dark:border-gray-800">
+                                        <div className="mt-3 space-y-4 bg-gray-50/50 dark:bg-gray-800/20 p-4 rounded-xl border-[0.5px] border-black/50 dark:border-gray-800">
                                             <div className="grid grid-cols-2 gap-3 text-xs">
                                                 <div>
                                                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">AWB / Tracking Number</p>
@@ -672,7 +672,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                                                 </div>
                                             </div>
 
-                                            <div className="border-t border-gray-100 dark:border-gray-800 pt-3">
+                                            <div className="border-t-[0.5px] border-black/50 dark:border-gray-800 pt-3">
                                                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Package Dimensions</p>
                                                 <div className="flex gap-4 text-xs font-semibold text-gray-700 dark:text-gray-300">
                                                     <span>Weight: {parseFloat(shipment.weight).toFixed(2)} kg</span>
@@ -686,12 +686,12 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
 
                             {/* Step 3: Courier Agent Handover */}
                             <div className="relative">
-                                <span className={`absolute -left-[41px] top-0 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-sm ${
+                                <span className={`absolute -left-[41px] top-0 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-none border-black/50 border-[0.5px] ${
                                     !shipment 
                                         ? 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-600'
                                         : shipment.status === 'delivered' 
                                             ? 'bg-emerald-600 text-white' 
-                                            : 'bg-emerald-500 text-white border-2 border-emerald-100'
+                                            : 'bg-emerald-500 text-white border-[0.5px] border-black/50'
                                 }`}>
                                     {shipment && shipment.status === 'delivered' ? '✓' : '3'}
                                 </span>
@@ -707,10 +707,10 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                                     </p>
 
                                     {shipment && (
-                                        <div className="mt-3 bg-white dark:bg-gray-850 p-4 rounded-xl border border-gray-200/50 dark:border-gray-800 space-y-3">
+                                        <div className="mt-3 bg-white dark:bg-gray-850 p-4 rounded-xl border-[0.5px] border-black/50 dark:border-gray-800 space-y-3">
                                             <div className="flex justify-between items-center text-xs">
                                                 <span className="font-semibold text-gray-500">Courier Tracking Status</span>
-                                                <span className="font-extrabold capitalize text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 px-2.5 py-0.5 rounded-full border border-emerald-100 dark:border-emerald-900/30 text-[10px]">
+                                                <span className="font-extrabold capitalize text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 px-2.5 py-0.5 rounded-full border-[0.5px] border-black/50 dark:border-emerald-900/30 text-[10px]">
                                                     {shipment.status.replace(/_/g, ' ')}
                                                 </span>
                                             </div>
@@ -719,7 +719,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                                                 <button
                                                     onClick={() => handleSimulateStatus('picked_up')}
                                                     disabled={isSimulating}
-                                                    className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 shadow cursor-pointer mt-2"
+                                                    className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 shadow-none cursor-pointer mt-2 border-black/50 border-[0.5px]"
                                                 >
                                                     {isSimulating ? 'Acknowledging...' : 'I Have Handed Over Package to Delivery Boy'}
                                                 </button>
@@ -733,7 +733,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
 
                             {/* Step 4: Payout Settlement */}
                             <div className="relative">
-                                <span className={`absolute -left-[41px] top-0 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-sm ${
+                                <span className={`absolute -left-[41px] top-0 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-none border-black/50 border-[0.5px] ${
                                     shipment && shipment.status === 'delivered' 
                                         ? 'bg-emerald-600 text-white' 
                                         : 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-600'
@@ -752,7 +752,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                                     </p>
 
                                     {shipment && (
-                                        <div className="mt-3 bg-gray-50/50 dark:bg-gray-800/10 p-3 rounded-lg border border-gray-200/40 dark:border-gray-800 space-y-1.5 text-[11px]">
+                                        <div className="mt-3 bg-gray-50/50 dark:bg-gray-800/10 p-3 rounded-lg border-[0.5px] border-black/50 dark:border-gray-800 space-y-1.5 text-[11px]">
                                             <div className="flex justify-between items-center text-gray-500">
                                                 <span>COD Remittance</span>
                                                 <span className="font-bold capitalize text-gray-800 dark:text-gray-200">{shipment.remittance_status}</span>
@@ -770,7 +770,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                         </div>
 
                         {/* Logistics SLA & Guidelines Section */}
-                        <div className="mt-8 bg-amber-50/40 dark:bg-amber-950/10 border border-amber-200/40 dark:border-amber-900/30 rounded-xl p-4 space-y-3">
+                        <div className="mt-8 bg-amber-50/40 dark:bg-amber-950/10 border-[0.5px] border-black/50 dark:border-amber-900/30 rounded-xl p-4 space-y-3">
                             <h4 className="font-bold text-xs text-amber-800 dark:text-amber-400 flex items-center gap-1.5 uppercase tracking-wide">
                                 <AlertCircle size={14} />
                                 Logistics SLA & Seller Guidelines
@@ -784,8 +784,8 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-100 dark:border-gray-800 overflow-hidden">
-                        <div className="p-6 border-b border-gray-100 dark:border-gray-800">
+                    <div className="bg-white dark:bg-gray-900 rounded-lg border-[0.5px] border-black/50 dark:border-gray-800 overflow-hidden">
+                        <div className="p-6 border-b-[0.5px] border-black/50 dark:border-gray-800">
                             <h3 className="font-bold text-base text-gray-900 dark:text-gray-100">Order Items</h3>
                             <p className="text-xs text-gray-500 mt-1 font-semibold">{order.items.length} Item(s) in This Order</p>
                         </div>
@@ -797,10 +797,10 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                                             <img
                                                 src={getImageUrl(item.product.image)}
                                                 alt={item.product_name}
-                                                className="w-20 h-20 object-cover rounded-lg border border-gray-200 dark:border-gray-800 flex-shrink-0"
+                                                className="w-20 h-20 object-cover rounded-lg border-[0.5px] border-black/50 dark:border-gray-800 flex-shrink-0"
                                             />
                                         ) : (
-                                            <div className="w-20 h-20 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-800 rounded-lg flex items-center justify-center text-3xl flex-shrink-0">
+                                            <div className="w-20 h-20 bg-gray-50 dark:bg-gray-800 border-[0.5px] border-black/50 dark:border-gray-800 rounded-lg flex items-center justify-center text-3xl flex-shrink-0">
                                                 📦
                                             </div>
                                         )}
@@ -815,7 +815,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
 
                                             {/* Patient Details */}
                                             {item.patient_name && (
-                                                <div className="mt-3 p-3.5 bg-gray-50 dark:bg-gray-800/40 rounded-lg border border-gray-100 dark:border-gray-800 max-w-md">
+                                                <div className="mt-3 p-3.5 bg-gray-50 dark:bg-gray-800/40 rounded-lg border-[0.5px] border-black/50 dark:border-gray-800 max-w-md">
                                                     <p className="text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Patient Information</p>
                                                     <div className="text-xs text-gray-650 dark:text-gray-400 space-y-1 font-medium">
                                                         <p><span className="text-gray-400 font-semibold">Name:</span> <span className="text-gray-800 dark:text-gray-200">{item.patient_name}</span></p>
@@ -841,9 +841,9 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                         </div>
 
                         {/* Pricing Summary inside the card */}
-                        <div className="border-t border-gray-100 dark:border-gray-800 p-6 bg-gray-50/30 dark:bg-gray-900/30">
+                        <div className="border-t-[0.5px] border-black/50 dark:border-gray-800 p-6 bg-gray-50/30 dark:bg-gray-900/30">
                             <div className="space-y-3 max-w-md ml-auto">
-                                <h3 className="font-bold text-sm text-gray-900 dark:text-gray-100 mb-4 border-b border-gray-100 dark:border-gray-800 pb-2">Pricing Summary</h3>
+                                <h3 className="font-bold text-sm text-gray-900 dark:text-gray-100 mb-4 border-b-[0.5px] border-black/50 dark:border-gray-800 pb-2">Pricing Summary</h3>
                                 <div className="flex justify-between text-xs font-medium">
                                     <span className="text-gray-500 dark:text-gray-400">Subtotal (Your Items)</span>
                                     <span className="font-bold text-gray-900 dark:text-gray-100">₹{itemsTotal.toFixed(2)}</span>
@@ -877,7 +877,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
 
 
 
-                                <div className="pt-3 border-t border-gray-200 dark:border-gray-800 mt-4">
+                                <div className="pt-3 border-t-[0.5px] border-black/50 dark:border-gray-800 mt-4">
                                     <div className="flex justify-between items-center">
                                         <span className="font-bold text-sm text-gray-900 dark:text-gray-100">Total Revenue</span>
                                         <span className="font-heading font-black text-lg text-emerald-600">₹{itemsTotal.toFixed(2)}</span>
@@ -890,7 +890,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
 
                     {/* Customer Notes */}
                     {order.order_notes && (
-                        <div className="bg-gray-50 dark:bg-gray-800/40 rounded-lg border border-gray-100 dark:border-gray-800 p-6">
+                        <div className="bg-gray-50 dark:bg-gray-800/40 rounded-lg border-[0.5px] border-black/50 dark:border-gray-800 p-6">
                             <div className="flex items-start gap-3">
                                 <FileText className="text-amber-500 mt-0.5" size={20} />
                                 <div>
@@ -905,14 +905,14 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                 {/* Right Column - Customer & Address Info (1/3 width) */}
                 <div className="space-y-6">
                     {/* Card 1: Customer Details & Payment */}
-                    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-100 dark:border-gray-800 p-6">
+                    <div className="bg-white dark:bg-gray-900 rounded-lg border-[0.5px] border-black/50 dark:border-gray-800 p-6">
                         {/* Customer Info */}
                         <div className="mb-6">
                             <h3 className="font-bold text-base text-gray-900 dark:text-gray-100 mb-4">Customer Details</h3>
                             {order.user ? (
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-800 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <div className="w-10 h-10 bg-gray-50 dark:bg-gray-800 border-[0.5px] border-black/50 dark:border-gray-800 rounded-lg flex items-center justify-center flex-shrink-0">
                                             <User size={18} className="text-gray-400" />
                                         </div>
                                         <div>
@@ -948,7 +948,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                             )}
                         </div>
 
-                        <div className="border-t border-gray-100 dark:border-gray-800 my-5"></div>
+                        <div className="border-t-[0.5px] border-black/50 dark:border-gray-800 my-5"></div>
 
                         {/* Payment Info */}
                         <div>
@@ -963,15 +963,15 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                                 </div>
                                 <div className="flex items-center justify-between text-xs font-medium">
                                     <span className="text-gray-500 dark:text-gray-400">Payment Status</span>
-                                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${
+                                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border-[0.5px] ${
                                         order.payment_status.toLowerCase() === 'paid'
-                                            ? 'bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30'
-                                            : 'bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30'
+                                            ? 'bg-emerald-50 text-emerald-700 border-black/50 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30'
+                                            : 'bg-amber-50 text-amber-700 border-black/50 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30'
                                     }`}>
                                         {order.payment_status.charAt(0).toUpperCase() + order.payment_status.slice(1)}
                                     </span>
                                 </div>
-                                <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-800 mt-4">
+                                <div className="flex items-center justify-between pt-3 border-t-[0.5px] border-black/50 dark:border-gray-800 mt-4">
                                     <span className="font-bold text-sm text-gray-900 dark:text-gray-100">Total Customer Paid</span>
                                     <span className="font-heading font-black text-lg text-emerald-600">₹{parseFloat(order.final_amount).toFixed(2)}</span>
                                 </div>
@@ -980,12 +980,12 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                     </div>
 
                     {/* Card 2: Shipping & Delivery Info */}
-                    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-100 dark:border-gray-800 p-6 space-y-5">
+                    <div className="bg-white dark:bg-gray-900 rounded-lg border-[0.5px] border-black/50 dark:border-gray-800 p-6 space-y-5">
                         {/* Shipping Address */}
                         <div>
                             <h3 className="font-bold text-base text-gray-900 dark:text-gray-100 mb-4">Shipping Address</h3>
                             <div className="flex items-start gap-3">
-                                <div className="w-10 h-10 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-800 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <div className="w-10 h-10 bg-gray-50 dark:bg-gray-800 border-[0.5px] border-black/50 dark:border-gray-800 rounded-lg flex items-center justify-center flex-shrink-0">
                                     <MapPin className="text-gray-400" size={18} />
                                 </div>
                                 <div className="text-xs">
@@ -1012,11 +1012,11 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                         {/* Billing Address (if different) */}
                         {billingAddress.street_address && billingAddress.street_address !== shippingAddress.street_address && (
                             <>
-                                <div className="border-t border-gray-100 dark:border-gray-800"></div>
+                                <div className="border-t-[0.5px] border-black/50 dark:border-gray-800"></div>
                                 <div>
                                     <h3 className="font-bold text-base text-gray-900 dark:text-gray-100 mb-4">Billing Address</h3>
                                     <div className="flex items-start gap-3">
-                                        <div className="w-10 h-10 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-800 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <div className="w-10 h-10 bg-gray-50 dark:bg-gray-800 border-[0.5px] border-black/50 dark:border-gray-800 rounded-lg flex items-center justify-center flex-shrink-0">
                                             <MapPin className="text-gray-400" size={18} />
                                         </div>
                                         <div className="text-xs">
@@ -1040,7 +1040,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                         {/* Shipping Method */}
                         {order.shippingMethod && (
                             <>
-                                <div className="border-t border-gray-100 dark:border-gray-800"></div>
+                                <div className="border-t-[0.5px] border-black/50 dark:border-gray-800"></div>
                                 <div>
                                     <h3 className="font-bold text-base text-gray-900 dark:text-gray-100 mb-4">Shipping Method</h3>
                                     <div className="space-y-2">

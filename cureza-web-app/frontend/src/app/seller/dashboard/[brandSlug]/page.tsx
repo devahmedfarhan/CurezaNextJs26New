@@ -347,7 +347,7 @@ export default function DynamicBrandReconciliationPage() {
                 <button
                     onClick={handleExportExcel}
                     disabled={exportLoading || loading}
-                    className="w-full lg:w-auto flex justify-center items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-semibold capitalize shadow-sm hover:bg-emerald-700 active:scale-95 transition-all border border-emerald-650 disabled:bg-gray-150 disabled:text-gray-400 disabled:border-transparent disabled:shadow-none disabled:scale-100 cursor-pointer"
+                    className="w-full lg:w-auto flex justify-center items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-semibold capitalize shadow-none hover:bg-emerald-700 active:scale-95 transition-all border-[0.5px] border-emerald-650 disabled:bg-gray-150 disabled:text-gray-400 disabled:border-transparent disabled:shadow-none disabled:scale-100 cursor-pointer"
                 >
                     {exportLoading ? (
                         <>Generating Sheet...</>
@@ -361,7 +361,7 @@ export default function DynamicBrandReconciliationPage() {
 
             {/* Quick Metrics Summary */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="premium-card p-6 bg-white border border-gray-100 rounded-2xl relative overflow-hidden flex flex-col justify-between h-[140px] shadow-sm">
+                <div className="premium-card p-6 bg-white border-[0.5px] border-black/50 rounded-2xl relative overflow-hidden flex flex-col justify-between h-[140px] shadow-none">
                     <div>
                         <span className="text-[10px] font-semibold text-gray-500 capitalize block mb-1">Total Items Sold</span>
                         <h3 className="text-2xl font-bold text-gray-800 tracking-tight">
@@ -371,7 +371,7 @@ export default function DynamicBrandReconciliationPage() {
                     <div className="text-[9px] font-medium text-gray-500">Across {totalRecords} order transactions</div>
                 </div>
 
-                <div className="premium-card p-6 bg-white border border-gray-100 rounded-2xl relative overflow-hidden flex flex-col justify-between h-[140px] shadow-sm">
+                <div className="premium-card p-6 bg-white border-[0.5px] border-black/50 rounded-2xl relative overflow-hidden flex flex-col justify-between h-[140px] shadow-none">
                     <div>
                         <span className="text-[10px] font-semibold text-gray-500 capitalize block mb-1">Gross Selling Volume</span>
                         <h3 className="text-2xl font-bold text-gray-800 tracking-tight">
@@ -381,7 +381,7 @@ export default function DynamicBrandReconciliationPage() {
                     <div className="text-[9px] font-medium text-gray-500">Before platform charges & deductions</div>
                 </div>
 
-                <div className="premium-card p-6 bg-white border border-gray-100 rounded-2xl relative overflow-hidden flex flex-col justify-between h-[140px] shadow-sm">
+                <div className="premium-card p-6 bg-white border-[0.5px] border-black/50 rounded-2xl relative overflow-hidden flex flex-col justify-between h-[140px] shadow-none">
                     <div>
                         <span className="text-[10px] font-semibold text-rose-600 capitalize block mb-1">Platform Commission + GST</span>
                         <h3 className="text-2xl font-bold text-rose-600 tracking-tight">
@@ -391,7 +391,7 @@ export default function DynamicBrandReconciliationPage() {
                     <div className="text-[9px] font-medium text-rose-500">Includes {summary?.commission_rate?.platform ?? 25}% platform cut + 18% GST</div>
                 </div>
 
-                <div className="premium-card p-6 bg-white border border-gray-100 rounded-2xl relative overflow-hidden flex flex-col justify-between h-[140px] shadow-sm">
+                <div className="premium-card p-6 bg-white border-[0.5px] border-black/50 rounded-2xl relative overflow-hidden flex flex-col justify-between h-[140px] shadow-none">
                     <div>
                         <span className="text-[10px] font-semibold text-emerald-600 capitalize block mb-1">Amount Payable (Net)</span>
                         <h3 className="text-2xl font-bold text-emerald-600 tracking-tight">
@@ -403,7 +403,7 @@ export default function DynamicBrandReconciliationPage() {
             </div>
 
             {/* Filter Dashboard */}
-            <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+            <div className="bg-white p-6 rounded-2xl border-[0.5px] border-black/50 shadow-none space-y-4">
                 <div className="flex flex-wrap gap-4 items-center justify-between">
                     <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-80">
                         <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={15} />
@@ -412,7 +412,7 @@ export default function DynamicBrandReconciliationPage() {
                             placeholder="Search customer, order no., product..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-gray-250 rounded-xl text-xs font-semibold focus:outline-none focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green transition-all outline-none"
+                            className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border-[0.5px] border-black/50 rounded-xl text-xs font-semibold focus:outline-none focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green transition-all outline-none"
                         />
                     </form>
 
@@ -420,7 +420,7 @@ export default function DynamicBrandReconciliationPage() {
                         <select
                             value={statusFilter}
                             onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-                            className="w-full sm:w-auto bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-xs font-semibold capitalize text-gray-700 outline-none cursor-pointer focus:border-cureza-green"
+                            className="w-full sm:w-auto bg-white border-[0.5px] border-black/50 rounded-xl px-4 py-2.5 text-xs font-semibold capitalize text-gray-700 outline-none cursor-pointer focus:border-cureza-green"
                         >
                             <option value="All">All Statuses</option>
                             <option value="Pending">Pending</option>
@@ -433,7 +433,7 @@ export default function DynamicBrandReconciliationPage() {
                         <select
                             value={paymentFilter}
                             onChange={(e) => { setPaymentFilter(e.target.value); setPage(1); }}
-                            className="w-full sm:w-auto bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-xs font-semibold capitalize text-gray-700 outline-none cursor-pointer focus:border-cureza-green"
+                            className="w-full sm:w-auto bg-white border-[0.5px] border-black/50 rounded-xl px-4 py-2.5 text-xs font-semibold capitalize text-gray-700 outline-none cursor-pointer focus:border-cureza-green"
                         >
                             <option value="All">All Payment Methods</option>
                             <option value="cod">COD Only</option>
@@ -449,7 +449,7 @@ export default function DynamicBrandReconciliationPage() {
                             type="date"
                             value={startDate}
                             onChange={(e) => { setStartDate(e.target.value); setPage(1); }}
-                            className="w-full border border-gray-250 rounded-xl p-2.5 text-xs font-semibold text-gray-700 outline-none focus:border-cureza-green"
+                            className="w-full border-[0.5px] border-black/50 rounded-xl p-2.5 text-xs font-semibold text-gray-700 outline-none focus:border-cureza-green"
                         />
                     </div>
                     <div>
@@ -458,13 +458,13 @@ export default function DynamicBrandReconciliationPage() {
                             type="date"
                             value={endDate}
                             onChange={(e) => { setEndDate(e.target.value); setPage(1); }}
-                            className="w-full border border-gray-250 rounded-xl p-2.5 text-xs font-semibold text-gray-700 outline-none focus:border-cureza-green"
+                            className="w-full border-[0.5px] border-black/50 rounded-xl p-2.5 text-xs font-semibold text-gray-700 outline-none focus:border-cureza-green"
                         />
                     </div>
                     <div className="flex items-end">
                         <button
                             onClick={resetFilters}
-                            className="w-full py-2.5 border border-red-100 hover:border-red-200 hover:bg-red-50/50 rounded-xl text-xs font-semibold text-red-600 transition-all capitalize cursor-pointer"
+                            className="w-full py-2.5 border-[0.5px] border-black/50 hover:border-red-200 hover:bg-red-50/50 rounded-xl text-xs font-semibold text-red-600 transition-all capitalize cursor-pointer"
                         >
                             Reset Filter Parameters
                         </button>
@@ -473,10 +473,10 @@ export default function DynamicBrandReconciliationPage() {
             </div>
 
             {/* Reconciliation Ledger Table */}
-            <div className="premium-card overflow-hidden bg-white border border-gray-200 rounded-2xl shadow-sm">
-                <div className="p-6 border-b border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="premium-card overflow-hidden bg-white border-[0.5px] border-black/50 rounded-2xl shadow-none">
+                <div className="p-6 border-b-[0.5px] border-black/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
-                        <div className="p-3 bg-emerald-50 text-cureza-green border border-emerald-100 rounded-xl shrink-0">
+                        <div className="p-3 bg-emerald-50 text-cureza-green border-[0.5px] border-black/50 rounded-xl shrink-0">
                             <FileText size={18} />
                         </div>
                         <div>
@@ -491,7 +491,7 @@ export default function DynamicBrandReconciliationPage() {
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="premium-table-header border-b border-gray-100 bg-gray-50/50">
+                            <tr className="premium-table-header border-b-[0.5px] border-black/50 bg-gray-50/50">
                                 <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize">Month & Year</th>
                                 <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize">Date</th>
                                 <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize">Order No.</th>
@@ -521,7 +521,7 @@ export default function DynamicBrandReconciliationPage() {
                                 <tr>
                                     <td colSpan={22} className="px-8 py-20 text-center">
                                         <div className="flex flex-col items-center justify-center gap-2">
-                                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cureza-green"></div>
+                                            <div className="animate-spin rounded-full h-8 w-8 border-b-[0.5px] border-cureza-green"></div>
                                             <span className="text-xs font-semibold capitalize text-gray-500 mt-2">Loading data portfolio...</span>
                                         </div>
                                     </td>
@@ -538,7 +538,7 @@ export default function DynamicBrandReconciliationPage() {
                                         <td className="px-5 py-4 whitespace-nowrap text-gray-500">{r.monthYear}</td>
                                         <td className="px-5 py-4 whitespace-nowrap text-gray-800">{r.dateStr}</td>
                                         <td className="px-5 py-4 whitespace-nowrap">
-                                            <span className="font-mono text-indigo-600 bg-indigo-50/70 px-2.5 py-0.5 rounded border border-indigo-100 font-semibold">#{r.orderNumber}</span>
+                                            <span className="font-mono text-indigo-600 bg-indigo-50/70 px-2.5 py-0.5 rounded border-[0.5px] border-black/50 font-semibold">#{r.orderNumber}</span>
                                         </td>
                                         <td className="px-5 py-4 whitespace-nowrap font-semibold text-gray-800">{r.customerName}</td>
                                         <td className="px-5 py-4 max-w-[200px] truncate" title={r.product}>{r.product}</td>
@@ -571,7 +571,7 @@ export default function DynamicBrandReconciliationPage() {
                                 ))
                             )}
                             {rows.length > 0 && (
-                                <tr className="bg-gray-50 font-bold text-gray-800 border-t border-b border-gray-200 text-[11px] capitalize tracking-wide">
+                                <tr className="bg-gray-50 font-bold text-gray-800 border-t-[0.5px] border-b-[0.5px] border-black/50 text-[11px] capitalize tracking-wide">
                                     <td colSpan={6} className="px-5 py-4 text-left font-bold">Totals (Page)</td>
                                     <td className="px-5 py-4 text-center whitespace-nowrap font-semibold">{rows.reduce((acc, r) => acc + r.qty, 0)}</td>
                                     <td className="px-5 py-4 text-right">—</td>
@@ -597,7 +597,7 @@ export default function DynamicBrandReconciliationPage() {
 
                 {/* Pagination Controls */}
                 {lastPage > 1 && (
-                    <div className="p-5 border-t border-gray-100 flex items-center justify-between">
+                    <div className="p-5 border-t-[0.5px] border-black/50 flex items-center justify-between">
                         <span className="text-xs text-gray-500 font-semibold capitalize">
                             Showing page {page} of {lastPage} ({totalRecords} records)
                         </span>
@@ -605,14 +605,14 @@ export default function DynamicBrandReconciliationPage() {
                             <button
                                 onClick={() => setPage(p => Math.max(1, p - 1))}
                                 disabled={page === 1}
-                                className="px-3.5 py-2 border border-gray-200 rounded-xl text-xs font-semibold capitalize text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-all cursor-pointer"
+                                className="px-3.5 py-2 border-[0.5px] border-black/50 rounded-xl text-xs font-semibold capitalize text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-all cursor-pointer"
                             >
                                 <ChevronLeft size={14} className="inline mr-1" /> Prev
                             </button>
                             <button
                                 onClick={() => setPage(p => Math.min(lastPage, p + 1))}
                                 disabled={page === lastPage}
-                                className="px-3.5 py-2 border border-gray-200 rounded-xl text-xs font-semibold capitalize text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-all cursor-pointer"
+                                className="px-3.5 py-2 border-[0.5px] border-black/50 rounded-xl text-xs font-semibold capitalize text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-all cursor-pointer"
                             >
                                 Next <ChevronRight size={14} className="inline ml-1" />
                             </button>

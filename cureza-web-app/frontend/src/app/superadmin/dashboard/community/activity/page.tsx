@@ -43,14 +43,14 @@ export default function AdminActivityPage() {
     return (
         <div className="space-y-6">
             {/* Filters */}
-            <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 flex flex-col sm:flex-row gap-3 items-center justify-between">
+            <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-black/50 flex flex-col sm:flex-row gap-3 items-center justify-between">
                 <form onSubmit={handleSearchSubmit} className="flex gap-2 w-full sm:max-w-md">
                     <input
                         type="text"
                         placeholder="Search by user name or email..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white"
+                        className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white"
                     />
                     <button type="submit" className="bg-black text-white px-3 py-1.5 rounded-[10px] text-xs font-medium hover:bg-neutral-800 transition-colors">
                         Search
@@ -61,7 +61,7 @@ export default function AdminActivityPage() {
                     <select
                         value={type}
                         onChange={(e) => { setType(e.target.value); setPage(1); }}
-                        className="px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white"
+                        className="px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white"
                     >
                         <option value="">All Transactions</option>
                         <option value="credit">Credits Only</option>
@@ -71,7 +71,7 @@ export default function AdminActivityPage() {
             </div>
 
             {/* Audit Log Table */}
-            <div className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 overflow-hidden">
+            <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 overflow-hidden">
                 {loading ? (
                     <div className="p-8 text-center text-xs text-gray-500 animate-pulse">Loading activity logs...</div>
                 ) : activities.length === 0 ? (
@@ -79,7 +79,7 @@ export default function AdminActivityPage() {
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-xs">
-                            <thead className="bg-neutral-50 border-b-[0.5px] border-neutral-950/10 text-gray-500 font-medium">
+                            <thead className="bg-neutral-50 border-b-[0.5px] border-black/50 text-gray-500 font-medium">
                                 <tr>
                                     <th className="p-3">User</th>
                                     <th className="p-3">Action</th>
@@ -115,8 +115,8 @@ export default function AdminActivityPage() {
                                             <td className="p-3">
                                                 <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[6px] text-[10px] font-medium border-[0.5px] ${
                                                     isEarn 
-                                                        ? 'bg-green-50 text-green-800 border-green-200/50' 
-                                                        : 'bg-red-50 text-red-800 border-red-200/50'
+                                                        ? 'bg-green-50 text-green-800 border-black/50' 
+                                                        : 'bg-red-50 text-red-800 border-black/50'
                                                 }`}>
                                                     {isEarn ? <ArrowUpRight size={10} /> : <ArrowDownLeft size={10} />}
                                                     {isEarn ? 'Credit' : 'Debit'}
@@ -149,7 +149,7 @@ export default function AdminActivityPage() {
                         <button
                             disabled={page <= 1}
                             onClick={() => setPage(page - 1)}
-                            className="px-2.5 py-1 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs font-medium hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            className="px-2.5 py-1 border-[0.5px] border-black/50 rounded-[10px] text-xs font-medium hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                             Previous
                         </button>
@@ -157,7 +157,7 @@ export default function AdminActivityPage() {
                         <button
                             disabled={page >= pagination.last_page}
                             onClick={() => setPage(page + 1)}
-                            className="px-2.5 py-1 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs font-medium hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            className="px-2.5 py-1 border-[0.5px] border-black/50 rounded-[10px] text-xs font-medium hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                             Next
                         </button>

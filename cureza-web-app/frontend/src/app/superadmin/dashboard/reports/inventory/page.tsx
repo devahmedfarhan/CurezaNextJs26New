@@ -13,7 +13,7 @@ export default function AdminInventoryReportPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-green-500">
+                <div className="bg-white p-6 rounded-xl border-[0.5px] border-black/50 shadow-none border-l-4 border-l-green-500">
                     <div className="flex justify-between items-start">
                         <div>
                             <p className="text-sm text-gray-500">Healthy Stock</p>
@@ -22,7 +22,7 @@ export default function AdminInventoryReportPage() {
                         <Package className="text-green-500" size={24} />
                     </div>
                 </div>
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-yellow-500">
+                <div className="bg-white p-6 rounded-xl border-[0.5px] border-black/50 shadow-none border-l-4 border-l-yellow-500">
                     <div className="flex justify-between items-start">
                         <div>
                             <p className="text-sm text-gray-500">Low Stock (&lt; 10)</p>
@@ -31,7 +31,7 @@ export default function AdminInventoryReportPage() {
                         <AlertTriangle className="text-yellow-500" size={24} />
                     </div>
                 </div>
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-red-500">
+                <div className="bg-white p-6 rounded-xl border-[0.5px] border-black/50 shadow-none border-l-4 border-l-red-500">
                     <div className="flex justify-between items-start">
                         <div>
                             <p className="text-sm text-gray-500">Out of Stock</p>
@@ -43,8 +43,8 @@ export default function AdminInventoryReportPage() {
             </div>
 
             {/* Low Stock Alert Table */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-gray-200 bg-red-50">
+            <div className="bg-white rounded-xl border-[0.5px] border-black/50 shadow-none overflow-hidden">
+                <div className="p-4 border-b-[0.5px] border-black/50 bg-red-50">
                     <h3 className="font-bold text-red-800 flex items-center gap-2">
                         <AlertTriangle size={18} /> Critical Stock Alerts
                     </h3>

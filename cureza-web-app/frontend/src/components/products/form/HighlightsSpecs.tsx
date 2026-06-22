@@ -28,21 +28,21 @@ export default function HighlightsSpecs({
     const roundedClass = isSuperAdmin ? 'rounded-[10px]' : 'rounded-xl';
 
     return (
-        <div className={`bg-white dark:bg-gray-900 p-6 ${roundedClass} border ${isSuperAdmin ? 'border-neutral-950/15 shadow-none' : 'border-gray-200 shadow-sm'} space-y-8`}>
+        <div className={`bg-white dark:bg-gray-900 p-6 ${roundedClass} border-[0.5px] ${isSuperAdmin ? 'border-black/50 shadow-none' : 'border-black/50 shadow-none border-[0.5px]'} space-y-8`}>
             {/* Highlights */}
             <div>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Key Highlights</h3>
                 <div className="space-y-3">
                     {highlights.map((highlight, index) => (
                         <div key={index} className="flex gap-3 items-center group">
-                            <div className={`w-8 h-8 ${isSuperAdmin ? 'rounded-md bg-neutral-100 dark:bg-gray-800 text-black dark:text-white border-[0.5px] border-neutral-950/10' : 'rounded-full bg-blue-50 text-blue-600'} flex items-center justify-center flex-shrink-0`}>
+                            <div className={`w-8 h-8 ${isSuperAdmin ? 'rounded-md bg-neutral-100 dark:bg-gray-800 text-black dark:text-white border-[0.5px] border-black/50' : 'rounded-full bg-blue-50 text-blue-600'} flex items-center justify-center flex-shrink-0`}>
                                 <Check size={16} />
                             </div>
                             <input
                                 type="text"
                                 value={highlight}
                                 onChange={(e) => handleArrayChange(index, e.target.value, 'highlights')}
-                                className={`flex-1 ${isSuperAdmin ? 'rounded-md border-[0.5px] border-neutral-950/15 focus:ring-black/10 focus:border-black' : 'rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500'} bg-transparent px-3 py-2 text-sm text-gray-900 dark:text-gray-100 transition-all outline-none`}
+                                className={`flex-1 ${isSuperAdmin ? 'rounded-md border-[0.5px] border-black/50 focus:ring-black/10 focus:border-black' : 'rounded-lg border-black/50 focus:ring-blue-500 focus:border-blue-500'} bg-transparent px-3 py-2 text-sm text-gray-900 dark:text-gray-100 transition-all outline-none`}
                                 placeholder="e.g. 100% Organic Ingredients"
                             />
                             <button
@@ -59,7 +59,7 @@ export default function HighlightsSpecs({
                         onClick={() => addArrayItem('highlights')} 
                         className={`text-sm font-bold flex items-center gap-2 w-fit px-3 py-2 rounded-lg transition-colors cursor-pointer ${
                             isSuperAdmin
-                                ? 'text-black dark:text-white border-[0.5px] border-neutral-950/15 bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-750'
+                                ? 'text-black dark:text-white border-[0.5px] border-black/50 bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-750'
                                 : 'text-blue-600 hover:bg-blue-50'
                         }`}
                     >
@@ -68,14 +68,14 @@ export default function HighlightsSpecs({
                 </div>
             </div>
 
-            <hr className="border-gray-100 dark:border-gray-800" />
+            <hr className="border-black/50 dark:border-gray-800" />
 
             {/* Specifications */}
             <div>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Technical Specifications</h3>
-                <div className={`overflow-hidden ${isSuperAdmin ? 'rounded-[10px] border-[0.5px] border-neutral-950/15' : 'rounded-lg border border-gray-200'}`}>
+                <div className={`overflow-hidden ${isSuperAdmin ? 'rounded-[10px] border-[0.5px] border-black/50' : 'rounded-lg border-[0.5px] border-black/50'}`}>
                     <table className="w-full text-sm">
-                        <thead className={`font-medium border-b ${isSuperAdmin ? 'bg-neutral-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-neutral-950/15' : 'bg-gray-50 text-gray-600 border-gray-200'}`}>
+                        <thead className={`font-medium border-b-[0.5px] ${isSuperAdmin ? 'bg-neutral-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-black/50' : 'bg-gray-50 text-gray-600 border-black/50'}`}>
                             <tr>
                                 <th className="px-4 py-3 text-left w-1/3">Feature</th>
                                 <th className="px-4 py-3 text-left">Value</th>
@@ -116,14 +116,14 @@ export default function HighlightsSpecs({
                             ))}
                         </tbody>
                     </table>
-                    <div className={`p-2 border-t ${isSuperAdmin ? 'bg-neutral-50 dark:bg-gray-800 border-neutral-950/15' : 'bg-gray-50 border-gray-200'}`}>
+                    <div className={`p-2 border-t-[0.5px] ${isSuperAdmin ? 'bg-neutral-50 dark:bg-gray-800 border-black/50' : 'bg-gray-50 border-black/50'}`}>
                         <button 
                             type="button" 
                             onClick={addSpec} 
-                            className={`w-full py-2 text-sm font-medium rounded border border-dashed flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                            className={`w-full py-2 text-sm font-medium rounded border-[0.5px] border-dashed flex items-center justify-center gap-2 transition-all cursor-pointer ${
                                 isSuperAdmin
-                                    ? 'text-black dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-750 border-neutral-950/20'
-                                    : 'text-gray-500 hover:text-blue-600 hover:bg-gray-100 border-gray-300'
+                                    ? 'text-black dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-750 border-black/50'
+                                    : 'text-gray-500 hover:text-blue-600 hover:bg-gray-100 border-black/50'
                             }`}
                         >
                             <Plus size={16} /> Add Specification Row

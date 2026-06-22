@@ -145,7 +145,7 @@ function DoctorsPageContent() {
         <div className="w-full space-y-6">
 
             {/* Header Section */}
-            <div className="relative overflow-hidden bg-white rounded-[10px] p-6 border-[0.5px] border-neutral-950/10">
+            <div className="relative overflow-hidden bg-white rounded-[10px] p-6 border-[0.5px] border-black/50">
                 <div className="absolute top-0 right-0 p-8 opacity-5">
                     <Users size={120} />
                 </div>
@@ -166,7 +166,7 @@ function DoctorsPageContent() {
                     <div className="flex gap-2 self-start md:self-center">
                         <button 
                             onClick={fetchDoctors}
-                            className="h-10 rounded-[10px] border border-neutral-950/10 hover:bg-neutral-50 shadow-none text-xs font-medium bg-white text-neutral-850 px-4 flex items-center gap-2"
+                            className="h-10 rounded-[10px] border-[0.5px] border-black/50 hover:bg-neutral-50 shadow-none text-xs font-medium bg-white text-neutral-850 px-4 flex items-center gap-2"
                         >
                             <Activity className="h-3.5 w-3.5" /> Refresh
                         </button>
@@ -182,16 +182,16 @@ function DoctorsPageContent() {
             </div>
 
             {/* --- Controls Bar --- */}
-            <div className="flex flex-col md:flex-row gap-3 items-center justify-between bg-white p-3 rounded-[10px] border border-neutral-950/10 shadow-none">
+            <div className="flex flex-col md:flex-row gap-3 items-center justify-between bg-white p-3 rounded-[10px] border-[0.5px] border-black/50 shadow-none">
 
                 {/* Tabs */}
-                <div className="flex items-center bg-neutral-50/70 p-0.5 rounded-[10px] self-start md:self-auto flex-wrap border border-neutral-950/5">
+                <div className="flex items-center bg-neutral-50/70 p-0.5 rounded-[10px] self-start md:self-auto flex-wrap border-[0.5px] border-black/50">
                     {tabMapping.map((tab) => (
                         <button
                             key={tab.id}
                             onClick={() => { setStatusFilter(tab.id); setPage(1); setSelectedIds(new Set()); }}
                             className={`px-4 py-2 text-xs font-medium rounded-lg transition-all ${statusFilter === tab.id
-                                    ? 'bg-white text-neutral-900 border border-neutral-950/10'
+                                    ? 'bg-white text-neutral-900 border-[0.5px] border-black/50'
                                     : 'text-neutral-500 hover:text-neutral-900'
                                 }`}
                         >
@@ -207,7 +207,7 @@ function DoctorsPageContent() {
                         placeholder="Search name, license..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full h-10 pl-9 text-xs rounded-[10px] border border-neutral-950/15 focus-visible:ring-1 focus-visible:ring-black focus-visible:border-black outline-none shadow-none"
+                        className="w-full h-10 pl-9 text-xs rounded-[10px] border-[0.5px] border-black/50 focus-visible:ring-1 focus-visible:ring-black focus-visible:border-black outline-none shadow-none"
                     />
                 </div>
             </div>
@@ -225,7 +225,7 @@ function DoctorsPageContent() {
                         <div className="flex items-center gap-2">
                             {statusFilter === 'pending_approval' && (
                                 <button 
-                                    className="h-8 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-green-400 text-xs px-3 font-medium flex items-center gap-1.5 transition-colors border border-transparent shadow-none" 
+                                    className="h-8 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-green-400 text-xs px-3 font-medium flex items-center gap-1.5 transition-colors border-[0.5px] border-transparent shadow-none" 
                                     onClick={handleBulkApprove} 
                                     disabled={isBulkActing}
                                 >
@@ -233,7 +233,7 @@ function DoctorsPageContent() {
                                 </button>
                             )}
                             <button 
-                                className="h-8 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-red-500 text-xs px-3 font-medium flex items-center gap-1.5 transition-colors border border-transparent shadow-none" 
+                                className="h-8 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-red-500 text-xs px-3 font-medium flex items-center gap-1.5 transition-colors border-[0.5px] border-transparent shadow-none" 
                                 onClick={handleBulkDelete} 
                                 disabled={isBulkActing}
                             >
@@ -245,16 +245,16 @@ function DoctorsPageContent() {
             </AnimatePresence>
 
             {/* --- Shadcn Data Grid --- */}
-            <div className="rounded-[10px] border border-neutral-950/10 bg-white overflow-hidden shadow-none">
+            <div className="rounded-[10px] border-[0.5px] border-black/50 bg-white overflow-hidden shadow-none">
                 <Table>
-                    <TableHeader className="bg-neutral-50/50 border-b border-neutral-950/5">
+                    <TableHeader className="bg-neutral-50/50 border-b-[0.5px] border-black/50">
                         <TableRow className="hover:bg-transparent border-none">
                             <TableHead className="w-[50px] text-center py-4">
                                 <Checkbox
                                     checked={doctors.length > 0 && selectedIds.size === doctors.length}
                                     onCheckedChange={(checked) => toggleSelectAll(!!checked)}
                                     aria-label="Select all"
-                                    className="border-neutral-950/20 text-black focus:ring-black"
+                                    className="border-black/50 text-black focus:ring-black"
                                 />
                             </TableHead>
                             <TableHead className="font-medium text-neutral-500 py-4 px-6 text-xs text-left">Doctor Profile</TableHead>
@@ -283,20 +283,20 @@ function DoctorsPageContent() {
                             </TableRow>
                         )}
                         {!loading && doctors.map((doctor) => (
-                            <TableRow key={doctor.id} className={`hover:bg-neutral-50/20 border-b border-neutral-950/5 transition-colors ${selectedIds.has(doctor.id) ? "bg-neutral-50/40" : ""}`}>
+                            <TableRow key={doctor.id} className={`hover:bg-neutral-50/20 border-b-[0.5px] border-black/50 transition-colors ${selectedIds.has(doctor.id) ? "bg-neutral-50/40" : ""}`}>
                                 <TableCell className="text-center py-4">
                                     <Checkbox
                                         checked={selectedIds.has(doctor.id)}
                                         onCheckedChange={(checked) => toggleSelectRow(doctor.id, !!checked)}
                                         aria-label="Select row"
-                                        className="border-neutral-950/20 text-black focus:ring-black"
+                                        className="border-black/50 text-black focus:ring-black"
                                     />
                                 </TableCell>
                                 <TableCell className="py-4 px-6">
                                     <div className="flex items-center gap-3">
-                                        <Avatar className="h-9 w-9 border border-neutral-950/10 shadow-none">
+                                        <Avatar className="h-9 w-9 border-[0.5px] border-black/50 shadow-none">
                                             <AvatarImage src={doctor.profile_photo_url} alt={doctor.name} />
-                                            <AvatarFallback className="text-[11px] font-semibold bg-neutral-50 text-neutral-900 border border-neutral-950/5">{doctor.name?.charAt(0)}</AvatarFallback>
+                                            <AvatarFallback className="text-[11px] font-semibold bg-neutral-50 text-neutral-900 border-[0.5px] border-black/50">{doctor.name?.charAt(0)}</AvatarFallback>
                                         </Avatar>
                                         <div className="flex flex-col gap-0.5">
                                             <span className="font-medium text-sm text-neutral-900">{doctor.name}</span>
@@ -313,10 +313,10 @@ function DoctorsPageContent() {
                                 <TableCell className="py-4">
                                     <Badge
                                         variant={doctor.doctor_status === 'approved' ? 'default' : doctor.doctor_status === 'rejected' ? 'destructive' : 'secondary'}
-                                        className={`h-6 text-[10px] font-semibold border px-2.5 rounded-[4px] shadow-none uppercase tracking-wide
-                                            ${doctor.doctor_status === 'approved' ? 'bg-green-50 text-green-755 border-green-200/50' :
-                                              doctor.doctor_status === 'rejected' ? 'bg-red-50 text-red-755 border-red-200/50' :
-                                              'bg-neutral-50 text-neutral-700 border-neutral-950/10'
+                                        className={`h-6 text-[10px] font-semibold border-[0.5px] px-2.5 rounded-[4px] shadow-none uppercase tracking-wide
+                                            ${doctor.doctor_status === 'approved' ? 'bg-green-50 text-green-755 border-black/50' :
+                                              doctor.doctor_status === 'rejected' ? 'bg-red-50 text-red-755 border-black/50' :
+                                              'bg-neutral-50 text-neutral-700 border-black/50'
                                             }`}
                                     >
                                         {doctor.doctor_status?.replace('_', ' ')}
@@ -331,8 +331,8 @@ function DoctorsPageContent() {
                                             <button 
                                                 className={`h-8 px-4 rounded-[10px] text-xs font-medium flex items-center gap-1.5 transition-all
                                                     ${doctor.doctor_status === 'pending_approval' || doctor.pending_updates
-                                                        ? 'bg-black text-white hover:bg-neutral-900 border border-transparent'
-                                                        : 'bg-white border border-neutral-950/15 text-neutral-700 hover:bg-neutral-50'
+                                                        ? 'bg-black text-white hover:bg-neutral-900 border-[0.5px] border-transparent'
+                                                        : 'bg-white border-[0.5px] border-black/50 text-neutral-700 hover:bg-neutral-50'
                                                     }`}
                                             >
                                                 Review
@@ -346,7 +346,7 @@ function DoctorsPageContent() {
                                                     <MoreHorizontal className="h-4 w-4" />
                                                 </Button>
                                             </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end" className="rounded-[10px] border border-neutral-950/10 shadow-none bg-white p-1">
+                                            <DropdownMenuContent align="end" className="rounded-[10px] border-[0.5px] border-black/50 shadow-none bg-white p-1">
                                                 <DropdownMenuLabel className="font-semibold text-xs px-2 py-1.5 text-neutral-500">Actions</DropdownMenuLabel>
                                                 <Link href={`/superadmin/dashboard/users/doctors/${doctor.id}`}>
                                                     <DropdownMenuItem className="cursor-pointer font-medium text-xs rounded-md px-2 py-1.5 text-neutral-750 hover:bg-neutral-50 hover:text-black">
@@ -373,7 +373,7 @@ function DoctorsPageContent() {
 
                 {/* --- Pagination --- */}
                 {totalPages > 1 && (
-                    <div className="flex items-center justify-between space-x-2 py-4 px-6 border-t border-neutral-950/5 bg-neutral-50/10">
+                    <div className="flex items-center justify-between space-x-2 py-4 px-6 border-t-[0.5px] border-black/50 bg-neutral-50/10">
                         <p className="text-xs text-neutral-500 font-normal">
                             Page <span className="font-medium text-neutral-900">{page}</span> of <span className="font-medium text-neutral-900">{totalPages}</span>
                         </p>
@@ -381,14 +381,14 @@ function DoctorsPageContent() {
                             <button
                                 onClick={() => setPage(p => Math.max(1, p - 1))}
                                 disabled={page === 1}
-                                className="h-8 text-xs px-3 rounded-[10px] border border-neutral-950/15 bg-white text-neutral-700 hover:bg-neutral-50 disabled:opacity-40"
+                                className="h-8 text-xs px-3 rounded-[10px] border-[0.5px] border-black/50 bg-white text-neutral-700 hover:bg-neutral-50 disabled:opacity-40"
                             >
                                 Previous
                             </button>
                             <button
                                 onClick={() => setPage(p => p + 1)}
                                 disabled={page >= totalPages}
-                                className="h-8 text-xs px-3 rounded-[10px] border border-neutral-950/15 bg-white text-neutral-700 hover:bg-neutral-50 disabled:opacity-40"
+                                className="h-8 text-xs px-3 rounded-[10px] border-[0.5px] border-black/50 bg-white text-neutral-700 hover:bg-neutral-50 disabled:opacity-40"
                             >
                                 Next
                             </button>

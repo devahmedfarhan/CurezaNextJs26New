@@ -156,6 +156,7 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
     const [brands, setBrands] = useState<any[]>([]);
     const [sellers, setSellers] = useState<any[]>([]);
     const [sellerBrand, setSellerBrand] = useState<any>(null);
+    const [sellerSettings, setSellerSettings] = useState<any>(null);
     const [categories, setCategories] = useState<any[]>([]);
     const [concerns, setConcerns] = useState<any[]>([]);
     const [tags, setTags] = useState<any[]>([]);
@@ -209,8 +210,9 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
         banners: initialData?.banners || [{ desktop: null, mobile: null }, { desktop: null, mobile: null }, { desktop: null, mobile: null }],
         faqs: initialData?.faqs || [] as { question: string; answer: string }[],
         is_prescription_required: initialData?.is_prescription_required || false,
-        gst_slab: initialData?.gst_slab !== undefined ? String(initialData.gst_slab) : '18',
+        gst_slab: initialData?.gst_slab !== undefined ? String(Number(initialData.gst_slab)) : '18',
         gst_inclusive: initialData?.gst_inclusive ?? true,
+        hsn_code: initialData?.hsn_code || '',
         status: initialData?.status || 'draft',
     }));
 
@@ -274,8 +276,9 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                 faqs: dataToUse.faqs || [],
                 is_prescription_required: dataToUse.is_prescription_required || false,
                 video_cover: dataToUse.video_cover || null,
-                gst_slab: dataToUse.gst_slab !== undefined ? String(dataToUse.gst_slab) : '18',
+                gst_slab: dataToUse.gst_slab !== undefined ? String(Number(dataToUse.gst_slab)) : '18',
                 gst_inclusive: dataToUse.gst_inclusive ?? true,
+                hsn_code: dataToUse.hsn_code || '',
                 status: dataToUse.status || 'draft',
             }));
 
@@ -344,13 +347,17 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                 setConcerns(cnRes.data);
                 setAttributes(aRes.data);
                 setTags(tRes.data || []);
+                if (sSettings?.data) {
+                    setSellerSettings(sSettings.data);
+                }
 
                 if (!initialData && sSettings?.data?.profile) {
                     const profile = sSettings.data.profile;
                     setFormData(prev => ({
                         ...prev,
-                        gst_slab: profile.default_gst_slab !== undefined ? String(profile.default_gst_slab) : '18',
-                        gst_inclusive: profile.default_gst_inclusive ?? true
+                        gst_slab: profile.default_gst_slab !== undefined ? String(Number(profile.default_gst_slab)) : '18',
+                        gst_inclusive: profile.default_gst_inclusive ?? true,
+                        hsn_code: profile.default_hsn_code || ''
                     }));
                 }
             }
@@ -558,6 +565,7 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
             data.append('is_prescription_required', formData.is_prescription_required ? '1' : '0');
             if (formData.gst_slab) data.append('gst_slab', formData.gst_slab);
             data.append('gst_inclusive', formData.gst_inclusive ? '1' : '0');
+            if (formData.hsn_code) data.append('hsn_code', formData.hsn_code);
             data.append('status', formData.status);
 
             // Arrays
@@ -761,6 +769,7 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                         formData={formData}
                         handleInputChange={handleInputChange}
                         isSuperAdmin={isSuperAdmin}
+                        pendingTaxRequest={sellerSettings?.pending_requests?.tax?.[0]}
                     />
                 </AccordionCard>
 

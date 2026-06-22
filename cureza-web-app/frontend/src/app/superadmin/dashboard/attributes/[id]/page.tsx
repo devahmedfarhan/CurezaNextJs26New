@@ -82,7 +82,7 @@ export default function AttributeTermsPage() {
     );
 
     if (!attribute) return (
-        <div className="w-full p-8 text-center bg-red-50 dark:bg-red-900/10 rounded-lg border border-red-100 dark:border-red-900/20">
+        <div className="w-full p-8 text-center bg-red-50 dark:bg-red-900/10 rounded-lg border-[0.5px] border-black/50 dark:border-red-900/20">
             <AlertCircle size={36} className="mx-auto text-red-500 mb-3" />
             <h2 className="text-sm font-semibold text-gray-900 dark:text-white leading-none mb-1">Critical Error</h2>
             <p className="text-xs font-normal text-gray-500 dark:text-gray-400">The requested attribute configuration could not be synchronized.</p>
@@ -95,11 +95,11 @@ export default function AttributeTermsPage() {
     return (
         <div className="w-full space-y-6 animate-in fade-in duration-500">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4 justify-between border-b border-neutral-200 dark:border-neutral-800 pb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 justify-between border-b-[0.5px] border-black/50 dark:border-neutral-800 pb-6">
                 <div className="flex items-center gap-3">
                     <button
                         onClick={() => router.back()}
-                        className="p-2 bg-white dark:bg-gray-900 border border-neutral-200 dark:border-neutral-800 rounded-lg text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-all active:scale-95"
+                        className="p-2 bg-white dark:bg-gray-900 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-lg text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-all active:scale-95"
                     >
                         <ArrowLeft size={16} />
                     </button>
@@ -108,7 +108,7 @@ export default function AttributeTermsPage() {
                             <h1 className="text-lg font-bold text-gray-900 dark:text-white leading-none">
                                 {attribute.name}
                             </h1>
-                            <div className="px-2 py-0.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 text-[10px] font-semibold rounded border border-neutral-200 dark:border-neutral-700 capitalize">
+                            <div className="px-2 py-0.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 text-[10px] font-semibold rounded border-[0.5px] border-black/50 dark:border-neutral-700 capitalize">
                                 {attribute.type}
                             </div>
                         </div>
@@ -118,10 +118,10 @@ export default function AttributeTermsPage() {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-2.5 p-1.5 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700">
+                <div className="flex items-center gap-2.5 p-1.5 bg-neutral-50 dark:bg-neutral-800 rounded-lg border-[0.5px] border-black/50 dark:border-neutral-700">
                     <div className="flex -space-x-1.5 px-1">
                         {[1, 2, 3].map((i) => (
-                            <div key={i} className="w-6 h-6 rounded-full border border-white dark:border-gray-900 bg-neutral-200" />
+                            <div key={i} className="w-6 h-6 rounded-full border-[0.5px] border-white dark:border-gray-900 bg-neutral-200" />
                         ))}
                     </div>
                     <span className="text-[10px] font-semibold text-neutral-400 pr-2">Global Property</span>
@@ -129,7 +129,7 @@ export default function AttributeTermsPage() {
             </div>            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 {/* Form Side */}
                 <div className="lg:col-span-5 space-y-4">
-                    <div className="bg-white dark:bg-gray-900 p-5 rounded-lg border border-neutral-200 dark:border-neutral-800 relative overflow-hidden group">
+                    <div className="bg-white dark:bg-gray-900 p-5 rounded-lg border-[0.5px] border-black/50 dark:border-neutral-800 relative overflow-hidden group">
                         <div className="absolute top-0 right-0 p-3 opacity-5 group-hover:scale-105 transition-transform">
                             <Plus size={60} />
                         </div>
@@ -142,7 +142,7 @@ export default function AttributeTermsPage() {
                                     required
                                     value={newTerm.name}
                                     onChange={(e) => setNewTerm({ ...newTerm, name: e.target.value })}
-                                    className="w-full bg-neutral-50 dark:bg-neutral-850 rounded-md border border-neutral-200 dark:border-neutral-700 focus:border-neutral-950 focus:bg-white dark:focus:bg-gray-900 transition-all px-3 py-2 text-sm font-normal text-neutral-900 dark:text-white placeholder:text-neutral-400"
+                                    className="w-full bg-neutral-50 dark:bg-neutral-850 rounded-md border-[0.5px] border-black/50 dark:border-neutral-700 focus:border-neutral-950 focus:bg-white dark:focus:bg-gray-900 transition-all px-3 py-2 text-sm font-normal text-neutral-900 dark:text-white placeholder:text-neutral-400"
                                     placeholder="e.g. 10ml, Red, Large"
                                 />
                             </div>
@@ -152,14 +152,14 @@ export default function AttributeTermsPage() {
                                     <label className="text-xs font-semibold text-neutral-500 px-0.5">Visual Code</label>
                                     <div className="relative">
                                         <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 pointer-events-none">
-                                            <div className="w-3.5 h-3.5 rounded border border-black/10 shadow-sm" style={{ backgroundColor: newTerm.value || '#000000' }} />
+                                            <div className="w-3.5 h-3.5 rounded border-[0.5px] border-black/10 shadow-none" style={{ backgroundColor: newTerm.value || '#000000' }} />
                                             <span className="text-neutral-400 font-semibold text-xs">#</span>
                                         </div>
                                         <input
                                             type="text"
                                             value={newTerm.value.replace('#', '')}
                                             onChange={(e) => setNewTerm({ ...newTerm, value: '#' + e.target.value.replace('#', '') })}
-                                            className="w-full bg-neutral-50 dark:bg-neutral-850 rounded-md border border-neutral-200 dark:border-neutral-700 focus:border-neutral-950 focus:bg-white dark:focus:bg-gray-900 transition-all pl-10 pr-3 py-2 text-sm font-normal text-neutral-900 dark:text-white placeholder:text-neutral-400"
+                                            className="w-full bg-neutral-50 dark:bg-neutral-850 rounded-md border-[0.5px] border-black/50 dark:border-neutral-700 focus:border-neutral-950 focus:bg-white dark:focus:bg-gray-900 transition-all pl-10 pr-3 py-2 text-sm font-normal text-neutral-900 dark:text-white placeholder:text-neutral-400"
                                             placeholder="000000"
                                         />
                                     </div>
@@ -176,7 +176,7 @@ export default function AttributeTermsPage() {
                         </form>
                     </div>
 
-                    <div className="bg-neutral-50 dark:bg-neutral-850 p-5 rounded-lg border border-neutral-200 dark:border-neutral-800 text-center relative overflow-hidden group">
+                    <div className="bg-neutral-50 dark:bg-neutral-850 p-5 rounded-lg border-[0.5px] border-black/50 dark:border-neutral-800 text-center relative overflow-hidden group">
                         <div className="absolute bottom-0 right-0 p-3 opacity-5">
                             <Sparkles size={60} />
                         </div>
@@ -191,13 +191,13 @@ export default function AttributeTermsPage() {
                 <div className="lg:col-span-7 space-y-3 font-normal">
                     <div className="flex items-center justify-between px-1">
                         <h2 className="text-xs font-semibold text-neutral-550">Active Schema Values</h2>
-                        <div className="text-[9px] font-semibold text-neutral-600 bg-neutral-100 dark:bg-neutral-805 px-2 py-0.5 rounded border border-neutral-200 dark:border-neutral-700">Synced</div>
+                        <div className="text-[9px] font-semibold text-neutral-600 bg-neutral-100 dark:bg-neutral-805 px-2 py-0.5 rounded border-[0.5px] border-black/50 dark:border-neutral-700">Synced</div>
                     </div>
 
                     <div className="space-y-2">
                         {attribute.terms && attribute.terms.length > 0 ? (
                             attribute.terms.map((term: any) => (
-                                <div key={term.id} className="group bg-white dark:bg-gray-900 p-3.5 rounded-lg border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 transition-all duration-200">
+                                <div key={term.id} className="group bg-white dark:bg-gray-900 p-3.5 rounded-lg border-[0.5px] border-black/50 dark:border-neutral-800 hover:border-neutral-300 transition-all duration-200">
                                     {editingTerm === term.id ? (
                                         <div className="flex flex-col gap-3">
                                             <div className="flex gap-2">
@@ -205,14 +205,14 @@ export default function AttributeTermsPage() {
                                                     type="text"
                                                     value={editData.name}
                                                     onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-                                                    className="flex-1 bg-neutral-50 dark:bg-neutral-850 rounded-md border border-neutral-200 dark:border-neutral-700 focus:border-neutral-950 px-3 py-2 text-sm font-semibold text-neutral-900 dark:text-white"
+                                                    className="flex-1 bg-neutral-50 dark:bg-neutral-850 rounded-md border-[0.5px] border-black/50 dark:border-neutral-700 focus:border-neutral-950 px-3 py-2 text-sm font-semibold text-neutral-900 dark:text-white"
                                                 />
                                                 {attribute.type === 'color' && (
                                                     <input
                                                         type="text"
                                                         value={editData.value}
                                                         onChange={(e) => setEditData({ ...editData, value: e.target.value })}
-                                                        className="w-28 bg-neutral-50 dark:bg-neutral-850 rounded-md border border-neutral-200 dark:border-neutral-700 focus:border-neutral-950 px-3 py-2 text-sm font-semibold text-neutral-900 dark:text-white"
+                                                        className="w-28 bg-neutral-50 dark:bg-neutral-850 rounded-md border-[0.5px] border-black/50 dark:border-neutral-700 focus:border-neutral-950 px-3 py-2 text-sm font-semibold text-neutral-900 dark:text-white"
                                                         placeholder="#000000"
                                                     />
                                                 )}
@@ -238,11 +238,11 @@ export default function AttributeTermsPage() {
                                                 <div className="relative group/color">
                                                     {attribute.type === 'color' ? (
                                                         <div
-                                                            className="w-8 h-8 rounded-md border border-black/10 shadow-sm transition-transform group-hover:scale-105"
+                                                            className="w-8 h-8 rounded-md border-[0.5px] border-black/10 shadow-none transition-transform group-hover:scale-105"
                                                             style={{ backgroundColor: term.value || '#000000' }}
                                                         />
                                                     ) : (
-                                                        <div className="w-8 h-8 rounded-md bg-neutral-50 dark:bg-neutral-800 flex items-center justify-center text-neutral-450 border border-neutral-200 dark:border-neutral-700">
+                                                        <div className="w-8 h-8 rounded-md bg-neutral-50 dark:bg-neutral-800 flex items-center justify-center text-neutral-450 border-[0.5px] border-black/50 dark:border-neutral-700">
                                                             <Hash size={14} />
                                                         </div>
                                                     )}

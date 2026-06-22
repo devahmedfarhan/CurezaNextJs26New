@@ -10,7 +10,7 @@ class OrderItem extends Model
         'order_id', 'product_id', 'seller_id',
         'product_name', 'quantity', 'price', 'total', 'status',
         'patient_name', 'patient_age', 'patient_gender', 'health_concern', 'prescription_path', 'doctor_id',
-        'base_price', 'gst_slab', 'gst_amount', 'cgst', 'sgst', 'igst', 'net_amount'
+        'base_price', 'gst_slab', 'gst_amount', 'cgst', 'sgst', 'igst', 'net_amount', 'hsn_code'
     ];
 
     protected $casts = [

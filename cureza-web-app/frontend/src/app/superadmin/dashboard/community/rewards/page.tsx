@@ -159,7 +159,7 @@ export default function AdminRewardsPage() {
         <div className="space-y-10">
             {/* Section 1: Rewards Catalog */}
             <div className="space-y-4">
-                <div className="flex justify-between items-center border-b-[0.5px] border-neutral-950/10 pb-3">
+                <div className="flex justify-between items-center border-b-[0.5px] border-black/50 pb-3">
                     <h2 className="text-sm font-semibold text-gray-900">Reward Items Catalog</h2>
                     <button
                         onClick={handleOpenCreate}
@@ -172,16 +172,16 @@ export default function AdminRewardsPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {rewards.length === 0 ? (
-                        <div className="col-span-full bg-white p-8 text-center border-[0.5px] border-neutral-950/10 rounded-[10px] text-xs text-gray-500">
+                        <div className="col-span-full bg-white p-8 text-center border-[0.5px] border-black/50 rounded-[10px] text-xs text-gray-500">
                             No rewards configured. Click "Add Reward Item" to start.
                         </div>
                     ) : (
                         rewards.map((item) => (
-                            <div key={item.id} className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 overflow-hidden flex flex-col relative">
-                                <span className="absolute top-3 right-3 text-[10px] font-medium px-2 py-0.5 rounded-[6px] border-[0.5px] border-neutral-200 bg-neutral-50 text-neutral-600 capitalize">
+                            <div key={item.id} className="bg-white rounded-[10px] border-[0.5px] border-black/50 overflow-hidden flex flex-col relative">
+                                <span className="absolute top-3 right-3 text-[10px] font-medium px-2 py-0.5 rounded-[6px] border-[0.5px] border-black/50 bg-neutral-50 text-neutral-600 capitalize">
                                     {item.type}
                                 </span>
-                                <div className="bg-neutral-50 border-b-[0.5px] border-neutral-950/10 h-28 flex items-center justify-center text-neutral-400">
+                                <div className="bg-neutral-50 border-b-[0.5px] border-black/50 h-28 flex items-center justify-center text-neutral-400">
                                     <Gift size={36} />
                                 </div>
                                 <div className="p-4 flex-1 flex flex-col justify-between">
@@ -195,17 +195,17 @@ export default function AdminRewardsPage() {
                                             <p>Status: {item.is_active ? 'Active' : 'Draft'}</p>
                                         </div>
                                     </div>
-                                    <div className="flex gap-2 justify-end border-t-[0.5px] border-neutral-950/10 pt-3 mt-4">
+                                    <div className="flex gap-2 justify-end border-t-[0.5px] border-black/50 pt-3 mt-4">
                                         <button
                                             onClick={() => handleOpenEdit(item)}
-                                            className="px-2.5 py-1 border-[0.5px] border-neutral-950/20 text-gray-600 rounded-[10px] text-xs font-medium hover:bg-neutral-50 flex items-center gap-1 transition-colors"
+                                            className="px-2.5 py-1 border-[0.5px] border-black/50 text-gray-600 rounded-[10px] text-xs font-medium hover:bg-neutral-50 flex items-center gap-1 transition-colors"
                                         >
                                             <Edit2 size={12} />
                                             <span>Edit</span>
                                         </button>
                                         <button
                                             onClick={() => handleDelete(item.id)}
-                                            className="px-2.5 py-1 border-[0.5px] border-red-200 text-red-650 rounded-[10px] text-xs font-medium hover:bg-red-50/50 flex items-center gap-1 transition-colors"
+                                            className="px-2.5 py-1 border-[0.5px] border-black/50 text-red-650 rounded-[10px] text-xs font-medium hover:bg-red-50/50 flex items-center gap-1 transition-colors"
                                         >
                                             <Trash2 size={12} />
                                             <span>Delete</span>
@@ -220,12 +220,12 @@ export default function AdminRewardsPage() {
 
             {/* Section 2: User Redemptions */}
             <div className="space-y-4 pt-4">
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 border-b-[0.5px] border-neutral-950/10 pb-3">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 border-b-[0.5px] border-black/50 pb-3">
                     <h2 className="text-sm font-semibold text-gray-900">User Redemptions Log</h2>
                     <select
                         value={redemptionsStatus}
                         onChange={(e) => { setRedemptionsStatus(e.target.value); setRedemptionsPage(1); }}
-                        className="px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal self-end sm:self-center"
+                        className="px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal self-end sm:self-center"
                     >
                         <option value="">All Statuses</option>
                         <option value="pending">Pending</option>
@@ -234,13 +234,13 @@ export default function AdminRewardsPage() {
                     </select>
                 </div>
 
-                <div className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 overflow-hidden">
+                <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 overflow-hidden">
                     {redemptions.length === 0 ? (
                         <div className="p-8 text-center text-xs text-gray-500">No redemptions found.</div>
                     ) : (
                         <div className="overflow-x-auto">
                             <table className="w-full text-left text-xs">
-                                <thead className="bg-neutral-50 border-b-[0.5px] border-neutral-950/10 text-gray-500 font-medium">
+                                <thead className="bg-neutral-50 border-b-[0.5px] border-black/50 text-gray-500 font-medium">
                                     <tr>
                                         <th className="p-3">User</th>
                                         <th className="p-3">Reward Item</th>
@@ -268,14 +268,14 @@ export default function AdminRewardsPage() {
                                                 </td>
                                                 <td className="p-3">
                                                     <p className="font-medium text-gray-900">{reward?.name || 'Redeemed Item'}</p>
-                                                    <span className="text-[10px] bg-neutral-50 border-[0.5px] border-neutral-950/10 text-neutral-600 px-2 py-0.5 rounded-[6px] font-medium capitalize mt-1 inline-block">{reward?.type}</span>
+                                                    <span className="text-[10px] bg-neutral-50 border-[0.5px] border-black/50 text-neutral-600 px-2 py-0.5 rounded-[6px] font-medium capitalize mt-1 inline-block">{reward?.type}</span>
                                                 </td>
                                                 <td className="p-3 font-semibold text-red-650">-{item.points_spent} XP</td>
                                                 <td className="p-3 max-w-xs">
                                                     {item.coupon_code && (
                                                         <div className="flex items-center gap-1.5">
                                                             <span className="text-[10px] text-gray-400 font-medium">Coupon:</span>
-                                                            <code className="bg-neutral-50 px-2 py-0.5 border-[0.5px] border-neutral-950/10 rounded-[6px] text-xs font-mono text-gray-800 font-semibold select-all">
+                                                            <code className="bg-neutral-50 px-2 py-0.5 border-[0.5px] border-black/50 rounded-[6px] text-xs font-mono text-gray-800 font-semibold select-all">
                                                                 {item.coupon_code}
                                                             </code>
                                                         </div>
@@ -289,10 +289,10 @@ export default function AdminRewardsPage() {
                                                 <td className="p-3">
                                                     <span className={`inline-block text-[10px] font-medium px-2 py-0.5 rounded-[6px] border-[0.5px] capitalize ${
                                                         isFulfilled 
-                                                            ? 'bg-green-50 text-green-800 border-green-200/50' 
+                                                            ? 'bg-green-50 text-green-800 border-black/50' 
                                                             : isCancelled
-                                                                ? 'bg-red-50 text-red-800 border-red-200/50'
-                                                                : 'bg-neutral-50 text-neutral-600 border-neutral-950/10'
+                                                                ? 'bg-red-50 text-red-800 border-black/50'
+                                                                : 'bg-neutral-50 text-neutral-600 border-black/50'
                                                     }`}>
                                                         {item.status}
                                                     </span>
@@ -309,7 +309,7 @@ export default function AdminRewardsPage() {
                                                             </button>
                                                             <button
                                                                 onClick={() => handleUpdateStatus(item.id, 'cancelled')}
-                                                                className="px-2.5 py-1 border-[0.5px] border-red-250 text-red-650 rounded-[10px] text-xs font-medium hover:bg-red-50/50 flex items-center gap-1 transition-colors"
+                                                                className="px-2.5 py-1 border-[0.5px] border-black/50 text-red-650 rounded-[10px] text-xs font-medium hover:bg-red-50/50 flex items-center gap-1 transition-colors"
                                                             >
                                                                 <XCircle size={12} />
                                                                 <span>Cancel</span>
@@ -334,7 +334,7 @@ export default function AdminRewardsPage() {
                             <button
                                 disabled={redemptionsPage <= 1}
                                 onClick={() => setRedemptionsPage(redemptionsPage - 1)}
-                                className="px-2.5 py-1 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs font-medium hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                className="px-2.5 py-1 border-[0.5px] border-black/50 rounded-[10px] text-xs font-medium hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                                 Previous
                             </button>
@@ -342,7 +342,7 @@ export default function AdminRewardsPage() {
                             <button
                                 disabled={redemptionsPage >= pagination.last_page}
                                 onClick={() => setRedemptionsPage(redemptionsPage + 1)}
-                                className="px-2.5 py-1 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs font-medium hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                className="px-2.5 py-1 border-[0.5px] border-black/50 rounded-[10px] text-xs font-medium hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                                 Next
                             </button>
@@ -354,7 +354,7 @@ export default function AdminRewardsPage() {
             {/* Create/Edit Modal */}
             {isOpen && (
                 <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-                    <div className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 max-w-md w-full p-5 space-y-4">
+                    <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 max-w-md w-full p-5 space-y-4">
                         <div className="flex justify-between items-start">
                             <h3 className="text-sm font-semibold text-gray-900">{editingId ? 'Edit Reward Item' : 'Add Reward Item'}</h3>
                             <button
@@ -374,7 +374,7 @@ export default function AdminRewardsPage() {
                                     value={form.name}
                                     onChange={handleInputChange}
                                     placeholder="e.g., ₹500 Off Coupon"
-                                    className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
+                                    className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                     required
                                 />
                             </div>
@@ -387,7 +387,7 @@ export default function AdminRewardsPage() {
                                     onChange={handleInputChange}
                                     placeholder="Provide details about the reward benefit..."
                                     rows={3}
-                                    className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal resize-none"
+                                    className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal resize-none"
                                     required
                                 ></textarea>
                             </div>
@@ -401,7 +401,7 @@ export default function AdminRewardsPage() {
                                         value={form.points_cost}
                                         onChange={handleInputChange}
                                         min="1"
-                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                         required
                                     />
                                 </div>
@@ -411,7 +411,7 @@ export default function AdminRewardsPage() {
                                         name="type"
                                         value={form.type}
                                         onChange={handleInputChange}
-                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                     >
                                         <option value="coupon">Discount Coupon</option>
                                         <option value="physical">Physical Gift Box</option>
@@ -429,7 +429,7 @@ export default function AdminRewardsPage() {
                                         value={form.coupon_code}
                                         onChange={handleInputChange}
                                         placeholder="e.g., REDEEM500 (Optional)"
-                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                     />
                                 </div>
                                 <div className="space-y-1">
@@ -441,7 +441,7 @@ export default function AdminRewardsPage() {
                                         onChange={handleInputChange}
                                         min="-1"
                                         placeholder="-1 for unlimited"
-                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                         required
                                     />
                                 </div>
@@ -453,18 +453,18 @@ export default function AdminRewardsPage() {
                                     name="is_active"
                                     value={form.is_active ? 'true' : 'false'}
                                     onChange={handleInputChange}
-                                    className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
+                                    className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                 >
                                     <option value="true">Active (Visible)</option>
                                     <option value="false">Draft (Hidden)</option>
                                 </select>
                             </div>
 
-                            <div className="flex gap-2.5 pt-3 border-t-[0.5px] border-neutral-950/10">
+                            <div className="flex gap-2.5 pt-3 border-t-[0.5px] border-black/50">
                                 <button
                                     type="button"
                                     onClick={() => setIsOpen(false)}
-                                    className="flex-1 border-[0.5px] border-neutral-950/20 text-gray-700 py-1.5 rounded-[10px] text-xs font-medium hover:bg-neutral-50 transition-colors"
+                                    className="flex-1 border-[0.5px] border-black/50 text-gray-700 py-1.5 rounded-[10px] text-xs font-medium hover:bg-neutral-50 transition-colors"
                                 >
                                     Cancel
                                 </button>

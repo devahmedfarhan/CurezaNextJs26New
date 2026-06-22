@@ -514,7 +514,7 @@ function NotificationSettingsContent() {
     return (
         <div className="space-y-6 pb-20 font-sans text-neutral-900">
             {/* Header section with Stats */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-black/10 pb-5">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b-[0.5px] border-black/10 pb-5">
                 <div>
                     <h1 className="text-xl font-semibold text-neutral-900 tracking-tight flex items-center gap-2">
                         <Sliders className="text-black" size={22} /> Notifications & Flows
@@ -563,13 +563,13 @@ function NotificationSettingsContent() {
 
             {/* Alert messages */}
             {successMessage && (
-                <div className="bg-green-50 border-l-2 border-green-600 p-4 rounded-[10px] flex items-center gap-3">
+                <div className="bg-green-50 border-l-[0.5px] border-black/50 p-4 rounded-[10px] flex items-center gap-3">
                     <CheckCircle className="text-green-600 flex-shrink-0" size={16} />
                     <span className="text-green-800 text-xs font-medium">{successMessage}</span>
                 </div>
             )}
             {errorMessage && (
-                <div className="bg-red-50 border-l-2 border-red-600 p-4 rounded-[10px] flex items-center gap-3">
+                <div className="bg-red-50 border-l-[0.5px] border-black/50 p-4 rounded-[10px] flex items-center gap-3">
                     <AlertCircle className="text-red-600 flex-shrink-0" size={16} />
                     <span className="text-red-800 text-xs font-medium">{errorMessage}</span>
                 </div>
@@ -593,7 +593,7 @@ function NotificationSettingsContent() {
                         <h3 className="text-xl font-semibold text-neutral-900 mt-1">{stats.total_failed}</h3>
                         <p className="text-[10px] text-red-500 font-medium mt-1">Errors logged in history</p>
                     </div>
-                    <div className="p-2.5 bg-red-50/50 text-red-600 border-[0.5px] border-red-250/20 rounded-[10px]">
+                    <div className="p-2.5 bg-red-50/50 text-red-600 border-[0.5px] border-black/50 rounded-[10px]">
                         <AlertCircle size={18} />
                     </div>
                 </div>
@@ -625,7 +625,7 @@ function NotificationSettingsContent() {
                 {/* 1. TEMPLATES TAB */}
                 {activeTab === 'templates' && (
                     <div className="space-y-6">
-                        <div className="flex justify-between items-center border-b border-black/10 pb-3">
+                        <div className="flex justify-between items-center border-b-[0.5px] border-black/10 pb-3">
                             <h3 className="font-semibold text-neutral-900 text-base">Notification Templates</h3>
                             <p className="text-xs text-neutral-500 font-normal">Click on any template to preview, edit copy parameters, or run dispatches.</p>
                         </div>
@@ -650,7 +650,7 @@ function NotificationSettingsContent() {
 
                                     return (
                                         <div key={flowType} className="border-[0.5px] border-black/10 rounded-[10px] p-5 bg-neutral-50/30 space-y-4">
-                                            <h4 className="font-medium text-neutral-800 text-xs border-b border-black/10 pb-2">
+                                            <h4 className="font-medium text-neutral-800 text-xs border-b-[0.5px] border-black/10 pb-2">
                                                 {flowLabels[flowType] || flowType}
                                             </h4>
                                             <div className="space-y-3">
@@ -681,9 +681,9 @@ function NotificationSettingsContent() {
                                                             {/* Status Toggle */}
                                                             <button
                                                                 onClick={() => handleToggleStatus(tmpl)}
-                                                                className={`text-[10px] px-2.5 py-1 rounded-[10px] font-medium border transition-all ${
+                                                                className={`text-[10px] px-2.5 py-1 rounded-[10px] font-medium border-[0.5px] transition-all ${
                                                                     tmpl.status === 'active' 
-                                                                        ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100/50' 
+                                                                        ? 'bg-green-50 text-green-700 border-black/50 hover:bg-green-100/50' 
                                                                         : 'bg-neutral-50 text-neutral-600 border-black/10 hover:bg-neutral-100'
                                                                 }`}
                                                             >
@@ -697,7 +697,7 @@ function NotificationSettingsContent() {
                                                                     setPreviewMode('edit');
                                                                     setEditorOpen(true);
                                                                 }}
-                                                                className="text-neutral-500 hover:text-black p-1.5 rounded-[10px] hover:bg-neutral-50 border border-transparent hover:border-black/5 transition"
+                                                                className="text-neutral-500 hover:text-black p-1.5 rounded-[10px] hover:bg-neutral-50 border-[0.5px] border-transparent hover:border-black/5 transition"
                                                                 title="Edit content & rules"
                                                             >
                                                                 <Edit size={14} />
@@ -707,7 +707,7 @@ function NotificationSettingsContent() {
                                                                     setSelectedTemplate(tmpl);
                                                                     setTestModalOpen(true);
                                                                 }}
-                                                                className="text-neutral-550 hover:text-black p-1.5 rounded-[10px] hover:bg-neutral-50 border border-transparent hover:border-black/5 transition"
+                                                                className="text-neutral-550 hover:text-black p-1.5 rounded-[10px] hover:bg-neutral-50 border-[0.5px] border-transparent hover:border-black/5 transition"
                                                                 title="Trigger test message"
                                                             >
                                                                 <Send size={14} />
@@ -727,7 +727,7 @@ function NotificationSettingsContent() {
                 {/* 2. AUTOMATED FLOWS CONFIG */}
                 {activeTab === 'flows' && (
                     <div className="space-y-6">
-                        <div className="border-b border-black/10 pb-3">
+                        <div className="border-b-[0.5px] border-black/10 pb-3">
                             <h3 className="font-semibold text-neutral-900 text-base">Automated Triggers Configuration</h3>
                             <p className="text-neutral-500 text-xs mt-1">Configure intervals and conditions for automatic system schedules</p>
                         </div>
@@ -753,13 +753,13 @@ function NotificationSettingsContent() {
                                             <input 
                                                 type="number" 
                                                 defaultValue="1" 
-                                                className="w-12 px-2 py-1 text-xs border border-black/10 bg-neutral-50 rounded-[10px] text-center text-neutral-600" 
+                                                className="w-12 px-2 py-1 text-xs border-[0.5px] border-black/10 bg-neutral-50 rounded-[10px] text-center text-neutral-600" 
                                                 disabled 
                                             />
                                             <span className="text-xs text-neutral-650 font-medium">hour(s)</span>
                                         </div>
                                     </div>
-                                    <div className="flex items-center justify-between border-t border-black/10 pt-3">
+                                    <div className="flex items-center justify-between border-t-[0.5px] border-black/10 pt-3">
                                         <div className="space-y-0.5">
                                             <p className="text-xs font-medium text-neutral-800">Step 2: Incentivized Recovery</p>
                                             <p className="text-[10px] text-neutral-450 font-normal">Dispatches 10% coupon code (CUREZA10)</p>
@@ -768,7 +768,7 @@ function NotificationSettingsContent() {
                                             <input 
                                                 type="number" 
                                                 defaultValue="24" 
-                                                className="w-12 px-2 py-1 text-xs border border-black/10 bg-neutral-50 rounded-[10px] text-center text-neutral-600" 
+                                                className="w-12 px-2 py-1 text-xs border-[0.5px] border-black/10 bg-neutral-50 rounded-[10px] text-center text-neutral-600" 
                                                 disabled 
                                             />
                                             <span className="text-xs text-neutral-650 font-medium">hour(s)</span>
@@ -797,13 +797,13 @@ function NotificationSettingsContent() {
                                             <input 
                                                 type="number" 
                                                 defaultValue="3" 
-                                                className="w-12 px-2 py-1 text-xs border border-black/10 bg-neutral-50 rounded-[10px] text-center text-neutral-600" 
+                                                className="w-12 px-2 py-1 text-xs border-[0.5px] border-black/10 bg-neutral-50 rounded-[10px] text-center text-neutral-600" 
                                                 disabled 
                                             />
                                             <span className="text-xs text-neutral-650 font-medium">day(s)</span>
                                         </div>
                                     </div>
-                                    <div className="flex items-center justify-between border-t border-black/10 pt-3">
+                                    <div className="flex items-center justify-between border-t-[0.5px] border-black/10 pt-3">
                                         <div className="space-y-0.5">
                                             <p className="text-xs font-medium text-neutral-800">Replenishment Reminder</p>
                                             <p className="text-[10px] text-neutral-450 font-normal">Suggest re-purchasing wellness products</p>
@@ -812,7 +812,7 @@ function NotificationSettingsContent() {
                                             <input 
                                                 type="number" 
                                                 defaultValue="30" 
-                                                className="w-12 px-2 py-1 text-xs border border-black/10 bg-neutral-50 rounded-[10px] text-center text-neutral-600" 
+                                                className="w-12 px-2 py-1 text-xs border-[0.5px] border-black/10 bg-neutral-50 rounded-[10px] text-center text-neutral-600" 
                                                 disabled 
                                             />
                                             <span className="text-xs text-neutral-650 font-medium">day(s)</span>
@@ -837,7 +837,7 @@ function NotificationSettingsContent() {
                 {/* 3. PRODUCT WAITLIST TAB */}
                 {activeTab === 'waitlist' && (
                     <div className="space-y-6">
-                        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-black/10 pb-3">
+                        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b-[0.5px] border-black/10 pb-3">
                             <div>
                                 <h3 className="font-semibold text-neutral-900 text-base">Product Restock Waitlists</h3>
                                 <p className="text-neutral-500 text-xs mt-1">Notify customers automatically when out-of-stock items become available</p>
@@ -911,9 +911,9 @@ function NotificationSettingsContent() {
                                                     {new Date(sub.created_at).toLocaleDateString()}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className={`px-2 py-0.5 text-[10px] font-medium rounded-[10px] border ${
+                                                    <span className={`px-2 py-0.5 text-[10px] font-medium rounded-[10px] border-[0.5px] ${
                                                         sub.notified 
-                                                            ? 'bg-green-50 text-green-700 border-green-200' 
+                                                            ? 'bg-green-50 text-green-700 border-black/50' 
                                                             : 'bg-neutral-50 text-neutral-700 border-black/10'
                                                     }`}>
                                                         {sub.notified ? 'Notified' : 'Pending'}
@@ -970,7 +970,7 @@ function NotificationSettingsContent() {
                 {/* 4. WHATSAPP API CONFIG */}
                 {activeTab === 'whatsapp' && (
                     <div className="space-y-6">
-                        <div className="border-b border-black/10 pb-3 flex justify-between items-start">
+                        <div className="border-b-[0.5px] border-black/10 pb-3 flex justify-between items-start">
                             <div>
                                 <h3 className="font-semibold text-neutral-900 text-base">WhatsApp API (AISensy Campaign Provider)</h3>
                                 <p className="text-neutral-500 text-xs mt-1">Configure credentials for automated AISensy campaigns and test connection</p>
@@ -985,7 +985,7 @@ function NotificationSettingsContent() {
                                         ...whatsappSettings,
                                         whatsapp_enabled: whatsappSettings.whatsapp_enabled === '1' ? '0' : '1'
                                     })}
-                                    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-[0.5px] border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
                                         whatsappSettings.whatsapp_enabled === '1' ? 'bg-black' : 'bg-neutral-200'
                                     }`}
                                 >
@@ -1068,18 +1068,18 @@ function NotificationSettingsContent() {
                                         </div>
                                     )}
                                     {pingStatus === 'success' && (
-                                        <div className="p-3 bg-green-50 border-[0.5px] border-green-200 text-green-700 rounded-[10px] text-xs font-medium flex items-center gap-2">
+                                        <div className="p-3 bg-green-50 border-[0.5px] border-black/50 text-green-700 rounded-[10px] text-xs font-medium flex items-center gap-2">
                                             <CheckCircle size={16} /> API Connected! AISensy Developer Token is authenticated successfully.
                                         </div>
                                     )}
                                     {pingStatus === 'failed' && (
-                                        <div className="p-3 bg-red-50 border-[0.5px] border-red-200 text-red-700 rounded-[10px] text-xs font-medium flex items-center gap-2">
+                                        <div className="p-3 bg-red-50 border-[0.5px] border-black/50 text-red-700 rounded-[10px] text-xs font-medium flex items-center gap-2">
                                             <AlertCircle size={16} /> API Key check failed. Please check your token string parameters.
                                         </div>
                                     )}
                                 </div>
 
-                                <div className="border-t border-black/10 pt-4 mt-4 text-xs text-neutral-500 space-y-2">
+                                <div className="border-t-[0.5px] border-black/10 pt-4 mt-4 text-xs text-neutral-500 space-y-2">
                                     <p className="font-medium text-neutral-700">Webhook Integration Callback (for delivery statuses):</p>
                                     <div className="p-2 bg-white rounded border-[0.5px] border-black/10 font-mono text-[10px] break-all select-all">
                                         {config('app.url', 'http://localhost:8000')}/api/payments/webhook
@@ -1094,14 +1094,14 @@ function NotificationSettingsContent() {
                 {/* 5. LOGS TAB */}
                 {activeTab === 'logs' && (
                     <div className="space-y-6">
-                        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-black/10 pb-3">
+                        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b-[0.5px] border-black/10 pb-3">
                             <div>
                                 <h3 className="font-semibold text-neutral-900 text-base">Delivery Logs Audit Trail</h3>
                                 <p className="text-neutral-500 text-xs mt-1">Audit log of all email and whatsapp messages dispatched by the system</p>
                             </div>
                             <button
                                 onClick={handleClearLogs}
-                                className="bg-red-50 border-[0.5px] border-red-200 hover:bg-red-100 text-red-650 px-4 py-2 rounded-[10px] text-xs font-medium flex items-center gap-1.5 self-start transition-all"
+                                className="bg-red-50 border-[0.5px] border-black/50 hover:bg-red-100 text-red-650 px-4 py-2 rounded-[10px] text-xs font-medium flex items-center gap-1.5 self-start transition-all"
                             >
                                 <Trash2 size={14} /> Flush All Logs
                             </button>
@@ -1165,16 +1165,16 @@ function NotificationSettingsContent() {
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className="px-2 py-0.5 text-[10px] font-medium rounded-[10px] border border-black/10 bg-neutral-50 text-neutral-700">
+                                                    <span className="px-2 py-0.5 text-[10px] font-medium rounded-[10px] border-[0.5px] border-black/10 bg-neutral-50 text-neutral-700">
                                                         {log.channel === 'email' ? 'Email' : 'WhatsApp'}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className={`px-2 py-0.5 text-[10px] font-medium rounded-[10px] border ${
+                                                    <span className={`px-2 py-0.5 text-[10px] font-medium rounded-[10px] border-[0.5px] ${
                                                         log.status === 'sent' 
-                                                            ? 'bg-green-50 text-green-700 border-green-200' 
+                                                            ? 'bg-green-50 text-green-700 border-black/50' 
                                                             : log.status === 'failed'
-                                                            ? 'bg-red-50 text-red-700 border-red-200'
+                                                            ? 'bg-red-50 text-red-700 border-black/50'
                                                             : 'bg-neutral-50 text-neutral-700 border-black/10'
                                                     }`}>
                                                         {log.status === 'sent' ? 'Sent' : log.status === 'failed' ? 'Failed' : 'Queued'}
@@ -1226,7 +1226,7 @@ function NotificationSettingsContent() {
                 {/* 6. SYSTEM DOCUMENTATION GUIDE TAB */}
                 {activeTab === 'guide' && (
                     <div className="space-y-6 animate-fadeIn">
-                        <div className="border-b border-black/10 pb-3">
+                        <div className="border-b-[0.5px] border-black/10 pb-3">
                             <h3 className="font-semibold text-neutral-900 text-base">System Documentation & Help Guide</h3>
                             <p className="text-neutral-500 text-xs mt-1">Full operational manual for SMTP emails and AISensy WhatsApp campaigns</p>
                         </div>
@@ -1245,7 +1245,7 @@ function NotificationSettingsContent() {
                                 </div>
 
                                 <div className="space-y-4">
-                                    <h4 className="font-medium text-neutral-800 text-sm border-b pb-1">2. Customer Lifecycle Flows Details</h4>
+                                    <h4 className="font-medium text-neutral-800 text-sm border-b-[0.5px] pb-1">2. Customer Lifecycle Flows Details</h4>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div className="bg-white border-[0.5px] border-black/10 rounded-[10px] p-4 space-y-2">
                                             <span className="font-medium text-xs text-neutral-900 block">📦 Order Tracking Flow</span>
@@ -1314,7 +1314,7 @@ function NotificationSettingsContent() {
                                                     { v: 'unsubscribe_link', d: 'Email subscription opt-out link' }
                                                 ].map(item => (
                                                     <tr key={item.v} className="hover:bg-neutral-50/40">
-                                                        <td className="px-3 py-2 font-mono font-medium text-neutral-800 bg-neutral-50/50 border-r border-black/5">{`{{${item.v}}}`}</td>
+                                                        <td className="px-3 py-2 font-mono font-medium text-neutral-800 bg-neutral-50/50 border-r-[0.5px] border-black/5">{`{{${item.v}}}`}</td>
                                                         <td className="px-3 py-2 text-neutral-500 font-normal">{item.d}</td>
                                                     </tr>
                                                 ))}
@@ -1328,7 +1328,7 @@ function NotificationSettingsContent() {
                                     <p className="text-[11px] text-neutral-500">
                                         Trigger evaluation scripts via console shells.
                                     </p>
-                                    <div className="p-3 bg-neutral-900 text-neutral-200 font-mono text-[10px] rounded-[10px] break-all select-all border border-black">
+                                    <div className="p-3 bg-neutral-900 text-neutral-200 font-mono text-[10px] rounded-[10px] break-all select-all border-[0.5px] border-black">
                                         php artisan notifications:process-flows
                                     </div>
                                 </div>
@@ -1359,7 +1359,7 @@ function NotificationSettingsContent() {
                             </div>
                             <button 
                                 onClick={() => setEditorOpen(false)}
-                                className="text-neutral-400 hover:text-neutral-900 p-1.5 rounded-[10px] hover:bg-neutral-50 border border-transparent hover:border-black/5 transition"
+                                className="text-neutral-400 hover:text-neutral-900 p-1.5 rounded-[10px] hover:bg-neutral-50 border-[0.5px] border-transparent hover:border-black/5 transition"
                             >
                                 <X size={18} />
                             </button>
@@ -1458,7 +1458,7 @@ function NotificationSettingsContent() {
                                     </div>
                                 )}
 
-                                <div className="grid grid-cols-3 gap-3 border-t border-black/10 pt-3">
+                                <div className="grid grid-cols-3 gap-3 border-t-[0.5px] border-black/10 pt-3">
                                     <div>
                                         <label className="block text-xs font-medium text-neutral-700 mb-1">Trigger Type</label>
                                         <select 
@@ -1494,7 +1494,7 @@ function NotificationSettingsContent() {
                                     </div>
                                 </div>
 
-                                <div className="border-t border-black/10 pt-3">
+                                <div className="border-t-[0.5px] border-black/10 pt-3">
                                     <div className="flex justify-between items-center mb-1">
                                         <label className="block text-xs font-medium text-neutral-700">Body Copy Template</label>
                                         <span className="text-[10px] text-neutral-400">Click chips to insert placeholders</span>
@@ -1535,7 +1535,7 @@ function NotificationSettingsContent() {
                                     <button
                                         type="button"
                                         onClick={() => setPreviewMode('edit')}
-                                        className={`px-4 py-2 text-xs font-medium border-b-2 transition-all ${
+                                        className={`px-4 py-2 text-xs font-medium border-b-[0.5px] transition-all ${
                                             previewMode === 'edit' ? 'border-black text-black' : 'border-transparent text-neutral-400 hover:text-neutral-900'
                                         }`}
                                     >
@@ -1544,7 +1544,7 @@ function NotificationSettingsContent() {
                                     <button
                                         type="button"
                                         onClick={() => setPreviewMode('preview')}
-                                        className={`px-4 py-2 text-xs font-medium border-b-2 transition-all ${
+                                        className={`px-4 py-2 text-xs font-medium border-b-[0.5px] transition-all ${
                                             previewMode === 'preview' ? 'border-black text-black' : 'border-transparent text-neutral-400 hover:text-neutral-900'
                                         }`}
                                     >
@@ -1710,7 +1710,7 @@ function NotificationSettingsContent() {
                             </div>
 
                             {logDetailsModal.error_message && (
-                                <div className="p-3 bg-red-50 border-[0.5px] border-red-200 text-red-700 rounded-[10px] text-xs font-medium flex items-center gap-2">
+                                <div className="p-3 bg-red-50 border-[0.5px] border-black/50 text-red-700 rounded-[10px] text-xs font-medium flex items-center gap-2">
                                     <AlertCircle className="text-red-500" size={16} />
                                     Error Details: {logDetailsModal.error_message}
                                 </div>
@@ -1824,7 +1824,7 @@ export default function AdminNotificationSettingsPage() {
     return (
         <Suspense fallback={
             <div className="flex flex-col justify-center items-center py-20 gap-2">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cureza-green"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-[0.5px] border-cureza-green"></div>
                 <span className="text-sm text-gray-500 font-medium">Loading page configurations...</span>
             </div>
         }>

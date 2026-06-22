@@ -295,7 +295,7 @@ export default function AdminFaqManagerPage() {
                 <div className="flex items-center gap-4">
                     <Link 
                         href="/superadmin/dashboard/cms"
-                        className="p-2 hover:bg-gray-100 rounded-[10px] text-gray-600 transition-colors border-[0.5px] border-gray-200/50"
+                        className="p-2 hover:bg-gray-100 rounded-[10px] text-gray-600 transition-colors border-[0.5px] border-black/50"
                     >
                         <ArrowLeft size={16} />
                     </Link>
@@ -317,7 +317,7 @@ export default function AdminFaqManagerPage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
                 
                 {/* Left Side: Modern Card Item Navigation */}
-                <div className="md:col-span-1 border-[0.5px] border-gray-200/50 rounded-[10px] bg-white overflow-hidden p-2 space-y-1">
+                <div className="md:col-span-1 border-[0.5px] border-black/50 rounded-[10px] bg-white overflow-hidden p-2 space-y-1">
                     <button
                         onClick={() => setActiveTab('help')}
                         className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium rounded-[10px] transition-colors ${
@@ -345,7 +345,7 @@ export default function AdminFaqManagerPage() {
                 {/* Right Side: FAQ list content */}
                 <div className="md:col-span-3 space-y-6">
                     {activeTab === 'home' ? (
-                        <div className="bg-white rounded-[10px] border-[0.5px] border-gray-200/50 overflow-hidden divide-y-[0.5px] divide-gray-200/50 shadow-none">
+                        <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 overflow-hidden divide-y-[0.5px] divide-gray-200/50 shadow-none">
                             {filteredFaqs.length === 0 ? (
                                 <div className="p-12 text-center text-gray-400 italic text-sm">No homepage FAQs found. Add one now!</div>
                             ) : (
@@ -363,14 +363,14 @@ export default function AdminFaqManagerPage() {
                                         <div className="flex items-center gap-2 shrink-0">
                                             <button 
                                                 onClick={() => handleOpenModal(faq)}
-                                                className="p-1.5 text-black hover:bg-gray-100 border-[0.5px] border-gray-200/50 rounded-[10px] transition-colors"
+                                                className="p-1.5 text-black hover:bg-gray-100 border-[0.5px] border-black/50 rounded-[10px] transition-colors"
                                                 title="Edit FAQ"
                                             >
                                                 <Edit size={14} />
                                             </button>
                                             <button 
                                                 onClick={() => handleDelete(faq.id)}
-                                                className="p-1.5 text-red-500 hover:bg-red-50 border-[0.5px] border-gray-200/50 rounded-[10px] transition-colors"
+                                                className="p-1.5 text-red-500 hover:bg-red-50 border-[0.5px] border-black/50 rounded-[10px] transition-colors"
                                                 title="Delete FAQ"
                                             >
                                                 <Trash2 size={14} />
@@ -383,7 +383,7 @@ export default function AdminFaqManagerPage() {
                     ) : (
                         <div className="space-y-6">
                             {Object.keys(helpCenterGroups).length === 0 ? (
-                                <div className="bg-white rounded-[10px] border-[0.5px] border-gray-200/50 p-12 text-center text-gray-400 italic text-sm">
+                                <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 p-12 text-center text-gray-400 italic text-sm">
                                     No Help Center FAQs found. Add one now!
                                 </div>
                             ) : (
@@ -392,11 +392,11 @@ export default function AdminFaqManagerPage() {
                                     const TopicIcon = AVAILABLE_ICONS.find(i => i.name === topic.icon)?.component || HelpCircle;
                                     
                                     return (
-                                        <div key={topicId} className="bg-white rounded-[10px] border-[0.5px] border-gray-200/50 overflow-hidden shadow-none">
+                                        <div key={topicId} className="bg-white rounded-[10px] border-[0.5px] border-black/50 overflow-hidden shadow-none">
                                             {/* Topic Header: Clean B&W */}
-                                            <div className="bg-gray-50/50 p-4 flex items-center justify-between gap-4 border-b-[0.5px] border-gray-200/50">
+                                            <div className="bg-gray-50/50 p-4 flex items-center justify-between gap-4 border-b-[0.5px] border-black/50">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="p-2 border-[0.5px] border-gray-200 bg-white rounded-[10px] text-black">
+                                                    <div className="p-2 border-[0.5px] border-black/50 bg-white rounded-[10px] text-black">
                                                         <TopicIcon size={16} />
                                                     </div>
                                                     <div>
@@ -412,7 +412,7 @@ export default function AdminFaqManagerPage() {
                                                     const sub = topic.subtopics[subId];
                                                     return (
                                                         <div key={subId} className="p-5">
-                                                            <h4 className="font-medium text-xs text-black uppercase tracking-wider mb-3 bg-gray-50 inline-block px-2.5 py-1 rounded-[10px] border-[0.5px] border-gray-200/50">
+                                                            <h4 className="font-medium text-xs text-black uppercase tracking-wider mb-3 bg-gray-50 inline-block px-2.5 py-1 rounded-[10px] border-[0.5px] border-black/50">
                                                                 {sub.title} ({subId})
                                                             </h4>
                                                             
@@ -429,14 +429,14 @@ export default function AdminFaqManagerPage() {
                                                                         <div className="flex items-center gap-1.5 shrink-0">
                                                                             <button 
                                                                                 onClick={() => handleOpenModal(faq)}
-                                                                                className="p-1.5 text-black hover:bg-gray-100 border-[0.5px] border-gray-200/50 rounded-[10px] transition-colors"
+                                                                                className="p-1.5 text-black hover:bg-gray-100 border-[0.5px] border-black/50 rounded-[10px] transition-colors"
                                                                                 title="Edit FAQ"
                                                                             >
                                                                                 <Edit size={12} />
                                                                             </button>
                                                                             <button 
                                                                                 onClick={() => handleDelete(faq.id)}
-                                                                                className="p-1.5 text-red-500 hover:bg-red-50 border-[0.5px] border-gray-200/50 rounded-[10px] transition-colors"
+                                                                                className="p-1.5 text-red-500 hover:bg-red-50 border-[0.5px] border-black/50 rounded-[10px] transition-colors"
                                                                                 title="Delete FAQ"
                                                                             >
                                                                                 <Trash2 size={12} />
@@ -461,9 +461,9 @@ export default function AdminFaqManagerPage() {
             {/* Add/Edit Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-[10px] shadow-none max-w-xl w-full overflow-hidden border-[0.5px] border-gray-200/50">
+                    <div className="bg-white rounded-[10px] shadow-none max-w-xl w-full overflow-hidden border-[0.5px] border-black/50">
                         {/* Modal Header */}
-                        <div className="bg-white p-4 flex justify-between items-center border-b-[0.5px] border-gray-200/50">
+                        <div className="bg-white p-4 flex justify-between items-center border-b-[0.5px] border-black/50">
                             <h2 className="font-medium text-base text-black">
                                 {editingFaq ? 'Edit FAQ Item' : 'Add New FAQ Item'}
                             </h2>
@@ -482,7 +482,7 @@ export default function AdminFaqManagerPage() {
                                 <select
                                     value={formData.category}
                                     onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value as 'help' | 'home' }))}
-                                    className="w-full px-3 py-2 border-[0.5px] border-gray-200/50 rounded-[10px] text-sm bg-white focus:outline-none focus:ring-1 focus:ring-black"
+                                    className="w-full px-3 py-2 border-[0.5px] border-black/50 rounded-[10px] text-sm bg-white focus:outline-none focus:ring-1 focus:ring-black"
                                 >
                                     <option value="help">Help Center Support Pages</option>
                                     <option value="home">Homepage FAQs Block</option>
@@ -490,8 +490,8 @@ export default function AdminFaqManagerPage() {
                             </div>
 
                             {formData.category === 'help' && (
-                                <div className="space-y-4 bg-gray-50/50 p-4 rounded-[10px] border-[0.5px] border-gray-200/50">
-                                    <h4 className="font-medium text-xs text-black border-b-[0.5px] border-gray-200/50 pb-1.5">Help Center Categorization</h4>
+                                <div className="space-y-4 bg-gray-50/50 p-4 rounded-[10px] border-[0.5px] border-black/50">
+                                    <h4 className="font-medium text-xs text-black border-b-[0.5px] border-black/50 pb-1.5">Help Center Categorization</h4>
                                     
                                     {/* Topic Selection */}
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -500,7 +500,7 @@ export default function AdminFaqManagerPage() {
                                             <select
                                                 value={formData.topic_mode === 'new' ? '__new__' : formData.topic_id}
                                                 onChange={(e) => handleTopicChange(e.target.value)}
-                                                className="w-full px-3 py-2 border-[0.5px] border-gray-200/50 rounded-[10px] text-xs bg-white font-medium focus:outline-none focus:ring-1 focus:ring-black"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/50 rounded-[10px] text-xs bg-white font-medium focus:outline-none focus:ring-1 focus:ring-black"
                                             >
                                                 {uniqueTopics.map(t => (
                                                     <option key={t.id} value={t.id}>{t.title}</option>
@@ -518,7 +518,7 @@ export default function AdminFaqManagerPage() {
                                                     placeholder="e.g. Account Security"
                                                     value={formData.topic_title}
                                                     onChange={(e) => setFormData(prev => ({ ...prev, topic_title: e.target.value }))}
-                                                    className="w-full px-3 py-2 border-[0.5px] border-gray-200/50 rounded-[10px] text-xs bg-white focus:outline-none focus:ring-1 focus:ring-black"
+                                                    className="w-full px-3 py-2 border-[0.5px] border-black/50 rounded-[10px] text-xs bg-white focus:outline-none focus:ring-1 focus:ring-black"
                                                 />
                                             </div>
                                         )}
@@ -532,7 +532,7 @@ export default function AdminFaqManagerPage() {
                                                 <select
                                                     value={formData.topic_icon}
                                                     onChange={(e) => setFormData(prev => ({ ...prev, topic_icon: e.target.value }))}
-                                                    className="w-full px-3 py-2 border-[0.5px] border-gray-200/50 rounded-[10px] text-xs bg-white focus:outline-none focus:ring-1 focus:ring-black"
+                                                    className="w-full px-3 py-2 border-[0.5px] border-black/50 rounded-[10px] text-xs bg-white focus:outline-none focus:ring-1 focus:ring-black"
                                                 >
                                                     {AVAILABLE_ICONS.map(i => (
                                                         <option key={i.name} value={i.name}>{i.name}</option>
@@ -546,7 +546,7 @@ export default function AdminFaqManagerPage() {
                                                     placeholder="Short summary of this topic..."
                                                     value={formData.topic_description}
                                                     onChange={(e) => setFormData(prev => ({ ...prev, topic_description: e.target.value }))}
-                                                    className="w-full px-3 py-2 border-[0.5px] border-gray-200/50 rounded-[10px] text-xs bg-white focus:outline-none focus:ring-1 focus:ring-black"
+                                                    className="w-full px-3 py-2 border-[0.5px] border-black/50 rounded-[10px] text-xs bg-white focus:outline-none focus:ring-1 focus:ring-black"
                                                 />
                                             </div>
                                         </div>
@@ -559,7 +559,7 @@ export default function AdminFaqManagerPage() {
                                             <select
                                                 value={formData.subtopic_mode === 'new' ? '__new__' : formData.subtopic_id}
                                                 onChange={(e) => handleSubtopicChange(e.target.value)}
-                                                className="w-full px-3 py-2 border-[0.5px] border-gray-200/50 rounded-[10px] text-xs bg-white font-medium focus:outline-none focus:ring-1 focus:ring-black"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/50 rounded-[10px] text-xs bg-white font-medium focus:outline-none focus:ring-1 focus:ring-black"
                                                 disabled={formData.topic_mode === 'new'}
                                             >
                                                 <option value="" disabled>Select Subtopic</option>
@@ -579,7 +579,7 @@ export default function AdminFaqManagerPage() {
                                                     placeholder="e.g. Password Management"
                                                     value={formData.subtopic_title}
                                                     onChange={(e) => setFormData(prev => ({ ...prev, subtopic_title: e.target.value }))}
-                                                    className="w-full px-3 py-2 border-[0.5px] border-gray-200/50 rounded-[10px] text-xs bg-white focus:outline-none focus:ring-1 focus:ring-black"
+                                                    className="w-full px-3 py-2 border-[0.5px] border-black/50 rounded-[10px] text-xs bg-white focus:outline-none focus:ring-1 focus:ring-black"
                                                 />
                                             </div>
                                         )}
@@ -595,7 +595,7 @@ export default function AdminFaqManagerPage() {
                                     placeholder="Enter FAQ question..."
                                     value={formData.question}
                                     onChange={(e) => setFormData(prev => ({ ...prev, question: e.target.value }))}
-                                    className="w-full px-3.5 py-2.5 border-[0.5px] border-gray-200/50 rounded-[10px] text-sm outline-none bg-white text-black focus:ring-1 focus:ring-black"
+                                    className="w-full px-3.5 py-2.5 border-[0.5px] border-black/50 rounded-[10px] text-sm outline-none bg-white text-black focus:ring-1 focus:ring-black"
                                 />
                             </div>
 
@@ -607,7 +607,7 @@ export default function AdminFaqManagerPage() {
                                     placeholder="Enter detailed answer..."
                                     value={formData.answer}
                                     onChange={(e) => setFormData(prev => ({ ...prev, answer: e.target.value }))}
-                                    className="w-full px-3.5 py-2.5 border-[0.5px] border-gray-200/50 rounded-[10px] text-sm outline-none bg-white text-black focus:ring-1 focus:ring-black"
+                                    className="w-full px-3.5 py-2.5 border-[0.5px] border-black/50 rounded-[10px] text-sm outline-none bg-white text-black focus:ring-1 focus:ring-black"
                                 />
                             </div>
 
@@ -619,7 +619,7 @@ export default function AdminFaqManagerPage() {
                                         required
                                         value={formData.order}
                                         onChange={(e) => setFormData(prev => ({ ...prev, order: parseInt(e.target.value) || 0 }))}
-                                        className="w-full px-3 py-2 border-[0.5px] border-gray-200/50 rounded-[10px] text-sm bg-white focus:outline-none focus:ring-1 focus:ring-black"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/50 rounded-[10px] text-sm bg-white focus:outline-none focus:ring-1 focus:ring-black"
                                     />
                                 </div>
                             </div>

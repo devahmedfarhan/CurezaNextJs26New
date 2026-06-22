@@ -234,7 +234,7 @@ function RefundsContent() {
     return (
         <div className="w-full space-y-6 animate-in fade-in duration-300">
             {/* Header Section */}
-            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border-[0.5px] border-neutral-950/10 dark:border-neutral-800">
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border-[0.5px] border-black/50 dark:border-neutral-800">
                 <div className="absolute top-0 right-0 p-8 opacity-5">
                     <RefreshCw size={120} />
                 </div>
@@ -255,7 +255,7 @@ function RefundsContent() {
                     <div className="flex gap-2 self-start md:self-center">
                         <button
                             onClick={loadPaidOrders}
-                            className="bg-black text-white dark:bg-white dark:text-black px-4 py-2.5 rounded-[10px] font-medium hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-all active:scale-95 text-xs border border-transparent shadow-none"
+                            className="bg-black text-white dark:bg-white dark:text-black px-4 py-2.5 rounded-[10px] font-medium hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-all active:scale-95 text-xs border-[0.5px] border-transparent shadow-none"
                         >
                             Initiate Manual Refund
                         </button>
@@ -268,7 +268,7 @@ function RefundsContent() {
             {activeTab === 'refunds' ? (
                 <>
                     {/* Search and Filter Bar */}
-                    <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-neutral-950/10 dark:border-neutral-800 space-y-4 shadow-none">
+                    <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 space-y-4 shadow-none">
                         <div className="flex flex-col sm:flex-row gap-4">
                             <div className="relative flex-1">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -276,7 +276,7 @@ function RefundsContent() {
                                 </div>
                                 <input
                                     type="text"
-                                    className="block w-full pl-10 pr-3 py-2 border border-neutral-950/15 rounded-[10px] bg-neutral-50/50 dark:bg-gray-800/30 text-xs font-normal placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-1 focus:ring-black focus:border-black dark:text-white transition-colors"
+                                    className="block w-full pl-10 pr-3 py-2 border-[0.5px] border-black/50 rounded-[10px] bg-neutral-50/50 dark:bg-gray-800/30 text-xs font-normal placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-1 focus:ring-black focus:border-black dark:text-white transition-colors"
                                     placeholder="Search by Refund ID or Order #..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -287,10 +287,10 @@ function RefundsContent() {
                                     <button
                                         key={status}
                                         onClick={() => setStatusFilter(status)}
-                                        className={`px-3 py-2 rounded-[10px] border transition-colors capitalize ${
+                                        className={`px-3 py-2 rounded-[10px] border-[0.5px] transition-colors capitalize ${
                                             statusFilter === status
                                                 ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
-                                                : 'bg-white text-neutral-600 border-neutral-950/15 hover:bg-neutral-50 dark:bg-gray-900 dark:text-neutral-350 dark:border-neutral-800 dark:hover:bg-neutral-800'
+                                                : 'bg-white text-neutral-600 border-black/50 hover:bg-neutral-50 dark:bg-gray-900 dark:text-neutral-350 dark:border-neutral-800 dark:hover:bg-neutral-800'
                                         }`}
                                     >
                                         {status}
@@ -301,7 +301,7 @@ function RefundsContent() {
                     </div>
 
                     {/* Refunds List Table */}
-                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border border-neutral-950/10 dark:border-neutral-800 overflow-hidden shadow-none">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 overflow-hidden shadow-none">
                         <div className="overflow-x-auto">
                             <table className="min-w-full divide-y divide-neutral-955/10 dark:divide-neutral-800">
                                 <thead className="bg-neutral-50/50 dark:bg-gray-850/50">
@@ -363,11 +363,11 @@ function RefundsContent() {
                             </table>
                         </div>
                         {/* Pagination */}
-                        <div className="px-6 py-3 flex justify-between items-center border-t border-neutral-955/10 dark:border-neutral-800 text-xs">
+                        <div className="px-6 py-3 flex justify-between items-center border-t-[0.5px] border-black/50 dark:border-neutral-800 text-xs">
                             <button
                                 disabled={page <= 1}
                                 onClick={() => setPage(page - 1)}
-                                className="px-3 py-1.5 border border-neutral-950/10 rounded-[10px] hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-neutral-800 dark:hover:bg-neutral-800 dark:text-white transition-all shadow-none"
+                                className="px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-neutral-800 dark:hover:bg-neutral-800 dark:text-white transition-all shadow-none"
                             >
                                 Previous
                             </button>
@@ -375,7 +375,7 @@ function RefundsContent() {
                             <button
                                 disabled={page >= totalPages}
                                 onClick={() => setPage(page + 1)}
-                                className="px-3 py-1.5 border border-neutral-950/10 rounded-[10px] hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-neutral-800 dark:hover:bg-neutral-800 dark:text-white transition-all shadow-none"
+                                className="px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-neutral-800 dark:hover:bg-neutral-800 dark:text-white transition-all shadow-none"
                             >
                                 Next
                             </button>
@@ -385,7 +385,7 @@ function RefundsContent() {
             ) : (
                 <>
                     {/* Search and Filters for Cancelled Items */}
-                    <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-neutral-950/10 dark:border-neutral-800 space-y-4 shadow-none">
+                    <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 space-y-4 shadow-none">
                         <div className="flex flex-col sm:flex-row gap-4">
                             <div className="relative flex-1">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -393,7 +393,7 @@ function RefundsContent() {
                                 </div>
                                 <input
                                     type="text"
-                                    className="block w-full pl-10 pr-3 py-2 border border-neutral-950/15 rounded-[10px] bg-neutral-50/50 dark:bg-gray-800/30 text-xs font-normal placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-1 focus:ring-black focus:border-black dark:text-white transition-colors"
+                                    className="block w-full pl-10 pr-3 py-2 border-[0.5px] border-black/50 rounded-[10px] bg-neutral-50/50 dark:bg-gray-800/30 text-xs font-normal placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-1 focus:ring-black focus:border-black dark:text-white transition-colors"
                                     placeholder="Search by Product or Order #..."
                                     value={cancelledSearch}
                                     onChange={(e) => setCancelledSearch(e.target.value)}
@@ -403,7 +403,7 @@ function RefundsContent() {
                     </div>
 
                     {/* Cancelled Items Table */}
-                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border border-neutral-950/10 dark:border-neutral-800 overflow-hidden shadow-none">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 overflow-hidden shadow-none">
                         <div className="overflow-x-auto">
                             <table className="min-w-full divide-y divide-neutral-955/10 dark:divide-neutral-800">
                                 <thead className="bg-neutral-50/50 dark:bg-gray-850/50">
@@ -447,11 +447,11 @@ function RefundsContent() {
                             </table>
                         </div>
                         {/* Pagination */}
-                        <div className="px-6 py-3 flex justify-between items-center border-t border-neutral-955/10 dark:border-neutral-800 text-xs">
+                        <div className="px-6 py-3 flex justify-between items-center border-t-[0.5px] border-black/50 dark:border-neutral-800 text-xs">
                             <button
                                 disabled={cancelledPage <= 1}
                                 onClick={() => setCancelledPage(cancelledPage - 1)}
-                                className="px-3 py-1.5 border border-neutral-950/10 rounded-[10px] hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-neutral-800 dark:hover:bg-neutral-800 dark:text-white transition-all shadow-none"
+                                className="px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-neutral-800 dark:hover:bg-neutral-800 dark:text-white transition-all shadow-none"
                             >
                                 Previous
                             </button>
@@ -459,7 +459,7 @@ function RefundsContent() {
                             <button
                                 disabled={cancelledPage >= cancelledTotalPages}
                                 onClick={() => setCancelledPage(cancelledPage + 1)}
-                                className="px-3 py-1.5 border border-neutral-950/10 rounded-[10px] hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-neutral-800 dark:hover:bg-neutral-800 dark:text-white transition-all shadow-none"
+                                className="px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-neutral-800 dark:hover:bg-neutral-800 dark:text-white transition-all shadow-none"
                             >
                                 Next
                             </button>
@@ -471,8 +471,8 @@ function RefundsContent() {
             {/* Manual Initiate Refund Request Modal */}
             {isCreateModalOpen && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in zoom-in duration-200">
-                    <div className="bg-white dark:bg-gray-900 rounded-[10px] shadow-none w-full max-w-md overflow-hidden border border-neutral-950/15">
-                        <div className="flex justify-between items-center p-5 border-b border-neutral-950/10 bg-neutral-50 dark:bg-neutral-850 dark:border-neutral-800">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] shadow-none w-full max-w-md overflow-hidden border-[0.5px] border-black/50">
+                        <div className="flex justify-between items-center p-5 border-b-[0.5px] border-black/50 bg-neutral-50 dark:bg-neutral-850 dark:border-neutral-800">
                             <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Initiate Manual Refund</h3>
                             <button onClick={() => setIsCreateModalOpen(false)} className="text-neutral-450 hover:text-gray-600 dark:hover:text-white p-1 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
                                 <X size={18} />
@@ -490,7 +490,7 @@ function RefundsContent() {
                                             const selectedOrd = ordersList.find(o => o.id === parseInt(e.target.value));
                                             if (selectedOrd) setManualAmount(selectedOrd.final_amount);
                                         }}
-                                        className="w-full h-10 pl-3.5 pr-10 border border-neutral-950/15 rounded-[10px] bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-900 dark:text-white transition-all text-xs outline-none appearance-none cursor-pointer"
+                                        className="w-full h-10 pl-3.5 pr-10 border-[0.5px] border-black/50 rounded-[10px] bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-900 dark:text-white transition-all text-xs outline-none appearance-none cursor-pointer"
                                     >
                                         <option value="">-- Select Paid Order --</option>
                                         {ordersList.map(o => (
@@ -513,7 +513,7 @@ function RefundsContent() {
                                     required
                                     value={manualAmount}
                                     onChange={(e) => setManualAmount(e.target.value)}
-                                    className="w-full h-10 px-3.5 border border-neutral-950/15 rounded-[10px] bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-900 dark:text-white transition-all text-xs outline-none"
+                                    className="w-full h-10 px-3.5 border-[0.5px] border-black/50 rounded-[10px] bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-900 dark:text-white transition-all text-xs outline-none"
                                     placeholder="Enter Refund Amount"
                                 />
                             </div>
@@ -525,7 +525,7 @@ function RefundsContent() {
                                     rows={3}
                                     value={manualReason}
                                     onChange={(e) => setManualReason(e.target.value)}
-                                    className="w-full p-3.5 border border-neutral-950/15 rounded-[10px] bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-normal text-gray-700 dark:text-gray-300 transition-all text-xs outline-none resize-none leading-relaxed"
+                                    className="w-full p-3.5 border-[0.5px] border-black/50 rounded-[10px] bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-normal text-gray-700 dark:text-gray-300 transition-all text-xs outline-none resize-none leading-relaxed"
                                     placeholder="Customer requested return for damaged items"
                                 />
                             </div>
@@ -536,7 +536,7 @@ function RefundsContent() {
                                     rows={2}
                                     value={manualNotes}
                                     onChange={(e) => setManualNotes(e.target.value)}
-                                    className="w-full p-3.5 border border-neutral-950/15 rounded-[10px] bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-normal text-gray-700 dark:text-gray-300 transition-all text-xs outline-none resize-none leading-relaxed"
+                                    className="w-full p-3.5 border-[0.5px] border-black/50 rounded-[10px] bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-normal text-gray-700 dark:text-gray-300 transition-all text-xs outline-none resize-none leading-relaxed"
                                     placeholder="Any internal processing notes..."
                                 />
                             </div>
@@ -545,14 +545,14 @@ function RefundsContent() {
                                 <button
                                     type="button"
                                     onClick={() => setIsCreateModalOpen(false)}
-                                    className="px-5 py-2.5 border border-neutral-950/10 text-neutral-600 dark:text-neutral-350 hover:bg-neutral-50 dark:hover:bg-neutral-850 font-medium rounded-[10px] text-xs transition-colors bg-transparent"
+                                    className="px-5 py-2.5 border-[0.5px] border-black/50 text-neutral-600 dark:text-neutral-350 hover:bg-neutral-50 dark:hover:bg-neutral-850 font-medium rounded-[10px] text-xs transition-colors bg-transparent"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={manualLoading}
-                                    className="flex-1 py-2.5 bg-black text-white dark:bg-white dark:text-black font-medium rounded-[10px] hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-colors text-xs border border-transparent shadow-none"
+                                    className="flex-1 py-2.5 bg-black text-white dark:bg-white dark:text-black font-medium rounded-[10px] hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-colors text-xs border-[0.5px] border-transparent shadow-none"
                                 >
                                     {manualLoading ? 'Initiating...' : 'Submit Request'}
                                 </button>
@@ -565,15 +565,15 @@ function RefundsContent() {
             {/* Refund Approval Confirmation Modal */}
             {confirmApproveOpen && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in zoom-in duration-200">
-                    <div className="bg-white dark:bg-gray-900 rounded-[10px] shadow-none w-full max-w-md overflow-hidden border border-neutral-950/15">
-                        <div className="flex justify-between items-center p-5 border-b border-neutral-950/10 bg-neutral-50 dark:bg-neutral-850 dark:border-neutral-800">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] shadow-none w-full max-w-md overflow-hidden border-[0.5px] border-black/50">
+                        <div className="flex justify-between items-center p-5 border-b-[0.5px] border-black/50 bg-neutral-50 dark:bg-neutral-850 dark:border-neutral-800">
                             <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Approve Refund Request</h3>
                             <button onClick={() => setConfirmApproveOpen(false)} className="text-neutral-450 hover:text-gray-600 dark:hover:text-white p-1 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
                                 <X size={18} />
                             </button>
                         </div>
                         <div className="p-6 space-y-4 text-xs font-semibold">
-                            <div className="bg-neutral-50 dark:bg-neutral-850 border border-neutral-950/10 dark:border-neutral-800 rounded-[10px] p-4 text-xs text-neutral-700 dark:text-neutral-300 font-normal leading-relaxed">
+                            <div className="bg-neutral-50 dark:bg-neutral-850 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] p-4 text-xs text-neutral-700 dark:text-neutral-300 font-normal leading-relaxed">
                                 <p className="font-semibold text-black dark:text-white">Important Return Package Verification</p>
                                 <p className="text-[11px] text-neutral-500 mt-1">
                                     Verify that the customer's return package has safely arrived at the warehouse and that the return has been formally accepted.
@@ -585,7 +585,7 @@ function RefundsContent() {
                                     type="checkbox"
                                     checked={confirmPackageReceived}
                                     onChange={(e) => setConfirmPackageReceived(e.target.checked)}
-                                    className="mt-0.5 h-4 w-4 text-black border-neutral-950/15 rounded-[4px] focus:ring-black cursor-pointer bg-transparent"
+                                    className="mt-0.5 h-4 w-4 text-black border-black/50 rounded-[4px] focus:ring-black cursor-pointer bg-transparent"
                                 />
                                 <span className="text-xs text-neutral-800 dark:text-neutral-200 font-normal">
                                     I confirm return package is received and return is accepted.
@@ -598,7 +598,7 @@ function RefundsContent() {
                                     rows={2}
                                     value={confirmNotes}
                                     onChange={(e) => setConfirmNotes(e.target.value)}
-                                    className="w-full p-3.5 border border-neutral-950/15 rounded-[10px] bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-normal text-gray-700 dark:text-gray-300 transition-all text-xs outline-none resize-none leading-relaxed"
+                                    className="w-full p-3.5 border-[0.5px] border-black/50 rounded-[10px] bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-normal text-gray-700 dark:text-gray-300 transition-all text-xs outline-none resize-none leading-relaxed"
                                     placeholder="Enter details about return shipment validation..."
                                 />
                             </div>
@@ -607,14 +607,14 @@ function RefundsContent() {
                                 <button
                                     type="button"
                                     onClick={() => setConfirmApproveOpen(false)}
-                                    className="px-5 py-2.5 border border-neutral-950/10 text-neutral-600 dark:text-neutral-350 hover:bg-neutral-50 dark:hover:bg-neutral-850 font-medium rounded-[10px] text-xs transition-colors bg-transparent"
+                                    className="px-5 py-2.5 border-[0.5px] border-black/50 text-neutral-600 dark:text-neutral-350 hover:bg-neutral-50 dark:hover:bg-neutral-850 font-medium rounded-[10px] text-xs transition-colors bg-transparent"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleApprove}
                                     disabled={confirmLoading || !confirmPackageReceived}
-                                    className="flex-1 py-2.5 bg-black text-white dark:bg-white dark:text-black font-medium rounded-[10px] hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-colors text-xs border border-transparent shadow-none disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="flex-1 py-2.5 bg-black text-white dark:bg-white dark:text-black font-medium rounded-[10px] hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-colors text-xs border-[0.5px] border-transparent shadow-none disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {confirmLoading ? 'Approving...' : 'Process Refund'}
                                 </button>
@@ -627,8 +627,8 @@ function RefundsContent() {
             {/* Refund Rejection Modal */}
             {confirmRejectOpen && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in zoom-in duration-200">
-                    <div className="bg-white dark:bg-gray-900 rounded-[10px] shadow-none w-full max-w-md overflow-hidden border border-neutral-950/15">
-                        <div className="flex justify-between items-center p-5 border-b border-neutral-950/10 bg-neutral-50 dark:bg-neutral-850 dark:border-neutral-800">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] shadow-none w-full max-w-md overflow-hidden border-[0.5px] border-black/50">
+                        <div className="flex justify-between items-center p-5 border-b-[0.5px] border-black/50 bg-neutral-50 dark:bg-neutral-850 dark:border-neutral-800">
                             <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Reject Refund Request</h3>
                             <button onClick={() => setConfirmRejectOpen(false)} className="text-neutral-450 hover:text-gray-600 dark:hover:text-white p-1 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
                                 <X size={18} />
@@ -642,7 +642,7 @@ function RefundsContent() {
                                     required
                                     value={rejectNotes}
                                     onChange={(e) => setRejectNotes(e.target.value)}
-                                    className="w-full p-3.5 border border-neutral-950/15 rounded-[10px] bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-normal text-gray-700 dark:text-gray-300 transition-all text-xs outline-none resize-none leading-relaxed"
+                                    className="w-full p-3.5 border-[0.5px] border-black/50 rounded-[10px] bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-normal text-gray-700 dark:text-gray-300 transition-all text-xs outline-none resize-none leading-relaxed"
                                     placeholder="State the reason why refund request is rejected (e.g. package not returned or damaged)..."
                                 />
                             </div>
@@ -651,14 +651,14 @@ function RefundsContent() {
                                 <button
                                     type="button"
                                     onClick={() => setConfirmRejectOpen(false)}
-                                    className="px-5 py-2.5 border border-neutral-950/10 text-neutral-600 dark:text-neutral-350 hover:bg-neutral-50 dark:hover:bg-neutral-850 font-medium rounded-[10px] text-xs transition-colors bg-transparent"
+                                    className="px-5 py-2.5 border-[0.5px] border-black/50 text-neutral-600 dark:text-neutral-350 hover:bg-neutral-50 dark:hover:bg-neutral-850 font-medium rounded-[10px] text-xs transition-colors bg-transparent"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleReject}
                                     disabled={confirmRejectLoading}
-                                    className="flex-1 py-2.5 bg-black text-white dark:bg-white dark:text-black font-medium rounded-[10px] hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-colors text-xs border border-transparent shadow-none"
+                                    className="flex-1 py-2.5 bg-black text-white dark:bg-white dark:text-black font-medium rounded-[10px] hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-colors text-xs border-[0.5px] border-transparent shadow-none"
                                 >
                                     {confirmRejectLoading ? 'Rejecting...' : 'Reject Request'}
                                 </button>

@@ -26,7 +26,7 @@ export default function AdminBannersPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {banners.map((banner) => (
-                    <div key={banner.id} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden group">
+                    <div key={banner.id} className="bg-white rounded-xl border-[0.5px] border-black/50 shadow-none overflow-hidden group">
                         <div className="h-40 bg-gray-100 relative">
                             <img src={banner.image} alt={banner.title} className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">

@@ -14,7 +14,7 @@ export default function AdminSellerReportPage() {
 
             {/* Top Sellers */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <div className="bg-white p-6 rounded-xl border-[0.5px] border-black/50 shadow-none">
                     <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                         <TrendingUp className="text-green-600" size={20} /> Top Performing Sellers
                     </h3>
@@ -22,7 +22,7 @@ export default function AdminSellerReportPage() {
                         {[1, 2, 3].map((i) => (
                             <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center font-bold text-gray-400 border border-gray-200">
+                                    <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center font-bold text-gray-400 border-[0.5px] border-black/50">
                                         {i}
                                     </div>
                                     <div>
@@ -40,7 +40,7 @@ export default function AdminSellerReportPage() {
                     </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <div className="bg-white p-6 rounded-xl border-[0.5px] border-black/50 shadow-none">
                     <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                         <AlertCircle className="text-red-600" size={20} /> Sellers Needing Attention
                     </h3>
@@ -48,7 +48,7 @@ export default function AdminSellerReportPage() {
                         {[1, 2].map((i) => (
                             <div key={i} className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center font-bold text-red-400 border border-red-100">
+                                    <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center font-bold text-red-400 border-[0.5px] border-black/50">
                                         !
                                     </div>
                                     <div>
@@ -56,7 +56,7 @@ export default function AdminSellerReportPage() {
                                         <p className="text-xs text-red-600">High Return Rate (15%)</p>
                                     </div>
                                 </div>
-                                <button className="text-xs bg-white border border-red-200 text-red-600 px-3 py-1 rounded-full font-medium hover:bg-red-50">
+                                <button className="text-xs bg-white border-[0.5px] border-black/50 text-red-600 px-3 py-1 rounded-full font-medium hover:bg-red-50">
                                     Review
                                 </button>
                             </div>
@@ -66,7 +66,7 @@ export default function AdminSellerReportPage() {
             </div>
 
             {/* Detailed Table */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-xl border-[0.5px] border-black/50 shadow-none overflow-hidden">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                         <tr>

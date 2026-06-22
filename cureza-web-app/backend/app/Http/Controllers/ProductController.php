@@ -128,6 +128,7 @@ class ProductController extends Controller
             'faqs' => 'nullable|array',
             'gst_slab' => 'nullable|numeric|in:0,5,12,18,28',
             'gst_inclusive' => 'nullable|boolean',
+            'hsn_code' => 'nullable|string|max:20',
         ];
 
         // Role-based validation for Brand and Seller
@@ -174,6 +175,12 @@ class ProductController extends Controller
             $data['gst_inclusive'] = $sellerProfile && $sellerProfile->default_gst_inclusive !== null
                 ? (bool)$sellerProfile->default_gst_inclusive
                 : true;
+        }
+
+        if (!isset($data['hsn_code']) || $data['hsn_code'] === null) {
+            $data['hsn_code'] = $sellerProfile && $sellerProfile->default_hsn_code !== null
+                ? $sellerProfile->default_hsn_code
+                : null;
         }
 
         // Remove tags from data as it's not a column anymore
@@ -340,6 +347,7 @@ class ProductController extends Controller
             'faqs' => 'nullable|array',
             'gst_slab' => 'nullable|numeric|in:0,5,12,18,28',
             'gst_inclusive' => 'nullable|boolean',
+            'hsn_code' => 'nullable|string|max:20',
         ];
 
         if ($isAdmin) {

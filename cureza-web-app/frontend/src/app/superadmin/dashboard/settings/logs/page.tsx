@@ -136,7 +136,7 @@ export default function AdminLogsPage() {
     return (
         <div className="w-full space-y-6 pb-20 font-sans text-neutral-900">
             {/* Header Section */}
-            <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b border-black/10 pb-5">
+            <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b-[0.5px] border-black/10 pb-5">
                 <div>
                     <h2 className="text-sm font-medium text-neutral-900 tracking-tight">System Audit Trail</h2>
                     <p className="text-neutral-500 text-xs mt-0.5">
@@ -145,7 +145,7 @@ export default function AdminLogsPage() {
                 </div>
                 <button 
                     onClick={() => fetchLogs(1, activeTab, search)}
-                    className="flex items-center justify-center gap-1.5 px-3 py-1.5 border border-black/10 hover:bg-neutral-50 transition-all rounded-[10px] text-xs font-medium text-neutral-800 shrink-0 bg-white"
+                    className="flex items-center justify-center gap-1.5 px-3 py-1.5 border-[0.5px] border-black/10 hover:bg-neutral-50 transition-all rounded-[10px] text-xs font-medium text-neutral-800 shrink-0 bg-white"
                 >
                     <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
                     Refresh Logs
@@ -153,7 +153,7 @@ export default function AdminLogsPage() {
             </div>
 
             {/* Filter and Search Bar */}
-            <div className="bg-white p-4 rounded-[10px] border border-black/10 shadow-none flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-black/10 shadow-none flex flex-col md:flex-row gap-4 items-center justify-between">
                 <form onSubmit={handleSearchSubmit} className="relative w-full md:max-w-md">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={14} />
                     <input
@@ -161,7 +161,7 @@ export default function AdminLogsPage() {
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder="Search logs by action, IP, description..."
-                        className="w-full pl-9 pr-20 py-2 bg-neutral-50/50 border border-black/10 rounded-[10px] focus:border-black outline-none text-xs"
+                        className="w-full pl-9 pr-20 py-2 bg-neutral-50/50 border-[0.5px] border-black/10 rounded-[10px] focus:border-black outline-none text-xs"
                     />
                     <button 
                         type="submit"
@@ -189,7 +189,7 @@ export default function AdminLogsPage() {
                                 setActiveTab(tab.id as any);
                                 setPage(1);
                             }}
-                            className={`flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-[10px] transition-all border ${
+                            className={`flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-[10px] transition-all border-[0.5px] ${
                                 isActive 
                                     ? 'bg-black border-black text-white' 
                                     : 'border-black/10 text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 bg-white'
@@ -203,7 +203,7 @@ export default function AdminLogsPage() {
             </div>
 
             {/* Table Container */}
-            <div className="bg-white rounded-[10px] border border-black/10 shadow-none overflow-hidden">
+            <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 shadow-none overflow-hidden">
                 {loading ? (
                     <div className="flex flex-col justify-center items-center py-20 gap-3">
                         <Loader2 className="animate-spin text-black" size={28} />
@@ -238,7 +238,7 @@ export default function AdminLogsPage() {
                                                 {log.user ? (
                                                     <div className="flex flex-col gap-1">
                                                         <div className="flex items-center gap-2">
-                                                            <div className="w-7 h-7 rounded-full bg-neutral-100 text-black flex items-center justify-center font-bold text-xs uppercase border border-black/5">
+                                                            <div className="w-7 h-7 rounded-full bg-neutral-100 text-black flex items-center justify-center font-bold text-xs uppercase border-[0.5px] border-black/5">
                                                                 {log.user.name.charAt(0)}
                                                             </div>
                                                             <div className="flex flex-col">
@@ -254,7 +254,7 @@ export default function AdminLogsPage() {
                                                     </div>
                                                 ) : (
                                                     <div className="flex items-center gap-2">
-                                                        <div className="w-7 h-7 rounded-full bg-neutral-50 text-neutral-450 border border-black/5 flex items-center justify-center font-semibold text-xs">
+                                                        <div className="w-7 h-7 rounded-full bg-neutral-50 text-neutral-450 border-[0.5px] border-black/5 flex items-center justify-center font-semibold text-xs">
                                                             S
                                                         </div>
                                                         <div className="flex flex-col">
@@ -304,7 +304,7 @@ export default function AdminLogsPage() {
 
                         {/* Pagination Footer */}
                         {lastPage > 1 && (
-                            <div className="px-5 py-3 bg-neutral-50/50 border-t border-black/10 flex items-center justify-between">
+                            <div className="px-5 py-3 bg-neutral-50/50 border-t-[0.5px] border-black/10 flex items-center justify-between">
                                 <div className="text-xs text-neutral-550">
                                     Showing page <span className="font-medium text-neutral-900">{page}</span> of <span className="font-medium text-neutral-900">{lastPage}</span>
                                 </div>
@@ -312,14 +312,14 @@ export default function AdminLogsPage() {
                                     <button
                                         onClick={() => handlePageChange(page - 1)}
                                         disabled={page === 1}
-                                        className="p-1.5 border border-black/10 rounded-[10px] hover:bg-neutral-50 transition-all disabled:opacity-40 bg-white flex items-center justify-center"
+                                        className="p-1.5 border-[0.5px] border-black/10 rounded-[10px] hover:bg-neutral-50 transition-all disabled:opacity-40 bg-white flex items-center justify-center"
                                     >
                                         <ChevronLeft size={14} />
                                     </button>
                                     <button
                                         onClick={() => handlePageChange(page + 1)}
                                         disabled={page === lastPage}
-                                        className="p-1.5 border border-black/10 rounded-[10px] hover:bg-neutral-50 transition-all disabled:opacity-40 bg-white flex items-center justify-center"
+                                        className="p-1.5 border-[0.5px] border-black/10 rounded-[10px] hover:bg-neutral-50 transition-all disabled:opacity-40 bg-white flex items-center justify-center"
                                     >
                                         <ChevronRight size={14} />
                                     </button>

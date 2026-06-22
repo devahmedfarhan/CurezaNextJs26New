@@ -22,12 +22,12 @@ export default function AdminUGCPage() {
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-2 border-b border-gray-200">
+            <div className="flex gap-2 border-b-[0.5px] border-black/50">
                 {['Pending', 'Approved', 'Rejected'].map((tab) => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
-                        className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === tab
+                        className={`px-6 py-3 text-sm font-medium border-b-[0.5px] transition-colors ${activeTab === tab
                                 ? 'border-cureza-green text-cureza-green'
                                 : 'border-transparent text-gray-500 hover:text-gray-700'
                             }`}
@@ -40,10 +40,10 @@ export default function AdminUGCPage() {
             {/* Content List */}
             <div className="grid grid-cols-1 gap-4">
                 {items.filter(i => i.status === activeTab).map((item) => (
-                    <div key={item.id} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row gap-6">
+                    <div key={item.id} className="bg-white p-6 rounded-xl border-[0.5px] border-black/50 shadow-none flex flex-col md:flex-row gap-6">
                         <div className="flex-shrink-0">
                             {item.type === 'Photo' ? (
-                                <img src={item.content} alt="UGC" className="w-24 h-24 object-cover rounded-lg border border-gray-100" />
+                                <img src={item.content} alt="UGC" className="w-24 h-24 object-cover rounded-lg border-[0.5px] border-black/50" />
                             ) : (
                                 <div className="w-24 h-24 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400">
                                     <MessageSquare size={32} />
@@ -62,7 +62,7 @@ export default function AdminUGCPage() {
                                 <p className="mt-3 text-gray-700 bg-gray-50 p-3 rounded-lg text-sm">"{item.content}"</p>
                             )}
                         </div>
-                        <div className="flex flex-col justify-center gap-2 border-l border-gray-100 pl-6">
+                        <div className="flex flex-col justify-center gap-2 border-l-[0.5px] border-black/50 pl-6">
                             {item.status === 'Pending' ? (
                                 <>
                                     <button className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium w-full justify-center">
@@ -81,7 +81,7 @@ export default function AdminUGCPage() {
                     </div>
                 ))}
                 {items.filter(i => i.status === activeTab).length === 0 && (
-                    <div className="text-center py-12 text-gray-500 bg-white rounded-xl border border-gray-200">
+                    <div className="text-center py-12 text-gray-500 bg-white rounded-xl border-[0.5px] border-black/50">
                         <p>No items found in {activeTab}</p>
                     </div>
                 )}

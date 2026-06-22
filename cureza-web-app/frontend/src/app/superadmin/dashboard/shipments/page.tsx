@@ -78,7 +78,7 @@ export default function AdminShipmentsPage() {
     return (
         <div className="w-full space-y-6 animate-in fade-in duration-300">
             {/* Header Section */}
-            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border-[0.5px] border-neutral-950/10 dark:border-neutral-800">
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border-[0.5px] border-black/50 dark:border-neutral-800">
                 <div className="absolute top-0 right-0 p-8 opacity-5">
                     <Truck size={120} />
                 </div>
@@ -100,16 +100,16 @@ export default function AdminShipmentsPage() {
             </div>
 
             {/* Filters */}
-            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-neutral-950/10 dark:border-neutral-800 shadow-none">
+            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none">
                 <div className="flex flex-wrap gap-2 text-xs font-medium overflow-x-auto pb-2 sm:pb-0">
                     {['All', 'pickup_scheduled', 'picked_up', 'out_for_delivery', 'delivered', 'cancelled'].map((status) => (
                         <button
                             key={status}
                             onClick={() => { setStatusFilter(status); setPage(1); }}
-                            className={`px-3 py-2 rounded-[10px] border transition-colors capitalize ${
+                            className={`px-3 py-2 rounded-[10px] border-[0.5px] transition-colors capitalize ${
                                 statusFilter === status
                                     ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
-                                    : 'bg-white text-neutral-600 border-neutral-955/15 hover:bg-neutral-50 dark:bg-gray-900 dark:text-neutral-350 dark:border-neutral-800 dark:hover:bg-neutral-800'
+                                    : 'bg-white text-neutral-600 border-black/50 hover:bg-neutral-50 dark:bg-gray-900 dark:text-neutral-350 dark:border-neutral-800 dark:hover:bg-neutral-800'
                             }`}
                         >
                             {status.replace(/_/g, ' ')}
@@ -119,7 +119,7 @@ export default function AdminShipmentsPage() {
             </div>
 
             {/* Shipments List Table */}
-            <div className="bg-white dark:bg-gray-900 rounded-[10px] border border-neutral-950/10 dark:border-neutral-800 overflow-hidden shadow-none">
+            <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 overflow-hidden shadow-none">
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-neutral-955/10 dark:divide-neutral-800">
                         <thead className="bg-neutral-50/50 dark:bg-gray-850/50">
@@ -190,7 +190,7 @@ export default function AdminShipmentsPage() {
                                                         }
                                                         e.target.value = '';
                                                     }}
-                                                    className="px-2 py-1 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-white rounded text-[10px] focus:outline-none cursor-pointer"
+                                                    className="px-2 py-1 bg-white border-[0.5px] border-black/50 dark:bg-gray-800 dark:border-gray-700 dark:text-white rounded text-[10px] focus:outline-none cursor-pointer"
                                                 >
                                                     <option value="">Simulate Status</option>
                                                     <option value="picked_up" disabled={shipment.status === 'picked_up'}>Mark Picked Up</option>
@@ -206,11 +206,11 @@ export default function AdminShipmentsPage() {
                     </table>
                 </div>
                 {/* Pagination */}
-                <div className="px-6 py-3 flex justify-between items-center border-t border-neutral-955/10 dark:border-neutral-800 text-xs">
+                <div className="px-6 py-3 flex justify-between items-center border-t-[0.5px] border-black/50 dark:border-neutral-800 text-xs">
                     <button
                         disabled={page <= 1}
                         onClick={() => setPage(page - 1)}
-                        className="px-3 py-1.5 border border-neutral-950/10 rounded-[10px] hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-neutral-800 dark:hover:bg-neutral-800 dark:text-white transition-all shadow-none"
+                        className="px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-neutral-800 dark:hover:bg-neutral-800 dark:text-white transition-all shadow-none"
                     >
                         Previous
                     </button>
@@ -218,7 +218,7 @@ export default function AdminShipmentsPage() {
                     <button
                         disabled={page >= totalPages}
                         onClick={() => setPage(page + 1)}
-                        className="px-3 py-1.5 border border-neutral-950/10 rounded-[10px] hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-neutral-800 dark:hover:bg-neutral-800 dark:text-white transition-all shadow-none"
+                        className="px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-neutral-800 dark:hover:bg-neutral-800 dark:text-white transition-all shadow-none"
                     >
                         Next
                     </button>

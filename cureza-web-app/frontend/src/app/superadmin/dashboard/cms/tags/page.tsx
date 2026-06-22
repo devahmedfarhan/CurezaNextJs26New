@@ -149,7 +149,7 @@ export default function TagsPage() {
                             <Plus className="mr-2 h-4 w-4" /> Add Tag
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none max-h-[85vh] overflow-y-auto">
+                    <DialogContent className="rounded-[10px] border-[0.5px] border-black/50 shadow-none max-h-[85vh] overflow-y-auto">
                         <DialogHeader>
                             <DialogTitle className="text-base font-medium text-black">Create Tag</DialogTitle>
                         </DialogHeader>
@@ -161,7 +161,7 @@ export default function TagsPage() {
                                     value={formData.name}
                                     onChange={handleNameChange}
                                     required
-                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                    className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
                             <div className="space-y-2">
@@ -171,11 +171,11 @@ export default function TagsPage() {
                                     value={formData.slug}
                                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                                     required
-                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                    className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
                             
-                            <div className="border-[0.5px] border-gray-150 p-4 rounded-[10px] space-y-4 bg-gray-50/30">
+                            <div className="border-[0.5px] border-black/50 p-4 rounded-[10px] space-y-4 bg-gray-50/30">
                                 <h4 className="font-medium text-xs text-black">SEO Settings</h4>
                                 <div className="space-y-2">
                                     <Label htmlFor="meta_title" className="text-[10px] font-medium text-gray-700">Meta Title</Label>
@@ -184,7 +184,7 @@ export default function TagsPage() {
                                         value={formData.meta_title}
                                         onChange={(e) => setFormData({ ...formData, meta_title: e.target.value })}
                                         placeholder="SEO Tag Title"
-                                        className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                        className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -195,7 +195,7 @@ export default function TagsPage() {
                                         onChange={(e) => setFormData({ ...formData, meta_description: e.target.value })}
                                         placeholder="SEO Tag Description"
                                         rows={2}
-                                        className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                        className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -205,7 +205,7 @@ export default function TagsPage() {
                                         value={formData.meta_keywords}
                                         onChange={(e) => setFormData({ ...formData, meta_keywords: e.target.value })}
                                         placeholder="keyword1, keyword2"
-                                        className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                        className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
                                     />
                                 </div>
                             </div>
@@ -223,17 +223,17 @@ export default function TagsPage() {
                     <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
                     <Input
                         placeholder="Search tags..."
-                        className="pl-9 rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                        className="pl-9 rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
                 </div>
             </div>
 
-            <div className="border-[0.5px] border-gray-200/50 rounded-[10px] overflow-hidden bg-white shadow-none">
+            <div className="border-[0.5px] border-black/50 rounded-[10px] overflow-hidden bg-white shadow-none">
                 <Table>
                     <TableHeader className="bg-gray-50/50">
-                        <TableRow className="border-b-[0.5px] border-gray-200/50">
+                        <TableRow className="border-b-[0.5px] border-black/50">
                             <TableHead className="text-gray-500 font-medium text-xs">Name</TableHead>
                             <TableHead className="text-gray-500 font-medium text-xs">Slug</TableHead>
                             <TableHead className="text-right text-gray-500 font-medium text-xs">Actions</TableHead>
@@ -250,7 +250,7 @@ export default function TagsPage() {
                             </TableRow>
                         ) : (
                             filteredTags.map((tag) => (
-                                <TableRow key={tag.id} className="border-b-[0.5px] border-gray-200/50 hover:bg-gray-50/30">
+                                <TableRow key={tag.id} className="border-b-[0.5px] border-black/50 hover:bg-gray-50/30">
                                     <TableCell className="font-normal text-sm text-black">{tag.name}</TableCell>
                                     <TableCell className="text-gray-500 text-sm">{tag.slug}</TableCell>
                                     <TableCell className="text-right">
@@ -277,7 +277,7 @@ export default function TagsPage() {
                     setFormData({ name: '', slug: '', meta_title: '', meta_description: '', meta_keywords: '' });
                 }
             }}>
-                <DialogContent className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none max-h-[85vh] overflow-y-auto">
+                <DialogContent className="rounded-[10px] border-[0.5px] border-black/50 shadow-none max-h-[85vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle className="text-base font-medium text-black">Edit Tag</DialogTitle>
                     </DialogHeader>
@@ -289,7 +289,7 @@ export default function TagsPage() {
                                 value={formData.name}
                                 onChange={handleNameChange}
                                 required
-                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                             />
                         </div>
                         <div className="space-y-2">
@@ -299,11 +299,11 @@ export default function TagsPage() {
                                 value={formData.slug}
                                 onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                                 required
-                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                             />
                         </div>
                         
-                        <div className="border-[0.5px] border-gray-150 p-4 rounded-[10px] space-y-4 bg-gray-50/30">
+                        <div className="border-[0.5px] border-black/50 p-4 rounded-[10px] space-y-4 bg-gray-50/30">
                             <h4 className="font-medium text-xs text-black">SEO Settings</h4>
                             <div className="space-y-2">
                                 <Label htmlFor="edit-meta_title" className="text-[10px] font-medium text-gray-700">Meta Title</Label>
@@ -312,7 +312,7 @@ export default function TagsPage() {
                                     value={formData.meta_title}
                                     onChange={(e) => setFormData({ ...formData, meta_title: e.target.value })}
                                     placeholder="SEO Tag Title"
-                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                    className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
                                 />
                             </div>
                             <div className="space-y-2">
@@ -323,7 +323,7 @@ export default function TagsPage() {
                                     onChange={(e) => setFormData({ ...formData, meta_description: e.target.value })}
                                     placeholder="SEO Tag Description"
                                     rows={2}
-                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                    className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
                                 />
                             </div>
                             <div className="space-y-2">
@@ -333,7 +333,7 @@ export default function TagsPage() {
                                     value={formData.meta_keywords}
                                     onChange={(e) => setFormData({ ...formData, meta_keywords: e.target.value })}
                                     placeholder="keyword1, keyword2"
-                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                    className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
                                 />
                             </div>
                         </div>

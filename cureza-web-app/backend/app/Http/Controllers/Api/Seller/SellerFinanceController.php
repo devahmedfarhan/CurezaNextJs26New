@@ -300,7 +300,7 @@ class SellerFinanceController extends Controller
                     $q->where('created_at', '<=', $dates['end']);
                 }
             })
-            ->with(['order']);
+            ->with(['order', 'product', 'seller.sellerProfile']);
 
         $items = $query->get();
 
@@ -335,9 +335,11 @@ class SellerFinanceController extends Controller
             ],
             'by_slab' => $bySlab,
             'items' => $items->map(function ($item) {
+                $hsnCode = $item->hsn_code ?? ($item->product->hsn_code ?? ($item->seller->sellerProfile->default_hsn_code ?? 'N/A'));
                 return [
                     'order_number' => $item->order->order_number ?? 'N/A',
                     'product_name' => $item->product_name,
+                    'hsn_code' => $hsnCode,
                     'price' => (float)$item->price,
                     'gst_slab' => (float)$item->gst_slab,
                     'base_price' => (float)$item->base_price,

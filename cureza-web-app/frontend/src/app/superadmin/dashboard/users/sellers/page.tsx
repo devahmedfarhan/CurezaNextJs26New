@@ -284,12 +284,12 @@ function SellersPageContent() {
             </div>
 
             {/* Navigation Tabs Bar */}
-            <div className="flex flex-col md:flex-row gap-3 items-center justify-between bg-white p-3 rounded-[10px] border border-neutral-950/10 shadow-none">
-                <div className="flex items-center bg-neutral-50/70 p-0.5 rounded-lg border border-neutral-950/5 flex-wrap">
+            <div className="flex flex-col md:flex-row gap-3 items-center justify-between bg-white p-3 rounded-[10px] border-[0.5px] border-black/50 shadow-none">
+                <div className="flex items-center bg-neutral-50/70 p-0.5 rounded-lg border-[0.5px] border-black/50 flex-wrap">
                     <button
                         onClick={() => setActiveView('directory')}
                         className={`px-4 py-2 text-xs font-medium rounded-md transition-all ${
-                            activeView === 'directory' ? 'bg-white text-neutral-900 border border-neutral-950/10' : 'text-neutral-500 hover:text-neutral-900'
+                            activeView === 'directory' ? 'bg-white text-neutral-900 border-[0.5px] border-black/50' : 'text-neutral-500 hover:text-neutral-900'
                         }`}
                     >
                         Sellers Directory
@@ -297,7 +297,7 @@ function SellersPageContent() {
                     <button
                         onClick={() => setActiveView('store_requests')}
                         className={`px-4 py-2 text-xs font-medium rounded-md transition-all ${
-                            activeView === 'store_requests' ? 'bg-white text-neutral-900 border border-neutral-950/10' : 'text-neutral-500 hover:text-neutral-900'
+                            activeView === 'store_requests' ? 'bg-white text-neutral-900 border-[0.5px] border-black/50' : 'text-neutral-500 hover:text-neutral-900'
                         }`}
                     >
                         Store Change Requests
@@ -305,7 +305,7 @@ function SellersPageContent() {
                     <button
                         onClick={() => setActiveView('seller_requests')}
                         className={`px-4 py-2 text-xs font-medium rounded-md transition-all ${
-                            activeView === 'seller_requests' ? 'bg-white text-neutral-900 border border-neutral-950/10' : 'text-neutral-500 hover:text-neutral-900'
+                            activeView === 'seller_requests' ? 'bg-white text-neutral-900 border-[0.5px] border-black/50' : 'text-neutral-500 hover:text-neutral-900'
                         }`}
                     >
                         Seller Info Changes
@@ -321,13 +321,13 @@ function SellersPageContent() {
                                 placeholder="Search sellers..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-9 pr-4 py-2 border border-neutral-950/15 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none w-full transition-all"
+                                className="pl-9 pr-4 py-2 border-[0.5px] border-black/50 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none w-full transition-all"
                             />
                         </div>
                         <select
                             value={statusFilter}
                             onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
-                            className="px-3 py-2 border border-neutral-950/15 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none bg-white cursor-pointer transition-all text-neutral-800"
+                            className="px-3 py-2 border-[0.5px] border-black/50 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none bg-white cursor-pointer transition-all text-neutral-800"
                         >
                             <option value="all">All Statuses</option>
                             <option value="pending">Pending Onboarding</option>
@@ -340,9 +340,9 @@ function SellersPageContent() {
 
             {/* ---- VIEW 1: SELLERS DIRECTORY & ONBOARDING ---- */}
             {activeView === 'directory' && (
-                <div className="bg-white rounded-[10px] border border-neutral-950/10 shadow-none overflow-hidden animate-in fade-in duration-300">
+                <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 shadow-none overflow-hidden animate-in fade-in duration-300">
                     <table className="w-full text-left text-sm">
-                        <thead className="bg-neutral-50/50 border-b border-neutral-950/5">
+                        <thead className="bg-neutral-50/50 border-b-[0.5px] border-black/50">
                             <tr className="text-neutral-500 font-medium">
                                 <th className="px-6 py-4 text-xs tracking-wide">Seller / Brand</th>
                                 <th className="px-6 py-4 text-xs tracking-wide">Email</th>
@@ -368,10 +368,10 @@ function SellersPageContent() {
                                         </td>
                                         <td className="px-6 py-4 text-neutral-600">{seller.email}</td>
                                         <td className="px-6 py-4">
-                                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[4px] text-[10px] font-semibold uppercase tracking-wide border 
-                                                ${seller.status === 'approved' ? 'bg-green-50 text-green-700 border-green-200/50' :
-                                                    seller.status === 'rejected' ? 'bg-red-50 text-red-700 border-red-200/50' :
-                                                        'bg-neutral-50 text-neutral-700 border-neutral-950/10'}`}>
+                                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[4px] text-[10px] font-semibold uppercase tracking-wide border-[0.5px] 
+                                                ${seller.status === 'approved' ? 'bg-green-50 text-green-700 border-black/50' :
+                                                    seller.status === 'rejected' ? 'bg-red-50 text-red-700 border-black/50' :
+                                                        'bg-neutral-50 text-neutral-700 border-black/50'}`}>
                                                 {seller.status}
                                             </span>
                                         </td>
@@ -383,22 +383,22 @@ function SellersPageContent() {
                                                     <>
                                                         <button 
                                                             onClick={() => handleApproveOnboarding(seller.id)} 
-                                                            className="text-green-700 hover:text-green-900 text-[10px] font-semibold bg-green-50 hover:bg-green-100/50 px-3 py-1.5 rounded-[10px] transition-all uppercase tracking-wider border border-green-200/50"
+                                                            className="text-green-700 hover:text-green-900 text-[10px] font-semibold bg-green-50 hover:bg-green-100/50 px-3 py-1.5 rounded-[10px] transition-all uppercase tracking-wider border-[0.5px] border-black/50"
                                                         >
                                                             Approve
                                                         </button>
                                                         <button 
                                                             onClick={() => handleRejectOnboarding(seller.id)} 
-                                                            className="text-red-700 hover:text-red-900 text-[10px] font-semibold bg-red-50 hover:bg-red-100/50 px-3 py-1.5 rounded-[10px] transition-all uppercase tracking-wider border border-red-200/50"
+                                                            className="text-red-700 hover:text-red-900 text-[10px] font-semibold bg-red-50 hover:bg-red-100/50 px-3 py-1.5 rounded-[10px] transition-all uppercase tracking-wider border-[0.5px] border-black/50"
                                                         >
                                                             Reject
                                                         </button>
                                                     </>
                                                 )}
-                                                <Link href={`/superadmin/dashboard/users/sellers/${seller.id}`} className="p-1.5 bg-neutral-50 hover:bg-neutral-100 border border-neutral-950/10 text-neutral-500 hover:text-neutral-900 rounded-lg transition-colors" title="View details">
+                                                <Link href={`/superadmin/dashboard/users/sellers/${seller.id}`} className="p-1.5 bg-neutral-50 hover:bg-neutral-100 border-[0.5px] border-black/50 text-neutral-500 hover:text-neutral-900 rounded-lg transition-colors" title="View details">
                                                     <Eye size={12} />
                                                 </Link>
-                                                <button onClick={() => handleDeleteSeller(seller.id)} className="p-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-650 rounded-lg transition-colors" title="Delete">
+                                                <button onClick={() => handleDeleteSeller(seller.id)} className="p-1.5 bg-red-50 hover:bg-red-100 border-[0.5px] border-black/50 text-red-650 rounded-lg transition-colors" title="Delete">
                                                     <Trash2 size={12} />
                                                 </button>
                                             </div>
@@ -411,7 +411,7 @@ function SellersPageContent() {
 
                     {/* Pagination Controls */}
                     {lastPage > 1 && (
-                        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6 bg-white p-4 border-t border-neutral-950/5">
+                        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6 bg-white p-4 border-t-[0.5px] border-black/50">
                             <span className="text-xs text-neutral-500 font-normal">
                                 Showing page <strong className="text-neutral-900">{currentPage}</strong> of <strong className="text-neutral-900">{lastPage}</strong> (Total: {totalSellers} sellers)
                             </span>
@@ -423,7 +423,7 @@ function SellersPageContent() {
                                         setCurrentPage(prev);
                                         fetchSellers(prev, searchQuery, statusFilter);
                                     }}
-                                    className="px-3.5 py-1.5 rounded-[10px] border border-neutral-950/10 text-xs font-medium text-neutral-600 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                                    className="px-3.5 py-1.5 rounded-[10px] border-[0.5px] border-black/50 text-xs font-medium text-neutral-600 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                                 >
                                     Previous
                                 </button>
@@ -434,7 +434,7 @@ function SellersPageContent() {
                                         setCurrentPage(next);
                                         fetchSellers(next, searchQuery, statusFilter);
                                     }}
-                                    className="px-3.5 py-1.5 rounded-[10px] border border-neutral-950/10 text-xs font-medium text-neutral-650 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                                    className="px-3.5 py-1.5 rounded-[10px] border-[0.5px] border-black/50 text-xs font-medium text-neutral-650 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                                 >
                                     Next
                                 </button>
@@ -446,9 +446,9 @@ function SellersPageContent() {
 
             {/* ---- VIEW 2: STORE CHANGE REQUESTS ---- */}
             {activeView === 'store_requests' && (
-                <div className="bg-white rounded-[10px] border border-neutral-950/10 shadow-none overflow-hidden animate-in fade-in duration-300">
+                <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 shadow-none overflow-hidden animate-in fade-in duration-300">
                     <table className="w-full text-left text-xs">
-                        <thead className="bg-neutral-50/50 border-b border-neutral-950/5">
+                        <thead className="bg-neutral-50/50 border-b-[0.5px] border-black/50">
                             <tr className="text-neutral-500 font-medium">
                                 <th className="px-6 py-4 text-xs tracking-wide">Seller / Brand</th>
                                 <th className="px-6 py-4 text-xs tracking-wide">Requested On</th>
@@ -466,7 +466,7 @@ function SellersPageContent() {
                                     <tr key={req.id} className="hover:bg-neutral-50/20 transition-colors">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-9 h-9 rounded-[10px] bg-neutral-50 border border-neutral-950/10 flex items-center justify-center font-semibold text-neutral-800 text-sm">
+                                                <div className="w-9 h-9 rounded-[10px] bg-neutral-50 border-[0.5px] border-black/50 flex items-center justify-center font-semibold text-neutral-800 text-sm">
                                                     {req.seller?.name?.charAt(0)}
                                                 </div>
                                                 <div>
@@ -482,7 +482,7 @@ function SellersPageContent() {
                                             <div className="flex gap-2 flex-wrap">
                                                 {Object.keys(req.proposed_data).map(key => (
                                                     req.proposed_data[key] !== req.brand?.[key === 'banner_path' ? 'banner_path' : key] && (
-                                                        <span key={key} className="px-2 py-0.5 bg-neutral-50 text-neutral-700 border border-neutral-950/10 rounded-[4px] text-[10px] font-medium uppercase tracking-wide">
+                                                        <span key={key} className="px-2 py-0.5 bg-neutral-50 text-neutral-700 border-[0.5px] border-black/50 rounded-[4px] text-[10px] font-medium uppercase tracking-wide">
                                                             {key.replace('_', ' ')}
                                                         </span>
                                                     )
@@ -507,9 +507,9 @@ function SellersPageContent() {
 
             {/* ---- VIEW 3: SELLER INFO CHANGES (KYC/BANK) ---- */}
             {activeView === 'seller_requests' && (
-                <div className="bg-white rounded-[10px] border border-neutral-950/10 shadow-none overflow-hidden animate-in fade-in duration-300">
+                <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 shadow-none overflow-hidden animate-in fade-in duration-300">
                     <table className="w-full text-left text-xs">
-                        <thead className="bg-neutral-50/50 border-b border-neutral-950/5">
+                        <thead className="bg-neutral-50/50 border-b-[0.5px] border-black/50">
                             <tr className="text-neutral-500 font-medium">
                                 <th className="px-6 py-4 text-xs tracking-wide">Seller</th>
                                 <th className="px-6 py-4 text-xs tracking-wide">Requested Section</th>
@@ -527,7 +527,7 @@ function SellersPageContent() {
                                     <tr key={req.id} className="hover:bg-neutral-50/20 transition-colors">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded-[10px] bg-neutral-100 flex items-center justify-center text-neutral-900 border border-neutral-950/10 font-semibold text-sm">
+                                                <div className="w-8 h-8 rounded-[10px] bg-neutral-100 flex items-center justify-center text-neutral-900 border-[0.5px] border-black/50 font-semibold text-sm">
                                                     {req.seller?.name?.[0]}
                                                 </div>
                                                 <div>
@@ -537,7 +537,7 @@ function SellersPageContent() {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className="px-2.5 py-0.5 rounded-[4px] text-[10px] font-semibold uppercase tracking-wide border bg-neutral-50 text-neutral-700 border-neutral-950/10">
+                                            <span className="px-2.5 py-0.5 rounded-[4px] text-[10px] font-semibold uppercase tracking-wide border-[0.5px] bg-neutral-50 text-neutral-700 border-black/50">
                                                 {req.section}
                                             </span>
                                         </td>
@@ -563,8 +563,8 @@ function SellersPageContent() {
 
             {/* SELLER CHANGE DETAILS MODAL/PANEL */}
             {selectedSellerRequest && (
-                <div className="bg-neutral-50/50 p-6 rounded-[10px] border border-neutral-950/10 space-y-6 mt-6 animate-in slide-in-from-bottom-6 duration-500">
-                    <div className="flex items-center justify-between pb-4 border-b border-neutral-950/5">
+                <div className="bg-neutral-50/50 p-6 rounded-[10px] border-[0.5px] border-black/50 space-y-6 mt-6 animate-in slide-in-from-bottom-6 duration-500">
+                    <div className="flex items-center justify-between pb-4 border-b-[0.5px] border-black/50">
                         <div className="space-y-1">
                             <h2 className="text-base font-semibold text-neutral-900 flex items-center gap-3">
                                 Review Seller {selectedSellerRequest.section} Change Request
@@ -574,13 +574,13 @@ function SellersPageContent() {
                             </h2>
                             <p className="text-xs text-neutral-500 font-normal">Submitted by {selectedSellerRequest.seller?.name} ({selectedSellerRequest.seller?.email}) on {new Date(selectedSellerRequest.created_at).toLocaleString()}</p>
                         </div>
-                        <button onClick={() => setSelectedSellerRequest(null)} className="px-4 py-2 border border-neutral-950/15 rounded-[10px] bg-white hover:bg-neutral-50 text-xs font-medium text-neutral-700 transition-colors">Close</button>
+                        <button onClick={() => setSelectedSellerRequest(null)} className="px-4 py-2 border-[0.5px] border-black/50 rounded-[10px] bg-white hover:bg-neutral-50 text-xs font-medium text-neutral-700 transition-colors">Close</button>
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         {/* Current/Old Info */}
-                        <div className="bg-white p-5 rounded-[10px] border border-neutral-950/10 space-y-4">
-                            <h3 className="font-semibold text-neutral-400 uppercase text-[9px] tracking-wider border-b border-neutral-950/5 pb-2">Database Record</h3>
+                        <div className="bg-white p-5 rounded-[10px] border-[0.5px] border-black/50 space-y-4">
+                            <h3 className="font-semibold text-neutral-400 uppercase text-[9px] tracking-wider border-b-[0.5px] border-black/50 pb-2">Database Record</h3>
                             {Object.entries(selectedSellerRequest.old_data || {}).map(([key, val]: any) => (
                                 <div key={key} className="text-xs font-normal">
                                     <span className="text-[9px] text-neutral-450 uppercase font-medium block mb-0.5">{key.replace(/_/g, ' ')}</span>
@@ -590,12 +590,12 @@ function SellersPageContent() {
                         </div>
 
                         {/* Proposed Updates */}
-                        <div className="bg-white p-5 rounded-[10px] border border-green-200 space-y-4">
-                            <h3 className="font-semibold text-green-700 uppercase text-[9px] tracking-wider border-b border-green-200/50 pb-2">Proposed Updates</h3>
+                        <div className="bg-white p-5 rounded-[10px] border-[0.5px] border-black/50 space-y-4">
+                            <h3 className="font-semibold text-green-700 uppercase text-[9px] tracking-wider border-b-[0.5px] border-black/50 pb-2">Proposed Updates</h3>
                             {Object.entries(selectedSellerRequest.new_data || {}).map(([key, val]: any) => {
                                 const isDiff = JSON.stringify(selectedSellerRequest.old_data?.[key]) !== JSON.stringify(val);
                                 return (
-                                    <div key={key} className={`text-xs p-2 rounded-lg transition-all ${isDiff ? 'bg-green-50 border border-green-200/50 text-green-700' : 'opacity-70 font-normal text-neutral-600'}`}>
+                                    <div key={key} className={`text-xs p-2 rounded-lg transition-all ${isDiff ? 'bg-green-50 border-[0.5px] border-black/50 text-green-700' : 'opacity-70 font-normal text-neutral-600'}`}>
                                         <span className="text-[9px] text-neutral-450 uppercase font-semibold block mb-0.5">{key.replace(/_/g, ' ')}</span>
                                         {key.includes('image') || key.includes('proof') || key.includes('path') || String(val).startsWith('/storage/') ? (
                                             <a href={getImageUrl(val)} target="_blank" rel="noreferrer" className="text-blue-650 font-semibold underline block">View Uploaded Image</a>
@@ -608,10 +608,10 @@ function SellersPageContent() {
                         </div>
                     </div>
 
-                    <div className="flex justify-end gap-3 pt-4 border-t border-neutral-950/5">
+                    <div className="flex justify-end gap-3 pt-4 border-t-[0.5px] border-black/50">
                         <button
                             onClick={() => triggerRejectionDialog('seller')}
-                            className="px-6 py-2.5 border border-red-200 text-red-600 hover:bg-red-50 rounded-[10px] font-medium text-xs transition-colors"
+                            className="px-6 py-2.5 border-[0.5px] border-black/50 text-red-600 hover:bg-red-50 rounded-[10px] font-medium text-xs transition-colors"
                         >
                             Reject Updates
                         </button>
@@ -627,7 +627,7 @@ function SellersPageContent() {
 
             {/* STORE PROFILE CHANGE DETAILS DIALOG */}
             <Dialog open={isStoreDetailsOpen} onOpenChange={setIsStoreDetailsOpen}>
-                <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto rounded-[10px] p-6 bg-white shadow-none border border-neutral-950/10">
+                <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto rounded-[10px] p-6 bg-white shadow-none border-[0.5px] border-black/50">
                     <DialogHeader>
                         <DialogTitle className="text-base font-semibold text-neutral-900">Review Store Details Changes</DialogTitle>
                     </DialogHeader>
@@ -635,19 +635,19 @@ function SellersPageContent() {
                         <div className="space-y-6 py-3">
                             <div className="grid grid-cols-2 gap-6">
                                 {/* Current Live */}
-                                <div className="space-y-4 opacity-70 border-r pr-6 border-neutral-950/10">
-                                    <h3 className="font-semibold text-neutral-400 text-[10px] uppercase tracking-wider border-b border-neutral-950/5 pb-2">Active Live Store</h3>
+                                <div className="space-y-4 opacity-70 border-r-[0.5px] pr-6 border-black/50">
+                                    <h3 className="font-semibold text-neutral-400 text-[10px] uppercase tracking-wider border-b-[0.5px] border-black/50 pb-2">Active Live Store</h3>
                                     
                                     <div className="space-y-1">
                                         <label className="text-[9px] uppercase font-semibold text-neutral-400">Banner</label>
-                                        <div className="h-20 bg-neutral-100 rounded-[10px] overflow-hidden border border-neutral-950/10">
+                                        <div className="h-20 bg-neutral-100 rounded-[10px] overflow-hidden border-[0.5px] border-black/50">
                                             <img src={getImageUrl(selectedStoreRequest.brand?.banner_path)} className="w-full h-full object-cover grayscale" />
                                         </div>
                                     </div>
 
                                     <div className="space-y-1">
                                         <label className="text-[9px] uppercase font-semibold text-neutral-400">Logo</label>
-                                        <div className="w-12 h-12 bg-neutral-100 rounded-[10px] border border-neutral-950/10 overflow-hidden flex items-center justify-center">
+                                        <div className="w-12 h-12 bg-neutral-100 rounded-[10px] border-[0.5px] border-black/50 overflow-hidden flex items-center justify-center">
                                             <img src={getImageUrl(selectedStoreRequest.brand?.logo)} className="w-full h-full object-contain grayscale" />
                                         </div>
                                     </div>
@@ -674,22 +674,22 @@ function SellersPageContent() {
                                 </div>
 
                                 {/* Proposed Changes */}
-                                <div className="space-y-4 bg-green-50/30 p-5 rounded-[10px] border border-green-200">
-                                    <h3 className="font-semibold text-green-700 text-[10px] uppercase tracking-wider border-b border-green-200/50 pb-2 flex justify-between items-center">
+                                <div className="space-y-4 bg-green-50/30 p-5 rounded-[10px] border-[0.5px] border-black/50">
+                                    <h3 className="font-semibold text-green-700 text-[10px] uppercase tracking-wider border-b-[0.5px] border-black/50 pb-2 flex justify-between items-center">
                                         Proposed Brand Profile
                                         <span className="bg-green-100 text-green-800 text-[8px] font-semibold px-1.5 py-0.5 rounded">New</span>
                                     </h3>
 
                                     <div className="space-y-1">
                                         <label className="text-[9px] uppercase font-semibold text-green-700">Banner</label>
-                                        <div className="h-20 bg-white rounded-[10px] overflow-hidden border border-green-200">
+                                        <div className="h-20 bg-white rounded-[10px] overflow-hidden border-[0.5px] border-black/50">
                                             <img src={getImageUrl(selectedStoreRequest.proposed_data.banner_path)} className="w-full h-full object-cover" />
                                         </div>
                                     </div>
 
                                     <div className="space-y-1">
                                         <label className="text-[9px] uppercase font-semibold text-green-700">Logo</label>
-                                        <div className="w-12 h-12 bg-white rounded-[10px] overflow-hidden border border-green-200 flex items-center justify-center">
+                                        <div className="w-12 h-12 bg-white rounded-[10px] overflow-hidden border-[0.5px] border-black/50 flex items-center justify-center">
                                             <img src={getImageUrl(selectedStoreRequest.proposed_data.logo)} className="w-full h-full object-contain" />
                                         </div>
                                     </div>
@@ -715,13 +715,13 @@ function SellersPageContent() {
                                     </div>
 
                                     {/* Proposed Categories & Concerns */}
-                                    <div className="border-t border-green-200/50 pt-3 space-y-2 text-xs">
+                                    <div className="border-t-[0.5px] border-black/50 pt-3 space-y-2 text-xs">
                                         <div>
                                             <label className="text-[9px] uppercase font-semibold text-green-700 block mb-1">Categories</label>
                                             <div className="flex flex-wrap gap-1">
                                                 {Array.isArray(selectedStoreRequest.proposed_data.categories) && selectedStoreRequest.proposed_data.categories.length > 0 ? (
                                                     selectedStoreRequest.proposed_data.categories.map((id: number) => (
-                                                        <span key={id} className="text-[9px] font-semibold bg-white border border-green-200 px-2 py-0.5 rounded text-green-800 uppercase">
+                                                        <span key={id} className="text-[9px] font-semibold bg-white border-[0.5px] border-black/50 px-2 py-0.5 rounded text-green-800 uppercase">
                                                             {getClassificationName(id)}
                                                         </span>
                                                     ))
@@ -734,7 +734,7 @@ function SellersPageContent() {
                                 </div>
                             </div>
 
-                            <DialogFooter className="pt-4 border-t border-neutral-950/5 gap-2 sm:gap-0">
+                            <DialogFooter className="pt-4 border-t-[0.5px] border-black/50 gap-2 sm:gap-0">
                                 <button
                                     onClick={() => triggerRejectionDialog('store')}
                                     className="px-4 py-2.5 text-xs font-semibold text-red-650 hover:bg-red-50 rounded-[10px] transition-colors"
@@ -756,7 +756,7 @@ function SellersPageContent() {
 
             {/* REJECTION REASON MODAL DIALOG */}
             <Dialog open={showRejectDialog} onOpenChange={setShowRejectDialog}>
-                <DialogContent className="max-w-md rounded-[10px] p-6 bg-white shadow-none border border-neutral-950/10">
+                <DialogContent className="max-w-md rounded-[10px] p-6 bg-white shadow-none border-[0.5px] border-black/50">
                     <DialogHeader>
                         <DialogTitle className="text-base font-semibold text-neutral-900">Reject Changes</DialogTitle>
                     </DialogHeader>
@@ -765,7 +765,7 @@ function SellersPageContent() {
                         <textarea
                             value={rejectionReason}
                             onChange={(e) => setRejectionReason(e.target.value)}
-                            className="w-full h-28 p-3 rounded-[10px] border border-neutral-950/15 focus:ring-1 focus:ring-black focus:border-black outline-none text-xs font-normal"
+                            className="w-full h-28 p-3 rounded-[10px] border-[0.5px] border-black/50 focus:ring-1 focus:ring-black focus:border-black outline-none text-xs font-normal"
                             placeholder="e.g. Blurry upload documents or incorrect bank data..."
                         />
                     </div>

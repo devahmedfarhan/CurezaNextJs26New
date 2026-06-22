@@ -491,7 +491,7 @@ export default function AdminCheckoutCartSettingsPage() {
     return (
         <div className="w-full space-y-6 pb-24 font-sans text-neutral-900">
             {/* Unified Page Header */}
-            <div className="border-b border-black/10 pb-4">
+            <div className="border-b-[0.5px] border-black/10 pb-4">
                 <h1 className="text-xl font-semibold text-neutral-900 tracking-tight flex items-center gap-2 mb-1">
                     <Truck className="text-black" size={20} /> Shipping & Checkout Settings
                 </h1>
@@ -499,7 +499,7 @@ export default function AdminCheckoutCartSettingsPage() {
             </div>
 
             {/* Sub Header / Action bar */}
-            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-black/10 pb-6">
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b-[0.5px] border-black/10 pb-6">
                 <div>
                     <h2 className="text-sm font-medium text-neutral-900 tracking-tight flex items-center gap-2">
                         <ShoppingBag className="text-black" size={16} /> Unified Shopping Experience Configurator
@@ -518,13 +518,13 @@ export default function AdminCheckoutCartSettingsPage() {
 
             {/* Notification messages */}
             {successMessage && (
-                <div className="bg-green-50 border-l-2 border-green-600 p-4 rounded-[10px] flex items-center gap-3">
+                <div className="bg-green-50 border-l-[0.5px] border-black/50 p-4 rounded-[10px] flex items-center gap-3">
                     <CheckCircle className="text-green-600 flex-shrink-0" size={16} />
                     <span className="text-green-800 text-xs font-medium">{successMessage}</span>
                 </div>
             )}
             {errorMessage && (
-                <div className="bg-red-50 border-l-2 border-red-600 p-4 rounded-[10px] flex items-center gap-3">
+                <div className="bg-red-50 border-l-[0.5px] border-black/50 p-4 rounded-[10px] flex items-center gap-3">
                     <AlertCircle className="text-red-600 flex-shrink-0" size={16} />
                     <span className="text-red-800 text-xs font-medium">{errorMessage}</span>
                 </div>
@@ -560,7 +560,7 @@ export default function AdminCheckoutCartSettingsPage() {
                     {/* 1. Feature Toggles Sub-tab */}
                     {activeSubTab === 'features' && (
                         <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 overflow-hidden w-full">
-                            <div className="p-4 border-b border-black/10 bg-neutral-50/50 flex items-center gap-2">
+                            <div className="p-4 border-b-[0.5px] border-black/10 bg-neutral-50/50 flex items-center gap-2">
                                 <Sliders className="text-black" size={16} />
                                 <h3 className="font-medium text-neutral-900 text-sm">Feature Toggles</h3>
                             </div>
@@ -568,7 +568,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                 <p className="text-xs text-neutral-500 font-normal">Configure which features are active on the Cart Drawer, Cart Page, and Checkout Page.</p>
                                 
                                 {/* Rewards Switch */}
-                                <div className="flex justify-between items-center py-3 border-b border-black/5 last:border-0">
+                                <div className="flex justify-between items-center py-3 border-b-[0.5px] border-black/5 last:border-0">
                                     <div>
                                         <span className="block font-medium text-xs text-neutral-800">Milestone Rewards Progress</span>
                                         <span className="text-[10px] text-neutral-400 font-normal">Add free gift progress bar. Applies to: <span className="font-medium text-neutral-650">Cart Drawer, Cart Page</span></span>
@@ -576,7 +576,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                     <button
                                         type="button"
                                         onClick={() => handleToggleChange('cart_drawer_enable_rewards')}
-                                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-[0.5px] border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
                                             settings.cart_drawer_enable_rewards === '1' ? 'bg-black' : 'bg-neutral-200'
                                         }`}
                                     >
@@ -589,7 +589,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                 </div>
 
                                 {/* Coupons Switch */}
-                                <div className="flex justify-between items-center py-3 border-b border-black/5 last:border-0">
+                                <div className="flex justify-between items-center py-3 border-b-[0.5px] border-black/5 last:border-0">
                                     <div>
                                         <span className="block font-medium text-xs text-neutral-800">Coupon Code Box</span>
                                         <span className="text-[10px] text-neutral-400 font-normal">Coupon inputs & recommended tags. Applies to: <span className="font-medium text-neutral-650">Cart Drawer, Cart Page, Checkout Page</span></span>
@@ -597,7 +597,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                     <button
                                         type="button"
                                         onClick={() => handleToggleChange('cart_drawer_enable_coupons')}
-                                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-[0.5px] border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
                                             settings.cart_drawer_enable_coupons === '1' ? 'bg-black' : 'bg-neutral-200'
                                         }`}
                                     >
@@ -610,7 +610,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                 </div>
 
                                 {/* Coins Switch */}
-                                <div className="flex justify-between items-center py-3 border-b border-black/5 last:border-0">
+                                <div className="flex justify-between items-center py-3 border-b-[0.5px] border-black/5 last:border-0">
                                     <div>
                                         <span className="block font-medium text-xs text-neutral-800">Loyalty Coins/Cashback Card</span>
                                         <span className="text-[10px] text-neutral-400 font-normal">Wallet integrations & earnings banner. Applies to: <span className="font-medium text-neutral-650">Cart Drawer, Cart Page</span></span>
@@ -618,7 +618,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                     <button
                                         type="button"
                                         onClick={() => handleToggleChange('cart_drawer_enable_coins')}
-                                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-[0.5px] border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
                                             settings.cart_drawer_enable_coins === '1' ? 'bg-black' : 'bg-neutral-200'
                                         }`}
                                     >
@@ -631,7 +631,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                 </div>
 
                                 {/* Upsell Switch */}
-                                <div className="flex justify-between items-center py-3 border-b border-black/5 last:border-0">
+                                <div className="flex justify-between items-center py-3 border-b-[0.5px] border-black/5 last:border-0">
                                     <div>
                                         <span className="block font-medium text-xs text-neutral-800">Cross-sell Upsells Carousel</span>
                                         <span className="text-[10px] text-neutral-400 font-normal">Horizontal quick-add product cards. Applies to: <span className="font-medium text-neutral-650">Cart Drawer, Cart Page</span></span>
@@ -639,7 +639,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                     <button
                                         type="button"
                                         onClick={() => handleToggleChange('cart_drawer_enable_upsell')}
-                                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-[0.5px] border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
                                             settings.cart_drawer_enable_upsell === '1' ? 'bg-black' : 'bg-neutral-200'
                                         }`}
                                     >
@@ -652,7 +652,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                 </div>
 
                                 {/* Notes Switch */}
-                                <div className="flex justify-between items-center py-3 border-b border-black/5 last:border-0">
+                                <div className="flex justify-between items-center py-3 border-b-[0.5px] border-black/5 last:border-0">
                                     <div>
                                         <span className="block font-medium text-xs text-neutral-800">Delivery Instructions Note</span>
                                         <span className="text-[10px] text-neutral-400 font-normal">Allow custom delivery note field. Applies to: <span className="font-medium text-neutral-650">Cart Drawer</span></span>
@@ -660,7 +660,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                     <button
                                         type="button"
                                         onClick={() => handleToggleChange('cart_drawer_enable_delivery_note')}
-                                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-[0.5px] border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
                                             settings.cart_drawer_enable_delivery_note === '1' ? 'bg-black' : 'bg-neutral-200'
                                         }`}
                                     >
@@ -680,7 +680,7 @@ export default function AdminCheckoutCartSettingsPage() {
                         <div className="space-y-6 w-full">
                             {/* Section 2.1: Colors & Animations */}
                             <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 overflow-hidden">
-                                <div className="p-4 border-b border-black/10 bg-neutral-50/50 flex items-center gap-2">
+                                <div className="p-4 border-b-[0.5px] border-black/10 bg-neutral-50/50 flex items-center gap-2">
                                     <Sliders className="text-black" size={16} />
                                     <h3 className="font-medium text-neutral-900 text-sm">Visual Customization</h3>
                                 </div>
@@ -692,13 +692,13 @@ export default function AdminCheckoutCartSettingsPage() {
                                                 type="color" 
                                                 value={settings.cart_drawer_primary_color}
                                                 onChange={(e) => handleInputChange('cart_drawer_primary_color', e.target.value)}
-                                                className="w-10 h-10 border border-black/10 rounded-md cursor-pointer shrink-0 overflow-hidden bg-transparent"
+                                                className="w-10 h-10 border-[0.5px] border-black/10 rounded-md cursor-pointer shrink-0 overflow-hidden bg-transparent"
                                             />
                                             <input 
                                                 type="text" 
                                                 value={settings.cart_drawer_primary_color}
                                                 onChange={(e) => handleInputChange('cart_drawer_primary_color', e.target.value)}
-                                                className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
                                                 placeholder="#16A34A"
                                             />
                                         </div>
@@ -711,7 +711,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                 type="number" 
                                                 value={settings.cart_drawer_animation_speed}
                                                 onChange={(e) => handleInputChange('cart_drawer_animation_speed', e.target.value)}
-                                                className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
                                                 placeholder="300"
                                                 min="100"
                                             />
@@ -722,7 +722,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                 type="text" 
                                                 value={settings.cart_drawer_logo_url}
                                                 onChange={(e) => handleInputChange('cart_drawer_logo_url', e.target.value)}
-                                                className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
                                                 placeholder="https://example.com/logo.png"
                                             />
                                         </div>
@@ -732,7 +732,7 @@ export default function AdminCheckoutCartSettingsPage() {
 
                             {/* Section 2.2: Labels & Strings */}
                             <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 overflow-hidden">
-                                <div className="p-4 border-b border-black/10 bg-neutral-50/50 flex items-center gap-2">
+                                <div className="p-4 border-b-[0.5px] border-black/10 bg-neutral-50/50 flex items-center gap-2">
                                     <Type className="text-black" size={16} />
                                     <h3 className="font-medium text-neutral-900 text-sm">Text Copies & Headings</h3>
                                 </div>
@@ -744,7 +744,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                 type="text" 
                                                 value={settings.cart_drawer_title}
                                                 onChange={(e) => handleInputChange('cart_drawer_title', e.target.value)}
-                                                className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
                                             />
                                         </div>
                                         <div>
@@ -753,7 +753,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                 type="text" 
                                                 value={settings.cart_drawer_urgency_text}
                                                 onChange={(e) => handleInputChange('cart_drawer_urgency_text', e.target.value)}
-                                                className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
                                             />
                                         </div>
                                     </div>
@@ -765,7 +765,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                 type="text" 
                                                 value={settings.cart_drawer_empty_text}
                                                 onChange={(e) => handleInputChange('cart_drawer_empty_text', e.target.value)}
-                                                className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
                                             />
                                         </div>
                                         <div>
@@ -774,7 +774,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                 type="text" 
                                                 value={settings.cart_drawer_empty_cta_label}
                                                 onChange={(e) => handleInputChange('cart_drawer_empty_cta_label', e.target.value)}
-                                                className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
                                             />
                                         </div>
                                     </div>
@@ -786,7 +786,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                 type="text" 
                                                 value={settings.cart_drawer_secure_text}
                                                 onChange={(e) => handleInputChange('cart_drawer_secure_text', e.target.value)}
-                                                className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
                                             />
                                         </div>
                                         <div>
@@ -795,7 +795,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                 type="text" 
                                                 value={settings.cart_drawer_checkout_cta_label}
                                                 onChange={(e) => handleInputChange('cart_drawer_checkout_cta_label', e.target.value)}
-                                                className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
                                             />
                                         </div>
                                     </div>
@@ -807,7 +807,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                 type="text" 
                                                 value={settings.cart_drawer_reviews_text}
                                                 onChange={(e) => handleInputChange('cart_drawer_reviews_text', e.target.value)}
-                                                className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
                                             />
                                         </div>
                                         <div>
@@ -816,7 +816,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                 type="text" 
                                                 value={settings.cart_drawer_upsell_title}
                                                 onChange={(e) => handleInputChange('cart_drawer_upsell_title', e.target.value)}
-                                                className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors"
                                             />
                                         </div>
                                     </div>
@@ -828,7 +828,7 @@ export default function AdminCheckoutCartSettingsPage() {
                     {/* 3. Checkout Page Settings Sub-tab */}
                     {activeSubTab === 'checkout' && (
                         <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 overflow-hidden w-full">
-                            <div className="p-4 border-b border-black/10 bg-neutral-50/50 flex items-center gap-2">
+                            <div className="p-4 border-b-[0.5px] border-black/10 bg-neutral-50/50 flex items-center gap-2">
                                 <CreditCard className="text-black" size={16} />
                                 <h3 className="font-medium text-neutral-900 text-sm">Checkout Page Settings</h3>
                             </div>
@@ -842,14 +842,14 @@ export default function AdminCheckoutCartSettingsPage() {
                                         type="text" 
                                         value={settings.checkout_secure_badge_text}
                                         onChange={(e) => handleInputChange('checkout_secure_badge_text', e.target.value)}
-                                        className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors text-neutral-800"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs font-normal bg-neutral-50/20 focus:border-black transition-colors text-neutral-800"
                                         placeholder="100% Safe & Secure Checkout"
                                     />
                                     <span className="text-[10px] text-neutral-400 mt-1 block">Displayed in the header banner during checkout.</span>
                                 </div>
 
                                 {/* Enable Order Notes Switch */}
-                                <div className="flex justify-between items-center py-3 border-t border-b border-black/5">
+                                <div className="flex justify-between items-center py-3 border-t-[0.5px] border-b-[0.5px] border-black/5">
                                     <div>
                                         <span className="block font-medium text-xs text-neutral-800">Enable Order Notes</span>
                                         <span className="text-[10px] text-neutral-400 font-normal">Allow custom checkout order notes field (special instructions for doctor/shipping).</span>
@@ -857,7 +857,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                     <button
                                         type="button"
                                         onClick={() => handleToggleChange('checkout_order_notes_enabled')}
-                                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-[0.5px] border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
                                             settings.checkout_order_notes_enabled === '1' ? 'bg-black' : 'bg-neutral-200'
                                         }`}
                                     >
@@ -878,7 +878,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                     <button
                                         type="button"
                                         onClick={() => handleToggleChange('checkout_save_address_default')}
-                                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-[0.5px] border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
                                             settings.checkout_save_address_default === '1' ? 'bg-black' : 'bg-neutral-200'
                                         }`}
                                     >
@@ -891,7 +891,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                 </div>
 
                                 {/* Native Checkout Switch */}
-                                <div className="flex justify-between items-center py-3 border-t border-black/5">
+                                <div className="flex justify-between items-center py-3 border-t-[0.5px] border-black/5">
                                     <div>
                                         <span className="block font-medium text-xs text-neutral-800">Enable Native Checkout Page</span>
                                         <span className="text-[10px] text-neutral-400 font-normal">If enabled, checkout redirect pushes to /checkout page. If disabled, checkout opens as a centered modal popup on the current screen.</span>
@@ -899,7 +899,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                     <button
                                         type="button"
                                         onClick={() => handleToggleChange('checkout_native_enabled')}
-                                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-[0.5px] border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
                                             settings.checkout_native_enabled === '1' ? 'bg-black' : 'bg-neutral-200'
                                         }`}
                                     >
@@ -917,7 +917,7 @@ export default function AdminCheckoutCartSettingsPage() {
                     {/* 4. Reward Milestones (Slabs) Sub-tab */}
                     {activeSubTab === 'slabs' && (
                         <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 overflow-hidden w-full">
-                            <div className="p-4 border-b border-black/10 bg-neutral-50/50 flex justify-between items-center">
+                            <div className="p-4 border-b-[0.5px] border-black/10 bg-neutral-50/50 flex justify-between items-center">
                                 <h3 className="font-medium text-neutral-900 text-sm">Reward Milestones (Slabs)</h3>
                                 <span className="text-xs text-neutral-500 font-normal">Configure Flat Discount, Free Gift, or Free Shipping</span>
                             </div>
@@ -931,7 +931,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                 type="text" 
                                                 value={newSlab.name}
                                                 onChange={(e) => setNewSlab(prev => ({ ...prev, name: e.target.value }))}
-                                                className="w-full px-3 py-1.5 border border-black/10 rounded-[10px] text-xs outline-none text-neutral-800 bg-white"
+                                                className="w-full px-3 py-1.5 border-[0.5px] border-black/10 rounded-[10px] text-xs outline-none text-neutral-800 bg-white"
                                                 placeholder="e.g. ₹50 Off Milestone"
                                             />
                                         </div>
@@ -941,7 +941,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                 type="number" 
                                                 value={newSlab.min_value}
                                                 onChange={(e) => setNewSlab(prev => ({ ...prev, min_value: e.target.value }))}
-                                                className="w-full px-3 py-1.5 border border-black/10 rounded-[10px] text-xs outline-none text-neutral-800 bg-white"
+                                                className="w-full px-3 py-1.5 border-[0.5px] border-black/10 rounded-[10px] text-xs outline-none text-neutral-800 bg-white"
                                                 placeholder="e.g. 499"
                                             />
                                         </div>
@@ -950,7 +950,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                             <select 
                                                 value={newSlab.reward_type}
                                                 onChange={(e) => setNewSlab(prev => ({ ...prev, reward_type: e.target.value }))}
-                                                className="w-full px-3 py-1.5 border border-black/10 rounded-[10px] text-xs outline-none bg-white font-medium text-neutral-800"
+                                                className="w-full px-3 py-1.5 border-[0.5px] border-black/10 rounded-[10px] text-xs outline-none bg-white font-medium text-neutral-800"
                                             >
                                                 <option value="gift">🎁 Free Gift Product</option>
                                                 <option value="discount">💰 Cash Discount (Flat Off)</option>
@@ -959,14 +959,14 @@ export default function AdminCheckoutCartSettingsPage() {
                                         </div>
                                     </div>
 
-                                    <div className="border-t border-black/5 pt-3">
+                                    <div className="border-t-[0.5px] border-black/5 pt-3">
                                         {newSlab.reward_type === 'gift' && (
                                             <div>
                                                 <label className="block text-xs font-medium text-neutral-500 mb-1">Choose Free Gift Product</label>
                                                 <select 
                                                     value={newSlab.gift_product_id}
                                                     onChange={(e) => setNewSlab(prev => ({ ...prev, gift_product_id: e.target.value }))}
-                                                    className="w-full px-3 py-1.5 border border-black/10 rounded-[10px] text-xs outline-none bg-white font-medium text-neutral-800"
+                                                    className="w-full px-3 py-1.5 border-[0.5px] border-black/10 rounded-[10px] text-xs outline-none bg-white font-medium text-neutral-800"
                                                 >
                                                     <option value="">Choose Gift Product</option>
                                                     {products.map((prod) => (
@@ -983,7 +983,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                     type="number" 
                                                     value={newSlab.discount_amount}
                                                     onChange={(e) => setNewSlab(prev => ({ ...prev, discount_amount: e.target.value }))}
-                                                    className="w-full px-3 py-1.5 border border-black/10 rounded-[10px] text-xs outline-none text-neutral-800 bg-white"
+                                                    className="w-full px-3 py-1.5 border-[0.5px] border-black/10 rounded-[10px] text-xs outline-none text-neutral-800 bg-white"
                                                     placeholder="e.g. 50"
                                                 />
                                             </div>
@@ -1012,7 +1012,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                     <div className="border-[0.5px] border-black/10 rounded-[10px] overflow-hidden">
                                         <table className="w-full text-left text-xs border-collapse">
                                             <thead>
-                                                <tr className="bg-neutral-50 border-b border-black/10 text-neutral-500 font-medium uppercase tracking-wider">
+                                                <tr className="bg-neutral-50 border-b-[0.5px] border-black/10 text-neutral-500 font-medium uppercase tracking-wider">
                                                     <th className="p-3 font-medium">Name</th>
                                                     <th className="p-3 font-medium">Threshold</th>
                                                     <th className="p-3 font-medium">Reward / Benefit</th>
@@ -1032,7 +1032,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                         rewardText = 'None';
                                                     }
                                                     return (
-                                                        <tr key={slab.id} className="border-b border-black/10 last:border-0 hover:bg-neutral-50/20">
+                                                        <tr key={slab.id} className="border-b-[0.5px] border-black/10 last:border-0 hover:bg-neutral-50/20">
                                                             {editingSlabId === slab.id ? (
                                                                 <>
                                                                     <td className="p-3">
@@ -1040,7 +1040,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                                             type="text" 
                                                                             value={editingSlabForm.name}
                                                                             onChange={(e) => setEditingSlabForm(prev => ({ ...prev, name: e.target.value }))}
-                                                                            className="w-full px-2 py-1 border border-black/10 rounded-md text-xs outline-none font-normal text-neutral-800 bg-white"
+                                                                            className="w-full px-2 py-1 border-[0.5px] border-black/10 rounded-md text-xs outline-none font-normal text-neutral-800 bg-white"
                                                                             placeholder="Name"
                                                                         />
                                                                     </td>
@@ -1049,7 +1049,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                                             type="number" 
                                                                             value={editingSlabForm.min_value}
                                                                             onChange={(e) => setEditingSlabForm(prev => ({ ...prev, min_value: e.target.value }))}
-                                                                            className="w-24 px-2 py-1 border border-black/10 rounded-md text-xs outline-none font-medium text-neutral-850 bg-white"
+                                                                            className="w-24 px-2 py-1 border-[0.5px] border-black/10 rounded-md text-xs outline-none font-medium text-neutral-850 bg-white"
                                                                             placeholder="Threshold"
                                                                         />
                                                                     </td>
@@ -1058,7 +1058,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                                             <select 
                                                                                 value={editingSlabForm.reward_type}
                                                                                 onChange={(e) => setEditingSlabForm(prev => ({ ...prev, reward_type: e.target.value }))}
-                                                                                className="w-full px-2 py-1 border border-black/10 rounded-md text-xs outline-none bg-white font-medium text-neutral-800"
+                                                                                className="w-full px-2 py-1 border-[0.5px] border-black/10 rounded-md text-xs outline-none bg-white font-medium text-neutral-800"
                                                                             >
                                                                                 <option value="gift">🎁 Free Gift</option>
                                                                                 <option value="discount">💰 Cash Discount</option>
@@ -1068,7 +1068,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                                                 <select 
                                                                                     value={editingSlabForm.gift_product_id}
                                                                                     onChange={(e) => setEditingSlabForm(prev => ({ ...prev, gift_product_id: e.target.value }))}
-                                                                                    className="w-full px-2 py-1 border border-black/10 rounded-md text-[10px] outline-none bg-white font-medium text-neutral-800 mt-1"
+                                                                                    className="w-full px-2 py-1 border-[0.5px] border-black/10 rounded-md text-[10px] outline-none bg-white font-medium text-neutral-800 mt-1"
                                                                                 >
                                                                                     <option value="">Select Gift Product</option>
                                                                                     {products.map((prod) => (
@@ -1081,7 +1081,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                                                     type="number" 
                                                                                     value={editingSlabForm.discount_amount}
                                                                                     onChange={(e) => setEditingSlabForm(prev => ({ ...prev, discount_amount: e.target.value }))}
-                                                                                    className="w-full px-2 py-1 border border-black/10 rounded-md text-xs outline-none mt-1"
+                                                                                    className="w-full px-2 py-1 border-[0.5px] border-black/10 rounded-md text-xs outline-none mt-1"
                                                                                     placeholder="Discount Amount"
                                                                                 />
                                                                             )}
@@ -1100,7 +1100,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                                             <button
                                                                                 type="button"
                                                                                 onClick={() => setEditingSlabId(null)}
-                                                                                className="bg-white hover:bg-neutral-50 text-neutral-650 p-1.5 rounded-md text-xs font-medium transition border border-black/10 flex items-center justify-center"
+                                                                                className="bg-white hover:bg-neutral-50 text-neutral-650 p-1.5 rounded-md text-xs font-medium transition border-[0.5px] border-black/10 flex items-center justify-center"
                                                                                 title="Cancel"
                                                                             >
                                                                                 <X size={14} />
@@ -1143,7 +1143,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                                                             e.stopPropagation();
                                                                                             setDeleteConfirmId(null);
                                                                                         }}
-                                                                                        className="bg-white hover:bg-neutral-50 text-neutral-600 px-2 py-1 rounded-md text-[10px] font-medium transition border border-black/10"
+                                                                                        className="bg-white hover:bg-neutral-50 text-neutral-600 px-2 py-1 rounded-md text-[10px] font-medium transition border-[0.5px] border-black/10"
                                                                                     >
                                                                                         Cancel
                                                                                     </button>
@@ -1173,7 +1173,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                         </table>
                                     </div>
                                 ) : (
-                                    <p className="text-xs text-neutral-400 font-medium text-center py-4 bg-neutral-50/50 rounded-[10px] border border-dashed border-black/10">
+                                    <p className="text-xs text-neutral-400 font-medium text-center py-4 bg-neutral-50/50 rounded-[10px] border-[0.5px] border-dashed border-black/10">
                                         No milestone slabs configured.
                                     </p>
                                 )}
@@ -1184,7 +1184,7 @@ export default function AdminCheckoutCartSettingsPage() {
                     {/* 5. Loyalty Coins Settings Sub-tab */}
                     {activeSubTab === 'coins' && (
                         <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 overflow-hidden w-full max-w-md">
-                            <div className="p-4 border-b border-black/10 bg-neutral-50/50 flex items-center gap-2">
+                            <div className="p-4 border-b-[0.5px] border-black/10 bg-neutral-50/50 flex items-center gap-2">
                                 <Coins className="text-black" size={16} />
                                 <h3 className="font-medium text-neutral-900 text-sm">Loyalty Coins Settings</h3>
                             </div>
@@ -1196,7 +1196,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                             type="number" 
                                             value={settings.cart_coins_earn_percentage}
                                             onChange={(e) => handleInputChange('cart_coins_earn_percentage', e.target.value)}
-                                            className="w-full px-3 py-2 border border-black/10 rounded-[10px] text-xs font-normal outline-none text-gray-800 bg-neutral-50/20 focus:border-black transition-colors"
+                                            className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs font-normal outline-none text-gray-800 bg-neutral-50/20 focus:border-black transition-colors"
                                             placeholder="5.0"
                                             min="0"
                                             max="100"
@@ -1212,7 +1212,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                         type="number" 
                                         value={settings.cart_coins_max_earn_limit}
                                         onChange={(e) => handleInputChange('cart_coins_max_earn_limit', e.target.value)}
-                                        className="w-full px-3 py-2 border border-black/10 rounded-[10px] text-xs font-normal outline-none text-gray-800 bg-neutral-50/20 focus:border-black transition-colors"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs font-normal outline-none text-gray-800 bg-neutral-50/20 focus:border-black transition-colors"
                                         placeholder="500.00"
                                         min="0"
                                         step="0.01"
@@ -1227,7 +1227,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                             type="number" 
                                             value={settings.cart_coins_conversion_rate}
                                             onChange={(e) => handleInputChange('cart_coins_conversion_rate', e.target.value)}
-                                            className="w-20 px-2 py-1.5 border border-black/10 rounded-[10px] text-xs text-gray-800 font-normal outline-none bg-neutral-50/20 focus:border-black transition-colors"
+                                            className="w-20 px-2 py-1.5 border-[0.5px] border-black/10 rounded-[10px] text-xs text-gray-800 font-normal outline-none bg-neutral-50/20 focus:border-black transition-colors"
                                             placeholder="1.0"
                                             min="0.1"
                                             step="0.1"
@@ -1241,7 +1241,7 @@ export default function AdminCheckoutCartSettingsPage() {
                     {/* 6. Upsell Pinned Products Sub-tab */}
                     {activeSubTab === 'upsells' && (
                         <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 overflow-hidden w-full">
-                            <div className="p-4 border-b border-black/10 bg-neutral-50/50 flex justify-between items-center">
+                            <div className="p-4 border-b-[0.5px] border-black/10 bg-neutral-50/50 flex justify-between items-center">
                                 <h3 className="font-medium text-neutral-900 text-sm">Pinned Upsell Products</h3>
                                 <span className="text-xs text-neutral-500 font-normal">Select 5 to 7 products</span>
                             </div>
@@ -1251,7 +1251,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                     <select 
                                         value={settings.cart_drawer_upsell_mode}
                                         onChange={(e) => handleInputChange('cart_drawer_upsell_mode', e.target.value)}
-                                        className="px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs font-medium text-neutral-800 w-full bg-white"
+                                        className="px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs font-medium text-neutral-800 w-full bg-white"
                                     >
                                         <option value="ai">AI Auto Recommendations</option>
                                         <option value="manual">Manual Pinned Products (Specified below)</option>
@@ -1272,11 +1272,11 @@ export default function AdminCheckoutCartSettingsPage() {
                                                 }}
                                                 onFocus={() => setShowUpsellDropdown(true)}
                                                 placeholder="Search by product name..."
-                                                className="w-full px-3 py-2 border border-black/10 rounded-[10px] text-xs font-normal outline-none text-neutral-800 bg-neutral-50/20 focus:border-black transition-colors"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs font-normal outline-none text-neutral-800 bg-neutral-50/20 focus:border-black transition-colors"
                                             />
                                             
                                             {showUpsellDropdown && upsellSearchQuery && (
-                                                <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-black/10 rounded-[10px] z-20 max-h-48 overflow-y-auto divide-y divide-black/5 bg-white">
+                                                <div className="absolute left-0 right-0 top-full mt-1 bg-white border-[0.5px] border-black/10 rounded-[10px] z-20 max-h-48 overflow-y-auto divide-y divide-black/5">
                                                     {filteredSearchProducts.length > 0 ? (
                                                         filteredSearchProducts.map((p) => (
                                                             <div 
@@ -1285,7 +1285,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                                 className="p-2.5 text-xs hover:bg-neutral-50 flex items-center justify-between cursor-pointer"
                                                             >
                                                                 <div className="flex items-center gap-2">
-                                                                    <div className="w-8 h-8 rounded bg-neutral-50 overflow-hidden border border-black/10 shrink-0">
+                                                                    <div className="w-8 h-8 rounded bg-neutral-50 overflow-hidden border-[0.5px] border-black/10 shrink-0">
                                                                         {p.image ? (
                                                                             <img src={p.image} alt={p.title} className="w-full h-full object-cover" />
                                                                         ) : (
@@ -1312,18 +1312,18 @@ export default function AdminCheckoutCartSettingsPage() {
                                             </div>
 
                                             {pinnedUpsellIds.length < 5 && (
-                                                <div className="bg-neutral-50 border-l-2 border-neutral-400 p-2.5 rounded-[10px] text-[10px] font-normal text-neutral-700">
+                                                <div className="bg-neutral-50 border-l-[0.5px] border-black/50 p-2.5 rounded-[10px] text-[10px] font-normal text-neutral-700">
                                                     💡 We recommend pinning between 5 to 7 products to keep the cart drawer upsell carousel engaging.
                                                 </div>
                                             )}
 
                                             {pinnedProducts.length > 0 ? (
-                                                <div className="border border-black/10 rounded-[10px] divide-y divide-black/5 overflow-hidden">
+                                                <div className="border-[0.5px] border-black/10 rounded-[10px] divide-y divide-black/5 overflow-hidden">
                                                     {pinnedProducts.map((p, idx) => (
                                                         <div key={p.id} className="p-3 flex items-center justify-between bg-neutral-50/20 text-xs">
                                                             <div className="flex items-center gap-3">
                                                                 <span className="font-bold text-neutral-400">#{idx + 1}</span>
-                                                                <div className="w-10 h-10 rounded bg-neutral-50 overflow-hidden border border-black/10 shrink-0">
+                                                                <div className="w-10 h-10 rounded bg-neutral-50 overflow-hidden border-[0.5px] border-black/10 shrink-0">
                                                                     {p.image ? (
                                                                         <img src={p.image} alt={p.title} className="w-full h-full object-cover" />
                                                                     ) : (
@@ -1346,14 +1346,14 @@ export default function AdminCheckoutCartSettingsPage() {
                                                     ))}
                                                 </div>
                                             ) : (
-                                                <p className="text-xs text-neutral-400 text-center py-4 bg-neutral-50/50 border border-dashed border-black/10 rounded-[10px]">
+                                                <p className="text-xs text-neutral-400 text-center py-4 bg-neutral-50/50 border-[0.5px] border-dashed border-black/10 rounded-[10px]">
                                                     No pinned products. Search and select above.
                                                 </p>
                                             )}
                                         </div>
                                     </div>
                                 ) : (
-                                    <p className="text-xs text-neutral-400 bg-neutral-50/50 border border-dashed border-black/10 rounded-[10px] text-center py-4">
+                                    <p className="text-xs text-neutral-400 bg-neutral-50/50 border-[0.5px] border-dashed border-black/10 rounded-[10px] text-center py-4">
                                         Pinned manual items carousel is disabled because mode is set to 'AI Recommended'.
                                     </p>
                                 )}
@@ -1364,7 +1364,7 @@ export default function AdminCheckoutCartSettingsPage() {
                     {/* 7. Shipping Rules Sub-tab */}
                     {activeSubTab === 'shipping-rules' && (
                         <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 overflow-hidden w-full">
-                            <div className="p-4 border-b border-black/10 bg-neutral-50/50 flex items-center gap-2">
+                            <div className="p-4 border-b-[0.5px] border-black/10 bg-neutral-50/50 flex items-center gap-2">
                                 <Truck className="text-black" size={16} />
                                 <h3 className="font-medium text-neutral-900 text-sm">Shipping Rules</h3>
                             </div>
@@ -1375,7 +1375,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                         <Settings className="text-black" size={14} /> Shipping Threshold Rules
                                     </h4>
                                     {hasActiveFreeShippingSlab ? (
-                                        <div className="bg-neutral-50 border-l-2 border-black p-4 rounded-[10px] flex items-start gap-3">
+                                        <div className="bg-neutral-50 border-l-[0.5px] border-black p-4 rounded-[10px] flex items-start gap-3">
                                             <Truck className="text-black shrink-0 mt-0.5" size={16} />
                                             <div className="text-xs text-neutral-800 space-y-1">
                                                 <p className="font-medium">Standard Free Shipping Threshold Overridden</p>
@@ -1395,7 +1395,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                 <select
                                                     value={settings.cart_free_shipping_enabled}
                                                     onChange={(e) => handleInputChange('cart_free_shipping_enabled', e.target.value)}
-                                                    className="w-full px-3 py-2 border border-black/10 rounded-[10px] text-xs font-medium outline-none bg-white text-neutral-850"
+                                                    className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs font-medium outline-none bg-white text-neutral-850"
                                                 >
                                                     <option value="1">Enabled (Free standard shipping on orders meeting threshold)</option>
                                                     <option value="0">Disabled (Always apply regular shipping rates)</option>
@@ -1408,7 +1408,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                     <input
                                                         type="number"
                                                         min="0"
-                                                        className="w-full px-3 py-2 border border-black/10 rounded-[10px] text-xs font-normal outline-none text-neutral-850 bg-neutral-50/20 focus:border-black transition-colors"
+                                                        className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs font-normal outline-none text-neutral-850 bg-neutral-50/20 focus:border-black transition-colors"
                                                         value={settings.cart_free_shipping_threshold}
                                                         onChange={(e) => handleInputChange('cart_free_shipping_threshold', e.target.value)}
                                                         placeholder="e.g. 500"
@@ -1433,7 +1433,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                 type="number"
                                                 min="0"
                                                 step="0.01"
-                                                className="w-full px-3 py-2 border border-black/10 rounded-[10px] text-xs font-normal outline-none text-neutral-850 bg-neutral-50/20 focus:border-black transition-colors"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs font-normal outline-none text-neutral-850 bg-neutral-50/20 focus:border-black transition-colors"
                                                 value={settings.shipping_cod_charge}
                                                 onChange={(e) => handleInputChange('shipping_cod_charge', e.target.value)}
                                                 placeholder="e.g. 50"
@@ -1444,7 +1444,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                             <select
                                                 value={settings.shipping_prepaid_free_enabled}
                                                 onChange={(e) => handleInputChange('shipping_prepaid_free_enabled', e.target.value)}
-                                                className="w-full px-3 py-2 border border-black/10 rounded-[10px] text-xs font-medium outline-none bg-white text-neutral-850"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs font-medium outline-none bg-white text-neutral-850"
                                             >
                                                 <option value="0">Disabled (Apply standard shipping methods for online/prepaid)</option>
                                                 <option value="1">Enabled (Automatically make shipping free for Razorpay, Stripe, PayU, PhonePe)</option>
@@ -1459,7 +1459,7 @@ export default function AdminCheckoutCartSettingsPage() {
                     {/* 8. Base Shipping Methods CRUD Sub-tab */}
                     {activeSubTab === 'shipping-methods' && (
                         <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 overflow-hidden w-full">
-                            <div className="p-4 border-b border-black/10 bg-neutral-50/50 flex justify-between items-center">
+                            <div className="p-4 border-b-[0.5px] border-black/10 bg-neutral-50/50 flex justify-between items-center">
                                 <h3 className="font-medium text-neutral-900 text-sm">Base Shipping Methods</h3>
                                 <button
                                     type="button"
@@ -1484,7 +1484,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                 <input
                                                     type="text"
                                                     placeholder="e.g., Express Delivery"
-                                                    className="w-full px-3 py-1.5 border border-black/10 rounded-[10px] text-xs outline-none text-neutral-800 bg-white"
+                                                    className="w-full px-3 py-1.5 border-[0.5px] border-black/10 rounded-[10px] text-xs outline-none text-neutral-800 bg-white"
                                                     value={newShippingMethodForm.name}
                                                     onChange={(e) => setNewShippingMethodForm({ ...newShippingMethodForm, name: e.target.value })}
                                                     required
@@ -1496,7 +1496,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                     type="number"
                                                     min="0"
                                                     placeholder="0 for Free"
-                                                    className="w-full px-3 py-1.5 border border-black/10 rounded-[10px] text-xs outline-none text-neutral-800 bg-white"
+                                                    className="w-full px-3 py-1.5 border-[0.5px] border-black/10 rounded-[10px] text-xs outline-none text-neutral-800 bg-white"
                                                     value={newShippingMethodForm.cost}
                                                     onChange={(e) => setNewShippingMethodForm({ ...newShippingMethodForm, cost: parseFloat(e.target.value) || 0 })}
                                                     required
@@ -1507,7 +1507,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                 <input
                                                     type="text"
                                                     placeholder="e.g., 2-3 working days"
-                                                    className="w-full px-3 py-1.5 border border-black/10 rounded-[10px] text-xs outline-none text-neutral-800 bg-white"
+                                                    className="w-full px-3 py-1.5 border-[0.5px] border-black/10 rounded-[10px] text-xs outline-none text-neutral-800 bg-white"
                                                     value={newShippingMethodForm.estimated_days}
                                                     onChange={(e) => setNewShippingMethodForm({ ...newShippingMethodForm, estimated_days: e.target.value })}
                                                     required
@@ -1541,7 +1541,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                     <div className="border-[0.5px] border-black/10 rounded-[10px] overflow-hidden">
                                         <table className="w-full text-left text-xs border-collapse">
                                             <thead>
-                                                <tr className="bg-neutral-50 border-b border-black/10 text-neutral-500 font-medium uppercase tracking-wider">
+                                                <tr className="bg-neutral-50 border-b-[0.5px] border-black/10 text-neutral-500 font-medium uppercase tracking-wider">
                                                     <th className="p-3 font-medium">Name</th>
                                                     <th className="p-3 font-medium">Cost</th>
                                                     <th className="p-3 font-medium">Estimated Days</th>
@@ -1551,12 +1551,12 @@ export default function AdminCheckoutCartSettingsPage() {
                                             </thead>
                                             <tbody>
                                                 {shippingMethods.map((method) => (
-                                                    <tr key={method.id} className="border-b border-black/10 last:border-0 hover:bg-neutral-50/20">
+                                                    <tr key={method.id} className="border-b-[0.5px] border-black/10 last:border-0 hover:bg-neutral-50/20">
                                                         <td className="p-3">
                                                             {editingShippingMethodId === method.id ? (
                                                                 <input
                                                                     type="text"
-                                                                    className="w-full px-2 py-1 border border-black/10 rounded text-xs outline-none font-normal text-neutral-800 bg-white"
+                                                                    className="w-full px-2 py-1 border-[0.5px] border-black/10 rounded text-xs outline-none font-normal text-neutral-800 bg-white"
                                                                     value={editShippingMethodForm.name || ''}
                                                                     onChange={(e) => setEditShippingMethodForm({ ...editShippingMethodForm, name: e.target.value })}
                                                                 />
@@ -1568,7 +1568,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                             {editingShippingMethodId === method.id ? (
                                                                 <input
                                                                     type="number"
-                                                                    className="w-24 px-2 py-1 border border-black/10 rounded text-xs outline-none font-normal text-neutral-800 bg-white"
+                                                                    className="w-24 px-2 py-1 border-[0.5px] border-black/10 rounded text-xs outline-none font-normal text-neutral-800 bg-white"
                                                                     value={editShippingMethodForm.cost ?? 0}
                                                                     onChange={(e) => setEditShippingMethodForm({ ...editShippingMethodForm, cost: parseFloat(e.target.value) || 0 })}
                                                                 />
@@ -1582,7 +1582,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                             {editingShippingMethodId === method.id ? (
                                                                 <input
                                                                     type="text"
-                                                                    className="w-full px-2 py-1 border border-black/10 rounded text-xs outline-none font-normal text-neutral-800 bg-white"
+                                                                    className="w-full px-2 py-1 border-[0.5px] border-black/10 rounded text-xs outline-none font-normal text-neutral-800 bg-white"
                                                                     value={editShippingMethodForm.estimated_days || ''}
                                                                     onChange={(e) => setEditShippingMethodForm({ ...editShippingMethodForm, estimated_days: e.target.value })}
                                                                 />
@@ -1594,10 +1594,10 @@ export default function AdminCheckoutCartSettingsPage() {
                                                             <button
                                                                 type="button"
                                                                 onClick={() => toggleShippingMethodActive(method)}
-                                                                className={`px-2.5 py-0.5 rounded-full text-[10px] font-medium transition-colors border ${
+                                                                className={`px-2.5 py-0.5 rounded-full text-[10px] font-medium transition-colors border-[0.5px] ${
                                                                     method.is_active
-                                                                        ? 'bg-green-50 text-green-750 border-green-200/50 hover:bg-green-100/50'
-                                                                        : 'bg-neutral-50 text-neutral-500 border-neutral-250 hover:bg-neutral-100/50'
+                                                                        ? 'bg-green-50 text-green-750 border-black/50 hover:bg-green-100/50'
+                                                                        : 'bg-neutral-50 text-neutral-500 border-black/50 hover:bg-neutral-100/50'
                                                                 }`}
                                                             >
                                                                 {method.is_active ? 'Active' : 'Inactive'}
@@ -1617,7 +1617,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                                                     <button
                                                                         type="button"
                                                                         onClick={handleCancelEditShippingMethod}
-                                                                        className="bg-white hover:bg-neutral-50 text-neutral-600 p-1.5 rounded-md text-xs font-medium transition border border-black/10 flex items-center justify-center"
+                                                                        className="bg-white hover:bg-neutral-50 text-neutral-600 p-1.5 rounded-md text-xs font-medium transition border-[0.5px] border-black/10 flex items-center justify-center"
                                                                         title="Cancel"
                                                                     >
                                                                         <X size={14} />
@@ -1650,7 +1650,7 @@ export default function AdminCheckoutCartSettingsPage() {
                                         </table>
                                     </div>
                                 ) : (
-                                    <p className="text-xs text-neutral-400 font-medium text-center py-4 bg-neutral-50/50 rounded-[10px] border border-dashed border-black/10">
+                                    <p className="text-xs text-neutral-400 font-medium text-center py-4 bg-neutral-50/50 rounded-[10px] border-[0.5px] border-dashed border-black/10">
                                         No shipping methods configured.
                                     </p>
                                 )}

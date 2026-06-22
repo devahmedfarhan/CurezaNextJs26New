@@ -176,7 +176,7 @@ export default function OffersPage() {
     return (
         <div className="space-y-6 pb-12">
             {/* Header */}
-            <div className="flex justify-between items-center bg-white p-6 rounded-[10px] border-[0.35px] border-neutral-950/10">
+            <div className="flex justify-between items-center bg-white p-6 rounded-[10px] border-[0.35px] border-black/50">
                 <div className="space-y-1.5">
                     <h1 className="text-xl font-semibold text-gray-900 tracking-tight">Offers & Coupons</h1>
                     <p className="text-xs text-gray-500 font-normal">Manage coupon promo codes, fixed discounts, and purchase thresholds</p>
@@ -191,8 +191,8 @@ export default function OffersPage() {
 
             {/* Metrics Row */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-white border-[0.35px] border-neutral-950/10 p-5 rounded-[10px] flex items-center gap-4">
-                    <div className="p-3 bg-neutral-50 text-black border-[0.35px] border-neutral-950/10 rounded-[10px]">
+                <div className="bg-white border-[0.35px] border-black/50 p-5 rounded-[10px] flex items-center gap-4">
+                    <div className="p-3 bg-neutral-50 text-black border-[0.35px] border-black/50 rounded-[10px]">
                         <Tag className="h-5 w-5" />
                     </div>
                     <div>
@@ -200,8 +200,8 @@ export default function OffersPage() {
                         <span className="text-2xl font-semibold text-gray-900">{totalCount}</span>
                     </div>
                 </div>
-                <div className="bg-white border-[0.35px] border-neutral-950/10 p-5 rounded-[10px] flex items-center gap-4">
-                    <div className="p-3 bg-neutral-50 text-black border-[0.35px] border-neutral-950/10 rounded-[10px]">
+                <div className="bg-white border-[0.35px] border-black/50 p-5 rounded-[10px] flex items-center gap-4">
+                    <div className="p-3 bg-neutral-50 text-black border-[0.35px] border-black/50 rounded-[10px]">
                         <CheckCircle className="h-5 w-5" />
                     </div>
                     <div>
@@ -209,8 +209,8 @@ export default function OffersPage() {
                         <span className="text-2xl font-semibold text-gray-900">{activeCount}</span>
                     </div>
                 </div>
-                <div className="bg-white border-[0.35px] border-neutral-950/10 p-5 rounded-[10px] flex items-center gap-4">
-                    <div className="p-3 bg-neutral-50 text-black border-[0.35px] border-neutral-950/10 rounded-[10px]">
+                <div className="bg-white border-[0.35px] border-black/50 p-5 rounded-[10px] flex items-center gap-4">
+                    <div className="p-3 bg-neutral-50 text-black border-[0.35px] border-black/50 rounded-[10px]">
                         <Percent className="h-5 w-5" />
                     </div>
                     <div>
@@ -218,8 +218,8 @@ export default function OffersPage() {
                         <span className="text-2xl font-semibold text-gray-900">{percentCount}</span>
                     </div>
                 </div>
-                <div className="bg-white border-[0.35px] border-neutral-950/10 p-5 rounded-[10px] flex items-center gap-4">
-                    <div className="p-3 bg-neutral-50 text-black border-[0.35px] border-neutral-950/10 rounded-[10px]">
+                <div className="bg-white border-[0.35px] border-black/50 p-5 rounded-[10px] flex items-center gap-4">
+                    <div className="p-3 bg-neutral-50 text-black border-[0.35px] border-black/50 rounded-[10px]">
                         <IndianRupee className="h-5 w-5" />
                     </div>
                     <div>
@@ -230,7 +230,7 @@ export default function OffersPage() {
             </div>
 
             {/* Filter and Search Bar */}
-            <div className="bg-white p-5 rounded-[10px] border-[0.35px] border-neutral-950/10 flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div className="bg-white p-5 rounded-[10px] border-[0.35px] border-black/50 flex flex-col md:flex-row gap-4 items-center justify-between">
                 <div className="relative w-full md:w-80">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                         <Search size={14} />
@@ -238,7 +238,7 @@ export default function OffersPage() {
                     <input
                         type="text"
                         placeholder="Search coupon codes..."
-                        className="pl-9 pr-4 py-2 w-full border-[0.35px] border-neutral-950/10 rounded-[10px] focus:border-black text-xs font-normal outline-none"
+                        className="pl-9 pr-4 py-2 w-full border-[0.35px] border-black/50 rounded-[10px] focus:border-black text-xs font-normal outline-none"
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
                     />
@@ -252,7 +252,7 @@ export default function OffersPage() {
 
                     {/* Status filter */}
                     <select
-                        className="border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 text-xs font-normal focus:outline-none focus:border-black bg-white"
+                        className="border-[0.35px] border-black/50 rounded-[10px] px-3 py-2 text-xs font-normal focus:outline-none focus:border-black bg-white"
                         value={statusFilter}
                         onChange={e => setStatusFilter(e.target.value as any)}
                     >
@@ -263,7 +263,7 @@ export default function OffersPage() {
 
                     {/* Type filter */}
                     <select
-                        className="border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 text-xs font-normal focus:outline-none focus:border-black bg-white"
+                        className="border-[0.35px] border-black/50 rounded-[10px] px-3 py-2 text-xs font-normal focus:outline-none focus:border-black bg-white"
                         value={typeFilter}
                         onChange={e => setTypeFilter(e.target.value as any)}
                     >
@@ -277,8 +277,8 @@ export default function OffersPage() {
             {/* Create/Edit Modal */}
             {isCreating && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-white rounded-[10px] p-6 w-full max-w-md border-[0.35px] border-neutral-950/10 space-y-5 animate-in zoom-in-95 duration-200">
-                        <div className="flex justify-between items-center border-b-[0.35px] border-neutral-950/10 pb-3">
+                    <div className="bg-white rounded-[10px] p-6 w-full max-w-md border-[0.35px] border-black/50 space-y-5 animate-in zoom-in-95 duration-200">
+                        <div className="flex justify-between items-center border-b-[0.35px] border-black/50 pb-3">
                             <h2 className="text-base font-semibold text-gray-900">
                                 {isEditing ? 'Edit Coupon Promo' : 'Create New Coupon'}
                             </h2>
@@ -294,7 +294,7 @@ export default function OffersPage() {
                                     required
                                     value={formData.code}
                                     onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-                                    className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3.5 py-2 bg-white text-gray-900 text-xs focus:border-black font-semibold uppercase tracking-wider outline-none"
+                                    className="w-full border-[0.35px] border-black/50 rounded-[10px] px-3.5 py-2 bg-white text-gray-900 text-xs focus:border-black font-semibold uppercase tracking-wider outline-none"
                                     placeholder="e.g. SUMMER25"
                                 />
                             </div>
@@ -305,7 +305,7 @@ export default function OffersPage() {
                                     <select
                                         value={formData.type}
                                         onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                                        className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 bg-white text-gray-900 text-xs focus:border-black outline-none"
+                                        className="w-full border-[0.35px] border-black/50 rounded-[10px] px-3 py-2 bg-white text-gray-900 text-xs focus:border-black outline-none"
                                     >
                                         <option value="percent">Percentage (%)</option>
                                         <option value="fixed">Fixed Amount (₹)</option>
@@ -319,7 +319,7 @@ export default function OffersPage() {
                                         min="0"
                                         value={formData.value}
                                         onChange={(e) => setFormData({ ...formData, value: e.target.value })}
-                                        className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 text-xs focus:border-black outline-none"
+                                        className="w-full border-[0.35px] border-black/50 rounded-[10px] px-3 py-2 text-xs focus:border-black outline-none"
                                         placeholder={formData.type === 'percent' ? 'e.g. 15' : 'e.g. 200'}
                                     />
                                 </div>
@@ -333,7 +333,7 @@ export default function OffersPage() {
                                         min="0"
                                         value={formData.min_cart_value}
                                         onChange={(e) => setFormData({ ...formData, min_cart_value: e.target.value })}
-                                        className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 text-xs focus:border-black outline-none"
+                                        className="w-full border-[0.35px] border-black/50 rounded-[10px] px-3 py-2 text-xs focus:border-black outline-none"
                                         placeholder="Optional"
                                     />
                                 </div>
@@ -343,7 +343,7 @@ export default function OffersPage() {
                                         type="datetime-local"
                                         value={formData.expires_at}
                                         onChange={(e) => setFormData({ ...formData, expires_at: e.target.value })}
-                                        className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 text-xs focus:border-black outline-none"
+                                        className="w-full border-[0.35px] border-black/50 rounded-[10px] px-3 py-2 text-xs focus:border-black outline-none"
                                     />
                                 </div>
                             </div>
@@ -354,17 +354,17 @@ export default function OffersPage() {
                                     id="is_active"
                                     checked={formData.is_active}
                                     onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                                    className="rounded text-black focus:ring-black h-4 w-4 border-neutral-950/20"
+                                    className="rounded text-black focus:ring-black h-4 w-4 border-black/50"
                                     style={{ borderRadius: '4px' }}
                                 />
                                 <label htmlFor="is_active" className="text-xs font-medium text-gray-700 cursor-pointer">Mark coupon active</label>
                             </div>
 
-                            <div className="flex justify-end gap-3 mt-6 pt-3 border-t-[0.35px] border-neutral-950/10">
+                            <div className="flex justify-end gap-3 mt-6 pt-3 border-t-[0.35px] border-black/50">
                                 <button
                                     type="button"
                                     onClick={closeModal}
-                                    className="px-4 py-2 text-gray-700 hover:bg-neutral-50 border-[0.35px] border-neutral-950/10 rounded-[10px] text-xs font-medium"
+                                    className="px-4 py-2 text-gray-700 hover:bg-neutral-50 border-[0.35px] border-black/50 rounded-[10px] text-xs font-medium"
                                 >
                                     Cancel
                                 </button>
@@ -381,10 +381,10 @@ export default function OffersPage() {
             )}
 
             {/* Coupons List */}
-            <div className="bg-white rounded-[10px] border-[0.35px] border-neutral-950/10 overflow-hidden">
+            <div className="bg-white rounded-[10px] border-[0.35px] border-black/50 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-xs text-left">
-                        <thead className="bg-neutral-50/50 text-gray-500 font-medium tracking-normal text-xs border-b-[0.35px] border-neutral-950/10">
+                        <thead className="bg-neutral-50/50 text-gray-500 font-medium tracking-normal text-xs border-b-[0.35px] border-black/50">
                             <tr>
                                 <th className="px-6 py-4">Code</th>
                                 <th className="px-6 py-4">Discount Offer</th>
@@ -399,7 +399,7 @@ export default function OffersPage() {
                                 <tr>
                                     <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
                                         <div className="flex flex-col items-center justify-center gap-2">
-                                            <div className="animate-spin rounded-full h-7 w-7 border-b-2 border-black"></div>
+                                            <div className="animate-spin rounded-full h-7 w-7 border-b-[0.5px] border-black"></div>
                                             <span className="text-[10px] font-medium">Loading coupons list...</span>
                                         </div>
                                     </td>
@@ -419,7 +419,7 @@ export default function OffersPage() {
                                         <tr key={coupon.id} className="hover:bg-neutral-50/40 transition-colors">
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-2.5">
-                                                    <div className="p-1.5 bg-neutral-50 text-black rounded-[10px] border-[0.35px] border-neutral-950/10">
+                                                    <div className="p-1.5 bg-neutral-50 text-black rounded-[10px] border-[0.35px] border-black/50">
                                                         <Tag size={13} />
                                                     </div>
                                                     <span className="font-semibold text-gray-900 tracking-wider">{coupon.code}</span>
@@ -428,11 +428,11 @@ export default function OffersPage() {
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-1 font-semibold text-gray-700">
                                                     {coupon.type === 'percent' ? (
-                                                        <span className="flex items-center gap-1.5 text-neutral-800 bg-neutral-100 px-2.5 py-0.5 rounded-[10px] text-[10px] border-[0.35px] border-neutral-950/10">
+                                                        <span className="flex items-center gap-1.5 text-neutral-800 bg-neutral-100 px-2.5 py-0.5 rounded-[10px] text-[10px] border-[0.35px] border-black/50">
                                                             <Percent size={10} /> {coupon.value}% OFF
                                                         </span>
                                                     ) : (
-                                                        <span className="flex items-center gap-1.5 text-neutral-700 bg-neutral-50 px-2.5 py-0.5 rounded-[10px] text-[10px] border-[0.35px] border-neutral-950/10">
+                                                        <span className="flex items-center gap-1.5 text-neutral-700 bg-neutral-50 px-2.5 py-0.5 rounded-[10px] text-[10px] border-[0.35px] border-black/50">
                                                             <IndianRupee size={10} /> ₹{coupon.value} OFF
                                                         </span>
                                                     )}
@@ -445,13 +445,13 @@ export default function OffersPage() {
                                             </td>
                                             <td className="px-6 py-4 text-gray-500">
                                                 {coupon.expires_at ? (
-                                                    <div className={`flex items-center gap-1.5 text-[10px] font-medium ${isExpired ? 'text-rose-700 bg-rose-50 border-[0.35px] border-rose-500/10 px-2 py-0.5 rounded-[10px]' : 'text-gray-655'}`}>
+                                                    <div className={`flex items-center gap-1.5 text-[10px] font-medium ${isExpired ? 'text-rose-700 bg-rose-50 border-[0.35px] border-black/50 px-2 py-0.5 rounded-[10px]' : 'text-gray-655'}`}>
                                                         <Calendar size={11} />
                                                         {format(new Date(coupon.expires_at), 'MMM d, yyyy h:mm a')}
                                                         {isExpired && <span className="text-[9px] font-semibold uppercase tracking-wider ml-1">Expired</span>}
                                                     </div>
                                                 ) : (
-                                                    <span className="text-[10px] text-neutral-700 bg-neutral-100 px-2 py-0.5 rounded-[10px] font-medium border-[0.35px] border-neutral-950/10">No Expiry</span>
+                                                    <span className="text-[10px] text-neutral-700 bg-neutral-100 px-2 py-0.5 rounded-[10px] font-medium border-[0.35px] border-black/50">No Expiry</span>
                                                 )}
                                             </td>
                                             <td className="px-6 py-4">
@@ -459,8 +459,8 @@ export default function OffersPage() {
                                                     onClick={() => handleToggleActive(coupon)}
                                                     className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-[10px] text-[10px] font-medium transition-all border-[0.35px] ${
                                                         coupon.is_active 
-                                                            ? 'bg-emerald-50 text-emerald-700 border-emerald-500/10 hover:bg-emerald-100/50' 
-                                                            : 'bg-neutral-50 text-gray-550 border-neutral-950/10 hover:bg-neutral-100'
+                                                            ? 'bg-emerald-50 text-emerald-700 border-black/50 hover:bg-emerald-100/50' 
+                                                            : 'bg-neutral-50 text-gray-550 border-black/50 hover:bg-neutral-100'
                                                     }`}
                                                 >
                                                     <span className={`h-1.5 w-1.5 rounded-full ${coupon.is_active ? 'bg-emerald-600' : 'bg-gray-400'}`} />
@@ -495,7 +495,7 @@ export default function OffersPage() {
             </div>
 
             {/* Tutorial / Guidelines Section */}
-            <div className="bg-neutral-50 border-[0.35px] border-neutral-950/10 rounded-[10px] p-6 space-y-4">
+            <div className="bg-neutral-50 border-[0.35px] border-black/50 rounded-[10px] p-6 space-y-4">
                 <div className="flex items-center gap-2">
                     <HelpCircle className="h-5 w-5 text-black" />
                     <h3 className="text-sm font-semibold text-gray-900">How It Works & Guidelines | Offers & Coupons Setup</h3>

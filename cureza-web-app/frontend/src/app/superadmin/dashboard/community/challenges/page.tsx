@@ -140,13 +140,13 @@ export default function AdminChallengesPage() {
             </div>
 
             {/* List Table */}
-            <div className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 overflow-hidden">
+            <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 overflow-hidden">
                 {challenges.length === 0 ? (
                     <div className="p-8 text-center text-xs text-gray-500">No challenges configured yet. Click "Create Challenge" to start!</div>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-xs">
-                            <thead className="bg-neutral-50 border-b-[0.5px] border-neutral-950/10 text-gray-500 font-medium">
+                            <thead className="bg-neutral-50 border-b-[0.5px] border-black/50 text-gray-500 font-medium">
                                 <tr>
                                     <th className="p-3">Title / Description</th>
                                     <th className="p-3">Type</th>
@@ -178,8 +178,8 @@ export default function AdminChallengesPage() {
                                             <td className="p-3">
                                                 <span className={`inline-block text-[10px] font-medium px-2 py-0.5 rounded-[6px] border-[0.5px] ${
                                                     item.is_active 
-                                                        ? 'bg-green-50 text-green-800 border-green-200/50' 
-                                                        : 'bg-neutral-50 text-neutral-500 border-neutral-950/10'
+                                                        ? 'bg-green-50 text-green-800 border-black/50' 
+                                                        : 'bg-neutral-50 text-neutral-500 border-black/50'
                                                 }`}>
                                                     {item.is_active ? 'Active' : 'Draft'}
                                                 </span>
@@ -212,7 +212,7 @@ export default function AdminChallengesPage() {
             {/* Create/Edit Modal */}
             {isOpen && (
                 <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-                    <div className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 max-w-md w-full p-5 space-y-4">
+                    <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 max-w-md w-full p-5 space-y-4">
                         <div className="flex justify-between items-start">
                             <h3 className="text-sm font-semibold text-gray-900">{editingId ? 'Edit Challenge' : 'Create Challenge'}</h3>
                             <button
@@ -232,7 +232,7 @@ export default function AdminChallengesPage() {
                                     value={form.title}
                                     onChange={handleInputChange}
                                     placeholder="e.g., Wellness Warrior"
-                                    className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
+                                    className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                     required
                                 />
                             </div>
@@ -245,7 +245,7 @@ export default function AdminChallengesPage() {
                                     onChange={handleInputChange}
                                     placeholder="Explain how users can complete this quest..."
                                     rows={3}
-                                    className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal resize-none"
+                                    className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal resize-none"
                                     required
                                 ></textarea>
                             </div>
@@ -257,7 +257,7 @@ export default function AdminChallengesPage() {
                                         name="type"
                                         value={form.type}
                                         onChange={handleInputChange}
-                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                     >
                                         <option value="purchase">Purchases Count</option>
                                         <option value="referral">Referrals Count</option>
@@ -273,7 +273,7 @@ export default function AdminChallengesPage() {
                                         value={form.goal_value}
                                         onChange={handleInputChange}
                                         min="1"
-                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                         required
                                     />
                                 </div>
@@ -288,7 +288,7 @@ export default function AdminChallengesPage() {
                                         value={form.reward_points}
                                         onChange={handleInputChange}
                                         min="1"
-                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                         required
                                     />
                                 </div>
@@ -298,7 +298,7 @@ export default function AdminChallengesPage() {
                                         name="is_active"
                                         value={form.is_active ? 'true' : 'false'}
                                         onChange={handleInputChange}
-                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                     >
                                         <option value="true">Active (Visible)</option>
                                         <option value="false">Draft (Hidden)</option>
@@ -314,7 +314,7 @@ export default function AdminChallengesPage() {
                                         name="start_date"
                                         value={form.start_date}
                                         onChange={handleInputChange}
-                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                         required
                                     />
                                 </div>
@@ -325,17 +325,17 @@ export default function AdminChallengesPage() {
                                         name="end_date"
                                         value={form.end_date}
                                         onChange={handleInputChange}
-                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                         required
                                     />
                                 </div>
                             </div>
 
-                            <div className="flex gap-2.5 pt-3 border-t-[0.5px] border-neutral-950/10">
+                            <div className="flex gap-2.5 pt-3 border-t-[0.5px] border-black/50">
                                 <button
                                     type="button"
                                     onClick={() => setIsOpen(false)}
-                                    className="flex-1 border-[0.5px] border-neutral-950/20 text-gray-700 py-1.5 rounded-[10px] text-xs font-medium hover:bg-neutral-50 transition-colors"
+                                    className="flex-1 border-[0.5px] border-black/50 text-gray-700 py-1.5 rounded-[10px] text-xs font-medium hover:bg-neutral-50 transition-colors"
                                 >
                                     Cancel
                                 </button>

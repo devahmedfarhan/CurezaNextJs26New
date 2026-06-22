@@ -133,7 +133,7 @@ export default function AdminAutomationPage() {
     return (
         <div className="space-y-6 pb-12">
             {/* Header */}
-            <div className="flex justify-between items-center bg-white p-6 rounded-[10px] border-[0.35px] border-neutral-950/10">
+            <div className="flex justify-between items-center bg-white p-6 rounded-[10px] border-[0.35px] border-black/50">
                 <div className="space-y-1.5">
                     <h1 className="text-xl font-semibold text-gray-900 tracking-tight">SMS & WhatsApp Automation</h1>
                     <p className="text-xs text-gray-500 font-normal">Configure real-time automated notifications triggered by user events</p>
@@ -148,7 +148,7 @@ export default function AdminAutomationPage() {
             </div>
 
             {/* Alert Banner / Guide */}
-            <div className="bg-neutral-50 border-[0.35px] border-neutral-950/10 p-5 rounded-[10px] flex items-start gap-4 text-xs text-gray-700">
+            <div className="bg-neutral-50 border-[0.35px] border-black/50 p-5 rounded-[10px] flex items-start gap-4 text-xs text-gray-700">
                 <Info size={16} className="shrink-0 text-black mt-0.5" />
                 <div className="space-y-1">
                     <h4 className="font-semibold text-gray-900">Variables Mapping Guide</h4>
@@ -157,27 +157,27 @@ export default function AdminAutomationPage() {
                     </p>
                     <div className="flex flex-wrap gap-2 pt-2">
                         {['{customer_name}', '{order_id}', '{order_amount}', '{cart_url}', '{tracking_url}', '{product_name}'].map(v => (
-                            <code key={v} className="bg-neutral-100 border-[0.35px] border-neutral-950/10 text-neutral-850 px-2 py-0.5 rounded-[10px] text-xs font-normal font-mono">{v}</code>
+                            <code key={v} className="bg-neutral-100 border-[0.35px] border-black/50 text-neutral-850 px-2 py-0.5 rounded-[10px] text-xs font-normal font-mono">{v}</code>
                         ))}
                     </div>
                 </div>
             </div>
 
             {/* List of Automations */}
-            <div className="bg-white rounded-[10px] border-[0.35px] border-neutral-950/10 overflow-hidden divide-y-[0.35px] divide-neutral-950/10">
+            <div className="bg-white rounded-[10px] border-[0.35px] border-black/50 overflow-hidden divide-y-[0.35px] divide-neutral-950/10">
                 {automations.map((item) => (
                     <div 
                         key={item.id} 
                         className="p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hover:bg-neutral-50/30 transition-all group"
                     >
                         <div className="flex items-start gap-4 flex-1">
-                            <div className="p-3 bg-neutral-50 border-[0.35px] border-neutral-950/10 text-black rounded-[10px] shrink-0">
+                            <div className="p-3 bg-neutral-50 border-[0.35px] border-black/50 text-black rounded-[10px] shrink-0">
                                 {item.channel === 'WhatsApp' ? <MessageSquare size={20} /> : <Smartphone size={20} />}
                             </div>
                             <div className="space-y-1.5 flex-1">
                                 <div className="flex items-center gap-2.5">
                                     <h3 className="font-semibold text-gray-900 text-sm">{item.name}</h3>
-                                    <span className="bg-neutral-50 text-neutral-850 border-[0.35px] border-neutral-950/10 rounded-[10px] px-2 py-0.5 text-[9px] font-medium">
+                                    <span className="bg-neutral-50 text-neutral-850 border-[0.35px] border-black/50 rounded-[10px] px-2 py-0.5 text-[9px] font-medium">
                                         {item.channel}
                                     </span>
                                 </div>
@@ -188,32 +188,32 @@ export default function AdminAutomationPage() {
                                         <span className="text-gray-400 font-normal ml-2">• Send delay: {item.delayMinutes >= 1440 ? `${item.delayMinutes / 1440} day(s)` : `${item.delayMinutes} mins`}</span>
                                     )}
                                 </p>
-                                <div className="bg-neutral-50 p-3 rounded-[10px] border-[0.35px] border-neutral-950/10 text-xs text-neutral-600 font-normal max-w-3xl leading-relaxed mt-2 italic">
+                                <div className="bg-neutral-50 p-3 rounded-[10px] border-[0.35px] border-black/50 text-xs text-neutral-600 font-normal max-w-3xl leading-relaxed mt-2 italic">
                                     "{item.messageTemplate}"
                                 </div>
                             </div>
                         </div>
 
                         {/* Actions */}
-                        <div className="flex items-center justify-between md:justify-end gap-5 w-full md:w-auto pt-4 md:pt-0 border-t-[0.35px] md:border-t-0 border-neutral-950/10">
+                        <div className="flex items-center justify-between md:justify-end gap-5 w-full md:w-auto pt-4 md:pt-0 border-t-[0.35px] md:border-t-0 border-black/50">
                             <div className="flex items-center gap-2">
                                 <button 
                                     onClick={() => handleTriggerTest(item)}
-                                    className="p-2 hover:bg-neutral-100 bg-neutral-50 text-neutral-850 border-[0.35px] border-neutral-950/10 rounded-[10px] flex items-center gap-1.5 text-xs font-medium"
+                                    className="p-2 hover:bg-neutral-100 bg-neutral-50 text-neutral-850 border-[0.35px] border-black/50 rounded-[10px] flex items-center gap-1.5 text-xs font-medium"
                                     title="Send simulation packet to testing mobile"
                                 >
                                     <Play size={11} className="fill-current" /> Test Flow
                                 </button>
                                 <button 
                                     onClick={() => handleEditRule(item)}
-                                    className="p-2 hover:bg-neutral-100 bg-neutral-50 text-neutral-850 rounded-[10px] border-[0.35px] border-neutral-950/10"
+                                    className="p-2 hover:bg-neutral-100 bg-neutral-50 text-neutral-850 rounded-[10px] border-[0.35px] border-black/50"
                                     title="Edit Template Message"
                                 >
                                     <Edit2 size={11} />
                                 </button>
                                 <button 
                                     onClick={() => handleDeleteRule(item.id)}
-                                    className="p-2 hover:bg-rose-50 bg-neutral-50 text-gray-450 hover:text-rose-650 rounded-[10px] border-[0.35px] border-neutral-950/10 hover:border-rose-100"
+                                    className="p-2 hover:bg-rose-50 bg-neutral-50 text-gray-450 hover:text-rose-650 rounded-[10px] border-[0.35px] border-black/50 hover:border-rose-100"
                                     title="Remove Rule"
                                 >
                                     <X size={11} />
@@ -238,8 +238,8 @@ export default function AdminAutomationPage() {
             {/* Create/Edit Modal */}
             {isCreating && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-white rounded-[10px] p-6 w-full max-w-xl border-[0.35px] border-neutral-950/10 space-y-5 animate-in zoom-in-95 duration-200">
-                        <div className="flex justify-between items-center border-b-[0.35px] border-neutral-950/10 pb-3">
+                    <div className="bg-white rounded-[10px] p-6 w-full max-w-xl border-[0.35px] border-black/50 space-y-5 animate-in zoom-in-95 duration-200">
+                        <div className="flex justify-between items-center border-b-[0.35px] border-black/50 pb-3">
                             <h2 className="text-base font-semibold text-gray-900">
                                 {editingRule ? 'Edit Automation Template' : 'Configure Custom Flow'}
                             </h2>
@@ -254,7 +254,7 @@ export default function AdminAutomationPage() {
                                 <input
                                     type="text"
                                     required
-                                    className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3.5 py-2 bg-white text-gray-900 text-xs focus:ring-1 focus:ring-black focus:border-black font-semibold outline-none"
+                                    className="w-full border-[0.35px] border-black/50 rounded-[10px] px-3.5 py-2 bg-white text-gray-900 text-xs focus:ring-1 focus:ring-black focus:border-black font-semibold outline-none"
                                     placeholder="e.g. Prescription Verification Confirmation"
                                     value={formData.name}
                                     onChange={e => setFormData({ ...formData, name: e.target.value })}
@@ -265,7 +265,7 @@ export default function AdminAutomationPage() {
                                 <div>
                                     <label className="block text-[10px] font-semibold text-gray-500 tracking-normal mb-1">Dispatch Channel</label>
                                     <select
-                                        className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 bg-white text-xs focus:ring-1 focus:ring-black focus:border-black outline-none"
+                                        className="w-full border-[0.35px] border-black/50 rounded-[10px] px-3 py-2 bg-white text-xs focus:ring-1 focus:ring-black focus:border-black outline-none"
                                         value={formData.channel}
                                         onChange={e => setFormData({ ...formData, channel: e.target.value as any })}
                                     >
@@ -276,7 +276,7 @@ export default function AdminAutomationPage() {
                                 <div>
                                     <label className="block text-[10px] font-semibold text-gray-500 tracking-normal mb-1">Trigger Event</label>
                                     <select
-                                        className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 bg-white text-xs focus:ring-1 focus:ring-black focus:border-black outline-none"
+                                        className="w-full border-[0.35px] border-black/50 rounded-[10px] px-3 py-2 bg-white text-xs focus:ring-1 focus:ring-black focus:border-black outline-none"
                                         value={formData.trigger}
                                         onChange={e => setFormData({ ...formData, trigger: e.target.value })}
                                     >
@@ -292,7 +292,7 @@ export default function AdminAutomationPage() {
                                 <input
                                     type="number"
                                     min="0"
-                                    className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 bg-white text-xs focus:ring-1 focus:ring-black focus:border-black outline-none"
+                                    className="w-full border-[0.35px] border-black/50 rounded-[10px] px-3 py-2 bg-white text-xs focus:ring-1 focus:ring-black focus:border-black outline-none"
                                     value={formData.delayMinutes}
                                     onChange={e => setFormData({ ...formData, delayMinutes: parseInt(e.target.value) || 0 })}
                                     placeholder="0 for instant dispatch"
@@ -305,7 +305,7 @@ export default function AdminAutomationPage() {
                                 <textarea
                                     required
                                     rows={4}
-                                    className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3.5 py-2.5 bg-white text-xs focus:ring-1 focus:ring-black focus:border-black font-medium outline-none"
+                                    className="w-full border-[0.35px] border-black/50 rounded-[10px] px-3.5 py-2.5 bg-white text-xs focus:ring-1 focus:ring-black focus:border-black font-medium outline-none"
                                     placeholder="Hello {customer_name}, your order #{order_id} has been verified..."
                                     value={formData.messageTemplate}
                                     onChange={e => setFormData({ ...formData, messageTemplate: e.target.value })}
@@ -317,11 +317,11 @@ export default function AdminAutomationPage() {
                             </div>
                         </div>
 
-                        <div className="flex justify-end gap-3 pt-4 border-t-[0.35px] border-neutral-950/10 mt-6">
+                        <div className="flex justify-end gap-3 pt-4 border-t-[0.35px] border-black/50 mt-6">
                             <button
                                 type="button"
                                 onClick={closeModal}
-                                className="px-4 py-2 text-gray-700 hover:bg-gray-50 border-[0.35px] border-neutral-950/10 rounded-[10px] text-xs font-medium"
+                                className="px-4 py-2 text-gray-700 hover:bg-gray-50 border-[0.35px] border-black/50 rounded-[10px] text-xs font-medium"
                             >
                                 Cancel
                             </button>
@@ -338,7 +338,7 @@ export default function AdminAutomationPage() {
             )}
 
             {/* Tutorial / Guidelines Section */}
-            <div className="bg-neutral-50 border-[0.35px] border-neutral-950/10 rounded-[10px] p-6 space-y-4">
+            <div className="bg-neutral-50 border-[0.35px] border-black/50 rounded-[10px] p-6 space-y-4">
                 <div className="flex items-center gap-2">
                     <HelpCircle className="h-5 w-5 text-black" />
                     <h3 className="text-sm font-semibold text-gray-900">How It Works & Guidelines | SMS & WhatsApp Automation</h3>

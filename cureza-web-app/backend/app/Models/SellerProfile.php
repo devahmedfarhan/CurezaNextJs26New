@@ -75,6 +75,7 @@ class SellerProfile extends Model
         'tds_rate',
         'default_gst_slab',
         'default_gst_inclusive',
+        'default_hsn_code',
     ];
 
     protected $casts = [

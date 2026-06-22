@@ -160,7 +160,7 @@ class SellerDashboardController extends Controller
             'pending' => $orderStats['pending'] ?? 0,
             'processing' => ($orderStats['confirmed'] ?? 0) + ($orderStats['processing'] ?? 0),
             'shipped' => $orderStats['shipped'] ?? 0,
-            'delivered' => $orderStats['delivered'] ?? 0,
+            'delivered' => ($orderStats['delivered'] ?? 0) + ($orderStats['cod_reconciled'] ?? 0),
             'cancelled' => $orderStats['cancelled'] ?? 0,
         ];
 
@@ -455,7 +455,7 @@ class SellerDashboardController extends Controller
                     'customer' => $item->order->user ? $item->order->user->name : 'Guest',
                     'date' => $item->order->created_at->format('M d, Y'),
                     'amount' => $item->total,
-                    'status' => $item->status ?? $item->order->status
+                    'status' => $item->order->status === 'cod_reconciled' ? 'delivered' : $item->order->status
                 ];
             })
             ->filter()

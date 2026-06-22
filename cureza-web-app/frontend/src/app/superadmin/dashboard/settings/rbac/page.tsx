@@ -141,7 +141,7 @@ export default function AdminRBACPage() {
 
     return (
         <div className="w-full space-y-6 pb-20 font-sans text-neutral-900">
-            <div className="flex justify-between items-center border-b border-black/10 pb-5">
+            <div className="flex justify-between items-center border-b-[0.5px] border-black/10 pb-5">
                 <div>
                     <h2 className="text-sm font-medium text-neutral-900 tracking-tight">Role-Based Access Control</h2>
                     <p className="text-neutral-500 text-xs mt-0.5">Manage admin roles and assign system module permissions</p>
@@ -156,21 +156,21 @@ export default function AdminRBACPage() {
             </div>
 
             {isLoading ? (
-                <div className="text-center py-12 text-neutral-500 text-xs font-normal bg-white rounded-[10px] border border-black/10 shadow-none">
+                <div className="text-center py-12 text-neutral-500 text-xs font-normal bg-white rounded-[10px] border-[0.5px] border-black/10 shadow-none">
                     Loading admin roles...
                 </div>
             ) : roles.length === 0 ? (
-                <div className="text-center py-12 text-neutral-500 text-xs font-normal bg-white rounded-[10px] border border-black/10 shadow-none">
+                <div className="text-center py-12 text-neutral-500 text-xs font-normal bg-white rounded-[10px] border-[0.5px] border-black/10 shadow-none">
                     No roles found. Create one to get started.
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {roles.map((role) => (
-                        <div key={role.id} className="bg-white p-5 rounded-[10px] border border-black/10 shadow-none hover:border-black/30 transition-all flex flex-col justify-between">
+                        <div key={role.id} className="bg-white p-5 rounded-[10px] border-[0.5px] border-black/10 shadow-none hover:border-black/30 transition-all flex flex-col justify-between">
                             <div>
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="flex items-center gap-3">
-                                        <div className="p-2.5 bg-neutral-50 text-black border border-black/10 rounded-[10px] shadow-none">
+                                        <div className="p-2.5 bg-neutral-50 text-black border-[0.5px] border-black/10 rounded-[10px] shadow-none">
                                             <Shield size={18} />
                                         </div>
                                         <div>
@@ -183,14 +183,14 @@ export default function AdminRBACPage() {
                                     <div className="flex gap-1.5">
                                         <button
                                             onClick={() => handleOpenModal(role)}
-                                            className="p-1.5 text-neutral-500 hover:text-black hover:bg-neutral-50 rounded-[10px] transition-colors border border-black/10"
+                                            className="p-1.5 text-neutral-500 hover:text-black hover:bg-neutral-50 rounded-[10px] transition-colors border-[0.5px] border-black/10"
                                             title="Edit Role"
                                         >
                                             <Edit size={14} />
                                         </button>
                                         <button
                                             onClick={() => handleDelete(role.id)}
-                                            className="p-1.5 text-neutral-500 hover:text-black hover:bg-neutral-50 rounded-[10px] transition-colors border border-black/10"
+                                            className="p-1.5 text-neutral-500 hover:text-black hover:bg-neutral-50 rounded-[10px] transition-colors border-[0.5px] border-black/10"
                                             title="Delete Role"
                                         >
                                             <Trash2 size={14} />
@@ -198,7 +198,7 @@ export default function AdminRBACPage() {
                                     </div>
                                 </div>
                                 
-                                <div className="bg-neutral-50/50 p-4 rounded-[10px] mt-2 border border-black/5">
+                                <div className="bg-neutral-50/50 p-4 rounded-[10px] mt-2 border-[0.5px] border-black/5">
                                     <p className="text-[10px] font-medium text-neutral-500 uppercase tracking-wider mb-2">
                                         Permissions ({role.permissions.length})
                                     </p>
@@ -206,7 +206,7 @@ export default function AdminRBACPage() {
                                         {role.permissions.map((perm) => {
                                             const module = AVAILABLE_MODULES.find(m => m.id === perm);
                                             return (
-                                                <span key={perm} className="px-2 py-0.5 bg-white text-neutral-800 border border-black/10 rounded-[10px] text-xs font-normal">
+                                                <span key={perm} className="px-2 py-0.5 bg-white text-neutral-800 border-[0.5px] border-black/10 rounded-[10px] text-xs font-normal">
                                                     {module ? module.name : perm}
                                                 </span>
                                             );
@@ -222,8 +222,8 @@ export default function AdminRBACPage() {
             {/* Create/Edit Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-[10px] border border-black/10 shadow-none max-w-2xl w-full overflow-hidden flex flex-col max-h-[90vh]">
-                        <div className="p-4 border-b border-black/10 flex justify-between items-center bg-neutral-50/50">
+                    <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 shadow-none max-w-2xl w-full overflow-hidden flex flex-col max-h-[90vh]">
+                        <div className="p-4 border-b-[0.5px] border-black/10 flex justify-between items-center bg-neutral-50/50">
                             <h3 className="font-medium text-sm text-neutral-900 flex items-center gap-2">
                                 <Shield className="text-black" size={16} />
                                 {editingRole ? 'Edit Admin Role' : 'Create New Admin Role'}
@@ -247,12 +247,12 @@ export default function AdminRBACPage() {
                                         placeholder="e.g. Customer Support Agent, Order Manager"
                                         value={formData.name}
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                        className="w-full px-3 py-2 border border-black/10 rounded-[10px] outline-none text-xs bg-white focus:border-black font-normal"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs bg-white focus:border-black font-normal"
                                     />
                                 </div>
 
                                 <div className="space-y-3">
-                                    <div className="flex justify-between items-center border-b border-black/10 pb-2">
+                                    <div className="flex justify-between items-center border-b-[0.5px] border-black/10 pb-2">
                                         <label className="block text-xs font-medium text-neutral-600">Assign Modules & Permissions</label>
                                         <button
                                             type="button"
@@ -270,13 +270,13 @@ export default function AdminRBACPage() {
                                                 <div
                                                     key={mod.id}
                                                     onClick={() => handlePermissionToggle(mod.id)}
-                                                    className={`p-3 rounded-[10px] border transition-all cursor-pointer flex items-start gap-3 select-none ${
+                                                    className={`p-3 rounded-[10px] border-[0.5px] transition-all cursor-pointer flex items-start gap-3 select-none ${
                                                         isSelected
                                                             ? 'border-black bg-neutral-50 shadow-none'
                                                             : 'border-black/10 hover:border-black/20 bg-white'
                                                     }`}
                                                 >
-                                                    <div className={`mt-0.5 w-4 h-4 rounded border flex items-center justify-center transition-all ${
+                                                    <div className={`mt-0.5 w-4 h-4 rounded border-[0.5px] flex items-center justify-center transition-all ${
                                                         isSelected
                                                             ? 'bg-black border-black text-white'
                                                             : 'border-black/20'
@@ -294,11 +294,11 @@ export default function AdminRBACPage() {
                                 </div>
                             </div>
                             
-                            <div className="p-4 border-t border-black/10 bg-neutral-50/50 flex justify-end gap-2.5">
+                            <div className="p-4 border-t-[0.5px] border-black/10 bg-neutral-50/50 flex justify-end gap-2.5">
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="px-4 py-2 border border-black/10 rounded-[10px] text-xs text-neutral-700 hover:bg-neutral-50 transition-all font-medium"
+                                    className="px-4 py-2 border-[0.5px] border-black/10 rounded-[10px] text-xs text-neutral-700 hover:bg-neutral-50 transition-all font-medium"
                                 >
                                     Cancel
                                 </button>

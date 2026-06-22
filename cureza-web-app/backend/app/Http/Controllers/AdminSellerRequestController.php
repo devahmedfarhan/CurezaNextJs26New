@@ -242,6 +242,25 @@ class AdminSellerRequestController extends Controller
 
                     $profile->update($kycUpdates);
                     break;
+
+                case 'tax':
+                    if (!$profile) {
+                        $profile = SellerProfile::create(['user_id' => $seller->id]);
+                    }
+                    $profile->update([
+                        'default_gst_slab' => (float)$newData['default_gst_slab'],
+                        'default_gst_inclusive' => (bool)$newData['default_gst_inclusive'],
+                        'default_hsn_code' => $newData['default_hsn_code'] ?? null,
+                    ]);
+
+                    // Propagate default GST settings to all seller's products
+                    \App\Models\Product::where('seller_id', $seller->id)
+                        ->update([
+                            'gst_slab' => (float)$newData['default_gst_slab'],
+                            'gst_inclusive' => (bool)$newData['default_gst_inclusive'],
+                            'hsn_code' => $newData['default_hsn_code'] ?? null,
+                        ]);
+                    break;
             }
 
             $changeRequest->update([

@@ -21,7 +21,7 @@ export default function AdminHomepageEditorPage() {
                     <p className="text-gray-500">Drag and drop to reorder homepage sections</p>
                 </div>
                 <div className="flex gap-2">
-                    <button className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-50 transition-colors">
+                    <button className="bg-white border-[0.5px] border-black/50 text-gray-700 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-50 transition-colors">
                         <Eye size={18} />
                         Preview
                     </button>
@@ -32,8 +32,8 @@ export default function AdminHomepageEditorPage() {
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+            <div className="bg-white rounded-xl border-[0.5px] border-black/50 shadow-none overflow-hidden">
+                <div className="p-4 border-b-[0.5px] border-black/50 bg-gray-50 flex justify-between items-center">
                     <h3 className="font-bold text-gray-700">Active Sections</h3>
                     <button className="text-sm text-cureza-green font-medium flex items-center gap-1 hover:underline">
                         <Plus size={16} /> Add Section

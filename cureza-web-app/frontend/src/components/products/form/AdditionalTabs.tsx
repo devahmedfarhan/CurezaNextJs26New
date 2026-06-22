@@ -44,8 +44,8 @@ export default function AdditionalTabs({
     const roundedClass = isSuperAdmin ? 'rounded-[10px]' : 'rounded-xl';
 
     return (
-        <div className={`p-6 ${roundedClass} border ${isSuperAdmin ? 'border-neutral-950/15 bg-white dark:bg-gray-900 shadow-none' : 'border-gray-200 bg-white dark:bg-gray-900 shadow-sm'} space-y-6`}>
-            <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-3">
+        <div className={`p-6 ${roundedClass} border-[0.5px] ${isSuperAdmin ? 'border-black/50 bg-white dark:bg-gray-900 shadow-none' : 'border-black/50 bg-white dark:bg-gray-900 shadow-none border-[0.5px]'} space-y-6`}>
+            <div className="flex items-center justify-between border-b-[0.5px] border-black/50 dark:border-gray-800 pb-3">
                 <div>
                     <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Additional Information</h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400">Add dynamic tabs like warranty, materials, etc.</p>
@@ -59,7 +59,7 @@ export default function AdditionalTabs({
                                 e.target.value = '';
                             }
                         }}
-                        className={`text-sm ${isSuperAdmin ? 'rounded-md border-[0.5px] border-neutral-950/15 focus:ring-black/10 focus:border-black' : 'rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500'} bg-gray-50 dark:bg-gray-800/40`}
+                        className={`text-sm ${isSuperAdmin ? 'rounded-md border-[0.5px] border-black/50 focus:ring-black/10 focus:border-black' : 'rounded-lg border-black/50 focus:ring-blue-500 focus:border-blue-500'} bg-gray-50 dark:bg-gray-800/40`}
                     >
                         <option value="">+ Add Predefined Tab</option>
                         {PREDEFINED_TABS.map(tab => (
@@ -80,13 +80,13 @@ export default function AdditionalTabs({
             </div>
 
             {additionalTabs.length === 0 ? (
-                <div className={`text-center py-12 bg-gray-50 dark:bg-gray-800/20 ${roundedClass} border border-dashed ${isSuperAdmin ? 'border-neutral-950/15' : 'border-gray-200'}`}>
+                <div className={`text-center py-12 bg-gray-50 dark:bg-gray-800/20 ${roundedClass} border-[0.5px] border-dashed ${isSuperAdmin ? 'border-black/50' : 'border-black/50'}`}>
                     <p className="text-gray-500 dark:text-gray-400">No additional tabs yet.</p>
                 </div>
             ) : (
                 <div>
                     {/* Horizontal Tab Bar / Modern Card segment selector */}
-                    <div className="flex flex-wrap gap-2 border-b border-gray-200 dark:border-gray-800 pb-4 mb-4">
+                    <div className="flex flex-wrap gap-2 border-b-[0.5px] border-black/50 dark:border-gray-800 pb-4 mb-4">
                         {additionalTabs.map(tab => (
                             <button
                                 key={tab.id}
@@ -96,9 +96,9 @@ export default function AdditionalTabs({
                                     isSuperAdmin
                                         ? (activeTabId === tab.id
                                             ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white rounded-md'
-                                            : 'bg-white dark:bg-gray-900 text-gray-500 hover:bg-neutral-50 dark:hover:bg-gray-800 border-neutral-950/10 dark:border-gray-700 rounded-md')
+                                            : 'bg-white dark:bg-gray-900 text-gray-500 hover:bg-neutral-50 dark:hover:bg-gray-800 border-black/50 dark:border-gray-700 rounded-md')
                                         : (activeTabId === tab.id
-                                            ? 'border-blue-600 text-blue-600 bg-blue-50/50 rounded-lg'
+                                            ? 'border-black/50 text-blue-600 bg-blue-50/50 rounded-lg'
                                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200 rounded-lg')
                                 }`}
                             >
@@ -110,7 +110,7 @@ export default function AdditionalTabs({
                     {/* Active Tab Content */}
                     {currentTab && (
                         <div className="animate-in fade-in slide-in-from-left-2 duration-300">
-                            <div className={`flex items-center justify-between mb-3 bg-gray-50 dark:bg-gray-800/40 p-2 ${isSuperAdmin ? 'rounded-md border-[0.5px] border-neutral-950/15' : 'rounded-lg border border-gray-200'}`}>
+                            <div className={`flex items-center justify-between mb-3 bg-gray-50 dark:bg-gray-800/40 p-2 ${isSuperAdmin ? 'rounded-md border-[0.5px] border-black/50' : 'rounded-lg border-[0.5px] border-black/50'}`}>
                                 <div className="flex items-center gap-2">
                                     <span className={`text-xs font-bold text-gray-500 ${isSuperAdmin ? 'capitalize' : 'uppercase'} px-2`}>Editing Tab:</span>
                                     <input

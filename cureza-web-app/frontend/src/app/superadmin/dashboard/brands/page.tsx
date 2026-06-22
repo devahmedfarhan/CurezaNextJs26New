@@ -109,7 +109,7 @@ export default function AdminBrandsPage() {
     return (
         <div className="w-full space-y-6 animate-in fade-in duration-500">
             {/* Header Section */}
-            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border border-neutral-950/10 dark:border-gray-800">
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border-[0.5px] border-black/50 dark:border-gray-800">
                 <div className="absolute top-0 right-0 p-8 opacity-5">
                     <Store size={120} />
                 </div>
@@ -143,7 +143,7 @@ export default function AdminBrandsPage() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
                 <input
                     type="text"
-                    className="w-full h-10 pl-10 pr-4 bg-white dark:bg-gray-900 border border-neutral-955/15 rounded-lg text-xs font-normal text-gray-900 dark:text-white placeholder:text-gray-300 focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all"
+                    className="w-full h-10 pl-10 pr-4 bg-white dark:bg-gray-900 border-[0.5px] border-black/50 rounded-lg text-xs font-normal text-gray-900 dark:text-white placeholder:text-gray-300 focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all"
                     placeholder="Search brands by name..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -151,7 +151,7 @@ export default function AdminBrandsPage() {
             </div>
 
             {/* Brands List */}
-            <div className="bg-white dark:bg-gray-900 rounded-[10px] border border-neutral-950/10 dark:border-gray-800 overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-neutral-955/10 dark:divide-gray-800">
                         <thead className="bg-neutral-50/50 dark:bg-gray-850/50">
@@ -211,7 +211,7 @@ export default function AdminBrandsPage() {
                                     <tr key={brand.id} className="hover:bg-neutral-50/40 dark:hover:bg-gray-850/20 transition-colors group">
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
-                                                <div className="h-10 w-10 shrink-0 bg-neutral-100 text-black dark:bg-neutral-800 dark:text-white rounded-full flex items-center justify-center font-bold text-sm border border-neutral-950/5">
+                                                <div className="h-10 w-10 shrink-0 bg-neutral-100 text-black dark:bg-neutral-800 dark:text-white rounded-full flex items-center justify-center font-bold text-sm border-[0.5px] border-black/50">
                                                     {brand.name.charAt(0).toUpperCase()}
                                                 </div>
                                                 <div className="ml-4 min-w-0">
@@ -224,7 +224,7 @@ export default function AdminBrandsPage() {
                                             {brand.user ? (
                                                 <div className="text-gray-900 dark:text-gray-100">{brand.user.name}</div>
                                             ) : (
-                                                <span className="px-2.5 py-0.5 text-[10px] font-semibold tracking-wider rounded-lg bg-neutral-50 dark:bg-gray-800 text-gray-450 border border-neutral-955/5">
+                                                <span className="px-2.5 py-0.5 text-[10px] font-semibold tracking-wider rounded-lg bg-neutral-50 dark:bg-gray-800 text-gray-450 border-[0.5px] border-black/50">
                                                     System / Admin
                                                 </span>
                                             )}
@@ -261,7 +261,7 @@ export default function AdminBrandsPage() {
             {/* Dynamic Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4 animate-in fade-in zoom-in duration-200">
-                    <div className="bg-white dark:bg-gray-900 rounded-[10px] w-full max-w-md overflow-hidden border border-neutral-950/15">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] w-full max-w-md overflow-hidden border-[0.5px] border-black/50">
                         <div className="relative p-6">
                             <button 
                                 onClick={() => setIsModalOpen(false)}
@@ -291,7 +291,7 @@ export default function AdminBrandsPage() {
                                         required
                                         value={formData.name}
                                         onChange={handleInputChange}
-                                        className="w-full h-10 px-3.5 border border-neutral-950/15 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-900 dark:text-white transition-all"
+                                        className="w-full h-10 px-3.5 border-[0.5px] border-black/50 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-900 dark:text-white transition-all"
                                         placeholder="e.g. Organic India, Dabur"
                                     />
                                 </div>
@@ -301,7 +301,7 @@ export default function AdminBrandsPage() {
                                         name="description"
                                         value={formData.description}
                                         onChange={handleInputChange}
-                                        className="w-full p-3.5 border border-neutral-950/15 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-normal text-gray-750 dark:text-gray-300 resize-none transition-all leading-relaxed"
+                                        className="w-full p-3.5 border-[0.5px] border-black/50 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-normal text-gray-750 dark:text-gray-300 resize-none transition-all leading-relaxed"
                                         rows={3}
                                         placeholder="Optional description of the brand identity..."
                                     />

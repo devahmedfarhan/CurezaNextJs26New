@@ -266,7 +266,7 @@ export default function AdminDoctorDetailPage({ params }: { params: Promise<{ id
                             href={getFileUrl(oldValue)}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 px-2 py-1 bg-red-100 text-red-700 rounded text-xs hover:bg-red-200 transition-colors border border-red-200"
+                            className="inline-flex items-center gap-1.5 px-2 py-1 bg-red-100 text-red-700 rounded text-xs hover:bg-red-200 transition-colors border-[0.5px] border-black/50"
                         >
                             <ExternalLink className="h-3 w-3" /> View Current
                         </a>
@@ -276,7 +276,7 @@ export default function AdminDoctorDetailPage({ params }: { params: Promise<{ id
                             href={getFileUrl(newValue)}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold hover:bg-green-200 transition-colors border border-green-200"
+                            className="inline-flex items-center gap-1.5 px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold hover:bg-green-200 transition-colors border-[0.5px] border-black/50"
                         >
                             <ExternalLink className="h-3 w-3" /> View Proposed
                         </a>
@@ -294,11 +294,11 @@ export default function AdminDoctorDetailPage({ params }: { params: Promise<{ id
         if (changes.length === 0) return <p className="text-sm text-muted-foreground mt-2">No significant changes detected (formatting only).</p>;
 
         return (
-            <div className="mt-4 bg-white rounded-md border p-3">
+            <div className="mt-4 bg-white rounded-md border-[0.5px] p-3">
                 <p className="text-xs font-semibold mb-2 uppercase text-muted-foreground">Proposed Changes:</p>
                 <div className="space-y-3">
                     {changes.map((change, i) => (
-                        <div key={i} className="text-sm border-b pb-2 last:border-0 grid grid-cols-[1.2fr,1fr,auto,1fr] gap-2 items-center">
+                        <div key={i} className="text-sm border-b-[0.5px] pb-2 last:border-0 grid grid-cols-[1.2fr,1fr,auto,1fr] gap-2 items-center">
                             <span className="font-medium text-gray-700">{change.field}</span>
                             <div className="text-red-500 line-through text-xs px-2 bg-red-50 rounded min-h-[1.5rem] flex items-center">
                                 {change.old}
@@ -318,7 +318,7 @@ export default function AdminDoctorDetailPage({ params }: { params: Promise<{ id
         <div className="w-full max-w-[98%] mx-auto px-4 py-6 space-y-6">
 
             {hasPendingUpdates && (
-                <Alert className="bg-blue-50 border-blue-200 text-blue-800 flex justify-between items-center">
+                <Alert className="bg-blue-50 border-black/50 text-blue-800 flex justify-between items-center">
                     <div className="flex items-center gap-3">
                         <Clock className="h-5 w-5 text-blue-600" />
                         <div>
@@ -330,7 +330,7 @@ export default function AdminDoctorDetailPage({ params }: { params: Promise<{ id
                         </div>
                     </div>
                     <div className="flex gap-2">
-                        <Button size="sm" variant="outline" className="text-red-600 border-red-200 hover:bg-red-50" onClick={handleRejectUpdate}>
+                        <Button size="sm" variant="outline" className="text-red-600 border-black/50 hover:bg-red-50" onClick={handleRejectUpdate}>
                             Reject Updates
                         </Button>
                         <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white" onClick={handleApproveUpdate}>
@@ -348,7 +348,7 @@ export default function AdminDoctorDetailPage({ params }: { params: Promise<{ id
                     </Button>
                     <div className="flex items-center gap-4">
                         <div className="relative group">
-                            <Avatar className="h-16 w-16 border-2 border-background shadow-sm">
+                            <Avatar className="h-16 w-16 border-[0.5px] border-background shadow-none">
                                 <AvatarImage src={formData.profile_photo_url || doctor.profile_photo_url} />
                                 <AvatarFallback className="text-xl font-bold bg-muted">{doctor.name?.charAt(0)}</AvatarFallback>
                             </Avatar>
@@ -474,7 +474,7 @@ export default function AdminDoctorDetailPage({ params }: { params: Promise<{ id
                                     placeholder="Add notes about verification calls, special conditions, or issues..."
                                 />
                             ) : (
-                                <div className="text-sm text-muted-foreground italic bg-background p-3 rounded-md border min-h-[60px]">
+                                <div className="text-sm text-muted-foreground italic bg-background p-3 rounded-md border-[0.5px] min-h-[60px]">
                                     {doctor.admin_remarks || "No remarks added."}
                                 </div>
                             )}
@@ -527,7 +527,7 @@ export default function AdminDoctorDetailPage({ params }: { params: Promise<{ id
                                                     name="gender"
                                                     value={formData.gender || ''}
                                                     onChange={(e) => setFormData((prev: any) => ({ ...prev, gender: e.target.value }))}
-                                                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                                    className="flex h-9 w-full rounded-md border-[0.5px] border-black/50 bg-transparent px-3 py-1 text-sm shadow-none transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                                 >
                                                     <option value="">Select Gender</option>
                                                     <option value="Male">Male</option>
@@ -579,7 +579,7 @@ export default function AdminDoctorDetailPage({ params }: { params: Promise<{ id
                                                         name="consultation_duration"
                                                         value={formData.consultation_duration || '15'}
                                                         onChange={(e) => setFormData((prev: any) => ({ ...prev, consultation_duration: e.target.value }))}
-                                                        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
+                                                        className="flex h-9 w-full rounded-md border-[0.5px] border-black/50 bg-transparent px-3 py-1 text-sm shadow-none"
                                                     >
                                                         <option value="15">15</option>
                                                         <option value="30">30</option>
@@ -616,7 +616,7 @@ export default function AdminDoctorDetailPage({ params }: { params: Promise<{ id
                                                                 const current = Array.isArray(formData.consultation_modes) ? formData.consultation_modes : [];
                                                                 setFormData((p: any) => ({ ...p, consultation_modes: current.includes(mode) ? current.filter((m: string) => m !== mode) : [...current, mode] }));
                                                             }}
-                                                                className={`cursor-pointer inline-flex items-center rounded-md border px-3 py-1 text-sm font-semibold transition-colors ${Array.isArray(formData.consultation_modes) && formData.consultation_modes.includes(mode) ? 'bg-primary text-primary-foreground' : 'border-input hover:bg-muted'}`}
+                                                                className={`cursor-pointer inline-flex items-center rounded-md border-[0.5px] px-3 py-1 text-sm font-semibold transition-colors ${Array.isArray(formData.consultation_modes) && formData.consultation_modes.includes(mode) ? 'bg-primary text-primary-foreground' : 'border-black/50 hover:bg-muted'}`}
                                                             >
                                                                 {mode}
                                                             </div>
@@ -699,7 +699,7 @@ export default function AdminDoctorDetailPage({ params }: { params: Promise<{ id
 
                                         return (
                                             <Card key={index} className="overflow-hidden group flex flex-col">
-                                                <div className="aspect-video bg-muted relative flex items-center justify-center border-b">
+                                                <div className="aspect-video bg-muted relative flex items-center justify-center border-b-[0.5px]">
                                                     {fileUrl ? (
                                                         fileUrl.endsWith('.pdf') ? (
                                                             <div className="text-center p-4">
@@ -740,7 +740,7 @@ export default function AdminDoctorDetailPage({ params }: { params: Promise<{ id
                                                             </Badge>
                                                         </div>
                                                         {doc.status === 'rejected' && doc.reason && (
-                                                            <p className="text-xs text-red-600 bg-red-50 p-2 rounded border border-red-150 mt-2 font-mono">
+                                                            <p className="text-xs text-red-600 bg-red-50 p-2 rounded border-[0.5px] border-black/50 mt-2 font-mono">
                                                                 Reason: {doc.reason}
                                                             </p>
                                                         )}
@@ -842,14 +842,14 @@ export default function AdminDoctorDetailPage({ params }: { params: Promise<{ id
                                                                     const current = Array.isArray(formData.available_days) ? formData.available_days : [];
                                                                     setFormData((p: any) => ({ ...p, available_days: current.includes(day) ? current.filter((d: string) => d !== day) : [...current, day] }));
                                                                 }}
-                                                                    className={`cursor-pointer h-9 w-9 flex items-center justify-center rounded-full text-xs font-bold border transition-all ${isSelectedInForm ? 'bg-primary text-primary-foreground' : 'bg-background border-input text-muted-foreground'}`}
+                                                                    className={`cursor-pointer h-9 w-9 flex items-center justify-center rounded-full text-xs font-bold border-[0.5px] transition-all ${isSelectedInForm ? 'bg-primary text-primary-foreground' : 'bg-background border-black/50 text-muted-foreground'}`}
                                                                 >
                                                                     {day[0]}
                                                                 </div>
                                                             );
                                                         } else {
                                                             return (
-                                                                <div key={day} className={`h-8 w-8 flex items-center justify-center rounded-full text-xs font-bold border ${isAvailable ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : 'bg-muted text-muted-foreground border-transparent opacity-50'}`}>
+                                                                <div key={day} className={`h-8 w-8 flex items-center justify-center rounded-full text-xs font-bold border-[0.5px] ${isAvailable ? 'bg-emerald-100 text-emerald-800 border-black/50' : 'bg-muted text-muted-foreground border-transparent opacity-50'}`}>
                                                                     {day[0]}
                                                                 </div>
                                                             );
@@ -920,7 +920,7 @@ export default function AdminDoctorDetailPage({ params }: { params: Promise<{ id
                         <div className="space-y-2">
                             <Label>Rejection Reason (Required)</Label>
                             <select
-                                className="w-full flex h-9 w-full items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                className="w-full flex h-9 items-center justify-between rounded-md border-[0.5px] border-black/50 bg-transparent px-3 py-2 text-sm shadow-none ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                 value={rejectReason}
                                 onChange={(e) => setRejectReason(e.target.value)}
                             >
@@ -960,7 +960,7 @@ export default function AdminDoctorDetailPage({ params }: { params: Promise<{ id
                         <div className="space-y-2">
                             <Label>Rejection Reason</Label>
                             <select
-                                className="w-full flex h-9 items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                                className="w-full flex h-9 items-center justify-between rounded-md border-[0.5px] border-black/50 bg-transparent px-3 py-2 text-sm shadow-none placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
                                 value={docRejectReason}
                                 onChange={(e) => setDocRejectReason(e.target.value)}
                             >

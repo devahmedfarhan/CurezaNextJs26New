@@ -243,6 +243,10 @@ class SuperAdminOrderController extends Controller
 
             // Create Order Items
             foreach ($itemsData as $data) {
+                $itemSeller = $data['product']->seller;
+                $itemSellerProfile = $itemSeller ? $itemSeller->sellerProfile : null;
+                $hsnCode = $data['product']->hsn_code ?? ($itemSellerProfile->default_hsn_code ?? null);
+
                 \App\Models\OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $data['product']->id,
@@ -251,6 +255,7 @@ class SuperAdminOrderController extends Controller
                     'price' => $data['price'],
                     'quantity' => $data['quantity'],
                     'total' => $data['total'],
+                    'hsn_code' => $hsnCode,
                 ]);
             }
 
@@ -266,7 +271,7 @@ class SuperAdminOrderController extends Controller
         $order = Order::findOrFail($id);
 
         $request->validate([
-            'status' => 'nullable|string|in:pending,processing,shipped,delivered,cancelled',
+            'status' => 'nullable|string|in:pending,processing,shipped,delivered,cancelled,cod_reconciled',
             'payment_status' => 'nullable|string|in:pending,paid,failed,refunded',
             'payment_method' => 'nullable|string',
             'shipping_address_json' => 'nullable|array',
@@ -278,14 +283,24 @@ class SuperAdminOrderController extends Controller
             $oldStatus = $order->status;
             $oldPaymentStatus = $order->payment_status;
 
-            $order->update($request->only([
+            $updateData = $request->only([
                 'status', 
                 'payment_status', 
                 'payment_method', 
                 'shipping_address_json',
                 'tracking_id',
                 'tracking_provider'
-            ]));
+            ]);
+
+            if (isset($updateData['status']) && $updateData['status'] === 'cod_reconciled') {
+                $updateData['payment_status'] = 'paid';
+                
+                // Also update any existing transactions for this order to reconciled
+                \App\Models\SellerTransaction::where('order_id', $order->id)
+                    ->update(['reconciliation_status' => 'reconciled']);
+            }
+
+            $order->update($updateData);
             
             // Reload items to ensure we have access to them for seller_id
             $order->load('items');
@@ -298,7 +313,7 @@ class SuperAdminOrderController extends Controller
                     $shipmentStatus = 'pickup_scheduled';
                 } elseif ($order->status === 'shipped') {
                     $shipmentStatus = 'picked_up';
-                } elseif ($order->status === 'delivered') {
+                } elseif ($order->status === 'delivered' || $order->status === 'cod_reconciled') {
                     $shipmentStatus = 'delivered';
                 } elseif ($order->status === 'cancelled') {
                     $shipmentStatus = 'cancelled';
@@ -348,7 +363,7 @@ class SuperAdminOrderController extends Controller
      */
     public function downloadInvoice($id)
     {
-        $order = Order::with(['items.seller', 'user', 'items.product.brand'])->findOrFail($id);
+        $order = Order::with(['items.seller', 'user', 'items.product.brand', 'items.doctor'])->findOrFail($id);
 
         $pdf = Pdf::loadView('admin.pdf.invoice', compact('order'));
         
@@ -370,7 +385,7 @@ class SuperAdminOrderController extends Controller
         $sellerId = $request->seller_id;
 
         $query = Order::whereIn('id', $orderIds)
-            ->with(['items.seller', 'user', 'items.product.brand']);
+            ->with(['items.seller', 'user', 'items.product.brand', 'items.doctor']);
 
         if ($sellerId) {
             $query->whereHas('items', function ($q) use ($sellerId) {

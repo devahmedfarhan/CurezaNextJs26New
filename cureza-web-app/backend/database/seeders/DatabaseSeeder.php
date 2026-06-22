@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             LegalPagesSeeder::class,
             NotificationSeeder::class,
             FaqSeeder::class,
+            HsnCodeSeeder::class,
         ]);
     }
 }

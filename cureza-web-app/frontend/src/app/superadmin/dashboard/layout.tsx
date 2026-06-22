@@ -225,7 +225,7 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
             <SidebarProvider>
                 <AppSidebar />
                 <SidebarInset>
-                    <header className="flex h-16 shrink-0 items-center gap-2 border-b-[0.5px] border-neutral-950/10 px-4 bg-white sticky top-0 z-10">
+                    <header className="flex h-16 shrink-0 items-center gap-2 border-b-[0.5px] border-black/50 px-4 bg-white sticky top-0 z-10">
                         <SidebarTrigger className="-ml-1" />
                         <div className="h-4 w-px bg-gray-200 mx-2" />
                         <div className="flex flex-1 items-center justify-between">
@@ -234,7 +234,7 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
                             </div>
                             <div className="flex items-center gap-6">
                                 <Skeleton className="h-8 w-8 rounded-lg" />
-                                <div className="flex items-center gap-3 pl-6 border-l border-gray-200">
+                                <div className="flex items-center gap-3 pl-6 border-l-[0.5px] border-black/50">
                                     <div className="text-right hidden sm:block space-y-1">
                                         <Skeleton className="h-4 w-24" />
                                         <Skeleton className="h-3 w-32" />
@@ -270,11 +270,11 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
             <AppSidebar />
             <SidebarInset className="bg-neutral-50/20">
                 {/* Premium Detailed Super Admin Header */}
-                <header className="flex h-16 shrink-0 items-center border-b-[0.5px] border-neutral-950/10 px-6 bg-white sticky top-0 z-40 transition-all">
+                <header className="flex h-16 shrink-0 items-center border-b-[0.5px] border-black/50 px-6 bg-white sticky top-0 z-40 transition-all">
                     
                     {/* Left: Sidebar toggle & Breadcrumbs */}
                     <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <SidebarTrigger className="-ml-1 text-neutral-500 hover:text-neutral-900 border-[0.5px] border-neutral-950/10 rounded-lg hover:bg-neutral-50 p-1.5 bg-white" />
+                        <SidebarTrigger className="-ml-1 text-neutral-500 hover:text-neutral-900 border-[0.5px] border-black/50 rounded-lg hover:bg-neutral-50 p-1.5 bg-white" />
                         <div className="h-4 w-px bg-neutral-950/10" />
                         <div className="hidden md:block truncate">
                             {generateBreadcrumbs()}
@@ -292,9 +292,9 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 onFocus={() => setSearchFocused(true)}
                                 placeholder="Search dashboards, routes, actions..."
-                                className="w-full pl-9 pr-14 py-2 bg-neutral-50 hover:bg-neutral-100/50 border-[0.5px] border-neutral-950/15 rounded-lg text-xs font-medium focus:outline-none focus:bg-white focus:ring-1 focus:ring-neutral-950 focus:border-neutral-950 transition-all placeholder-neutral-400 text-neutral-900"
+                                className="w-full pl-9 pr-14 py-2 bg-neutral-50 hover:bg-neutral-100/50 border-[0.5px] border-black/50 rounded-lg text-xs font-medium focus:outline-none focus:bg-white focus:ring-1 focus:ring-neutral-950 focus:border-neutral-950 transition-all placeholder-neutral-400 text-neutral-900"
                             />
-                            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-0.5 px-1.5 py-0.5 bg-white border-[0.5px] border-neutral-950/10 rounded text-[9px] font-bold text-neutral-400">
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-0.5 px-1.5 py-0.5 bg-white border-[0.5px] border-black/50 rounded text-[9px] font-bold text-neutral-400">
                                 <Command size={10} />
                                 <span>K</span>
                             </div>
@@ -302,8 +302,8 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
 
                         {/* Search Results Dropdown Overlay */}
                         {searchFocused && (
-                            <div className="absolute left-0 right-0 mt-1.5 bg-white border-[0.5px] border-neutral-950/20 rounded-lg overflow-hidden z-50 flex flex-col max-h-[360px] animate-in fade-in slide-in-from-top-1 duration-150">
-                                <div className="p-2 border-b-[0.5px] bg-neutral-50/50 border-neutral-950/10 text-[10px] font-bold text-neutral-400 tracking-wider uppercase flex justify-between">
+                            <div className="absolute left-0 right-0 mt-1.5 bg-white border-[0.5px] border-black/50 rounded-lg overflow-hidden z-50 flex flex-col max-h-[360px] animate-in fade-in slide-in-from-top-1 duration-150">
+                                <div className="p-2 border-b-[0.5px] bg-neutral-50/50 border-black/50 text-[10px] font-bold text-neutral-400 tracking-wider uppercase flex justify-between">
                                     <span>Quick Navigator</span>
                                     <span>{filteredSearchResults.length} pages found</span>
                                 </div>
@@ -324,7 +324,7 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
                                                 className="w-full text-left px-4 py-2 hover:bg-neutral-50 flex items-center justify-between text-xs font-semibold text-neutral-800 transition-colors"
                                             >
                                                 <span>{page.title}</span>
-                                                <span className="text-[10px] text-neutral-400 font-normal font-mono bg-neutral-50 px-1.5 py-0.5 rounded border border-neutral-950/5">
+                                                <span className="text-[10px] text-neutral-400 font-normal font-mono bg-neutral-50 px-1.5 py-0.5 rounded border-[0.5px] border-black/50">
                                                     {page.path.replace('/superadmin/dashboard', '..')}
                                                 </span>
                                             </button>
@@ -339,7 +339,7 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
                     <div className="flex items-center gap-4 shrink-0">
                         
                         {/* System Status Indicators (Pulsing badge) */}
-                        <div className="hidden lg:flex items-center gap-3 px-3 py-1 bg-neutral-50 border-[0.5px] border-neutral-950/10 rounded-lg text-[10px] font-bold text-neutral-500">
+                        <div className="hidden lg:flex items-center gap-3 px-3 py-1 bg-neutral-50 border-[0.5px] border-black/50 rounded-lg text-[10px] font-bold text-neutral-500">
                             <div className="flex items-center gap-1.5">
                                 <span className="relative flex h-1.5 w-1.5">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neutral-900 opacity-75"></span>
@@ -370,15 +370,15 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
                         <div className="relative" ref={quickActionsRef}>
                             <button
                                 onClick={() => setQuickActionsOpen(!quickActionsOpen)}
-                                className="flex items-center gap-1 px-3 py-1.5 bg-neutral-900 text-white hover:bg-neutral-800 text-xs font-bold rounded-lg border border-neutral-900 transition-colors"
+                                className="flex items-center gap-1 px-3 py-1.5 bg-neutral-900 text-white hover:bg-neutral-800 text-xs font-bold rounded-lg border-[0.5px] border-black/50 transition-colors"
                             >
                                 <Plus size={14} />
                                 <span className="hidden sm:inline">Actions</span>
                             </button>
 
                             {quickActionsOpen && (
-                                <div className="absolute right-0 mt-2 w-56 bg-white border-[0.5px] border-neutral-950/20 rounded-lg overflow-hidden z-50 flex flex-col animate-in fade-in slide-in-from-top-1 duration-150">
-                                    <div className="p-2 border-b-[0.5px] bg-neutral-50/50 border-neutral-950/10 text-[10px] font-bold text-neutral-400 tracking-wider uppercase">
+                                <div className="absolute right-0 mt-2 w-56 bg-white border-[0.5px] border-black/50 rounded-lg overflow-hidden z-50 flex flex-col animate-in fade-in slide-in-from-top-1 duration-150">
+                                    <div className="p-2 border-b-[0.5px] bg-neutral-50/50 border-black/50 text-[10px] font-bold text-neutral-400 tracking-wider uppercase">
                                         SuperAdmin Shortcuts
                                     </div>
                                     <div className="flex flex-col py-1">
@@ -441,30 +441,30 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
                         <NotificationBell />
 
                         {/* Profile menu dropdown (Detailed popover) */}
-                        <div className="relative pl-2 border-l border-neutral-950/10 flex items-center" ref={profileMenuRef}>
+                        <div className="relative pl-2 border-l-[0.5px] border-black/50 flex items-center" ref={profileMenuRef}>
                             <button
                                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                                 className="flex items-center gap-2 hover:opacity-85 focus:outline-none"
                             >
-                                <div className="w-9 h-9 bg-neutral-900 hover:bg-neutral-800 text-white rounded-lg flex items-center justify-center font-bold text-xs border-[0.5px] border-neutral-950/20 transition-colors uppercase">
+                                <div className="w-9 h-9 bg-neutral-900 hover:bg-neutral-800 text-white rounded-lg flex items-center justify-center font-bold text-xs border-[0.5px] border-black/50 transition-colors uppercase">
                                     {user?.name ? user.name.substring(0, 2) : 'AD'}
                                 </div>
                             </button>
 
                             {profileMenuOpen && (
-                                <div className="absolute right-0 mt-2 top-full w-72 bg-white border-[0.5px] border-neutral-950/20 rounded-lg overflow-hidden z-50 flex flex-col animate-in fade-in slide-in-from-top-1 duration-150">
+                                <div className="absolute right-0 mt-2 top-full w-72 bg-white border-[0.5px] border-black/50 rounded-lg overflow-hidden z-50 flex flex-col animate-in fade-in slide-in-from-top-1 duration-150">
                                     {/* User Details */}
-                                    <div className="p-4 border-b-[0.5px] border-neutral-950/10 bg-neutral-50/50">
+                                    <div className="p-4 border-b-[0.5px] border-black/50 bg-neutral-50/50">
                                         <p className="text-xs font-bold text-neutral-900 truncate">{user?.name || 'Admin User'}</p>
                                         <p className="text-[10px] text-neutral-500 truncate mt-0.5">{user?.email || 'admin@cureza.com'}</p>
-                                        <div className="mt-2.5 inline-flex items-center gap-1 text-[9px] font-bold bg-neutral-900 text-white px-2 py-0.5 rounded border border-neutral-950">
+                                        <div className="mt-2.5 inline-flex items-center gap-1 text-[9px] font-bold bg-neutral-900 text-white px-2 py-0.5 rounded border-[0.5px] border-black/50">
                                             <Shield size={10} />
                                             <span>{user?.role === 'super_admin' ? 'SUPER ADMIN' : 'ADMINISTRATOR'}</span>
                                         </div>
                                     </div>
 
                                     {/* Privileges & Permissions List */}
-                                    <div className="p-4 border-b-[0.5px] border-neutral-950/10 text-[10px]">
+                                    <div className="p-4 border-b-[0.5px] border-black/50 text-[10px]">
                                         <p className="font-bold text-neutral-400 tracking-wider uppercase mb-1.5 flex items-center gap-1">
                                             <Activity size={10} className="text-neutral-500" />
                                             Privileges Checklist
@@ -494,7 +494,7 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
                                                 logout();
                                                 setProfileMenuOpen(false);
                                             }}
-                                            className="px-4 py-2 text-left text-xs font-bold text-red-600 hover:bg-red-50/50 flex items-center gap-2 border-t-[0.5px] border-neutral-950/5"
+                                            className="px-4 py-2 text-left text-xs font-bold text-red-600 hover:bg-red-50/50 flex items-center gap-2 border-t-[0.5px] border-black/50"
                                         >
                                             <LogOut size={14} className="text-red-500" />
                                             <span>Log out account</span>

@@ -75,10 +75,10 @@ export default function MarketingDashboardPage() {
     return (
         <div className="space-y-6 pb-12">
             {/* Header section */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-[10px] border-[0.35px] border-neutral-950/10">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-[10px] border-[0.35px] border-black/50">
                 <div className="space-y-1.5">
                     <div className="flex items-center gap-3">
-                        <div className="p-2.5 bg-neutral-100 text-black rounded-[10px] border-[0.35px] border-neutral-950/10">
+                        <div className="p-2.5 bg-neutral-100 text-black rounded-[10px] border-[0.35px] border-black/50">
                             <Megaphone className="h-5 w-5" />
                         </div>
                         <h1 className="text-xl font-semibold text-gray-900 tracking-tight">
@@ -92,7 +92,7 @@ export default function MarketingDashboardPage() {
                 <div className="flex gap-3">
                     <Link
                         href="/superadmin/dashboard/marketing/offers"
-                        className="bg-white border-[0.35px] border-neutral-950/10 text-gray-700 px-4 py-2.5 rounded-[10px] font-medium hover:bg-neutral-50 transition-colors text-xs flex items-center gap-2"
+                        className="bg-white border-[0.35px] border-black/50 text-gray-700 px-4 py-2.5 rounded-[10px] font-medium hover:bg-neutral-50 transition-colors text-xs flex items-center gap-2"
                     >
                         <Plus className="h-4 w-4" /> Create Coupon
                     </Link>
@@ -112,20 +112,20 @@ export default function MarketingDashboardPage() {
                     return (
                         <div 
                             key={idx} 
-                            className="bg-white border-[0.35px] border-neutral-950/10 rounded-[10px] p-5 relative overflow-hidden group"
+                            className="bg-white border-[0.35px] border-black/50 rounded-[10px] p-5 relative overflow-hidden group"
                         >
                             <div className="flex justify-between items-start">
                                 <div className="space-y-2">
                                     <p className="text-xs font-medium text-gray-500 tracking-normal">{stat.name}</p>
                                     <h3 className="text-2xl font-semibold text-gray-900">{stat.value}</h3>
                                     <div className="flex items-center gap-1.5 mt-2">
-                                        <span className="text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-[10px] border-[0.35px] border-emerald-500/50">
+                                        <span className="text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-[10px] border-[0.35px] border-black/50">
                                             {stat.change}
                                         </span>
                                         <span className="text-xs text-gray-400 font-normal">vs last month</span>
                                     </div>
                                 </div>
-                                <div className="p-3 bg-neutral-50 text-gray-600 rounded-[10px] border-[0.35px] border-neutral-950/10 group-hover:bg-neutral-100 group-hover:text-black transition-colors duration-300">
+                                <div className="p-3 bg-neutral-50 text-gray-600 rounded-[10px] border-[0.35px] border-black/50 group-hover:bg-neutral-100 group-hover:text-black transition-colors duration-300">
                                     <IconComponent className="h-4 w-4" />
                                 </div>
                             </div>
@@ -137,7 +137,7 @@ export default function MarketingDashboardPage() {
             {/* Interactive Charts and Promo Overview */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Campaigns Trend Simulator */}
-                <div className="lg:col-span-2 bg-white rounded-[10px] border-[0.35px] border-neutral-950/10 p-6 space-y-6">
+                <div className="lg:col-span-2 bg-white rounded-[10px] border-[0.35px] border-black/50 p-6 space-y-6">
                     <div className="flex justify-between items-center">
                         <div className="space-y-1">
                             <h3 className="text-sm font-semibold text-gray-900">Campaign Conversions (30d)</h3>
@@ -155,7 +155,7 @@ export default function MarketingDashboardPage() {
 
                     {/* SVG campaigns performance graph */}
                     <div className="h-64 flex flex-col justify-between">
-                        <div className="flex-1 flex items-end gap-3 px-2 pt-4 border-b border-gray-100 pb-2">
+                        <div className="flex-1 flex items-end gap-3 px-2 pt-4 border-b-[0.5px] border-black/50 pb-2">
                             {/* Render columns representing weekly conversions */}
                             {[
                                 { week: 'W1', couponVal: 45, bundleVal: 30 },
@@ -190,13 +190,13 @@ export default function MarketingDashboardPage() {
                 </div>
 
                 {/* Quick actions & stats summary */}
-                <div className="bg-white rounded-[10px] border-[0.35px] border-neutral-950/10 p-6 space-y-6">
+                <div className="bg-white rounded-[10px] border-[0.35px] border-black/50 p-6 space-y-6">
                     <h3 className="text-sm font-semibold text-gray-900">Module Status</h3>
                     
                     <div className="space-y-4">
-                        <div className="flex justify-between items-center p-4 bg-neutral-50 rounded-[10px] border-[0.35px] border-neutral-950/10 hover:bg-neutral-100 transition-colors">
+                        <div className="flex justify-between items-center p-4 bg-neutral-50 rounded-[10px] border-[0.35px] border-black/50 hover:bg-neutral-100 transition-colors">
                             <div className="flex items-center gap-3">
-                                <div className="p-2.5 bg-white border-[0.35px] border-neutral-950/10 text-black rounded-[10px]">
+                                <div className="p-2.5 bg-white border-[0.35px] border-black/50 text-black rounded-[10px]">
                                     <Tag className="h-4 w-4" />
                                 </div>
                                 <div className="space-y-0.5">
@@ -207,9 +207,9 @@ export default function MarketingDashboardPage() {
                             <span className="text-base font-semibold text-gray-900">{activeCoupons}/{couponCount}</span>
                         </div>
 
-                        <div className="flex justify-between items-center p-4 bg-neutral-50 rounded-[10px] border-[0.35px] border-neutral-950/10 hover:bg-neutral-100 transition-colors">
+                        <div className="flex justify-between items-center p-4 bg-neutral-50 rounded-[10px] border-[0.35px] border-black/50 hover:bg-neutral-100 transition-colors">
                             <div className="flex items-center gap-3">
-                                <div className="p-2.5 bg-white border-[0.35px] border-neutral-950/10 text-black rounded-[10px]">
+                                <div className="p-2.5 bg-white border-[0.35px] border-black/50 text-black rounded-[10px]">
                                     <Gift className="h-4 w-4" />
                                 </div>
                                 <div className="space-y-0.5">
@@ -220,9 +220,9 @@ export default function MarketingDashboardPage() {
                             <span className="text-base font-semibold text-gray-900">{activeBundles}/{bundleCount}</span>
                         </div>
 
-                        <div className="flex justify-between items-center p-4 bg-neutral-50 rounded-[10px] border-[0.35px] border-neutral-950/10 hover:bg-neutral-100 transition-colors">
+                        <div className="flex justify-between items-center p-4 bg-neutral-50 rounded-[10px] border-[0.35px] border-black/50 hover:bg-neutral-100 transition-colors">
                             <div className="flex items-center gap-3">
-                                <div className="p-2.5 bg-white border-[0.35px] border-neutral-950/10 text-black rounded-[10px]">
+                                <div className="p-2.5 bg-white border-[0.35px] border-black/50 text-black rounded-[10px]">
                                     <Zap className="h-4 w-4" />
                                 </div>
                                 <div className="space-y-0.5">
@@ -234,7 +234,7 @@ export default function MarketingDashboardPage() {
                         </div>
                     </div>
 
-                    <div className="bg-neutral-50 border-[0.35px] border-neutral-950/10 p-4 rounded-[10px] flex items-start gap-3">
+                    <div className="bg-neutral-50 border-[0.35px] border-black/50 p-4 rounded-[10px] flex items-start gap-3">
                         <Activity className="h-4 w-4 text-black shrink-0 mt-0.5" />
                         <div>
                             <h5 className="font-medium text-black text-xs">Marketing Simulator</h5>
@@ -252,9 +252,9 @@ export default function MarketingDashboardPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {/* Offers & Coupons */}
                     <Link href="/superadmin/dashboard/marketing/offers" className="group">
-                        <div className="h-full bg-white border-[0.35px] border-neutral-950/10 hover:border-neutral-950 rounded-[10px] p-6 transition-all duration-300 flex flex-col justify-between">
+                        <div className="h-full bg-white border-[0.35px] border-black/50 hover:border-neutral-950 rounded-[10px] p-6 transition-all duration-300 flex flex-col justify-between">
                             <div className="space-y-4">
-                                <div className="w-10 h-10 bg-neutral-50 border-[0.35px] border-neutral-950/10 text-black rounded-[10px] flex items-center justify-center group-hover:scale-105 transition-transform">
+                                <div className="w-10 h-10 bg-neutral-50 border-[0.35px] border-black/50 text-black rounded-[10px] flex items-center justify-center group-hover:scale-105 transition-transform">
                                     <Tag className="h-5 w-5" />
                                 </div>
                                 <div>
@@ -266,7 +266,7 @@ export default function MarketingDashboardPage() {
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-150 text-xs text-gray-400 font-normal">
+                            <div className="flex justify-between items-center mt-6 pt-4 border-t-[0.5px] border-black/50 text-xs text-gray-400 font-normal">
                                 <span>{couponCount} Coupons Available</span>
                                 <span className="text-black font-medium flex items-center gap-1">Manage <ChevronRight className="h-3 w-3" /></span>
                             </div>
@@ -275,9 +275,9 @@ export default function MarketingDashboardPage() {
 
                     {/* Bundle Offers */}
                     <Link href="/superadmin/dashboard/marketing/bundles" className="group">
-                        <div className="h-full bg-white border-[0.35px] border-neutral-950/10 hover:border-neutral-950 rounded-[10px] p-6 transition-all duration-300 flex flex-col justify-between">
+                        <div className="h-full bg-white border-[0.35px] border-black/50 hover:border-neutral-950 rounded-[10px] p-6 transition-all duration-300 flex flex-col justify-between">
                             <div className="space-y-4">
-                                <div className="w-10 h-10 bg-neutral-50 border-[0.35px] border-neutral-950/10 text-black rounded-[10px] flex items-center justify-center group-hover:scale-105 transition-transform">
+                                <div className="w-10 h-10 bg-neutral-50 border-[0.35px] border-black/50 text-black rounded-[10px] flex items-center justify-center group-hover:scale-105 transition-transform">
                                     <Gift className="h-5 w-5" />
                                 </div>
                                 <div>
@@ -289,7 +289,7 @@ export default function MarketingDashboardPage() {
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-150 text-xs text-gray-400 font-normal">
+                            <div className="flex justify-between items-center mt-6 pt-4 border-t-[0.5px] border-black/50 text-xs text-gray-400 font-normal">
                                 <span>{bundleCount} Bundles Configured</span>
                                 <span className="text-black font-medium flex items-center gap-1">Manage <ChevronRight className="h-3 w-3" /></span>
                             </div>
@@ -298,9 +298,9 @@ export default function MarketingDashboardPage() {
 
                     {/* Email Campaigns */}
                     <Link href="/superadmin/dashboard/marketing/email" className="group">
-                        <div className="h-full bg-white border-[0.35px] border-neutral-950/10 hover:border-neutral-950 rounded-[10px] p-6 transition-all duration-300 flex flex-col justify-between">
+                        <div className="h-full bg-white border-[0.35px] border-black/50 hover:border-neutral-950 rounded-[10px] p-6 transition-all duration-300 flex flex-col justify-between">
                             <div className="space-y-4">
-                                <div className="w-10 h-10 bg-neutral-50 border-[0.35px] border-neutral-950/10 text-black rounded-[10px] flex items-center justify-center group-hover:scale-105 transition-transform">
+                                <div className="w-10 h-10 bg-neutral-50 border-[0.35px] border-black/50 text-black rounded-[10px] flex items-center justify-center group-hover:scale-105 transition-transform">
                                     <Mail className="h-5 w-5" />
                                 </div>
                                 <div>
@@ -312,7 +312,7 @@ export default function MarketingDashboardPage() {
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-150 text-xs text-gray-400 font-normal">
+                            <div className="flex justify-between items-center mt-6 pt-4 border-t-[0.5px] border-black/50 text-xs text-gray-400 font-normal">
                                 <span>Templates Ready</span>
                                 <span className="text-black font-medium flex items-center gap-1">Manage <ChevronRight className="h-3 w-3" /></span>
                             </div>
@@ -321,9 +321,9 @@ export default function MarketingDashboardPage() {
 
                     {/* Automation */}
                     <Link href="/superadmin/dashboard/marketing/automation" className="group">
-                        <div className="h-full bg-white border-[0.35px] border-neutral-950/10 hover:border-neutral-950 rounded-[10px] p-6 transition-all duration-300 flex flex-col justify-between">
+                        <div className="h-full bg-white border-[0.35px] border-black/50 hover:border-neutral-950 rounded-[10px] p-6 transition-all duration-300 flex flex-col justify-between">
                             <div className="space-y-4">
-                                <div className="w-10 h-10 bg-neutral-50 border-[0.35px] border-neutral-950/10 text-black rounded-[10px] flex items-center justify-center group-hover:scale-105 transition-transform">
+                                <div className="w-10 h-10 bg-neutral-50 border-[0.35px] border-black/50 text-black rounded-[10px] flex items-center justify-center group-hover:scale-105 transition-transform">
                                     <Zap className="h-5 w-5" />
                                 </div>
                                 <div>
@@ -335,7 +335,7 @@ export default function MarketingDashboardPage() {
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-150 text-xs text-gray-400 font-normal">
+                            <div className="flex justify-between items-center mt-6 pt-4 border-t-[0.5px] border-black/50 text-xs text-gray-400 font-normal">
                                 <span>5 Flows Active</span>
                                 <span className="text-black font-medium flex items-center gap-1">Manage <ChevronRight className="h-3 w-3" /></span>
                             </div>
@@ -344,9 +344,9 @@ export default function MarketingDashboardPage() {
 
                     {/* Pixel Settings */}
                     <Link href="/superadmin/dashboard/marketing/pixel" className="group">
-                        <div className="h-full bg-white border-[0.35px] border-neutral-950/10 hover:border-neutral-950 rounded-[10px] p-6 transition-all duration-300 flex flex-col justify-between">
+                        <div className="h-full bg-white border-[0.35px] border-black/50 hover:border-neutral-950 rounded-[10px] p-6 transition-all duration-300 flex flex-col justify-between">
                             <div className="space-y-4">
-                                <div className="w-10 h-10 bg-neutral-50 border-[0.35px] border-neutral-950/10 text-black rounded-[10px] flex items-center justify-center group-hover:scale-105 transition-transform">
+                                <div className="w-10 h-10 bg-neutral-50 border-[0.35px] border-black/50 text-black rounded-[10px] flex items-center justify-center group-hover:scale-105 transition-transform">
                                     <Code className="h-5 w-5" />
                                 </div>
                                 <div>
@@ -358,7 +358,7 @@ export default function MarketingDashboardPage() {
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-150 text-xs text-gray-400 font-normal">
+                            <div className="flex justify-between items-center mt-6 pt-4 border-t-[0.5px] border-black/50 text-xs text-gray-400 font-normal">
                                 <span>GA4 & Meta Connected</span>
                                 <span className="text-black font-medium flex items-center gap-1">Manage <ChevronRight className="h-3 w-3" /></span>
                             </div>
@@ -368,7 +368,7 @@ export default function MarketingDashboardPage() {
             </div>
 
             {/* Tutorial / Guideline Section */}
-            <div className="bg-neutral-50 border-[0.35px] border-neutral-950/10 rounded-[10px] p-6 space-y-4">
+            <div className="bg-neutral-50 border-[0.35px] border-black/50 rounded-[10px] p-6 space-y-4">
                 <div className="flex items-center gap-2">
                     <HelpCircle className="h-5 w-5 text-black" />
                     <h3 className="text-sm font-semibold text-gray-900">How It Works & Guidelines | Marketing Suite Guide</h3>

@@ -157,15 +157,15 @@ function CreateUserPageContent() {
             </div>
 
 
-            <div className="bg-white rounded-[10px] border border-neutral-950/10 overflow-hidden shadow-none">
+            <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 overflow-hidden shadow-none">
                 {/* Tabs */}
-                <div className="flex border-b border-neutral-950/5">
+                <div className="flex border-b-[0.5px] border-black/50">
                     <button
                         type="button"
                         onClick={() => !isEdit && setActiveTab('seller')}
                         disabled={isEdit}
                         className={`flex-1 py-4 text-xs font-medium flex items-center justify-center gap-2 transition-colors ${activeTab === 'seller'
-                            ? 'text-neutral-900 border-b-2 border-black bg-neutral-50/50'
+                            ? 'text-neutral-900 border-b-[0.5px] border-black bg-neutral-50/50'
                             : 'text-neutral-500 hover:text-neutral-700 hover:bg-neutral-50'
                             } ${isEdit ? 'cursor-not-allowed opacity-50' : ''}`}
                     >
@@ -177,7 +177,7 @@ function CreateUserPageContent() {
                         onClick={() => !isEdit && setActiveTab('doctor')}
                         disabled={isEdit}
                         className={`flex-1 py-4 text-xs font-medium flex items-center justify-center gap-2 transition-colors ${activeTab === 'doctor'
-                            ? 'text-neutral-900 border-b-2 border-black bg-neutral-50/50'
+                            ? 'text-neutral-900 border-b-[0.5px] border-black bg-neutral-50/50'
                             : 'text-neutral-500 hover:text-neutral-700 hover:bg-neutral-50'
                             } ${isEdit ? 'cursor-not-allowed opacity-50' : ''}`}
                     >
@@ -189,7 +189,7 @@ function CreateUserPageContent() {
                         onClick={() => !isEdit && setActiveTab('customer')}
                         disabled={isEdit}
                         className={`flex-1 py-4 text-xs font-medium flex items-center justify-center gap-2 transition-colors ${activeTab === 'customer'
-                            ? 'text-neutral-900 border-b-2 border-black bg-neutral-50/50'
+                            ? 'text-neutral-900 border-b-[0.5px] border-black bg-neutral-50/50'
                             : 'text-neutral-500 hover:text-neutral-700 hover:bg-neutral-50'
                             } ${isEdit ? 'cursor-not-allowed opacity-50' : ''}`}
                     >
@@ -210,7 +210,7 @@ function CreateUserPageContent() {
                                     <input
                                         type="text"
                                         required
-                                        className="w-full pl-10 pr-4 py-2 border border-neutral-950/15 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all text-xs font-normal text-neutral-850"
+                                        className="w-full pl-10 pr-4 py-2 border-[0.5px] border-black/50 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all text-xs font-normal text-neutral-850"
                                         placeholder="John Doe"
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
@@ -227,7 +227,7 @@ function CreateUserPageContent() {
                                     <input
                                         type="text"
                                         required
-                                        className="w-full pl-10 pr-4 py-2 border border-neutral-950/15 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all text-xs font-normal text-neutral-850"
+                                        className="w-full pl-10 pr-4 py-2 border-[0.5px] border-black/50 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all text-xs font-normal text-neutral-850"
                                         placeholder="Awesome Brand"
                                         value={brandName}
                                         onChange={(e) => setBrandName(e.target.value)}
@@ -245,7 +245,7 @@ function CreateUserPageContent() {
                                         type="email"
                                         required
                                         readOnly={isEdit}
-                                        className={`w-full pl-10 pr-4 py-2 border border-neutral-950/15 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all text-xs font-normal text-neutral-850 ${isEdit ? 'bg-neutral-50 text-neutral-400 cursor-not-allowed border-neutral-950/5' : ''}`}
+                                        className={`w-full pl-10 pr-4 py-2 border-[0.5px] border-black/50 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all text-xs font-normal text-neutral-850 ${isEdit ? 'bg-neutral-50 text-neutral-400 cursor-not-allowed border-black/50' : ''}`}
                                         placeholder="email@example.com"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
@@ -261,7 +261,7 @@ function CreateUserPageContent() {
                                     <input
                                         type="tel"
                                         required
-                                        className="w-full pl-10 pr-4 py-2 border border-neutral-950/15 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all text-xs font-normal text-neutral-850"
+                                        className="w-full pl-10 pr-4 py-2 border-[0.5px] border-black/50 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all text-xs font-normal text-neutral-850"
                                         placeholder="+91 98765 43210"
                                         value={phone}
                                         onChange={(e) => setPhone(e.target.value)}
@@ -279,7 +279,7 @@ function CreateUserPageContent() {
                                         type="text"
                                         required
                                         minLength={8}
-                                        className="w-full pl-10 pr-4 py-2 border border-neutral-950/15 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all text-xs font-normal text-neutral-855"
+                                        className="w-full pl-10 pr-4 py-2 border-[0.5px] border-black/50 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all text-xs font-normal text-neutral-855"
                                         placeholder="Min 8 characters"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
@@ -297,7 +297,7 @@ function CreateUserPageContent() {
                                         <Globe className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={16} />
                                         <input
                                             type="url"
-                                            className="w-full pl-10 pr-4 py-2 border border-neutral-950/15 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all text-xs font-normal text-neutral-850"
+                                            className="w-full pl-10 pr-4 py-2 border-[0.5px] border-black/50 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all text-xs font-normal text-neutral-850"
                                             placeholder="https://example.com"
                                             value={website}
                                             onChange={(e) => setWebsite(e.target.value)}
@@ -309,7 +309,7 @@ function CreateUserPageContent() {
                                     <div className="relative">
                                         <MapPin className="absolute left-3 top-3 text-neutral-400" size={16} />
                                         <textarea
-                                            className="w-full pl-10 pr-4 py-2 border border-neutral-950/15 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all text-xs font-normal text-neutral-850"
+                                            className="w-full pl-10 pr-4 py-2 border-[0.5px] border-black/50 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all text-xs font-normal text-neutral-850"
                                             rows={3}
                                             placeholder="Brand registered address"
                                             value={address}
@@ -320,11 +320,11 @@ function CreateUserPageContent() {
                             </>
                         )}
 
-                        <div className="pt-4 flex items-center justify-end gap-3 border-t border-neutral-950/5">
+                        <div className="pt-4 flex items-center justify-end gap-3 border-t-[0.5px] border-black/50">
                             <button
                                 type="button"
                                 onClick={() => router.back()}
-                                className="px-6 py-2 border border-neutral-950/15 rounded-[10px] text-neutral-700 font-medium hover:bg-neutral-50 transition-colors text-xs"
+                                className="px-6 py-2 border-[0.5px] border-black/50 rounded-[10px] text-neutral-700 font-medium hover:bg-neutral-50 transition-colors text-xs"
                             >
                                 Cancel
                             </button>
@@ -348,7 +348,7 @@ export default function CreateUserPage() {
     return (
         <Suspense fallback={
             <div className="flex items-center justify-center min-h-[50vh]">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black" />
+                <div className="animate-spin rounded-full h-8 w-8 border-b-[0.5px] border-black" />
             </div>
         }>
             <CreateUserPageContent />

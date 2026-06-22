@@ -66,7 +66,7 @@ const ChangeTypeBadge = ({ type }: { type: string }) => {
     const Icon = config.icon;
 
     return (
-        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-bold border ${config.bg}`}>
+        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-bold border-[0.5px] ${config.bg}`}>
             <Icon size={12} />
             {config.label}
         </span>
@@ -95,7 +95,7 @@ const DiffRow = ({ field, oldValue, newValue }: { field: string; oldValue: any; 
     };
 
     return (
-        <tr className="border-b border-neutral-950/5 dark:border-gray-850 last:border-0">
+        <tr className="border-b-[0.5px] border-black/50 dark:border-gray-850 last:border-0">
             <td className="py-3 px-4 text-xs font-bold text-gray-700 dark:text-gray-300 w-1/4">
                 {formatFieldName(field)}
             </td>
@@ -209,7 +209,7 @@ export default function ChangeRequestDetailPage() {
     return (
         <div className="space-y-6 animate-in fade-in duration-550">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-[0.5px] border-neutral-950/15 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 rounded-[10px]">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-[0.5px] border-black/50 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 rounded-[10px]">
                 <div>
                     <Link
                         href="/superadmin/dashboard/products/change-requests"
@@ -225,9 +225,9 @@ export default function ChangeRequestDetailPage() {
             {/* Meta Info Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Product Info */}
-                <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-4">
+                <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 p-4">
                     <div className="flex items-start gap-3">
-                        <div className="w-12 h-12 bg-neutral-50 dark:bg-gray-850 rounded-lg overflow-hidden shrink-0 flex items-center justify-center border-[0.5px] border-neutral-950/10">
+                        <div className="w-12 h-12 bg-neutral-50 dark:bg-gray-850 rounded-lg overflow-hidden shrink-0 flex items-center justify-center border-[0.5px] border-black/50">
                             {request.product?.image ? (
                                 <img src={getImageUrl(request.product.image)} alt="" className="w-full h-full object-cover" />
                             ) : (
@@ -243,7 +243,7 @@ export default function ChangeRequestDetailPage() {
                 </div>
 
                 {/* Seller Info */}
-                <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-4">
+                <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 p-4">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-neutral-100 dark:bg-gray-800 rounded-md text-neutral-600 dark:text-neutral-400">
                             <User size={16} />
@@ -257,7 +257,7 @@ export default function ChangeRequestDetailPage() {
                 </div>
 
                 {/* Submission Info */}
-                <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-4">
+                <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 p-4">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-neutral-100 dark:bg-gray-800 rounded-md text-neutral-600 dark:text-neutral-400">
                             <Calendar size={16} />
@@ -272,14 +272,14 @@ export default function ChangeRequestDetailPage() {
 
             {/* Changes Diff View (for edit requests) */}
             {request.change_type === 'edit' && request.changes && Object.keys(request.changes).length > 0 && (
-                <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 overflow-hidden">
-                    <div className="px-6 py-4 border-b border-neutral-950/10 dark:border-gray-800 bg-neutral-50/30">
+                <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 overflow-hidden">
+                    <div className="px-6 py-4 border-b-[0.5px] border-black/50 dark:border-gray-800 bg-neutral-50/30">
                         <h2 className="font-bold text-sm text-gray-900 dark:text-white">Proposed Changes</h2>
                         <p className="text-xs text-gray-500 mt-0.5">Review the changes before approving</p>
                     </div>
                     <div className="overflow-x-auto">
                         <table className="w-full">
-                            <thead className="bg-neutral-50/20 dark:bg-gray-850/30 border-b border-neutral-950/5">
+                            <thead className="bg-neutral-50/20 dark:bg-gray-850/30 border-b-[0.5px] border-black/50">
                                 <tr>
                                     <th className="py-2 px-4 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider">Field</th>
                                     <th className="py-2 px-4 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider">Current Value</th>
@@ -304,8 +304,8 @@ export default function ChangeRequestDetailPage() {
 
             {/* New Product Details (for create requests) */}
             {request.change_type === 'create' && request.proposed_data && (
-                <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 overflow-hidden">
-                    <div className="px-6 py-4 border-b border-neutral-950/10 dark:border-gray-800 bg-neutral-50/30">
+                <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 overflow-hidden">
+                    <div className="px-6 py-4 border-b-[0.5px] border-black/50 dark:border-gray-800 bg-neutral-50/30">
                         <h2 className="font-bold text-sm text-gray-900 dark:text-white">New Product Details</h2>
                         <p className="text-xs text-gray-500 mt-0.5">Review the product details before approving</p>
                     </div>
@@ -313,7 +313,7 @@ export default function ChangeRequestDetailPage() {
                         {Object.entries(request.proposed_data)
                             .filter(([key]) => !['id', 'created_at', 'updated_at', 'deleted_at', 'seller_id'].includes(key))
                             .map(([key, value]) => (
-                                <div key={key} className="border-b border-neutral-950/5 pb-2.5">
+                                <div key={key} className="border-b-[0.5px] border-black/50 pb-2.5">
                                     <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{key.replace(/_/g, ' ')}</span>
                                     <p className="text-xs text-gray-900 dark:text-white mt-1 leading-relaxed">
                                         {value === null ? <span className="text-gray-450 italic">Not set</span> :
@@ -328,7 +328,7 @@ export default function ChangeRequestDetailPage() {
 
             {/* Delete Request Confirmation */}
             {request.change_type === 'delete' && (
-                <div className="bg-red-50/20 border-[0.5px] border-red-200/50 rounded-[10px] p-5">
+                <div className="bg-red-50/20 border-[0.5px] border-black/50 rounded-[10px] p-5">
                     <div className="flex items-start gap-4">
                         <div className="p-2.5 bg-red-50 rounded-md text-red-600">
                             <Trash2 size={20} />
@@ -339,7 +339,7 @@ export default function ChangeRequestDetailPage() {
                                 The seller has requested to delete this product. If approved, the product will be soft-deleted
                                 and no longer visible to customers.
                             </p>
-                            <div className="mt-4 p-4 bg-white dark:bg-gray-900 rounded-lg border-[0.5px] border-red-200/35">
+                            <div className="mt-4 p-4 bg-white dark:bg-gray-900 rounded-lg border-[0.5px] border-black/50">
                                 <p className="text-xs text-gray-650 dark:text-gray-300 leading-relaxed">
                                     <strong>Product:</strong> {request.product?.title}<br />
                                     <strong>Price:</strong> ₹{request.product?.price}<br />
@@ -353,7 +353,7 @@ export default function ChangeRequestDetailPage() {
 
             {/* Action Buttons */}
             {request.status === 'pending' && (
-                <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-6">
+                <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 p-6">
                     <h2 className="font-bold text-sm text-gray-900 dark:text-white mb-4">Take Action</h2>
                     <div className="flex flex-col sm:flex-row gap-4 text-xs font-bold">
                         <button
@@ -367,7 +367,7 @@ export default function ChangeRequestDetailPage() {
                         <button
                             onClick={() => setRejectModalOpen(true)}
                             disabled={processing}
-                            className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-red-50 text-red-700 border-[0.5px] border-red-200/30 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50 cursor-pointer"
+                            className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-red-50 text-red-700 border-[0.5px] border-black/50 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50 cursor-pointer"
                         >
                             <X size={16} />
                             Reject Request
@@ -379,8 +379,8 @@ export default function ChangeRequestDetailPage() {
             {/* Status if already processed */}
             {request.status !== 'pending' && (
                 <div className={`rounded-[10px] border-[0.5px] p-6 ${request.status === 'approved'
-                        ? 'bg-green-50/20 border-green-200/40 text-green-900 dark:text-green-400'
-                        : 'bg-red-50/20 border-red-200/40 text-red-900 dark:text-red-400'
+                        ? 'bg-green-50/20 border-black/50 text-green-900 dark:text-green-400'
+                        : 'bg-red-50/20 border-black/50 text-red-900 dark:text-red-400'
                     }`}>
                     <div className="flex items-center gap-3">
                         {request.status === 'approved' ? (
@@ -411,7 +411,7 @@ export default function ChangeRequestDetailPage() {
             {/* Reject Modal */}
             {rejectModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-sm animate-in fade-in duration-300">
-                    <div className="bg-white dark:bg-gray-900 border border-gray-250 dark:border-gray-850 rounded-[10px] p-6 max-w-md w-full mx-4 shadow-2xl animate-in zoom-in-95 duration-200">
+                    <div className="bg-white dark:bg-gray-900 border-[0.5px] border-black/50 dark:border-gray-850 rounded-[10px] p-6 max-w-md w-full mx-4 shadow-none animate-in zoom-in-95 duration-200">
                         <div className="flex items-center gap-3 mb-4">
                             <div className="p-2 bg-red-50 rounded-md text-red-600">
                                 <X size={20} />
@@ -429,7 +429,7 @@ export default function ChangeRequestDetailPage() {
                                 value={rejectReason}
                                 onChange={(e) => setRejectReason(e.target.value)}
                                 placeholder="Explain why this request is being rejected..."
-                                className="w-full px-3 py-2 border-[0.5px] border-neutral-950/15 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-[1.5px] focus:ring-black/10 focus:border-black dark:focus:ring-white/10 dark:focus:border-white text-xs min-h-[100px] resize-none leading-relaxed"
+                                className="w-full px-3 py-2 border-[0.5px] border-black/50 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-[1.5px] focus:ring-black/10 focus:border-black dark:focus:ring-white/10 dark:focus:border-white text-xs min-h-[100px] resize-none leading-relaxed"
                             />
                         </div>
                         <div className="flex gap-3 justify-end text-xs">

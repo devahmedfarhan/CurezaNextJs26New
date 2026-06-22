@@ -204,7 +204,7 @@ export default function BundlesPage() {
     return (
         <div className="space-y-6 pb-12">
             {/* Header */}
-            <div className="flex justify-between items-center bg-white p-6 rounded-[10px] border-[0.35px] border-neutral-950/10">
+            <div className="flex justify-between items-center bg-white p-6 rounded-[10px] border-[0.35px] border-black/50">
                 <div className="space-y-1.5">
                     <h1 className="text-xl font-semibold text-gray-900 tracking-tight">Bundle Offers</h1>
                     <p className="text-xs text-gray-500 font-normal">Configure 'Frequently Bought Together' promotional deals</p>
@@ -227,8 +227,8 @@ export default function BundlesPage() {
 
             {/* Creation / Editing Form */}
             {isCreating && (
-                <div className="bg-white p-6 rounded-[10px] border-[0.35px] border-neutral-950/10 space-y-6 animate-in fade-in slide-in-from-top-4 duration-300">
-                    <div className="flex justify-between items-center border-b-[0.35px] border-neutral-950/10 pb-4">
+                <div className="bg-white p-6 rounded-[10px] border-[0.35px] border-black/50 space-y-6 animate-in fade-in slide-in-from-top-4 duration-300">
+                    <div className="flex justify-between items-center border-b-[0.35px] border-black/50 pb-4">
                         <h3 className="font-semibold text-base text-gray-900">
                             {isEditing ? 'Edit Bundle Offer' : 'Create New Bundle Offer'}
                         </h3>
@@ -248,14 +248,14 @@ export default function BundlesPage() {
                                 <input
                                     type="text"
                                     placeholder="Search main product..."
-                                    className="pl-9 pr-4 py-2 w-full border-[0.35px] border-neutral-950/10 rounded-[10px] focus:border-black text-xs font-normal outline-none"
+                                    className="pl-9 pr-4 py-2 w-full border-[0.35px] border-black/50 rounded-[10px] focus:border-black text-xs font-normal outline-none"
                                     value={mainSearch}
                                     onChange={e => setMainSearch(e.target.value)}
                                 />
                             </div>
                             <select
                                 size={4}
-                                className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 text-xs max-h-40 focus:outline-none focus:border-black bg-white"
+                                className="w-full border-[0.35px] border-black/50 rounded-[10px] px-3 py-2 text-xs max-h-40 focus:outline-none focus:border-black bg-white"
                                 value={formData.main_product_id}
                                 onChange={e => {
                                     setFormData({ ...formData, main_product_id: e.target.value });
@@ -271,7 +271,7 @@ export default function BundlesPage() {
                                 ))}
                             </select>
                             {formData.main_product_id && (
-                                <div className="text-xs text-neutral-800 font-medium bg-neutral-50/50 p-2 rounded-[10px] border-[0.35px] border-neutral-950/10 flex items-center gap-1.5">
+                                <div className="text-xs text-neutral-800 font-medium bg-neutral-50/50 p-2 rounded-[10px] border-[0.35px] border-black/50 flex items-center gap-1.5">
                                     <Check size={14} /> Selected: {getProductTitle(formData.main_product_id)}
                                 </div>
                             )}
@@ -287,14 +287,14 @@ export default function BundlesPage() {
                                 <input
                                     type="text"
                                     placeholder="Search add-on products..."
-                                    className="pl-9 pr-4 py-2 w-full border-[0.35px] border-neutral-950/10 rounded-[10px] focus:border-black text-xs font-normal outline-none"
+                                    className="pl-9 pr-4 py-2 w-full border-[0.35px] border-black/50 rounded-[10px] focus:border-black text-xs font-normal outline-none"
                                     value={bundledSearch}
                                     onChange={e => setBundledSearch(e.target.value)}
                                 />
                             </div>
                             <select
                                 size={4}
-                                className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3 py-2 text-xs max-h-40 focus:outline-none focus:border-black bg-white"
+                                className="w-full border-[0.35px] border-black/50 rounded-[10px] px-3 py-2 text-xs max-h-40 focus:outline-none focus:border-black bg-white"
                                 onChange={e => {
                                     addBundledId(e.target.value);
                                     // Reset dropdown value
@@ -314,13 +314,13 @@ export default function BundlesPage() {
                             <div className="space-y-1.5 mt-3">
                                 <span className="block text-[10px] font-medium text-gray-500 tracking-normal uppercase">Selected Add-ons ({selectedBundledIds.length})</span>
                                 {selectedBundledIds.length === 0 ? (
-                                    <div className="text-xs text-gray-400 bg-neutral-50/50 p-3 rounded-[10px] border-[0.35px] border-dashed border-neutral-950/10 text-center">
+                                    <div className="text-xs text-gray-400 bg-neutral-50/50 p-3 rounded-[10px] border-[0.35px] border-dashed border-black/50 text-center">
                                         No items added. Click products in list to add them.
                                     </div>
                                 ) : (
                                     <div className="flex flex-wrap gap-2 pt-1">
                                         {selectedBundledIds.map(id => (
-                                            <div key={id} className="inline-flex items-center gap-1.5 bg-neutral-50 border-[0.35px] border-neutral-950/10 text-neutral-800 px-3 py-1 rounded-[10px] text-xs font-medium">
+                                            <div key={id} className="inline-flex items-center gap-1.5 bg-neutral-50 border-[0.35px] border-black/50 text-neutral-800 px-3 py-1 rounded-[10px] text-xs font-medium">
                                                 <span>{getProductTitle(id)}</span>
                                                 <button
                                                     type="button"
@@ -343,7 +343,7 @@ export default function BundlesPage() {
                                 type="number"
                                 min="1"
                                 max="100"
-                                className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-4 py-2.5 focus:border-black text-xs font-normal outline-none"
+                                className="w-full border-[0.35px] border-black/50 rounded-[10px] px-4 py-2.5 focus:border-black text-xs font-normal outline-none"
                                 value={formData.discount_percentage}
                                 onChange={e => setFormData({ ...formData, discount_percentage: parseInt(e.target.value) || 1 })}
                             />
@@ -355,7 +355,7 @@ export default function BundlesPage() {
                             <label className="block text-xs font-medium text-gray-700">Bundle Title (Marketing Tagline)</label>
                             <input
                                 type="text"
-                                className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-4 py-2.5 focus:border-black text-xs font-normal outline-none"
+                                className="w-full border-[0.35px] border-black/50 rounded-[10px] px-4 py-2.5 focus:border-black text-xs font-normal outline-none"
                                 placeholder="e.g. Double Cleanse Kit, Skincare Duo"
                                 value={formData.title}
                                 onChange={e => setFormData({ ...formData, title: e.target.value })}
@@ -369,7 +369,7 @@ export default function BundlesPage() {
                                 id="form_is_active"
                                 checked={formData.is_active}
                                 onChange={e => setFormData({ ...formData, is_active: e.target.checked })}
-                                className="rounded text-black focus:ring-black h-4 w-4 border-neutral-950/20"
+                                className="rounded text-black focus:ring-black h-4 w-4 border-black/50"
                                 style={{ borderRadius: '4px' }}
                             />
                             <label htmlFor="form_is_active" className="text-xs font-medium text-gray-700 cursor-pointer">
@@ -378,10 +378,10 @@ export default function BundlesPage() {
                         </div>
                     </div>
 
-                    <div className="flex justify-end gap-3 border-t-[0.35px] border-neutral-950/10 pt-4 mt-6">
+                    <div className="flex justify-end gap-3 border-t-[0.35px] border-black/50 pt-4 mt-6">
                         <button
                             onClick={resetForm}
-                            className="bg-neutral-50 border-[0.35px] border-neutral-950/10 text-gray-750 px-5 py-2.5 rounded-[10px] font-medium hover:bg-neutral-100 transition-colors text-xs"
+                            className="bg-neutral-50 border-[0.35px] border-black/50 text-gray-750 px-5 py-2.5 rounded-[10px] font-medium hover:bg-neutral-100 transition-colors text-xs"
                         >
                             Cancel
                         </button>
@@ -397,12 +397,12 @@ export default function BundlesPage() {
 
             {/* Bundles Grid */}
             {loading ? (
-                <div className="flex flex-col items-center justify-center py-24 text-gray-500 space-y-3 bg-white rounded-[10px] border-[0.35px] border-neutral-950/10">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+                <div className="flex flex-col items-center justify-center py-24 text-gray-500 space-y-3 bg-white rounded-[10px] border-[0.35px] border-black/50">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-[0.5px] border-black"></div>
                     <span className="text-xs font-medium">Loading bundle promotions...</span>
                 </div>
             ) : bundles.length === 0 ? (
-                <div className="text-center py-20 bg-neutral-50 rounded-[10px] border-[0.35px] border-dashed border-neutral-950/10">
+                <div className="text-center py-20 bg-neutral-50 rounded-[10px] border-[0.35px] border-dashed border-black/50">
                     <Package className="mx-auto h-12 w-12 text-gray-400 mb-4" />
                     <h3 className="text-sm font-semibold text-gray-900">No active bundles found</h3>
                     <p className="text-gray-500 mt-1 max-w-sm mx-auto text-xs font-normal">
@@ -422,12 +422,12 @@ export default function BundlesPage() {
                         return (
                             <div 
                                 key={bundle.id} 
-                                className="bg-white border-[0.35px] border-neutral-950/10 rounded-[10px] overflow-hidden hover:border-black transition-all duration-300 flex flex-col justify-between group"
+                                className="bg-white border-[0.35px] border-black/50 rounded-[10px] overflow-hidden hover:border-black transition-all duration-300 flex flex-col justify-between group"
                             >
                                 <div className="p-6 space-y-4">
                                     {/* Card header */}
                                     <div className="flex justify-between items-start">
-                                        <span className="inline-flex items-center rounded-[10px] bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-800 border-[0.35px] border-neutral-950/10">
+                                        <span className="inline-flex items-center rounded-[10px] bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-800 border-[0.35px] border-black/50">
                                             {bundle.discount_percentage}% OFF Add-ons
                                         </span>
                                         <div className="flex gap-1.5 opacity-60 group-hover:opacity-100 transition-opacity">
@@ -457,7 +457,7 @@ export default function BundlesPage() {
                                     </div>
 
                                     {/* Products mapping details */}
-                                    <div className="space-y-3 bg-neutral-50/50 p-4 rounded-[10px] border-[0.35px] border-neutral-950/10 text-xs font-normal">
+                                    <div className="space-y-3 bg-neutral-50/50 p-4 rounded-[10px] border-[0.35px] border-black/50 text-xs font-normal">
                                         <div>
                                             <span className="text-[10px] font-medium text-gray-500 uppercase tracking-normal block">Primary Item</span>
                                             <span className="font-semibold text-gray-800 line-clamp-1 mt-0.5">{getProductTitle(bundle.main_product_id) || bundle.main_product?.title || `Product #${bundle.main_product_id}`}</span>
@@ -466,7 +466,7 @@ export default function BundlesPage() {
                                             <span className="text-[10px] font-medium text-gray-500 uppercase tracking-normal block">Bundled Add-ons ({bundledIds.length})</span>
                                             <div className="space-y-1 mt-1">
                                                 {bundledIds.map((id: any) => (
-                                                    <div key={id} className="text-xs text-gray-600 flex justify-between items-center bg-white px-2.5 py-1 rounded-[10px] border-[0.35px] border-neutral-950/10">
+                                                    <div key={id} className="text-xs text-gray-600 flex justify-between items-center bg-white px-2.5 py-1 rounded-[10px] border-[0.35px] border-black/50">
                                                         <span className="truncate font-medium max-w-[180px]">{getProductTitle(id)}</span>
                                                         {getProductPrice(id) && <span className="text-gray-500 shrink-0 font-normal">₹{getProductPrice(id)}</span>}
                                                     </div>
@@ -477,14 +477,14 @@ export default function BundlesPage() {
                                 </div>
 
                                 {/* Toggle Active Status footer */}
-                                <div className="border-t-[0.35px] border-neutral-950/10 px-6 py-4 bg-neutral-50/50 flex justify-between items-center text-xs">
+                                <div className="border-t-[0.35px] border-black/50 px-6 py-4 bg-neutral-50/50 flex justify-between items-center text-xs">
                                     <span className="text-gray-400">Bundle Status</span>
                                     <button 
                                         onClick={() => handleToggleActive(bundle)}
                                         className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-[10px] font-medium transition-all border-[0.35px] ${
                                             bundle.is_active 
-                                                ? 'bg-emerald-50 text-emerald-700 border-emerald-500/10 hover:bg-emerald-100/50' 
-                                                : 'bg-neutral-50 text-gray-600 border-[0.35px] border-neutral-950/10 hover:bg-neutral-100'
+                                                ? 'bg-emerald-50 text-emerald-700 border-black/50 hover:bg-emerald-100/50' 
+                                                : 'bg-neutral-50 text-gray-600 border-[0.35px] border-black/50 hover:bg-neutral-100'
                                         }`}
                                     >
                                         <span className={`h-1.5 w-1.5 rounded-full ${bundle.is_active ? 'bg-emerald-600' : 'bg-gray-400'}`} />
@@ -498,7 +498,7 @@ export default function BundlesPage() {
             )}
 
             {/* Tutorial / Guidelines Section */}
-            <div className="bg-neutral-50 border-[0.35px] border-neutral-950/10 rounded-[10px] p-6 space-y-4">
+            <div className="bg-neutral-50 border-[0.35px] border-black/50 rounded-[10px] p-6 space-y-4">
                 <div className="flex items-center gap-2">
                     <HelpCircle className="h-5 w-5 text-black" />
                     <h3 className="text-sm font-semibold text-gray-900">How It Works & Guidelines | Bundle Offers Setup</h3>

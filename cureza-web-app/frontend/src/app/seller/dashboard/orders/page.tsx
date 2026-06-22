@@ -17,6 +17,8 @@ const OrderStatusBadge = ({ status }: { status: string }) => {
                 return { bg: 'bg-indigo-50 text-indigo-700 border-indigo-100 dark:bg-indigo-950/20 dark:text-indigo-400 dark:border-indigo-900/30', dot: 'bg-indigo-500', label: 'Shipped' };
             case 'delivered':
                 return { bg: 'bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30', dot: 'bg-emerald-500', label: 'Delivered' };
+            case 'cod_reconciled':
+                return { bg: 'bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30', dot: 'bg-emerald-500', label: 'Ready to Payout' };
             case 'cancelled':
             default:
                 return { bg: 'bg-rose-50 text-rose-700 border-rose-100 dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/30', dot: 'bg-rose-500', label: 'Cancelled' };

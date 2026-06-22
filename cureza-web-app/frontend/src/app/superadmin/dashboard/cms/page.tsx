@@ -55,10 +55,10 @@ export default function AdminCMSPage() {
                         <Link 
                             key={idx} 
                             href={m.href}
-                            className="block p-6 bg-white border-[0.5px] border-gray-200/50 rounded-[10px] transition-colors hover:bg-gray-50/50 group"
+                            className="block p-6 bg-white border-[0.5px] border-black/50 rounded-[10px] transition-colors hover:bg-gray-50/50 group"
                         >
                             <div className="flex items-start gap-4">
-                                <div className="p-3 rounded-[10px] border-[0.5px] border-gray-200/50 text-black bg-white transition-colors">
+                                <div className="p-3 rounded-[10px] border-[0.5px] border-black/50 text-black bg-white transition-colors">
                                     <Icon size={20} />
                                 </div>
                                 <div className="space-y-1.5 flex-1">

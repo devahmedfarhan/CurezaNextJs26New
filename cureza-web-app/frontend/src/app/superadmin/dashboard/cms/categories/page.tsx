@@ -152,7 +152,7 @@ export default function CategoriesPage() {
                             <Plus className="mr-2 h-4 w-4" /> Add Category
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none max-h-[85vh] overflow-y-auto">
+                    <DialogContent className="rounded-[10px] border-[0.5px] border-black/50 shadow-none max-h-[85vh] overflow-y-auto">
                         <DialogHeader>
                             <DialogTitle className="text-base font-medium text-black">Create Category</DialogTitle>
                         </DialogHeader>
@@ -164,7 +164,7 @@ export default function CategoriesPage() {
                                     value={formData.name}
                                     onChange={handleNameChange}
                                     required
-                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                    className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
                             <div className="space-y-2">
@@ -174,7 +174,7 @@ export default function CategoriesPage() {
                                     value={formData.slug}
                                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                                     required
-                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                    className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
                             <div className="space-y-2">
@@ -184,11 +184,11 @@ export default function CategoriesPage() {
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     rows={2}
-                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                    className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
                             
-                            <div className="border-[0.5px] border-gray-150 p-4 rounded-[10px] space-y-4 bg-gray-50/30">
+                            <div className="border-[0.5px] border-black/50 p-4 rounded-[10px] space-y-4 bg-gray-50/30">
                                 <h4 className="font-medium text-xs text-black">SEO Settings</h4>
                                 <div className="space-y-2">
                                     <Label htmlFor="meta_title" className="text-[10px] font-medium text-gray-700">Meta Title</Label>
@@ -197,7 +197,7 @@ export default function CategoriesPage() {
                                         value={formData.meta_title}
                                         onChange={(e) => setFormData({ ...formData, meta_title: e.target.value })}
                                         placeholder="SEO Category Title"
-                                        className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                        className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -208,7 +208,7 @@ export default function CategoriesPage() {
                                         onChange={(e) => setFormData({ ...formData, meta_description: e.target.value })}
                                         placeholder="SEO Category Description"
                                         rows={2}
-                                        className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                        className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -218,7 +218,7 @@ export default function CategoriesPage() {
                                         value={formData.meta_keywords}
                                         onChange={(e) => setFormData({ ...formData, meta_keywords: e.target.value })}
                                         placeholder="keyword1, keyword2"
-                                        className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                        className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
                                     />
                                 </div>
                             </div>
@@ -236,17 +236,17 @@ export default function CategoriesPage() {
                     <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
                     <Input
                         placeholder="Search categories..."
-                        className="pl-9 rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                        className="pl-9 rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
                 </div>
             </div>
 
-            <div className="border-[0.5px] border-gray-200/50 rounded-[10px] overflow-hidden bg-white shadow-none">
+            <div className="border-[0.5px] border-black/50 rounded-[10px] overflow-hidden bg-white shadow-none">
                 <Table>
                     <TableHeader className="bg-gray-50/50">
-                        <TableRow className="border-b-[0.5px] border-gray-200/50">
+                        <TableRow className="border-b-[0.5px] border-black/50">
                             <TableHead className="text-gray-500 font-medium text-xs">Name</TableHead>
                             <TableHead className="text-gray-500 font-medium text-xs">Slug</TableHead>
                             <TableHead className="text-gray-500 font-medium text-xs">Description</TableHead>
@@ -264,7 +264,7 @@ export default function CategoriesPage() {
                             </TableRow>
                         ) : (
                             filteredCategories.map((category) => (
-                                <TableRow key={category.id} className="border-b-[0.5px] border-gray-200/50 hover:bg-gray-50/30">
+                                <TableRow key={category.id} className="border-b-[0.5px] border-black/50 hover:bg-gray-50/30">
                                     <TableCell className="font-normal text-sm text-black">{category.name}</TableCell>
                                     <TableCell className="text-gray-500 text-sm">{category.slug}</TableCell>
                                     <TableCell className="max-w-md truncate text-gray-500 text-sm">{category.description || '-'}</TableCell>
@@ -292,7 +292,7 @@ export default function CategoriesPage() {
                     setFormData({ name: '', slug: '', description: '', meta_title: '', meta_description: '', meta_keywords: '' });
                 }
             }}>
-                <DialogContent className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none max-h-[85vh] overflow-y-auto">
+                <DialogContent className="rounded-[10px] border-[0.5px] border-black/50 shadow-none max-h-[85vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle className="text-base font-medium text-black">Edit Category</DialogTitle>
                     </DialogHeader>
@@ -304,7 +304,7 @@ export default function CategoriesPage() {
                                 value={formData.name}
                                 onChange={handleNameChange}
                                 required
-                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                             />
                         </div>
                         <div className="space-y-2">
@@ -314,7 +314,7 @@ export default function CategoriesPage() {
                                 value={formData.slug}
                                 onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                                 required
-                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                             />
                         </div>
                         <div className="space-y-2">
@@ -324,11 +324,11 @@ export default function CategoriesPage() {
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                 rows={2}
-                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                             />
                         </div>
                         
-                        <div className="border-[0.5px] border-gray-150 p-4 rounded-[10px] space-y-4 bg-gray-50/30">
+                        <div className="border-[0.5px] border-black/50 p-4 rounded-[10px] space-y-4 bg-gray-50/30">
                             <h4 className="font-medium text-xs text-black">SEO Settings</h4>
                             <div className="space-y-2">
                                 <Label htmlFor="edit-meta_title" className="text-[10px] font-medium text-gray-700">Meta Title</Label>
@@ -337,7 +337,7 @@ export default function CategoriesPage() {
                                     value={formData.meta_title}
                                     onChange={(e) => setFormData({ ...formData, meta_title: e.target.value })}
                                     placeholder="SEO Category Title"
-                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                    className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
                                 />
                             </div>
                             <div className="space-y-2">
@@ -348,7 +348,7 @@ export default function CategoriesPage() {
                                     onChange={(e) => setFormData({ ...formData, meta_description: e.target.value })}
                                     placeholder="SEO Category Description"
                                     rows={2}
-                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                    className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
                                 />
                             </div>
                             <div className="space-y-2">
@@ -358,7 +358,7 @@ export default function CategoriesPage() {
                                     value={formData.meta_keywords}
                                     onChange={(e) => setFormData({ ...formData, meta_keywords: e.target.value })}
                                     placeholder="keyword1, keyword2"
-                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
+                                    className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:ring-black bg-white"
                                 />
                             </div>
                         </div>

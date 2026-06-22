@@ -78,8 +78,8 @@ export default function AdminCommunityPage() {
         <div className="space-y-6">
             {/* Statistics Row */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 flex items-center gap-4">
-                    <div className="p-3 bg-neutral-50 text-neutral-900 border-[0.5px] border-neutral-950/10 rounded-[10px]">
+                <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-black/50 flex items-center gap-4">
+                    <div className="p-3 bg-neutral-50 text-neutral-900 border-[0.5px] border-black/50 rounded-[10px]">
                         <Users size={20} />
                     </div>
                     <div>
@@ -87,8 +87,8 @@ export default function AdminCommunityPage() {
                         <h3 className="text-lg font-semibold text-gray-900 mt-0.5">{(stats?.total_members || 0).toLocaleString()}</h3>
                     </div>
                 </div>
-                <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 flex items-center gap-4">
-                    <div className="p-3 bg-neutral-50 text-neutral-900 border-[0.5px] border-neutral-950/10 rounded-[10px]">
+                <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-black/50 flex items-center gap-4">
+                    <div className="p-3 bg-neutral-50 text-neutral-900 border-[0.5px] border-black/50 rounded-[10px]">
                         <Share2 size={20} />
                     </div>
                     <div>
@@ -98,8 +98,8 @@ export default function AdminCommunityPage() {
                         </h3>
                     </div>
                 </div>
-                <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 flex items-center gap-4">
-                    <div className="p-3 bg-neutral-50 text-neutral-900 border-[0.5px] border-neutral-950/10 rounded-[10px]">
+                <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-black/50 flex items-center gap-4">
+                    <div className="p-3 bg-neutral-50 text-neutral-900 border-[0.5px] border-black/50 rounded-[10px]">
                         <Zap size={20} />
                     </div>
                     <div>
@@ -107,8 +107,8 @@ export default function AdminCommunityPage() {
                         <h3 className="text-lg font-semibold text-gray-900 mt-0.5">{(stats?.total_xp_distributed || 0).toLocaleString()} XP</h3>
                     </div>
                 </div>
-                <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 flex items-center gap-4">
-                    <div className="p-3 bg-neutral-50 text-neutral-900 border-[0.5px] border-neutral-950/10 rounded-[10px]">
+                <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-black/50 flex items-center gap-4">
+                    <div className="p-3 bg-neutral-50 text-neutral-900 border-[0.5px] border-black/50 rounded-[10px]">
                         <Gift size={20} />
                     </div>
                     <div>
@@ -119,8 +119,8 @@ export default function AdminCommunityPage() {
             </div>
 
             {/* XP Earning Rules Form */}
-            <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-neutral-950/10 max-w-3xl">
-                <div className="flex items-center gap-3 mb-6 pb-4 border-b-[0.5px] border-neutral-950/10">
+            <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-black/50 max-w-3xl">
+                <div className="flex items-center gap-3 mb-6 pb-4 border-b-[0.5px] border-black/50">
                     <Zap size={18} className="text-black" />
                     <div>
                         <h3 className="font-semibold text-gray-900 text-sm">Earning Rules Configuration</h3>
@@ -138,7 +138,7 @@ export default function AdminCommunityPage() {
                                 value={rules.xp_per_100_spent}
                                 onChange={handleChange}
                                 min="0"
-                                className="w-full px-3 py-2 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs bg-white focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 font-normal"
+                                className="w-full px-3 py-2 border-[0.5px] border-black/50 rounded-[10px] text-xs bg-white focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 font-normal"
                                 required
                             />
                             <span className="text-[10px] text-gray-400 block font-normal">Points earned per ₹100 paid on orders.</span>
@@ -151,7 +151,7 @@ export default function AdminCommunityPage() {
                                 value={rules.xp_per_review}
                                 onChange={handleChange}
                                 min="0"
-                                className="w-full px-3 py-2 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs bg-white focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 font-normal"
+                                className="w-full px-3 py-2 border-[0.5px] border-black/50 rounded-[10px] text-xs bg-white focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 font-normal"
                                 required
                             />
                             <span className="text-[10px] text-gray-400 block font-normal">Points awarded for writing a product review.</span>
@@ -164,7 +164,7 @@ export default function AdminCommunityPage() {
                                 value={rules.xp_per_photo_upload}
                                 onChange={handleChange}
                                 min="0"
-                                className="w-full px-3 py-2 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs bg-white focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 font-normal"
+                                className="w-full px-3 py-2 border-[0.5px] border-black/50 rounded-[10px] text-xs bg-white focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 font-normal"
                                 required
                             />
                             <span className="text-[10px] text-gray-400 block font-normal">Points awarded for uploading photos in reviews.</span>
@@ -177,7 +177,7 @@ export default function AdminCommunityPage() {
                                 value={rules.xp_per_referral}
                                 onChange={handleChange}
                                 min="0"
-                                className="w-full px-3 py-2 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs bg-white focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 font-normal"
+                                className="w-full px-3 py-2 border-[0.5px] border-black/50 rounded-[10px] text-xs bg-white focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 font-normal"
                                 required
                             />
                             <span className="text-[10px] text-gray-400 block font-normal">Points awarded to referrer when friend completes their first purchase.</span>
@@ -185,12 +185,12 @@ export default function AdminCommunityPage() {
                     </div>
 
                     {successMessage && (
-                        <div className="p-3 bg-green-50 border-[0.5px] border-green-200 text-green-800 rounded-[10px] text-xs font-medium">
+                        <div className="p-3 bg-green-50 border-[0.5px] border-black/50 text-green-800 rounded-[10px] text-xs font-medium">
                             {successMessage}
                         </div>
                     )}
 
-                    <div className="flex justify-end pt-4 border-t-[0.5px] border-neutral-950/10">
+                    <div className="flex justify-end pt-4 border-t-[0.5px] border-black/50">
                         <button
                             type="submit"
                             disabled={saving}

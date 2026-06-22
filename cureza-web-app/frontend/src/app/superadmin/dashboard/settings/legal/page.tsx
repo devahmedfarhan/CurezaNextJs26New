@@ -41,7 +41,7 @@ interface DoctorPolicyStructuredData {
     legal: { title: string; desc: string };
 }
 
-function formatParagraphs(text: string, className = "text-[#052326]/70 leading-relaxed font-light"): string {
+function formatParagraphs(text: string, className="text-[#052326]/70 leading-relaxed font-light"): string {
     return text
         .split('\n\n')
         .map(p => p.trim())
@@ -401,7 +401,7 @@ function SellerPolicyEditor({
             <button
                 type="button"
                 onClick={() => setOpenSection(isOpen ? '' : id)}
-                className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition rounded-xl font-bold text-gray-900 text-sm border border-gray-200"
+                className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition rounded-xl font-bold text-gray-900 text-sm border-[0.5px] border-black/50"
             >
                 <div className="flex items-center gap-3">
                     <span className="text-gray-400 text-xs font-mono">{num}</span>
@@ -414,11 +414,11 @@ function SellerPolicyEditor({
 
     return (
         <div className="space-y-4">
-            <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <div className="border-[0.5px] border-black/50 rounded-xl overflow-hidden">
                 <button
                     type="button"
                     onClick={() => setOpenSection(openSection === 'intro' ? '' : 'intro')}
-                    className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition font-bold text-gray-900 text-sm border-b border-gray-200"
+                    className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition font-bold text-gray-900 text-sm border-b-[0.5px] border-black/50"
                 >
                     <div className="flex items-center gap-3">
                         <span className="text-gray-400 text-xs font-mono">00</span>
@@ -432,13 +432,13 @@ function SellerPolicyEditor({
                         <textarea
                             value={data.intro}
                             onChange={(e) => updateField('intro', '', e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg text-sm min-h-[80px] text-gray-800 focus:ring-2 focus:ring-cureza-green focus:border-transparent outline-none font-medium"
+                            className="w-full p-3 border-[0.5px] border-black/50 rounded-lg text-sm min-h-[80px] text-gray-800 focus:ring-2 focus:ring-cureza-green focus:border-transparent outline-none font-medium"
                         />
                     </div>
                 )}
             </div>
 
-            <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <div className="border-[0.5px] border-black/50 rounded-xl overflow-hidden">
                 {sectionHeader('overview', 'Section 1: System Overview', '01')}
                 {openSection === 'overview' && (
                     <div className="p-4 bg-white space-y-4">
@@ -448,7 +448,7 @@ function SellerPolicyEditor({
                                 type="text"
                                 value={data.overview.title}
                                 onChange={(e) => updateField('overview', 'title', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm font-semibold text-gray-950"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm font-semibold text-gray-950"
                             />
                         </div>
                         <div>
@@ -456,14 +456,14 @@ function SellerPolicyEditor({
                             <textarea
                                 value={data.overview.desc}
                                 onChange={(e) => updateField('overview', 'desc', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm min-h-[100px] font-medium"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm min-h-[100px] font-medium"
                             />
                         </div>
                     </div>
                 )}
             </div>
 
-            <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <div className="border-[0.5px] border-black/50 rounded-xl overflow-hidden">
                 {sectionHeader('onboarding', 'Section 2: Identity & Onboarding', '02')}
                 {openSection === 'onboarding' && (
                     <div className="p-4 bg-white space-y-4">
@@ -473,7 +473,7 @@ function SellerPolicyEditor({
                                 type="text"
                                 value={data.onboarding.title}
                                 onChange={(e) => updateField('onboarding', 'title', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm font-semibold text-gray-950"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm font-semibold text-gray-950"
                             />
                         </div>
                         <div>
@@ -481,10 +481,10 @@ function SellerPolicyEditor({
                             <textarea
                                 value={data.onboarding.desc}
                                 onChange={(e) => updateField('onboarding', 'desc', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm min-h-[100px] font-medium"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm min-h-[100px] font-medium"
                             />
                         </div>
-                        <div className="border-t border-gray-150 pt-4 space-y-3">
+                        <div className="border-t-[0.5px] border-black/50 pt-4 space-y-3">
                             <h4 className="font-bold text-xs text-gray-700">Inputs Requirements Checklist Card</h4>
                             <div>
                                 <label className="block text-xs text-gray-500 mb-1 font-semibold">Requirements Card Title</label>
@@ -492,7 +492,7 @@ function SellerPolicyEditor({
                                     type="text"
                                     value={data.onboarding.cardTitle}
                                     onChange={(e) => updateField('onboarding', 'cardTitle', e.target.value)}
-                                    className="w-full p-2.5 border border-gray-300 rounded-lg text-sm font-semibold text-gray-950"
+                                    className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm font-semibold text-gray-950"
                                 />
                             </div>
                             <div className="space-y-2">
@@ -503,12 +503,12 @@ function SellerPolicyEditor({
                                             type="text"
                                             value={item}
                                             onChange={(e) => updateListItem('onboarding', idx, e.target.value)}
-                                            className="flex-1 p-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-800"
+                                            className="flex-1 p-2 border-[0.5px] border-black/50 rounded-lg text-xs font-semibold text-gray-800"
                                         />
                                         <button
                                             type="button"
                                             onClick={() => removeListItem('onboarding', idx)}
-                                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg border border-red-200"
+                                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg border-[0.5px] border-black/50"
                                         >
                                             <Trash2 size={14} />
                                         </button>
@@ -517,7 +517,7 @@ function SellerPolicyEditor({
                                 <button
                                     type="button"
                                     onClick={() => addListItem('onboarding')}
-                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg text-[10px] font-bold text-gray-700"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 border-[0.5px] border-black/50 rounded-lg text-[10px] font-bold text-gray-700"
                                 >
                                     <Plus size={12} /> Add Requirement Item
                                 </button>
@@ -527,7 +527,7 @@ function SellerPolicyEditor({
                 )}
             </div>
 
-            <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <div className="border-[0.5px] border-black/50 rounded-xl overflow-hidden">
                 {sectionHeader('fees', 'Section 3: Marketplace Deductibles', '03')}
                 {openSection === 'fees' && (
                     <div className="p-4 bg-white space-y-4">
@@ -537,7 +537,7 @@ function SellerPolicyEditor({
                                 type="text"
                                 value={data.fees.title}
                                 onChange={(e) => updateField('fees', 'title', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm font-semibold text-gray-950"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm font-semibold text-gray-950"
                             />
                         </div>
                         <div>
@@ -545,14 +545,14 @@ function SellerPolicyEditor({
                             <textarea
                                 value={data.fees.desc}
                                 onChange={(e) => updateField('fees', 'desc', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm min-h-[100px] font-medium"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm min-h-[100px] font-medium"
                             />
                         </div>
                     </div>
                 )}
             </div>
 
-            <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <div className="border-[0.5px] border-black/50 rounded-xl overflow-hidden">
                 {sectionHeader('logistics', 'Section 4: Logistics & Fulfillment', '04')}
                 {openSection === 'logistics' && (
                     <div className="p-4 bg-white space-y-4">
@@ -562,7 +562,7 @@ function SellerPolicyEditor({
                                 type="text"
                                 value={data.logistics.title}
                                 onChange={(e) => updateField('logistics', 'title', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm font-semibold text-gray-950"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm font-semibold text-gray-950"
                             />
                         </div>
                         <div>
@@ -570,10 +570,10 @@ function SellerPolicyEditor({
                             <textarea
                                 value={data.logistics.desc}
                                 onChange={(e) => updateField('logistics', 'desc', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm min-h-[100px] font-medium"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm min-h-[100px] font-medium"
                             />
                         </div>
-                        <div className="border-t border-gray-150 pt-4 space-y-2">
+                        <div className="border-t-[0.5px] border-black/50 pt-4 space-y-2">
                             <label className="block text-xs text-gray-500 font-semibold">Logistics SLAs Checklist</label>
                             {data.logistics.items.map((item, idx) => (
                                 <div key={idx} className="flex gap-2 items-center">
@@ -581,12 +581,12 @@ function SellerPolicyEditor({
                                         type="text"
                                         value={item}
                                         onChange={(e) => updateListItem('logistics', idx, e.target.value)}
-                                        className="flex-1 p-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-800"
+                                        className="flex-1 p-2 border-[0.5px] border-black/50 rounded-lg text-xs font-semibold text-gray-800"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => removeListItem('logistics', idx)}
-                                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg border border-red-200"
+                                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg border-[0.5px] border-black/50"
                                     >
                                         <Trash2 size={14} />
                                     </button>
@@ -595,7 +595,7 @@ function SellerPolicyEditor({
                             <button
                                 type="button"
                                 onClick={() => addListItem('logistics')}
-                                className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg text-[10px] font-bold text-gray-700"
+                                className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 border-[0.5px] border-black/50 rounded-lg text-[10px] font-bold text-gray-700"
                                 >
                                     <Plus size={12} /> Add SLA Item
                                 </button>
@@ -604,7 +604,7 @@ function SellerPolicyEditor({
                 )}
             </div>
 
-            <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <div className="border-[0.5px] border-black/50 rounded-xl overflow-hidden">
                 {sectionHeader('payouts', 'Section 5: Financial Settlements', '05')}
                 {openSection === 'payouts' && (
                     <div className="p-4 bg-white space-y-4">
@@ -614,7 +614,7 @@ function SellerPolicyEditor({
                                 type="text"
                                 value={data.payouts.title}
                                 onChange={(e) => updateField('payouts', 'title', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm font-semibold text-gray-950"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm font-semibold text-gray-950"
                             />
                         </div>
                         <div>
@@ -622,10 +622,10 @@ function SellerPolicyEditor({
                             <textarea
                                 value={data.payouts.desc}
                                 onChange={(e) => updateField('payouts', 'desc', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm min-h-[100px] font-medium"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm min-h-[100px] font-medium"
                             />
                         </div>
-                        <div className="border-t border-gray-150 pt-4 space-y-3">
+                        <div className="border-t-[0.5px] border-black/50 pt-4 space-y-3">
                             <h4 className="font-bold text-xs text-gray-700">Payout Protocol Card</h4>
                             <div>
                                 <label className="block text-xs text-gray-500 mb-1 font-semibold">Card Protocol Title</label>
@@ -633,7 +633,7 @@ function SellerPolicyEditor({
                                     type="text"
                                     value={data.payouts.cardTitle}
                                     onChange={(e) => updateField('payouts', 'cardTitle', e.target.value)}
-                                    className="w-full p-2.5 border border-gray-300 rounded-lg text-sm font-semibold text-gray-955"
+                                    className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm font-semibold text-gray-955"
                                 />
                             </div>
                             <div>
@@ -641,7 +641,7 @@ function SellerPolicyEditor({
                                 <textarea
                                     value={data.payouts.cardDesc}
                                     onChange={(e) => updateField('payouts', 'cardDesc', e.target.value)}
-                                    className="w-full p-2.5 border border-gray-300 rounded-lg text-sm min-h-[80px] font-medium"
+                                    className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm min-h-[80px] font-medium"
                                 />
                             </div>
                         </div>
@@ -649,7 +649,7 @@ function SellerPolicyEditor({
                 )}
             </div>
 
-            <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <div className="border-[0.5px] border-black/50 rounded-xl overflow-hidden">
                 {sectionHeader('termination', 'Section 6: System Disconnection', '06')}
                 {openSection === 'termination' && (
                     <div className="p-4 bg-white space-y-4">
@@ -659,7 +659,7 @@ function SellerPolicyEditor({
                                 type="text"
                                 value={data.termination.title}
                                 onChange={(e) => updateField('termination', 'title', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm font-semibold text-gray-955"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm font-semibold text-gray-955"
                             />
                         </div>
                         <div>
@@ -667,14 +667,14 @@ function SellerPolicyEditor({
                             <textarea
                                 value={data.termination.desc}
                                 onChange={(e) => updateField('termination', 'desc', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm min-h-[100px] font-medium"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm min-h-[100px] font-medium"
                             />
                         </div>
                     </div>
                 )}
             </div>
 
-            <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <div className="border-[0.5px] border-black/50 rounded-xl overflow-hidden">
                 {sectionHeader('legal', 'Section 7: Dispute Resolution', '07')}
                 {openSection === 'legal' && (
                     <div className="p-4 bg-white space-y-4">
@@ -684,7 +684,7 @@ function SellerPolicyEditor({
                                 type="text"
                                 value={data.legal.title}
                                 onChange={(e) => updateField('legal', 'title', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm font-semibold text-gray-955"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm font-semibold text-gray-955"
                             />
                         </div>
                         <div>
@@ -692,7 +692,7 @@ function SellerPolicyEditor({
                             <textarea
                                 value={data.legal.desc}
                                 onChange={(e) => updateField('legal', 'desc', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm min-h-[100px] font-medium"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm min-h-[100px] font-medium"
                             />
                         </div>
                     </div>
@@ -754,7 +754,7 @@ function DoctorPolicyEditor({
             <button
                 type="button"
                 onClick={() => setOpenSection(isOpen ? '' : id)}
-                className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition rounded-xl font-bold text-gray-900 text-sm border border-gray-200"
+                className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition rounded-xl font-bold text-gray-900 text-sm border-[0.5px] border-black/50"
             >
                 <div className="flex items-center gap-3">
                     <span className="text-gray-400 text-xs font-mono">{num}</span>
@@ -767,11 +767,11 @@ function DoctorPolicyEditor({
 
     return (
         <div className="space-y-4">
-            <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <div className="border-[0.5px] border-black/50 rounded-xl overflow-hidden">
                 <button
                     type="button"
                     onClick={() => setOpenSection(openSection === 'intro' ? '' : 'intro')}
-                    className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition font-bold text-gray-900 text-sm border-b border-gray-200"
+                    className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition font-bold text-gray-900 text-sm border-b-[0.5px] border-black/50"
                 >
                     <div className="flex items-center gap-3">
                         <span className="text-gray-400 text-xs font-mono">00</span>
@@ -785,13 +785,13 @@ function DoctorPolicyEditor({
                         <textarea
                             value={data.intro}
                             onChange={(e) => updateField('intro', '', e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg text-sm min-h-[80px] text-gray-800 focus:ring-2 focus:ring-cureza-green focus:border-transparent outline-none font-medium"
+                            className="w-full p-3 border-[0.5px] border-black/50 rounded-lg text-sm min-h-[80px] text-gray-800 focus:ring-2 focus:ring-cureza-green focus:border-transparent outline-none font-medium"
                         />
                     </div>
                 )}
             </div>
 
-            <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <div className="border-[0.5px] border-black/50 rounded-xl overflow-hidden">
                 {sectionHeader('overview', 'Section 1: Protocol Overview', '01')}
                 {openSection === 'overview' && (
                     <div className="p-4 bg-white space-y-4">
@@ -801,7 +801,7 @@ function DoctorPolicyEditor({
                                 type="text"
                                 value={data.overview.title}
                                 onChange={(e) => updateField('overview', 'title', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm font-semibold text-gray-955"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm font-semibold text-gray-955"
                             />
                         </div>
                         <div>
@@ -809,14 +809,14 @@ function DoctorPolicyEditor({
                             <textarea
                                 value={data.overview.desc}
                                 onChange={(e) => updateField('overview', 'desc', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm min-h-[100px] font-medium"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm min-h-[100px] font-medium"
                             />
                         </div>
                     </div>
                 )}
             </div>
 
-            <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <div className="border-[0.5px] border-black/50 rounded-xl overflow-hidden">
                 {sectionHeader('onboarding', 'Section 2: Medical Verification', '02')}
                 {openSection === 'onboarding' && (
                     <div className="p-4 bg-white space-y-4">
@@ -826,7 +826,7 @@ function DoctorPolicyEditor({
                                 type="text"
                                 value={data.onboarding.title}
                                 onChange={(e) => updateField('onboarding', 'title', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm font-semibold text-gray-955"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm font-semibold text-gray-955"
                             />
                         </div>
                         <div>
@@ -834,10 +834,10 @@ function DoctorPolicyEditor({
                             <textarea
                                 value={data.onboarding.desc}
                                 onChange={(e) => updateField('onboarding', 'desc', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm min-h-[100px] font-medium"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm min-h-[100px] font-medium"
                             />
                         </div>
-                        <div className="border-t border-gray-150 pt-4 space-y-3">
+                        <div className="border-t-[0.5px] border-black/50 pt-4 space-y-3">
                             <h4 className="font-bold text-xs text-gray-700">Verification Requirements Checklist Card</h4>
                             <div>
                                 <label className="block text-xs text-gray-500 mb-1 font-semibold">Card Title</label>
@@ -845,7 +845,7 @@ function DoctorPolicyEditor({
                                     type="text"
                                     value={data.onboarding.cardTitle}
                                     onChange={(e) => updateField('onboarding', 'cardTitle', e.target.value)}
-                                    className="w-full p-2.5 border border-gray-300 rounded-lg text-sm font-semibold text-gray-955"
+                                    className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm font-semibold text-gray-955"
                                 />
                             </div>
                             <div className="space-y-2">
@@ -856,12 +856,12 @@ function DoctorPolicyEditor({
                                             type="text"
                                             value={item}
                                             onChange={(e) => updateListItem(idx, e.target.value)}
-                                            className="flex-1 p-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-800"
+                                            className="flex-1 p-2 border-[0.5px] border-black/50 rounded-lg text-xs font-semibold text-gray-800"
                                         />
                                         <button
                                             type="button"
                                             onClick={() => removeListItem(idx)}
-                                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg border border-red-200"
+                                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg border-[0.5px] border-black/50"
                                         >
                                             <Trash2 size={14} />
                                         </button>
@@ -870,7 +870,7 @@ function DoctorPolicyEditor({
                                 <button
                                     type="button"
                                     onClick={addListItem}
-                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg text-[10px] font-bold text-gray-700"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 border-[0.5px] border-black/50 rounded-lg text-[10px] font-bold text-gray-700"
                                 >
                                     <Plus size={12} /> Add Verification Item
                                 </button>
@@ -880,7 +880,7 @@ function DoctorPolicyEditor({
                 )}
             </div>
 
-            <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <div className="border-[0.5px] border-black/50 rounded-xl overflow-hidden">
                 {sectionHeader('fees', 'Section 3: Consultation Payouts', '03')}
                 {openSection === 'fees' && (
                     <div className="p-4 bg-white space-y-4">
@@ -890,7 +890,7 @@ function DoctorPolicyEditor({
                                 type="text"
                                 value={data.fees.title}
                                 onChange={(e) => updateField('fees', 'title', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm font-semibold text-gray-955"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm font-semibold text-gray-955"
                             />
                         </div>
                         <div>
@@ -898,14 +898,14 @@ function DoctorPolicyEditor({
                             <textarea
                                 value={data.fees.desc}
                                 onChange={(e) => updateField('fees', 'desc', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm min-h-[100px] font-medium"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm min-h-[100px] font-medium"
                             />
                         </div>
                     </div>
                 )}
             </div>
 
-            <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <div className="border-[0.5px] border-black/50 rounded-xl overflow-hidden">
                 {sectionHeader('shipping', 'Section 4: Prescription Verification', '04')}
                 {openSection === 'shipping' && (
                     <div className="p-4 bg-white space-y-4">
@@ -915,7 +915,7 @@ function DoctorPolicyEditor({
                                 type="text"
                                 value={data.shipping.title}
                                 onChange={(e) => updateField('shipping', 'title', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm font-semibold text-gray-955"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm font-semibold text-gray-955"
                             />
                         </div>
                         <div>
@@ -923,14 +923,14 @@ function DoctorPolicyEditor({
                             <textarea
                                 value={data.shipping.desc}
                                 onChange={(e) => updateField('shipping', 'desc', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm min-h-[100px] font-medium"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm min-h-[100px] font-medium"
                             />
                         </div>
                     </div>
                 )}
             </div>
 
-            <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <div className="border-[0.5px] border-black/50 rounded-xl overflow-hidden">
                 {sectionHeader('termination', 'Section 5: Account Deactivation', '05')}
                 {openSection === 'termination' && (
                     <div className="p-4 bg-white space-y-4">
@@ -940,7 +940,7 @@ function DoctorPolicyEditor({
                                 type="text"
                                 value={data.termination.title}
                                 onChange={(e) => updateField('termination', 'title', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm font-semibold text-gray-955"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm font-semibold text-gray-955"
                             />
                         </div>
                         <div>
@@ -948,14 +948,14 @@ function DoctorPolicyEditor({
                             <textarea
                                 value={data.termination.desc}
                                 onChange={(e) => updateField('termination', 'desc', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm min-h-[100px] font-medium"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm min-h-[100px] font-medium"
                             />
                         </div>
                     </div>
                 )}
             </div>
 
-            <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <div className="border-[0.5px] border-black/50 rounded-xl overflow-hidden">
                 {sectionHeader('legal', 'Section 6: Governing Law', '06')}
                 {openSection === 'legal' && (
                     <div className="p-4 bg-white space-y-4">
@@ -965,7 +965,7 @@ function DoctorPolicyEditor({
                                 type="text"
                                 value={data.legal.title}
                                 onChange={(e) => updateField('legal', 'title', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm font-semibold text-gray-955"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm font-semibold text-gray-955"
                             />
                         </div>
                         <div>
@@ -973,7 +973,7 @@ function DoctorPolicyEditor({
                             <textarea
                                 value={data.legal.desc}
                                 onChange={(e) => updateField('legal', 'desc', e.target.value)}
-                                className="w-full p-2.5 border border-gray-300 rounded-lg text-sm min-h-[100px] font-medium"
+                                className="w-full p-2.5 border-[0.5px] border-black/50 rounded-lg text-sm min-h-[100px] font-medium"
                             />
                         </div>
                     </div>
@@ -1119,18 +1119,18 @@ export default function AdminLegalSettingsPage() {
         <div className="max-w-5xl space-y-6 pb-20">
             {/* Header */}
             {!selectedPage ? (
-                <div className="flex justify-between items-center border-b border-black/10 pb-5">
+                <div className="flex justify-between items-center border-b-[0.5px] border-black/10 pb-5">
                     <div>
                         <h2 className="text-sm font-medium text-neutral-900 tracking-tight">Legal & Policy Pages</h2>
                         <p className="text-neutral-500 text-xs mt-0.5">Manage content, terms, and agreements across the Cureza marketplace</p>
                     </div>
                 </div>
             ) : (
-                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-black/10 pb-5">
+                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b-[0.5px] border-black/10 pb-5">
                     <div className="flex items-center gap-4">
                         <button 
                             onClick={handleBack}
-                            className="p-2 hover:bg-neutral-50 rounded-[10px] text-neutral-600 transition-colors border border-black/10"
+                            className="p-2 hover:bg-neutral-50 rounded-[10px] text-neutral-600 transition-colors border-[0.5px] border-black/10"
                         >
                             <ArrowLeft size={16} />
                         </button>
@@ -1138,12 +1138,12 @@ export default function AdminLegalSettingsPage() {
                             <div className="flex items-center gap-2">
                                 <h3 className="font-semibold text-neutral-900 text-sm">{selectedPage.title}</h3>
                                 <span className={`px-2 py-0.5 text-[10px] font-medium rounded-full ${
-                                    editStatus === 'Published' ? 'bg-green-50 text-green-700 border border-green-150' : 'bg-neutral-100 text-neutral-800 border border-black/5'
+                                    editStatus === 'Published' ? 'bg-green-50 text-green-700 border-[0.5px] border-black/50' : 'bg-neutral-100 text-neutral-800 border-[0.5px] border-black/5'
                                 }`}>
                                     {editStatus}
                                 </span>
                             </div>
-                            <p className="text-neutral-450 text-[10px] mt-0.5">Slug: <span className="font-mono text-neutral-700 bg-neutral-50 px-1.5 py-0.5 rounded-[10px] border border-black/5">{editSlug}</span></p>
+                            <p className="text-neutral-450 text-[10px] mt-0.5">Slug: <span className="font-mono text-neutral-700 bg-neutral-50 px-1.5 py-0.5 rounded-[10px] border-[0.5px] border-black/5">{editSlug}</span></p>
                         </div>
                     </div>
                     
@@ -1152,7 +1152,7 @@ export default function AdminLegalSettingsPage() {
                             <Link 
                                 href={getPublicUrl(editSlug)} 
                                 target="_blank"
-                                className="px-3 py-1.5 border border-black/10 text-neutral-700 rounded-[10px] flex items-center justify-center gap-1.5 font-medium text-xs hover:bg-neutral-50 transition-colors"
+                                className="px-3 py-1.5 border-[0.5px] border-black/10 text-neutral-700 rounded-[10px] flex items-center justify-center gap-1.5 font-medium text-xs hover:bg-neutral-50 transition-colors"
                             >
                                 <ExternalLink size={14} />
                                 View Public Page
@@ -1172,13 +1172,13 @@ export default function AdminLegalSettingsPage() {
 
             {/* Alert Notifications */}
             {successMessage && (
-                <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-lg shadow-sm flex items-center gap-3">
+                <div className="bg-green-50 border-l-4 border-black/50 p-4 rounded-lg shadow-none flex items-center gap-3 border-[0.5px]">
                     <CheckCircle className="text-green-500 flex-shrink-0" size={20} />
                     <span className="text-green-800 text-sm font-medium">{successMessage}</span>
                 </div>
             )}
             {errorMessage && (
-                <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg shadow-sm flex items-center gap-3">
+                <div className="bg-red-50 border-l-4 border-black/50 p-4 rounded-lg shadow-none flex items-center gap-3 border-[0.5px]">
                     <AlertCircle className="text-red-500 flex-shrink-0" size={20} />
                     <span className="text-red-800 text-sm font-medium">{errorMessage}</span>
                 </div>
@@ -1194,7 +1194,7 @@ export default function AdminLegalSettingsPage() {
                             className="bg-white p-5 rounded-[10px] border-[0.5px] border-black/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-black/35 transition-all shadow-none"
                         >
                             <div className="flex items-start gap-4">
-                                <div className="p-3 bg-neutral-50 text-neutral-600 rounded-[10px] border border-black/5 flex-shrink-0">
+                                <div className="p-3 bg-neutral-50 text-neutral-600 rounded-[10px] border-[0.5px] border-black/5 flex-shrink-0">
                                     <FileText size={20} className="text-neutral-900" />
                                 </div>
                                 <div className="space-y-1">
@@ -1210,11 +1210,11 @@ export default function AdminLegalSettingsPage() {
                                 </div>
                             </div>
                             
-                            <div className="flex items-center gap-3 justify-end border-t sm:border-0 pt-3 sm:pt-0 border-black/5">
+                            <div className="flex items-center gap-3 justify-end border-t-[0.5px] sm:border-0 pt-3 sm:pt-0 border-black/5">
                                 <span className={`px-2 py-0.5 text-[10px] font-medium rounded-full flex items-center gap-1.5 ${
                                     page.status === 'Published' 
-                                        ? 'bg-green-50 text-green-700 border border-green-150' 
-                                        : 'bg-neutral-100 text-neutral-600 border border-black/5'
+                                        ? 'bg-green-50 text-green-700 border-[0.5px] border-black/50' 
+                                        : 'bg-neutral-100 text-neutral-600 border-[0.5px] border-black/5'
                                 }`}>
                                     {page.status === 'Published' ? <Globe size={10} /> : <Lock size={10} />}
                                     {page.status}
@@ -1224,7 +1224,7 @@ export default function AdminLegalSettingsPage() {
                                         <Link 
                                             href={getPublicUrl(page.slug)} 
                                             target="_blank"
-                                            className="p-1.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-50 rounded-[10px] transition-colors border border-black/10"
+                                            className="p-1.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-50 rounded-[10px] transition-colors border-[0.5px] border-black/10"
                                             title="View published page"
                                         >
                                             <Eye size={14} />
@@ -1232,7 +1232,7 @@ export default function AdminLegalSettingsPage() {
                                     )}
                                     <button 
                                         onClick={() => handleSelectPage(page)}
-                                        className="p-1.5 text-black hover:bg-neutral-50 border border-black/10 rounded-[10px] transition-colors flex items-center gap-1 font-medium text-xs"
+                                        className="p-1.5 text-black hover:bg-neutral-50 border-[0.5px] border-black/10 rounded-[10px] transition-colors flex items-center gap-1 font-medium text-xs"
                                         title="Edit page content"
                                     >
                                         <Edit size={12} />
@@ -1249,7 +1249,7 @@ export default function AdminLegalSettingsPage() {
                     {/* Main Content Editor */}
                     <div className="lg:col-span-2 space-y-6">
                         <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 p-6 space-y-4 shadow-none">
-                            <h3 className="font-medium text-neutral-900 text-sm border-b border-black/10 pb-2">Policy Content Editor</h3>
+                            <h3 className="font-medium text-neutral-900 text-sm border-b-[0.5px] border-black/10 pb-2">Policy Content Editor</h3>
                             
                             {editSlug === 'seller-policy' && structuredSellerData ? (
                                 <SellerPolicyEditor 
@@ -1275,7 +1275,7 @@ export default function AdminLegalSettingsPage() {
                     {/* Metadata & Options Sidebar */}
                     <div className="space-y-6">
                         <div className="bg-white rounded-[10px] border-[0.5px] border-black/10 p-6 space-y-4 shadow-none">
-                            <h3 className="font-medium text-neutral-900 text-sm border-b border-black/10 pb-2">Page Settings</h3>
+                            <h3 className="font-medium text-neutral-900 text-sm border-b-[0.5px] border-black/10 pb-2">Page Settings</h3>
                             
                             <div className="space-y-4 text-xs font-normal text-neutral-700">
                                 <div>
@@ -1284,7 +1284,7 @@ export default function AdminLegalSettingsPage() {
                                         type="text" 
                                         value={editTitle}
                                         onChange={(e) => setEditTitle(e.target.value)}
-                                        className="w-full px-3 py-2 border border-black/10 rounded-[10px] text-neutral-950 focus:border-black outline-none bg-white text-xs font-normal"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-neutral-950 focus:border-black outline-none bg-white text-xs font-normal"
                                         placeholder="Privacy Policy"
                                     />
                                 </div>
@@ -1295,7 +1295,7 @@ export default function AdminLegalSettingsPage() {
                                         type="text" 
                                         value={editSlug}
                                         onChange={(e) => setEditSlug(e.target.value)}
-                                        className="w-full px-3 py-2 border border-black/10 rounded-[10px] font-mono text-neutral-450 outline-none bg-neutral-50 text-xs"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] font-mono text-neutral-450 outline-none bg-neutral-50 text-xs"
                                         placeholder="privacy-policy"
                                         disabled
                                     />
@@ -1307,7 +1307,7 @@ export default function AdminLegalSettingsPage() {
                                     <textarea 
                                         value={editDescription}
                                         onChange={(e) => setEditDescription(e.target.value)}
-                                        className="w-full px-3 py-2 border border-black/10 rounded-[10px] font-normal text-neutral-700 focus:border-black outline-none bg-white min-h-[80px]"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] font-normal text-neutral-700 focus:border-black outline-none bg-white min-h-[80px]"
                                         placeholder="Short SEO meta description for this page..."
                                     />
                                 </div>
@@ -1317,7 +1317,7 @@ export default function AdminLegalSettingsPage() {
                                     <select 
                                         value={editStatus}
                                         onChange={(e) => setEditStatus(e.target.value as 'Published' | 'Draft')}
-                                        className="w-full px-3 py-2 border border-black/10 rounded-[10px] text-neutral-900 bg-white focus:border-black outline-none text-xs"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] text-neutral-900 bg-white focus:border-black outline-none text-xs"
                                     >
                                         <option value="Published">Published (Publicly Visible)</option>
                                         <option value="Draft">Draft (Restricted/Private)</option>
@@ -1327,7 +1327,7 @@ export default function AdminLegalSettingsPage() {
                         </div>
 
                         {/* Tips card */}
-                        <div className="bg-neutral-50 text-neutral-900 p-5 rounded-[10px] border border-black/10 shadow-none space-y-3">
+                        <div className="bg-neutral-50 text-neutral-900 p-5 rounded-[10px] border-[0.5px] border-black/10 shadow-none space-y-3">
                             <h4 className="font-medium text-xs text-neutral-850">SEO & Styling Tips</h4>
                             <ul className="list-disc pl-4 text-[10px] space-y-1.5 text-neutral-600 font-normal leading-relaxed">
                                 <li>Use **Heading 2** (`H2`) for primary policy chapters and **Heading 3** (`H3`) for detailed sub-sections.</li>

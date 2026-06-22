@@ -43,14 +43,14 @@ export default function AdminReferralsPage() {
     return (
         <div className="space-y-6">
             {/* Filters */}
-            <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 flex flex-col sm:flex-row gap-3 items-center justify-between">
+            <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-black/50 flex flex-col sm:flex-row gap-3 items-center justify-between">
                 <form onSubmit={handleSearchSubmit} className="flex gap-2 w-full sm:max-w-md">
                     <input
                         type="text"
                         placeholder="Search by referrer or referee..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white"
+                        className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white"
                     />
                     <button type="submit" className="bg-black text-white px-3 py-1.5 rounded-[10px] text-xs font-medium hover:bg-neutral-800 transition-colors">
                         Search
@@ -61,7 +61,7 @@ export default function AdminReferralsPage() {
                     <select
                         value={status}
                         onChange={(e) => { setStatus(e.target.value); setPage(1); }}
-                        className="px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white"
+                        className="px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white"
                     >
                         <option value="">All Referrals</option>
                         <option value="pending">Pending Purchase</option>
@@ -71,7 +71,7 @@ export default function AdminReferralsPage() {
             </div>
 
             {/* Referrals Table */}
-            <div className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 overflow-hidden">
+            <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 overflow-hidden">
                 {loading ? (
                     <div className="p-8 text-center text-xs text-gray-500 animate-pulse">Loading referrals logs...</div>
                 ) : referrals.length === 0 ? (
@@ -79,7 +79,7 @@ export default function AdminReferralsPage() {
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-xs">
-                            <thead className="bg-neutral-50 border-b-[0.5px] border-neutral-950/10 text-gray-500 font-medium">
+                            <thead className="bg-neutral-50 border-b-[0.5px] border-black/50 text-gray-500 font-medium">
                                 <tr>
                                     <th className="p-3">Referrer (Invited By)</th>
                                     <th></th>
@@ -117,15 +117,15 @@ export default function AdminReferralsPage() {
                                                 </div>
                                             </td>
                                             <td className="p-3">
-                                                <code className="bg-neutral-50 px-2 py-0.5 rounded-[6px] border-[0.5px] border-neutral-950/10 text-xs font-mono text-gray-800 font-semibold">
+                                                <code className="bg-neutral-50 px-2 py-0.5 rounded-[6px] border-[0.5px] border-black/50 text-xs font-mono text-gray-800 font-semibold">
                                                     {item.referral_code}
                                                 </code>
                                             </td>
                                             <td className="p-3">
                                                 <span className={`inline-block text-[10px] font-medium px-2 py-0.5 rounded-[6px] border-[0.5px] ${
                                                     isCompleted
-                                                        ? 'bg-green-50 text-green-800 border-green-200/50'
-                                                        : 'bg-neutral-50 text-neutral-600 border-neutral-950/10'
+                                                        ? 'bg-green-50 text-green-800 border-black/50'
+                                                        : 'bg-neutral-50 text-neutral-600 border-black/50'
                                                 }`}>
                                                     {isCompleted ? 'Completed' : 'Pending Order'}
                                                 </span>
@@ -151,7 +151,7 @@ export default function AdminReferralsPage() {
                         <button
                             disabled={page <= 1}
                             onClick={() => setPage(page - 1)}
-                            className="px-2.5 py-1 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs font-medium hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            className="px-2.5 py-1 border-[0.5px] border-black/50 rounded-[10px] text-xs font-medium hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                             Previous
                         </button>
@@ -159,7 +159,7 @@ export default function AdminReferralsPage() {
                         <button
                             disabled={page >= pagination.last_page}
                             onClick={() => setPage(page + 1)}
-                            className="px-2.5 py-1 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs font-medium hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            className="px-2.5 py-1 border-[0.5px] border-black/50 rounded-[10px] text-xs font-medium hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                             Next
                         </button>

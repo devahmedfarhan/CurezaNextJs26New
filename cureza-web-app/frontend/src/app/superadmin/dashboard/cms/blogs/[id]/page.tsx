@@ -240,7 +240,7 @@ export default function EditBlogPostPage() {
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                     <Link href="/superadmin/dashboard/cms/blogs">
-                        <Button variant="outline" size="icon" className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none h-8 w-8 hover:bg-gray-100">
+                        <Button variant="outline" size="icon" className="rounded-[10px] border-[0.5px] border-black/50 shadow-none h-8 w-8 hover:bg-gray-100">
                             <ArrowLeft className="h-4 w-4 text-black" />
                         </Button>
                     </Link>
@@ -269,7 +269,7 @@ export default function EditBlogPostPage() {
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, title: e.target.value })}
                             placeholder="Enter post title"
                             required
-                            className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                            className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                         />
                     </div>
 
@@ -281,13 +281,13 @@ export default function EditBlogPostPage() {
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, slug: e.target.value })}
                             placeholder="url-friendly-slug"
                             required
-                            className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                            className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                         />
                     </div>
 
                     <div className="space-y-2">
                         <Label className="text-xs font-medium text-gray-700">Content</Label>
-                        <div className="border-[0.5px] border-gray-200/50 rounded-[10px] overflow-hidden">
+                        <div className="border-[0.5px] border-black/50 rounded-[10px] overflow-hidden">
                             <TiptapEditor
                                 content={formData.content}
                                 onChange={(content) => setFormData({ ...formData, content })}
@@ -303,11 +303,11 @@ export default function EditBlogPostPage() {
                             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData({ ...formData, excerpt: e.target.value })}
                             placeholder="Short summary of the post..."
                             rows={3}
-                            className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                            className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                         />
                     </div>
 
-                    <div className="border-[0.5px] border-gray-200/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
+                    <div className="border-[0.5px] border-black/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
                         <h3 className="font-medium text-base text-black">Fact-Checking & Reviewer Details</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
@@ -317,7 +317,7 @@ export default function EditBlogPostPage() {
                                     value={formData.fact_checked_by}
                                     onChange={(e) => setFormData({ ...formData, fact_checked_by: e.target.value })}
                                     placeholder="e.g. Dr. Anjali Sharma"
-                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                    className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
                             <div className="space-y-2">
@@ -327,7 +327,7 @@ export default function EditBlogPostPage() {
                                     value={formData.fact_checker_title}
                                     onChange={(e) => setFormData({ ...formData, fact_checker_title: e.target.value })}
                                     placeholder="e.g. BAMS, MD (Ayurveda)"
-                                    className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                    className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                                 />
                             </div>
                         </div>
@@ -340,7 +340,7 @@ export default function EditBlogPostPage() {
                                 onChange={(e) => setFormData({ ...formData, fact_checker_credentials: e.target.value })}
                                 placeholder="e.g. 15+ years experience in clinical Panchakarma..."
                                 rows={2}
-                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                             />
                         </div>
 
@@ -355,10 +355,10 @@ export default function EditBlogPostPage() {
                                         setFormData({ ...formData, fact_checker_image: e.target.files[0] });
                                     }
                                 }}
-                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black file:mr-4 file:py-1 file:px-3 file:rounded-[10px] file:border-[0.5px] file:border-gray-200 file:bg-gray-50 file:text-xs file:font-medium"
+                                className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black file:mr-4 file:py-1 file:px-3 file:rounded-[10px] file:border-[0.5px] file:border-gray-200 file:bg-gray-50 file:text-xs file:font-medium"
                             />
                             {formData.fact_checker_image && (
-                                <div className="mt-2 w-16 h-16 rounded-full overflow-hidden border-[0.5px] border-gray-200/50">
+                                <div className="mt-2 w-16 h-16 rounded-full overflow-hidden border-[0.5px] border-black/50">
                                     <img
                                         src={
                                             formData.fact_checker_image instanceof File
@@ -375,7 +375,7 @@ export default function EditBlogPostPage() {
                         </div>
                     </div>
 
-                    <div className="border-[0.5px] border-gray-200/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
+                    <div className="border-[0.5px] border-black/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
                         <div className="flex justify-between items-center">
                             <h3 className="font-medium text-base text-black">Citations & Scientific References</h3>
                             <Button 
@@ -388,7 +388,7 @@ export default function EditBlogPostPage() {
                                         citations: [...formData.citations, { title: '', url: '', source: '' }]
                                     });
                                 }}
-                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs font-medium text-black bg-white hover:bg-gray-50"
+                                className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-xs font-medium text-black bg-white hover:bg-gray-50"
                             >
                                 <Plus className="mr-1 h-3.5 w-3.5" /> Add Citation
                             </Button>
@@ -399,7 +399,7 @@ export default function EditBlogPostPage() {
                         ) : (
                             <div className="space-y-3">
                                 {formData.citations.map((citation, idx) => (
-                                    <div key={idx} className="flex gap-3 items-end border-b-[0.5px] border-gray-150 pb-3 last:border-0 last:pb-0">
+                                    <div key={idx} className="flex gap-3 items-end border-b-[0.5px] border-black/50 pb-3 last:border-0 last:pb-0">
                                         <div className="flex-1 space-y-1">
                                             <Label className="text-[10px] font-medium text-gray-500">Citation Title</Label>
                                             <Input
@@ -410,7 +410,7 @@ export default function EditBlogPostPage() {
                                                     setFormData({ ...formData, citations: updated });
                                                 }}
                                                 placeholder="e.g. Clinical study of Amla"
-                                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs focus-visible:ring-1 focus-visible:ring-black"
+                                                className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-xs focus-visible:ring-1 focus-visible:ring-black"
                                             />
                                         </div>
                                         <div className="flex-1 space-y-1">
@@ -423,7 +423,7 @@ export default function EditBlogPostPage() {
                                                     setFormData({ ...formData, citations: updated });
                                                 }}
                                                 placeholder="https://pubmed..."
-                                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs focus-visible:ring-1 focus-visible:ring-black"
+                                                className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-xs focus-visible:ring-1 focus-visible:ring-black"
                                             />
                                         </div>
                                         <div className="w-1/4 space-y-1">
@@ -436,7 +436,7 @@ export default function EditBlogPostPage() {
                                                     setFormData({ ...formData, citations: updated });
                                                 }}
                                                 placeholder="PubMed"
-                                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-xs focus-visible:ring-1 focus-visible:ring-black"
+                                                className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-xs focus-visible:ring-1 focus-visible:ring-black"
                                             />
                                         </div>
                                         <Button
@@ -456,14 +456,14 @@ export default function EditBlogPostPage() {
                         )}
                     </div>
 
-                    <div className="border-[0.5px] border-gray-200/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
+                    <div className="border-[0.5px] border-black/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
                         <h3 className="font-medium text-base text-black">Recommended Products</h3>
                         <div className="space-y-2">
                             <Label className="text-xs font-medium text-gray-700">Select Products to Recommend (Grouped by Category)</Label>
-                            <div className="space-y-6 max-h-96 overflow-y-auto p-4 border-[0.5px] border-gray-200/50 rounded-[10px] bg-gray-50/50">
+                            <div className="space-y-6 max-h-96 overflow-y-auto p-4 border-[0.5px] border-black/50 rounded-[10px] bg-gray-50/50">
                                 {Object.entries(groupedProducts).map(([categoryName, items]) => (
                                     <div key={categoryName} className="space-y-2">
-                                        <h4 className="text-xs font-medium text-black border-b-[0.5px] border-gray-200/50 pb-1 mb-2">
+                                        <h4 className="text-xs font-medium text-black border-b-[0.5px] border-black/50 pb-1 mb-2">
                                             {categoryName}
                                         </h4>
                                         <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -473,7 +473,7 @@ export default function EditBlogPostPage() {
                                                     className={`flex items-center space-x-2 p-2 rounded-[10px] border-[0.5px] cursor-pointer transition-colors ${
                                                         formData.recommended_products.includes(product.id)
                                                             ? "bg-black text-white border-black"
-                                                            : "bg-white hover:bg-gray-50 border-gray-150 text-gray-900"
+                                                            : "bg-white hover:bg-gray-50 border-black/50 text-gray-900"
                                                     }`}
                                                     onClick={() => {
                                                         const isSelected = formData.recommended_products.includes(product.id);
@@ -487,7 +487,7 @@ export default function EditBlogPostPage() {
                                                         type="checkbox"
                                                         checked={formData.recommended_products.includes(product.id)}
                                                         onChange={() => {}} // handled by div click
-                                                        className="h-3.5 w-3.5 text-black border-gray-300 rounded focus:ring-black accent-black"
+                                                        className="h-3.5 w-3.5 text-black border-black/50 rounded focus:ring-black accent-black"
                                                     />
                                                     <span className="text-xs font-medium truncate">{product.title}</span>
                                                 </div>
@@ -499,7 +499,7 @@ export default function EditBlogPostPage() {
                         </div>
                     </div>
 
-                    <div className="border-[0.5px] border-gray-200/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
+                    <div className="border-[0.5px] border-black/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
                         <h3 className="font-medium text-base text-black">SEO Settings</h3>
                         <div className="space-y-2">
                             <Label htmlFor="meta_title" className="text-xs font-medium text-gray-700">Meta Title</Label>
@@ -508,7 +508,7 @@ export default function EditBlogPostPage() {
                                 value={formData.meta_title}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, meta_title: e.target.value })}
                                 placeholder="SEO Title"
-                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                             />
                         </div>
                         <div className="space-y-2">
@@ -519,7 +519,7 @@ export default function EditBlogPostPage() {
                                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData({ ...formData, meta_description: e.target.value })}
                                 placeholder="SEO Description"
                                 rows={2}
-                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                             />
                         </div>
                         <div className="space-y-2">
@@ -529,14 +529,14 @@ export default function EditBlogPostPage() {
                                 value={formData.meta_keywords}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, meta_keywords: e.target.value })}
                                 placeholder="keyword1, keyword2, keyword3"
-                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                                className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                             />
                         </div>
                     </div>
                 </div>
 
                 <div className="space-y-6">
-                    <div className="border-[0.5px] border-gray-200/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
+                    <div className="border-[0.5px] border-black/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
                         <h3 className="font-medium text-base text-black">Publishing</h3>
                         <div className="space-y-2">
                             <Label className="text-xs font-medium text-gray-700">Status</Label>
@@ -544,10 +544,10 @@ export default function EditBlogPostPage() {
                                 value={formData.status}
                                 onValueChange={(value: string) => setFormData({ ...formData, status: value })}
                             >
-                                <SelectTrigger className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm focus:ring-1 focus:ring-black">
+                                <SelectTrigger className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm focus:ring-1 focus:ring-black">
                                     <SelectValue placeholder="Select status" />
                                 </SelectTrigger>
-                                <SelectContent className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none">
+                                <SelectContent className="rounded-[10px] border-[0.5px] border-black/50 shadow-none">
                                     <SelectItem value="draft">Draft</SelectItem>
                                     <SelectItem value="published">Published</SelectItem>
                                     <SelectItem value="archived">Archived</SelectItem>
@@ -566,7 +566,7 @@ export default function EditBlogPostPage() {
                         </div>
                     </div>
 
-                    <div className="border-[0.5px] border-gray-200/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
+                    <div className="border-[0.5px] border-black/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
                         <h3 className="font-medium text-base text-black">Organization</h3>
                         <div className="space-y-2">
                             <Label className="text-xs font-medium text-gray-700">Category</Label>
@@ -574,10 +574,10 @@ export default function EditBlogPostPage() {
                                 value={formData.category_id}
                                 onValueChange={(value: string) => setFormData({ ...formData, category_id: value })}
                             >
-                                <SelectTrigger className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm focus:ring-1 focus:ring-black">
+                                <SelectTrigger className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm focus:ring-1 focus:ring-black">
                                     <SelectValue placeholder="Select category" />
                                 </SelectTrigger>
-                                <SelectContent className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none">
+                                <SelectContent className="rounded-[10px] border-[0.5px] border-black/50 shadow-none">
                                     {categories.map((category) => (
                                         <SelectItem key={category.id} value={category.id.toString()}>
                                             {category.name}
@@ -593,10 +593,10 @@ export default function EditBlogPostPage() {
                                 value={formData.author_id}
                                 onValueChange={(value: string) => setFormData({ ...formData, author_id: value })}
                             >
-                                <SelectTrigger className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm focus:ring-1 focus:ring-black">
+                                <SelectTrigger className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm focus:ring-1 focus:ring-black">
                                     <SelectValue placeholder="Select author" />
                                 </SelectTrigger>
-                                <SelectContent className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none">
+                                <SelectContent className="rounded-[10px] border-[0.5px] border-black/50 shadow-none">
                                     {authors.map((author) => (
                                         <SelectItem key={author.id} value={author.id.toString()}>
                                             {author.name}
@@ -616,7 +616,7 @@ export default function EditBlogPostPage() {
                                         className={`cursor-pointer rounded-[10px] px-2 py-0.5 border-[0.5px] font-normal text-xs shadow-none transition-colors ${
                                             formData.tags.includes(tag.id)
                                                 ? 'bg-black text-white border-black'
-                                                : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+                                                : 'bg-white text-gray-700 border-black/50 hover:bg-gray-50'
                                         }`}
                                         onClick={() => {
                                             const newTags = formData.tags.includes(tag.id)
@@ -632,10 +632,10 @@ export default function EditBlogPostPage() {
                         </div>
                     </div>
 
-                    <div className="border-[0.5px] border-gray-200/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
+                    <div className="border-[0.5px] border-black/50 rounded-[10px] p-6 space-y-4 bg-white shadow-none">
                         <h3 className="font-medium text-base text-black">Featured Image</h3>
                         <div className="space-y-2">
-                            <Label htmlFor="featured_image" className="text-xs font-medium text-gray-700 font-medium">Featured Image</Label>
+                            <Label htmlFor="featured_image" className="text-xs font-medium text-gray-700">Featured Image</Label>
                             <Input
                                 id="featured_image"
                                 type="file"
@@ -645,11 +645,11 @@ export default function EditBlogPostPage() {
                                         setFormData({ ...formData, featured_image: e.target.files[0] });
                                     }
                                 }}
-                                className="rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black file:mr-4 file:py-1 file:px-3 file:rounded-[10px] file:border-[0.5px] file:border-gray-200 file:bg-gray-50 file:text-xs file:font-medium"
+                                className="rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black file:mr-4 file:py-1 file:px-3 file:rounded-[10px] file:border-[0.5px] file:border-gray-200 file:bg-gray-50 file:text-xs file:font-medium"
                             />
                         </div>
                         {formData.featured_image && (
-                            <div className="mt-2 relative aspect-video rounded-[10px] overflow-hidden border-[0.5px] border-gray-200/50">
+                            <div className="mt-2 relative aspect-video rounded-[10px] overflow-hidden border-[0.5px] border-black/50">
                                 <img
                                     src={
                                         formData.featured_image instanceof File

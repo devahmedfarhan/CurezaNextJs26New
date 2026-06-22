@@ -15,7 +15,7 @@ export default function AdminReviewsPage() {
 
             <div className="grid grid-cols-1 gap-6">
                 {[1, 2, 3].map((i) => (
-                    <div key={i} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <div key={i} className="bg-white p-6 rounded-xl border-[0.5px] border-black/50 shadow-none">
                         <div className="flex justify-between items-start mb-4">
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 font-bold text-lg">
@@ -45,7 +45,7 @@ export default function AdminReviewsPage() {
                         </div>
 
                         <div className="flex justify-end gap-3">
-                            <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700">
+                            <button className="flex items-center gap-2 px-4 py-2 border-[0.5px] border-black/50 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700">
                                 <MessageCircle size={16} /> Reply
                             </button>
                             <button className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 text-sm font-medium">

@@ -80,6 +80,9 @@ interface Payout {
         seller_wallet?: {
             available_balance: number;
         };
+        brand?: {
+            name: string;
+        };
     };
 }
 
@@ -98,6 +101,9 @@ interface SellerCommissionConfig {
         name: string;
         seller_profile?: {
             brand_name: string;
+        };
+        brand?: {
+            name: string;
         };
     };
 }
@@ -127,6 +133,11 @@ export default function AdminFinancialLedger({ activeSection }: AdminFinancialLe
     const [selectedPayout, setSelectedPayout] = useState<Payout | null>(null);
     const [payoutModalOpen, setPayoutModalOpen] = useState(false);
     const [payoutTxId, setPayoutTxId] = useState('');
+
+    const [eligibleSellers, setEligibleSellers] = useState<any[]>([]);
+    const [directPayoutModalOpen, setDirectPayoutModalOpen] = useState(false);
+    const [selectedSellerForDirectPayout, setSelectedSellerForDirectPayout] = useState<any>(null);
+    const [directPayoutAmount, setDirectPayoutAmount] = useState('');
 
     // Commission states
     const [commissions, setCommissions] = useState<SellerCommissionConfig[]>([]);
@@ -172,11 +183,21 @@ export default function AdminFinancialLedger({ activeSection }: AdminFinancialLe
                 setTxTotalPages(res.data.last_page || 1);
                 setTxTotalRecords(res.data.total || 0);
             } else if (activeSection === 'payouts') {
-                const endpoint = payoutsFilter === 'pending'
-                    ? `/admin/payouts/pending?${params}`
-                    : `/admin/payouts?status=${payoutsFilter}&${params}`;
-                const res = await api.get(endpoint);
-                setPayouts(res.data.data || []);
+                if (payoutsFilter === 'eligible') {
+                    const tempParams = new URLSearchParams();
+                    if (searchTerm) tempParams.append('search', searchTerm);
+                    tempParams.append('per_page', '100');
+                    const res = await api.get(`/admin/finance/sellers?${tempParams}`);
+                    const allSellers = res.data.data || [];
+                    const eligible = allSellers.filter((s: any) => s.wallet_balance > 0);
+                    setEligibleSellers(eligible);
+                } else {
+                    const endpoint = payoutsFilter === 'pending'
+                        ? `/admin/payouts/pending?${params}`
+                        : `/admin/payouts?status=${payoutsFilter}&${params}`;
+                    const res = await api.get(endpoint);
+                    setPayouts(res.data.data || []);
+                }
             } else if (activeSection === 'commissions') {
                 const [commRes, unconfiguredRes] = await Promise.all([
                     api.get(`/admin/commissions?${params}`),
@@ -255,6 +276,40 @@ export default function AdminFinancialLedger({ activeSection }: AdminFinancialLe
             fetchData();
         } catch (error: any) {
             alert(error.response?.data?.error || error.response?.data?.message || 'Failed to reject payout.');
+        }
+    };
+
+    // Direct Payout Submit
+    const handleDirectPayoutSubmit = async () => {
+        if (!selectedSellerForDirectPayout) return;
+        const amount = parseFloat(directPayoutAmount);
+        if (!amount || amount < 100) {
+            alert('Minimum direct payout capacity threshold is ₹100.00.');
+            return;
+        }
+        if (amount > selectedSellerForDirectPayout.wallet_balance) {
+            alert(`Settle amount exceeds maximum withdrawable balance.`);
+            return;
+        }
+        if (!payoutTxId.trim()) {
+            alert('Please enter bank transaction reference ID (UTR).');
+            return;
+        }
+
+        try {
+            await api.post(`/admin/payouts/direct`, {
+                seller_id: selectedSellerForDirectPayout.seller_id,
+                amount: amount,
+                transaction_id: payoutTxId
+            });
+            alert('Direct settlement payout processed and wallet ledger records updated successfully!');
+            setDirectPayoutModalOpen(false);
+            setSelectedSellerForDirectPayout(null);
+            setPayoutTxId('');
+            setDirectPayoutAmount('');
+            fetchData();
+        } catch (error: any) {
+            alert(error.response?.data?.error || error.response?.data?.message || 'Failed to execute direct payout.');
         }
     };
 
@@ -503,17 +558,17 @@ export default function AdminFinancialLedger({ activeSection }: AdminFinancialLe
                                         <Landmark size={18} /> Settlements Withdrawal Requests Queue
                                     </h3>
                                     <p className="text-xs text-neutral-450 mt-1">Verify linked escrow balances, upload UTR bank confirmation codes, and dispatch vendor payouts.</p>
-                                </div>
-                                <div className="flex bg-neutral-100 p-1 rounded-[10px] gap-1 text-xs font-semibold border border-neutral-950/10">
-                                    {['pending', 'approved', 'rejected'].map(st => (
-                                        <button
-                                            key={st}
-                                            onClick={() => setPayoutsFilter(st)}
-                                            className={`px-3 py-1 rounded-[10px] capitalize transition-all ${payoutsFilter === st ? 'bg-black text-white shadow-sm' : 'text-neutral-500 hover:text-neutral-900'}`}
-                                        >
-                                            {st} requests
-                                        </button>
-                                    ))}
+                                    <div className="flex bg-neutral-100 p-1 rounded-[10px] gap-1 text-xs font-semibold border border-neutral-950/10">
+                                        {['pending', 'approved', 'rejected', 'eligible'].map(st => (
+                                            <button
+                                                key={st}
+                                                onClick={() => setPayoutsFilter(st)}
+                                                className={`px-3 py-1 rounded-[10px] capitalize transition-all ${payoutsFilter === st ? 'bg-black text-white shadow-sm' : 'text-neutral-500 hover:text-neutral-900'}`}
+                                            >
+                                                {st === 'eligible' ? 'Eligible Sellers for Payout' : `${st} requests`}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
 
@@ -522,6 +577,58 @@ export default function AdminFinancialLedger({ activeSection }: AdminFinancialLe
                                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black mx-auto"></div>
                                     <p className="mt-2 text-xs font-medium">Scanning queue...</p>
                                 </div>
+                            ) : payoutsFilter === 'eligible' ? (
+                                eligibleSellers.length === 0 ? (
+                                    <div className="text-center py-12 text-xs text-neutral-450 font-semibold bg-neutral-50 rounded-[10px] border border-neutral-950/10">
+                                        No sellers are currently eligible for payout (wallet available balances are zero or negative).
+                                    </div>
+                                ) : (
+                                    <div className="overflow-x-auto">
+                                        <table className="min-w-full divide-y divide-neutral-100 text-left text-xs">
+                                            <thead>
+                                                <tr className="text-neutral-500 font-semibold border-b border-neutral-950/10">
+                                                    <th className="py-3 px-4 font-semibold">Seller Profile & Brand</th>
+                                                    <th className="py-3 px-4 font-semibold">Withdrawable Balance</th>
+                                                    <th className="py-3 px-4 font-semibold">Pending Escrow Hold</th>
+                                                    <th className="py-3 px-4 font-semibold">Bank Routing Details</th>
+                                                    <th className="py-3 px-4 text-center font-semibold">Manual Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-neutral-50 font-medium">
+                                                {eligibleSellers.map(s => (
+                                                    <tr key={s.seller_id} className="hover:bg-neutral-50 transition-colors">
+                                                        <td className="py-3.5 px-4">
+                                                            <div className="font-bold text-neutral-900">{s.seller_name}</div>
+                                                            <div className="text-[9px] text-neutral-400 font-medium">{s.brand_name && s.brand_name !== 'N/A' ? s.brand_name : s.seller_name}</div>
+                                                        </td>
+                                                        <td className="py-3.5 px-4 font-extrabold text-green-700">₹{s.wallet_balance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                                        <td className="py-3.5 px-4 text-amber-700 font-bold">₹{s.pending_payouts.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                                        <td className="py-3.5 px-4">
+                                                            {s.bank_details ? (
+                                                                <div className="font-semibold text-neutral-700">
+                                                                    <p>{s.bank_details.bank_name} ({s.bank_details.account_holder_name})</p>
+                                                                    <p className="font-mono text-[9px] text-neutral-400">A/C: {s.bank_details.account_number} (IFSC: {s.bank_details.ifsc_code})</p>
+                                                                </div>
+                                                            ) : <span className="text-red-655 font-bold">Bank Credentials Missing</span>}
+                                                        </td>
+                                                        <td className="py-3.5 px-4 text-center">
+                                                            <button
+                                                                onClick={() => {
+                                                                    setSelectedSellerForDirectPayout(s);
+                                                                    setDirectPayoutAmount(s.wallet_balance.toString());
+                                                                    setDirectPayoutModalOpen(true);
+                                                                }}
+                                                                className="px-3 py-1.5 bg-black text-white hover:bg-neutral-900 rounded-[10px] font-bold text-[10px] active:scale-95 transition-all"
+                                                            >
+                                                                Settle & Transfer
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )
                             ) : payouts.length === 0 ? (
                                 <div className="text-center py-12 text-xs text-neutral-450 font-semibold bg-neutral-50 rounded-[10px] border border-neutral-950/10">
                                     No {payoutsFilter} settlement release requests are pending.
@@ -544,7 +651,7 @@ export default function AdminFinancialLedger({ activeSection }: AdminFinancialLe
                                                 <tr key={p.id} className="hover:bg-neutral-50 transition-colors">
                                                     <td className="py-3.5 px-4">
                                                         <div className="font-bold text-neutral-900">{p.seller.name}</div>
-                                                        <div className="text-[9px] text-neutral-400 font-medium">{p.seller.seller_profile?.brand_name || 'N/A'}</div>
+                                                        <div className="text-[9px] text-neutral-400 font-medium">{p.seller.brand?.name || p.seller.seller_profile?.brand_name || p.seller.name}</div>
                                                     </td>
                                                     <td className="py-3.5 px-4 font-bold text-neutral-900">₹{p.requested_amount.toLocaleString('en-IN')}</td>
                                                     <td className="py-3.5 px-4 text-neutral-500 font-semibold">₹{(p.seller.seller_wallet?.available_balance || 0).toLocaleString('en-IN')}</td>
@@ -555,7 +662,7 @@ export default function AdminFinancialLedger({ activeSection }: AdminFinancialLe
                                                                 <p>{p.bank_details.bank_name}</p>
                                                                 <p className="font-mono text-[9px] text-neutral-400">No: {p.bank_details.account_number} (IFSC: {p.bank_details.ifsc_code})</p>
                                                             </div>
-                                                        ) : <span className="text-red-650 font-bold">Bank Credentials Missing</span>}
+                                                        ) : <span className="text-red-655 font-bold">Bank Credentials Missing</span>}
                                                     </td>
                                                     <td className="py-3.5 px-4 text-center">
                                                         <div className="flex justify-center gap-1.5">
@@ -673,7 +780,7 @@ export default function AdminFinancialLedger({ activeSection }: AdminFinancialLe
                                                                 {c.seller?.name || 'Seller ID #' + c.seller_id}
                                                                 <span className="bg-neutral-105 text-black text-[9px] font-bold px-2 py-0.5 rounded-[10px] border border-neutral-950/10 uppercase tracking-wider">Custom Profile</span>
                                                             </div>
-                                                            <div className="text-[10px] text-neutral-400 font-normal">{c.seller?.seller_profile?.brand_name || 'N/A'}</div>
+                                                            <div className="text-[10px] text-neutral-400 font-normal">{c.seller?.brand?.name || c.seller?.seller_profile?.brand_name || c.seller?.name || 'N/A'}</div>
                                                         </td>
                                                         <td className="py-3.5 px-4 font-bold text-neutral-750">{c.base_commission_percentage}%</td>
                                                         <td className="py-3.5 px-4 text-neutral-500 font-semibold">{c.payment_gateway_percentage}%</td>
@@ -705,7 +812,7 @@ export default function AdminFinancialLedger({ activeSection }: AdminFinancialLe
                                                                 {s.name}
                                                                 <span className="bg-neutral-100 text-neutral-500 text-[9px] font-bold px-2 py-0.5 rounded-[10px] border border-neutral-950/10 uppercase tracking-wider">Fallback Default</span>
                                                             </div>
-                                                            <div className="text-[10px] text-neutral-400 font-normal">{s.seller_profile?.brand_name || 'N/A'}</div>
+                                                            <div className="text-[10px] text-neutral-400 font-normal">{s.brand?.name || s.seller_profile?.brand_name || s.name || 'N/A'}</div>
                                                         </td>
                                                         <td className="py-3.5 px-4 text-neutral-450 font-normal">25.00% (Baseline)</td>
                                                         <td className="py-3.5 px-4 text-neutral-450 font-normal">2.50% (Baseline)</td>
@@ -780,7 +887,7 @@ export default function AdminFinancialLedger({ activeSection }: AdminFinancialLe
                                                     <tr key={sel.seller_id} className="hover:bg-neutral-50 transition-colors">
                                                         <td className="py-3.5 px-4 font-bold text-neutral-900">
                                                             <div>{sel.seller_name}</div>
-                                                            <div className="text-[10px] text-neutral-400 font-normal">{sel.brand_name}</div>
+                                                            <div className="text-[10px] text-neutral-400 font-normal">{sel.brand_name || sel.seller_name}</div>
                                                         </td>
                                                         <td className="py-3.5 px-4 font-bold text-neutral-900">₹{sel.total_sales.toLocaleString('en-IN')}</td>
                                                         <td className="py-3.5 px-4 text-red-655 font-bold">₹{sel.platform_commission.toLocaleString('en-IN')} ({sel.commission_rate.platform}%)</td>
@@ -825,7 +932,7 @@ export default function AdminFinancialLedger({ activeSection }: AdminFinancialLe
                                 <h4 className="font-bold text-black border-b border-neutral-950/10 pb-1 mb-2">Merchant Registration details</h4>
                                 <div className="grid grid-cols-2 gap-2">
                                     <div><p className="text-neutral-450 font-normal">Name</p><p className="font-bold text-neutral-900">{selectedPayout.seller.name}</p></div>
-                                    <div><p className="text-neutral-450 font-normal">Brand</p><p className="font-bold text-neutral-900">{selectedPayout.seller.seller_profile?.brand_name || 'N/A'}</p></div>
+                                    <div><p className="text-neutral-450 font-normal">Brand</p><p className="font-bold text-neutral-900">{selectedPayout.seller.brand?.name || selectedPayout.seller.seller_profile?.brand_name || selectedPayout.seller.name}</p></div>
                                     <div><p className="text-neutral-450 font-normal">Email</p><p className="font-normal text-neutral-700">{selectedPayout.seller.email}</p></div>
                                     <div><p className="text-neutral-450 font-normal">Wallet Balance</p><p className="font-extrabold text-green-700">₹{(selectedPayout.seller.seller_wallet?.available_balance || 0).toLocaleString('en-IN')}</p></div>
                                 </div>
@@ -973,6 +1080,85 @@ export default function AdminFinancialLedger({ activeSection }: AdminFinancialLe
                                 Commit Split Overrides
                             </button>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* MODAL 3: DIRECT PAYOUT SUBMISSION */}
+            {directPayoutModalOpen && selectedSellerForDirectPayout && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+                    <div className="bg-white rounded-[10px] p-6 max-w-lg w-full border-[0.5px] border-neutral-950/15 relative max-h-[90vh] overflow-y-auto">
+                        <button 
+                            onClick={() => { setDirectPayoutModalOpen(false); setSelectedSellerForDirectPayout(null); setPayoutTxId(''); setDirectPayoutAmount(''); }}
+                            className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-600 focus:outline-none"
+                        >
+                            <X size={20} />
+                        </button>
+                        
+                        <h3 className="text-lg font-bold text-black mb-4 flex items-center gap-2">
+                            <Landmark size={18} /> Direct Vendor Payout (Settle & Transfer)
+                        </h3>
+                        
+                        <div className="space-y-4 text-xs font-semibold text-neutral-600">
+                            <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/10">
+                                <h4 className="font-bold text-black border-b border-neutral-950/10 pb-1 mb-2">Merchant Target details</h4>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <div><p className="text-neutral-450 font-normal">Name</p><p className="font-bold text-neutral-900">{selectedSellerForDirectPayout.seller_name}</p></div>
+                                    <div><p className="text-neutral-450 font-normal">Brand</p><p className="font-bold text-neutral-900">{selectedSellerForDirectPayout.brand_name && selectedSellerForDirectPayout.brand_name !== 'N/A' ? selectedSellerForDirectPayout.brand_name : selectedSellerForDirectPayout.seller_name}</p></div>
+                                    <div><p className="text-neutral-450 font-normal">Withdrawable Balance</p><p className="font-extrabold text-green-700">₹{selectedSellerForDirectPayout.wallet_balance.toLocaleString('en-IN')}</p></div>
+                                    <div><p className="text-neutral-450 font-normal">Pending Escrow</p><p className="font-bold text-amber-700">₹{selectedSellerForDirectPayout.pending_payouts.toLocaleString('en-IN')}</p></div>
+                                </div>
+                            </div>
+
+                            {selectedSellerForDirectPayout.bank_details ? (
+                                <div className="bg-neutral-50 p-4 rounded-[10px] border border-neutral-950/10">
+                                    <h4 className="font-bold text-black border-b border-neutral-950/10 pb-1 mb-2">Target Bank Coordinates</h4>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div><p className="text-neutral-450 font-normal">Account Holder Name</p><p className="font-bold text-neutral-900">{selectedSellerForDirectPayout.bank_details.account_holder_name}</p></div>
+                                        <div><p className="text-neutral-450 font-normal">Bank Name</p><p className="font-bold text-neutral-900">{selectedSellerForDirectPayout.bank_details.bank_name}</p></div>
+                                        <div><p className="text-neutral-450 font-normal">Account Number</p><p className="font-mono font-bold text-neutral-950">{selectedSellerForDirectPayout.bank_details.account_number}</p></div>
+                                        <div><p className="text-neutral-450 font-normal">IFSC Bank Code</p><p className="font-mono font-bold text-neutral-950">{selectedSellerForDirectPayout.bank_details.ifsc_code}</p></div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="bg-red-50 text-red-700 text-center border border-red-150 p-3 rounded-[10px] font-bold">
+                                    Caution: No bank coordinates mapped to this profile. Direct payout might fail or require external manual routing.
+                                </div>
+                            )}
+
+                            <div className="border-t border-neutral-950/10 pt-4 space-y-3">
+                                <div>
+                                    <label className="block text-xs font-bold text-neutral-700 mb-1">Payout Amount (Max: ₹{selectedSellerForDirectPayout.wallet_balance.toLocaleString('en-IN')})</label>
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        value={directPayoutAmount}
+                                        onChange={(e) => setDirectPayoutAmount(e.target.value)}
+                                        max={selectedSellerForDirectPayout.wallet_balance}
+                                        min={100}
+                                        placeholder="0.00"
+                                        className="w-full px-3 py-2 border border-neutral-950/10 bg-white rounded-[10px] text-xs focus:ring-1 focus:ring-black focus:outline-none placeholder-neutral-450 font-semibold"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-neutral-700 mb-1">Enter Bank UTR Transaction Reference ID</label>
+                                    <input
+                                        type="text"
+                                        value={payoutTxId}
+                                        onChange={(e) => setPayoutTxId(e.target.value)}
+                                        placeholder="e.g. UTR202606200921"
+                                        className="w-full px-3 py-2 border border-neutral-950/10 bg-white rounded-[10px] text-xs focus:ring-1 focus:ring-black focus:outline-none placeholder-neutral-450 font-mono font-semibold"
+                                    />
+                                </div>
+                                <button
+                                    onClick={handleDirectPayoutSubmit}
+                                    disabled={!payoutTxId.trim() || !directPayoutAmount || parseFloat(directPayoutAmount) < 100 || parseFloat(directPayoutAmount) > selectedSellerForDirectPayout.wallet_balance}
+                                    className="w-full py-2.5 bg-black text-white rounded-[10px] font-bold hover:bg-neutral-900 transition-all active:scale-95 disabled:bg-neutral-100 disabled:text-neutral-400"
+                                >
+                                    Settle & Process Transfer Immediately
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}

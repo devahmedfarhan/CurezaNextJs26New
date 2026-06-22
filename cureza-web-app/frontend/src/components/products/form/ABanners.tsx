@@ -11,7 +11,7 @@ export default function ABanners({ banners, handleBannerChange, isSuperAdmin }: 
     const roundedClass = isSuperAdmin ? 'rounded-[10px]' : 'rounded-xl';
 
     return (
-        <div className={`p-6 ${roundedClass} border ${isSuperAdmin ? 'border-neutral-950/15 bg-white dark:bg-gray-900 shadow-none' : 'border-gray-200 bg-white dark:bg-gray-900 shadow-sm'} space-y-6`}>
+        <div className={`p-6 ${roundedClass} border-[0.5px] ${isSuperAdmin ? 'border-black/50 bg-white dark:bg-gray-900 shadow-none' : 'border-black/50 bg-white dark:bg-gray-900 shadow-none border-[0.5px]'} space-y-6`}>
             <div>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">A+ Listing Banners</h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400">Enhanced rich media content. Max 3 sections.</p>
@@ -19,8 +19,8 @@ export default function ABanners({ banners, handleBannerChange, isSuperAdmin }: 
 
             <div className="space-y-6">
                 {[0, 1, 2].map((index) => (
-                    <div key={index} className={`p-5 border ${isSuperAdmin ? 'border-neutral-950/15 rounded-lg bg-neutral-50/50 dark:bg-gray-800/10' : 'border-gray-200 rounded-xl bg-gray-50'} relative`}>
-                        <span className={`absolute -top-3 -left-3 w-8 h-8 flex items-center justify-center bg-gray-900 text-white ${isSuperAdmin ? 'rounded-md shadow-none border-[0.5px] border-neutral-950/15' : 'rounded-full shadow-sm'} text-sm font-bold`}>
+                    <div key={index} className={`p-5 border-[0.5px] ${isSuperAdmin ? 'border-black/50 rounded-lg bg-neutral-50/50 dark:bg-gray-800/10' : 'border-black/50 rounded-xl bg-gray-50'} relative`}>
+                        <span className={`absolute -top-3 -left-3 w-8 h-8 flex items-center justify-center bg-gray-900 text-white ${isSuperAdmin ? 'rounded-md shadow-none border-[0.5px] border-black/50' : 'rounded-full shadow-none border-black/50 border-[0.5px]'} text-sm font-bold`}>
                             {index + 1}
                         </span>
 
@@ -30,7 +30,7 @@ export default function ABanners({ banners, handleBannerChange, isSuperAdmin }: 
                                 <div className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                                     <Monitor size={16} /> Desktop Banner
                                 </div>
-                                <div className={`relative group border-2 border-dashed ${isSuperAdmin ? 'border-neutral-300 hover:border-black' : 'border-gray-300 hover:border-blue-500'} bg-white dark:bg-gray-900 rounded-lg h-32 flex items-center justify-center overflow-hidden transition-colors`}>
+                                <div className={`relative group border-[0.5px] border-dashed ${isSuperAdmin ? 'border-black/50 hover:border-black' : 'border-black/50 hover:border-blue-500'} bg-white dark:bg-gray-900 rounded-lg h-32 flex items-center justify-center overflow-hidden transition-colors`}>
                                     {banners[index]?.desktop ? (
                                         <>
                                             <img
@@ -75,7 +75,7 @@ export default function ABanners({ banners, handleBannerChange, isSuperAdmin }: 
                                 <div className="flex items-center gap-2 mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                                     <Smartphone size={16} /> Mobile Banner
                                 </div>
-                                <div className={`relative group border-2 border-dashed ${isSuperAdmin ? 'border-neutral-300 hover:border-black' : 'border-gray-300 hover:border-blue-500'} bg-white dark:bg-gray-900 rounded-lg h-32 w-full md:w-3/4 flex items-center justify-center overflow-hidden transition-colors mx-auto`}>
+                                <div className={`relative group border-[0.5px] border-dashed ${isSuperAdmin ? 'border-black/50 hover:border-black' : 'border-black/50 hover:border-blue-500'} bg-white dark:bg-gray-900 rounded-lg h-32 w-full md:w-3/4 flex items-center justify-center overflow-hidden transition-colors mx-auto`}>
                                     {banners[index]?.mobile ? (
                                         <>
                                             <img

@@ -10,10 +10,10 @@ export default function AdminCircleGuidelinesPage() {
             {/* Core Modules Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* XP Earning Rules */}
-                <div className="bg-white border-[0.5px] border-neutral-950/10 rounded-[10px] p-5 space-y-3.5 flex flex-col justify-between">
+                <div className="bg-white border-[0.5px] border-black/50 rounded-[10px] p-5 space-y-3.5 flex flex-col justify-between">
                     <div className="space-y-3">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-neutral-50 text-neutral-900 border-[0.5px] border-neutral-950/10 rounded-[8px]">
+                            <div className="p-2 bg-neutral-50 text-neutral-900 border-[0.5px] border-black/50 rounded-[8px]">
                                 <Settings size={16} />
                             </div>
                             <h3 className="font-semibold text-gray-900 text-sm">XP Earning Rules Configuration</h3>
@@ -21,7 +21,7 @@ export default function AdminCircleGuidelinesPage() {
                         <p className="text-xs text-gray-500 leading-relaxed font-normal">
                             Administrators can dynamically change global earning coefficients directly from the <Link href="/superadmin/dashboard/community" className="text-black font-semibold hover:underline">Circle Home</Link> page. These values are saved to the `system_settings` database table.
                         </p>
-                        <ul className="text-xs text-gray-600 space-y-2 bg-neutral-50/50 p-3 rounded-[10px] border-[0.5px] border-neutral-950/5 list-disc list-inside font-normal">
+                        <ul className="text-xs text-gray-600 space-y-2 bg-neutral-50/50 p-3 rounded-[10px] border-[0.5px] border-black/50 list-disc list-inside font-normal">
                             <li><strong>xp_per_100_spent:</strong> XP points awarded per ₹100 cart checkout value.</li>
                             <li><strong>xp_per_review:</strong> Points awarded for basic text reviews.</li>
                             <li><strong>xp_per_photo_upload:</strong> Points awarded for reviews with photo uploads.</li>
@@ -31,10 +31,10 @@ export default function AdminCircleGuidelinesPage() {
                 </div>
 
                 {/* Referral Tracking */}
-                <div className="bg-white border-[0.5px] border-neutral-950/10 rounded-[10px] p-5 space-y-3.5 flex flex-col justify-between">
+                <div className="bg-white border-[0.5px] border-black/50 rounded-[10px] p-5 space-y-3.5 flex flex-col justify-between">
                     <div className="space-y-3">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-neutral-50 text-neutral-900 border-[0.5px] border-neutral-950/10 rounded-[8px]">
+                            <div className="p-2 bg-neutral-50 text-neutral-900 border-[0.5px] border-black/50 rounded-[8px]">
                                 <Users size={16} />
                             </div>
                             <h3 className="font-semibold text-gray-900 text-sm">Referral Pipeline Triggers</h3>
@@ -42,7 +42,7 @@ export default function AdminCircleGuidelinesPage() {
                         <p className="text-xs text-gray-500 leading-relaxed font-normal">
                             The referral flow is handled securely on the backend by the `GamificationService` to prevent exploits:
                         </p>
-                        <ul className="text-xs text-gray-600 space-y-2 bg-neutral-50/50 p-3 rounded-[10px] border-[0.5px] border-neutral-950/5 list-decimal list-inside font-normal">
+                        <ul className="text-xs text-gray-600 space-y-2 bg-neutral-50/50 p-3 rounded-[10px] border-[0.5px] border-black/50 list-decimal list-inside font-normal">
                             <li>Referee registers with a referrer's code, creating a pending status.</li>
                             <li>Referee places their first order (status starts as pending).</li>
                             <li>When order status shifts to completed, the referral service triggers a points credit.</li>
@@ -53,9 +53,9 @@ export default function AdminCircleGuidelinesPage() {
             </div>
 
             {/* Database Tables Reference */}
-            <div className="bg-white border-[0.5px] border-neutral-950/10 rounded-[10px] p-5 space-y-4">
-                <div className="flex items-center gap-3 border-b-[0.5px] border-neutral-950/10 pb-3">
-                    <div className="w-8 h-8 bg-neutral-50 text-neutral-900 border-[0.5px] border-neutral-950/10 rounded-[8px] flex items-center justify-center">
+            <div className="bg-white border-[0.5px] border-black/50 rounded-[10px] p-5 space-y-4">
+                <div className="flex items-center gap-3 border-b-[0.5px] border-black/50 pb-3">
+                    <div className="w-8 h-8 bg-neutral-50 text-neutral-900 border-[0.5px] border-black/50 rounded-[8px] flex items-center justify-center">
                         <Database size={14} />
                     </div>
                     <div>
@@ -67,7 +67,7 @@ export default function AdminCircleGuidelinesPage() {
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs text-gray-600 border-collapse">
                         <thead>
-                            <tr className="border-b-[0.5px] border-neutral-950/10 bg-neutral-50 text-gray-500 font-medium">
+                            <tr className="border-b-[0.5px] border-black/50 bg-neutral-50 text-gray-500 font-medium">
                                 <th className="p-3">Table Name</th>
                                 <th className="p-3">Description</th>
                                 <th className="p-3">Key Columns</th>
@@ -110,9 +110,9 @@ export default function AdminCircleGuidelinesPage() {
             </div>
 
             {/* Developer CLI Guide */}
-            <div className="bg-white border-[0.5px] border-neutral-950/10 rounded-[10px] p-5 space-y-4">
-                <div className="flex items-center gap-3 border-b-[0.5px] border-neutral-950/10 pb-3">
-                    <div className="w-8 h-8 bg-neutral-50 text-neutral-900 border-[0.5px] border-neutral-950/10 rounded-[8px] flex items-center justify-center">
+            <div className="bg-white border-[0.5px] border-black/50 rounded-[10px] p-5 space-y-4">
+                <div className="flex items-center gap-3 border-b-[0.5px] border-black/50 pb-3">
+                    <div className="w-8 h-8 bg-neutral-50 text-neutral-900 border-[0.5px] border-black/50 rounded-[8px] flex items-center justify-center">
                         <Terminal size={14} />
                     </div>
                     <div>
@@ -125,7 +125,7 @@ export default function AdminCircleGuidelinesPage() {
                     <div className="space-y-1">
                         <h4 className="text-xs font-medium text-gray-700">1. Run Seeders</h4>
                         <p className="text-[10px] text-gray-450 font-normal">Populate default badges, challenges, rewards catalog, and rules coefficients:</p>
-                        <pre className="bg-neutral-950 text-neutral-100 p-3 rounded-[10px] text-xs overflow-x-auto font-mono select-all border-[0.5px] border-neutral-800">
+                        <pre className="bg-neutral-950 text-neutral-100 p-3 rounded-[10px] text-xs overflow-x-auto font-mono select-all border-[0.5px] border-black/50">
                             php artisan db:seed --class=CommunitySeeder
                         </pre>
                     </div>
@@ -133,7 +133,7 @@ export default function AdminCircleGuidelinesPage() {
                     <div className="space-y-1">
                         <h4 className="text-xs font-medium text-gray-700">2. Run Backend Feature Tests</h4>
                         <p className="text-[10px] text-gray-450 font-normal">Verify Gamification service, API status code rules, and coupon redemptions flow:</p>
-                        <pre className="bg-neutral-950 text-neutral-100 p-3 rounded-[10px] text-xs overflow-x-auto font-mono select-all border-[0.5px] border-neutral-800">
+                        <pre className="bg-neutral-950 text-neutral-100 p-3 rounded-[10px] text-xs overflow-x-auto font-mono select-all border-[0.5px] border-black/50">
                             php artisan test --filter=GamificationTest
                         </pre>
                     </div>
@@ -141,7 +141,7 @@ export default function AdminCircleGuidelinesPage() {
                     <div className="space-y-1">
                         <h4 className="text-xs font-medium text-gray-700">3. Check Frontend Type Consistency</h4>
                         <p className="text-[10px] text-gray-450 font-normal">Run Next.js code checks to ensure code aligns with TS schema validations:</p>
-                        <pre className="bg-neutral-950 text-neutral-100 p-3 rounded-[10px] text-xs overflow-x-auto font-mono select-all border-[0.5px] border-neutral-800">
+                        <pre className="bg-neutral-950 text-neutral-100 p-3 rounded-[10px] text-xs overflow-x-auto font-mono select-all border-[0.5px] border-black/50">
                             npx tsc --noEmit
                         </pre>
                     </div>

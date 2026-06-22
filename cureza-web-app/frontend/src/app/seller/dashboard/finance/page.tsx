@@ -46,6 +46,7 @@ interface Transaction {
     balance_after: number;
     order_id: number | null;
     payout_id: number | null;
+    reconciliation_status?: string | null;
     metadata: Record<string, any> | null;
     created_at: string;
     order?: {
@@ -246,7 +247,7 @@ export default function SellerFinancePage() {
     const taxableValue = price / 1.18;
     const platformFee = price * (platformRate / 100);
     const gstOnPlatform = platformFee * 0.18;
-    const tcs = price * 0.01;
+    const tcs = taxableValue * 0.01;
     const tds = price * 0.01;
     const gatewayFee = simulatorPaymentMode === 'prepaid' ? (price * (gatewayRate / 100)) : 0;
     const netEarnings = price - platformFee - gstOnPlatform - tcs - tds - gatewayFee;
@@ -277,11 +278,11 @@ export default function SellerFinancePage() {
                     <div className="flex flex-wrap items-center gap-4 mt-3">
                         <span className="text-xs font-semibold text-gray-500 capitalize italic">Net Retention Policy:</span>
                         <div className="flex flex-wrap items-center gap-3">
-                            <span className="px-2.5 py-1 bg-gray-50 text-gray-600 rounded-lg text-xs font-semibold border border-gray-200">{summary.commission_rate.platform}% Platform Fee</span>
-                            <span className="text-gray-300 font-semibold">+</span>
-                            <span className="px-2.5 py-1 bg-gray-50 text-gray-600 rounded-lg text-xs font-semibold border border-gray-200">{summary.commission_rate.gateway}% Gateway Charge</span>
-                            <span className="text-gray-350 font-semibold">=</span>
-                            <span className="px-3 py-1 bg-emerald-650 text-white rounded-lg text-xs font-semibold shadow-sm">{summary.commission_rate.total}% Total Overhead</span>
+                            <span className="px-2.5 py-1 bg-gray-50 text-black rounded-lg text-xs font-semibold border border-gray-200">{Number(summary.commission_rate.platform).toFixed(2)}% Platform Fee</span>
+                            <span className="text-black font-semibold">+</span>
+                            <span className="px-2.5 py-1 bg-gray-50 text-black rounded-lg text-xs font-semibold border border-gray-200">{Number(summary.commission_rate.gateway).toFixed(2)}% Gateway Charge</span>
+                            <span className="text-black font-semibold">=</span>
+                            <span className="px-3 py-1 bg-emerald-50 text-black rounded-lg text-xs font-semibold border border-emerald-200 shadow-sm">{Number(summary.commission_rate.total).toFixed(2)}% Total Overhead</span>
                         </div>
                     </div>
                 </div>
@@ -390,6 +391,14 @@ export default function SellerFinancePage() {
                                     {(() => {
                                         const tvlRaw = Math.max(0, summary.wallet.total_earnings - summary.wallet.paid_amount);
                                         const tvlNet = Math.max(0, tvlRaw - (tvlRaw * taxRatio));
+                                        
+                                        // Calculate breakdown of pending escrow amount
+                                        const pendingTransactions = transactions.filter(t => t.type === 'earning' && t.metadata?.escrow_status === 'held');
+                                        const pendingCODUnreconciled = pendingTransactions
+                                            .filter(t => t.reconciliation_status === 'pending')
+                                            .reduce((sum, t) => sum + Number(t.amount), 0);
+                                        const pendingReadyToPayout = Math.max(0, summary.wallet.pending_amount - pendingCODUnreconciled);
+                                        
                                         return (
                                             <>
                                                 <div>
@@ -403,12 +412,27 @@ export default function SellerFinancePage() {
                                                     <p className="text-xs text-gray-500 font-medium normal-case mb-4">Raw Value: ₹{tvlRaw.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                                                 </div>
 
-                                                <div className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-[11px] font-medium text-gray-550 leading-relaxed mb-4">
-                                                    <p className="font-semibold capitalize text-[10px] text-gray-400 mb-1">Card Logic & Source</p>
-                                                    <p className="mb-2 text-[10.5px]">Total active net earnings locked in the system, after compliance taxes (GST, TCS, TDS) are deducted.</p>
-                                                    <div className="pt-1.5 border-t border-gray-200/50 flex justify-between text-[10px] font-semibold capitalize text-gray-400">
-                                                        <span>Formula</span>
-                                                        <span>Raw TVL - Taxes</span>
+                                                <div className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-[10.5px] font-medium text-gray-550 leading-relaxed mb-4">
+                                                    <p className="font-semibold capitalize text-[10px] text-gray-400 mb-1.5">Escrow & Reconciliation Breakdown</p>
+                                                    <div className="space-y-1.5 text-gray-600">
+                                                        <div className="flex justify-between items-center">
+                                                            <span className="flex items-center gap-1.5">
+                                                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                                Ready to Payout (Held in Escrow):
+                                                            </span>
+                                                            <span className="font-bold text-emerald-600">₹{pendingReadyToPayout.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                                        </div>
+                                                        <div className="flex justify-between items-center">
+                                                            <span className="flex items-center gap-1.5">
+                                                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                                                Pending Courier Recon (COD):
+                                                            </span>
+                                                            <span className="font-bold text-amber-600">₹{pendingCODUnreconciled.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                                        </div>
+                                                        <div className="pt-1.5 mt-1 border-t border-gray-200 flex justify-between font-semibold text-gray-450 text-[10px]">
+                                                            <span>Total Escrow Balance:</span>
+                                                            <span>₹{summary.wallet.pending_amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </>
@@ -782,6 +806,22 @@ export default function SellerFinancePage() {
 
                 {activeTab === 'withdraw' && (
                     <div className="space-y-8">
+                        {/* Escrow Hold Warning Help Banner */}
+                        <div className="p-4 bg-emerald-50/50 border border-emerald-250 rounded-2xl flex gap-4 items-start shadow-sm animate-in slide-in-from-top-4 duration-300">
+                            <div className="p-2.5 bg-emerald-100 text-emerald-800 rounded-xl">
+                                <HelpCircle size={20} className="text-emerald-700" />
+                            </div>
+                            <div className="space-y-1.5">
+                                <h4 className="text-sm font-bold text-emerald-800">Understanding Wallet Escrow & Courier Reconciliation holds</h4>
+                                <p className="text-xs text-emerald-700 font-medium leading-relaxed normal-case">
+                                    All order earnings are held in escrow for a standard <span className="font-bold">7-day hold period</span> to handle potential customer returns or disputes. 
+                                    Prepaid orders enter the escrow queue immediately upon fulfillment. 
+                                    Cash on Delivery (COD) orders must first be reconciled with the courier provider (marked as <span className="font-bold">Ready to Payout</span>) before starting their escrow countdown. 
+                                    Once the 7-day window expires, balances are automatically transferred to your withdrawable <span className="font-bold">Liquid Balance</span>.
+                                </p>
+                            </div>
+                        </div>
+
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             {/* Payout Request Form */}
                             <div className="premium-card p-6 bg-white lg:col-span-2 space-y-6 rounded-xl border border-gray-100 shadow-sm">
@@ -1065,6 +1105,7 @@ export default function SellerFinancePage() {
                                             <th className="px-6 py-5 whitespace-nowrap">Logic Classification</th>
                                             <th className="px-6 py-5 whitespace-nowrap">Flow Direction</th>
                                             <th className="px-6 py-5 whitespace-nowrap">Order Reference</th>
+                                            <th className="px-6 py-5 whitespace-nowrap">Reconciliation Status</th>
                                             <th className="px-6 py-5 whitespace-nowrap">Network Descriptor</th>
                                             <th className="px-6 py-5 whitespace-nowrap">Interactive Delta</th>
                                             <th className="px-6 py-5 whitespace-nowrap">Balance Before</th>
@@ -1075,7 +1116,7 @@ export default function SellerFinancePage() {
                                     <tbody className="divide-y divide-gray-50">
                                         {transactions.length === 0 ? (
                                             <tr>
-                                                <td colSpan={10} className="px-8 py-20 text-center">
+                                                <td colSpan={11} className="px-8 py-20 text-center">
                                                     <div className="flex flex-col items-center opacity-20">
                                                         <CreditCard size={48} className="mb-4" />
                                                         <p className="text-[9px] font-semibold capitalize tracking-wide text-gray-400">Ledger sequence void</p>
@@ -1190,6 +1231,25 @@ export default function SellerFinancePage() {
                                                         ) : (
                                                             <span className="text-[9px] font-semibold text-gray-300">—</span>
                                                         )}
+                                                    </td>
+                                                    {/* Reconciliation Status */}
+                                                    <td className="px-6 py-5">
+                                                        {(() => {
+                                                            if (txn.type !== 'earning') {
+                                                                return <span className="text-[9px] font-semibold text-gray-300">—</span>;
+                                                            }
+                                                            const isCOD = txn.order ? (txn.order as any).payment_method?.toLowerCase() === 'cod' : false;
+                                                            const isReconciled = txn.reconciliation_status === 'reconciled' || !isCOD;
+                                                            return (
+                                                                <span className={`px-2.5 py-1 rounded-xl text-[8.5px] font-semibold capitalize tracking-wide border shadow-sm whitespace-nowrap ${
+                                                                    isReconciled 
+                                                                        ? 'bg-emerald-50 text-emerald-600 border-emerald-100' 
+                                                                        : 'bg-amber-50 text-amber-600 border-amber-100 animate-pulse'
+                                                                }`}>
+                                                                    {isReconciled ? 'Ready to Payout' : 'Pending Courier Recon'}
+                                                                </span>
+                                                            );
+                                                        })()}
                                                     </td>
                                                     {/* Network Descriptor */}
                                                     <td className="px-6 py-5">

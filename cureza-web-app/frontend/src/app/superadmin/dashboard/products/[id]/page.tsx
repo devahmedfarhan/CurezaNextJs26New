@@ -37,7 +37,7 @@ export default function AdminProductViewPage() {
     return (
         <div className="max-w-5xl mx-auto pb-12 animate-in fade-in duration-550">
             {/* Header */}
-            <div className="flex items-center justify-between mb-6 border-[0.5px] border-neutral-950/15 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 rounded-[10px]">
+            <div className="flex items-center justify-between mb-6 border-[0.5px] border-black/50 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 rounded-[10px]">
                 <div className="flex items-center gap-4">
                     <button onClick={() => router.back()} className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors cursor-pointer">
                         <ArrowLeft size={18} className="text-gray-600 dark:text-gray-400" />
@@ -51,7 +51,7 @@ export default function AdminProductViewPage() {
                     <Link
                         href={`/shop/${product.category?.slug || 'general'}/${product.slug}`}
                         target="_blank"
-                        className="px-4 py-2 border-[0.5px] border-neutral-950/15 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-neutral-50 font-medium flex items-center gap-2"
+                        className="px-4 py-2 border-[0.5px] border-black/50 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-neutral-50 font-medium flex items-center gap-2"
                     >
                         <ExternalLink size={14} /> View Live
                     </Link>
@@ -67,8 +67,8 @@ export default function AdminProductViewPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Left Column: Images & Key Info */}
                 <div className="space-y-6">
-                    <div className="bg-white dark:bg-gray-900 p-4 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800">
-                        <div className="aspect-square rounded-lg overflow-hidden bg-neutral-50 dark:bg-gray-850 mb-4 border-[0.5px] border-neutral-950/10">
+                    <div className="bg-white dark:bg-gray-900 p-4 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800">
+                        <div className="aspect-square rounded-lg overflow-hidden bg-neutral-50 dark:bg-gray-850 mb-4 border-[0.5px] border-black/50">
                             {product.image ? (
                                 <img src={getImageUrl(product.image)} alt={product.title} className="w-full h-full object-cover" />
                             ) : (
@@ -77,22 +77,22 @@ export default function AdminProductViewPage() {
                         </div>
                         <div className="grid grid-cols-4 gap-2">
                             {product.images && product.images.map((img: string, idx: number) => (
-                                <div key={idx} className="aspect-square rounded-md overflow-hidden bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-neutral-950/10">
+                                <div key={idx} className="aspect-square rounded-md overflow-hidden bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-black/50">
                                     <img src={getImageUrl(img)} alt="" className="w-full h-full object-cover" />
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 text-xs font-semibold">
-                        <h3 className="font-extrabold text-sm text-gray-950 dark:text-white border-b border-neutral-950/10 dark:border-gray-800 pb-2.5 mb-4">Status & Stock</h3>
+                    <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 text-xs font-semibold">
+                        <h3 className="font-extrabold text-sm text-gray-950 dark:text-white border-b-[0.5px] border-black/50 dark:border-gray-800 pb-2.5 mb-4">Status & Stock</h3>
                         <div className="space-y-4">
                             <div className="flex justify-between items-center">
                                 <span className="text-gray-500">Status</span>
-                                <span className={`px-2 py-0.5 rounded border text-[10px] font-bold uppercase ${
+                                <span className={`px-2 py-0.5 rounded border-[0.5px] text-[10px] font-bold uppercase ${
                                     product.status === 'published' || product.status === 'approved' 
-                                        ? 'bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400 border-green-200/30' 
-                                        : 'bg-neutral-50 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200'
+                                        ? 'bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400 border-black/50' 
+                                        : 'bg-neutral-50 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-black/50'
                                 }`}>{product.status.replace('_', ' ')}</span>
                             </div>
                             <div className="flex justify-between">
@@ -109,15 +109,15 @@ export default function AdminProductViewPage() {
 
                 {/* Right Column: Details */}
                 <div className="lg:col-span-2 space-y-6">
-                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 space-y-6">
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 space-y-6">
                         <div>
                             <h2 className="text-lg font-black text-gray-900 dark:text-white mb-3">{product.title}</h2>
                             <div className="flex items-center gap-3 text-[10px] text-gray-500 font-bold flex-wrap">
-                                <span className="bg-neutral-50 dark:bg-gray-800 border border-neutral-200/60 dark:border-gray-700 px-2 py-0.5 rounded">Category: {product.category?.name}</span>
+                                <span className="bg-neutral-50 dark:bg-gray-800 border-[0.5px] border-black/50 dark:border-gray-700 px-2 py-0.5 rounded">Category: {product.category?.name}</span>
                                 {product.concern && (
-                                    <span className="bg-neutral-50 dark:bg-gray-800 border border-neutral-200/60 dark:border-gray-700 px-2 py-0.5 rounded">Concern: {product.concern?.name}</span>
+                                    <span className="bg-neutral-50 dark:bg-gray-800 border-[0.5px] border-black/50 dark:border-gray-700 px-2 py-0.5 rounded">Concern: {product.concern?.name}</span>
                                 )}
-                                <span className="bg-neutral-50 dark:bg-gray-800 border border-neutral-200/60 dark:border-gray-700 px-2 py-0.5 rounded">Brand: {product.brand?.name}</span>
+                                <span className="bg-neutral-50 dark:bg-gray-800 border-[0.5px] border-black/50 dark:border-gray-700 px-2 py-0.5 rounded">Brand: {product.brand?.name}</span>
                             </div>
                         </div>
 
@@ -141,12 +141,12 @@ export default function AdminProductViewPage() {
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800">
-                        <h3 className="font-extrabold text-sm text-gray-900 dark:text-white border-b border-neutral-950/10 dark:border-gray-800 pb-2.5 mb-4">Specifications</h3>
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800">
+                        <h3 className="font-extrabold text-sm text-gray-900 dark:text-white border-b-[0.5px] border-black/50 dark:border-gray-800 pb-2.5 mb-4">Specifications</h3>
                         {product.specifications && product.specifications.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-semibold">
                                 {product.specifications.map((spec: any, idx: number) => (
-                                    <div key={idx} className="flex justify-between border-b border-neutral-950/5 pb-2">
+                                    <div key={idx} className="flex justify-between border-b-[0.5px] border-black/50 pb-2">
                                         <span className="text-gray-500">{spec.key}</span>
                                         <span className="font-bold text-gray-900 dark:text-white">{spec.value}</span>
                                     </div>

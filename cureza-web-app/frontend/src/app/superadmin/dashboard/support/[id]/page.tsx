@@ -32,7 +32,7 @@ export default function TicketChatPage() {
 
     return (
         <div className="w-full mx-auto px-4 md:px-6 lg:px-8 py-6 space-y-6">
-            <div className="flex justify-between items-center border-b-[0.35px] border-neutral-950/10 pb-4">
+            <div className="flex justify-between items-center border-b-[0.35px] border-black/50 pb-4">
                 <h1 className="text-xl font-semibold text-gray-900 tracking-tight">Ticket #{ticket.id}</h1>
                 <span className="text-xs text-gray-550 font-medium">Managing as Admin</span>
             </div>

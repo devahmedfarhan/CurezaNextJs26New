@@ -358,7 +358,7 @@ export default function AdminCustomersPage() {
                             setImportResult(null);
                             setIsBulkModalOpen(true);
                         }}
-                        className="flex items-center gap-2 bg-white border-[0.5px] border-neutral-950/15 text-neutral-850 px-4 py-2.5 rounded-[10px] hover:bg-neutral-50 transition-colors font-medium text-xs shadow-none"
+                        className="flex items-center gap-2 bg-white border-[0.5px] border-black/50 text-neutral-850 px-4 py-2.5 rounded-[10px] hover:bg-neutral-50 transition-colors font-medium text-xs shadow-none"
                     >
                         <Upload size={14} />
                         Bulk Upload (CSV)
@@ -375,7 +375,7 @@ export default function AdminCustomersPage() {
 
             {/* Bulk Actions Toolbar */}
             {selectedIds.size > 0 && (
-                <div className="bg-red-50/50 border-[0.5px] border-red-200/50 p-4 rounded-[10px] flex items-center justify-between shadow-none animate-in slide-in-from-top-4 duration-300">
+                <div className="bg-red-50/50 border-[0.5px] border-black/50 p-4 rounded-[10px] flex items-center justify-between shadow-none animate-in slide-in-from-top-4 duration-300">
                     <div className="flex items-center gap-2 text-red-700 text-xs font-medium">
                         <AlertCircle size={14} />
                         {selectedIds.size} Customers selected
@@ -391,14 +391,14 @@ export default function AdminCustomersPage() {
             )}
 
             {/* Search Bar */}
-            <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-neutral-950/10 shadow-none">
+            <div className="bg-white p-4 rounded-[10px] border-[0.5px] border-black/50 shadow-none">
                 <div className="relative flex-1">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                         <Search className="h-4 w-4 text-neutral-400" />
                     </div>
                     <input
                         type="text"
-                        className="block w-full pl-10 pr-4 py-2.5 border-[0.5px] border-neutral-950/15 rounded-[10px] text-xs font-normal focus:outline-none focus:ring-1 focus:ring-black focus:border-black w-full transition-all placeholder:text-neutral-400"
+                        className="block w-full pl-10 pr-4 py-2.5 border-[0.5px] border-black/50 rounded-[10px] text-xs font-normal focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all placeholder:text-neutral-400"
                         placeholder="Search by name, email or phone..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -407,10 +407,10 @@ export default function AdminCustomersPage() {
             </div>
 
             {/* Customers List */}
-            <div className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 shadow-none overflow-hidden">
+            <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 shadow-none overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs">
-                        <thead className="bg-neutral-50/50 border-b border-neutral-950/5">
+                        <thead className="bg-neutral-50/50 border-b-[0.5px] border-black/50">
                             <tr className="text-neutral-500 font-medium">
                                 <th scope="col" className="px-6 py-4 w-12 text-center">
                                     <input 
@@ -452,7 +452,7 @@ export default function AdminCustomersPage() {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
-                                                <div className="flex-shrink-0 h-9 w-9 bg-neutral-100 border-[0.5px] border-neutral-950/10 text-neutral-900 rounded-[10px] flex items-center justify-center font-semibold text-sm">
+                                                <div className="flex-shrink-0 h-9 w-9 bg-neutral-100 border-[0.5px] border-black/50 text-neutral-900 rounded-[10px] flex items-center justify-center font-semibold text-sm">
                                                     {customer.name.charAt(0).toUpperCase()}
                                                 </div>
                                                 <div className="ml-3">
@@ -474,7 +474,7 @@ export default function AdminCustomersPage() {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className="inline-flex items-center px-2 py-0.5 rounded-[4px] text-[10px] font-semibold tracking-wide bg-green-50 text-green-700 border border-green-200/50">
+                                            <span className="inline-flex items-center px-2 py-0.5 rounded-[4px] text-[10px] font-semibold tracking-wide bg-green-50 text-green-700 border-[0.5px] border-black/50">
                                                 {customer.status}
                                             </span>
                                         </td>
@@ -485,14 +485,14 @@ export default function AdminCustomersPage() {
                                             <div className="flex items-center justify-end gap-2">
                                                 <button 
                                                     onClick={() => handleOpenModal(customer)} 
-                                                    className="p-1.5 bg-neutral-50 hover:bg-neutral-100 border border-neutral-950/10 text-neutral-500 hover:text-neutral-900 rounded-lg transition-colors" 
+                                                    className="p-1.5 bg-neutral-50 hover:bg-neutral-100 border-[0.5px] border-black/50 text-neutral-500 hover:text-neutral-900 rounded-lg transition-colors" 
                                                     title="Edit"
                                                 >
                                                     <Edit size={12} />
                                                 </button>
                                                 <button 
                                                     onClick={() => handleDelete(customer.id)} 
-                                                    className="p-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 rounded-lg transition-colors" 
+                                                    className="p-1.5 bg-red-50 hover:bg-red-100 border-[0.5px] border-black/50 text-red-600 rounded-lg transition-colors" 
                                                     title="Delete"
                                                 >
                                                     <Trash2 size={12} />
@@ -508,7 +508,7 @@ export default function AdminCustomersPage() {
 
                 {/* Pagination Controls */}
                 {pagination.last_page > 1 && (
-                    <div className="bg-white px-6 py-4 flex items-center justify-between border-t border-neutral-950/5">
+                    <div className="bg-white px-6 py-4 flex items-center justify-between border-t-[0.5px] border-black/50">
                         <div className="flex-1 flex justify-between items-center gap-4">
                             <div>
                                 <p className="text-xs text-neutral-500 font-normal">
@@ -519,14 +519,14 @@ export default function AdminCustomersPage() {
                                 <button
                                     onClick={() => handlePageChange(pagination.current_page - 1)}
                                     disabled={pagination.current_page === 1}
-                                    className="px-3.5 py-1.5 rounded-[10px] border border-neutral-950/10 text-xs font-medium text-neutral-600 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                                    className="px-3.5 py-1.5 rounded-[10px] border-[0.5px] border-black/50 text-xs font-medium text-neutral-600 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                                 >
                                     Previous
                                 </button>
                                 <button
                                     onClick={() => handlePageChange(pagination.current_page + 1)}
                                     disabled={pagination.current_page === pagination.last_page}
-                                    className="px-3.5 py-1.5 rounded-[10px] border border-neutral-950/10 text-xs font-medium text-neutral-650 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                                    className="px-3.5 py-1.5 rounded-[10px] border-[0.5px] border-black/50 text-xs font-medium text-neutral-650 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                                 >
                                     Next
                                 </button>
@@ -538,7 +538,7 @@ export default function AdminCustomersPage() {
 
             {/* SINGLE ADD / EDIT MODAL */}
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-                <DialogContent className="max-w-md rounded-[10px] p-6 bg-white shadow-none border border-neutral-950/10">
+                <DialogContent className="max-w-md rounded-[10px] p-6 bg-white shadow-none border-[0.5px] border-black/50">
                     <DialogHeader>
                         <DialogTitle className="text-base font-semibold text-neutral-900">
                             {editingCustomer ? 'Edit Customer Info' : 'Register Customer Profile'}
@@ -553,7 +553,7 @@ export default function AdminCustomersPage() {
                                 required
                                 value={formData.name}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-2.5 text-xs font-normal border border-neutral-950/15 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
+                                className="w-full px-4 py-2.5 text-xs font-normal border-[0.5px] border-black/50 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
                                 placeholder="Rahul Kumar"
                             />
                         </div>
@@ -566,7 +566,7 @@ export default function AdminCustomersPage() {
                                 disabled={!!editingCustomer}
                                 value={formData.email}
                                 onChange={handleInputChange}
-                                className={`w-full px-4 py-2.5 text-xs font-normal border border-neutral-950/15 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black ${editingCustomer ? 'bg-neutral-50 text-neutral-400 cursor-not-allowed' : ''}`}
+                                className={`w-full px-4 py-2.5 text-xs font-normal border-[0.5px] border-black/50 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black ${editingCustomer ? 'bg-neutral-50 text-neutral-400 cursor-not-allowed' : ''}`}
                                 placeholder="rahul@example.com"
                             />
                         </div>
@@ -577,7 +577,7 @@ export default function AdminCustomersPage() {
                                 name="phone"
                                 value={formData.phone}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-2.5 text-xs font-normal border border-neutral-950/15 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
+                                className="w-full px-4 py-2.5 text-xs font-normal border-[0.5px] border-black/50 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
                                 placeholder="9876543210"
                             />
                         </div>
@@ -590,12 +590,12 @@ export default function AdminCustomersPage() {
                                     required
                                     value={formData.password}
                                     onChange={handleInputChange}
-                                    className="w-full px-4 py-2.5 text-xs font-normal border border-neutral-950/15 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
+                                    className="w-full px-4 py-2.5 text-xs font-normal border-[0.5px] border-black/50 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
                                     placeholder="••••••••"
                                 />
                             </div>
                         )}
-                        <DialogFooter className="pt-4 border-t gap-2 sm:gap-0">
+                        <DialogFooter className="pt-4 border-t-[0.5px] gap-2 sm:gap-0">
                             <button
                                 type="button"
                                 onClick={() => setIsModalOpen(false)}
@@ -617,7 +617,7 @@ export default function AdminCustomersPage() {
 
             {/* BULK CSV IMPORT DIALOG */}
             <Dialog open={isBulkModalOpen} onOpenChange={setIsBulkModalOpen}>
-                <DialogContent className="max-w-2xl rounded-[10px] p-6 bg-white shadow-none border border-neutral-950/10 max-h-[85vh] overflow-y-auto">
+                <DialogContent className="max-w-2xl rounded-[10px] p-6 bg-white shadow-none border-[0.5px] border-black/50 max-h-[85vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle className="text-lg font-semibold text-neutral-900 flex items-center gap-2">
                             <FileSpreadsheet className="text-neutral-900" size={20} />
@@ -626,21 +626,21 @@ export default function AdminCustomersPage() {
                     </DialogHeader>
                     
                     <div className="space-y-6 py-3">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-neutral-50 rounded-[10px] border border-neutral-950/10 gap-4">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/50 gap-4">
                             <div className="space-y-0.5 text-xs font-normal">
                                 <h4 className="font-semibold text-neutral-900">CSV Formatted Template</h4>
                                 <p className="text-[10px] text-neutral-500">Download standard CSV layout with sample values.</p>
                             </div>
                             <button
                                 onClick={downloadTemplateCSV}
-                                className="flex items-center gap-1.5 bg-white border border-neutral-950/15 text-neutral-800 px-3.5 py-2 rounded-[10px] text-xs font-medium hover:bg-neutral-50 shadow-none shrink-0"
+                                className="flex items-center gap-1.5 bg-white border-[0.5px] border-black/50 text-neutral-800 px-3.5 py-2 rounded-[10px] text-xs font-medium hover:bg-neutral-50 shadow-none shrink-0"
                             >
                                 <Download size={14} /> Download Template
                             </button>
                         </div>
 
                         {/* File Upload Selector */}
-                        <div className="border border-dashed border-neutral-950/20 rounded-[10px] p-6 text-center hover:border-black/50 transition-colors relative cursor-pointer group">
+                        <div className="border-[0.5px] border-dashed border-black/50 rounded-[10px] p-6 text-center hover:border-black/50 transition-colors relative cursor-pointer group">
                             <input 
                                 type="file"
                                 accept=".csv"
@@ -648,7 +648,7 @@ export default function AdminCustomersPage() {
                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                             />
                             <div className="space-y-2">
-                                <div className="p-3 bg-neutral-50 text-neutral-900 rounded-lg w-fit mx-auto border border-neutral-950/10 group-hover:scale-105 transition-transform">
+                                <div className="p-3 bg-neutral-50 text-neutral-900 rounded-lg w-fit mx-auto border-[0.5px] border-black/50 group-hover:scale-105 transition-transform">
                                     <Upload size={20} />
                                 </div>
                                 <div className="text-xs">
@@ -661,18 +661,18 @@ export default function AdminCustomersPage() {
                         {/* Parsed List Preview */}
                         {parsedData.length > 0 && !importResult && (
                             <div className="space-y-3">
-                                <div className="flex justify-between items-center border-b border-neutral-950/5 pb-2">
+                                <div className="flex justify-between items-center border-b-[0.5px] border-black/50 pb-2">
                                     <h4 className="text-xs font-medium text-neutral-900">CSV Preview ({parsedData.length} records parsed)</h4>
                                     {validationErrors.length > 0 && (
-                                        <span className="text-[10px] font-medium text-red-650 bg-red-50 px-2 py-0.5 rounded border border-red-100">
+                                        <span className="text-[10px] font-medium text-red-650 bg-red-50 px-2 py-0.5 rounded border-[0.5px] border-black/50">
                                             {validationErrors.length} validation errors
                                         </span>
                                     )}
                                 </div>
 
-                                <div className="border border-neutral-950/10 rounded-[10px] overflow-hidden max-h-48 overflow-y-auto">
+                                <div className="border-[0.5px] border-black/50 rounded-[10px] overflow-hidden max-h-48 overflow-y-auto">
                                     <table className="w-full text-left text-xs">
-                                        <thead className="bg-neutral-50/50 border-b border-neutral-950/10 text-neutral-500 font-medium sticky top-0">
+                                        <thead className="bg-neutral-50/50 border-b-[0.5px] border-black/50 text-neutral-500 font-medium sticky top-0">
                                             <tr>
                                                 <th className="px-4 py-2.5">Name</th>
                                                 <th className="px-4 py-2.5">Email</th>
@@ -710,17 +710,17 @@ export default function AdminCustomersPage() {
 
                         {/* Import Result Panel */}
                         {importResult && (
-                            <div className="bg-neutral-50/50 border border-neutral-950/10 p-6 rounded-[10px] space-y-3">
+                            <div className="bg-neutral-50/50 border-[0.5px] border-black/50 p-6 rounded-[10px] space-y-3">
                                 <h4 className="text-sm font-semibold text-neutral-900 flex items-center gap-1.5">
                                     <CheckCircle2 className="text-neutral-900" size={18} />
                                     Import Summary
                                 </h4>
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs">
-                                    <div className="bg-white p-3.5 rounded-[10px] border border-neutral-950/10">
+                                    <div className="bg-white p-3.5 rounded-[10px] border-[0.5px] border-black/50">
                                         <p className="text-neutral-450 font-medium uppercase text-[9px] tracking-wider">Successfully Imported</p>
                                         <p className="text-lg font-semibold text-neutral-900">{importResult.success_count}</p>
                                     </div>
-                                    <div className="bg-white p-3.5 rounded-[10px] border border-neutral-950/10">
+                                    <div className="bg-white p-3.5 rounded-[10px] border-[0.5px] border-black/50">
                                         <p className="text-neutral-450 font-medium uppercase text-[9px] tracking-wider">Failed Rows</p>
                                         <p className="text-lg font-semibold text-red-600">{importResult.failed_count}</p>
                                     </div>
@@ -729,7 +729,7 @@ export default function AdminCustomersPage() {
                                 {importResult.failed_list?.length > 0 && (
                                     <div className="mt-4 space-y-2">
                                         <h5 className="text-xs font-semibold text-red-700 uppercase tracking-wide">Duplicate or Invalid Database Records:</h5>
-                                        <div className="border border-red-100 bg-white rounded-[10px] max-h-32 overflow-y-auto text-[11px] p-3 space-y-1.5 font-normal">
+                                        <div className="border-[0.5px] border-black/50 bg-white rounded-[10px] max-h-32 overflow-y-auto text-[11px] p-3 space-y-1.5 font-normal">
                                             {importResult.failed_list.map((f: any, idx: number) => (
                                                 <div key={idx} className="flex gap-2">
                                                     <span className="font-semibold text-red-700">Row {f.row}:</span>
@@ -745,7 +745,7 @@ export default function AdminCustomersPage() {
                         )}
                     </div>
 
-                    <DialogFooter className="pt-4 border-t gap-2 sm:gap-0">
+                    <DialogFooter className="pt-4 border-t-[0.5px] gap-2 sm:gap-0">
                         <button
                             type="button"
                             onClick={() => setIsBulkModalOpen(false)}

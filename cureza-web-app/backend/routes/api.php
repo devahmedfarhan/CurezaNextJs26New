@@ -94,6 +94,7 @@ Route::get('/menu-items', [MenuItemController::class, 'index']);
 Route::get('/attributes', [AttributeController::class, 'index']);
 Route::get('/tags', [TagController::class, 'index']); // Public tags listing for sellers
 Route::get('/tags/{slug}', [TagController::class, 'show']);
+Route::get('/hsn-codes', [\App\Http\Controllers\HsnCodeController::class, 'index']);
 
 // Public Doctor Listing
 Route::get('/public/doctors', [App\Http\Controllers\PublicDoctorController::class, 'index']);
@@ -116,6 +117,9 @@ Route::get('/orders/{id}/track', [\App\Http\Controllers\OrderTrackingController:
 
 // Payment Webhook Callback
 Route::post('/payments/webhook', [\App\Http\Controllers\PaymentController::class, 'handleWebhook']);
+
+// Shiprocket Webhook Callback (No keywords like 'shiprocket' in URL as per rules)
+Route::post('/v1/updates/callback', [\App\Http\Controllers\ShiprocketWebhookController::class, 'handle']);
 
 // Protected Routes (All authenticated users)
 Route::middleware('auth:sanctum')->group(function () {
@@ -154,6 +158,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Seller Routes
     Route::middleware('role:vendor')->group(function () {
+        Route::get('/seller/coupons', [CouponController::class, 'sellerCoupons']);
         Route::post('/seller/products', [ProductController::class, 'store']);
         Route::get('/seller/products', [ProductController::class, 'sellerIndex']);
         Route::get('/seller/products/{id}', [ProductController::class, 'sellerShow']); // Get single product for editing
@@ -201,6 +206,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/profile', [\App\Http\Controllers\SellerSettingsController::class, 'updateProfile']);
             Route::post('/kyc', [\App\Http\Controllers\SellerSettingsController::class, 'updateKYC']);
             Route::post('/tax', [\App\Http\Controllers\SellerSettingsController::class, 'updateTaxSettings']);
+            Route::post('/tax/sync', [\App\Http\Controllers\SellerSettingsController::class, 'syncProductsTax']);
         });
         
         // Seller Order Routes
@@ -215,6 +221,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::put('/orders/{id}/tracking', [\App\Http\Controllers\SellerOrderController::class, 'updateTracking']);
             
             // Courier Shipping & Simulation Routes
+            Route::get('/orders/{id}/serviceability', [\App\Http\Controllers\SellerOrderController::class, 'checkServiceability']);
             Route::get('/orders/{id}/pickup-slots', [\App\Http\Controllers\SellerOrderController::class, 'getPickupSlots']);
             Route::post('/orders/{id}/book-shipment', [\App\Http\Controllers\SellerOrderController::class, 'bookShipment']);
             Route::get('/orders/{id}/shipment', [\App\Http\Controllers\SellerOrderController::class, 'getShipmentInfo']);
@@ -587,6 +594,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/', [\App\Http\Controllers\Api\Admin\PayoutController::class, 'index']);
             Route::get('/pending', [\App\Http\Controllers\Api\Admin\PayoutController::class, 'pending']);
             Route::get('/statistics', [\App\Http\Controllers\Api\Admin\PayoutController::class, 'statistics']);
+            Route::post('/direct', [\App\Http\Controllers\Api\Admin\PayoutController::class, 'direct']);
             Route::get('/{id}', [\App\Http\Controllers\Api\Admin\PayoutController::class, 'show']);
             Route::post('/{id}/approve', [\App\Http\Controllers\Api\Admin\PayoutController::class, 'approve']);
             Route::post('/{id}/reject', [\App\Http\Controllers\Api\Admin\PayoutController::class, 'reject']);

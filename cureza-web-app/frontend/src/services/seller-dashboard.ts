@@ -137,5 +137,10 @@ export const SellerDashboardService = {
         document.body.appendChild(link);
         link.click();
         link.remove();
+    },
+
+    getCoupons: async () => {
+        const response = await api.get('/seller/coupons');
+        return response.data;
     }
 };

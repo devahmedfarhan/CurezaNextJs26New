@@ -140,23 +140,23 @@ export default function AdminBadgesPage() {
             {/* List Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {badges.length === 0 ? (
-                    <div className="col-span-full bg-white p-8 text-center border-[0.5px] border-neutral-950/10 rounded-[10px] text-xs text-gray-500">
+                    <div className="col-span-full bg-white p-8 text-center border-[0.5px] border-black/50 rounded-[10px] text-xs text-gray-500">
                         No badges configured yet. Click "Create Badge" to start!
                     </div>
                 ) : (
                     badges.map((item) => (
-                        <div key={item.id} className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 p-5 space-y-3.5 relative flex flex-col justify-between">
+                        <div key={item.id} className="bg-white rounded-[10px] border-[0.5px] border-black/50 p-5 space-y-3.5 relative flex flex-col justify-between">
                             <span className={`absolute top-4 right-4 text-[10px] font-medium px-2 py-0.5 rounded-[6px] border-[0.5px] ${
                                 item.is_active 
-                                    ? 'bg-green-50 text-green-800 border-green-200/50' 
-                                    : 'bg-neutral-50 text-neutral-500 border-neutral-950/10'
+                                    ? 'bg-green-50 text-green-800 border-black/50' 
+                                    : 'bg-neutral-50 text-neutral-500 border-black/50'
                             }`}>
                                 {item.is_active ? 'Active' : 'Draft'}
                             </span>
 
                             <div className="space-y-3">
                                 <div className="flex items-center gap-3.5">
-                                    <div className="text-2xl w-11 h-11 bg-neutral-50 border-[0.5px] border-neutral-950/10 rounded-[10px] flex items-center justify-center">
+                                    <div className="text-2xl w-11 h-11 bg-neutral-50 border-[0.5px] border-black/50 rounded-[10px] flex items-center justify-center">
                                         {item.icon || '🏅'}
                                     </div>
                                     <div>
@@ -170,17 +170,17 @@ export default function AdminBadgesPage() {
                                 <p className="text-xs text-gray-500 font-normal leading-relaxed min-h-[36px]">{item.description}</p>
                             </div>
 
-                            <div className="flex gap-2 justify-end border-t-[0.5px] border-neutral-950/10 pt-3">
+                            <div className="flex gap-2 justify-end border-t-[0.5px] border-black/50 pt-3">
                                 <button
                                     onClick={() => handleOpenEdit(item)}
-                                    className="px-2.5 py-1 border-[0.5px] border-neutral-950/20 text-gray-600 rounded-[10px] text-xs font-medium hover:bg-neutral-50 flex items-center gap-1 transition-colors"
+                                    className="px-2.5 py-1 border-[0.5px] border-black/50 text-gray-600 rounded-[10px] text-xs font-medium hover:bg-neutral-50 flex items-center gap-1 transition-colors"
                                 >
                                     <Edit2 size={12} />
                                     <span>Edit</span>
                                 </button>
                                 <button
                                     onClick={() => handleDelete(item.id)}
-                                    className="px-2.5 py-1 border-[0.5px] border-red-200 text-red-650 rounded-[10px] text-xs font-medium hover:bg-red-50/50 flex items-center gap-1 transition-colors"
+                                    className="px-2.5 py-1 border-[0.5px] border-black/50 text-red-650 rounded-[10px] text-xs font-medium hover:bg-red-50/50 flex items-center gap-1 transition-colors"
                                 >
                                     <Trash2 size={12} />
                                     <span>Delete</span>
@@ -194,7 +194,7 @@ export default function AdminBadgesPage() {
             {/* Create/Edit Modal */}
             {isOpen && (
                 <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-                    <div className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 max-w-md w-full p-5 space-y-4">
+                    <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 max-w-md w-full p-5 space-y-4">
                         <div className="flex justify-between items-start">
                             <h3 className="text-sm font-semibold text-gray-900">{editingId ? 'Edit Badge' : 'Create Badge'}</h3>
                             <button
@@ -215,7 +215,7 @@ export default function AdminBadgesPage() {
                                         value={form.name}
                                         onChange={handleInputChange}
                                         placeholder="e.g., Streak Master"
-                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                         required
                                     />
                                 </div>
@@ -227,7 +227,7 @@ export default function AdminBadgesPage() {
                                         value={form.icon}
                                         onChange={handleInputChange}
                                         placeholder="🔥"
-                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal text-center text-sm"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal text-center text-sm"
                                         required
                                     />
                                 </div>
@@ -241,7 +241,7 @@ export default function AdminBadgesPage() {
                                     onChange={handleInputChange}
                                     placeholder="Explain how users can unlock this badge..."
                                     rows={3}
-                                    className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal resize-none"
+                                    className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal resize-none"
                                     required
                                 ></textarea>
                             </div>
@@ -253,7 +253,7 @@ export default function AdminBadgesPage() {
                                         name="rule_type"
                                         value={form.rule_type}
                                         onChange={handleInputChange}
-                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                     >
                                         <option value="points_milestone">XP Points Milestone</option>
                                         <option value="challenges_completed">Challenges Completed</option>
@@ -269,7 +269,7 @@ export default function AdminBadgesPage() {
                                         value={form.rule_value}
                                         onChange={handleInputChange}
                                         min="1"
-                                        className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
+                                        className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                         required
                                     />
                                 </div>
@@ -281,18 +281,18 @@ export default function AdminBadgesPage() {
                                     name="is_active"
                                     value={form.is_active ? 'true' : 'false'}
                                     onChange={handleInputChange}
-                                    className="w-full px-3 py-1.5 border-[0.5px] border-neutral-950/20 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
+                                    className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                 >
                                     <option value="true">Active (Visible)</option>
                                     <option value="false">Draft (Hidden)</option>
                                 </select>
                             </div>
 
-                            <div className="flex gap-2.5 pt-3 border-t-[0.5px] border-neutral-950/10">
+                            <div className="flex gap-2.5 pt-3 border-t-[0.5px] border-black/50">
                                 <button
                                     type="button"
                                     onClick={() => setIsOpen(false)}
-                                    className="flex-1 border-[0.5px] border-neutral-950/20 text-gray-700 py-1.5 rounded-[10px] text-xs font-medium hover:bg-neutral-50 transition-colors"
+                                    className="flex-1 border-[0.5px] border-black/50 text-gray-700 py-1.5 rounded-[10px] text-xs font-medium hover:bg-neutral-50 transition-colors"
                                 >
                                     Cancel
                                 </button>

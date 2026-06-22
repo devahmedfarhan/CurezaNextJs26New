@@ -15,7 +15,7 @@ export default function AdminProductReportPage() {
             {/* Top Products */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[1, 2, 3].map((i) => (
-                    <div key={i} className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm relative overflow-hidden">
+                    <div key={i} className="bg-white p-4 rounded-xl border-[0.5px] border-black/50 shadow-none relative overflow-hidden">
                         <div className="absolute top-0 right-0 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-bl-lg">
                             #{i} Bestseller
                         </div>
@@ -27,7 +27,7 @@ export default function AdminProductReportPage() {
                                 <p className="font-bold text-cureza-green mt-2">₹450</p>
                             </div>
                         </div>
-                        <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-gray-100 text-center">
+                        <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t-[0.5px] border-black/50 text-center">
                             <div>
                                 <p className="text-xs text-gray-500 flex justify-center items-center gap-1"><Eye size={12} /> Views</p>
                                 <p className="font-bold text-gray-900">12.5K</p>
@@ -46,7 +46,7 @@ export default function AdminProductReportPage() {
             </div>
 
             {/* Category Performance */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <div className="bg-white rounded-xl border-[0.5px] border-black/50 shadow-none p-6">
                 <h3 className="font-bold text-gray-900 mb-6">Category Performance</h3>
                 <div className="space-y-4">
                     {[

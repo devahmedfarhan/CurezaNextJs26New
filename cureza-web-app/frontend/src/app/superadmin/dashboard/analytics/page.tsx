@@ -83,11 +83,11 @@ export default function SuperAdminAnalyticsPage() {
     return (
         <div className="space-y-8 pb-12">
             {/* Header Dashboard Banner */}
-            <div className="relative overflow-hidden bg-black text-white p-6 md:p-8 rounded-[10px] border-[0.5px] border-neutral-950/15">
+            <div className="relative overflow-hidden bg-black text-white p-6 md:p-8 rounded-[10px] border-[0.5px] border-black/50">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
                     <div>
                         <div className="flex items-center gap-2 mb-1.5">
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-[10px] font-bold tracking-wider bg-neutral-800 text-neutral-200 border border-neutral-700">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-[10px] font-bold tracking-wider bg-neutral-800 text-neutral-200 border-[0.5px] border-black/50">
                                 Interactive Analytics
                             </span>
                             {refreshing && (
@@ -102,7 +102,7 @@ export default function SuperAdminAnalyticsPage() {
                     <div className="flex flex-wrap gap-2.5">
                         <button 
                             onClick={() => fetchDashboardData(true)} 
-                            className="bg-neutral-900 hover:bg-neutral-850 text-white border border-neutral-800 px-4 py-2 rounded-md transition-all flex items-center justify-center gap-2 font-semibold text-xs tracking-wider"
+                            className="bg-neutral-900 hover:bg-neutral-850 text-white border-[0.5px] border-black/50 px-4 py-2 rounded-md transition-all flex items-center justify-center gap-2 font-semibold text-xs tracking-wider"
                         >
                             <RefreshCw size={14} className={refreshing ? 'animate-spin' : ''} />
                             Reload Data
@@ -115,14 +115,14 @@ export default function SuperAdminAnalyticsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 {/* Sales Revenue Trend SVG Chart */}
-                <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 lg:col-span-2 space-y-4">
-                    <div className="flex justify-between items-center pb-2 border-b border-gray-100 dark:border-gray-850">
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 lg:col-span-2 space-y-4">
+                    <div className="flex justify-between items-center pb-2 border-b-[0.5px] border-black/50 dark:border-gray-850">
                         <div>
                             <h3 className="text-base font-extrabold text-gray-900 dark:text-white">Platform Revenue Trend</h3>
                             <p className="text-xs text-gray-400 font-bold tracking-wider">Month-over-Month Gross Sales</p>
                         </div>
                         <div className="flex gap-2">
-                            <span className="flex items-center gap-1 text-xs font-bold text-green-700 dark:text-green-400 bg-green-50/50 dark:bg-green-950/20 border border-green-200/30 px-2 py-0.5 rounded">
+                            <span className="flex items-center gap-1 text-xs font-bold text-green-700 dark:text-green-400 bg-green-50/50 dark:bg-green-950/20 border-[0.5px] border-black/50 px-2 py-0.5 rounded">
                                 <TrendingUp size={12} />
                                 +24% MoM
                             </span>
@@ -172,8 +172,8 @@ export default function SuperAdminAnalyticsPage() {
                 </div>
 
                 {/* User Distributions CSS Bar Graph */}
-                <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 space-y-4 flex flex-col justify-between">
-                    <div className="pb-2 border-b border-gray-100 dark:border-gray-850">
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 space-y-4 flex flex-col justify-between">
+                    <div className="pb-2 border-b-[0.5px] border-black/50 dark:border-gray-850">
                         <h3 className="text-base font-extrabold text-gray-900 dark:text-white">User Registrations</h3>
                         <p className="text-xs text-gray-400 font-bold tracking-wider">Breakdown of Platform Nodes</p>
                     </div>
@@ -182,7 +182,7 @@ export default function SuperAdminAnalyticsPage() {
                     <div className="flex justify-around items-end h-44 pt-6">
                         {/* Customers Bar */}
                         <div className="flex flex-col items-center gap-1.5 w-1/3 group cursor-pointer">
-                            <span className="text-[10px] font-bold text-black dark:text-white bg-neutral-50 dark:bg-gray-800 px-2 py-0.5 rounded border border-neutral-200 dark:border-gray-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span className="text-[10px] font-bold text-black dark:text-white bg-neutral-50 dark:bg-gray-800 px-2 py-0.5 rounded border-[0.5px] border-black/50 dark:border-gray-700 opacity-0 group-hover:opacity-100 transition-opacity">
                                 {stats.total_users}
                             </span>
                             <div className="w-10 bg-black dark:bg-white rounded-t-md transition-all duration-300 hover:bg-neutral-800" style={{ height: '120px' }} />
@@ -191,7 +191,7 @@ export default function SuperAdminAnalyticsPage() {
  
                         {/* Doctors Bar */}
                         <div className="flex flex-col items-center gap-1.5 w-1/3 group cursor-pointer">
-                            <span className="text-[10px] font-bold text-black dark:text-white bg-neutral-50 dark:bg-gray-800 px-2 py-0.5 rounded border border-neutral-200 dark:border-gray-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span className="text-[10px] font-bold text-black dark:text-white bg-neutral-50 dark:bg-gray-800 px-2 py-0.5 rounded border-[0.5px] border-black/50 dark:border-gray-700 opacity-0 group-hover:opacity-100 transition-opacity">
                                 {stats.total_doctors}
                             </span>
                             <div className="w-10 bg-neutral-600 dark:bg-neutral-500 rounded-t-md transition-all duration-300 hover:bg-neutral-700" style={{ height: '60px' }} />
@@ -200,7 +200,7 @@ export default function SuperAdminAnalyticsPage() {
  
                         {/* Sellers Bar */}
                         <div className="flex flex-col items-center gap-1.5 w-1/3 group cursor-pointer">
-                            <span className="text-[10px] font-bold text-black dark:text-white bg-neutral-50 dark:bg-gray-800 px-2 py-0.5 rounded border border-neutral-200 dark:border-gray-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span className="text-[10px] font-bold text-black dark:text-white bg-neutral-50 dark:bg-gray-800 px-2 py-0.5 rounded border-[0.5px] border-black/50 dark:border-gray-700 opacity-0 group-hover:opacity-100 transition-opacity">
                                 {stats.total_sellers}
                             </span>
                             <div className="w-10 bg-neutral-400 dark:bg-neutral-600 rounded-t-md transition-all duration-300 hover:bg-neutral-500" style={{ height: '40px' }} />
@@ -216,8 +216,8 @@ export default function SuperAdminAnalyticsPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
                 {/* Order Fulfillment pipeline */}
-                <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 space-y-4">
-                    <div className="pb-2 border-b border-gray-100 dark:border-gray-850 flex justify-between items-center">
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 space-y-4">
+                    <div className="pb-2 border-b-[0.5px] border-black/50 dark:border-gray-850 flex justify-between items-center">
                         <div>
                             <h3 className="text-base font-extrabold text-gray-900 dark:text-white">Fulfillment Pipeline</h3>
                             <p className="text-xs text-gray-400 font-bold tracking-wider">Order Journey Conversion</p>
@@ -246,8 +246,8 @@ export default function SuperAdminAnalyticsPage() {
                 </div>
 
                 {/* Customer Reviews Rating Distribution */}
-                <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 space-y-4">
-                    <div className="pb-2 border-b border-gray-100 dark:border-gray-850 flex justify-between items-center">
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 space-y-4">
+                    <div className="pb-2 border-b-[0.5px] border-black/50 dark:border-gray-850 flex justify-between items-center">
                         <div>
                             <h3 className="text-base font-extrabold text-gray-900 dark:text-white">Rating Distribution</h3>
                             <p className="text-xs text-gray-400 font-bold tracking-wider">Score Breakdown & NPS</p>
@@ -273,15 +273,15 @@ export default function SuperAdminAnalyticsPage() {
                         ))}
                     </div>
 
-                    <div className="bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-2.5 rounded-md flex justify-between items-center text-xs">
+                    <div className="bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-black/50 dark:border-gray-800 p-2.5 rounded-md flex justify-between items-center text-xs">
                         <span className="text-neutral-800 dark:text-neutral-250 font-bold">Net Promoter Score (NPS)</span>
-                        <span className="font-extrabold text-neutral-900 dark:text-white bg-white dark:bg-gray-900 border border-neutral-200 dark:border-gray-700 px-2 py-0.5 rounded">+78</span>
+                        <span className="font-extrabold text-neutral-900 dark:text-white bg-white dark:bg-gray-900 border-[0.5px] border-black/50 dark:border-gray-700 px-2 py-0.5 rounded">+78</span>
                     </div>
                 </div>
 
                 {/* Support SLA Donut Chart Representation */}
-                <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 space-y-4">
-                    <div className="pb-2 border-b border-gray-100 dark:border-gray-850 flex justify-between items-center">
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 space-y-4">
+                    <div className="pb-2 border-b-[0.5px] border-black/50 dark:border-gray-850 flex justify-between items-center">
                         <div>
                             <h3 className="text-base font-extrabold text-gray-900 dark:text-white">SLA & Ticket Priorities</h3>
                             <p className="text-xs text-gray-400 font-bold tracking-wider">Performance SLA Monitor</p>
@@ -318,19 +318,19 @@ export default function SuperAdminAnalyticsPage() {
                         <div className="flex-1 space-y-1.5 text-[11px] font-semibold">
                             <div className="flex justify-between items-center">
                                 <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-red-600" /> Urgent</span>
-                                <span className="text-neutral-900 dark:text-gray-200 bg-neutral-50 dark:bg-gray-800 px-1.5 py-0.2 rounded border border-neutral-200 dark:border-gray-700 font-bold">1</span>
+                                <span className="text-neutral-900 dark:text-gray-200 bg-neutral-50 dark:bg-gray-800 px-1.5 py-0.2 rounded border-[0.5px] border-black/50 dark:border-gray-700 font-bold">1</span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-red-650" /> High</span>
-                                <span className="text-neutral-900 dark:text-gray-200 bg-neutral-50 dark:bg-gray-800 px-1.5 py-0.2 rounded border border-neutral-200 dark:border-gray-700 font-bold">2</span>
+                                <span className="text-neutral-900 dark:text-gray-200 bg-neutral-50 dark:bg-gray-800 px-1.5 py-0.2 rounded border-[0.5px] border-black/50 dark:border-gray-700 font-bold">2</span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-neutral-500" /> Medium</span>
-                                <span className="text-neutral-900 dark:text-gray-200 bg-neutral-50 dark:bg-gray-800 px-1.5 py-0.2 rounded border border-neutral-200 dark:border-gray-700 font-bold">1</span>
+                                <span className="text-neutral-900 dark:text-gray-200 bg-neutral-50 dark:bg-gray-800 px-1.5 py-0.2 rounded border-[0.5px] border-black/50 dark:border-gray-700 font-bold">1</span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-neutral-300" /> Low</span>
-                                <span className="text-neutral-900 dark:text-gray-200 bg-neutral-50 dark:bg-gray-800 px-1.5 py-0.2 rounded border border-neutral-200 dark:border-gray-700 font-bold">1</span>
+                                <span className="text-neutral-900 dark:text-gray-200 bg-neutral-50 dark:bg-gray-800 px-1.5 py-0.2 rounded border-[0.5px] border-black/50 dark:border-gray-700 font-bold">1</span>
                             </div>
                         </div>
                     </div>
@@ -342,8 +342,8 @@ export default function SuperAdminAnalyticsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 
                 {/* Cureza Circle Engagement details */}
-                <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 space-y-4">
-                    <div className="pb-2 border-b border-gray-100 dark:border-gray-850 flex justify-between items-center">
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 space-y-4">
+                    <div className="pb-2 border-b-[0.5px] border-black/50 dark:border-gray-850 flex justify-between items-center">
                         <div>
                             <h3 className="text-base font-extrabold text-gray-900 dark:text-white">Cureza Circle Gamification</h3>
                             <p className="text-xs text-gray-400 font-bold tracking-wider">Community Engagement & Referrals</p>
@@ -352,17 +352,17 @@ export default function SuperAdminAnalyticsPage() {
                     </div>
 
                     <div className="grid grid-cols-3 gap-4 pt-2">
-                        <div className="bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-3.5 rounded-md text-center space-y-1">
+                        <div className="bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-black/50 dark:border-gray-800 p-3.5 rounded-md text-center space-y-1">
                             <p className="text-[9px] text-neutral-400 font-bold">Weekly Referrals</p>
                             <p className="text-xl font-black text-black dark:text-white">124</p>
                             <p className="text-[9px] text-green-600 dark:text-green-400 font-bold">+18% Growth</p>
                         </div>
-                        <div className="bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-3.5 rounded-md text-center space-y-1">
+                        <div className="bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-black/50 dark:border-gray-800 p-3.5 rounded-md text-center space-y-1">
                             <p className="text-[9px] text-neutral-400 font-bold">Challenge Entries</p>
                             <p className="text-xl font-black text-black dark:text-white">842</p>
                             <p className="text-[9px] text-neutral-500 font-bold">2 Live Contests</p>
                         </div>
-                        <div className="bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-3.5 rounded-md text-center space-y-1">
+                        <div className="bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-black/50 dark:border-gray-800 p-3.5 rounded-md text-center space-y-1">
                             <p className="text-[9px] text-neutral-400 font-bold">Badges Granted</p>
                             <p className="text-xl font-black text-black dark:text-white">210</p>
                             <p className="text-[9px] text-neutral-500 font-bold">Superuser tier</p>
@@ -371,8 +371,8 @@ export default function SuperAdminAnalyticsPage() {
                 </div>
 
                 {/* Marketing & Pixel Analytics */}
-                <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 space-y-4">
-                    <div className="pb-2 border-b border-gray-100 dark:border-gray-850 flex justify-between items-center">
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 space-y-4">
+                    <div className="pb-2 border-b-[0.5px] border-black/50 dark:border-gray-850 flex justify-between items-center">
                         <div>
                             <h3 className="text-base font-extrabold text-gray-900 dark:text-white">Campaigns & Pixel Performance</h3>
                             <p className="text-xs text-gray-400 font-bold tracking-wider">Email and Tracking Events Conversion</p>
@@ -381,17 +381,17 @@ export default function SuperAdminAnalyticsPage() {
                     </div>
 
                     <div className="grid grid-cols-3 gap-4 pt-2">
-                        <div className="bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-3.5 rounded-md text-center space-y-1">
+                        <div className="bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-black/50 dark:border-gray-800 p-3.5 rounded-md text-center space-y-1">
                             <p className="text-[9px] text-neutral-400 font-bold">Avg Open Rate</p>
                             <p className="text-xl font-black text-black dark:text-white">34.8%</p>
                             <p className="text-[9px] text-neutral-500 font-bold">Industry: 22%</p>
                         </div>
-                        <div className="bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-3.5 rounded-md text-center space-y-1">
+                        <div className="bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-black/50 dark:border-gray-800 p-3.5 rounded-md text-center space-y-1">
                             <p className="text-[9px] text-neutral-400 font-bold">Click-Through</p>
                             <p className="text-xl font-black text-black dark:text-white">4.9%</p>
                             <p className="text-[9px] text-green-600 dark:text-green-400 font-bold">Optimized copy</p>
                         </div>
-                        <div className="bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-3.5 rounded-md text-center space-y-1">
+                        <div className="bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-black/50 dark:border-gray-800 p-3.5 rounded-md text-center space-y-1">
                             <p className="text-[9px] text-neutral-400 font-bold">Conversion Value</p>
                             <p className="text-xl font-black text-black dark:text-white">₹32K</p>
                             <p className="text-[9px] text-green-600 dark:text-green-400 font-bold">via coupons</p>

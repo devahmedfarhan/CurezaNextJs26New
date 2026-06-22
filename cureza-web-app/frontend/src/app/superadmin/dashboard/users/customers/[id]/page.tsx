@@ -68,7 +68,7 @@ export default function AdminCustomerDetailPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Profile Card */}
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-6">
+                <div className="bg-white p-6 rounded-xl border-[0.5px] border-black/50 shadow-none space-y-6">
                     <div className="flex items-center gap-4">
                         <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center text-2xl font-bold text-gray-500">
                             {customer.name.charAt(0)}
@@ -81,7 +81,7 @@ export default function AdminCustomerDetailPage() {
                         </div>
                     </div>
 
-                    <div className="space-y-3 pt-4 border-t border-gray-100">
+                    <div className="space-y-3 pt-4 border-t-[0.5px] border-black/50">
                         <div className="flex items-center gap-3 text-gray-600">
                             <Mail size={18} className="text-gray-400" />
                             <span className="text-sm">{customer.email}</span>
@@ -96,7 +96,7 @@ export default function AdminCustomerDetailPage() {
                         </div>
                     </div>
 
-                    {/* <div className="pt-4 border-t border-gray-100">
+                    {/* <div className="pt-4 border-t-[0.5px] border-black/50">
                         <h3 className="font-bold text-gray-900 mb-3 text-sm">Saved Addresses</h3>
                         <div className="space-y-3">
                             {addresses.map((addr: any) => (
@@ -116,7 +116,7 @@ export default function AdminCustomerDetailPage() {
                 <div className="lg:col-span-2 space-y-6">
                     {/* Stats */}
                     <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
+                        <div className="bg-white p-4 rounded-xl border-[0.5px] border-black/50 shadow-none flex items-center gap-4">
                             <div className="p-3 bg-blue-50 text-blue-600 rounded-lg">
                                 <ShoppingBag size={24} />
                             </div>
@@ -125,7 +125,7 @@ export default function AdminCustomerDetailPage() {
                                 <h3 className="text-2xl font-bold text-gray-900">{orders.length}</h3>
                             </div>
                         </div>
-                        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
+                        <div className="bg-white p-4 rounded-xl border-[0.5px] border-black/50 shadow-none flex items-center gap-4">
                             <div className="p-3 bg-green-50 text-green-600 rounded-lg">
                                 <CreditCard size={24} />
                             </div>
@@ -137,8 +137,8 @@ export default function AdminCustomerDetailPage() {
                     </div>
 
                     {/* Order History */}
-                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                        <div className="p-6 border-b border-gray-200">
+                    <div className="bg-white rounded-xl border-[0.5px] border-black/50 shadow-none overflow-hidden">
+                        <div className="p-6 border-b-[0.5px] border-black/50">
                             <h3 className="font-bold text-gray-900">Recent Orders</h3>
                         </div>
                         <div className="p-6 text-center text-gray-500">

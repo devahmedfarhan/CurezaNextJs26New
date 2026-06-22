@@ -13,28 +13,28 @@ export default function AdminAffiliateReportPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                <div className="bg-white p-4 rounded-xl border-[0.5px] border-black/50 shadow-none">
                     <div className="flex items-center gap-3 mb-2">
                         <div className="p-2 bg-purple-50 text-purple-600 rounded-lg"><Users size={20} /></div>
                         <span className="text-sm text-gray-500">Active Affiliates</span>
                     </div>
                     <h3 className="text-2xl font-bold text-gray-900">124</h3>
                 </div>
-                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                <div className="bg-white p-4 rounded-xl border-[0.5px] border-black/50 shadow-none">
                     <div className="flex items-center gap-3 mb-2">
                         <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><MousePointer size={20} /></div>
                         <span className="text-sm text-gray-500">Total Clicks</span>
                     </div>
                     <h3 className="text-2xl font-bold text-gray-900">45.2K</h3>
                 </div>
-                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                <div className="bg-white p-4 rounded-xl border-[0.5px] border-black/50 shadow-none">
                     <div className="flex items-center gap-3 mb-2">
                         <div className="p-2 bg-green-50 text-green-600 rounded-lg"><DollarSign size={20} /></div>
                         <span className="text-sm text-gray-500">Revenue Generated</span>
                     </div>
                     <h3 className="text-2xl font-bold text-gray-900">₹12.5L</h3>
                 </div>
-                <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                <div className="bg-white p-4 rounded-xl border-[0.5px] border-black/50 shadow-none">
                     <div className="flex items-center gap-3 mb-2">
                         <div className="p-2 bg-yellow-50 text-yellow-600 rounded-lg"><DollarSign size={20} /></div>
                         <span className="text-sm text-gray-500">Commission Paid</span>
@@ -43,8 +43,8 @@ export default function AdminAffiliateReportPage() {
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-gray-200">
+            <div className="bg-white rounded-xl border-[0.5px] border-black/50 shadow-none overflow-hidden">
+                <div className="p-4 border-b-[0.5px] border-black/50">
                     <h3 className="font-bold text-gray-900">Top Affiliates</h3>
                 </div>
                 <table className="min-w-full divide-y divide-gray-200">

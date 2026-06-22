@@ -127,7 +127,7 @@ export default function AdminProductsPage() {
     return (
         <div className="space-y-6 animate-in fade-in duration-550">
             {/* Header Section */}
-            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border-[0.5px] border-neutral-950/15 dark:border-gray-800">
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border-[0.5px] border-black/50 dark:border-gray-800">
                 <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div className="space-y-1">
                         <div className="flex items-center gap-3">
@@ -146,7 +146,7 @@ export default function AdminProductsPage() {
                     <div className="flex flex-wrap items-center gap-3">
                         <Link 
                             href="/superadmin/dashboard/products/bulk" 
-                            className="flex items-center gap-2 bg-white dark:bg-gray-800 border-[0.5px] border-neutral-950/15 text-gray-700 dark:text-gray-300 px-4 py-2.5 rounded-lg font-black text-xs hover:bg-gray-50 dark:hover:bg-gray-750 transition-all"
+                            className="flex items-center gap-2 bg-white dark:bg-gray-800 border-[0.5px] border-black/50 text-gray-700 dark:text-gray-300 px-4 py-2.5 rounded-lg font-black text-xs hover:bg-gray-50 dark:hover:bg-gray-750 transition-all"
                         >
                             <Upload size={14} className="text-gray-400" />
                             Bulk Import
@@ -169,7 +169,7 @@ export default function AdminProductsPage() {
                     className={`flex flex-col items-start p-5 text-left border-[0.5px] rounded-[10px] transition-all cursor-pointer ${
                         activeTab === 'all'
                             ? 'border-black bg-black text-white dark:border-white dark:bg-white dark:text-black'
-                            : 'border-neutral-950/15 bg-white text-gray-950 hover:bg-neutral-50 dark:border-gray-800 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-850'
+                            : 'border-black/50 bg-white text-gray-950 hover:bg-neutral-50 dark:border-gray-800 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-850'
                     }`}
                 >
                     <div className="flex justify-between items-center w-full mb-1">
@@ -190,7 +190,7 @@ export default function AdminProductsPage() {
                     className={`flex flex-col items-start p-5 text-left border-[0.5px] rounded-[10px] transition-all cursor-pointer ${
                         activeTab === 'pending'
                             ? 'border-black bg-black text-white dark:border-white dark:bg-white dark:text-black'
-                            : 'border-neutral-950/15 bg-white text-gray-950 hover:bg-neutral-50 dark:border-gray-800 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-850'
+                            : 'border-black/50 bg-white text-gray-950 hover:bg-neutral-50 dark:border-gray-800 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-850'
                     }`}
                 >
                     <div className="flex justify-between items-center w-full mb-1">
@@ -234,7 +234,7 @@ export default function AdminProductsPage() {
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
                 <input
                     type="text"
-                    className="w-full pl-11 pr-4 py-2.5 bg-white dark:bg-gray-900 border-[0.5px] border-neutral-950/15 dark:border-gray-800 rounded-lg font-bold text-xs text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-[1.5px] focus:ring-black/10 focus:border-black dark:focus:ring-white/10 dark:focus:border-white transition-all"
+                    className="w-full pl-11 pr-4 py-2.5 bg-white dark:bg-gray-900 border-[0.5px] border-black/50 dark:border-gray-800 rounded-lg font-bold text-xs text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-[1.5px] focus:ring-black/10 focus:border-black dark:focus:ring-white/10 dark:focus:border-white transition-all"
                     placeholder="Search products by title or brand..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -242,7 +242,7 @@ export default function AdminProductsPage() {
             </div>
 
             {/* Products List Table */}
-            <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 overflow-hidden">
                 {loading ? (
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-neutral-950/10 dark:divide-gray-800">
@@ -307,7 +307,7 @@ export default function AdminProductsPage() {
                                             <tr key={product.id} className="hover:bg-neutral-50/50 dark:hover:bg-gray-850/30 transition-colors group">
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <div className="flex items-center">
-                                                        <div className="h-10 w-10 shrink-0 bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-neutral-950/10 rounded-lg overflow-hidden flex items-center justify-center text-gray-400">
+                                                        <div className="h-10 w-10 shrink-0 bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-black/50 rounded-lg overflow-hidden flex items-center justify-center text-gray-400">
                                                             {product.image ? (
                                                                 <img src={getImageUrl(product.image)} alt="" className="w-full h-full object-cover" />
                                                             ) : (
@@ -330,21 +330,21 @@ export default function AdminProductsPage() {
                                                     ₹{parseFloat(product.price).toLocaleString('en-IN')}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className={`px-2 py-0.5 inline-flex text-[9px] font-bold uppercase tracking-wider rounded border ${
+                                                    <span className={`px-2 py-0.5 inline-flex text-[9px] font-bold uppercase tracking-wider rounded border-[0.5px] ${
                                                         product.stock > 10 
-                                                            ? 'bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400 border-green-200/30' 
+                                                            ? 'bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400 border-black/50' 
                                                             : product.stock > 0 
-                                                            ? 'bg-neutral-50 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200' 
-                                                            : 'bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-400 border-red-200/30'
+                                                            ? 'bg-neutral-50 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-black/50' 
+                                                            : 'bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-400 border-black/50'
                                                     }`}>
                                                         {product.stock > 0 ? `${product.stock} In Stock` : 'Out of Stock'}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className={`px-2 py-0.5 inline-flex text-[9px] font-bold uppercase tracking-wider rounded border ${
+                                                    <span className={`px-2 py-0.5 inline-flex text-[9px] font-bold uppercase tracking-wider rounded border-[0.5px] ${
                                                         product.status === 'published' || product.status === 'approved'
-                                                            ? 'bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400 border-green-200/30' 
-                                                            : 'bg-neutral-50 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200'
+                                                            ? 'bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400 border-black/50' 
+                                                            : 'bg-neutral-50 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-black/50'
                                                     }`}>
                                                         {product.status.replace('_', ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())}
                                                     </span>
@@ -415,19 +415,19 @@ export default function AdminProductsPage() {
 
                         {/* Pagination Controls */}
                         {totalPages > 1 && (
-                            <div className="bg-white dark:bg-gray-900 px-6 py-4 flex items-center justify-between border-t border-neutral-950/10 dark:border-gray-800 rounded-b-[10px]">
+                            <div className="bg-white dark:bg-gray-900 px-6 py-4 flex items-center justify-between border-t-[0.5px] border-black/50 dark:border-gray-800 rounded-b-[10px]">
                                 <div className="flex-1 flex justify-between sm:hidden">
                                     <button
                                         onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                         disabled={currentPage === 1}
-                                        className="px-4 py-2 border border-neutral-950/15 dark:border-gray-700 text-[10px] font-black uppercase tracking-wider rounded-lg text-gray-700 dark:text-gray-300 hover:bg-neutral-50 dark:hover:bg-gray-850 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                        className="px-4 py-2 border-[0.5px] border-black/50 dark:border-gray-700 text-[10px] font-black uppercase tracking-wider rounded-lg text-gray-700 dark:text-gray-300 hover:bg-neutral-50 dark:hover:bg-gray-850 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                                     >
                                         Prev
                                     </button>
                                     <button
                                         onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                                         disabled={currentPage === totalPages}
-                                        className="px-4 py-2 border border-neutral-950/15 dark:border-gray-700 text-[10px] font-black uppercase tracking-wider rounded-lg text-gray-700 dark:text-gray-300 hover:bg-neutral-50 dark:hover:bg-gray-850 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                        className="px-4 py-2 border-[0.5px] border-black/50 dark:border-gray-700 text-[10px] font-black uppercase tracking-wider rounded-lg text-gray-700 dark:text-gray-300 hover:bg-neutral-50 dark:hover:bg-gray-850 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                                     >
                                         Next
                                     </button>
@@ -443,11 +443,11 @@ export default function AdminProductsPage() {
                                         </p>
                                     </div>
                                     <div>
-                                        <nav className="relative z-0 inline-flex rounded-lg -space-x-px border border-neutral-950/10 dark:border-gray-800 overflow-hidden" aria-label="Pagination">
+                                        <nav className="relative z-0 inline-flex rounded-lg -space-x-px border-[0.5px] border-black/50 dark:border-gray-800 overflow-hidden" aria-label="Pagination">
                                             <button
                                                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                                 disabled={currentPage === 1}
-                                                className="relative inline-flex items-center px-3 py-2 border-r border-neutral-950/10 dark:border-gray-850 bg-white dark:bg-gray-900 text-xs font-medium text-gray-500 hover:bg-neutral-50 dark:hover:bg-gray-850 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                className="relative inline-flex items-center px-3 py-2 border-r-[0.5px] border-black/50 dark:border-gray-850 bg-white dark:bg-gray-900 text-xs font-medium text-gray-500 hover:bg-neutral-50 dark:hover:bg-gray-850 disabled:opacity-50 disabled:cursor-not-allowed"
                                             >
                                                 <span className="sr-only">Previous</span>
                                                 <ChevronLeft size={14} />
@@ -456,7 +456,7 @@ export default function AdminProductsPage() {
                                                 <button
                                                     key={page}
                                                     onClick={() => setCurrentPage(page)}
-                                                    className={`relative inline-flex items-center px-3.5 py-1.5 border-r border-neutral-950/10 dark:border-gray-850 text-[10px] font-black uppercase tracking-wider transition-all ${
+                                                    className={`relative inline-flex items-center px-3.5 py-1.5 border-r-[0.5px] border-black/50 dark:border-gray-850 text-[10px] font-black uppercase tracking-wider transition-all ${
                                                         currentPage === page
                                                             ? 'z-10 bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
                                                             : 'bg-white dark:bg-gray-900 text-gray-500 hover:bg-neutral-50 dark:hover:bg-gray-850'

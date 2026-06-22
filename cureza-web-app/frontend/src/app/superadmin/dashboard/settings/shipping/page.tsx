@@ -13,7 +13,7 @@ export default function ShippingSettingsPageRedirect() {
     }, [router]);
 
     return (
-        <div className="max-w-md mx-auto my-20 p-8 bg-white border border-gray-200 rounded-2xl shadow-sm text-center font-sans space-y-6">
+        <div className="max-w-md mx-auto my-20 p-8 bg-white border-[0.5px] border-black/50 rounded-2xl shadow-none text-center font-sans space-y-6">
             <div className="flex justify-center">
                 <Loader2 className="animate-spin text-green-600" size={40} />
             </div>

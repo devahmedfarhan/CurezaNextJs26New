@@ -127,15 +127,15 @@ export default function AdminOrderDetailPage() {
     return (
         <div className="space-y-6 max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 bg-slate-50 min-h-screen">
             {/* Header section with modern background gradient */}
-            <div className="bg-gradient-to-r from-teal-700 to-emerald-600 rounded-2xl p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="bg-gradient-to-r from-teal-700 to-emerald-600 rounded-2xl p-6 sm:p-8 text-white shadow-none flex flex-col md:flex-row md:items-center justify-between gap-6 border-black/50 border-[0.5px]">
                 <div className="flex items-center gap-4">
-                    <Link href="/superadmin/dashboard/orders" className="p-3 bg-white/10 hover:bg-white/20 border border-white/15 rounded-xl transition-all">
+                    <Link href="/superadmin/dashboard/orders" className="p-3 bg-white/10 hover:bg-white/20 border-[0.5px] border-white/15 rounded-xl transition-all">
                         <ArrowLeft size={20} className="text-white" />
                     </Link>
                     <div>
                         <div className="flex items-center gap-3">
                             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Order #{order.order_number}</h1>
-                            <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase border ${getStatusBadge(order.status)}`}>
+                            <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase border-[0.5px] ${getStatusBadge(order.status)}`}>
                                 {order.status}
                             </span>
                         </div>
@@ -159,7 +159,7 @@ export default function AdminOrderDetailPage() {
                                 alert('Failed to download invoice');
                             }
                         }}
-                        className="flex items-center gap-2 bg-white text-teal-800 px-4 py-2.5 rounded-xl font-semibold hover:bg-teal-50 transition-colors shadow-sm text-sm"
+                        className="flex items-center gap-2 bg-white text-teal-800 px-4 py-2.5 rounded-xl font-semibold hover:bg-teal-50 transition-colors shadow-none text-sm border-black/50 border-[0.5px]"
                     >
                         <Printer size={18} />
                         Download Invoice
@@ -169,21 +169,21 @@ export default function AdminOrderDetailPage() {
                     {order.payment_status === 'paid' && (
                         <button
                             onClick={() => setIsRefundModalOpen(true)}
-                            className="flex items-center gap-2 bg-rose-600 text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-rose-700 transition-colors shadow-sm text-sm"
+                            className="flex items-center gap-2 bg-rose-600 text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-rose-700 transition-colors shadow-none text-sm border-black/50 border-[0.5px]"
                         >
                             Initiate Refund
                         </button>
                     )}
 
                     <button
-                        className="flex items-center gap-2 bg-amber-500 text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-amber-600 transition-colors shadow-sm text-sm"
+                        className="flex items-center gap-2 bg-amber-500 text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-amber-600 transition-colors shadow-none text-sm border-black/50 border-[0.5px]"
                         onClick={() => setIsEditModalOpen(true)}
                     >
                         Update Order
                     </button>
 
                     <button
-                        className="flex items-center gap-2 bg-rose-700 text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-rose-800 transition-colors shadow-sm text-sm"
+                        className="flex items-center gap-2 bg-rose-700 text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-rose-800 transition-colors shadow-none text-sm border-black/50 border-[0.5px]"
                         onClick={async () => {
                             if (confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
                                 try {
@@ -205,8 +205,8 @@ export default function AdminOrderDetailPage() {
                 {/* Main Content */}
                 <div className="lg:col-span-2 space-y-8">
                     {/* Order Items */}
-                    <div className="bg-white rounded-2xl border border-slate-200/80 shadow-md overflow-hidden">
-                        <div className="p-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                    <div className="bg-white rounded-2xl border-[0.5px] border-black/50 shadow-none overflow-hidden">
+                        <div className="p-6 border-b-[0.5px] border-black/50 bg-slate-50/50 flex justify-between items-center">
                             <h3 className="font-bold text-slate-800 text-lg flex items-center gap-2">
                                 <Package className="text-teal-600" size={20} />
                                 Order Items
@@ -217,7 +217,7 @@ export default function AdminOrderDetailPage() {
                             {order.items.map((item) => (
                                 <div key={item.id} className="p-6 flex flex-col gap-4 hover:bg-slate-50/30 transition-all">
                                     <div className="flex items-center gap-4">
-                                        <div className="h-16 w-16 bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl flex-shrink-0 flex items-center justify-center text-teal-600 font-bold border border-teal-100/50 shadow-inner">
+                                        <div className="h-16 w-16 bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl flex-shrink-0 flex items-center justify-center text-teal-600 font-bold border-[0.5px] border-black/50 shadow-inner">
                                             {item.product_name.charAt(0)}
                                         </div>
                                         <div className="flex-1 min-w-0">
@@ -230,20 +230,20 @@ export default function AdminOrderDetailPage() {
                                         </div>
                                     </div>
                                     {item.patient_name && (
-                                        <div className="ml-0 sm:ml-20 bg-teal-50/40 border border-teal-100/50 rounded-xl p-4 text-xs text-slate-600 space-y-2">
+                                        <div className="ml-0 sm:ml-20 bg-teal-50/40 border-[0.5px] border-black/50 rounded-xl p-4 text-xs text-slate-600 space-y-2">
                                             <div className="flex flex-wrap gap-4 justify-between font-medium">
                                                 <div>Patient: <span className="text-slate-900 font-bold">{item.patient_name}</span> ({item.patient_age} yrs, {item.patient_gender})</div>
                                                 <div>Doctor: <span className="text-slate-900 font-bold">Dr. {item.doctor?.name || 'N/A'}</span></div>
                                             </div>
                                             <div>Concern: <span className="italic text-slate-800">"{item.health_concern}"</span></div>
-                                            <div className="flex items-center justify-between pt-2 border-t border-teal-100/30">
+                                            <div className="flex items-center justify-between pt-2 border-t-[0.5px] border-black/50">
                                                 <span className="font-medium">Prescription File:</span>
                                                 {item.prescription_path ? (
                                                     <a 
                                                         href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/storage/${item.prescription_path}`} 
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="text-teal-700 font-bold hover:underline hover:text-teal-800 flex items-center gap-1 bg-white border border-teal-100 px-3 py-1 rounded-lg shadow-sm"
+                                                        className="text-teal-700 font-bold hover:underline hover:text-teal-800 flex items-center gap-1 bg-white border-[0.5px] border-black/50 px-3 py-1 rounded-lg shadow-none"
                                                     >
                                                         View Prescription PDF
                                                     </a>
@@ -256,7 +256,7 @@ export default function AdminOrderDetailPage() {
                                 </div>
                             ))}
                         </div>
-                        <div className="bg-slate-50/80 p-6 border-t border-slate-100">
+                        <div className="bg-slate-50/80 p-6 border-t-[0.5px] border-black/50">
                             <div className="flex justify-between text-sm mb-2">
                                 <span className="text-slate-500 font-medium">Subtotal</span>
                                 <span className="font-semibold text-slate-700">₹{order.total_amount}</span>
@@ -269,7 +269,7 @@ export default function AdminOrderDetailPage() {
                                 <span className="text-slate-500 font-medium">GST / Taxes</span>
                                 <span className="font-semibold text-slate-700">₹{order.tax_amount}</span>
                             </div>
-                            <div className="flex justify-between text-lg font-bold border-t border-slate-200/80 pt-4 mt-4">
+                            <div className="flex justify-between text-lg font-bold border-t-[0.5px] border-black/50 pt-4 mt-4">
                                 <span className="text-slate-850">Grand Total</span>
                                 <span className="text-emerald-600 text-xl font-extrabold">₹{order.final_amount}</span>
                             </div>
@@ -277,13 +277,13 @@ export default function AdminOrderDetailPage() {
                     </div>
 
                     {/* Shipment Details & AWB Tracking */}
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-md">
+                    <div className="bg-white p-6 rounded-2xl border-[0.5px] border-black/50 shadow-none">
                         <h3 className="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
                             <Truck className="text-teal-600" size={20} />
                             Shipping & Courier Integration
                         </h3>
                         {order.tracking_id ? (
-                            <div className="bg-slate-50 border border-slate-100 rounded-xl p-5 space-y-4">
+                            <div className="bg-slate-50 border-[0.5px] border-black/50 rounded-xl p-5 space-y-4">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                                     <div>
                                         <span className="text-slate-450 font-medium">Courier Provider</span>
@@ -299,14 +299,14 @@ export default function AdminOrderDetailPage() {
                                         href={`https://track.cureza.com/?awb=${order.tracking_id}&provider=${encodeURIComponent(order.tracking_provider || '')}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-teal-700 transition-colors shadow-sm"
+                                        className="inline-flex items-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-teal-700 transition-colors shadow-none border-black/50 border-[0.5px]"
                                     >
                                         Track Package Live
                                     </a>
                                 </div>
                             </div>
                         ) : (
-                            <div className="bg-amber-50/50 border border-amber-100/50 rounded-xl p-5 text-sm text-amber-800 flex items-start gap-3">
+                            <div className="bg-amber-50/50 border-[0.5px] border-black/50 rounded-xl p-5 text-sm text-amber-800 flex items-start gap-3">
                                 <div>
                                     <p className="font-semibold">No active tracking information available.</p>
                                     <p className="text-xs text-amber-700 mt-1">Please update this order status and insert courier details to activate shipment tracking.</p>
@@ -316,15 +316,15 @@ export default function AdminOrderDetailPage() {
                     </div>
 
                     {/* Timeline */}
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-md">
+                    <div className="bg-white p-6 rounded-2xl border-[0.5px] border-black/50 shadow-none">
                         <h3 className="font-bold text-slate-800 text-lg mb-6 flex items-center gap-2">
                             <Clock className="text-teal-600" size={20} />
                             Order Tracking Timeline
                         </h3>
-                        <div className="relative pl-6 border-l-2 border-slate-150 space-y-8 ml-3">
+                        <div className="relative pl-6 border-l-[0.5px] border-black/50 space-y-8 ml-3">
                             {timeline.map((event, index) => (
                                 <div key={index} className="relative">
-                                    <div className={`absolute -left-[31px] top-1 h-5 w-5 rounded-full border-4 shadow-sm transition-all ${event.completed ? 'bg-emerald-500 border-emerald-100' : 'bg-white border-slate-200'
+                                    <div className={`absolute -left-[31px] top-1 h-5 w-5 rounded-full border-4 shadow-none transition-all border-[0.5px] ${event.completed ? 'bg-emerald-500 border-black/50' : 'bg-white border-black/50'
                                         }`}></div>
                                     <div>
                                         <p className={`font-bold text-sm ${event.completed ? 'text-slate-850' : 'text-slate-400'}`}>{event.status}</p>
@@ -339,7 +339,7 @@ export default function AdminOrderDetailPage() {
                 {/* Sidebar Info */}
                 <div className="space-y-8">
                     {/* Customer Info */}
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-md">
+                    <div className="bg-white p-6 rounded-2xl border-[0.5px] border-black/50 shadow-none">
                         <h3 className="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
                             <User className="text-slate-400" size={18} />
                             Customer Information
@@ -361,7 +361,7 @@ export default function AdminOrderDetailPage() {
                     </div>
 
                     {/* Shipping Address */}
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-md">
+                    <div className="bg-white p-6 rounded-2xl border-[0.5px] border-black/50 shadow-none">
                         <h3 className="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
                             <MapPin className="text-slate-400" size={18} />
                             Shipping Destination
@@ -381,7 +381,7 @@ export default function AdminOrderDetailPage() {
                     </div>
 
                     {/* Payment Info */}
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-md">
+                    <div className="bg-white p-6 rounded-2xl border-[0.5px] border-black/50 shadow-none">
                         <h3 className="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
                             <CreditCard className="text-slate-400" size={18} />
                             Payment Method Details
@@ -389,7 +389,7 @@ export default function AdminOrderDetailPage() {
                         <div className="space-y-4 text-sm text-slate-650">
                             <div className="flex justify-between items-center">
                                 <span className="text-slate-450">Payment Status</span>
-                                <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold border capitalize ${order.payment_status === 'paid' ? 'bg-emerald-50 text-emerald-700 border-emerald-250' : 'bg-amber-50 text-amber-700 border-amber-250'}`}>
+                                <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold border-[0.5px] capitalize ${order.payment_status === 'paid' ? 'bg-emerald-50 text-emerald-700 border-black/50' : 'bg-amber-50 text-amber-700 border-black/50'}`}>
                                     {order.payment_status}
                                 </span>
                             </div>
@@ -402,13 +402,13 @@ export default function AdminOrderDetailPage() {
 
                     {/* Active Refunds Display */}
                     {order.refunds && order.refunds.length > 0 && (
-                        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-md">
+                        <div className="bg-white p-6 rounded-2xl border-[0.5px] border-black/50 shadow-none">
                             <h3 className="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
                                 <span className="text-rose-500 font-bold">Refund History</span>
                             </h3>
                             <div className="space-y-3">
                                 {order.refunds.map((ref: any) => (
-                                    <div key={ref.id} className="border border-slate-100 rounded-xl p-4 bg-slate-50 text-xs">
+                                    <div key={ref.id} className="border-[0.5px] border-black/50 rounded-xl p-4 bg-slate-50 text-xs">
                                         <div className="flex justify-between font-bold text-slate-850">
                                             <span>₹{ref.amount}</span>
                                             <span className={`px-2 py-0.5 rounded-full uppercase tracking-wider ${ref.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>{ref.status}</span>
@@ -435,8 +435,8 @@ export default function AdminOrderDetailPage() {
             {/* Manual Refund Dialog */}
             {isRefundModalOpen && order && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 overflow-hidden border border-slate-100 animate-fadeIn">
-                        <div className="flex justify-between items-center p-5 border-b border-slate-100 bg-slate-50/50">
+                    <div className="bg-white rounded-2xl shadow-none w-full max-w-md mx-4 overflow-hidden border-[0.5px] border-black/50 animate-fadeIn">
+                        <div className="flex justify-between items-center p-5 border-b-[0.5px] border-black/50 bg-slate-50/50">
                             <h3 className="font-bold text-slate-800 text-lg">Initiate Refund</h3>
                             <button onClick={() => setIsRefundModalOpen(false)} className="text-slate-400 hover:text-slate-650">
                                 <X size={20} />
@@ -452,7 +452,7 @@ export default function AdminOrderDetailPage() {
                                     value={refundAmount}
                                     onChange={(e) => setRefundAmount(e.target.value)}
                                     max={order.final_amount}
-                                    className="w-full px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 text-sm font-semibold"
+                                    className="w-full px-4 py-2 border-[0.5px] border-black/50 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 text-sm font-semibold"
                                 />
                                 <span className="text-xs text-slate-450 mt-1 block">Maximum refundable: ₹{order.final_amount}</span>
                             </div>
@@ -465,7 +465,7 @@ export default function AdminOrderDetailPage() {
                                     placeholder="Customer returns damaged goods, etc."
                                     value={refundReason}
                                     onChange={(e) => setRefundReason(e.target.value)}
-                                    className="w-full px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 text-sm"
+                                    className="w-full px-4 py-2 border-[0.5px] border-black/50 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 text-sm"
                                 />
                             </div>
 
@@ -476,7 +476,7 @@ export default function AdminOrderDetailPage() {
                                     placeholder="Internal comments on package delivery confirmation"
                                     value={refundNotes}
                                     onChange={(e) => setRefundNotes(e.target.value)}
-                                    className="w-full px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 text-sm"
+                                    className="w-full px-4 py-2 border-[0.5px] border-black/50 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 text-sm"
                                 />
                             </div>
 
@@ -484,14 +484,14 @@ export default function AdminOrderDetailPage() {
                                 <button
                                     type="button"
                                     onClick={() => setIsRefundModalOpen(false)}
-                                    className="px-4 py-2 border border-slate-200 rounded-xl text-slate-650 hover:bg-slate-50 font-semibold text-sm transition-all"
+                                    className="px-4 py-2 border-[0.5px] border-black/50 rounded-xl text-slate-650 hover:bg-slate-50 font-semibold text-sm transition-all"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={refunding}
-                                    className="px-5 py-2 bg-rose-600 text-white rounded-xl hover:bg-rose-700 font-semibold text-sm disabled:opacity-50 transition-all shadow-sm"
+                                    className="px-5 py-2 bg-rose-600 text-white rounded-xl hover:bg-rose-700 font-semibold text-sm disabled:opacity-50 transition-all shadow-none border-black/50 border-[0.5px]"
                                 >
                                     {refunding ? 'Processing...' : 'Confirm Refund'}
                                 </button>

@@ -190,7 +190,7 @@ export default function SellerAnalyticsPage() {
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center py-32 gap-3">
-                <div className="w-8 h-8 border-2 border-[#00bba7] border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-8 h-8 border-[0.5px] border-[#00bba7] border-t-transparent rounded-full animate-spin"></div>
                 <p className="text-xs text-gray-400 font-medium">Loading intelligence console...</p>
             </div>
         );
@@ -202,7 +202,7 @@ export default function SellerAnalyticsPage() {
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-4">
                 <div>
                     <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">Intelligence & Insights</h1>
-                    <p className="text-gray-500 mt-2 text-xs sm:text-sm font-medium italic border-l-2 border-[#00bba7] pl-4 sm:pl-5 leading-relaxed">
+                    <p className="text-gray-500 mt-2 text-xs sm:text-sm font-medium italic border-l-[0.5px] border-[#00bba7] pl-4 sm:pl-5 leading-relaxed">
                         Granular analysis of marketplace performance, commission logic, and forecasting node matrices.
                     </p>
                 </div>
@@ -211,7 +211,7 @@ export default function SellerAnalyticsPage() {
                     <select 
                         value={range}
                         onChange={(e) => setRange(e.target.value)}
-                        className="w-full lg:w-auto bg-white border border-gray-200 rounded-2xl px-10 py-3.5 sm:py-4 text-[10px] font-black uppercase tracking-widest shadow-sm hover:shadow-md focus:outline-none focus:ring-4 focus:ring-[#00bba7]/10 focus:border-[#00bba7] transition-all cursor-pointer appearance-none outline-none"
+                        className="w-full lg:w-auto bg-white border-[0.5px] border-black/50 rounded-2xl px-10 py-3.5 sm:py-4 text-[10px] font-black uppercase tracking-widest shadow-none focus:outline-none focus:ring-4 focus:ring-[#00bba7]/10 focus:border-[#00bba7] transition-all cursor-pointer appearance-none outline-none"
                     >
                         <option value="7_days">7 Days Audit Focus</option>
                         <option value="30_days">30 Days Audit Focus</option>
@@ -231,14 +231,14 @@ export default function SellerAnalyticsPage() {
                     { label: 'Net Wallet Balance', value: `₹${(summary?.revenue?.net || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, icon: Layers, color: 'text-indigo-600', bg: 'bg-indigo-50 border-indigo-100', trend: 'Cleared', sub: 'Ready for withdrawal' },
                     { label: 'Conversion Yield', value: `${(summary?.conversion_yield?.value || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`, icon: BarChart2, color: 'text-amber-600', bg: 'bg-amber-50 border-amber-100', trend: summary?.conversion_yield?.trend || 'Healthy', sub: summary?.conversion_yield?.sub || 'Calculated index rate' },
                 ].map((stat) => (
-                    <div key={stat.label} className="premium-card p-5 sm:p-8 group relative overflow-hidden bg-white border border-gray-100 shadow-sm rounded-3xl">
+                    <div key={stat.label} className="premium-card p-5 sm:p-8 group relative overflow-hidden bg-white border-[0.5px] border-black/50 shadow-none rounded-3xl">
                         <div className="absolute top-0 right-0 w-24 h-24 bg-gray-50 rounded-full -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150"></div>
                         <div className="relative">
                             <div className="flex justify-between items-start mb-6">
-                                <div className={`p-3 sm:p-4 rounded-[1.25rem] ${stat.bg} ${stat.color} shadow-inner border group-hover:scale-110 transition-transform duration-500`}>
+                                <div className={`p-3 sm:p-4 rounded-[1.25rem] ${stat.bg} ${stat.color} shadow-inner border-[0.5px] group-hover:scale-110 transition-transform duration-500`}>
                                     <stat.icon size={20} className="sm:w-6 sm:h-6" />
                                 </div>
-                                <span className="text-[9px] font-black px-3 py-1 rounded-xl shadow-sm border bg-emerald-50 text-emerald-600 border-emerald-100">
+                                <span className="text-[9px] font-black px-3 py-1 rounded-xl shadow-none border-[0.5px] bg-emerald-50 text-emerald-600 border-black/50">
                                     {stat.trend}
                                 </span>
                             </div>
@@ -254,13 +254,13 @@ export default function SellerAnalyticsPage() {
             {/* Graphs Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                 {/* Sales trajectory */}
-                <div className="premium-card p-8 bg-white border border-gray-200 rounded-3xl shadow-sm flex flex-col group">
+                <div className="premium-card p-8 bg-white border-[0.5px] border-black/50 rounded-3xl shadow-none flex flex-col group">
                     <div className="flex justify-between items-center mb-8">
                         <div>
                             <h3 className="font-black text-xl text-gray-900 tracking-tighter">Strategic Sales Trajectory</h3>
                             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1 opacity-60">Temporal Revenue Mapping</p>
                         </div>
-                        <span className="flex items-center gap-2 px-3 py-1 bg-gray-50 rounded-lg border border-gray-100 text-[9px] font-black uppercase tracking-widest text-emerald-600">
+                        <span className="flex items-center gap-2 px-3 py-1 bg-gray-50 rounded-lg border-[0.5px] border-black/50 text-[9px] font-black uppercase tracking-widest text-emerald-600">
                             <span className="w-2 h-2 rounded-full bg-[#00bba7]"></span> Live Stream
                         </span>
                     </div>
@@ -316,13 +316,13 @@ export default function SellerAnalyticsPage() {
                 </div>
 
                 {/* Status Distribution */}
-                <div className="premium-card p-8 bg-white border border-gray-200 rounded-3xl shadow-sm flex flex-col group">
+                <div className="premium-card p-8 bg-white border-[0.5px] border-black/50 rounded-3xl shadow-none flex flex-col group">
                     <div className="flex justify-between items-center mb-8">
                         <div>
                             <h3 className="font-black text-xl text-gray-900 tracking-tighter">Order Status Summary</h3>
                             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1 opacity-60">Check your orders progress at a glance</p>
                         </div>
-                        <span className="flex items-center gap-2 px-3 py-1 bg-gray-50 rounded-lg border border-gray-100 text-[9px] font-black uppercase tracking-widest text-indigo-600">
+                        <span className="flex items-center gap-2 px-3 py-1 bg-gray-50 rounded-lg border-[0.5px] border-black/50 text-[9px] font-black uppercase tracking-widest text-indigo-600">
                             Status Overview
                         </span>
                     </div>
@@ -374,8 +374,8 @@ export default function SellerAnalyticsPage() {
             </div>
 
             {/* Interactive Seller Tools Console */}
-            <div className="premium-card bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
-                <div className="p-4 sm:p-8 bg-gray-50 border-b border-gray-100 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+            <div className="premium-card bg-white border-[0.5px] border-black/50 rounded-3xl shadow-none overflow-hidden">
+                <div className="p-4 sm:p-8 bg-gray-50 border-b-[0.5px] border-black/50 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
                                     <div className="flex items-center gap-3">
                                         <Sparkles className="text-[#00bba7] shrink-0" />
                                         <div>
@@ -384,11 +384,11 @@ export default function SellerAnalyticsPage() {
                                         </div>
                                     </div>
                                     
-                                    <div className="flex overflow-x-auto border border-gray-200 rounded-2xl bg-white p-1 gap-1 w-full xl:w-auto scrollbar-none">
+                                    <div className="flex overflow-x-auto border-[0.5px] border-black/50 rounded-2xl bg-white p-1 gap-1 w-full xl:w-auto scrollbar-none">
                                         <button 
                                             onClick={() => setActiveTool('forecaster')}
                                             className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all cursor-pointer shrink-0 ${
-                                                activeTool === 'forecaster' ? 'bg-[#101828] text-white shadow-md hover:bg-[#00bba7] hover:text-[#101828]' : 'text-gray-500 hover:text-[#101828]'
+                                                activeTool === 'forecaster' ? 'bg-[#101828] text-white shadow-none hover:bg-[#00bba7] hover:text-[#101828] border-black/50 border-[0.5px]' : 'text-gray-500 hover:text-[#101828]'
                                             }`}
                                         >
                                             <TrendingUp size={12} className="inline mr-1" /> Revenue Forecaster
@@ -396,7 +396,7 @@ export default function SellerAnalyticsPage() {
                                         <button 
                                             onClick={() => setActiveTool('pricing')}
                                             className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all cursor-pointer shrink-0 ${
-                                                activeTool === 'pricing' ? 'bg-[#101828] text-white shadow-md hover:bg-[#00bba7] hover:text-[#101828]' : 'text-gray-500 hover:text-[#101828]'
+                                                activeTool === 'pricing' ? 'bg-[#101828] text-white shadow-none hover:bg-[#00bba7] hover:text-[#101828] border-black/50 border-[0.5px]' : 'text-gray-500 hover:text-[#101828]'
                                             }`}
                                         >
                                             <Calculator size={12} className="inline mr-1" /> Pricing & ROI Optimizer
@@ -404,7 +404,7 @@ export default function SellerAnalyticsPage() {
                                         <button 
                                             onClick={() => setActiveTool('inventory')}
                                             className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all cursor-pointer shrink-0 ${
-                                                activeTool === 'inventory' ? 'bg-[#101828] text-white shadow-md hover:bg-[#00bba7] hover:text-[#101828]' : 'text-gray-500 hover:text-[#101828]'
+                                                activeTool === 'inventory' ? 'bg-[#101828] text-white shadow-none hover:bg-[#00bba7] hover:text-[#101828] border-black/50 border-[0.5px]' : 'text-gray-500 hover:text-[#101828]'
                                             }`}
                                         >
                                             <Package size={12} className="inline mr-1" /> Restock Runway Analyst
@@ -412,7 +412,7 @@ export default function SellerAnalyticsPage() {
                                         <button 
                                             onClick={() => setActiveTool('planner')}
                                             className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all cursor-pointer shrink-0 ${
-                                                activeTool === 'planner' ? 'bg-[#101828] text-white shadow-md hover:bg-[#00bba7] hover:text-[#101828]' : 'text-gray-500 hover:text-[#101828]'
+                                                activeTool === 'planner' ? 'bg-[#101828] text-white shadow-none hover:bg-[#00bba7] hover:text-[#101828] border-black/50 border-[0.5px]' : 'text-gray-500 hover:text-[#101828]'
                                             }`}
                                         >
                             <Target size={12} className="inline mr-1" /> Payout Goal Planner
@@ -425,8 +425,8 @@ export default function SellerAnalyticsPage() {
                     {activeTool === 'forecaster' && (
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                             {/* Sliders panel */}
-                            <div className="space-y-6 lg:col-span-1 p-4 sm:p-6 bg-gray-50 rounded-2xl border border-gray-100">
-                                <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-200 pb-3">Projection Parameters</h4>
+                            <div className="space-y-6 lg:col-span-1 p-4 sm:p-6 bg-gray-50 rounded-2xl border-[0.5px] border-black/50">
+                                <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest border-b-[0.5px] border-black/50 pb-3">Projection Parameters</h4>
                                 
                                 <div className="space-y-2">
                                     <div className="flex justify-between items-center text-xs font-black text-gray-600">
@@ -466,7 +466,7 @@ export default function SellerAnalyticsPage() {
                                     </div>
                                 </div>
 
-                                <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100/50 text-[9px] font-semibold text-emerald-800 flex gap-2">
+                                <div className="p-4 bg-emerald-50 rounded-xl border-[0.5px] border-black/50 text-[9px] font-semibold text-emerald-800 flex gap-2">
                                     <Info size={14} className="shrink-0 text-[#00bba7] mt-0.5" />
                                     <p>Increasing your Prepaid Mix decreases COD logistic management, but online payment processors charge a standard 2.50% Gateway Fee.</p>
                                 </div>
@@ -475,21 +475,21 @@ export default function SellerAnalyticsPage() {
                             {/* Projections Output Panel */}
                             <div className="lg:col-span-2 space-y-6">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
+                                    <div className="p-5 bg-white border-[0.5px] border-black/50 rounded-2xl shadow-none">
                                         <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest block mb-1">Projected Gross Volume</span>
                                         <h3 className="text-xl font-black text-gray-900">₹{projectedGross.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
                                         <p className="text-[8px] font-bold text-gray-400 mt-1 uppercase">Based on ₹{baseRevenue.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} base</p>
                                     </div>
 
-                                    <div className="p-5 bg-emerald-50/20 border border-emerald-100 rounded-2xl shadow-sm">
+                                    <div className="p-5 bg-emerald-50/20 border-[0.5px] border-black/50 rounded-2xl shadow-none">
                                         <span className="text-[8px] font-black text-[#00bba7] uppercase tracking-widest block mb-1">Projected Net Payout (Actual Yield)</span>
                                         <h3 className="text-xl font-black text-[#00bba7]">₹{projectedNetEarnings.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
                                         <p className="text-[8px] font-bold text-emerald-600 mt-1 uppercase">Approx {projectedGross > 0 ? ((projectedNetEarnings / projectedGross) * 100).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}% retention rate</p>
                                     </div>
                                 </div>
 
-                                <div className="p-6 border border-gray-100 rounded-2xl space-y-3">
-                                    <h5 className="text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-50 pb-2">Deductions Breakdown Simulator</h5>
+                                <div className="p-6 border-[0.5px] border-black/50 rounded-2xl space-y-3">
+                                    <h5 className="text-[10px] font-black text-gray-900 uppercase tracking-widest border-b-[0.5px] border-black/50 pb-2">Deductions Breakdown Simulator</h5>
                                     
                                     <div className="flex justify-between items-center text-xs font-bold text-gray-500">
                                         <span>Platform Commission ({platRate.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%)</span>
@@ -512,7 +512,7 @@ export default function SellerAnalyticsPage() {
                                         <span>-₹{projectedGatewayFee.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
 
-                                    <div className="border-t border-gray-100 pt-3 flex justify-between items-center text-sm font-black text-gray-900">
+                                    <div className="border-t-[0.5px] border-black/50 pt-3 flex justify-between items-center text-sm font-black text-gray-900">
                                         <span>Total Estimated Deductions</span>
                                         <span className="text-rose-600">₹{(projectedGross - projectedNetEarnings).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
@@ -525,8 +525,8 @@ export default function SellerAnalyticsPage() {
                     {activeTool === 'pricing' && (
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-in fade-in duration-300">
                             {/* Inputs Panel */}
-                            <div className="space-y-4 lg:col-span-1 p-4 sm:p-6 bg-gray-50 rounded-2xl border border-gray-100">
-                                <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-200 pb-3 mb-2">Cost & Pricing Parameters</h4>
+                            <div className="space-y-4 lg:col-span-1 p-4 sm:p-6 bg-gray-50 rounded-2xl border-[0.5px] border-black/50">
+                                <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest border-b-[0.5px] border-black/50 pb-3 mb-2">Cost & Pricing Parameters</h4>
                                 
                                 <div className="space-y-1">
                                     <label className="block text-[8px] font-black text-gray-400 uppercase tracking-widest px-1">Source / Cost Price (₹)</label>
@@ -536,7 +536,7 @@ export default function SellerAnalyticsPage() {
                                             type="number" 
                                             value={simCostPrice}
                                             onChange={(e) => setSimCostPrice(e.target.value)}
-                                            className="w-full pl-8 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold focus:ring-4 focus:ring-[#00bba7]/10 focus:border-[#00bba7] outline-none"
+                                            className="w-full pl-8 pr-4 py-2.5 bg-white border-[0.5px] border-black/50 rounded-xl text-xs font-bold focus:ring-4 focus:ring-[#00bba7]/10 focus:border-[#00bba7] outline-none"
                                             placeholder="Cost price"
                                         />
                                     </div>
@@ -550,7 +550,7 @@ export default function SellerAnalyticsPage() {
                                             type="number" 
                                             value={simSellingPrice}
                                             onChange={(e) => setSimSellingPrice(e.target.value)}
-                                            className="w-full pl-8 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold focus:ring-4 focus:ring-[#00bba7]/10 focus:border-[#00bba7] outline-none"
+                                            className="w-full pl-8 pr-4 py-2.5 bg-white border-[0.5px] border-black/50 rounded-xl text-xs font-bold focus:ring-4 focus:ring-[#00bba7]/10 focus:border-[#00bba7] outline-none"
                                             placeholder="List price"
                                         />
                                     </div>
@@ -579,13 +579,13 @@ export default function SellerAnalyticsPage() {
                             {/* ROI Outputs Panel */}
                             <div className="lg:col-span-2 space-y-6">
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                    <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
+                                    <div className="p-5 bg-white border-[0.5px] border-black/50 rounded-2xl shadow-none">
                                         <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest block mb-1">Simulated Sale Price</span>
                                         <h3 className="text-xl font-black text-gray-900">₹{simulatedSalePrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
                                         <p className="text-[8px] font-bold text-red-500 mt-1 uppercase">Saved ₹{discountAmt.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} for client</p>
                                     </div>
 
-                                    <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
+                                    <div className="p-5 bg-white border-[0.5px] border-black/50 rounded-2xl shadow-none">
                                         <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest block mb-1">Simulated Net Profit</span>
                                         <h3 className={`text-xl font-black ${simProfit >= 0 ? 'text-[#00bba7]' : 'text-red-600'}`}>
                                             {simProfit >= 0 ? '' : '-'}₹{Math.abs(simProfit).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -593,15 +593,15 @@ export default function SellerAnalyticsPage() {
                                         <p className="text-[8px] font-bold text-gray-400 mt-1 uppercase">ROI: <span className={simRoi >= 0 ? 'text-[#00bba7] font-extrabold' : 'text-red-500 font-extrabold'}>{simRoi.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</span></p>
                                     </div>
 
-                                    <div className="p-5 bg-indigo-50/10 border border-indigo-100 rounded-2xl shadow-sm">
+                                    <div className="p-5 bg-indigo-50/10 border-[0.5px] border-black/50 rounded-2xl shadow-none">
                                         <span className="text-[8px] font-black text-indigo-600 uppercase tracking-widest block mb-1">Calculated Break-Even</span>
                                         <h3 className="text-xl font-black text-indigo-900">₹{breakEvenPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
                                         <p className="text-[8px] font-bold text-indigo-500 mt-1 uppercase">Min Selling Price to cover costs</p>
                                     </div>
                                 </div>
 
-                                <div className="p-6 border border-gray-100 rounded-2xl space-y-2">
-                                    <h5 className="text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-55 pb-2">Single Order Retention Breakdowns</h5>
+                                <div className="p-6 border-[0.5px] border-black/50 rounded-2xl space-y-2">
+                                    <h5 className="text-[10px] font-black text-gray-900 uppercase tracking-widest border-b-[0.5px] border-gray-55 pb-2">Single Order Retention Breakdowns</h5>
                                     <div className="flex justify-between items-center text-xs font-bold text-gray-500">
                                         <span>Product Cost Price</span>
                                         <span>₹{costPriceVal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
@@ -618,7 +618,7 @@ export default function SellerAnalyticsPage() {
                                         <span>Gateway Fee (Weighted)</span>
                                         <span className="text-red-500">-₹{simGate.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
-                                    <div className="border-t border-gray-100 pt-2 flex justify-between items-center text-xs font-black text-gray-900">
+                                    <div className="border-t-[0.5px] border-black/50 pt-2 flex justify-between items-center text-xs font-black text-gray-900">
                                         <span>Net Disbursable Order Value</span>
                                         <span className="text-[#00bba7]">₹{simNetEarnings.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
@@ -630,7 +630,7 @@ export default function SellerAnalyticsPage() {
                     {/* Tool 3: Restock Runway Analyst */}
                     {activeTool === 'inventory' && (
                         <div className="space-y-6 animate-in fade-in duration-300">
-                            <h4 className="text-[11px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-100 pb-3">Stock Exhaustion and Velocity Matrix</h4>
+                            <h4 className="text-[11px] font-black text-gray-900 uppercase tracking-widest border-b-[0.5px] border-black/50 pb-3">Stock Exhaustion and Velocity Matrix</h4>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {topProducts.map((prod) => {
@@ -650,10 +650,10 @@ export default function SellerAnalyticsPage() {
                                     }
 
                                     return (
-                                        <div key={prod.product_id} className="p-5 border border-gray-150 rounded-2xl space-y-4 hover:border-gray-300 transition-all bg-white">
+                                        <div key={prod.product_id} className="p-5 border-[0.5px] border-black/50 rounded-2xl space-y-4 hover:border-gray-300 transition-all bg-white">
                                             <div className="flex justify-between items-start gap-2">
                                                 <h5 className="font-extrabold text-xs text-gray-900 truncate max-w-[70%]" title={prod.product_name}>{prod.product_name}</h5>
-                                                <span className={`px-2 py-0.5 rounded-xl text-[8px] font-black uppercase tracking-wider border shrink-0 ${badgeColor}`}>
+                                                <span className={`px-2 py-0.5 rounded-xl text-[8px] font-black uppercase tracking-wider border-[0.5px] shrink-0 ${badgeColor}`}>
                                                     {statusText}
                                                 </span>
                                             </div>
@@ -694,8 +694,8 @@ export default function SellerAnalyticsPage() {
                     {activeTool === 'planner' && (
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-in fade-in duration-300">
                             {/* Target Payout Inputs */}
-                            <div className="space-y-4 lg:col-span-1 p-4 sm:p-6 bg-gray-50 rounded-2xl border border-gray-100">
-                                <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-200 pb-3 mb-2">Payout Targets</h4>
+                            <div className="space-y-4 lg:col-span-1 p-4 sm:p-6 bg-gray-50 rounded-2xl border-[0.5px] border-black/50">
+                                <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest border-b-[0.5px] border-black/50 pb-3 mb-2">Payout Targets</h4>
                                 
                                 <div className="space-y-2">
                                     <label className="block text-[8px] font-black text-gray-400 uppercase tracking-widest px-1">Desired Monthly Net Payout (₹)</label>
@@ -705,13 +705,13 @@ export default function SellerAnalyticsPage() {
                                             type="number" 
                                             value={simTargetPayout}
                                             onChange={(e) => setSimTargetPayout(e.target.value)}
-                                            className="w-full pl-8 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold focus:ring-4 focus:ring-[#00bba7]/10 focus:border-[#00bba7] outline-none"
+                                            className="w-full pl-8 pr-4 py-2.5 bg-white border-[0.5px] border-black/50 rounded-xl text-xs font-bold focus:ring-4 focus:ring-[#00bba7]/10 focus:border-[#00bba7] outline-none"
                                             placeholder="Target payout"
                                         />
                                     </div>
                                 </div>
 
-                                <div className="p-4 bg-indigo-50/50 rounded-xl border border-indigo-100/30 text-[9.5px] font-medium text-indigo-700 space-y-1">
+                                <div className="p-4 bg-indigo-50/50 rounded-xl border-[0.5px] border-black/50 text-[9.5px] font-medium text-indigo-700 space-y-1">
                                     <p className="font-extrabold uppercase text-[8px] tracking-wider">Parameters Used:</p>
                                     <p>• Platform Cut: {platRate}% (+18% GST)</p>
                                     <p>• Gateway Charge: {gateRate}% on Prepaid</p>
@@ -719,27 +719,27 @@ export default function SellerAnalyticsPage() {
                                            {/* Planner Outputs Panel */}
                             <div className="lg:col-span-2 space-y-6">
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                    <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
+                                    <div className="p-5 bg-white border-[0.5px] border-black/50 rounded-2xl shadow-none">
                                         <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest block mb-1">Target Net Payout</span>
                                         <h3 className="text-xl font-black text-emerald-600">₹{targetPayoutVal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
                                         <p className="text-[8px] font-bold text-gray-400 mt-1 uppercase">Your Monthly Bank Payout Goal</p>
                                     </div>
 
-                                    <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
+                                    <div className="p-5 bg-white border-[0.5px] border-black/50 rounded-2xl shadow-none">
                                         <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest block mb-1">Required Gross Sales</span>
                                         <h3 className="text-xl font-black text-gray-900">₹{requiredGrossSales.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
                                         <p className="text-[8px] font-bold text-indigo-500 mt-1 uppercase">Sales target to hit payout</p>
                                     </div>
 
-                                    <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
+                                    <div className="p-5 bg-white border-[0.5px] border-black/50 rounded-2xl shadow-none">
                                         <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest block mb-1">Estimated Orders Count</span>
                                         <h3 className="text-xl font-black text-gray-900">{requiredOrders} Orders</h3>
                                         <p className="text-[8px] font-bold text-gray-400 mt-1 uppercase">Based on ₹{avgOrderVal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Average Order Value</p>
                                     </div>
                                 </div>
 
-                                <div className="p-6 border border-gray-100 rounded-2xl space-y-3">
-                                    <h5 className="text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-50 pb-2">Target Revenue Structure Projection</h5>
+                                <div className="p-6 border-[0.5px] border-black/50 rounded-2xl space-y-3">
+                                    <h5 className="text-[10px] font-black text-gray-900 uppercase tracking-widest border-b-[0.5px] border-black/50 pb-2">Target Revenue Structure Projection</h5>
                                     
                                     <div className="flex justify-between items-center text-xs font-bold text-gray-500">
                                         <span>Required Gross Revenue</span>
@@ -754,7 +754,7 @@ export default function SellerAnalyticsPage() {
                                         <span className="text-rose-600">-₹{(requiredGrossSales - targetPayoutVal - requiredCommission).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
 
-                                    <div className="border-t border-gray-100 pt-3 flex justify-between items-center text-sm font-black text-gray-900">
+                                    <div className="border-t-[0.5px] border-black/50 pt-3 flex justify-between items-center text-sm font-black text-gray-900">
                                         <span>Estimated Take-Home (Net Payout)</span>
                                         <span className="text-[#00bba7]">₹{targetPayoutVal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
@@ -767,8 +767,8 @@ export default function SellerAnalyticsPage() {
             </div>
 
             {/* High velocity table */}
-            <div className="premium-card overflow-hidden bg-white border border-gray-200 rounded-3xl shadow-sm">
-                <div className="p-4 sm:p-8 border-b border-gray-100 flex justify-between items-center bg-gray-50/20">
+            <div className="premium-card overflow-hidden bg-white border-[0.5px] border-black/50 rounded-3xl shadow-none">
+                <div className="p-4 sm:p-8 border-b-[0.5px] border-black/50 flex justify-between items-center bg-gray-50/20">
                     <div>
                         <h3 className="font-black text-xl text-gray-900 tracking-tighter">High-Velocity Catalog Nodes</h3>
                         <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1 opacity-60">Performance Leaderboard Ranking</p>
@@ -777,7 +777,7 @@ export default function SellerAnalyticsPage() {
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="premium-table-header border-b border-gray-100">
+                            <tr className="premium-table-header border-b-[0.5px] border-black/50">
                                 <th className="px-4 sm:px-8 py-4 sm:py-5 text-[9px] font-black tracking-wider text-gray-500 uppercase">Product Descriptor</th>
                                 <th className="px-4 sm:px-8 py-4 sm:py-5 text-[9px] font-black tracking-wider text-gray-500 uppercase text-center">Units Sold</th>
                                 <th className="px-4 sm:px-8 py-4 sm:py-5 text-[9px] font-black tracking-wider text-gray-500 uppercase text-right">Net Return Portfolio</th>
@@ -796,7 +796,7 @@ export default function SellerAnalyticsPage() {
                                         <tr key={prod.product_id} className="group hover:bg-gray-50/30 transition-all">
                                             <td className="px-4 sm:px-8 py-4">
                                                 <div className="flex items-center gap-4">
-                                                    <span className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-black text-gray-400 text-[10px] border border-gray-50 group-hover:bg-white group-hover:shadow-md transition-all">
+                                                    <span className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-black text-gray-400 text-[10px] border-[0.5px] border-black/50 group-hover:bg-white group-hover:shadow-md transition-all">
                                                         {idx + 1}
                                                     </span>
                                                     <div>
@@ -806,7 +806,7 @@ export default function SellerAnalyticsPage() {
                                                 </div>
                                             </td>
                                             <td className="px-4 sm:px-8 py-4 text-center">
-                                                <span className="inline-flex items-center justify-center px-3 py-1 rounded-xl bg-gray-50 text-gray-900 font-extrabold border border-gray-100 shadow-inner">
+                                                <span className="inline-flex items-center justify-center px-3 py-1 rounded-xl bg-gray-50 text-gray-900 font-extrabold border-[0.5px] border-black/50 shadow-inner">
                                                     {prod.units_sold} Units
                                                 </span>
                                             </td>
@@ -815,10 +815,10 @@ export default function SellerAnalyticsPage() {
                                                 <span className="text-[8px] font-black text-emerald-600 uppercase tracking-widest mt-0.5">Success Injected</span>
                                             </td>
                                             <td className="px-4 sm:px-8 py-4 text-right">
-                                                <span className={`px-2 py-0.5 rounded-lg text-[8.5px] font-black uppercase border tracking-wider ${
-                                                    runway < 10 ? 'bg-rose-50 text-rose-600 border-rose-100' :
-                                                    runway < 20 ? 'bg-amber-50 text-amber-600 border-amber-100' :
-                                                    'bg-emerald-50 text-emerald-600 border-emerald-100'
+                                                <span className={`px-2 py-0.5 rounded-lg text-[8.5px] font-black uppercase border-[0.5px] tracking-wider ${
+                                                    runway < 10 ? 'bg-rose-50 text-rose-600 border-black/50' :
+                                                    runway < 20 ? 'bg-amber-50 text-amber-600 border-black/50' :
+                                                    'bg-emerald-50 text-emerald-600 border-black/50'
                                                 }`}>
                                                     {runway === 999 ? 'Infinite Runway' : `${runway} Days Runway`}
                                                 </span>

@@ -247,7 +247,7 @@ export default function AdminCategoriesPage() {
     return (
         <div className="w-full space-y-6 animate-in fade-in duration-500">
             {/* Header Section */}
-            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border border-neutral-950/10 dark:border-gray-800">
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border-[0.5px] border-black/50 dark:border-gray-800">
                 <div className="absolute top-0 right-0 p-8 opacity-5">
                     <Database size={120} />
                 </div>
@@ -270,7 +270,7 @@ export default function AdminCategoriesPage() {
                         <button
                             onClick={handleInitDB}
                             disabled={isInitializingDb}
-                            className="flex items-center gap-2 bg-white dark:bg-gray-800 border border-neutral-950/15 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2.5 rounded-[10px] font-semibold text-xs hover:bg-neutral-50 dark:hover:bg-gray-750 transition-all disabled:opacity-50"
+                            className="flex items-center gap-2 bg-white dark:bg-gray-800 border-[0.5px] border-black/50 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2.5 rounded-[10px] font-semibold text-xs hover:bg-neutral-50 dark:hover:bg-gray-750 transition-all disabled:opacity-50"
                             title="Initialize collections database tables and run migrations"
                         >
                             {isInitializingDb ? (
@@ -305,7 +305,7 @@ export default function AdminCategoriesPage() {
                         className={`flex flex-col text-left p-4 rounded-[10px] border-[0.5px] transition-all cursor-pointer ${
                             activeTab === item.type
                                 ? 'border-black bg-black text-white dark:border-white dark:bg-white dark:text-black'
-                                : 'border-neutral-955/10 bg-white hover:bg-neutral-50 dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-gray-850 text-gray-800 dark:text-gray-250'
+                                : 'border-black/50 bg-white hover:bg-neutral-50 dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-gray-850 text-gray-800 dark:text-gray-250'
                         }`}
                     >
                         <span className="text-[10px] font-semibold tracking-wider opacity-60">Section</span>
@@ -323,25 +323,25 @@ export default function AdminCategoriesPage() {
                     placeholder={`Search ${activeTab === 'category' ? 'categories' : activeTab === 'concern' ? 'concerns' : 'collections'} by name...`}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full h-10 pl-10 pr-4 bg-white dark:bg-gray-900 border border-neutral-955/15 dark:border-gray-800 rounded-lg text-xs font-normal text-gray-900 dark:text-white placeholder:text-gray-300 focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all"
+                    className="w-full h-10 pl-10 pr-4 bg-white dark:bg-gray-900 border-[0.5px] border-black/50 dark:border-gray-800 rounded-lg text-xs font-normal text-gray-900 dark:text-white placeholder:text-gray-300 focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all"
                 />
             </div>
 
             {/* Diagnostics Panel Collapsible */}
-            <details className="group bg-neutral-50/50 dark:bg-gray-850 border border-neutral-950/10 dark:border-gray-800 rounded-lg">
+            <details className="group bg-neutral-50/50 dark:bg-gray-850 border-[0.5px] border-black/50 dark:border-gray-800 rounded-lg">
                 <summary className="flex justify-between items-center px-4 py-2.5 text-xs font-semibold text-gray-500 tracking-wide cursor-pointer select-none outline-none">
                     <span>System Diagnostics</span>
                     <span className="text-[10px] font-mono group-open:hidden">Show</span>
                     <span className="text-[10px] font-mono hidden group-open:inline">Hide</span>
                 </summary>
-                <div className="px-4 pb-4 pt-2 text-[10px] font-mono grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-neutral-955/5 text-gray-500">
+                <div className="px-4 pb-4 pt-2 text-[10px] font-mono grid grid-cols-2 md:grid-cols-4 gap-4 border-t-[0.5px] border-black/50 text-gray-500">
                     <p>Auth Loading: {String(authLoading)}</p>
                     <p>User Logged In: {String(!!user)}</p>
                     <p>Is Loading Data: {String(isLoading)}</p>
                     <p>Error: <span className="text-red-500">{error || 'None'}</span></p>
                     <p>Total Categories: {categories.length}</p>
                     <p>Total Collections: {collections.length}</p>
-                    <button onClick={fetchCategories} className="px-2.5 py-1 bg-white border border-neutral-950/15 text-gray-650 rounded-md font-semibold hover:bg-neutral-50 transition-colors w-fit">Force Refresh</button>
+                    <button onClick={fetchCategories} className="px-2.5 py-1 bg-white border-[0.5px] border-black/50 text-gray-650 rounded-md font-semibold hover:bg-neutral-50 transition-colors w-fit">Force Refresh</button>
                 </div>
             </details>
 
@@ -349,7 +349,7 @@ export default function AdminCategoriesPage() {
             {isLoading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {[1, 2, 3].map((n) => (
-                        <div key={n} className="bg-white dark:bg-gray-900 border border-neutral-955/10 dark:border-gray-800 rounded-[10px] p-5 space-y-4 animate-pulse">
+                        <div key={n} className="bg-white dark:bg-gray-900 border-[0.5px] border-black/50 dark:border-gray-800 rounded-[10px] p-5 space-y-4 animate-pulse">
                             <div className="flex items-center gap-3">
                                 <div className="w-12 h-12 bg-neutral-100 dark:bg-gray-800 rounded-lg" />
                                 <div className="space-y-2 flex-1">
@@ -366,12 +366,12 @@ export default function AdminCategoriesPage() {
                     {filteredItems.map((item) => (
                         <div 
                             key={item.id} 
-                            className="group bg-white dark:bg-gray-900 border border-neutral-950/10 dark:border-gray-800 rounded-[10px] p-5 hover:border-black dark:hover:border-white transition-all flex flex-col justify-between"
+                            className="group bg-white dark:bg-gray-900 border-[0.5px] border-black/50 dark:border-gray-800 rounded-[10px] p-5 hover:border-black dark:hover:border-white transition-all flex flex-col justify-between"
                         >
                             <div>
                                 <div className="flex justify-between items-start">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 border bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white border-neutral-955/5">
+                                        <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 border-[0.5px] bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white border-black/50">
                                             {activeTab !== 'collection' && (item as Category).icon ? (
                                                 <span className="text-lg leading-none">{(item as Category).icon}</span>
                                             ) : (
@@ -408,10 +408,10 @@ export default function AdminCategoriesPage() {
                                     </p>
                                 )}
                             </div>
-                            <div className="mt-5 flex items-center justify-between pt-3.5 border-t border-neutral-955/10 dark:border-gray-800">
+                            <div className="mt-5 flex items-center justify-between pt-3.5 border-t-[0.5px] border-black/50 dark:border-gray-800">
                                 <span className={`text-[10px] font-semibold tracking-wider px-2.5 py-0.5 rounded-lg ${
                                     item.is_active 
-                                        ? 'bg-green-50 dark:bg-green-950/30 text-green-755 dark:text-green-400 border border-green-200' 
+                                        ? 'bg-green-50 dark:bg-green-950/30 text-green-755 dark:text-green-400 border-[0.5px] border-black/50' 
                                         : 'bg-neutral-100 dark:bg-gray-800 text-gray-500'
                                 }`}>
                                     {item.is_active ? 'Active' : 'Inactive'}
@@ -425,8 +425,8 @@ export default function AdminCategoriesPage() {
                         </div>
                     ))}
                     {filteredItems.length === 0 && (
-                        <div className="col-span-full py-20 bg-neutral-50/50 dark:bg-gray-800/20 rounded-[10px] border border-dashed border-neutral-955/15 dark:border-gray-800 flex flex-col items-center justify-center text-center space-y-4">
-                            <div className="w-14 h-14 bg-white dark:bg-gray-900 rounded-lg flex items-center justify-center border border-neutral-955/10 text-gray-250">
+                        <div className="col-span-full py-20 bg-neutral-50/50 dark:bg-gray-800/20 rounded-[10px] border-[0.5px] border-dashed border-black/50 dark:border-gray-800 flex flex-col items-center justify-center text-center space-y-4">
+                            <div className="w-14 h-14 bg-white dark:bg-gray-900 rounded-lg flex items-center justify-center border-[0.5px] border-black/50 text-gray-250">
                                 <Layers size={24} />
                             </div>
                             <div className="space-y-1">
@@ -441,8 +441,8 @@ export default function AdminCategoriesPage() {
             {/* Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border border-neutral-950/15 max-w-md w-full overflow-hidden">
-                        <div className="p-4 border-b border-neutral-955/10 flex justify-between items-center bg-neutral-50 dark:bg-gray-850/50">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 max-w-md w-full overflow-hidden">
+                        <div className="p-4 border-b-[0.5px] border-black/50 flex justify-between items-center bg-neutral-50 dark:bg-gray-850/50">
                             <h2 className="font-semibold text-sm text-gray-955 dark:text-white">
                                 {editingItem ? 'Edit' : 'Add'} {activeTab === 'category' ? 'Category' : activeTab === 'concern' ? 'Concern' : 'Collection'}
                             </h2>
@@ -459,7 +459,7 @@ export default function AdminCategoriesPage() {
                                     required
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full h-10 px-3 border border-neutral-950/15 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-900 dark:text-white transition-all"
+                                    className="w-full h-10 px-3 border-[0.5px] border-black/50 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-900 dark:text-white transition-all"
                                 />
                             </div>
 
@@ -470,7 +470,7 @@ export default function AdminCategoriesPage() {
                                         <select
                                             value={formData.parent_id}
                                             onChange={(e) => setFormData({ ...formData, parent_id: e.target.value })}
-                                            className="w-full h-10 px-3 border border-neutral-950/15 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-950 dark:text-gray-100 transition-all cursor-pointer"
+                                            className="w-full h-10 px-3 border-[0.5px] border-black/50 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-950 dark:text-gray-100 transition-all cursor-pointer"
                                         >
                                             <option value="">None (Top Level)</option>
                                             {parentOptions.map(p => (
@@ -485,7 +485,7 @@ export default function AdminCategoriesPage() {
                                             value={formData.icon}
                                             onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
                                             placeholder="e.g. 🌿"
-                                            className="w-full h-10 px-3 border border-neutral-950/15 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-900 dark:text-white transition-all"
+                                            className="w-full h-10 px-3 border-[0.5px] border-black/50 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-900 dark:text-white transition-all"
                                         />
                                     </div>
                                 </div>
@@ -511,7 +511,7 @@ export default function AdminCategoriesPage() {
                                         type="text"
                                         value={formData.sub_heading}
                                         onChange={(e) => setFormData({ ...formData, sub_heading: e.target.value })}
-                                        className="w-full h-10 px-3 border border-neutral-950/15 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-900 dark:text-white transition-all"
+                                        className="w-full h-10 px-3 border-[0.5px] border-black/50 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-900 dark:text-white transition-all"
                                     />
                                 </div>
                             )}
@@ -522,7 +522,7 @@ export default function AdminCategoriesPage() {
                                     rows={3}
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    className="w-full p-3 border border-neutral-955/15 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-normal text-gray-750 dark:text-gray-300 resize-none transition-all leading-relaxed"
+                                    className="w-full p-3 border-[0.5px] border-black/50 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-normal text-gray-750 dark:text-gray-300 resize-none transition-all leading-relaxed"
                                 />
                             </div>
 
@@ -533,7 +533,7 @@ export default function AdminCategoriesPage() {
                                         rows={3}
                                         value={formData.bottom_description}
                                         onChange={(e) => setFormData({ ...formData, bottom_description: e.target.value })}
-                                        className="w-full p-3 border border-neutral-955/15 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-normal text-gray-750 dark:text-gray-300 resize-none transition-all leading-relaxed"
+                                        className="w-full p-3 border-[0.5px] border-black/50 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-normal text-gray-750 dark:text-gray-300 resize-none transition-all leading-relaxed"
                                     />
                                 </div>
                             )}
@@ -542,7 +542,7 @@ export default function AdminCategoriesPage() {
                             {activeTab === 'collection' && (
                                 <div className="space-y-1.5">
                                     <label className="block text-[10px] font-semibold text-gray-555">Select Products for this Collection</label>
-                                    <div className="border border-neutral-955/15 rounded-lg p-3 max-h-48 overflow-y-auto space-y-2 bg-neutral-50/50">
+                                    <div className="border-[0.5px] border-black/50 rounded-lg p-3 max-h-48 overflow-y-auto space-y-2 bg-neutral-50/50">
                                         {productsList.map((product) => {
                                             const isChecked = formData.product_ids.includes(product.id);
                                             return (
@@ -556,7 +556,7 @@ export default function AdminCategoriesPage() {
                                                                 : formData.product_ids.filter(id => id !== product.id);
                                                             setFormData({ ...formData, product_ids: newIds });
                                                         }}
-                                                        className="w-4 h-4 rounded-[3px] border-neutral-300 text-black focus:ring-black/10"
+                                                        className="w-4 h-4 rounded-[3px] border-black/50 text-black focus:ring-black/10"
                                                     />
                                                     <div className="text-xs">
                                                         <span className="font-semibold text-gray-800 dark:text-gray-200">{product.title}</span>
@@ -578,7 +578,7 @@ export default function AdminCategoriesPage() {
                                     id="is_active"
                                     checked={formData.is_active}
                                     onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                                    className="w-4 h-4 rounded-[3px] border-neutral-300 text-black focus:ring-black/10"
+                                    className="w-4 h-4 rounded-[3px] border-black/50 text-black focus:ring-black/10"
                                 />
                                 <label htmlFor="is_active" className="text-xs font-semibold text-gray-700">Active</label>
                             </div>
@@ -587,7 +587,7 @@ export default function AdminCategoriesPage() {
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="flex-1 h-10 border border-neutral-955/15 text-gray-750 font-semibold rounded-lg hover:bg-neutral-50"
+                                    className="flex-1 h-10 border-[0.5px] border-black/50 text-gray-750 font-semibold rounded-lg hover:bg-neutral-50"
                                 >
                                     Cancel
                                 </button>

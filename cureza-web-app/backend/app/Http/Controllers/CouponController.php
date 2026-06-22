@@ -158,4 +158,33 @@ class CouponController extends Controller
 
         return response()->json($coupon);
     }
+
+    // Seller: List all coupons with seller specific usage statistics
+    public function sellerCoupons(Request $request)
+    {
+        $sellerId = auth()->id();
+
+        $coupons = Coupon::latest()->get()->map(function($coupon) use ($sellerId) {
+            $usageCount = \App\Models\Order::whereHas('items', function ($q) use ($sellerId) {
+                    $q->where('seller_id', $sellerId);
+                })
+                ->where('coupon_code', $coupon->code)
+                ->where('status', '!=', 'cancelled')
+                ->count();
+
+            return [
+                'id' => $coupon->id,
+                'code' => $coupon->code,
+                'type' => $coupon->type,
+                'value' => (float)$coupon->value,
+                'min_cart_value' => $coupon->min_cart_value ? (float)$coupon->min_cart_value : null,
+                'expires_at' => $coupon->expires_at,
+                'is_active' => (bool)$coupon->is_active,
+                'usage_count' => $usageCount,
+            ];
+        });
+
+        return response()->json($coupons);
+    }
 }
+

@@ -33,8 +33,8 @@ export default function SellerPolicy() {
                     <p className="text-gray-600 leading-relaxed">
                         Cureza operates as a centralized hub for decentralized, premium healthcare and wellness trade. We provide the digital transaction infrastructure, brand presence, practitioner alignment, and security protocols, while verified sellers (vendors) maintain full ownership of inventory, product configurations, pricing models, and order execution.
                     </p>
-                    <div className="bg-[#f0f9fa] border border-[#d2f1f5] rounded-2xl p-6 flex gap-4 items-start">
-                        <div className="p-2 bg-white rounded-lg shadow-sm text-teal-600 shrink-0">
+                    <div className="bg-[#f0f9fa] border-[0.5px] border-[#d2f1f5] rounded-2xl p-6 flex gap-4 items-start">
+                        <div className="p-2 bg-white rounded-lg shadow-none text-teal-600 shrink-0 border-black/50 border-[0.5px]">
                             <HelpCircle size={20} />
                         </div>
                         <div>
@@ -58,7 +58,7 @@ export default function SellerPolicy() {
                         Before publishing catalog items or receiving order data, sellers must complete our KYC (Know Your Customer) workflow. This maintains registry safety, prevents fraud, and ensures statutory compliance.
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="p-5 bg-white border border-gray-150 rounded-2xl shadow-sm hover:shadow-md transition">
+                        <div className="p-5 bg-white border-[0.5px] border-black/50 rounded-2xl shadow-none transition">
                             <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-3">Enterprise Documents</span>
                             <ul className="space-y-2 text-xs font-semibold text-gray-700">
                                 <li className="flex gap-2 items-center"><CheckCircle size={14} className="text-emerald-500" /> GSTIN Certification</li>
@@ -67,7 +67,7 @@ export default function SellerPolicy() {
                                 <li className="flex gap-2 items-center"><CheckCircle size={14} className="text-emerald-500" /> FSSAI License (If selling Food/Supplements)</li>
                             </ul>
                         </div>
-                        <div className="p-5 bg-white border border-gray-150 rounded-2xl shadow-sm hover:shadow-md transition">
+                        <div className="p-5 bg-white border-[0.5px] border-black/50 rounded-2xl shadow-none transition">
                             <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-3">Financial Ingestion</span>
                             <ul className="space-y-2 text-xs font-semibold text-gray-700">
                                 <li className="flex gap-2 items-center"><CheckCircle size={14} className="text-emerald-500" /> Cancelled Cheque / Passbook Copy</li>
@@ -76,7 +76,7 @@ export default function SellerPolicy() {
                             </ul>
                         </div>
                     </div>
-                    <div className="bg-amber-50 border border-amber-100 rounded-2xl p-6 flex gap-4 items-start">
+                    <div className="bg-amber-50 border-[0.5px] border-black/50 rounded-2xl p-6 flex gap-4 items-start">
                         <AlertTriangle size={20} className="text-amber-600 shrink-0 mt-0.5" />
                         <div>
                             <h4 className="text-sm font-bold text-amber-900 mb-1">KYC Timelines</h4>
@@ -98,10 +98,10 @@ export default function SellerPolicy() {
                     <p className="text-gray-600 leading-relaxed">
                         Cureza runs a clear, transparent revenue model. In exchange for the store presence, marketing integrations, hosting, and practitioner referral networks, a commission is deducted from the gross transaction value.
                     </p>
-                    <div className="bg-white border border-gray-150 rounded-2xl overflow-hidden shadow-sm">
+                    <div className="bg-white border-[0.5px] border-black/50 rounded-2xl overflow-hidden shadow-none">
                         <div className="overflow-x-auto">
                             <div className="min-w-[600px]">
-                                <div className="grid grid-cols-3 bg-gray-50 p-4 text-xs font-extrabold text-gray-500 uppercase border-b border-gray-150">
+                                <div className="grid grid-cols-3 bg-gray-50 p-4 text-xs font-extrabold text-gray-500 uppercase border-b-[0.5px] border-black/50">
                                     <div>Fee Category</div>
                                     <div>Standard Charge</div>
                                     <div>Deduction Timing</div>
@@ -140,17 +140,17 @@ export default function SellerPolicy() {
                         Sellers must maintain high operational efficiency to satisfy customer expectations. Delays in shipment negatively affect search rankings and platform ratings.
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="p-5 bg-white border border-gray-150 rounded-2xl shadow-sm text-center">
+                        <div className="p-5 bg-white border-[0.5px] border-black/50 rounded-2xl shadow-none text-center">
                             <span className="text-2xl block mb-2">⏳</span>
                             <h5 className="text-xs font-extrabold text-gray-900 uppercase mb-1">48-Hour dispatch</h5>
                             <p className="text-[11px] text-gray-500 leading-relaxed">Orders must be handed over to courier partners within 48 hours of approval.</p>
                         </div>
-                        <div className="p-5 bg-white border border-gray-150 rounded-2xl shadow-sm text-center">
+                        <div className="p-5 bg-white border-[0.5px] border-black/50 rounded-2xl shadow-none text-center">
                             <span className="text-2xl block mb-2">📦</span>
                             <h5 className="text-xs font-extrabold text-gray-900 uppercase mb-1">Secure Packaging</h5>
                             <p className="text-[11px] text-gray-500 leading-relaxed">Use proper protective layers. Product damage due to poor packaging is the seller's liability.</p>
                         </div>
-                        <div className="p-5 bg-white border border-gray-150 rounded-2xl shadow-sm text-center">
+                        <div className="p-5 bg-white border-[0.5px] border-black/50 rounded-2xl shadow-none text-center">
                             <span className="text-2xl block mb-2">🔗</span>
                             <h5 className="text-xs font-extrabold text-gray-900 uppercase mb-1">Tracking Sync</h5>
                             <p className="text-[11px] text-gray-500 leading-relaxed">Tracking IDs must be synced back instantly to activate the customer dispatch alert.</p>
@@ -169,7 +169,7 @@ export default function SellerPolicy() {
                     <p className="text-gray-600 leading-relaxed">
                         Cureza runs a convenient wallet settlement schedule. Once an order is marked as "Delivered" and the customer's return window (standard 7 days) expires, the payout is calculated and credited to the seller's wallet.
                     </p>
-                    <div className="p-6 bg-emerald-50/50 border border-emerald-100 rounded-2xl flex gap-4 items-start">
+                    <div className="p-6 bg-emerald-50/50 border-[0.5px] border-black/50 rounded-2xl flex gap-4 items-start">
                         <CheckCircle size={20} className="text-emerald-600 shrink-0 mt-0.5" />
                         <div>
                             <h4 className="text-sm font-bold text-emerald-950 mb-1">Payout Cycle: T+3 Days</h4>
@@ -192,7 +192,7 @@ export default function SellerPolicy() {
                         We expect all sellers to run their shops with absolute honesty. Selling counterfeit items, false marketing, or intentionally dispatching expired wellness products will result in immediate suspension.
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="p-5 bg-white border border-rose-100 rounded-2xl shadow-sm">
+                        <div className="p-5 bg-white border-[0.5px] border-black/50 rounded-2xl shadow-none">
                             <div className="flex items-center gap-2 mb-3 text-rose-700">
                                 <Ban size={16} />
                                 <span className="text-xs font-bold uppercase tracking-wider">Zero Tolerance Offenses</span>
@@ -203,7 +203,7 @@ export default function SellerPolicy() {
                                 <li>• Bypassing Cureza gateway to complete transactions</li>
                             </ul>
                         </div>
-                        <div className="p-5 bg-white border border-gray-150 rounded-2xl shadow-sm">
+                        <div className="p-5 bg-white border-[0.5px] border-black/50 rounded-2xl shadow-none">
                             <div className="flex items-center gap-2 mb-3 text-gray-700">
                                 <FileCheck size={16} />
                                 <span className="text-xs font-bold uppercase tracking-wider">Dispute Jurisdiction</span>
@@ -227,13 +227,13 @@ export default function SellerPolicy() {
         <div className="w-full">
             <div className="w-full">
                 {/* Header Section */}
-                <div className="bg-white rounded-3xl border border-gray-150 p-6 md:p-10 shadow-sm mb-8 relative overflow-hidden">
+                <div className="bg-white rounded-3xl border-[0.5px] border-black/50 p-6 md:p-10 shadow-none mb-8 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-80 h-80 bg-teal-500/5 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
                     <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none -ml-20 -mb-20"></div>
                     
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
                         <div>
-                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-teal-50 border border-teal-100 text-teal-700 rounded-full text-[10px] font-bold uppercase tracking-wider mb-4">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-teal-50 border-[0.5px] border-black/50 text-teal-700 rounded-full text-[10px] font-bold uppercase tracking-wider mb-4">
                                 <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse"></span>
                                 Legal & Operations Core
                             </div>
@@ -248,13 +248,13 @@ export default function SellerPolicy() {
                         <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                             <button 
                                 onClick={() => window.print()} 
-                                className="flex-1 sm:flex-none px-4 py-2.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-xs font-bold rounded-xl shadow-sm transition flex items-center justify-center gap-1.5"
+                                className="flex-1 sm:flex-none px-4 py-2.5 bg-white border-[0.5px] border-black/50 hover:bg-gray-50 text-gray-700 text-xs font-bold rounded-xl shadow-none transition flex items-center justify-center gap-1.5"
                             >
                                 <Printer size={14} /> Print Rules
                             </button>
                             <Link 
                                 href="/seller/dashboard" 
-                                className="flex-1 sm:flex-none px-4 py-2.5 bg-gray-900 hover:bg-black text-white text-xs font-bold rounded-xl shadow-sm transition flex items-center justify-center gap-1.5 text-center"
+                                className="flex-1 sm:flex-none px-4 py-2.5 bg-gray-900 hover:bg-black text-white text-xs font-bold rounded-xl shadow-none transition flex items-center justify-center gap-1.5 text-center border-black/50 border-[0.5px]"
                             >
                                 <ArrowLeft size={14} /> Dashboard
                             </Link>
@@ -262,20 +262,20 @@ export default function SellerPolicy() {
                     </div>
 
                     {/* Stats Highlights */}
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 pt-8 border-t border-gray-100">
-                        <div className="p-4 bg-gray-50/50 rounded-2xl border border-gray-100 text-center">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 pt-8 border-t-[0.5px] border-black/50">
+                        <div className="p-4 bg-gray-50/50 rounded-2xl border-[0.5px] border-black/50 text-center">
                             <span className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-1">Standard SLA</span>
                             <span className="text-base font-extrabold text-gray-900">48 Hours</span>
                         </div>
-                        <div className="p-4 bg-gray-50/50 rounded-2xl border border-gray-100 text-center">
+                        <div className="p-4 bg-gray-50/50 rounded-2xl border-[0.5px] border-black/50 text-center">
                             <span className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-1">Settlement Cycle</span>
                             <span className="text-base font-extrabold text-gray-900">T+3 Days</span>
                         </div>
-                        <div className="p-4 bg-gray-50/50 rounded-2xl border border-gray-100 text-center">
+                        <div className="p-4 bg-gray-50/50 rounded-2xl border-[0.5px] border-black/50 text-center">
                             <span className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-1">Platform Commission</span>
                             <span className="text-base font-extrabold text-gray-900">8% - 15%</span>
                         </div>
-                        <div className="p-4 bg-gray-50/50 rounded-2xl border border-gray-100 text-center">
+                        <div className="p-4 bg-gray-50/50 rounded-2xl border-[0.5px] border-black/50 text-center">
                             <span className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-1">Jurisdiction</span>
                             <span className="text-base font-extrabold text-gray-900">Jaipur, IN</span>
                         </div>
@@ -287,7 +287,7 @@ export default function SellerPolicy() {
                     {/* Left Sidebar Menu */}
                     <div className="lg:col-span-3 flex flex-col gap-6">
                         {/* Search Box */}
-                        <div className="bg-white rounded-2xl border border-gray-150 p-4 shadow-sm order-1 lg:order-none">
+                        <div className="bg-white rounded-2xl border-[0.5px] border-black/50 p-4 shadow-none order-1 lg:order-none">
                             <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Search Policy</label>
                             <div className="relative">
                                 <input
@@ -295,14 +295,14 @@ export default function SellerPolicy() {
                                     placeholder="Search keywords..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full pl-8 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none transition"
+                                    className="w-full pl-8 pr-3 py-2 bg-gray-50 border-[0.5px] border-black/50 rounded-xl text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none transition"
                                 />
                                 <Search size={14} className="text-gray-400 absolute left-2.5 top-3" />
                             </div>
                         </div>
 
                         {/* Navigation Tabs */}
-                        <div className="bg-white rounded-2xl border border-gray-150 p-4 shadow-sm order-2 lg:order-none">
+                        <div className="bg-white rounded-2xl border-[0.5px] border-black/50 p-4 shadow-none order-2 lg:order-none">
                             <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3 px-1">Policy Sections</label>
                             <nav className="flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-visible gap-2 lg:gap-0 lg:space-y-1.5 pb-2 lg:pb-0 scrollbar-none">
                                 {sections.map((sec) => {
@@ -317,9 +317,9 @@ export default function SellerPolicy() {
                                                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                                                 }
                                             }}
-                                            className={`shrink-0 flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold transition-all text-left border ${
+                                            className={`shrink-0 flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold transition-all text-left border-[0.5px] ${
                                                 activeSection === sec.id 
-                                                ? 'bg-teal-600 border-teal-600 text-white shadow-sm shadow-teal-100' 
+                                                ? 'bg-teal-600 border-black/50 text-white shadow-none shadow-teal-100 border-[0.5px]' 
                                                 : 'bg-white border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                                             }`}
                                         >
@@ -332,7 +332,7 @@ export default function SellerPolicy() {
                         </div>
 
                         {/* Need Help Box */}
-                        <div className="bg-gray-900 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden order-3 lg:order-none">
+                        <div className="bg-gray-900 text-white rounded-3xl p-6 shadow-none relative overflow-hidden order-3 lg:order-none border-black/50 border-[0.5px]">
                             <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full -mr-8 -mt-8"></div>
                             <h4 className="text-xs font-extrabold uppercase tracking-widest text-teal-400 mb-2">Need Compliance Help?</h4>
                             <p className="text-[11px] text-gray-300 leading-relaxed mb-4">
@@ -340,7 +340,7 @@ export default function SellerPolicy() {
                             </p>
                             <a 
                                 href="mailto:onboarding@cureza.in" 
-                                className="block text-center py-2.5 bg-teal-500 hover:bg-teal-600 text-white rounded-xl text-xs font-bold tracking-wide transition shadow-md"
+                                className="block text-center py-2.5 bg-teal-500 hover:bg-teal-600 text-white rounded-xl text-xs font-bold tracking-wide transition shadow-none border-black/50 border-[0.5px]"
                             >
                                 Contact Onboarding
                             </a>
@@ -350,7 +350,7 @@ export default function SellerPolicy() {
                     {/* Main Content Area */}
                     <div className="lg:col-span-9 space-y-8">
                         {filteredSections.length === 0 ? (
-                            <div className="bg-white rounded-3xl border border-gray-150 p-12 text-center text-gray-500">
+                            <div className="bg-white rounded-3xl border-[0.5px] border-black/50 p-12 text-center text-gray-500">
                                 <HelpCircle size={40} className="mx-auto text-gray-300 mb-3" />
                                 <h4 className="text-sm font-bold text-gray-800">No policy sections match your search</h4>
                                 <p className="text-xs text-gray-400 mt-1">Try searching for generic terms like "KYC", "commission", or "SLA".</p>
@@ -362,8 +362,8 @@ export default function SellerPolicy() {
                                     <section 
                                         key={sec.id} 
                                         id={sec.id}
-                                        className={`bg-white rounded-3xl border transition-all p-6 md:p-8 shadow-sm scroll-mt-6 ${
-                                            activeSection === sec.id ? 'border-teal-500 ring-2 ring-teal-500/5' : 'border-gray-150'
+                                        className={`bg-white rounded-3xl border-[0.5px] transition-all p-6 md:p-8 shadow-none scroll-mt-6 ${
+                                            activeSection === sec.id ? 'border-black/50 ring-2 ring-teal-500/5' : 'border-black/50'
                                         }`}
                                         onMouseEnter={() => setActiveSection(sec.id)}
                                     >
@@ -378,7 +378,7 @@ export default function SellerPolicy() {
                                                 <p className="text-xs text-gray-400 font-medium mt-0.5">{sec.description}</p>
                                             </div>
                                         </div>
-                                        <div className="border-t border-gray-100 pt-6 mt-6">
+                                        <div className="border-t-[0.5px] border-black/50 pt-6 mt-6">
                                             {sec.content}
                                         </div>
                                     </section>
@@ -387,7 +387,7 @@ export default function SellerPolicy() {
                         )}
 
                         {/* Agreement Footer */}
-                        <div className="bg-gray-100/50 rounded-2xl p-6 border border-gray-200 text-center">
+                        <div className="bg-gray-100/50 rounded-2xl p-6 border-[0.5px] border-black/50 text-center">
                             <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">
                                 © {new Date().getFullYear()} Cureza Health Marketplace • All Policies Synced Programmatically
                             </p>

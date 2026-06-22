@@ -27,10 +27,10 @@ export default function AdminLeaderboardPage() {
 
     return (
         <div className="space-y-6">
-            <div className="bg-white rounded-[10px] border-[0.5px] border-neutral-950/10 overflow-hidden">
+            <div className="bg-white rounded-[10px] border-[0.5px] border-black/50 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs">
-                        <thead className="bg-neutral-50 border-b-[0.5px] border-neutral-950/10 text-gray-500 font-medium">
+                        <thead className="bg-neutral-50 border-b-[0.5px] border-black/50 text-gray-500 font-medium">
                             <tr>
                                 <th className="p-3 w-24">Rank</th>
                                 <th className="p-3">User Name</th>
@@ -63,7 +63,7 @@ export default function AdminLeaderboardPage() {
                                         <td className="p-3 font-medium text-gray-900">{leader.name}</td>
                                         <td className="p-3 font-semibold text-gray-900">{leader.xp.toLocaleString()} XP</td>
                                         <td className="p-3">
-                                            <span className="inline-block text-[10px] font-medium px-2 py-0.5 rounded-[6px] border-[0.5px] border-neutral-250 bg-neutral-50 text-neutral-700">
+                                            <span className="inline-block text-[10px] font-medium px-2 py-0.5 rounded-[6px] border-[0.5px] border-black/50 bg-neutral-50 text-neutral-700">
                                                 {leader.badge}
                                             </span>
                                         </td>

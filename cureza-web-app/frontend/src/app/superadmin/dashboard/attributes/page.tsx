@@ -86,7 +86,7 @@ export default function AttributesPage() {
     return (
         <div className="w-full space-y-6 animate-in fade-in duration-500">
             {/* Header Section */}
-            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-lg p-6 border border-neutral-200 dark:border-neutral-800">
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-lg p-6 border-[0.5px] border-black/50 dark:border-neutral-800">
                 <div className="absolute top-0 right-0 p-6 opacity-5">
                     <Sparkles size={80} />
                 </div>
@@ -123,7 +123,7 @@ export default function AttributesPage() {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {attributes.map((attr) => (
-                        <div key={attr.id} className="group bg-white dark:bg-gray-900 rounded-lg p-5 border border-neutral-200 dark:border-neutral-800 transition-all duration-200">
+                        <div key={attr.id} className="group bg-white dark:bg-gray-900 rounded-lg p-5 border-[0.5px] border-black/50 dark:border-neutral-800 transition-all duration-200">
                             <div className="flex items-start justify-between mb-4">
                                 <div className="space-y-1">
                                     <div className="flex items-center gap-2">
@@ -132,7 +132,7 @@ export default function AttributesPage() {
                                         </h3>
                                         <div className={`w-1.5 h-1.5 rounded-full ${attr.is_active ? 'bg-green-500' : 'bg-neutral-300 dark:bg-neutral-700'}`} />
                                     </div>
-                                    <div className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-medium bg-neutral-50 dark:bg-neutral-850 text-neutral-500 border border-neutral-200/60 dark:border-neutral-700">
+                                    <div className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-medium bg-neutral-50 dark:bg-neutral-850 text-neutral-500 border-[0.5px] border-black/50 dark:border-neutral-700">
                                         Type: <span className="capitalize ml-0.5">{attr.type}</span>
                                     </div>
                                 </div>
@@ -161,10 +161,10 @@ export default function AttributesPage() {
                                             {attr.terms.slice(0, 6).map((term: any) => (
                                                 <div
                                                     key={term.id}
-                                                    className="inline-flex items-center gap-1 px-2 py-1 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-md text-[11px] font-medium text-neutral-600 dark:text-neutral-300"
+                                                    className="inline-flex items-center gap-1 px-2 py-1 bg-neutral-50 dark:bg-neutral-800 border-[0.5px] border-black/50 dark:border-neutral-700 rounded-md text-[11px] font-medium text-neutral-600 dark:text-neutral-300"
                                                 >
                                                     {attr.type === 'color' && term.value && (
-                                                        <div className="w-2 h-2 rounded-full border border-black/5" style={{ backgroundColor: term.value }} />
+                                                        <div className="w-2 h-2 rounded-full border-[0.5px] border-black/5" style={{ backgroundColor: term.value }} />
                                                     )}
                                                     {term.name}
                                                 </div>
@@ -186,7 +186,7 @@ export default function AttributesPage() {
 
                             <Link
                                 href={`/superadmin/dashboard/attributes/${attr.id}`}
-                                className="group/btn flex items-center justify-between w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-md hover:bg-neutral-950 hover:text-white dark:hover:bg-white dark:hover:text-neutral-950 border border-neutral-200 dark:border-neutral-700 transition-all duration-200 font-semibold text-xs"
+                                className="group/btn flex items-center justify-between w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-md hover:bg-neutral-950 hover:text-white dark:hover:bg-white dark:hover:text-neutral-950 border-[0.5px] border-black/50 dark:border-neutral-700 transition-all duration-200 font-semibold text-xs"
                             >
                                 <span>Manage Terms</span>
                                 <ChevronRight size={14} className="translate-x-0 group-hover/btn:translate-x-0.5 transition-transform" />
@@ -195,8 +195,8 @@ export default function AttributesPage() {
                     ))}
 
                     {attributes.length === 0 && (
-                        <div className="col-span-full py-16 bg-neutral-50/50 dark:bg-neutral-800/10 rounded-lg border border-dashed border-neutral-200 dark:border-neutral-800 flex flex-col items-center justify-center text-center space-y-3">
-                            <div className="w-12 h-12 bg-white dark:bg-gray-900 rounded-lg flex items-center justify-center border border-neutral-200 dark:border-neutral-800 text-neutral-400">
+                        <div className="col-span-full py-16 bg-neutral-50/50 dark:bg-neutral-800/10 rounded-lg border-[0.5px] border-dashed border-black/50 dark:border-neutral-800 flex flex-col items-center justify-center text-center space-y-3">
+                            <div className="w-12 h-12 bg-white dark:bg-gray-900 rounded-lg flex items-center justify-center border-[0.5px] border-black/50 dark:border-neutral-800 text-neutral-400">
                                 <Settings2 size={24} />
                             </div>
                             <div className="space-y-0.5">
@@ -216,7 +216,7 @@ export default function AttributesPage() {
 
             {showModal && (
                 <div className="fixed inset-0 bg-neutral-950/40 backdrop-blur-sm flex items-center justify-center z-[60] p-4 animate-in fade-in zoom-in-95 duration-150">
-                    <div className="bg-white dark:bg-gray-900 rounded-lg w-full max-w-md overflow-hidden border border-neutral-200 dark:border-neutral-800">
+                    <div className="bg-white dark:bg-gray-900 rounded-lg w-full max-w-md overflow-hidden border-[0.5px] border-black/50 dark:border-neutral-800">
                         <div className="relative p-5">
                             <button
                                 onClick={() => setShowModal(false)}
@@ -245,7 +245,7 @@ export default function AttributesPage() {
                                         required
                                         value={formData.name}
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                        className="w-full bg-neutral-50 dark:bg-neutral-850 rounded-md border border-neutral-200 dark:border-neutral-700 focus:border-neutral-950 dark:focus:border-white focus:bg-white dark:focus:bg-gray-900 transition-all px-3 py-2 text-sm font-normal text-neutral-900 dark:text-white placeholder:text-neutral-400"
+                                        className="w-full bg-neutral-50 dark:bg-neutral-850 rounded-md border-[0.5px] border-black/50 dark:border-neutral-700 focus:border-neutral-950 dark:focus:border-white focus:bg-white dark:focus:bg-gray-900 transition-all px-3 py-2 text-sm font-normal text-neutral-900 dark:text-white placeholder:text-neutral-400"
                                         placeholder="e.g. Size, Material, Color"
                                     />
                                 </div>
@@ -258,9 +258,9 @@ export default function AttributesPage() {
                                                 key={type}
                                                 type="button"
                                                 onClick={() => setFormData({ ...formData, type })}
-                                                className={`py-2 rounded-md border text-xs font-semibold transition-all ${formData.type === type
-                                                        ? 'border-neutral-950 dark:border-white bg-neutral-950 dark:bg-white text-white dark:text-neutral-950'
-                                                        : 'border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-850 text-neutral-500'
+                                                className={`py-2 rounded-md border-[0.5px] text-xs font-semibold transition-all ${formData.type === type
+                                                        ? 'border-black/50 dark:border-white bg-neutral-950 dark:bg-white text-white dark:text-neutral-950'
+                                                        : 'border-black/50 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-850 text-neutral-500'
                                                     }`}
                                             >
                                                 {type === 'select' && 'Dropdown'}
@@ -271,7 +271,7 @@ export default function AttributesPage() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center justify-between p-3 bg-neutral-50 dark:bg-neutral-850 rounded-md border border-neutral-200 dark:border-neutral-800">
+                                <div className="flex items-center justify-between p-3 bg-neutral-50 dark:bg-neutral-850 rounded-md border-[0.5px] border-black/50 dark:border-neutral-800">
                                     <div className="space-y-0.5">
                                         <p className="text-xs font-semibold text-neutral-950 dark:text-white">Active Visibility</p>
                                         <p className="text-[10px] font-normal text-neutral-400">Enable this across the store</p>
@@ -282,7 +282,7 @@ export default function AttributesPage() {
                                         className={`w-11 h-6 rounded-full transition-all flex items-center px-0.5 ${formData.is_active ? 'bg-neutral-950 dark:bg-white' : 'bg-neutral-200 dark:bg-neutral-700'
                                             }`}
                                     >
-                                        <div className={`w-5 h-5 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200/50 shadow-sm transition-all transform ${formData.is_active ? 'translate-x-5' : 'translate-x-0'
+                                        <div className={`w-5 h-5 rounded-full bg-white dark:bg-neutral-900 border-[0.5px] border-black/50 shadow-none transition-all transform ${formData.is_active ? 'translate-x-5' : 'translate-x-0'
                                             }`} />
                                     </button>
                                 </div>

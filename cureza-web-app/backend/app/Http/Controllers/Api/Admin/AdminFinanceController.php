@@ -32,8 +32,8 @@ class AdminFinanceController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
-        // Total revenue (all delivered orders)
-        $revenueQuery = Order::where('status', 'delivered')
+        // Total revenue (all completed orders)
+        $revenueQuery = Order::whereIn('status', ['delivered', 'cod_reconciled'])
             ->whereNotNull('commission_calculated_at');
 
         if ($startDate) $revenueQuery->where('created_at', '>=', $startDate);
@@ -81,116 +81,39 @@ class AdminFinanceController extends Controller
 
         // Get all sellers with their wallets
         $sellersQuery = User::where('role', 'vendor')
-            ->with(['sellerProfile', 'sellerWallet'])
+            ->with(['sellerProfile', 'sellerWallet', 'brand'])
             ->whereHas('sellerWallet');
 
         $sellers = $sellersQuery->paginate($perPage);
-        $sellerIds = $sellers->pluck('id')->toArray();
 
-        // Eager load matching orders + items in a single query
-        $orders = Order::whereHas('items', function ($q) use ($sellerIds) {
-                $q->whereIn('seller_id', $sellerIds);
-            })
-            ->with(['items' => function ($q) use ($sellerIds) {
-                $q->whereIn('seller_id', $sellerIds);
-            }])
-            ->where('status', 'delivered')
-            ->whereNotNull('commission_calculated_at')
-            ->when($startDate, function ($q) use ($startDate) {
-                return $q->where('created_at', '>=', $startDate);
-            })
-            ->when($endDate, function ($q) use ($endDate) {
-                return $q->where('created_at', '<=', $endDate);
-            })
-            ->get();
-
-        // Group orders by seller
-        $ordersBySeller = [];
-        foreach ($orders as $order) {
-            foreach ($order->items as $item) {
-                $sellerId = $item->seller_id;
-                if (!isset($ordersBySeller[$sellerId])) {
-                    $ordersBySeller[$sellerId] = collect();
-                }
-                $ordersBySeller[$sellerId]->push([
-                    'order' => $order,
-                    'item' => $item
-                ]);
-            }
-        }
-
-        // Pre-fetch all commission configurations for the page
-        $commissions = \App\Models\SellerCommission::whereIn('seller_id', $sellerIds)
-            ->where('is_active', true)
-            ->get()
-            ->groupBy('seller_id');
-
-        $getCommissionRate = function($sellerId, $date) use ($commissions) {
-            $sellerComms = $commissions->get($sellerId);
-            if (!$sellerComms) {
-                return (object)[
-                    'base_commission_percentage' => 25.00,
-                    'payment_gateway_percentage' => 2.50,
-                ];
-            }
-            $match = $sellerComms->first(function ($comm) use ($date) {
-                return $comm->valid_from <= $date && (is_null($comm->valid_until) || $comm->valid_until >= $date);
-            });
-            return $match ?? $sellerComms->sortByDesc('valid_from')->first() ?? (object)[
-                'base_commission_percentage' => 25.00,
-                'payment_gateway_percentage' => 2.50,
-            ];
-        };
-
-        $sellersData = $sellers->map(function ($seller) use ($ordersBySeller, $getCommissionRate) {
-            $sellerData = $ordersBySeller[$seller->id] ?? collect();
-            
-            $totalSales = 0;
-            $platformCommission = 0;
-            $gatewayFee = 0;
-            $sellerEarnings = 0;
-            $orderIds = [];
-
-            foreach ($sellerData as $data) {
-                $order = $data['order'];
-                $item = $data['item'];
-                $orderIds[$order->id] = true;
-
-                $sellerTotal = $item->total;
-                $commission = $getCommissionRate($seller->id, $order->created_at);
-                $commAmount = $sellerTotal * ($commission->base_commission_percentage / 100);
-                $isCOD = strtolower($order->payment_method ?? '') === 'cod';
-                $gwFee = $isCOD ? 0 : ($sellerTotal * ($commission->payment_gateway_percentage / 100));
-
-                $totalSales += $sellerTotal;
-                $platformCommission += $commAmount;
-                $gatewayFee += $gwFee;
-            }
-
-            $currentCommission = $getCommissionRate($seller->id, now());
-            $gstOnComm = $platformCommission * 0.18;
-            $tcsVal = $totalSales * 0.01;
-            $tdsVal = $totalSales * 0.01;
-            $sellerEarnings = $totalSales - $platformCommission - $gstOnComm - $gatewayFee - $tcsVal - $tdsVal;
+        $sellersData = $sellers->map(function ($seller) use ($startDate, $endDate) {
+            $summary = $this->commissionService->getSellerCommissionSummary($seller->id, $startDate, $endDate);
+            $brandName = $seller->brand ? $seller->brand->name : $seller->name;
 
             return [
                 'seller_id' => $seller->id,
                 'seller_name' => $seller->name,
-                'brand_name' => $seller->sellerProfile->brand_name ?? 'N/A',
-                'total_sales' => round($totalSales, 2),
-                'platform_commission' => round($platformCommission, 2),
-                'gst_on_commission' => round($gstOnComm, 2),
-                'tcs_amount' => round($tcsVal, 2),
-                'tds_amount' => round($tdsVal, 2),
-                'gateway_fee' => round($gatewayFee, 2),
-                'seller_earnings' => round($sellerEarnings, 2),
+                'brand_name' => $brandName,
+                'total_sales' => $summary['total_sales'],
+                'platform_commission' => $summary['total_platform_commission'],
+                'gst_on_commission' => $summary['total_platform_commission_gst'],
+                'tcs_amount' => $summary['total_tcs'],
+                'tds_amount' => $summary['total_tds'],
+                'gateway_fee' => $summary['total_gateway_fee'],
+                'seller_earnings' => $summary['total_earnings'],
                 'wallet_balance' => round($seller->sellerWallet->available_balance ?? 0, 2),
                 'pending_payouts' => round($seller->sellerWallet->pending_amount ?? 0, 2),
                 'commission_rate' => [
-                    'platform' => $currentCommission->base_commission_percentage,
-                    'gateway' => $currentCommission->payment_gateway_percentage,
+                    'platform' => $summary['current_commission_rate']['platform'],
+                    'gateway' => $summary['current_commission_rate']['gateway'],
                 ],
-                'order_count' => count($orderIds),
+                'order_count' => $summary['order_count'],
+                'bank_details' => $seller->sellerProfile ? [
+                    'account_holder_name' => $seller->sellerProfile->account_holder_name ?? $seller->name,
+                    'account_number' => $seller->sellerProfile->bank_account_number ?? 'N/A',
+                    'ifsc_code' => $seller->sellerProfile->ifsc_code ?? 'N/A',
+                    'bank_name' => $seller->sellerProfile->bank_name ?? 'N/A',
+                ] : null,
             ];
         });
 
@@ -214,7 +137,7 @@ class AdminFinanceController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
-        $ordersQuery = Order::where('status', 'delivered')
+        $ordersQuery = Order::whereIn('status', ['delivered', 'cod_reconciled'])
             ->whereNotNull('commission_calculated_at')
             ->with('items');
 
@@ -578,7 +501,7 @@ class AdminFinanceController extends Controller
                     
                     fputcsv($file, [
                         $seller->name,
-                        $seller->sellerProfile->brand_name ?? 'N/A',
+                        $seller->brand ? $seller->brand->name : $seller->name,
                         $summary['total_sales'],
                         $summary['total_platform_commission'],
                         $summary['total_gateway_fee'],
@@ -712,8 +635,8 @@ class AdminFinanceController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
-        // Aggregated marketplace revenue query (delivered orders)
-        $orderQuery = Order::where('status', 'delivered')
+        // Aggregated marketplace revenue query (delivered & cod_reconciled orders)
+        $orderQuery = Order::whereIn('status', ['delivered', 'cod_reconciled'])
             ->whereNotNull('commission_calculated_at');
 
         if ($startDate) $orderQuery->where('created_at', '>=', $startDate);

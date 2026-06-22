@@ -19,13 +19,13 @@ export default function AdminMembersPage() {
                 </div>
             </div>
 
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex gap-4">
+            <div className="bg-white p-4 rounded-xl border-[0.5px] border-black/50 shadow-none flex gap-4">
                 <div className="relative flex-1">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                     <input
                         type="text"
                         placeholder="Search members..."
-                        className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cureza-green/50"
+                        className="w-full pl-10 pr-4 py-2 bg-gray-50 border-[0.5px] border-black/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-cureza-green/50"
                     />
                 </div>
                 <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
@@ -33,7 +33,7 @@ export default function AdminMembersPage() {
                 </button>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-xl border-[0.5px] border-black/50 shadow-none overflow-hidden">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                         <tr>

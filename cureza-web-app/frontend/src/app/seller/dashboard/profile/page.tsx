@@ -216,8 +216,8 @@ export default function SellerProfilePage() {
             </div>
 
             {isLocked && (
-                <div className="bg-amber-50/50 border border-amber-100 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row gap-4 sm:gap-6 items-start animate-in fade-in slide-in-from-top-4 duration-500 shadow-sm shadow-amber-100/20">
-                    <div className="p-3 bg-amber-500 text-white rounded-xl shadow-md shrink-0">
+                <div className="bg-neutral-50/50 border border-neutral-950/10 rounded-lg p-5 sm:p-6 flex flex-col sm:flex-row gap-4 sm:gap-6 items-start animate-in fade-in slide-in-from-top-4 duration-500 shadow-sm shadow-amber-100/20">
+                    <div className="p-3 bg-neutral-500 text-white rounded-lg shadow-md shrink-0">
                         <Info size={20} />
                     </div>
                     <div className="flex-1">
@@ -229,7 +229,7 @@ export default function SellerProfilePage() {
                         <div className="mt-3">
                             <button
                                 onClick={handleCancelRequest}
-                                className="text-xs font-semibold capitalize text-amber-600 hover:text-amber-700 underline underline-offset-4 decoration-2 transition-all"
+                                className="text-xs font-semibold capitalize text-amber-600 hover:text-neutral-850 underline underline-offset-4 decoration-2 transition-all"
                             >
                                 Rollback Changes & Re-edit
                             </button>
@@ -245,12 +245,12 @@ export default function SellerProfilePage() {
                     {/* Banner Upload */}
                     <div className="lg:col-span-2 space-y-4">
                         <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Digital Storefront (Banner)</label>
-                        <div className="relative w-full aspect-[16/9] sm:aspect-[21/9] bg-gray-50 rounded-2xl overflow-hidden border-2 border-dashed border-gray-150 hover:border-cureza-green transition-all group shadow-sm bg-gradient-to-br from-gray-50 to-white">
+                        <div className="relative w-full aspect-[16/9] sm:aspect-[21/9] bg-neutral-50 rounded-lg overflow-hidden border-2 border-dashed border-gray-150 hover:border-neutral-950/15 transition-all group shadow-sm bg-gradient-to-br from-gray-50 to-white">
                             {bannerPreview ? (
                                 <img src={bannerPreview} alt="Banner" className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-700" />
                             ) : (
                                 <div className="flex flex-col items-center justify-center h-full text-gray-300">
-                                    <div className="p-4 bg-white rounded-xl shadow-sm mb-3">
+                                    <div className="p-4 bg-white rounded-lg shadow-sm mb-3">
                                         <Upload size={28} />
                                     </div>
                                     <span className="text-xs font-semibold capitalize text-gray-550">Deploy Banner Asset</span>
@@ -269,7 +269,7 @@ export default function SellerProfilePage() {
                                         className="hidden"
                                         onChange={(e) => handleFileChange(e, 'banner')}
                                     />
-                                    <div className="opacity-0 group-hover:opacity-100 bg-white px-4 py-2 rounded-xl text-xs font-semibold shadow-md scale-95 group-hover:scale-100 transition-all capitalize">
+                                    <div className="opacity-0 group-hover:opacity-100 bg-white px-4 py-2 rounded-lg text-xs font-semibold shadow-md scale-95 group-hover:scale-100 transition-all capitalize">
                                         Replace Visual
                                     </div>
                                 </label>
@@ -281,12 +281,12 @@ export default function SellerProfilePage() {
                     {/* Logo Upload */}
                     <div className="space-y-4">
                         <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Identity Mark (Logo)</label>
-                        <div className="relative w-48 h-48 mx-auto lg:ml-0 bg-gray-50 rounded-2xl overflow-hidden border-2 border-dashed border-gray-150 hover:border-cureza-green transition-all group shadow-sm bg-gradient-to-br from-gray-50 to-white flex items-center justify-center">
+                        <div className="relative w-48 h-48 mx-auto lg:ml-0 bg-neutral-50 rounded-lg overflow-hidden border-2 border-dashed border-gray-150 hover:border-neutral-950/15 transition-all group shadow-sm bg-gradient-to-br from-gray-50 to-white flex items-center justify-center">
                             {logoPreview ? (
                                 <img src={logoPreview} alt="Logo" className="w-3/4 h-3/4 object-contain transition-transform group-hover:scale-110 duration-700" />
                             ) : (
                                 <div className="flex flex-col items-center justify-center h-full text-gray-300">
-                                    <div className="p-3 bg-white rounded-xl shadow-sm mb-3">
+                                    <div className="p-3 bg-white rounded-lg shadow-sm mb-3">
                                         <Upload size={22} />
                                     </div>
                                     <span className="text-[10px] font-semibold capitalize text-gray-550">SVG / PNG</span>
@@ -304,7 +304,7 @@ export default function SellerProfilePage() {
                                         className="hidden"
                                         onChange={(e) => handleFileChange(e, 'logo')}
                                     />
-                                    <div className="opacity-0 group-hover:opacity-100 bg-white p-3 rounded-xl shadow-md scale-95 group-hover:scale-100 transition-all">
+                                    <div className="opacity-0 group-hover:opacity-100 bg-white p-3 rounded-lg shadow-md scale-95 group-hover:scale-100 transition-all">
                                         <Upload size={18} className="text-gray-900" />
                                     </div>
                                 </label>
@@ -315,13 +315,13 @@ export default function SellerProfilePage() {
                 </div>
 
                 {/* Text Fields */}
-                <div className="grid grid-cols-1 gap-8 premium-card p-4 sm:p-8 bg-white border border-gray-200 rounded-2xl shadow-sm">
+                <div className="grid grid-cols-1 gap-8 premium-card p-4 sm:p-8 bg-white border border-neutral-950/15 rounded-lg shadow-sm">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-2">
                             <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Registered Entity Name</label>
                             <input
                                 {...register('name', { required: "Brand Name is required" })}
-                                className="w-full h-12 px-5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
+                                className="w-full h-12 px-5 rounded-lg bg-neutral-50 border border-neutral-950/15 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-neutral-950/15 outline-none transition-all"
                                 placeholder="Publicly visible brand name"
                             />
                             {errors.name && <p className="text-xs text-rose-500 font-semibold mt-1 px-1">▲ {errors.name.message as string}</p>}
@@ -331,7 +331,7 @@ export default function SellerProfilePage() {
                             <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Search Metatags (Comma separated)</label>
                             <input
                                 {...register('keywords')}
-                                className="w-full h-12 px-5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
+                                className="w-full h-12 px-5 rounded-lg bg-neutral-50 border border-neutral-950/15 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-neutral-950/15 outline-none transition-all"
                                 placeholder="e.g. Wellness, Organic, Vegan"
                             />
                         </div>
@@ -341,7 +341,7 @@ export default function SellerProfilePage() {
                         <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Brand Tagline (Shown in Header)</label>
                         <input
                             {...register('short_description', { required: "Short description is required", maxLength: 255 })}
-                            className="w-full h-12 px-5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
+                            className="w-full h-12 px-5 rounded-lg bg-neutral-50 border border-neutral-950/15 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-neutral-950/15 outline-none transition-all"
                             placeholder="A concise mission statement or tagline shown in the store header..."
                         />
                         {errors.short_description && <p className="text-xs text-rose-500 font-semibold mt-1 px-1">▲ {errors.short_description.message as string}</p>}
@@ -351,7 +351,7 @@ export default function SellerProfilePage() {
                         <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Brand Vision (Quote / Slogan - Shown in Our Story)</label>
                         <textarea
                             {...register('brand_vision')}
-                            className="w-full h-24 p-5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-medium focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all resize-none leading-relaxed"
+                            className="w-full h-24 p-5 rounded-lg bg-neutral-50 border border-neutral-950/15 text-sm font-medium focus:ring-4 focus:ring-green-500/10 focus:border-neutral-950/15 outline-none transition-all resize-none leading-relaxed"
                             placeholder="A 2-3 line inspiring quote or vision statement shown in your 'Our Story' section..."
                         />
                     </div>
@@ -360,7 +360,7 @@ export default function SellerProfilePage() {
                         <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Brand Narrative (Full History)</label>
                         <textarea
                             {...register('description')}
-                            className="w-full h-48 p-5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-medium focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all resize-none leading-relaxed"
+                            className="w-full h-48 p-5 rounded-lg bg-neutral-50 border border-neutral-950/15 text-sm font-medium focus:ring-4 focus:ring-green-500/10 focus:border-neutral-950/15 outline-none transition-all resize-none leading-relaxed"
                             placeholder="Compose the story of your brand. This content defines your marketplace presence."
                         />
                         <div className="flex justify-between items-center px-1">
@@ -370,8 +370,8 @@ export default function SellerProfilePage() {
                 </div>
 
                 {/* SEO Settings Card */}
-                <div className="grid grid-cols-1 gap-8 premium-card p-4 sm:p-8 bg-white border border-gray-200 rounded-2xl shadow-sm">
-                    <div className="border-b border-gray-100 pb-4">
+                <div className="grid grid-cols-1 gap-8 premium-card p-4 sm:p-8 bg-white border border-neutral-950/15 rounded-lg shadow-sm">
+                    <div className="border-b border-neutral-950/10 pb-4">
                         <h3 className="text-lg font-bold text-gray-800 tracking-tight">Search Engine Optimization (SEO)</h3>
                         <p className="text-xs text-gray-400 font-medium mt-1">Configure metadata to improve your brand page rankings on Google search.</p>
                     </div>
@@ -383,14 +383,14 @@ export default function SellerProfilePage() {
                                 value={fullMetaTitle}
                                 readOnly
                                 disabled
-                                className="w-full h-12 px-5 rounded-xl bg-gray-100 border border-gray-200 text-sm font-semibold text-gray-500 cursor-not-allowed outline-none select-none"
+                                className="w-full h-12 px-5 rounded-lg bg-gray-100 border border-neutral-950/15 text-sm font-semibold text-gray-500 cursor-not-allowed outline-none select-none"
                             />
                             {/* Title Length Meter */}
                             <div className="mt-2 space-y-1">
                                 <div className="flex justify-between items-center text-[10px] font-semibold">
                                     <span className={
                                         fullMetaTitle.length < 50 ? 'text-amber-600' :
-                                        fullMetaTitle.length <= 60 ? 'text-emerald-600' : 'text-rose-600'
+                                        fullMetaTitle.length <= 60 ? 'text-neutral-900' : 'text-neutral-700'
                                     }>
                                         {fullMetaTitle.length < 50 ? 'Too Short' :
                                          fullMetaTitle.length <= 60 ? 'Perfect Length' : 'Too Long (Google will truncate)'}
@@ -401,7 +401,7 @@ export default function SellerProfilePage() {
                                     <div 
                                         className={`h-full transition-all duration-300 ${
                                             fullMetaTitle.length < 50 ? 'bg-amber-400' :
-                                            fullMetaTitle.length <= 60 ? 'bg-emerald-500' : 'bg-rose-500'
+                                            fullMetaTitle.length <= 60 ? 'bg-neutral-500' : 'bg-neutral-500'
                                         }`}
                                         style={{ width: `${Math.min(100, (fullMetaTitle.length / 60) * 100)}%` }}
                                     ></div>
@@ -413,12 +413,12 @@ export default function SellerProfilePage() {
                             <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Google Search Keywords (Meta Keywords)</label>
                             <input
                                 {...register('meta_keywords', { maxLength: 255 })}
-                                className="w-full h-12 px-5 rounded-xl bg-gray-50 border border-gray-250 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
+                                className="w-full h-12 px-5 rounded-lg bg-neutral-50 border border-gray-250 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-neutral-950/15 outline-none transition-all"
                                 placeholder="e.g. Wellness, health, premium organic"
                             />
                             <div className="text-[10px] text-gray-400 font-semibold text-right px-1 mt-1">Comma separated keywords</div>
                             
-                            <div className="mt-4 p-5 bg-gray-50/50 rounded-2xl border border-gray-100/50 space-y-4">
+                            <div className="mt-4 p-5 bg-neutral-50/50 rounded-lg border border-neutral-950/10/50 space-y-4">
                                 <span className="block text-xs font-semibold text-gray-500 capitalize">Select Categories & Concerns as Keywords</span>
                                 
                                 {allCategories.length > 0 && (
@@ -433,10 +433,10 @@ export default function SellerProfilePage() {
                                                         type="button"
                                                         disabled={isLocked}
                                                         onClick={() => toggleKeyword(cat.name)}
-                                                        className={`px-3 py-1 rounded-xl text-xs font-semibold transition-all border ${
+                                                        className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all border ${
                                                             isActive
-                                                                ? 'bg-emerald-500 border-emerald-500 text-white shadow-sm shadow-emerald-100'
-                                                                : 'bg-white border-gray-200 text-gray-650 hover:border-emerald-500 hover:text-emerald-600'
+                                                                ? 'bg-neutral-500 border-emerald-500 text-white shadow-sm shadow-emerald-100'
+                                                                : 'bg-white border-neutral-950/15 text-gray-650 hover:border-emerald-500 hover:text-neutral-900'
                                                         }`}
                                                     >
                                                         {cat.name}
@@ -459,10 +459,10 @@ export default function SellerProfilePage() {
                                                         type="button"
                                                         disabled={isLocked}
                                                         onClick={() => toggleKeyword(con.name)}
-                                                        className={`px-3 py-1 rounded-xl text-xs font-semibold transition-all border ${
+                                                        className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all border ${
                                                             isActive
-                                                                ? 'bg-emerald-500 border-emerald-500 text-white shadow-sm shadow-emerald-100'
-                                                                : 'bg-white border-gray-200 text-gray-650 hover:border-emerald-500 hover:text-emerald-600'
+                                                                ? 'bg-neutral-500 border-emerald-500 text-white shadow-sm shadow-emerald-100'
+                                                                : 'bg-white border-neutral-950/15 text-gray-650 hover:border-emerald-500 hover:text-neutral-900'
                                                         }`}
                                                     >
                                                         {con.name}
@@ -480,7 +480,7 @@ export default function SellerProfilePage() {
                         <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Google Snippet Description (Meta Description)</label>
                         <textarea
                             {...register('meta_description')}
-                            className="w-full h-28 p-5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-medium focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all resize-none leading-relaxed"
+                            className="w-full h-28 p-5 rounded-lg bg-neutral-50 border border-neutral-950/15 text-sm font-medium focus:ring-4 focus:ring-green-500/10 focus:border-neutral-950/15 outline-none transition-all resize-none leading-relaxed"
                             placeholder="Recommended: 150-160 characters describing your brand for Google search results snippet..."
                         />
                         {/* Description Length Meter */}
@@ -489,7 +489,7 @@ export default function SellerProfilePage() {
                                 <span className={
                                     metaDescription.length === 0 ? 'text-gray-405' :
                                     metaDescription.length < 120 ? 'text-amber-600' :
-                                    metaDescription.length <= 160 ? 'text-emerald-600' : 'text-rose-600'
+                                    metaDescription.length <= 160 ? 'text-neutral-900' : 'text-neutral-700'
                                 }>
                                     {metaDescription.length === 0 ? 'Not entered' :
                                      metaDescription.length < 120 ? 'Too Short' :
@@ -502,7 +502,7 @@ export default function SellerProfilePage() {
                                     className={`h-full transition-all duration-300 ${
                                         metaDescription.length === 0 ? 'bg-gray-200' :
                                         metaDescription.length < 120 ? 'bg-amber-400' :
-                                        metaDescription.length <= 160 ? 'bg-emerald-500' : 'bg-rose-500'
+                                        metaDescription.length <= 160 ? 'bg-neutral-500' : 'bg-neutral-500'
                                     }`}
                                     style={{ width: `${Math.min(100, (metaDescription.length / 160) * 100)}%` }}
                                 ></div>
@@ -511,9 +511,9 @@ export default function SellerProfilePage() {
                     </div>
 
                     {/* Google SERP Live Preview */}
-                    <div className="mt-6 p-6 bg-gray-50 rounded-2xl border border-gray-100 space-y-3">
+                    <div className="mt-6 p-6 bg-neutral-50 rounded-lg border border-neutral-950/10 space-y-3">
                         <span className="block text-xs font-semibold text-gray-500 capitalize">Google Search Result Preview</span>
-                        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm font-sans max-w-xl">
+                        <div className="bg-white p-5 rounded-lg border border-neutral-950/15 shadow-sm font-sans max-w-xl">
                             <div className="text-xs text-gray-500 flex items-center gap-1.5 mb-1.5 select-none">
                                 <span className="bg-[#f1f3f4] px-1.5 py-0.5 rounded text-[10px] font-semibold text-[#3c4043]">Cureza</span>
                                 <span className="text-[#3c4043]">https://www.cureza.com &gt; brand &gt; {profile?.slug || 'aura-wellness'}</span>
@@ -529,8 +529,8 @@ export default function SellerProfilePage() {
                 </div>
 
                 {/* Purity & Verification Settings Card */}
-                <div className="grid grid-cols-1 gap-8 premium-card p-4 sm:p-8 bg-white border border-gray-200 rounded-2xl shadow-sm">
-                    <div className="border-b border-gray-100 pb-4">
+                <div className="grid grid-cols-1 gap-8 premium-card p-4 sm:p-8 bg-white border border-neutral-950/15 rounded-lg shadow-sm">
+                    <div className="border-b border-neutral-950/10 pb-4">
                         <h3 className="text-lg font-bold text-gray-800 tracking-tight">Purity & Verification Standards</h3>
                         <p className="text-xs text-gray-400 font-medium mt-1">Configure your brand trust badges and purity parameters displayed on the storefront.</p>
                     </div>
@@ -540,7 +540,7 @@ export default function SellerProfilePage() {
                         <input
                             {...register('genuine_badge_text')}
                             disabled={isLocked}
-                            className="w-full h-12 px-5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
+                            className="w-full h-12 px-5 rounded-lg bg-neutral-50 border border-neutral-950/15 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-neutral-950/15 outline-none transition-all"
                             placeholder="e.g. 100% Genuine (Default: 100% Genuine)"
                         />
                     </div>
@@ -561,7 +561,7 @@ export default function SellerProfilePage() {
                                             setPurityStandards(updated);
                                         }}
                                         placeholder={`Point #${idx + 1} (e.g. ${idx === 0 ? "100% Organic & Ayurvedic" : idx === 1 ? "Toxin & Heavy Metal Free" : "Cruelty Free & Vegan Friendly"})`}
-                                        className="w-full h-12 px-4 rounded-xl bg-gray-50 border border-gray-100 text-xs font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all"
+                                        className="w-full h-12 px-4 rounded-lg bg-neutral-50 border border-neutral-950/10 text-xs font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-neutral-950/15 outline-none transition-all"
                                     />
                                 </div>
                             ))}
@@ -570,8 +570,8 @@ export default function SellerProfilePage() {
                 </div>
 
                 {/* Brand Classifications Card */}
-                <div className="grid grid-cols-1 gap-8 premium-card p-4 sm:p-8 bg-white border border-gray-200 rounded-2xl shadow-sm">
-                    <div className="border-b border-gray-100 pb-4">
+                <div className="grid grid-cols-1 gap-8 premium-card p-4 sm:p-8 bg-white border border-neutral-950/15 rounded-lg shadow-sm">
+                    <div className="border-b border-neutral-950/10 pb-4">
                         <h3 className="text-lg font-bold text-gray-800 tracking-tight">Brand Classification & Segments</h3>
                         <p className="text-xs text-gray-400 font-medium mt-1">Select the product categories and therapeutic concerns your brand caters to.</p>
                     </div>
@@ -585,7 +585,7 @@ export default function SellerProfilePage() {
                                     <p className="text-xs text-gray-400 italic">No categories available</p>
                                 ) : (
                                     allCategories.map(cat => (
-                                        <label key={cat.id} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-50 hover:bg-gray-100/50 cursor-pointer border border-gray-100 transition-all">
+                                        <label key={cat.id} className="flex items-center gap-3 px-4 py-3 rounded-lg bg-neutral-50 hover:bg-gray-100/50 cursor-pointer border border-neutral-950/10 transition-all">
                                             <input
                                                 type="checkbox"
                                                 checked={selectedCategories.includes(cat.id)}
@@ -596,7 +596,7 @@ export default function SellerProfilePage() {
                                                         setSelectedCategories(selectedCategories.filter(id => id !== cat.id));
                                                     }
                                                 }}
-                                                className="w-4 h-4 text-cureza-green border-gray-300 rounded focus:ring-cureza-green"
+                                                className="w-4 h-4 text-neutral-900 border-neutral-950/15 rounded focus:ring-cureza-green"
                                             />
                                             <span className="text-xs font-semibold text-gray-750">{cat.name}</span>
                                         </label>
@@ -613,7 +613,7 @@ export default function SellerProfilePage() {
                                     <p className="text-xs text-gray-400 italic">No concerns available</p>
                                 ) : (
                                     allConcerns.map(concern => (
-                                        <label key={concern.id} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-50 hover:bg-gray-100/50 cursor-pointer border border-gray-100 transition-all">
+                                        <label key={concern.id} className="flex items-center gap-3 px-4 py-3 rounded-lg bg-neutral-50 hover:bg-gray-100/50 cursor-pointer border border-neutral-950/10 transition-all">
                                             <input
                                                 type="checkbox"
                                                 checked={selectedConcerns.includes(concern.id)}
@@ -624,7 +624,7 @@ export default function SellerProfilePage() {
                                                         setSelectedConcerns(selectedConcerns.filter(id => id !== concern.id));
                                                     }
                                                 }}
-                                                className="w-4 h-4 text-cureza-green border-gray-300 rounded focus:ring-cureza-green"
+                                                className="w-4 h-4 text-neutral-900 border-neutral-950/15 rounded focus:ring-cureza-green"
                                             />
                                             <span className="text-xs font-semibold text-gray-750">{concern.name}</span>
                                         </label>
@@ -636,8 +636,8 @@ export default function SellerProfilePage() {
                 </div>
 
                 {/* FAQ Manager Card */}
-                <div className="grid grid-cols-1 gap-8 premium-card p-4 sm:p-8 bg-white border border-gray-200 rounded-2xl shadow-sm">
-                    <div className="border-b border-gray-100 pb-4 flex justify-between items-center">
+                <div className="grid grid-cols-1 gap-8 premium-card p-4 sm:p-8 bg-white border border-neutral-950/15 rounded-lg shadow-sm">
+                    <div className="border-b border-neutral-950/10 pb-4 flex justify-between items-center">
                         <div>
                             <h3 className="text-lg font-bold text-gray-800 tracking-tight">Brand FAQs (Frequently Asked Questions)</h3>
                             <p className="text-xs text-gray-400 font-medium mt-1">Provide answers to common queries to educate shoppers and improve SEO indexes.</p>
@@ -646,7 +646,7 @@ export default function SellerProfilePage() {
                             <button
                                 type="button"
                                 onClick={() => setFaqs([...faqs, { question: '', answer: '' }])}
-                                className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-semibold capitalize hover:bg-emerald-700 transition-colors"
+                                className="px-4 py-2 bg-black text-white rounded-lg text-xs font-semibold capitalize hover:bg-neutral-900 transition-colors"
                             >
                                 + Add FAQ
                             </button>
@@ -655,17 +655,17 @@ export default function SellerProfilePage() {
 
                     <div className="space-y-6">
                         {faqs.length === 0 ? (
-                            <div className="text-center py-10 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                            <div className="text-center py-10 bg-neutral-50 rounded-lg border border-dashed border-neutral-950/15">
                                 <p className="text-xs font-semibold text-gray-550 capitalize">No FAQs Configured</p>
                             </div>
                         ) : (
                             faqs.map((faq, index) => (
-                                <div key={index} className="p-6 bg-gray-50 rounded-2xl border border-gray-100 space-y-4 relative group">
+                                <div key={index} className="p-6 bg-neutral-50 rounded-lg border border-neutral-950/10 space-y-4 relative group">
                                     {!isLocked && (
                                         <button
                                             type="button"
                                             onClick={() => setFaqs(faqs.filter((_, i) => i !== index))}
-                                            className="absolute top-4 right-4 text-xs font-semibold text-rose-500 hover:text-rose-600 transition-colors capitalize"
+                                            className="absolute top-4 right-4 text-xs font-semibold text-rose-500 hover:text-neutral-700 transition-colors capitalize"
                                         >
                                             Remove
                                         </button>
@@ -682,7 +682,7 @@ export default function SellerProfilePage() {
                                                 setFaqs(updated);
                                             }}
                                             placeholder="e.g. Are your products 100% organic?"
-                                            className="w-full h-12 px-4 rounded-xl bg-white border border-gray-200 text-xs font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all disabled:bg-gray-100 disabled:text-gray-500"
+                                            className="w-full h-12 px-4 rounded-lg bg-white border border-neutral-950/15 text-xs font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-neutral-950/15 outline-none transition-all disabled:bg-gray-100 disabled:text-gray-500"
                                         />
                                     </div>
                                     <div className="space-y-2">
@@ -696,7 +696,7 @@ export default function SellerProfilePage() {
                                                 setFaqs(updated);
                                             }}
                                             placeholder="Write the detailed answer here..."
-                                            className="w-full h-24 p-4 rounded-xl bg-white border border-gray-200 text-xs font-medium focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all resize-none leading-relaxed disabled:bg-gray-100 disabled:text-gray-500"
+                                            className="w-full h-24 p-4 rounded-lg bg-white border border-neutral-950/15 text-xs font-medium focus:ring-4 focus:ring-green-500/10 focus:border-neutral-950/15 outline-none transition-all resize-none leading-relaxed disabled:bg-gray-100 disabled:text-gray-500"
                                         />
                                     </div>
                                 </div>
@@ -711,10 +711,10 @@ export default function SellerProfilePage() {
                         type="submit"
                         disabled={isLocked || isSubmitting}
                         className={`
-                            w-full sm:w-auto px-5 py-2.5 rounded-xl font-semibold text-xs capitalize text-white transition-all
+                            w-full sm:w-auto px-5 py-2.5 rounded-lg font-semibold text-xs capitalize text-white transition-all
                             ${isLocked || isSubmitting
                                 ? 'bg-gray-200 cursor-not-allowed shadow-none text-gray-400'
-                                : 'bg-emerald-600 hover:bg-emerald-700 active:scale-95 shadow-sm'}
+                                : 'bg-black hover:bg-neutral-900 active:scale-95 shadow-sm'}
                         `}
                     >
                         {isSubmitting ? (

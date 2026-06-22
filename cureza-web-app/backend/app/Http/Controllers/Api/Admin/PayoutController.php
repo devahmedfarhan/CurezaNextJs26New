@@ -27,7 +27,7 @@ class PayoutController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Payout::with(['seller', 'seller.sellerProfile', 'processedBy'])
+        $query = Payout::with(['seller', 'seller.sellerProfile', 'seller.brand', 'processedBy'])
             ->orderBy('requested_at', 'desc');
 
         // Apply filters
@@ -62,6 +62,7 @@ class PayoutController extends Controller
         $payout = Payout::with([
             'seller',
             'seller.sellerProfile',
+            'seller.brand',
             'seller.sellerWallet',
             'processedBy',
             'transactions'
@@ -189,5 +190,66 @@ class PayoutController extends Controller
         );
 
         return response()->json($stats);
+    }
+
+    /**
+     * Process direct payout to seller
+     * POST /api/admin/payouts/direct
+     */
+    public function direct(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'seller_id' => 'required|exists:users,id',
+            'amount' => 'required|numeric|min:100',
+            'transaction_id' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $adminId = Auth::id();
+            $sellerId = $request->seller_id;
+            $amount = $request->amount;
+            $transactionId = $request->transaction_id;
+
+            $seller = \App\Models\User::with('sellerProfile')->findOrFail($sellerId);
+            $profile = $seller->sellerProfile;
+
+            $bankDetails = $profile ? [
+                'account_holder_name' => $profile->account_holder_name ?? $seller->name,
+                'account_number' => $profile->bank_account_number ?? 'N/A',
+                'ifsc_code' => $profile->ifsc_code ?? 'N/A',
+                'bank_name' => $profile->bank_name ?? 'N/A',
+            ] : [
+                'account_holder_name' => $seller->name,
+                'account_number' => 'N/A',
+                'ifsc_code' => 'N/A',
+                'bank_name' => 'N/A',
+            ];
+
+            \Illuminate\Support\Facades\DB::beginTransaction();
+
+            $payout = $this->payoutService->requestPayout($sellerId, $amount, $bankDetails);
+            $payout = $this->payoutService->approvePayout($payout->id, $adminId, $transactionId, $amount);
+
+            \Illuminate\Support\Facades\DB::commit();
+
+            return response()->json([
+                'message' => 'Direct payout processed successfully',
+                'payout' => $payout
+            ]);
+
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            return response()->json([
+                'message' => 'Failed to process direct payout',
+                'error' => $e->getMessage()
+            ], 400);
+        }
     }
 }

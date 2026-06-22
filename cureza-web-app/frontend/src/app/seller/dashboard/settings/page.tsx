@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from '@/lib/api';
 import { useForm } from 'react-hook-form';
 import { useToast } from '@/contexts/ToastContext';
@@ -21,6 +21,13 @@ export default function SellerSettingsPage() {
     const [previews, setPreviews] = useState<any>({});
 
     useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search);
+            const tab = params.get('tab');
+            if (tab) {
+                setActiveTab(tab);
+            }
+        }
         fetchSettings();
     }, []);
 
@@ -1476,28 +1483,126 @@ function KYCTab({ settings, refresh }: any) {
 function TaxTab({ settings, refresh }: any) {
     const { showToast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSyncing, setIsSyncing] = useState(false);
     
     const [defaultGstSlab, setDefaultGstSlab] = useState(() => 
-        settings?.profile?.default_gst_slab !== undefined ? String(settings.profile.default_gst_slab) : '18'
+        settings?.profile?.default_gst_slab !== undefined ? String(Number(settings.profile.default_gst_slab)) : '18'
     );
     const [defaultGstInclusive, setDefaultGstInclusive] = useState(() => 
         settings?.profile?.default_gst_inclusive ?? true
     );
+    const [defaultHsnCode, setDefaultHsnCode] = useState(() => 
+        settings?.profile?.default_hsn_code !== undefined ? String(settings.profile.default_hsn_code) : ''
+    );
+
+    const [hsnSearch, setHsnSearch] = useState(defaultHsnCode);
+    const [suggestions, setSuggestions] = useState<any[]>([]);
+    const [isOpen, setIsOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [selectedDesc, setSelectedDesc] = useState('');
+    const wrapperRef = useRef<HTMLDivElement>(null);
+
+    // Sync external defaultHsnCode changes to internal state
+    useEffect(() => {
+        setHsnSearch(defaultHsnCode);
+    }, [defaultHsnCode]);
+
+    // Fetch initial description if defaultHsnCode is pre-filled
+    useEffect(() => {
+        if (defaultHsnCode) {
+            const fetchInitialDesc = async () => {
+                try {
+                    const res = await axios.get(`/hsn-codes?search=${defaultHsnCode}`);
+                    const match = res.data.find((item: any) => item.code === defaultHsnCode);
+                    if (match) {
+                        setSelectedDesc(match.description);
+                    }
+                } catch (e) {
+                    console.error("Failed to fetch initial HSN info", e);
+                }
+            };
+            fetchInitialDesc();
+        }
+    }, []);
+
+    // Handle search query with debounce
+    useEffect(() => {
+        if (!hsnSearch.trim()) {
+            setSuggestions([]);
+            return;
+        }
+
+        const delayDebounceFn = setTimeout(async () => {
+            setIsLoading(true);
+            try {
+                const res = await axios.get(`/hsn-codes?search=${hsnSearch}`);
+                setSuggestions(res.data);
+            } catch (err) {
+                console.error("Error fetching HSN codes:", err);
+            } finally {
+                setIsLoading(false);
+            }
+        }, 300);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [hsnSearch]);
+
+    // Close dropdown on click outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const handleSelectHsn = (item: any) => {
+        setIsOpen(false);
+        setSuggestions([]);
+        setSelectedDesc(item.description);
+        setDefaultHsnCode(item.code);
+        setHsnSearch(item.code);
+    };
+
+    const handleHsnInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = e.target.value;
+        setHsnSearch(val);
+        setDefaultHsnCode(val);
+        setIsOpen(true);
+        setSelectedDesc(''); // Clear description on manual type/change
+    };
+
+    const pending = settings?.pending_requests?.tax?.[0];
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            await axios.post('/seller/settings/tax', {
+            const res = await axios.post('/seller/settings/tax', {
                 default_gst_slab: Number(defaultGstSlab),
                 default_gst_inclusive: defaultGstInclusive,
+                default_hsn_code: defaultHsnCode,
             });
-            showToast("Default GST settings updated successfully", "success");
+            showToast(res.data.message || "Tax and HSN settings update submitted for review", "success");
             refresh();
         } catch (err: any) {
-            showToast(err.response?.data?.message || "Failed to update default GST settings", "error");
+            showToast(err.response?.data?.message || "Failed to submit default GST settings", "error");
         } finally {
             setIsSubmitting(false);
+        }
+    };
+
+    const handleSyncProducts = async () => {
+        setIsSyncing(true);
+        try {
+            const res = await axios.post('/seller/settings/tax/sync');
+            showToast(res.data.message || "Successfully synced products.", "success");
+        } catch (err: any) {
+            showToast(err.response?.data?.message || "Failed to sync products.", "error");
+        } finally {
+            setIsSyncing(false);
         }
     };
 
@@ -1511,7 +1616,7 @@ function TaxTab({ settings, refresh }: any) {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                 <div className="lg:col-span-1 space-y-6">
                     <div className="bg-gray-50 rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm space-y-4">
-                        <h3 className="text-xs font-semibold text-gray-550 capitalize tracking-wider flex items-center gap-2">
+                        <h3 className="text-xs font-semibold text-gray-555 capitalize tracking-wider flex items-center gap-2">
                             <span className="p-1.5 bg-cureza-green/10 text-cureza-green rounded-lg">
                                 <Info size={14} />
                             </span>
@@ -1524,10 +1629,44 @@ function TaxTab({ settings, refresh }: any) {
                             2. **Individual Overrides:** If a specific product falls under a different tax rate, you can edit that product's specific GST Slab and treatment directly within the Product Editor.
                         </p>
                     </div>
+
+                    {pending && (
+                        <div className="bg-amber-50/50 border border-amber-100 p-4 sm:p-6 rounded-xl relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:rotate-12 transition-transform">
+                                <Clock size={64} />
+                            </div>
+                             <h3 className="text-xs font-semibold text-amber-700 capitalize mb-6 flex items-center gap-3">
+                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                Awaiting Super Admin Approval
+                            </h3>
+                            <div className="space-y-4">
+                                {Object.entries(pending.new_data).map(([key, val]: any) => {
+                                    if (pending.old_data?.[key] === val) return null;
+                                    return (
+                                        <div key={key} className="flex flex-col border-b border-amber-100/30 pb-2">
+                                            <span className="text-[10px] text-amber-600 capitalize font-semibold tracking-normal">{key.replace(/_/g, ' ')}</span>
+                                            <span className="text-sm font-semibold text-amber-900">
+                                                {key === 'default_gst_inclusive'
+                                                    ? (val ? 'Inclusive (GST Included in Price)' : 'Exclusive (GST Added on Top)')
+                                                    : (key === 'default_gst_slab' ? `${val}%` : String(val))
+                                                }
+                                            </span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                            <p className="mt-4 text-xs text-amber-600 dark:text-amber-400 leading-relaxed font-medium">
+                                This request has been submitted to the Super Admin. Once approved, the new default GST slab will be saved and you can sync it across all your products.
+                            </p>
+                            <p className="mt-6 text-[10px] text-amber-700 font-semibold capitalize border-t border-amber-100 pt-4 text-center">
+                                Logged: {new Date(pending.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
+                            </p>
+                        </div>
+                    )}
                 </div>
 
                 <div className="lg:col-span-2">
-                    <form onSubmit={handleSubmit} className="space-y-8">
+                    <form onSubmit={handleSubmit} className={`space-y-8 ${pending ? 'opacity-35 pointer-events-none' : ''}`}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-2">
                                 <label className="text-xs font-bold text-gray-700 uppercase tracking-wider block">Default GST Slab <span className="text-red-500">*</span></label>
@@ -1563,12 +1702,76 @@ function TaxTab({ settings, refresh }: any) {
                                     </label>
                                 </div>
                             </div>
+
+                            <div className="space-y-2 md:col-span-2 relative" ref={wrapperRef}>
+                                <label className="text-xs font-bold text-gray-700 uppercase tracking-wider block">Default HSN Code <span className="text-red-500">*</span></label>
+                                <input
+                                    type="text"
+                                    name="default_hsn_code"
+                                    value={hsnSearch}
+                                    onChange={handleHsnInputChange}
+                                    onFocus={() => setIsOpen(true)}
+                                    placeholder="e.g. 33019049"
+                                    required
+                                    className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none transition-all text-gray-800"
+                                />
+
+                                {isOpen && (hsnSearch.trim() !== '' || suggestions.length > 0 || isLoading) && (
+                                    <div className="absolute z-[99] left-0 right-0 mt-1 max-h-60 overflow-y-auto bg-white dark:bg-gray-950 border border-gray-150 dark:border-gray-800 rounded-xl shadow-xl divide-y divide-gray-100 dark:divide-gray-900 scrollbar-thin">
+                                        {isLoading ? (
+                                            <div className="p-4 text-xs font-semibold text-gray-400 dark:text-gray-555 flex items-center gap-2">
+                                                <Loader2 size={14} className="animate-spin text-cureza-green" />
+                                                Searching standard HSN registry...
+                                            </div>
+                                        ) : suggestions.length > 0 ? (
+                                            suggestions.map((item) => (
+                                                <button
+                                                    key={item.id}
+                                                    type="button"
+                                                    onClick={() => handleSelectHsn(item)}
+                                                    className="w-full text-left p-3 hover:bg-gray-50 dark:hover:bg-gray-900/60 transition-colors flex flex-col gap-1 outline-none"
+                                                >
+                                                    <div className="flex justify-between items-center">
+                                                        <span className="text-xs font-bold text-gray-955 dark:text-gray-100 tracking-wider">HSN {item.code}</span>
+                                                        <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-450">GST {Math.round(parseFloat(item.gst_rate))}%</span>
+                                                    </div>
+                                                    <span className="text-[10px] text-gray-550 dark:text-gray-400 font-medium line-clamp-2 leading-relaxed">{item.description}</span>
+                                                </button>
+                                            ))
+                                        ) : (
+                                            <div className="p-3 text-[10px] text-gray-500 dark:text-gray-400 font-medium">
+                                                No matching standard HSN. Press enter or click outside to use custom HSN: <strong className="text-gray-800 dark:text-gray-250 font-bold">{hsnSearch}</strong>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                                
+                                {selectedDesc && (
+                                    <p className="text-[10px] text-emerald-650 dark:text-emerald-400 mt-1 font-semibold leading-relaxed">
+                                        ✓ Standard HSN: {selectedDesc}
+                                    </p>
+                                )}
+                            </div>
                         </div>
 
-                        <div className="flex justify-end pt-4">
+                        <div className="flex justify-end pt-4 gap-3">
+                            <button
+                                type="button"
+                                onClick={handleSyncProducts}
+                                disabled={isSyncing}
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm capitalize shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all disabled:bg-gray-200 disabled:text-gray-400 flex items-center gap-3"
+                            >
+                                {isSyncing ? (
+                                    <Loader2 className="animate-spin" size={16} />
+                                ) : (
+                                    <Clock size={16} className="text-white" />
+                                )}
+                                Recheck & Sync All Products
+                            </button>
+
                             <button
                                 type="submit"
-                                disabled={isSubmitting}
+                                disabled={isSubmitting || !!pending}
                                 className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm capitalize shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all disabled:bg-gray-200 disabled:text-gray-400 flex items-center gap-3"
                             >
                                 {isSubmitting ? (

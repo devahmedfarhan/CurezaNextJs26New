@@ -163,7 +163,7 @@ export default function AdminOrdersPage() {
     return (
         <div className="w-full space-y-6 animate-in fade-in duration-300">
             {/* Header Section */}
-            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border-[0.5px] border-neutral-950/10 dark:border-neutral-800">
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border-[0.5px] border-black/50 dark:border-neutral-800">
                 <div className="absolute top-0 right-0 p-8 opacity-5">
                     <ShoppingBag size={120} />
                 </div>
@@ -185,7 +185,7 @@ export default function AdminOrdersPage() {
                         {selectedOrderIds.length > 0 && (
                             <button
                                 onClick={handleBulkInvoiceDownload}
-                                className="flex items-center justify-center gap-2 bg-black text-white dark:bg-white dark:text-black px-4 py-2.5 rounded-[10px] font-medium hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-all active:scale-95 text-xs border border-transparent shadow-none"
+                                className="flex items-center justify-center gap-2 bg-black text-white dark:bg-white dark:text-black px-4 py-2.5 rounded-[10px] font-medium hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-all active:scale-95 text-xs border-[0.5px] border-transparent shadow-none"
                             >
                                 <Download size={16} />
                                 Bulk Invoices ({selectedOrderIds.length})
@@ -193,14 +193,14 @@ export default function AdminOrdersPage() {
                         )}
                         <Link
                             href="/superadmin/dashboard/orders/create"
-                            className="flex items-center justify-center gap-2 bg-black text-white dark:bg-white dark:text-black px-4 py-2.5 rounded-[10px] font-medium hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-all active:scale-95 text-xs border border-transparent shadow-none"
+                            className="flex items-center justify-center gap-2 bg-black text-white dark:bg-white dark:text-black px-4 py-2.5 rounded-[10px] font-medium hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-all active:scale-95 text-xs border-[0.5px] border-transparent shadow-none"
                         >
                             <Package size={16} />
                             Create New Order
                         </Link>
                         <button
                             onClick={handleExport}
-                            className="flex items-center justify-center gap-2 bg-white border border-neutral-950/15 text-gray-700 px-4 py-2.5 rounded-[10px] font-medium hover:bg-neutral-50 transition-all active:scale-95 text-xs dark:bg-gray-900 dark:text-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-800 shadow-none"
+                            className="flex items-center justify-center gap-2 bg-white border-[0.5px] border-black/50 text-gray-700 px-4 py-2.5 rounded-[10px] font-medium hover:bg-neutral-50 transition-all active:scale-95 text-xs dark:bg-gray-900 dark:text-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-800 shadow-none"
                         >
                             <Download size={16} />
                             Export All Details
@@ -212,7 +212,7 @@ export default function AdminOrdersPage() {
 
 
             {/* Search and Filter Bar */}
-            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-neutral-950/10 dark:border-neutral-800 space-y-4 shadow-none">
+            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 space-y-4 shadow-none">
                 <div className="flex flex-col sm:flex-row gap-4">
                     <div className="relative flex-1">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -220,7 +220,7 @@ export default function AdminOrdersPage() {
                         </div>
                         <input
                             type="text"
-                            className="block w-full pl-10 pr-3 py-2 border border-neutral-950/15 rounded-[10px] bg-neutral-50/50 dark:bg-gray-800/30 text-xs font-normal placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-1 focus:ring-black focus:border-black dark:text-white transition-colors"
+                            className="block w-full pl-10 pr-3 py-2 border-[0.5px] border-black/50 rounded-[10px] bg-neutral-50/50 dark:bg-gray-800/30 text-xs font-normal placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-1 focus:ring-black focus:border-black dark:text-white transition-colors"
                             placeholder="Search by Order ID, Customer, or Email..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
@@ -229,7 +229,7 @@ export default function AdminOrdersPage() {
                     {/* Filter Toggle Button */}
                     <button
                         onClick={() => setShowFilters(!showFilters)}
-                        className={`flex items-center justify-center gap-2 h-10 px-4 rounded-[10px] border border-neutral-950/15 text-xs font-medium transition-all ${
+                        className={`flex items-center justify-center gap-2 h-10 px-4 rounded-[10px] border-[0.5px] border-black/50 text-xs font-medium transition-all ${
                             showFilters
                                 ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
                                 : 'bg-white text-neutral-600 hover:bg-neutral-50 dark:bg-gray-900 dark:text-neutral-350 dark:border-neutral-800 dark:hover:bg-neutral-800 shadow-none'
@@ -246,14 +246,14 @@ export default function AdminOrdersPage() {
 
                 {/* Collapsible Filters Container */}
                 {showFilters && (
-                    <div className="flex flex-col gap-3 pt-3 border-t border-neutral-950/5 dark:border-neutral-800/50 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="flex flex-col gap-3 pt-3 border-t-[0.5px] border-black/50 dark:border-neutral-800/50 animate-in fade-in slide-in-from-top-2 duration-200">
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:flex lg:flex-wrap gap-3 text-xs">
                             {/* Seller Filter */}
                             <div className="relative w-full lg:w-auto lg:min-w-[160px] lg:max-w-[200px]">
                                 <select
                                     value={sellerFilter}
                                     onChange={(e) => setSellerFilter(e.target.value)}
-                                    className="w-full h-10 pl-3 pr-10 border border-neutral-950/15 rounded-[10px] text-xs bg-white dark:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black dark:text-white outline-none appearance-none cursor-pointer"
+                                    className="w-full h-10 pl-3 pr-10 border-[0.5px] border-black/50 rounded-[10px] text-xs bg-white dark:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black dark:text-white outline-none appearance-none cursor-pointer"
                                 >
                                     <option value="All">All Sellers</option>
                                     {sellers.map(seller => (
@@ -270,7 +270,7 @@ export default function AdminOrdersPage() {
                                 <select
                                     value={brandFilter}
                                     onChange={(e) => setBrandFilter(e.target.value)}
-                                    className="w-full h-10 pl-3 pr-10 border border-neutral-950/15 rounded-[10px] text-xs bg-white dark:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black dark:text-white outline-none appearance-none cursor-pointer"
+                                    className="w-full h-10 pl-3 pr-10 border-[0.5px] border-black/50 rounded-[10px] text-xs bg-white dark:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black dark:text-white outline-none appearance-none cursor-pointer"
                                 >
                                     <option value="All">All Brands</option>
                                     {brands.map(brand => (
@@ -287,7 +287,7 @@ export default function AdminOrdersPage() {
                                 <select
                                     value={statusFilter}
                                     onChange={(e) => setStatusFilter(e.target.value)}
-                                    className="w-full h-10 pl-3 pr-10 border border-neutral-950/15 rounded-[10px] text-xs bg-white dark:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black dark:text-white outline-none appearance-none cursor-pointer"
+                                    className="w-full h-10 pl-3 pr-10 border-[0.5px] border-black/50 rounded-[10px] text-xs bg-white dark:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black dark:text-white outline-none appearance-none cursor-pointer"
                                 >
                                     <option value="All">All Statuses</option>
                                     <option value="pending">Pending</option>
@@ -306,7 +306,7 @@ export default function AdminOrdersPage() {
                                 <select
                                     value={paymentStatusFilter}
                                     onChange={(e) => setPaymentStatusFilter(e.target.value)}
-                                    className="w-full h-10 pl-3 pr-10 border border-neutral-950/15 rounded-[10px] text-xs bg-white dark:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black dark:text-white outline-none appearance-none cursor-pointer"
+                                    className="w-full h-10 pl-3 pr-10 border-[0.5px] border-black/50 rounded-[10px] text-xs bg-white dark:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black dark:text-white outline-none appearance-none cursor-pointer"
                                 >
                                     <option value="All">All Payments</option>
                                     <option value="paid">Paid</option>
@@ -320,7 +320,7 @@ export default function AdminOrdersPage() {
                             </div>
 
                             {/* Date Range - From */}
-                            <div className="w-full lg:w-auto h-10 flex items-center justify-between lg:justify-start gap-2 bg-white dark:bg-gray-900 border border-neutral-950/15 rounded-[10px] px-3">
+                            <div className="w-full lg:w-auto h-10 flex items-center justify-between lg:justify-start gap-2 bg-white dark:bg-gray-900 border-[0.5px] border-black/50 rounded-[10px] px-3">
                                 <span className="text-[10px] text-neutral-450 uppercase font-semibold">From:</span>
                                 <input
                                     type="date"
@@ -331,7 +331,7 @@ export default function AdminOrdersPage() {
                             </div>
 
                             {/* Date Range - To */}
-                            <div className="w-full lg:w-auto h-10 flex items-center justify-between lg:justify-start gap-2 bg-white dark:bg-gray-950 border border-neutral-950/15 rounded-[10px] px-3">
+                            <div className="w-full lg:w-auto h-10 flex items-center justify-between lg:justify-start gap-2 bg-white dark:bg-gray-950 border-[0.5px] border-black/50 rounded-[10px] px-3">
                                 <span className="text-[10px] text-neutral-450 uppercase font-semibold">To:</span>
                                 <input
                                     type="date"
@@ -346,7 +346,7 @@ export default function AdminOrdersPage() {
             </div>
 
             {/* Orders List Table */}
-            <div className="bg-white dark:bg-gray-900 rounded-[10px] border border-neutral-950/10 dark:border-neutral-800 overflow-hidden shadow-none">
+            <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 overflow-hidden shadow-none">
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-neutral-955/10 dark:divide-neutral-800">
                         <thead className="bg-neutral-50/50 dark:bg-gray-850/50">
@@ -354,7 +354,7 @@ export default function AdminOrdersPage() {
                                 <th scope="col" className="px-6 py-3.5 text-left">
                                     <input
                                         type="checkbox"
-                                        className="h-4 w-4 text-black border-neutral-950/15 rounded-[4px] focus:ring-black cursor-pointer bg-transparent"
+                                        className="h-4 w-4 text-black border-black/50 rounded-[4px] focus:ring-black cursor-pointer bg-transparent"
                                         checked={orders.length > 0 && selectedOrderIds.length === orders.length}
                                         onChange={toggleSelectAll}
                                     />
@@ -384,7 +384,7 @@ export default function AdminOrdersPage() {
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <input
                                                 type="checkbox"
-                                                className="h-4 w-4 text-black border-neutral-950/15 rounded-[4px] focus:ring-black cursor-pointer bg-transparent"
+                                                className="h-4 w-4 text-black border-black/50 rounded-[4px] focus:ring-black cursor-pointer bg-transparent"
                                                 checked={selectedOrderIds.includes(order.id)}
                                                 onChange={() => toggleSelectOrder(order.id)}
                                             />
@@ -424,11 +424,11 @@ export default function AdminOrdersPage() {
                     </table>
                 </div>
                 {/* Pagination */}
-                <div className="px-6 py-3 flex justify-between items-center border-t border-neutral-955/10 dark:border-neutral-800 text-xs">
+                <div className="px-6 py-3 flex justify-between items-center border-t-[0.5px] border-black/50 dark:border-neutral-800 text-xs">
                     <button
                         disabled={page <= 1}
                         onClick={() => setPage(page - 1)}
-                        className="px-3 py-1.5 border border-neutral-950/10 rounded-[10px] hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-neutral-800 dark:hover:bg-neutral-800 dark:text-white transition-all shadow-none"
+                        className="px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-neutral-800 dark:hover:bg-neutral-800 dark:text-white transition-all shadow-none"
                     >
                         Previous
                     </button>
@@ -436,7 +436,7 @@ export default function AdminOrdersPage() {
                     <button
                         disabled={page >= totalPages}
                         onClick={() => setPage(page + 1)}
-                        className="px-3 py-1.5 border border-neutral-950/10 rounded-[10px] hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-neutral-800 dark:hover:bg-neutral-800 dark:text-white transition-all shadow-none"
+                        className="px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-neutral-800 dark:hover:bg-neutral-800 dark:text-white transition-all shadow-none"
                     >
                         Next
                     </button>

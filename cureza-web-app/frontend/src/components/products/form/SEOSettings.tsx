@@ -24,11 +24,11 @@ export default function SEOSettings({ formData, handleInputChange, isSuperAdmin 
     const roundedClass = isSuperAdmin ? 'rounded-[10px]' : 'rounded-2xl';
 
     return (
-        <div className={`p-8 ${isSuperAdmin ? 'rounded-[10px] border-[0.5px] border-neutral-950/15 bg-white dark:bg-gray-900 shadow-none' : 'bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-xl shadow-gray-100/50 dark:shadow-none'} space-y-10`}>
+        <div className={`p-8 ${isSuperAdmin ? 'rounded-[10px] border-[0.5px] border-black/50 bg-white dark:bg-gray-900 shadow-none' : 'bg-white dark:bg-gray-900 rounded-[2rem] border-[0.5px] border-black/50 dark:border-gray-800 shadow-none shadow-gray-100/50 dark:shadow-none'} space-y-10`}>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-2">
                 <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                        <div className={`p-2 ${isSuperAdmin ? 'bg-neutral-50 dark:bg-neutral-800 border-[0.5px] border-neutral-950/10' : 'bg-blue-50 dark:bg-blue-900/20'} rounded-xl`}>
+                        <div className={`p-2 ${isSuperAdmin ? 'bg-neutral-50 dark:bg-neutral-800 border-[0.5px] border-black/50' : 'bg-blue-50 dark:bg-blue-900/20'} rounded-xl`}>
                             <Globe size={20} className={isSuperAdmin ? 'text-black dark:text-white' : 'text-blue-600 dark:text-blue-400'} />
                         </div>
                         <h3 className={`text-xl font-black text-gray-900 dark:text-white ${isSuperAdmin ? 'capitalize' : 'uppercase'} tracking-tight`}>SEO Engine</h3>
@@ -36,8 +36,8 @@ export default function SEOSettings({ formData, handleInputChange, isSuperAdmin 
                     <p className="text-sm text-gray-500 font-medium">Maximize your search engine visibility and click-through rates.</p>
                 </div>
 
-                <div className={`flex items-center gap-4 bg-gray-50 dark:bg-gray-800/50 p-2 ${roundedClass} border border-gray-150 dark:border-gray-700`}>
-                    <div className="flex items-center gap-2 px-3 border-r border-gray-200 dark:border-gray-700">
+                <div className={`flex items-center gap-4 bg-gray-50 dark:bg-gray-800/50 p-2 ${roundedClass} border-[0.5px] border-black/50 dark:border-gray-700`}>
+                    <div className="flex items-center gap-2 px-3 border-r-[0.5px] border-black/50 dark:border-gray-700">
                         <Zap size={14} className="text-amber-500" />
                         <span className={`text-[10px] font-black ${isSuperAdmin ? 'capitalize' : 'uppercase'} text-gray-400`}>Score</span>
                         <span className="text-sm font-black text-gray-900 dark:text-white">85%</span>
@@ -45,7 +45,7 @@ export default function SEOSettings({ formData, handleInputChange, isSuperAdmin 
                     <div className="flex items-center gap-2 px-3">
                         <ShieldCheck size={14} className="text-emerald-500" />
                         <span className={`text-[10px] font-black ${isSuperAdmin ? 'capitalize' : 'uppercase'} text-gray-400`}>Status</span>
-                        <span className={`text-[10px] font-black ${isSuperAdmin ? 'capitalize border-[0.5px] border-neutral-950/10 bg-neutral-100 rounded px-1.5 py-0.5' : 'uppercase'} text-emerald-600 dark:text-emerald-450`}>Optimized</span>
+                        <span className={`text-[10px] font-black ${isSuperAdmin ? 'capitalize border-[0.5px] border-black/50 bg-neutral-100 rounded px-1.5 py-0.5' : 'uppercase'} text-emerald-600 dark:text-emerald-450`}>Optimized</span>
                     </div>
                 </div>
             </div>
@@ -73,7 +73,7 @@ export default function SEOSettings({ formData, handleInputChange, isSuperAdmin 
                                     name="seo_title"
                                     value={formData.seo_title}
                                     onChange={handleInputChange}
-                                    className={`w-full h-14 pl-4 pr-4 bg-gray-50 dark:bg-gray-800/50 ${isSuperAdmin ? 'border-[0.5px] border-neutral-950/15 focus:border-black focus:ring-4 focus:ring-black/10 focus:bg-white rounded-lg shadow-none' : 'border-2 border-transparent focus:border-cureza-green focus:bg-white dark:focus:bg-gray-800 rounded-2xl shadow-inner-sm'} transition-all font-bold text-gray-900 dark:text-white placeholder-gray-300`}
+                                    className={`w-full h-14 pl-4 pr-4 bg-gray-50 dark:bg-gray-800/50 ${isSuperAdmin ? 'border-[0.5px] border-black/50 focus:border-black focus:ring-4 focus:ring-black/10 focus:bg-white rounded-lg shadow-none' : 'border-[0.5px] border-transparent focus:border-cureza-green focus:bg-white dark:focus:bg-gray-800 rounded-2xl shadow-none'} transition-all font-bold text-gray-900 dark:text-white placeholder-gray-300`}
                                     placeholder="Impactful SEO Title..."
                                 />
                                 <div className="absolute bottom-0 left-4 right-4 h-1 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
@@ -103,7 +103,7 @@ export default function SEOSettings({ formData, handleInputChange, isSuperAdmin 
                                     name="seo_description"
                                     value={formData.seo_description}
                                     onChange={handleInputChange}
-                                    className={`w-full min-h-[56px] h-14 p-4 py-3 bg-gray-50 dark:bg-gray-800/50 ${isSuperAdmin ? 'border-[0.5px] border-neutral-950/15 focus:border-black focus:ring-4 focus:ring-black/10 focus:bg-white rounded-lg shadow-none' : 'border-2 border-transparent focus:border-cureza-green focus:bg-white dark:focus:bg-gray-800 rounded-2xl shadow-inner-sm'} transition-all font-medium text-gray-700 dark:text-gray-300 placeholder-gray-300 resize-none overflow-hidden`}
+                                    className={`w-full min-h-[56px] h-14 p-4 py-3 bg-gray-50 dark:bg-gray-800/50 ${isSuperAdmin ? 'border-[0.5px] border-black/50 focus:border-black focus:ring-4 focus:ring-black/10 focus:bg-white rounded-lg shadow-none' : 'border-[0.5px] border-transparent focus:border-cureza-green focus:bg-white dark:focus:bg-gray-800 rounded-2xl shadow-none'} transition-all font-medium text-gray-700 dark:text-gray-300 placeholder-gray-300 resize-none overflow-hidden`}
                                     placeholder="Draft a compelling product description..."
                                     onInput={(e: any) => {
                                         e.target.style.height = 'auto';
@@ -121,7 +121,7 @@ export default function SEOSettings({ formData, handleInputChange, isSuperAdmin 
                     </div>
 
                     {/* Pro Tips */}
-                    <div className={`p-6 ${isSuperAdmin ? 'bg-neutral-50/50 dark:bg-neutral-800/10 rounded-[10px] border-[0.5px] border-neutral-950/15' : 'bg-blue-50/50 dark:bg-blue-900/10 rounded-3xl border border-blue-100/50 dark:border-blue-900/30'} space-y-4`}>
+                    <div className={`p-6 ${isSuperAdmin ? 'bg-neutral-50/50 dark:bg-neutral-800/10 rounded-[10px] border-[0.5px] border-black/50' : 'bg-blue-50/50 dark:bg-blue-900/10 rounded-3xl border-[0.5px] border-black/50 dark:border-blue-900/30'} space-y-4`}>
                         <div className={`flex items-center gap-2 ${isSuperAdmin ? 'text-black dark:text-white' : 'text-blue-700 dark:text-blue-400'}`}>
                             <LineChart size={18} />
                             <h4 className={`text-xs font-black ${isSuperAdmin ? 'capitalize' : 'uppercase'} tracking-widest`}>SEO Excellence</h4>
@@ -134,7 +134,7 @@ export default function SEOSettings({ formData, handleInputChange, isSuperAdmin 
                                 { icon: <ShieldCheck size={14} />, text: 'Unique content.' }
                             ].map((tip, i) => (
                                 <li key={i} className={`flex items-center gap-2 text-[10px] font-bold ${isSuperAdmin ? 'text-neutral-700 dark:text-neutral-300' : 'text-blue-800/70 dark:text-blue-400/70'}`}>
-                                    <span className={`p-1 bg-white dark:bg-blue-900/40 ${isSuperAdmin ? 'rounded-md border-[0.5px] border-neutral-950/15 shadow-none' : 'rounded-lg shadow-xs'} flex-shrink-0`}>{tip.icon}</span>
+                                    <span className={`p-1 bg-white dark:bg-blue-900/40 ${isSuperAdmin ? 'rounded-md border-[0.5px] border-black/50 shadow-none' : 'rounded-lg shadow-none border-black/50 border-[0.5px]'} flex-shrink-0`}>{tip.icon}</span>
                                     <span className="leading-tight">{tip.text}</span>
                                 </li>
                             ))}
@@ -154,7 +154,7 @@ export default function SEOSettings({ formData, handleInputChange, isSuperAdmin 
                         </div>
                     </div>
 
-                    <div className={`bg-white dark:bg-gray-800 ${isSuperAdmin ? 'rounded-[10px] border-[0.5px] border-neutral-950/15 shadow-none' : 'rounded-3xl border border-gray-100 dark:border-gray-700 shadow-2xl shadow-gray-200/50 dark:shadow-none'} p-6 space-y-4`}>
+                    <div className={`bg-white dark:bg-gray-800 ${isSuperAdmin ? 'rounded-[10px] border-[0.5px] border-black/50 shadow-none' : 'rounded-3xl border-[0.5px] border-black/50 dark:border-gray-700 shadow-none shadow-gray-200/50 dark:shadow-none'} p-6 space-y-4`}>
                         <div className="flex items-center gap-3">
                             <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
                                 <Globe size={14} className="text-gray-400" />
@@ -175,16 +175,16 @@ export default function SEOSettings({ formData, handleInputChange, isSuperAdmin 
                             </p>
                         </div>
 
-                        <div className="pt-4 border-t border-gray-55/50 dark:border-gray-700/55 flex items-center gap-4">
+                        <div className="pt-4 border-t-[0.5px] border-gray-55/50 dark:border-gray-700/55 flex items-center gap-4">
                             <div className="flex -space-x-2">
                                 {[1, 2, 3].map(i => (
-                                    <div key={i} className="w-6 h-6 rounded-full border-2 border-white dark:border-gray-800 bg-gray-200 dark:bg-gray-700" />
+                                    <div key={i} className="w-6 h-6 rounded-full border-[0.5px] border-white dark:border-gray-800 bg-gray-200 dark:bg-gray-700" />
                                 ))}
                             </div>
                             <p className="text-[10px] font-bold text-gray-400">Trusted by 10k+ customers</p>
                         </div>
                     </div>
-                    <div className={`flex items-start gap-3 p-4 bg-gray-50/50 dark:bg-gray-800/50 ${isSuperAdmin ? 'rounded-[10px] border-[0.5px] border-neutral-950/15' : 'rounded-2xl border border-dashed border-gray-200 dark:border-gray-700'} mt-6`}>
+                    <div className={`flex items-start gap-3 p-4 bg-gray-50/50 dark:bg-gray-800/50 ${isSuperAdmin ? 'rounded-[10px] border-[0.5px] border-black/50' : 'rounded-2xl border-[0.5px] border-dashed border-black/50 dark:border-gray-700'} mt-6`}>
                         <Info size={16} className="text-gray-400 mt-0.5 flex-shrink-0" />
                         <p className="text-[10px] text-gray-500 font-medium leading-relaxed">
                             Simulated preview. Actual display may vary based on search intent.

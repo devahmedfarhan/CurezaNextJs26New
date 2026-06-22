@@ -385,26 +385,84 @@ class SellerSettingsController extends Controller
 
     public function updateTaxSettings(Request $request)
     {
+        $user = Auth::user();
+        $profile = $user->sellerProfile;
+
+        // Check for existing pending request of section 'tax'
+        $existing = SellerChangeRequest::where('seller_id', $user->id)
+            ->where('section', 'tax')
+            ->where('status', 'pending')
+            ->exists();
+
+        if ($existing) {
+            return response()->json(['message' => 'You already have a pending tax settings update request.'], 400);
+        }
+
         $validated = $request->validate([
             'default_gst_slab' => 'required|numeric|in:0,5,12,18,28',
             'default_gst_inclusive' => 'required|boolean',
+            'default_hsn_code' => 'required|string|max:20',
         ]);
 
+        $oldData = $profile ? [
+            'default_gst_slab' => $profile->default_gst_slab,
+            'default_gst_inclusive' => $profile->default_gst_inclusive,
+            'default_hsn_code' => $profile->default_hsn_code,
+        ] : [];
+
+        SellerChangeRequest::create([
+            'seller_id' => $user->id,
+            'section' => 'tax',
+            'old_data' => $oldData,
+            'new_data' => $validated,
+            'status' => 'pending'
+        ]);
+
+        // Notify Admins
+        try {
+            $admins = User::whereIn('role', ['admin', 'super_admin'])->get();
+            \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\AdminAlertNotification(
+                'seller_tax_update',
+                'Seller Tax Update Request',
+                'Seller ' . $user->name . ' has requested to update their default GST and HSN settings.',
+                '/superadmin/dashboard/users/sellers/' . $user->id
+            ));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send seller tax update notification to admins: ' . $e->getMessage());
+        }
+
+        return response()->json(['message' => 'Default GST and HSN settings update submitted for approval.']);
+    }
+
+    public function syncProductsTax()
+    {
         $user = Auth::user();
         $profile = $user->sellerProfile;
 
         if (!$profile) {
-            $profile = SellerProfile::create([
-                'user_id' => $user->id,
-                'status' => 'pending',
-            ]);
+            return response()->json(['message' => 'Seller profile not found.'], 404);
         }
 
-        $profile->update($validated);
+        $defaultGstSlab = $profile->default_gst_slab;
+        $defaultGstInclusive = $profile->default_gst_inclusive;
+        $defaultHsnCode = $profile->default_hsn_code;
+
+        if ($defaultGstSlab === null) {
+            return response()->json(['message' => 'Default GST slab not configured.'], 400);
+        }
+
+        // Update all products of the seller
+        $count = \App\Models\Product::where('seller_id', $user->id)
+            ->update([
+                'gst_slab' => (float)$defaultGstSlab,
+                'gst_inclusive' => (bool)$defaultGstInclusive,
+                'hsn_code' => $defaultHsnCode
+            ]);
 
         return response()->json([
-            'message' => 'Default GST settings updated successfully.',
-            'profile' => $profile
+            'message' => "Successfully synced {$count} products to default GST slab {$defaultGstSlab}% and HSN code " . ($defaultHsnCode ?? 'N/A') . ".",
+            'count' => $count
         ]);
     }
 }
+

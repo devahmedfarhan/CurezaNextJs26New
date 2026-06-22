@@ -152,7 +152,7 @@ export default function CreateOrderPage() {
 
     return (
         <div className="space-y-6 max-w-7xl mx-auto pb-20">
-            <div className="flex items-center gap-4 border-b pb-4">
+            <div className="flex items-center gap-4 border-b-[0.5px] pb-4">
                 <Link href="/superadmin/dashboard/orders" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                     <ArrowLeft size={24} className="text-gray-600" />
                 </Link>
@@ -167,14 +167,14 @@ export default function CreateOrderPage() {
                 <div className="lg:col-span-2 space-y-8">
 
                     {/* 1. Customer Selection */}
-                    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm relative z-20">
+                    <div className="bg-white p-6 rounded-xl border-[0.5px] border-black/50 shadow-none relative z-20">
                         <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                             <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-xs text-center mr-1">1</span>
                             Customer Details
                         </h3>
 
                         {selectedUser ? (
-                            <div className="flex justify-between items-center bg-blue-50 p-4 rounded-xl border border-blue-100">
+                            <div className="flex justify-between items-center bg-blue-50 p-4 rounded-xl border-[0.5px] border-black/50">
                                 <div className="flex items-center gap-4">
                                     <div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-bold">
                                         {selectedUser.name.charAt(0)}
@@ -197,13 +197,13 @@ export default function CreateOrderPage() {
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
                                 <input
                                     type="text"
-                                    className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cureza-green focus:border-transparent transition-shadow"
+                                    className="block w-full pl-10 pr-4 py-3 border-[0.5px] border-black/50 rounded-xl focus:ring-2 focus:ring-cureza-green focus:border-transparent transition-shadow"
                                     placeholder="Search Customer by Name, Email or Phone..."
                                     value={userSearch}
                                     onChange={(e) => { setUserSearch(e.target.value); searchUsers(e.target.value); }}
                                 />
                                 {users.length > 0 && userSearch && (
-                                    <ul className="absolute z-30 w-full bg-white border border-gray-200 rounded-xl mt-2 shadow-xl max-h-60 overflow-y-auto divide-y divide-gray-100">
+                                    <ul className="absolute z-30 w-full bg-white border-[0.5px] border-black/50 rounded-xl mt-2 shadow-none max-h-60 overflow-y-auto divide-y divide-gray-100">
                                         {users.map(user => (
                                             <li
                                                 key={user.id}
@@ -224,7 +224,7 @@ export default function CreateOrderPage() {
                     </div>
 
                     {/* 2. Product Search & Selection */}
-                    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm relative z-10">
+                    <div className="bg-white p-6 rounded-xl border-[0.5px] border-black/50 shadow-none relative z-10">
                         <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                             <span className="flex items-center justify-center w-6 h-6 rounded-full bg-green-100 text-green-600 text-xs text-center mr-1">2</span>
                             Add Products
@@ -234,7 +234,7 @@ export default function CreateOrderPage() {
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
                             <input
                                 type="text"
-                                className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cureza-green focus:border-transparent transition-shadow"
+                                className="block w-full pl-10 pr-4 py-3 border-[0.5px] border-black/50 rounded-xl focus:ring-2 focus:ring-cureza-green focus:border-transparent transition-shadow"
                                 placeholder="Search Products by Name, SKU, or Brand..."
                                 value={productSearch}
                                 onChange={(e) => { setProductSearch(e.target.value); searchProducts(e.target.value); }}
@@ -242,7 +242,7 @@ export default function CreateOrderPage() {
 
                             {/* Rich Product Search Dropdown */}
                             {products.length > 0 && productSearch && (
-                                <div className="absolute z-20 w-full bg-white border border-gray-200 rounded-xl mt-2 shadow-xl max-h-96 overflow-y-auto divide-y divide-gray-100">
+                                <div className="absolute z-20 w-full bg-white border-[0.5px] border-black/50 rounded-xl mt-2 shadow-none max-h-96 overflow-y-auto divide-y divide-gray-100">
                                     {products.map(product => (
                                         <div
                                             key={product.id}
@@ -250,7 +250,7 @@ export default function CreateOrderPage() {
                                             onClick={() => addToCart(product)}
                                         >
                                             {/* Product Image */}
-                                            <div className="w-12 h-12 bg-gray-100 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden border border-gray-200">
+                                            <div className="w-12 h-12 bg-gray-100 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden border-[0.5px] border-black/50">
                                                 {product.image ? (
                                                     <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
                                                 ) : (
@@ -287,7 +287,7 @@ export default function CreateOrderPage() {
                         </div>
 
                         {/* Selected Items Table */}
-                        <div className="overflow-hidden bg-white border border-gray-200 rounded-xl">
+                        <div className="overflow-hidden bg-white border-[0.5px] border-black/50 rounded-xl">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
                                     <tr>
@@ -311,7 +311,7 @@ export default function CreateOrderPage() {
                                             <tr key={item.id} className="hover:bg-gray-50 transition-colors">
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-10 h-10 bg-gray-100 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden border border-gray-200">
+                                                        <div className="w-10 h-10 bg-gray-100 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden border-[0.5px] border-black/50">
                                                             {item.image && <img src={item.image} alt={item.title} className="w-full h-full object-cover" />}
                                                         </div>
                                                         <div>
@@ -326,7 +326,7 @@ export default function CreateOrderPage() {
                                                     <div className="flex items-center justify-center gap-2">
                                                         <button
                                                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                                            className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors"
+                                                            className="w-8 h-8 rounded-full border-[0.5px] border-black/50 flex items-center justify-center hover:bg-gray-100 transition-colors"
                                                             disabled={item.quantity <= 1}
                                                         >
                                                             -
@@ -340,7 +340,7 @@ export default function CreateOrderPage() {
                                                         />
                                                         <button
                                                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                                            className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors"
+                                                            className="w-8 h-8 rounded-full border-[0.5px] border-black/50 flex items-center justify-center hover:bg-gray-100 transition-colors"
                                                         >
                                                             +
                                                         </button>
@@ -366,26 +366,26 @@ export default function CreateOrderPage() {
                 {/* Right Column: Address & Payment Summary */}
                 <div className="space-y-6">
                     {/* 3. Shipping Address Manual Override (Optional) */}
-                    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <div className="bg-white p-6 rounded-xl border-[0.5px] border-black/50 shadow-none">
                         <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                             <MapPin size={18} className="text-gray-500" /> Shipping Address
                         </h3>
                         <div className="space-y-3">
-                            <input type="text" placeholder="Full Name" className="w-full text-sm rounded-lg border-gray-300" value={shippingAddress.name} onChange={e => setShippingAddress({ ...shippingAddress, name: e.target.value })} />
-                            <input type="text" placeholder="Address Line" className="w-full text-sm rounded-lg border-gray-300" value={shippingAddress.line} onChange={e => setShippingAddress({ ...shippingAddress, line: e.target.value })} />
+                            <input type="text" placeholder="Full Name" className="w-full text-sm rounded-lg border-black/50" value={shippingAddress.name} onChange={e => setShippingAddress({ ...shippingAddress, name: e.target.value })} />
+                            <input type="text" placeholder="Address Line" className="w-full text-sm rounded-lg border-black/50" value={shippingAddress.line} onChange={e => setShippingAddress({ ...shippingAddress, line: e.target.value })} />
                             <div className="grid grid-cols-2 gap-2">
-                                <input type="text" placeholder="City" className="w-full text-sm rounded-lg border-gray-300" value={shippingAddress.city} onChange={e => setShippingAddress({ ...shippingAddress, city: e.target.value })} />
-                                <input type="text" placeholder="State" className="w-full text-sm rounded-lg border-gray-300" value={shippingAddress.state} onChange={e => setShippingAddress({ ...shippingAddress, state: e.target.value })} />
+                                <input type="text" placeholder="City" className="w-full text-sm rounded-lg border-black/50" value={shippingAddress.city} onChange={e => setShippingAddress({ ...shippingAddress, city: e.target.value })} />
+                                <input type="text" placeholder="State" className="w-full text-sm rounded-lg border-black/50" value={shippingAddress.state} onChange={e => setShippingAddress({ ...shippingAddress, state: e.target.value })} />
                             </div>
                             <div className="grid grid-cols-2 gap-2">
-                                <input type="text" placeholder="Zip" className="w-full text-sm rounded-lg border-gray-300" value={shippingAddress.zip} onChange={e => setShippingAddress({ ...shippingAddress, zip: e.target.value })} />
-                                <input type="text" placeholder="Phone" className="w-full text-sm rounded-lg border-gray-300" value={shippingAddress.phone} onChange={e => setShippingAddress({ ...shippingAddress, phone: e.target.value })} />
+                                <input type="text" placeholder="Zip" className="w-full text-sm rounded-lg border-black/50" value={shippingAddress.zip} onChange={e => setShippingAddress({ ...shippingAddress, zip: e.target.value })} />
+                                <input type="text" placeholder="Phone" className="w-full text-sm rounded-lg border-black/50" value={shippingAddress.phone} onChange={e => setShippingAddress({ ...shippingAddress, phone: e.target.value })} />
                             </div>
                         </div>
                     </div>
 
                     {/* 4. Payment & Totals */}
-                    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm sticky top-6">
+                    <div className="bg-white p-6 rounded-xl border-[0.5px] border-black/50 shadow-none sticky top-6">
                         <h3 className="font-bold text-gray-900 mb-6 flex items-center gap-2">
                             <CreditCard size={18} /> Order Summary
                         </h3>
@@ -396,7 +396,7 @@ export default function CreateOrderPage() {
                                 <select
                                     value={paymentMethod}
                                     onChange={(e) => setPaymentMethod(e.target.value)}
-                                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50 focus:bg-white transition-colors cursor-pointer"
+                                    className="w-full px-4 py-2.5 border-[0.5px] border-black/50 rounded-lg bg-gray-50 focus:bg-white transition-colors cursor-pointer"
                                 >
                                     <option value="cod">Cash on Delivery (COD)</option>
                                     <option value="online">Online Payment</option>
@@ -411,13 +411,13 @@ export default function CreateOrderPage() {
                                         type="number"
                                         value={shippingCost}
                                         onChange={(e) => setShippingCost(parseInt(e.target.value) || 0)}
-                                        className="w-full pl-8 pr-4 py-2.5 border border-gray-300 rounded-lg"
+                                        className="w-full pl-8 pr-4 py-2.5 border-[0.5px] border-black/50 rounded-lg"
                                     />
                                 </div>
                             </div>
                         </div>
 
-                        <div className="border-t border-dashed border-gray-200 my-6"></div>
+                        <div className="border-t-[0.5px] border-dashed border-black/50 my-6"></div>
 
                         <div className="space-y-3">
                             <div className="flex justify-between text-gray-600">
@@ -432,7 +432,7 @@ export default function CreateOrderPage() {
                                 <span>Shipping</span>
                                 <span>₹{shippingCost.toFixed(2)}</span>
                             </div>
-                            <div className="flex justify-between text-xl font-bold text-gray-900 pt-3 border-t border-gray-200">
+                            <div className="flex justify-between text-xl font-bold text-gray-900 pt-3 border-t-[0.5px] border-black/50">
                                 <span>Total</span>
                                 <span className="text-cureza-green">₹{calculateTotal().toFixed(2)}</span>
                             </div>
@@ -441,7 +441,7 @@ export default function CreateOrderPage() {
                         <button
                             onClick={handleSubmit}
                             disabled={loading || !selectedUser || cartItems.length === 0}
-                            className="w-full mt-8 bg-black text-white py-4 rounded-xl font-bold hover:bg-gray-800 transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-gray-200"
+                            className="w-full mt-8 bg-black text-white py-4 rounded-xl font-bold hover:bg-gray-800 transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-none shadow-gray-200 border-black/50 border-[0.5px]"
                         >
                             {loading ? (
                                 <span className="flex items-center justify-center gap-2">

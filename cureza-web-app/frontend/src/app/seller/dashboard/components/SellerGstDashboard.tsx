@@ -168,8 +168,8 @@ export default function SellerGstDashboard() {
             <div className="lg:col-span-2 space-y-8">
                 
                 {/* GSTIN Real-Time Verification */}
-                <div className="premium-card p-6 bg-white rounded-2xl border border-gray-100 shadow-sm space-y-6">
-                    <div className="flex justify-between items-center border-b border-gray-50 pb-4">
+                <div className="premium-card p-6 bg-white rounded-2xl border-[0.5px] border-black/50 shadow-none space-y-6">
+                    <div className="flex justify-between items-center border-b-[0.5px] border-black/50 pb-4">
                         <div className="flex items-center gap-3">
                             <div className="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl">
                                 <ShieldCheck size={20} />
@@ -180,11 +180,11 @@ export default function SellerGstDashboard() {
                             </div>
                         </div>
                         {profile?.gstin_verified ? (
-                            <span className="px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded-lg text-[10px] font-bold border border-emerald-200 uppercase tracking-wider flex items-center gap-1.5 animate-pulse">
+                            <span className="px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded-lg text-[10px] font-bold border-[0.5px] border-black/50 uppercase tracking-wider flex items-center gap-1.5 animate-pulse">
                                 <CheckCircle2 size={12} /> Verified Profile
                             </span>
                         ) : (
-                            <span className="px-2.5 py-1 bg-amber-50 text-amber-600 rounded-lg text-[10px] font-bold border border-amber-200 uppercase tracking-wider flex items-center gap-1.5">
+                            <span className="px-2.5 py-1 bg-amber-50 text-amber-600 rounded-lg text-[10px] font-bold border-[0.5px] border-black/50 uppercase tracking-wider flex items-center gap-1.5">
                                 <AlertCircle size={12} /> Verification Pending
                             </span>
                         )}
@@ -199,13 +199,13 @@ export default function SellerGstDashboard() {
                                 onChange={(e) => setGstin(e.target.value.toUpperCase())}
                                 placeholder="e.g. 08AAPCS1403F1ZW"
                                 disabled={profile?.gstin_verified}
-                                className="flex-1 h-11 px-4 rounded-xl border border-gray-200 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none disabled:bg-gray-50 disabled:text-gray-400"
+                                className="flex-1 h-11 px-4 rounded-xl border-[0.5px] border-black/50 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none disabled:bg-gray-50 disabled:text-gray-400"
                             />
                             {!profile?.gstin_verified && (
                                 <button
                                     onClick={handleVerifyGSTIN}
                                     disabled={verificationLoading || !gstin}
-                                    className="px-5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md hover:-translate-y-0.5 active:scale-95 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:translate-y-0"
+                                    className="px-5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-none hover:-translate-y-0.5 active:scale-95 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:translate-y-0 border-black/50 border-[0.5px]"
                                 >
                                     {verificationLoading ? <RefreshCw className="animate-spin" size={14} /> : <Sparkles size={14} />}
                                     Verify
@@ -214,7 +214,7 @@ export default function SellerGstDashboard() {
                         </div>
 
                         {verifiedData && (
-                            <div className="p-5 bg-emerald-50/20 border border-emerald-100 rounded-2xl space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
+                            <div className="p-5 bg-emerald-50/20 border-[0.5px] border-black/50 rounded-2xl space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
                                 <h4 className="text-xs font-black text-emerald-700 uppercase tracking-widest flex items-center gap-2">
                                     <Building size={14} /> Registered Business Profile
                                 </h4>
@@ -246,8 +246,8 @@ export default function SellerGstDashboard() {
                 </div>
 
                 {/* GSTR Sales Tax Ledger Reports */}
-                <div className="premium-card p-6 bg-white rounded-2xl border border-gray-100 shadow-sm space-y-6">
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-55 pb-4">
+                <div className="premium-card p-6 bg-white rounded-2xl border-[0.5px] border-black/50 shadow-none space-y-6">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b-[0.5px] border-gray-55 pb-4">
                         <div className="flex items-center gap-3">
                             <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl">
                                 <Calculator size={20} />
@@ -262,7 +262,7 @@ export default function SellerGstDashboard() {
                             <select
                                 value={range}
                                 onChange={(e) => setRange(e.target.value)}
-                                className="px-4 py-2 border border-gray-200 bg-white rounded-xl text-xs font-bold text-gray-700 shadow-sm cursor-pointer outline-none appearance-none"
+                                className="px-4 py-2 border-[0.5px] border-black/50 bg-white rounded-xl text-xs font-bold text-gray-700 shadow-none cursor-pointer outline-none appearance-none"
                             >
                                 <option value="today">Today</option>
                                 <option value="7_days">Last 7 Days</option>
@@ -290,32 +290,32 @@ export default function SellerGstDashboard() {
                             
                             {/* Summary Metrics */}
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                                <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 text-left">
+                                <div className="p-4 bg-gray-50 rounded-xl border-[0.5px] border-black/50 text-left">
                                     <span className="text-[9.5px] uppercase font-bold text-gray-400 block mb-1">Taxable Subtotal</span>
                                     <span className="text-lg font-black text-gray-800">₹{(gstrReport.summary?.taxable_amount || 0).toFixed(2)}</span>
                                 </div>
-                                <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 text-left">
+                                <div className="p-4 bg-gray-50 rounded-xl border-[0.5px] border-black/50 text-left">
                                     <span className="text-[9.5px] uppercase font-bold text-gray-400 block mb-1">CGST Share</span>
                                     <span className="text-lg font-black text-gray-800">₹{(gstrReport.summary?.cgst || 0).toFixed(2)}</span>
                                 </div>
-                                <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 text-left">
+                                <div className="p-4 bg-gray-50 rounded-xl border-[0.5px] border-black/50 text-left">
                                     <span className="text-[9.5px] uppercase font-bold text-gray-400 block mb-1">SGST Share</span>
                                     <span className="text-lg font-black text-gray-800">₹{(gstrReport.summary?.sgst || 0).toFixed(2)}</span>
                                 </div>
-                                <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 text-left">
+                                <div className="p-4 bg-gray-50 rounded-xl border-[0.5px] border-black/50 text-left">
                                     <span className="text-[9.5px] uppercase font-bold text-gray-400 block mb-1">IGST Share</span>
                                     <span className="text-lg font-black text-gray-800">₹{(gstrReport.summary?.igst || 0).toFixed(2)}</span>
                                 </div>
                             </div>
 
                             {/* GSTR Slab Matrix Table */}
-                            <div className="border border-gray-100 rounded-2xl overflow-hidden">
-                                <div className="bg-gray-50 px-4 py-2 border-b border-gray-100 text-[10px] font-black uppercase text-gray-400 text-left">
+                            <div className="border-[0.5px] border-black/50 rounded-2xl overflow-hidden">
+                                <div className="bg-gray-50 px-4 py-2 border-b-[0.5px] border-black/50 text-[10px] font-black uppercase text-gray-400 text-left">
                                     Tax Rate Slab Matrix
                                 </div>
                                 <table className="w-full text-xs font-semibold text-gray-650">
                                     <thead>
-                                        <tr className="bg-gray-50 border-b border-gray-100 text-gray-400 text-[10px] uppercase font-bold text-left">
+                                        <tr className="bg-gray-50 border-b-[0.5px] border-black/50 text-gray-400 text-[10px] uppercase font-bold text-left">
                                             <th className="px-4 py-2.5">GST Slab</th>
                                             <th className="px-4 py-2.5">Taxable Base Amount</th>
                                             <th className="px-4 py-2.5">CGST</th>
@@ -354,8 +354,8 @@ export default function SellerGstDashboard() {
             <div className="space-y-8">
                 
                 {/* KYC Documents Panel */}
-                <form onSubmit={handleUploadKYC} className="premium-card p-6 bg-white rounded-2xl border border-gray-100 shadow-sm space-y-6">
-                    <div className="flex items-center gap-3 border-b border-gray-50 pb-4">
+                <form onSubmit={handleUploadKYC} className="premium-card p-6 bg-white rounded-2xl border-[0.5px] border-black/50 shadow-none space-y-6">
+                    <div className="flex items-center gap-3 border-b-[0.5px] border-black/50 pb-4">
                         <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl">
                             <FileText size={20} />
                         </div>
@@ -371,7 +371,7 @@ export default function SellerGstDashboard() {
                             <select
                                 value={companyType}
                                 onChange={(e) => setCompanyType(e.target.value)}
-                                className="w-full h-11 px-4 rounded-xl border border-gray-200 bg-white text-xs font-bold text-gray-700 shadow-sm outline-none cursor-pointer"
+                                className="w-full h-11 px-4 rounded-xl border-[0.5px] border-black/50 bg-white text-xs font-bold text-gray-700 shadow-none outline-none cursor-pointer"
                             >
                                 <option value="Proprietorship">Individual / Proprietorship</option>
                                 <option value="Partnership">Partnership Firm</option>
@@ -387,8 +387,8 @@ export default function SellerGstDashboard() {
                             {/* PAN Image */}
                             <div className="space-y-1">
                                 <label className="block text-[10px] font-bold text-gray-450 uppercase">PAN Card Copy</label>
-                                <div className="flex items-center gap-3 p-2 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                                    <label className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[10px] font-extrabold cursor-pointer hover:border-gray-300 transition flex items-center gap-1.5">
+                                <div className="flex items-center gap-3 p-2 bg-gray-50 rounded-xl border-[0.5px] border-dashed border-black/50">
+                                    <label className="px-3 py-1.5 bg-white border-[0.5px] border-black/50 rounded-lg text-[10px] font-extrabold cursor-pointer hover:border-gray-300 transition flex items-center gap-1.5">
                                         <Upload size={12} /> Choose File
                                         <input type="file" accept=".pdf,image/*" onChange={(e) => setPanFile(e.target.files?.[0] || null)} className="hidden" />
                                     </label>
@@ -399,8 +399,8 @@ export default function SellerGstDashboard() {
                             {/* GST Certificate */}
                             <div className="space-y-1">
                                 <label className="block text-[10px] font-bold text-gray-450 uppercase">GST Certificate copy</label>
-                                <div className="flex items-center gap-3 p-2 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                                    <label className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[10px] font-extrabold cursor-pointer hover:border-gray-300 transition flex items-center gap-1.5">
+                                <div className="flex items-center gap-3 p-2 bg-gray-50 rounded-xl border-[0.5px] border-dashed border-black/50">
+                                    <label className="px-3 py-1.5 bg-white border-[0.5px] border-black/50 rounded-lg text-[10px] font-extrabold cursor-pointer hover:border-gray-300 transition flex items-center gap-1.5">
                                         <Upload size={12} /> Choose File
                                         <input type="file" accept=".pdf,image/*" onChange={(e) => setGstFile(e.target.files?.[0] || null)} className="hidden" />
                                     </label>
@@ -411,8 +411,8 @@ export default function SellerGstDashboard() {
                             {/* Aadhaar Card */}
                             <div className="space-y-1">
                                 <label className="block text-[10px] font-bold text-gray-450 uppercase">Aadhaar Card Copy</label>
-                                <div className="flex items-center gap-3 p-2 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                                    <label className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[10px] font-extrabold cursor-pointer hover:border-gray-300 transition flex items-center gap-1.5">
+                                <div className="flex items-center gap-3 p-2 bg-gray-50 rounded-xl border-[0.5px] border-dashed border-black/50">
+                                    <label className="px-3 py-1.5 bg-white border-[0.5px] border-black/50 rounded-lg text-[10px] font-extrabold cursor-pointer hover:border-gray-300 transition flex items-center gap-1.5">
                                         <Upload size={12} /> Choose File
                                         <input type="file" accept=".pdf,image/*" onChange={(e) => setAadhaarFile(e.target.files?.[0] || null)} className="hidden" />
                                     </label>
@@ -423,8 +423,8 @@ export default function SellerGstDashboard() {
                             {/* Cancelled Cheque */}
                             <div className="space-y-1">
                                 <label className="block text-[10px] font-bold text-gray-450 uppercase">Cancelled Cheque copy</label>
-                                <div className="flex items-center gap-3 p-2 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                                    <label className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[10px] font-extrabold cursor-pointer hover:border-gray-300 transition flex items-center gap-1.5">
+                                <div className="flex items-center gap-3 p-2 bg-gray-50 rounded-xl border-[0.5px] border-dashed border-black/50">
+                                    <label className="px-3 py-1.5 bg-white border-[0.5px] border-black/50 rounded-lg text-[10px] font-extrabold cursor-pointer hover:border-gray-300 transition flex items-center gap-1.5">
                                         <Upload size={12} /> Choose File
                                         <input type="file" accept=".pdf,image/*" onChange={(e) => setChequeFile(e.target.files?.[0] || null)} className="hidden" />
                                     </label>
@@ -435,8 +435,8 @@ export default function SellerGstDashboard() {
                             {/* Authorized Signature */}
                             <div className="space-y-1">
                                 <label className="block text-[10px] font-bold text-gray-450 uppercase">Authorized Signature (Png / Scan)</label>
-                                <div className="flex items-center gap-3 p-2 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                                    <label className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[10px] font-extrabold cursor-pointer hover:border-gray-300 transition flex items-center gap-1.5">
+                                <div className="flex items-center gap-3 p-2 bg-gray-50 rounded-xl border-[0.5px] border-dashed border-black/50">
+                                    <label className="px-3 py-1.5 bg-white border-[0.5px] border-black/50 rounded-lg text-[10px] font-extrabold cursor-pointer hover:border-gray-300 transition flex items-center gap-1.5">
                                         <Upload size={12} /> Choose File
                                         <input type="file" accept="image/*" onChange={(e) => setSignatureFile(e.target.files?.[0] || null)} className="hidden" />
                                     </label>
@@ -450,7 +450,7 @@ export default function SellerGstDashboard() {
                     <button
                         type="submit"
                         disabled={uploadingKyc || (!panFile && !gstFile && !aadhaarFile && !chequeFile && !signatureFile)}
-                        className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md hover:-translate-y-0.5 active:scale-95 transition-all disabled:bg-gray-50 disabled:text-gray-300 disabled:shadow-none disabled:translate-y-0 cursor-pointer flex items-center justify-center gap-1.5"
+                        className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-none hover:-translate-y-0.5 active:scale-95 transition-all disabled:bg-gray-50 disabled:text-gray-300 disabled:shadow-none disabled:translate-y-0 cursor-pointer flex items-center justify-center gap-1.5 border-black/50 border-[0.5px]"
                     >
                         {uploadingKyc ? <RefreshCw className="animate-spin" size={14} /> : <Upload size={14} />}
                         Submit KYC Documents
@@ -458,7 +458,7 @@ export default function SellerGstDashboard() {
                 </form>
 
                 {/* Tax slabs guidelines card */}
-                <div className="premium-card p-6 bg-[#E8F8EE] rounded-2xl border border-green-100 text-left space-y-4">
+                <div className="premium-card p-6 bg-[#E8F8EE] rounded-2xl border-[0.5px] border-black/50 text-left space-y-4">
                     <h4 className="text-xs font-black text-emerald-700 uppercase tracking-widest flex items-center gap-1.5">
                         <Calculator size={14} /> Marketplace GST Slab Rules
                     </h4>

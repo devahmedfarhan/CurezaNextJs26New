@@ -83,14 +83,14 @@ export default function BlogPostsPage() {
                     placeholder="Search posts..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="max-w-sm rounded-[10px] border-[0.5px] border-gray-200/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
+                    className="max-w-sm rounded-[10px] border-[0.5px] border-black/50 shadow-none text-sm font-normal focus-visible:ring-1 focus-visible:ring-black"
                 />
             </div>
 
-            <div className="border-[0.5px] border-gray-200/50 rounded-[10px] overflow-hidden bg-white shadow-none">
+            <div className="border-[0.5px] border-black/50 rounded-[10px] overflow-hidden bg-white shadow-none">
                 <Table>
                     <TableHeader className="bg-gray-50/50">
-                        <TableRow className="border-b-[0.5px] border-gray-200/50">
+                        <TableRow className="border-b-[0.5px] border-black/50">
                             <TableHead className="text-gray-500 font-medium text-xs">Title</TableHead>
                             <TableHead className="text-gray-500 font-medium text-xs">Category</TableHead>
                             <TableHead className="text-gray-500 font-medium text-xs">Author</TableHead>
@@ -114,7 +114,7 @@ export default function BlogPostsPage() {
                             </TableRow>
                         ) : (
                             filteredPosts.map((post) => (
-                                <TableRow key={post.id} className="border-b-[0.5px] border-gray-200/50 hover:bg-gray-50/30">
+                                <TableRow key={post.id} className="border-b-[0.5px] border-black/50 hover:bg-gray-50/30">
                                     <TableCell className="font-normal text-sm text-black">{post.title}</TableCell>
                                     <TableCell className="text-gray-500 text-sm">{post.category?.name}</TableCell>
                                     <TableCell className="text-gray-500 text-sm">{post.author?.name}</TableCell>
@@ -123,8 +123,8 @@ export default function BlogPostsPage() {
                                             variant="outline"
                                             className={`rounded-[10px] font-medium text-xs px-2 py-0.5 border-[0.5px] shadow-none ${
                                                 post.status === 'published' 
-                                                    ? 'bg-green-50 text-green-700 border-green-200' 
-                                                    : 'bg-gray-100 text-gray-700 border-gray-200'
+                                                    ? 'bg-green-50 text-green-700 border-black/50' 
+                                                    : 'bg-gray-100 text-gray-700 border-black/50'
                                             }`}
                                         >
                                             {post.status}

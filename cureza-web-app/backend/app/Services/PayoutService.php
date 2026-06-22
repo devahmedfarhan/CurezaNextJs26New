@@ -185,7 +185,7 @@ class PayoutService
      */
     public function getPendingPayouts($perPage = 15)
     {
-        return Payout::with(['seller', 'seller.sellerProfile'])
+        return Payout::with(['seller', 'seller.sellerProfile', 'seller.brand'])
             ->where('status', 'pending')
             ->orderBy('requested_at', 'asc')
             ->paginate($perPage);

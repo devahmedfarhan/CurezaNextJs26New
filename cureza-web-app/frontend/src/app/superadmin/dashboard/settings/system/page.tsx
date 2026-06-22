@@ -109,7 +109,7 @@ export default function AdminSystemPage() {
     return (
         <div className="w-full space-y-6 pb-12 font-sans text-neutral-900">
             {/* Header */}
-            <div className="flex justify-between items-center border-b border-black/10 pb-5">
+            <div className="flex justify-between items-center border-b-[0.5px] border-black/10 pb-5">
                 <div>
                     <h2 className="text-sm font-medium text-neutral-900 tracking-tight">System & Maintenance</h2>
                     <p className="text-neutral-500 text-xs mt-0.5">Backup database records and manage platform recovery snapshots</p>
@@ -118,22 +118,22 @@ export default function AdminSystemPage() {
 
             {/* Notification Banners */}
             {successMessage && (
-                <div className="bg-green-50 border-l-2 border-green-500 p-4 rounded-[10px] shadow-none flex items-center gap-3 animate-fadeIn">
+                <div className="bg-green-50 border-l-[0.5px] border-black/50 p-4 rounded-[10px] shadow-none flex items-center gap-3 animate-fadeIn">
                     <CheckCircle className="text-green-500 flex-shrink-0" size={16} />
                     <span className="text-green-800 text-xs font-medium">{successMessage}</span>
                 </div>
             )}
             {errorMessage && (
-                <div className="bg-red-50 border-l-2 border-red-500 p-4 rounded-[10px] shadow-none flex items-center gap-3 animate-fadeIn">
+                <div className="bg-red-50 border-l-[0.5px] border-black/50 p-4 rounded-[10px] shadow-none flex items-center gap-3 animate-fadeIn">
                     <AlertCircle className="text-red-500 flex-shrink-0" size={16} />
                     <span className="text-red-800 text-xs font-medium">{errorMessage}</span>
                 </div>
             )}
 
             {/* Database Backup Card */}
-            <div className="bg-white p-6 rounded-[10px] border border-black/10 shadow-none animate-fadeIn">
+            <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-black/10 shadow-none animate-fadeIn">
                 <div className="flex items-center gap-4 mb-6">
-                    <div className="p-2.5 bg-neutral-50 text-black border border-black/10 rounded-[10px] shadow-none">
+                    <div className="p-2.5 bg-neutral-50 text-black border-[0.5px] border-black/10 rounded-[10px] shadow-none">
                         <Database size={20} />
                     </div>
                     <div>
@@ -150,14 +150,14 @@ export default function AdminSystemPage() {
                             <p className="text-neutral-450 text-xs font-normal">Fetching list of database backups...</p>
                         </div>
                     ) : backups.length === 0 ? (
-                        <div className="border border-dashed border-black/10 rounded-[10px] p-8 text-center bg-neutral-50/20">
+                        <div className="border-[0.5px] border-dashed border-black/10 rounded-[10px] p-8 text-center bg-neutral-50/20">
                             <Database size={30} className="text-neutral-350 mx-auto mb-2" />
                             <p className="text-neutral-800 font-medium text-xs">No backup files found</p>
                             <p className="text-neutral-450 text-[10px] mt-1 font-normal">Generate a manual backup of the system database to start</p>
                         </div>
                     ) : (
                         backups.map((backup) => (
-                            <div key={backup.name} className="flex items-center justify-between p-4 bg-neutral-50/30 hover:bg-neutral-50/60 transition-all rounded-[10px] border border-black/10">
+                            <div key={backup.name} className="flex items-center justify-between p-4 bg-neutral-50/30 hover:bg-neutral-50/60 transition-all rounded-[10px] border-[0.5px] border-black/10">
                                 <div className="flex items-center gap-3 min-w-0 flex-1">
                                     <Server size={18} className="text-black flex-shrink-0" />
                                     <div className="min-w-0">
@@ -166,7 +166,7 @@ export default function AdminSystemPage() {
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-4 ml-4">
-                                    <span className="text-[10px] font-medium text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded border border-black/5">
+                                    <span className="text-[10px] font-medium text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded border-[0.5px] border-black/5">
                                         {backup.size}
                                     </span>
                                     <button 
@@ -197,7 +197,7 @@ export default function AdminSystemPage() {
                 </div>
 
                 {/* Create Backup Button */}
-                <div className="mt-6 pt-6 border-t border-black/10 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+                <div className="mt-6 pt-6 border-t-[0.5px] border-black/10 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
                     <p className="text-[10px] text-neutral-450 font-normal leading-relaxed max-w-md">
                         Warning: Backups capture current SQLite database file. Ensure correct environment configs.
                     </p>

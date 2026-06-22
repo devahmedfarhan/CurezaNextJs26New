@@ -298,7 +298,7 @@ function RatingsContent() {
     const renderMediaGrid = (review: Review) => (
         <div className="grid grid-cols-3 gap-3">
             {review.media_items?.map((media, i) => (
-                <div key={`media-${i}`} className="aspect-square rounded-[10px] overflow-hidden bg-neutral-50 dark:bg-neutral-850 border border-neutral-950/10 dark:border-neutral-800 relative group flex items-center justify-center">
+                <div key={`media-${i}`} className="aspect-square rounded-[10px] overflow-hidden bg-neutral-50 dark:bg-neutral-850 border-[0.5px] border-black/50 dark:border-neutral-800 relative group flex items-center justify-center">
                     {media.media_type === 'image' ? (
                         <img src={`${BACKEND_URL}/storage/${media.media_path}`} className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-200" />
                     ) : (
@@ -313,7 +313,7 @@ function RatingsContent() {
             {(typeof review.images === 'string' ? JSON.parse(review.images) : (review.images || [])).map((img: any, i: number) => {
                 if (typeof img !== 'string') return null;
                 return (
-                    <div key={`img-${i}`} className="aspect-square rounded-[10px] overflow-hidden bg-neutral-50 dark:bg-neutral-850 border border-neutral-950/10 dark:border-neutral-800 flex items-center justify-center relative group">
+                    <div key={`img-${i}`} className="aspect-square rounded-[10px] overflow-hidden bg-neutral-50 dark:bg-neutral-850 border-[0.5px] border-black/50 dark:border-neutral-800 flex items-center justify-center relative group">
                         <img
                             src={img.startsWith('http') ? img : `${BACKEND_URL}/storage/${img}`}
                             className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-200"
@@ -324,7 +324,7 @@ function RatingsContent() {
             })}
 
             {review.video_url && (
-                <a href={review.video_url} target="_blank" rel="noopener noreferrer" className="aspect-square rounded-[10px] bg-neutral-50 dark:bg-neutral-850 border border-neutral-950/10 dark:border-neutral-800 flex flex-col items-center justify-center text-neutral-900 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
+                <a href={review.video_url} target="_blank" rel="noopener noreferrer" className="aspect-square rounded-[10px] bg-neutral-50 dark:bg-neutral-850 border-[0.5px] border-black/50 dark:border-neutral-800 flex flex-col items-center justify-center text-neutral-900 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
                     <Video size={24} className="mb-1" />
                     <span className="text-[10px] font-medium flex items-center gap-0.5">Open Video <ExternalLink size={8} /></span>
                 </a>
@@ -341,7 +341,7 @@ function RatingsContent() {
     return (
         <div className="space-y-6 pb-12">
             {/* Header Section */}
-            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border-[0.5px] border-neutral-950/10 dark:border-neutral-800">
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border-[0.5px] border-black/50 dark:border-neutral-800">
                 <div className="absolute top-0 right-0 p-8 opacity-5">
                     <Star size={120} />
                 </div>
@@ -376,12 +376,12 @@ function RatingsContent() {
                     {statsLoading ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             {[...Array(4)].map((_, i) => (
-                                <div key={i} className="h-28 bg-white dark:bg-gray-900 border-[0.5px] border-neutral-950/10 dark:border-neutral-800 rounded-[10px] animate-pulse" />
+                                <div key={i} className="h-28 bg-white dark:bg-gray-900 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] animate-pulse" />
                             ))}
                         </div>
                     ) : stats && (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-neutral-950/10 dark:border-neutral-800 flex flex-col justify-between">
+                            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 flex flex-col justify-between">
                                 <div className="flex items-center justify-between text-neutral-500">
                                     <span className="text-xs font-medium">Total Reviews</span>
                                     <MessageSquare size={16} />
@@ -394,7 +394,7 @@ function RatingsContent() {
                                 </div>
                             </div>
 
-                            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-neutral-950/10 dark:border-neutral-800 flex flex-col justify-between">
+                            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 flex flex-col justify-between">
                                 <div className="flex items-center justify-between text-neutral-500">
                                     <span className="text-xs font-medium">Pending Moderation</span>
                                     <ShieldAlert size={16} />
@@ -409,7 +409,7 @@ function RatingsContent() {
                                 </div>
                             </div>
 
-                            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-neutral-950/10 dark:border-neutral-800 flex flex-col justify-between">
+                            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 flex flex-col justify-between">
                                 <div className="flex items-center justify-between text-neutral-500">
                                     <span className="text-xs font-medium">Average Rating</span>
                                     <Star size={16} />
@@ -420,7 +420,7 @@ function RatingsContent() {
                                 </div>
                             </div>
 
-                            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-neutral-950/10 dark:border-neutral-800 flex flex-col justify-between">
+                            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 flex flex-col justify-between">
                                 <div className="flex items-center justify-between text-neutral-500">
                                     <span className="text-xs font-medium">Seller Replies</span>
                                     <CheckCircle size={16} />
@@ -436,7 +436,7 @@ function RatingsContent() {
                     {/* Breakdown & Trend Charts */}
                     {isMounted && stats && (
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-neutral-950/10 dark:border-neutral-800 space-y-4">
+                            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 space-y-4">
                                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Rating Distribution</h3>
                                 <div className="h-64">
                                     <ResponsiveContainer width="100%" height="100%">
@@ -450,7 +450,7 @@ function RatingsContent() {
                                 </div>
                             </div>
 
-                            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-neutral-950/10 dark:border-neutral-800 space-y-4">
+                            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 space-y-4">
                                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Monthly Review Trends</h3>
                                 <div className="h-64">
                                     <ResponsiveContainer width="100%" height="100%">
@@ -471,35 +471,35 @@ function RatingsContent() {
                     {/* Breakdown by Type Grid */}
                     {stats && (
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-neutral-950/10 dark:border-neutral-800 flex items-center justify-between">
+                            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 flex items-center justify-between">
                                 <div className="space-y-1">
                                     <span className="text-[10px] font-medium tracking-wider text-neutral-800 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded-[10px]">Products</span>
                                     <h4 className="text-xl font-semibold text-gray-900 dark:text-white mt-1.5">{stats.product_reviews}</h4>
                                     <p className="text-xs text-neutral-500 font-normal">Reviews for items on store</p>
                                 </div>
-                                <div className="w-10 h-10 rounded-lg bg-neutral-50 dark:bg-neutral-850 flex items-center justify-center text-neutral-900 dark:text-neutral-100 border border-neutral-200 dark:border-neutral-800">
+                                <div className="w-10 h-10 rounded-lg bg-neutral-50 dark:bg-neutral-850 flex items-center justify-center text-neutral-900 dark:text-neutral-100 border-[0.5px] border-black/50 dark:border-neutral-800">
                                     <Store size={20} />
                                 </div>
                             </div>
 
-                            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-neutral-950/10 dark:border-neutral-800 flex items-center justify-between">
+                            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 flex items-center justify-between">
                                 <div className="space-y-1">
                                     <span className="text-[10px] font-medium tracking-wider text-neutral-800 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded-[10px]">Store Reviews</span>
                                     <h4 className="text-xl font-semibold text-gray-900 dark:text-white mt-1.5">{stats.store_reviews_count}</h4>
                                     <p className="text-xs text-neutral-500 font-normal">Store and service reviews</p>
                                 </div>
-                                <div className="w-10 h-10 rounded-lg bg-neutral-50 dark:bg-neutral-850 flex items-center justify-center text-neutral-900 dark:text-neutral-100 border border-neutral-200 dark:border-neutral-800">
+                                <div className="w-10 h-10 rounded-lg bg-neutral-50 dark:bg-neutral-850 flex items-center justify-center text-neutral-900 dark:text-neutral-100 border-[0.5px] border-black/50 dark:border-neutral-800">
                                     <Store size={20} />
                                 </div>
                             </div>
 
-                            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-neutral-950/10 dark:border-neutral-800 flex items-center justify-between">
+                            <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 flex items-center justify-between">
                                 <div className="space-y-1">
                                     <span className="text-[10px] font-medium tracking-wider text-neutral-800 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded-[10px]">Doctors</span>
                                     <h4 className="text-xl font-semibold text-gray-900 dark:text-white mt-1.5">{stats.doctor_reviews_count}</h4>
                                     <p className="text-xs text-neutral-500 font-normal">Consultation satisfaction reviews</p>
                                 </div>
-                                <div className="w-10 h-10 rounded-lg bg-neutral-50 dark:bg-neutral-850 flex items-center justify-center text-neutral-900 dark:text-neutral-100 border border-neutral-200 dark:border-neutral-800">
+                                <div className="w-10 h-10 rounded-lg bg-neutral-50 dark:bg-neutral-850 flex items-center justify-center text-neutral-900 dark:text-neutral-100 border-[0.5px] border-black/50 dark:border-neutral-800">
                                     <Stethoscope size={20} />
                                 </div>
                             </div>
@@ -508,7 +508,7 @@ function RatingsContent() {
 
                     {/* Pending Moderation Reminder Alert Banner */}
                     {stats && stats.pending_moderation > 0 && (
-                        <div className="bg-neutral-50 dark:bg-neutral-850 border-[0.5px] border-neutral-950/10 dark:border-neutral-800 rounded-[10px] p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div className="bg-neutral-50 dark:bg-neutral-850 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div className="flex items-center gap-3">
                                 <div className="p-2 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 rounded-lg">
                                     <ShieldAlert size={22} />
@@ -533,14 +533,14 @@ function RatingsContent() {
             {activeTab !== 'overview' && (
                 <div className="space-y-6">
                     {/* Filters Toolbar */}
-                    <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-neutral-950/10 dark:border-neutral-800 flex flex-col md:flex-row gap-4 items-end justify-between">
+                    <div className="bg-white dark:bg-gray-900 p-5 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 flex flex-col md:flex-row gap-4 items-end justify-between">
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1 w-full text-xs">
                             <div>
                                 <label className="block text-[10px] font-medium text-neutral-500 uppercase tracking-wider mb-1.5">Moderation Status</label>
                                 <select
                                     value={statusFilter}
                                     onChange={(e) => setStatusFilter(e.target.value as any)}
-                                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-850 border border-neutral-200 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none transition-all dark:text-white"
+                                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-850 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none transition-all dark:text-white"
                                 >
                                     <option value="all">All Statuses</option>
                                     <option value="pending">Pending Approval</option>
@@ -554,7 +554,7 @@ function RatingsContent() {
                                 <select
                                     value={ratingFilter}
                                     onChange={(e) => setRatingFilter(e.target.value)}
-                                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-850 border border-neutral-200 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none transition-all dark:text-white"
+                                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-850 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none transition-all dark:text-white"
                                 >
                                     <option value="">All Ratings</option>
                                     {[5, 4, 3, 2, 1].map((r) => (
@@ -570,7 +570,7 @@ function RatingsContent() {
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     placeholder="Search Customer, Target, Reply..."
-                                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-850 border border-neutral-250 dark:border-neutral-850 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none transition-all dark:text-white placeholder:text-neutral-400"
+                                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-850 border-[0.5px] border-black/50 dark:border-neutral-850 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none transition-all dark:text-white placeholder:text-neutral-400"
                                 />
                             </div>
                         </div>
@@ -578,14 +578,14 @@ function RatingsContent() {
 
                     {/* Table / List */}
                     {loading ? (
-                        <div className="flex justify-center py-16 bg-white dark:bg-gray-900 rounded-[10px] border border-neutral-950/10 dark:border-neutral-800">
+                        <div className="flex justify-center py-16 bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800">
                             <div className="flex flex-col items-center gap-2">
                                 <Loader2 className="animate-spin text-neutral-900 dark:text-white" size={32} />
                                 <p className="text-xs text-neutral-500 font-medium animate-pulse">Fetching reviews list...</p>
                             </div>
                         </div>
                     ) : reviews.length === 0 ? (
-                        <div className="text-center py-16 bg-white dark:bg-gray-900 rounded-[10px] border border-neutral-950/10 dark:border-neutral-800 space-y-3">
+                        <div className="text-center py-16 bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 space-y-3">
                             <MessageSquare className="mx-auto text-neutral-300 dark:text-neutral-700" size={48} />
                             <p className="text-sm font-medium text-neutral-500">No reviews found matching current filters.</p>
                         </div>
@@ -596,7 +596,7 @@ function RatingsContent() {
                                 const displayRating = review.rating || review.stars || 0;
 
                                 return (
-                                    <div key={review.id} className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/10 dark:border-neutral-800 hover:border-neutral-950/20 dark:hover:border-neutral-700 transition-all flex flex-col md:flex-row gap-6 relative group">
+                                    <div key={review.id} className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 hover:border-neutral-950/20 dark:hover:border-neutral-700 transition-all flex flex-col md:flex-row gap-6 relative group">
                                         {/* Main Review Panel */}
                                         <div className="flex-1 space-y-3">
                                             <div className="flex items-start justify-between">
@@ -604,16 +604,16 @@ function RatingsContent() {
                                                     {/* Badge based on Type */}
                                                     {review.review_type === 'seller' ? (
                                                         review.seller?.role === 'doctor' ? (
-                                                            <span className="px-2 py-0.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 text-[9px] font-medium uppercase tracking-wider rounded-[10px] border border-neutral-200 dark:border-neutral-750 flex items-center gap-0.5">
+                                                            <span className="px-2 py-0.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 text-[9px] font-medium uppercase tracking-wider rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-750 flex items-center gap-0.5">
                                                                 <Stethoscope size={10} /> Doctor Consultation
                                                             </span>
                                                         ) : (
-                                                            <span className="px-2 py-0.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 text-[9px] font-medium uppercase tracking-wider rounded-[10px] border border-neutral-200 dark:border-neutral-750 flex items-center gap-0.5">
+                                                            <span className="px-2 py-0.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 text-[9px] font-medium uppercase tracking-wider rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-750 flex items-center gap-0.5">
                                                                 <Store size={10} /> Store / Brand
                                                             </span>
                                                         )
                                                     ) : (
-                                                        <span className="px-2 py-0.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 text-[9px] font-medium uppercase tracking-wider rounded-[10px] border border-neutral-200 dark:border-neutral-750 flex items-center gap-0.5">
+                                                        <span className="px-2 py-0.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 text-[9px] font-medium uppercase tracking-wider rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-750 flex items-center gap-0.5">
                                                             <Store size={10} /> Store Product
                                                         </span>
                                                     )}
@@ -654,7 +654,7 @@ function RatingsContent() {
                                             )}
 
                                             {/* Footer metadata */}
-                                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-400 dark:text-gray-500 pt-3 border-t border-gray-100 dark:border-neutral-850">
+                                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-400 dark:text-gray-500 pt-3 border-t-[0.5px] border-black/50 dark:border-neutral-850">
                                                 <span className="font-medium text-gray-800 dark:text-gray-205 flex items-center gap-1"><User size={12} /> {displayName}</span>
                                                 <span>•</span>
                                                 <span>{review.customer?.email || review.email}</span>
@@ -664,7 +664,7 @@ function RatingsContent() {
 
                                             {/* Reply snippet */}
                                             {review.reply && (
-                                                <div className="mt-3 bg-neutral-50 dark:bg-neutral-850 border border-neutral-950/10 dark:border-neutral-800 rounded-[10px] p-3.5 space-y-1 relative group/reply">
+                                                <div className="mt-3 bg-neutral-50 dark:bg-neutral-850 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] p-3.5 space-y-1 relative group/reply">
                                                     <div className="flex items-center justify-between text-xs font-medium text-neutral-900 dark:text-neutral-100">
                                                         <div className="flex items-center gap-1">
                                                             <span className="w-5 h-5 rounded-full bg-neutral-250 dark:bg-neutral-700 flex items-center justify-center text-[10px]">S</span>
@@ -672,7 +672,7 @@ function RatingsContent() {
                                                         </div>
                                                         <button
                                                             onClick={() => handleDeleteReply(review.reply!.id)}
-                                                            className="p-1 text-gray-400 hover:text-red-650 rounded bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 shadow-none opacity-0 group-hover/reply:opacity-100 transition-opacity"
+                                                            className="p-1 text-gray-400 hover:text-red-650 rounded bg-white dark:bg-neutral-900 border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none opacity-0 group-hover/reply:opacity-100 transition-opacity"
                                                             title="Delete Reply"
                                                         >
                                                             <Trash2 size={12} />
@@ -684,12 +684,12 @@ function RatingsContent() {
                                         </div>
 
                                         {/* Target Info Panel (Product / Seller / Doctor) */}
-                                        <div className="w-full md:w-60 flex flex-col justify-between gap-4 border-t md:border-t-0 md:border-l border-neutral-950/10 dark:border-neutral-800 pt-4 md:pt-0 pl-0 md:pl-6 flex-shrink-0">
+                                        <div className="w-full md:w-60 flex flex-col justify-between gap-4 border-t-[0.5px] md:border-t-0 md:border-l border-black/50 dark:border-neutral-800 pt-4 md:pt-0 pl-0 md:pl-6 flex-shrink-0">
                                             <div>
                                                 <span className="text-[9px] font-semibold uppercase tracking-wider text-gray-450 dark:text-gray-505 block mb-2">Moderation Target</span>
                                                 {review.product ? (
-                                                    <div className="flex items-center gap-3 bg-neutral-50 dark:bg-neutral-850 p-2.5 rounded-[10px] border border-neutral-950/10 dark:border-neutral-800">
-                                                        <div className="w-10 h-10 bg-white dark:bg-neutral-900 rounded-[10px] border border-gray-200 dark:border-neutral-800 overflow-hidden flex-shrink-0 flex items-center justify-center">
+                                                    <div className="flex items-center gap-3 bg-neutral-50 dark:bg-neutral-850 p-2.5 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800">
+                                                        <div className="w-10 h-10 bg-white dark:bg-neutral-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 overflow-hidden flex-shrink-0 flex items-center justify-center">
                                                             {review.product.image ? (
                                                                 <img
                                                                     src={review.product.image.startsWith('http') ? review.product.image : `${BACKEND_URL}/storage/${review.product.image}`}
@@ -707,8 +707,8 @@ function RatingsContent() {
                                                     </div>
                                                 ) : review.review_type === 'seller' ? (
                                                     review.seller?.role === 'doctor' ? (
-                                                        <div className="flex items-center gap-3 bg-neutral-50 dark:bg-neutral-850 p-2.5 rounded-[10px] border border-neutral-950/10 dark:border-neutral-800">
-                                                            <div className="w-10 h-10 bg-white dark:bg-neutral-900 rounded-[10px] border border-gray-200 dark:border-neutral-800 flex items-center justify-center text-neutral-900 dark:text-neutral-100 font-semibold text-sm uppercase flex-shrink-0">
+                                                        <div className="flex items-center gap-3 bg-neutral-50 dark:bg-neutral-850 p-2.5 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800">
+                                                            <div className="w-10 h-10 bg-white dark:bg-neutral-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 flex items-center justify-center text-neutral-900 dark:text-neutral-100 font-semibold text-sm uppercase flex-shrink-0">
                                                                 {(review.seller?.name || 'D').charAt(0)}
                                                             </div>
                                                             <div className="flex-1 min-w-0">
@@ -717,8 +717,8 @@ function RatingsContent() {
                                                             </div>
                                                         </div>
                                                     ) : (
-                                                        <div className="flex items-center gap-3 bg-neutral-50 dark:bg-neutral-850 p-2.5 rounded-[10px] border border-neutral-950/10 dark:border-neutral-800">
-                                                            <div className="w-10 h-10 bg-white dark:bg-neutral-900 rounded-[10px] border border-gray-200 dark:border-neutral-800 flex items-center justify-center text-neutral-900 dark:text-neutral-100 font-semibold text-sm uppercase flex-shrink-0">
+                                                        <div className="flex items-center gap-3 bg-neutral-50 dark:bg-neutral-850 p-2.5 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800">
+                                                            <div className="w-10 h-10 bg-white dark:bg-neutral-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 flex items-center justify-center text-neutral-900 dark:text-neutral-100 font-semibold text-sm uppercase flex-shrink-0">
                                                                 {(review.seller?.name || 'S').charAt(0)}
                                                             </div>
                                                             <div className="flex-1 min-w-0">
@@ -728,8 +728,8 @@ function RatingsContent() {
                                                         </div>
                                                     )
                                                 ) : (
-                                                    <div className="flex items-center gap-3 bg-neutral-50 dark:bg-neutral-850 p-2.5 rounded-[10px] border border-neutral-950/10 dark:border-neutral-800">
-                                                        <div className="w-10 h-10 bg-white dark:bg-neutral-900 rounded-[10px] border border-gray-200 dark:border-neutral-800 flex items-center justify-center text-gray-400 flex-shrink-0">
+                                                    <div className="flex items-center gap-3 bg-neutral-50 dark:bg-neutral-850 p-2.5 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800">
+                                                        <div className="w-10 h-10 bg-white dark:bg-neutral-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 flex items-center justify-center text-gray-400 flex-shrink-0">
                                                             <ImageIcon size={18} />
                                                         </div>
                                                         <div className="flex-1 min-w-0">
@@ -748,7 +748,7 @@ function RatingsContent() {
                                                     {review.status !== 'hidden' ? (
                                                         <button
                                                             onClick={() => handleStatusUpdate(review.id, 'hidden')}
-                                                            className="flex items-center justify-center gap-1 py-2 bg-red-55 hover:bg-red-100 text-red-600 dark:bg-red-950/30 rounded-[10px] text-xs font-medium transition-colors border border-red-200/50"
+                                                            className="flex items-center justify-center gap-1 py-2 bg-red-55 hover:bg-red-100 text-red-600 dark:bg-red-950/30 rounded-[10px] text-xs font-medium transition-colors border-[0.5px] border-black/50"
                                                         >
                                                             <X size={14} /> Reject
                                                         </button>
@@ -758,12 +758,12 @@ function RatingsContent() {
                                                     {review.status !== 'active' ? (
                                                         <button
                                                             onClick={() => handleStatusUpdate(review.id, 'active')}
-                                                            className="flex items-center justify-center gap-1 py-2 bg-green-600 hover:bg-green-700 text-white rounded-[10px] text-xs font-medium transition-colors border border-transparent col-span-2 shadow-none"
+                                                            className="flex items-center justify-center gap-1 py-2 bg-green-600 hover:bg-green-700 text-white rounded-[10px] text-xs font-medium transition-colors border-[0.5px] border-transparent col-span-2 shadow-none"
                                                         >
                                                             <Check size={14} /> Approve
                                                         </button>
                                                     ) : (
-                                                        <span className="flex items-center justify-center gap-1 py-2 bg-neutral-50 dark:bg-neutral-850 text-neutral-400 dark:text-neutral-600 rounded-[10px] text-xs font-medium border border-neutral-950/10 dark:border-neutral-800 cursor-not-allowed">
+                                                        <span className="flex items-center justify-center gap-1 py-2 bg-neutral-50 dark:bg-neutral-850 text-neutral-400 dark:text-neutral-600 rounded-[10px] text-xs font-medium border-[0.5px] border-black/50 dark:border-neutral-800 cursor-not-allowed">
                                                             <Check size={14} /> Published
                                                         </span>
                                                     )}
@@ -780,17 +780,17 @@ function RatingsContent() {
                                     <button
                                         disabled={page === 1}
                                         onClick={() => setPage(page - 1)}
-                                        className="px-4 py-2 border border-neutral-950/10 dark:border-neutral-800 text-xs font-medium rounded-[10px] bg-white dark:bg-gray-900 dark:text-white shadow-none hover:bg-neutral-50 dark:hover:bg-neutral-850 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                        className="px-4 py-2 border-[0.5px] border-black/50 dark:border-neutral-800 text-xs font-medium rounded-[10px] bg-white dark:bg-gray-900 dark:text-white shadow-none hover:bg-neutral-50 dark:hover:bg-neutral-850 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                                     >
                                         Previous
                                     </button>
-                                    <span className="text-xs font-medium text-neutral-650 dark:text-neutral-400 bg-neutral-50 dark:bg-neutral-850 px-3 py-1.5 rounded-[10px] border border-neutral-950/10 dark:border-neutral-850">
+                                    <span className="text-xs font-medium text-neutral-650 dark:text-neutral-400 bg-neutral-50 dark:bg-neutral-850 px-3 py-1.5 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-850">
                                         Page {page} of {totalPages}
                                     </span>
                                     <button
                                         disabled={page === totalPages}
                                         onClick={() => setPage(page + 1)}
-                                        className="px-4 py-2 border border-neutral-950/10 dark:border-neutral-800 text-xs font-medium rounded-[10px] bg-white dark:bg-gray-900 dark:text-white shadow-none hover:bg-neutral-50 dark:hover:bg-neutral-850 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                        className="px-4 py-2 border-[0.5px] border-black/50 dark:border-neutral-800 text-xs font-medium rounded-[10px] bg-white dark:bg-gray-900 dark:text-white shadow-none hover:bg-neutral-50 dark:hover:bg-neutral-850 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                                     >
                                         Next
                                     </button>
@@ -804,8 +804,8 @@ function RatingsContent() {
             {/* Create/Edit Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div className="bg-white dark:bg-gray-900 rounded-[10px] shadow-none w-full max-w-lg overflow-hidden border border-neutral-950/10 dark:border-neutral-800 animate-in zoom-in duration-200">
-                        <div className="flex items-center justify-between p-6 border-b border-neutral-950/10 dark:border-neutral-800">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] shadow-none w-full max-w-lg overflow-hidden border-[0.5px] border-black/50 dark:border-neutral-800 animate-in zoom-in duration-200">
+                        <div className="flex items-center justify-between p-6 border-b-[0.5px] border-black/50 dark:border-neutral-800">
                             <h2 className="text-base font-semibold text-gray-900 dark:text-white">
                                 {editingReview ? 'Edit Review Content' : 'Create Manual Review'}
                             </h2>
@@ -822,7 +822,7 @@ function RatingsContent() {
                                             <select
                                                 value={formData.review_type}
                                                 onChange={(e) => setFormData({ ...formData, review_type: e.target.value as any })}
-                                                className="w-full px-3 py-2 border border-neutral-950/10 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none bg-neutral-50 dark:bg-neutral-850 dark:text-white"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none bg-neutral-50 dark:bg-neutral-850 dark:text-white"
                                             >
                                                 <option value="product">Product Review</option>
                                                 <option value="seller">Seller / Doctor Review</option>
@@ -835,7 +835,7 @@ function RatingsContent() {
                                                 required
                                                 value={formData.order_id}
                                                 onChange={(e) => setFormData({ ...formData, order_id: e.target.value })}
-                                                className="w-full px-3 py-2 border border-neutral-950/10 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none bg-neutral-50 dark:bg-neutral-850 dark:text-white font-semibold"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none bg-neutral-50 dark:bg-neutral-850 dark:text-white font-semibold"
                                                 placeholder="e.g. 1045"
                                             />
                                         </div>
@@ -849,7 +849,7 @@ function RatingsContent() {
                                                 required
                                                 value={formData.customer_id}
                                                 onChange={(e) => setFormData({ ...formData, customer_id: e.target.value })}
-                                                className="w-full px-3 py-2 border border-neutral-950/10 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none bg-neutral-50 dark:bg-neutral-850 dark:text-white font-semibold"
+                                                className="w-full px-3 py-2 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none bg-neutral-50 dark:bg-neutral-850 dark:text-white font-semibold"
                                                 placeholder="e.g. 12"
                                             />
                                         </div>
@@ -861,7 +861,7 @@ function RatingsContent() {
                                                     required
                                                     value={formData.product_id}
                                                     onChange={(e) => setFormData({ ...formData, product_id: e.target.value })}
-                                                    className="w-full px-3 py-2 border border-neutral-950/10 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none bg-neutral-50 dark:bg-neutral-850 dark:text-white font-semibold"
+                                                    className="w-full px-3 py-2 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none bg-neutral-50 dark:bg-neutral-850 dark:text-white font-semibold"
                                                     placeholder="Product ID"
                                                 />
                                             </div>
@@ -873,7 +873,7 @@ function RatingsContent() {
                                                     required
                                                     value={formData.seller_id}
                                                     onChange={(e) => setFormData({ ...formData, seller_id: e.target.value })}
-                                                    className="w-full px-3 py-2 border border-neutral-950/10 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none bg-neutral-50 dark:bg-neutral-850 dark:text-white font-semibold"
+                                                    className="w-full px-3 py-2 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none bg-neutral-50 dark:bg-neutral-850 dark:text-white font-semibold"
                                                     placeholder="Seller or Doctor ID"
                                                 />
                                             </div>
@@ -888,7 +888,7 @@ function RatingsContent() {
                                     <select
                                         value={formData.rating}
                                         onChange={(e) => setFormData({ ...formData, rating: Number(e.target.value) })}
-                                        className="w-full px-3 py-2 border border-neutral-950/10 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none bg-neutral-50 dark:bg-neutral-850 dark:text-white font-semibold"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none bg-neutral-50 dark:bg-neutral-850 dark:text-white font-semibold"
                                     >
                                         {[5, 4, 3, 2, 1].map(num => (
                                             <option key={num} value={num}>{num} Stars</option>
@@ -901,7 +901,7 @@ function RatingsContent() {
                                         value={formData.status}
                                         disabled={!!editingReview}
                                         onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                                        className="w-full px-3 py-2 border border-neutral-950/10 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none bg-neutral-50 dark:bg-neutral-850 dark:text-white font-semibold disabled:opacity-50"
+                                        className="w-full px-3 py-2 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none bg-neutral-50 dark:bg-neutral-850 dark:text-white font-semibold disabled:opacity-50"
                                     >
                                         <option value="active">Active (Published)</option>
                                         <option value="pending">Pending Approval</option>
@@ -917,7 +917,7 @@ function RatingsContent() {
                                     required
                                     value={formData.review_text}
                                     onChange={(e) => setFormData({ ...formData, review_text: e.target.value })}
-                                    className="w-full px-3.5 py-2.5 border border-neutral-950/10 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none resize-none bg-neutral-50 dark:bg-neutral-850 dark:text-white placeholder:text-neutral-400"
+                                    className="w-full px-3.5 py-2.5 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] text-xs font-normal focus:ring-1 focus:ring-black focus:border-black outline-none resize-none bg-neutral-50 dark:bg-neutral-850 dark:text-white placeholder:text-neutral-400"
                                     placeholder="Write review description..."
                                 ></textarea>
                             </div>
@@ -939,7 +939,7 @@ function RatingsContent() {
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="px-5 py-2.5 border border-neutral-950/10 dark:border-neutral-800 text-neutral-600 dark:text-neutral-350 hover:bg-neutral-50 dark:hover:bg-neutral-850 font-medium rounded-[10px] text-xs transition-colors"
+                                    className="px-5 py-2.5 border-[0.5px] border-black/50 dark:border-neutral-800 text-neutral-600 dark:text-neutral-350 hover:bg-neutral-50 dark:hover:bg-neutral-850 font-medium rounded-[10px] text-xs transition-colors"
                                 >
                                     Cancel
                                 </button>
@@ -952,8 +952,8 @@ function RatingsContent() {
             {/* View Details Modal */}
             {isViewModalOpen && viewingReview && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-                    <div className="bg-white dark:bg-gray-900 rounded-[10px] shadow-none w-full max-w-2xl overflow-hidden border border-neutral-950/10 dark:border-neutral-800 animate-in zoom-in duration-200">
-                        <div className="flex items-center justify-between p-6 border-b border-neutral-950/10 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-850">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] shadow-none w-full max-w-2xl overflow-hidden border-[0.5px] border-black/50 dark:border-neutral-800 animate-in zoom-in duration-200">
+                        <div className="flex items-center justify-between p-6 border-b-[0.5px] border-black/50 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-850">
                             <div>
                                 <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Review Moderation Audit</h2>
                                 <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">Review Identifier: #{viewingReview.id} • Status: {viewingReview.status}</p>
@@ -967,7 +967,7 @@ function RatingsContent() {
                             {/* User Header */}
                             <div className="flex items-start justify-between font-semibold">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 flex items-center justify-center font-semibold text-sm uppercase border border-neutral-950/5">
+                                    <div className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 flex items-center justify-center font-semibold text-sm uppercase border-[0.5px] border-black/50">
                                         {(viewingReview.customer?.name || viewingReview.full_name || 'C').charAt(0)}
                                     </div>
                                     <div>
@@ -988,7 +988,7 @@ function RatingsContent() {
                             </div>
 
                             {/* Content Description */}
-                            <div className="bg-neutral-50 dark:bg-neutral-850 p-4 rounded-[10px] border border-neutral-950/10 dark:border-neutral-800">
+                            <div className="bg-neutral-50 dark:bg-neutral-850 p-4 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800">
                                 <span className="text-[9px] font-semibold uppercase tracking-wider text-gray-450 dark:text-gray-505 block mb-1">Customer Sentiment Content</span>
                                 <p className="text-gray-800 dark:text-gray-200 text-sm leading-relaxed font-normal">{viewingReview.review_text || viewingReview.description}</p>
                             </div>
@@ -1002,11 +1002,11 @@ function RatingsContent() {
                             )}
 
                             {/* Linked Moderation Target details */}
-                            <div className="bg-neutral-50/50 dark:bg-neutral-850 p-4 rounded-[10px] border border-neutral-950/10 dark:border-neutral-800 space-y-2">
+                            <div className="bg-neutral-50/50 dark:bg-neutral-850 p-4 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 space-y-2">
                                 <h4 className="text-[9px] font-semibold uppercase tracking-wider text-gray-455 dark:text-gray-500">Associated Platform Entity</h4>
                                 {viewingReview.product && (
                                     <div className="flex items-center gap-3">
-                                        <div className="w-12 h-12 bg-white dark:bg-neutral-900 rounded-[10px] border border-gray-205 dark:border-neutral-800 overflow-hidden flex-shrink-0 flex items-center justify-center">
+                                        <div className="w-12 h-12 bg-white dark:bg-neutral-900 rounded-[10px] border-[0.5px] border-gray-205 dark:border-neutral-800 overflow-hidden flex-shrink-0 flex items-center justify-center">
                                             {viewingReview.product.image ? (
                                                 <img src={viewingReview.product.image.startsWith('http') ? viewingReview.product.image : `${BACKEND_URL}/storage/${viewingReview.product.image}`} className="w-full h-full object-cover" />
                                             ) : (
@@ -1021,7 +1021,7 @@ function RatingsContent() {
                                 )}
                                 {viewingReview.review_type === 'seller' && viewingReview.seller && (
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-white dark:bg-neutral-900 rounded-[10px] border border-neutral-950/10 dark:border-neutral-800 flex items-center justify-center text-neutral-900 dark:text-neutral-100 font-semibold text-sm uppercase flex-shrink-0">
+                                        <div className="w-10 h-10 bg-white dark:bg-neutral-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 flex items-center justify-center text-neutral-900 dark:text-neutral-100 font-semibold text-sm uppercase flex-shrink-0">
                                             {viewingReview.seller.name.charAt(0)}
                                         </div>
                                         <div>
@@ -1036,7 +1036,7 @@ function RatingsContent() {
 
                             {/* Seller Replies Section */}
                             {viewingReview.reply ? (
-                                <div className="bg-neutral-50 dark:bg-neutral-850 border border-neutral-950/10 dark:border-neutral-800 rounded-[10px] p-4 space-y-2 relative group">
+                                <div className="bg-neutral-50 dark:bg-neutral-850 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] p-4 space-y-2 relative group">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <div className="w-5 h-5 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-black rounded-full flex items-center justify-center text-[9px] font-semibold">
@@ -1056,17 +1056,17 @@ function RatingsContent() {
                                     <p className="text-gray-700 dark:text-gray-300 text-xs leading-relaxed font-normal pl-7">{viewingReview.reply.reply_text}</p>
                                 </div>
                             ) : (
-                                <div className="bg-neutral-50 dark:bg-neutral-850 p-4 rounded-[10px] border border-neutral-950/10 dark:border-neutral-800 border-dashed text-center">
+                                <div className="bg-neutral-50 dark:bg-neutral-850 p-4 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 border-dashed text-center">
                                     <p className="text-xs text-neutral-550 dark:text-neutral-450 font-normal">No replies have been recorded for this review yet.</p>
                                 </div>
                             )}
 
                             {/* Actions Footer */}
-                            <div className="flex gap-3 pt-4 border-t border-gray-100 dark:border-neutral-800 font-semibold">
+                            <div className="flex gap-3 pt-4 border-t-[0.5px] border-black/50 dark:border-neutral-800 font-semibold">
                                 {viewingReview.status !== 'hidden' && (
                                     <button
                                         onClick={() => { handleStatusUpdate(viewingReview.id, 'hidden'); setIsViewModalOpen(false); }}
-                                        className="flex-1 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-[10px] font-medium transition-colors text-xs border border-red-100"
+                                        className="flex-1 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-[10px] font-medium transition-colors text-xs border-[0.5px] border-black/50"
                                     >
                                         Reject Review
                                     </button>
@@ -1081,7 +1081,7 @@ function RatingsContent() {
                                 )}
                                 <button
                                     onClick={() => { setIsViewModalOpen(false); openEditModal(viewingReview); }}
-                                    className="px-5 py-2.5 border border-neutral-950/10 dark:border-neutral-800 text-neutral-600 dark:text-neutral-350 hover:bg-neutral-50 dark:hover:bg-neutral-850 font-medium rounded-[10px] text-xs transition-all"
+                                    className="px-5 py-2.5 border-[0.5px] border-black/50 dark:border-neutral-800 text-neutral-600 dark:text-neutral-350 hover:bg-neutral-50 dark:hover:bg-neutral-850 font-medium rounded-[10px] text-xs transition-all"
                                 >
                                     Modify Content
                                 </button>

@@ -502,4 +502,81 @@ class MarketplaceAccountingTest extends TestCase
         $txnNew->refresh();
         $this->assertEquals('held', $txnNew->metadata['escrow_status']);
     }
+
+    /** @test */
+    public function test_super_admin_can_reconcile_cod_order()
+    {
+        $product = Product::create([
+            'seller_id' => $this->seller1->id,
+            'brand_id' => $this->brand1->id,
+            'category_id' => $this->category->id,
+            'title' => 'Test Product',
+            'slug' => 'test-product',
+            'price' => 118.00,
+            'gst_slab' => 18.00,
+            'gst_inclusive' => true,
+            'stock' => 10,
+            'stock_status' => 'in_stock',
+            'status' => 'published'
+        ]);
+
+        $order = Order::create([
+            'order_number' => 'ORD-10003',
+            'user_id' => $this->customer->id,
+            'subtotal' => 118.00,
+            'discount_amount' => 18.00,
+            'shipping_amount' => 50.00,
+            'total_amount' => 118.00,
+            'tax_amount' => 15.25,
+            'final_amount' => 142.00,
+            'status' => 'delivered',
+            'payment_status' => 'pending',
+            'payment_method' => 'cod',
+            'shipping_address_json' => ['state' => 'Rajasthan'],
+            'billing_address_json' => ['state' => 'Rajasthan']
+        ]);
+
+        OrderItem::create([
+            'order_id' => $order->id,
+            'product_id' => $product->id,
+            'seller_id' => $this->seller1->id,
+            'product_name' => $product->title,
+            'quantity' => 1,
+            'price' => 118.00,
+            'total' => 100.00,
+            'base_price' => 84.75,
+            'gst_slab' => 18.00,
+            'gst_amount' => 15.25,
+            'cgst' => 7.63,
+            'sgst' => 7.62,
+            'igst' => 0.00,
+            'net_amount' => 100.00
+        ]);
+
+        Shipment::create([
+            'order_id' => $order->id,
+            'seller_id' => $this->seller1->id,
+            'shipping_charge' => 50.00,
+            'payout_status' => 'pending',
+            'status' => 'shipped'
+        ]);
+
+        // Create superadmin user for auth
+        $superAdmin = User::factory()->create(['role' => 'super_admin']);
+        $this->actingAs($superAdmin);
+
+        $response = $this->putJson('/api/admin/orders/' . $order->id, [
+            'status' => 'cod_reconciled'
+        ]);
+
+        $response->assertStatus(200);
+
+        $order->refresh();
+        $this->assertEquals('cod_reconciled', $order->status);
+        $this->assertEquals('paid', $order->payment_status);
+        $this->assertNotNull($order->commission_calculated_at);
+
+        $wallet = SellerWallet::where('seller_id', $this->seller1->id)->first();
+        $this->assertEquals(18.65, $wallet->pending_amount);
+    }
 }

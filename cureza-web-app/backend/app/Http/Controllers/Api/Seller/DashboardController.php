@@ -90,7 +90,7 @@ class DashboardController extends Controller
             'pending' => $orderStats['pending'] ?? 0,
             'processing' => ($orderStats['confirmed'] ?? 0) + ($orderStats['processing'] ?? 0),
             'shipped' => $orderStats['shipped'] ?? 0,
-            'delivered' => $orderStats['delivered'] ?? 0,
+            'delivered' => ($orderStats['delivered'] ?? 0) + ($orderStats['cod_reconciled'] ?? 0),
             'cancelled' => $orderStats['cancelled'] ?? 0,
         ];
 
@@ -383,7 +383,7 @@ class DashboardController extends Controller
                     'customer' => $item->order->user ? $item->order->user->name : 'Guest',
                     'date' => $item->order->created_at->format('Y-m-d H:i'),
                     'amount' => $item->total,
-                    'status' => $item->status,
+                    'status' => $item->order->status === 'cod_reconciled' ? 'delivered' : $item->order->status,
                     'payment_status' => $item->order->payment_status
                 ];
             })

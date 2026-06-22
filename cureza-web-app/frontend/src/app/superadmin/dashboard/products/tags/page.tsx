@@ -137,11 +137,11 @@ export default function AdminTagsPage() {
     return (
         <div className="space-y-8 animate-in fade-in duration-500 font-outfit">
             {/* Header Section */}
-            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-8 border border-neutral-950/15 shadow-none">
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-8 border-[0.5px] border-black/50 shadow-none">
                 <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                     <div className="space-y-2">
                         <div className="flex items-center gap-3">
-                            <div className="p-3 bg-neutral-100 dark:bg-gray-800 border-[0.5px] border-neutral-950/10 rounded-md text-black dark:text-white">
+                            <div className="p-3 bg-neutral-100 dark:bg-gray-800 border-[0.5px] border-black/50 rounded-md text-black dark:text-white">
                                 <TagIcon size={24} />
                             </div>
                             <h1 className="text-3xl font-black text-gray-950 dark:text-white tracking-tight">
@@ -158,7 +158,7 @@ export default function AdminTagsPage() {
                             <button
                                 onClick={handleBulkDelete}
                                 disabled={isSubmitting}
-                                className="flex h-11 items-center gap-2 bg-red-50 hover:bg-red-100 dark:bg-red-950/20 text-red-650 px-5 rounded-md font-bold text-xs capitalize border border-red-200/50 dark:border-red-900/35 transition-all shadow-none"
+                                className="flex h-11 items-center gap-2 bg-red-50 hover:bg-red-100 dark:bg-red-950/20 text-red-650 px-5 rounded-md font-bold text-xs capitalize border-[0.5px] border-black/50 dark:border-red-900/35 transition-all shadow-none"
                             >
                                 <Trash2 size={15} />
                                 Delete Selected ({selectedIds.length})
@@ -180,7 +180,7 @@ export default function AdminTagsPage() {
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                 <input
                     type="text"
-                    className="w-full pl-12 pr-4 py-3 bg-white dark:bg-gray-900 border border-neutral-950/15 rounded-md font-bold text-sm text-gray-955 dark:text-white placeholder:text-gray-300 focus:outline-none focus:ring-4 focus:ring-black/10 focus:border-black transition-all"
+                    className="w-full pl-12 pr-4 py-3 bg-white dark:bg-gray-900 border-[0.5px] border-black/50 rounded-md font-bold text-sm text-gray-955 dark:text-white placeholder:text-gray-300 focus:outline-none focus:ring-4 focus:ring-black/10 focus:border-black transition-all"
                     placeholder="Search tags by name or slug..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -188,7 +188,7 @@ export default function AdminTagsPage() {
             </div>
 
             {/* Tags Table Layout */}
-            <div className="bg-white dark:bg-gray-900 rounded-[10px] border border-neutral-950/15 shadow-none overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 shadow-none overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-neutral-950/10 dark:divide-gray-800">
                         <thead className="bg-neutral-50 dark:bg-gray-850/50">
@@ -263,14 +263,14 @@ export default function AdminTagsPage() {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded bg-neutral-100 dark:bg-gray-800 flex items-center justify-center text-black dark:text-white border-[0.5px] border-neutral-950/10 font-bold text-xs select-none">
+                                                <div className="w-8 h-8 rounded bg-neutral-100 dark:bg-gray-800 flex items-center justify-center text-black dark:text-white border-[0.5px] border-black/50 font-bold text-xs select-none">
                                                     #{tag.name.charAt(0).toUpperCase()}
                                                 </div>
                                                 <div className="text-sm font-extrabold text-gray-955 dark:text-gray-100">{tag.name}</div>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
-                                            <span className="bg-gray-55 dark:bg-gray-800 border border-neutral-950/10 dark:border-gray-700 px-2.5 py-1 rounded text-[10px] font-bold capitalize">/{tag.slug}</span>
+                                            <span className="bg-gray-55 dark:bg-gray-800 border-[0.5px] border-black/50 dark:border-gray-700 px-2.5 py-1 rounded text-[10px] font-bold capitalize">/{tag.slug}</span>
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="text-sm text-gray-550 dark:text-gray-400 font-medium truncate max-w-xs">{tag.description || '-'}</div>
@@ -304,13 +304,13 @@ export default function AdminTagsPage() {
             {/* Add/Edit Tag Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black/65 dark:bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-350">
-                    <div className="bg-white dark:bg-gray-900 border border-neutral-950/15 rounded-[10px] shadow-none max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-300">
-                        <div className="px-6 py-4 border-b border-neutral-950/10 dark:border-gray-800 flex justify-between items-center bg-neutral-50/50 dark:bg-gray-850/50">
+                    <div className="bg-white dark:bg-gray-900 border-[0.5px] border-black/50 rounded-[10px] shadow-none max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-300">
+                        <div className="px-6 py-4 border-b-[0.5px] border-black/50 dark:border-gray-800 flex justify-between items-center bg-neutral-50/50 dark:bg-gray-850/50">
                             <div>
                                 <h2 className="font-extrabold text-sm capitalize text-gray-955 dark:text-white">{editingTag ? 'Edit Tag Details' : 'Create New Tag'}</h2>
                                 <p className="text-[10px] text-gray-400 font-semibold mt-0.5">Fill in the tag fields</p>
                             </div>
-                            <button onClick={() => setIsModalOpen(false)} className="h-8 w-8 rounded-md bg-white dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 border border-neutral-950/15 dark:border-gray-700 shadow-none transition-colors cursor-pointer">
+                            <button onClick={() => setIsModalOpen(false)} className="h-8 w-8 rounded-md bg-white dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 border-[0.5px] border-black/50 dark:border-gray-700 shadow-none transition-colors cursor-pointer">
                                 <X size={16} />
                             </button>
                         </div>
@@ -323,7 +323,7 @@ export default function AdminTagsPage() {
                                     required
                                     value={formData.name}
                                     onChange={handleInputChange}
-                                    className="w-full h-11 px-4 border border-neutral-950/15 rounded-md bg-white dark:bg-gray-800/30 focus:outline-none focus:ring-4 focus:ring-black/10 focus:border-black font-bold text-sm text-gray-955 dark:text-gray-100 transition-all"
+                                    className="w-full h-11 px-4 border-[0.5px] border-black/50 rounded-md bg-white dark:bg-gray-800/30 focus:outline-none focus:ring-4 focus:ring-black/10 focus:border-black font-bold text-sm text-gray-955 dark:text-gray-100 transition-all"
                                     placeholder="e.g. Organic, Skin Care, Viral"
                                 />
                             </div>
@@ -333,7 +333,7 @@ export default function AdminTagsPage() {
                                     name="description"
                                     value={formData.description}
                                     onChange={handleInputChange}
-                                    className="w-full p-4 border border-neutral-950/15 rounded-md bg-white dark:bg-gray-800/30 focus:outline-none focus:ring-4 focus:ring-black/10 focus:border-black font-medium text-sm text-gray-750 dark:text-gray-300 resize-none transition-all leading-relaxed"
+                                    className="w-full p-4 border-[0.5px] border-black/50 rounded-md bg-white dark:bg-gray-800/30 focus:outline-none focus:ring-4 focus:ring-black/10 focus:border-black font-medium text-sm text-gray-750 dark:text-gray-300 resize-none transition-all leading-relaxed"
                                     rows={4}
                                     placeholder="Briefly describe what this tag is for..."
                                 />
@@ -342,7 +342,7 @@ export default function AdminTagsPage() {
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="w-1/2 h-11 text-xs font-bold capitalize border border-neutral-950/15 rounded-md text-gray-750 dark:text-gray-300 hover:bg-neutral-50 dark:hover:bg-gray-850 transition-colors"
+                                    className="w-1/2 h-11 text-xs font-bold capitalize border-[0.5px] border-black/50 rounded-md text-gray-750 dark:text-gray-300 hover:bg-neutral-50 dark:hover:bg-gray-850 transition-colors"
                                 >
                                     Cancel
                                 </button>

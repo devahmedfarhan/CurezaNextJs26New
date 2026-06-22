@@ -268,6 +268,10 @@ class OrderController extends Controller
                     ];
                 }
 
+                $itemSeller = $itemData['product']->seller;
+                $itemSellerProfile = $itemSeller ? $itemSeller->sellerProfile : null;
+                $hsnCode = $itemData['product']->hsn_code ?? ($itemSellerProfile->default_hsn_code ?? null);
+
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $itemData['product']->id,
@@ -289,6 +293,7 @@ class OrderController extends Controller
                     'sgst' => $itemBreakdown['sgst'],
                     'igst' => $itemBreakdown['igst'],
                     'net_amount' => $itemBreakdown['net_amount'],
+                    'hsn_code' => $hsnCode,
                 ]);
 
                 // Deduct Stock

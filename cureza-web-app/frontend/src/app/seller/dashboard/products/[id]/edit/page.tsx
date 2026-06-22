@@ -53,7 +53,7 @@ export default function SellerEditProductPage({ params }: { params: Promise<{ id
     if (error || !product) {
         return (
             <div className="p-6">
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="bg-red-50 border-[0.5px] border-black/50 rounded-lg p-4">
                     <div className="flex items-center gap-3">
                         <AlertCircle className="text-red-500" size={20} />
                         <span className="text-red-700">{error || 'Product not found'}</span>
@@ -66,7 +66,7 @@ export default function SellerEditProductPage({ params }: { params: Promise<{ id
     return (
         <div className="w-full py-6 space-y-6">
             {/* Edit Notice Banner */}
-            <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
+            <div className="bg-amber-50 dark:bg-amber-900/20 border-[0.5px] border-black/50 dark:border-amber-800 rounded-xl p-4">
                 <div className="flex items-start gap-3">
                     <AlertCircle className="text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" size={18} />
                     <div className="text-sm text-amber-800 dark:text-amber-200">

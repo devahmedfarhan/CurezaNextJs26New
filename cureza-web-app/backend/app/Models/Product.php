@@ -65,6 +65,7 @@ class Product extends Model
         'is_prescription_required',
         'gst_slab',
         'gst_inclusive',
+        'hsn_code',
     ];
 
     protected $casts = [

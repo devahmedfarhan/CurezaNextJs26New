@@ -114,11 +114,11 @@ export default function SuperAdminReportsPage() {
     return (
         <div className="space-y-8 pb-12 animate-in fade-in duration-500">
             {/* Header Dashboard Banner */}
-            <div className="relative overflow-hidden bg-black text-white p-6 md:p-8 rounded-[10px] border-[0.5px] border-neutral-950/15">
+            <div className="relative overflow-hidden bg-black text-white p-6 md:p-8 rounded-[10px] border-[0.5px] border-black/50">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
                     <div>
                         <div className="flex items-center gap-2 mb-1.5">
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-[10px] font-bold tracking-wider bg-neutral-800 text-neutral-200 border border-neutral-750">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-[10px] font-bold tracking-wider bg-neutral-800 text-neutral-200 border-[0.5px] border-neutral-750">
                                 Export Center
                             </span>
                         </div>
@@ -132,8 +132,8 @@ export default function SuperAdminReportsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 {/* Form parameters */}
-                <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 space-y-4">
-                    <div className="pb-2 border-b border-gray-100 dark:border-gray-800 flex items-center gap-2">
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 space-y-4">
+                    <div className="pb-2 border-b-[0.5px] border-black/50 dark:border-gray-800 flex items-center gap-2">
                         <Settings className="text-gray-400" size={18} />
                         <h3 className="text-base font-extrabold text-gray-900 dark:text-white">Configure Export</h3>
                     </div>
@@ -145,7 +145,7 @@ export default function SuperAdminReportsPage() {
                             <select 
                                 value={reportType}
                                 onChange={(e) => setReportType(e.target.value)}
-                                className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800/30 border-[0.5px] border-neutral-950/15 rounded-md text-xs font-bold text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-black dark:focus:ring-white/10 dark:focus:border-white"
+                                className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800/30 border-[0.5px] border-black/50 rounded-md text-xs font-bold text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-black dark:focus:ring-white/10 dark:focus:border-white"
                             >
                                 <option value="sales">Sales, Taxes & Revenue</option>
                                 <option value="doctors">Doctor Consultation Metrics</option>
@@ -160,7 +160,7 @@ export default function SuperAdminReportsPage() {
                             <select 
                                 value={dateRange}
                                 onChange={(e) => setDateRange(e.target.value)}
-                                className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800/30 border-[0.5px] border-neutral-950/15 rounded-md text-xs font-bold text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-black dark:focus:ring-white/10 dark:focus:border-white"
+                                className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800/30 border-[0.5px] border-black/50 rounded-md text-xs font-bold text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-black dark:focus:ring-white/10 dark:focus:border-white"
                             >
                                 <option value="today">Today (Live)</option>
                                 <option value="7days">Last 7 Days</option>
@@ -182,10 +182,10 @@ export default function SuperAdminReportsPage() {
                                         key={fmt.id}
                                         type="button"
                                         onClick={() => setFileFormat(fmt.id)}
-                                        className={`py-2 rounded-md text-xs font-bold border transition-all
+                                        className={`py-2 rounded-md text-xs font-bold border-[0.5px] transition-all
                                             ${fileFormat === fmt.id 
                                                 ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white' 
-                                                : 'bg-white dark:bg-gray-900 text-neutral-600 dark:text-gray-300 border-neutral-200 dark:border-gray-700 hover:bg-neutral-50 dark:hover:bg-gray-850'}`}
+                                                : 'bg-white dark:bg-gray-900 text-neutral-600 dark:text-gray-300 border-black/50 dark:border-gray-700 hover:bg-neutral-50 dark:hover:bg-gray-850'}`}
                                     >
                                         {fmt.label}
                                     </button>
@@ -218,7 +218,7 @@ export default function SuperAdminReportsPage() {
                     </form>
 
                     {feedbackMessage && (
-                        <div className="p-3 bg-green-50 dark:bg-green-950/20 border border-green-200/30 rounded-md flex gap-2.5 items-start text-xs text-green-700 dark:text-green-400 animate-slideUp">
+                        <div className="p-3 bg-green-50 dark:bg-green-950/20 border-[0.5px] border-black/50 rounded-md flex gap-2.5 items-start text-xs text-green-700 dark:text-green-400 animate-slideUp">
                             <CheckCircle size={16} className="text-green-600 mt-0.5 shrink-0" />
                             <p className="font-semibold leading-relaxed">{feedbackMessage}</p>
                         </div>
@@ -226,19 +226,19 @@ export default function SuperAdminReportsPage() {
                 </div>
 
                 {/* Key Metrics Table preview */}
-                <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 lg:col-span-2 space-y-4">
-                    <div className="pb-2 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 lg:col-span-2 space-y-4">
+                    <div className="pb-2 border-b-[0.5px] border-black/50 dark:border-gray-800 flex justify-between items-center">
                         <div className="flex items-center gap-2">
                             <Database className="text-gray-400" size={18} />
                             <h3 className="text-base font-extrabold text-gray-900 dark:text-white">Database Ledger Preview</h3>
                         </div>
-                        <span className="text-[10px] font-bold tracking-wider text-neutral-500 bg-neutral-50 dark:bg-gray-800 border border-neutral-200 dark:border-gray-700 px-2 py-0.5 rounded">Live Query</span>
+                        <span className="text-[10px] font-bold tracking-wider text-neutral-500 bg-neutral-50 dark:bg-gray-800 border-[0.5px] border-black/50 dark:border-gray-700 px-2 py-0.5 rounded">Live Query</span>
                     </div>
 
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-xs">
                             <thead>
-                                <tr className="text-[10px] font-bold text-neutral-500 tracking-wider border-b-[0.5px] border-neutral-950/10 dark:border-gray-800">
+                                <tr className="text-[10px] font-bold text-neutral-500 tracking-wider border-b-[0.5px] border-black/50 dark:border-gray-800">
                                     <th className="py-2.5">Billing Month</th>
                                     <th className="py-2.5">Volume (Orders)</th>
                                     <th className="py-2.5">Gross Sales</th>
@@ -269,8 +269,8 @@ export default function SuperAdminReportsPage() {
             </div>
 
             {/* Generated Reports History ledger */}
-            <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-6 space-y-4">
-                <div className="pb-2 border-b border-gray-100 dark:border-gray-800">
+            <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 p-6 space-y-4">
+                <div className="pb-2 border-b-[0.5px] border-black/50 dark:border-gray-800">
                     <h2 className="text-lg font-extrabold text-gray-900 dark:text-white">Generated Reports History</h2>
                     <p className="text-xs text-gray-400 font-semibold">Repository of previously compiled archives</p>
                 </div>
@@ -278,7 +278,7 @@ export default function SuperAdminReportsPage() {
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs">
                         <thead>
-                            <tr className="text-[10px] font-bold text-neutral-500 tracking-wider border-b-[0.5px] border-neutral-950/10 dark:border-gray-800">
+                            <tr className="text-[10px] font-bold text-neutral-500 tracking-wider border-b-[0.5px] border-black/50 dark:border-gray-800">
                                 <th className="py-3">Report ID</th>
                                 <th className="py-3">Document Name</th>
                                 <th className="py-3">Category</th>
@@ -296,7 +296,7 @@ export default function SuperAdminReportsPage() {
                                     <td className="py-3.5 text-gray-950 dark:text-white font-extrabold">{rep.name}</td>
                                     <td className="py-3.5">{rep.type}</td>
                                     <td className="py-3.5">
-                                        <span className="px-2 py-0.5 rounded text-[9px] font-bold border bg-neutral-50 dark:bg-gray-800 text-neutral-800 dark:text-gray-200 border-neutral-950/10 dark:border-gray-700">
+                                        <span className="px-2 py-0.5 rounded text-[9px] font-bold border-[0.5px] bg-neutral-50 dark:bg-gray-800 text-neutral-800 dark:text-gray-200 border-black/50 dark:border-gray-700">
                                             {rep.format}
                                         </span>
                                     </td>
@@ -306,7 +306,7 @@ export default function SuperAdminReportsPage() {
                                     <td className="py-3.5 text-right">
                                         <button 
                                             onClick={() => alert(`Simulated download for ${rep.id} started.`)}
-                                            className="bg-white dark:bg-gray-900 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black border border-neutral-950/15 dark:border-gray-700 px-2.5 py-1.5 rounded-md transition-all inline-flex items-center justify-center gap-1 font-bold text-[10px] tracking-wider cursor-pointer"
+                                            className="bg-white dark:bg-gray-900 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black border-[0.5px] border-black/50 dark:border-gray-700 px-2.5 py-1.5 rounded-md transition-all inline-flex items-center justify-center gap-1 font-bold text-[10px] tracking-wider cursor-pointer"
                                         >
                                             <Download size={12} />
                                             Download

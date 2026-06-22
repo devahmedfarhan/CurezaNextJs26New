@@ -67,7 +67,7 @@ const ChangeTypeBadge = ({ type }: { type: string }) => {
     const Icon = config.icon;
 
     return (
-        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px] font-bold ${config.bg}`}>
+        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded border-[0.5px] text-[10px] font-bold ${config.bg}`}>
             <Icon size={11} />
             {config.label}
         </span>
@@ -185,7 +185,7 @@ export default function ChangeRequestsPage() {
     return (
         <div className="space-y-6 animate-in fade-in duration-550">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-[0.5px] border-neutral-950/15 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 rounded-[10px]">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-[0.5px] border-black/50 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 rounded-[10px]">
                 <div>
                     <h1 className="text-2xl font-black text-gray-900 dark:text-white">Change Requests</h1>
                     <p className="text-xs text-gray-500 mt-0.5">Review and approve seller product changes</p>
@@ -201,7 +201,7 @@ export default function ChangeRequestsPage() {
             {/* Stats Cards */}
             {stats && (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-4">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 p-4">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-neutral-100 dark:bg-gray-800 rounded-md text-neutral-600 dark:text-neutral-400">
                                 <Clock size={16} />
@@ -212,7 +212,7 @@ export default function ChangeRequestsPage() {
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-4">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 p-4">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-neutral-100 dark:bg-gray-800 rounded-md text-neutral-600 dark:text-neutral-400">
                                 <Plus size={16} />
@@ -223,7 +223,7 @@ export default function ChangeRequestsPage() {
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-4">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 p-4">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-neutral-100 dark:bg-gray-800 rounded-md text-neutral-600 dark:text-neutral-400">
                                 <Edit size={16} />
@@ -234,7 +234,7 @@ export default function ChangeRequestsPage() {
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 p-4">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 p-4">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-neutral-100 dark:bg-gray-800 rounded-md text-neutral-600 dark:text-neutral-400">
                                 <Trash2 size={16} />
@@ -249,14 +249,14 @@ export default function ChangeRequestsPage() {
             )}
 
             {/* Filters */}
-            <div className="bg-white dark:bg-gray-900 p-4 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 flex flex-col sm:flex-row gap-4">
+            <div className="bg-white dark:bg-gray-900 p-4 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 flex flex-col sm:flex-row gap-4">
                 <div className="relative flex-1">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <Search className="h-4 w-4 text-gray-400" />
                     </div>
                     <input
                         type="text"
-                        className="block w-full pl-9 pr-3 py-2 border-[0.5px] border-neutral-950/15 dark:border-gray-700 rounded-lg bg-gray-50/50 dark:bg-gray-800/35 placeholder-gray-400 focus:outline-none focus:bg-white dark:focus:bg-gray-900 focus:ring-[1.5px] focus:ring-black/10 focus:border-black dark:focus:ring-white/10 dark:focus:border-white text-xs"
+                        className="block w-full pl-9 pr-3 py-2 border-[0.5px] border-black/50 dark:border-gray-700 rounded-lg bg-gray-50/50 dark:bg-gray-800/35 placeholder-gray-400 focus:outline-none focus:bg-white dark:focus:bg-gray-900 focus:ring-[1.5px] focus:ring-black/10 focus:border-black dark:focus:ring-white/10 dark:focus:border-white text-xs"
                         placeholder="Search by product or seller..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -268,7 +268,7 @@ export default function ChangeRequestsPage() {
                         setTypeFilter(e.target.value);
                         setCurrentPage(1);
                     }}
-                    className="px-3 py-2 border-[0.5px] border-neutral-950/15 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 focus:outline-none focus:ring-[1.5px] focus:ring-black/10 text-xs cursor-pointer font-medium"
+                    className="px-3 py-2 border-[0.5px] border-black/50 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 focus:outline-none focus:ring-[1.5px] focus:ring-black/10 text-xs cursor-pointer font-medium"
                 >
                     <option value="">All Types</option>
                     <option value="create">New Products</option>
@@ -278,7 +278,7 @@ export default function ChangeRequestsPage() {
             </div>
 
             {/* Change Requests Table */}
-            <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-neutral-950/15 dark:border-gray-800 overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 overflow-hidden">
                 {loading ? (
                     <div className="p-12 flex justify-center">
                         <Loader2 className="animate-spin text-black dark:text-white" size={24} />
@@ -306,7 +306,7 @@ export default function ChangeRequestsPage() {
                                     <tr key={request.id} className="hover:bg-neutral-50/50 dark:hover:bg-gray-850/30 transition-colors">
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
-                                                <div className="h-10 w-10 shrink-0 bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-neutral-950/10 rounded-lg overflow-hidden flex items-center justify-center text-gray-400">
+                                                <div className="h-10 w-10 shrink-0 bg-neutral-50 dark:bg-gray-850 border-[0.5px] border-black/50 rounded-lg overflow-hidden flex items-center justify-center text-gray-400">
                                                     {request.product?.image ? (
                                                         <img src={getImageUrl(request.product.image)} alt="" className="w-full h-full object-cover" />
                                                     ) : (
@@ -371,7 +371,7 @@ export default function ChangeRequestsPage() {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                    <div className="px-6 py-4 border-t border-neutral-950/10 dark:border-gray-800 flex items-center justify-between">
+                    <div className="px-6 py-4 border-t-[0.5px] border-black/50 dark:border-gray-800 flex items-center justify-between">
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">
                             Page {currentPage} of {totalPages}
                         </p>
@@ -379,14 +379,14 @@ export default function ChangeRequestsPage() {
                             <button
                                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                 disabled={currentPage === 1}
-                                className="p-1.5 border border-neutral-950/15 dark:border-gray-700 rounded-lg disabled:opacity-50 hover:bg-neutral-50 dark:hover:bg-gray-850"
+                                className="p-1.5 border-[0.5px] border-black/50 dark:border-gray-700 rounded-lg disabled:opacity-50 hover:bg-neutral-50 dark:hover:bg-gray-850"
                             >
                                 <ChevronLeft size={14} />
                             </button>
                             <button
                                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                 disabled={currentPage === totalPages}
-                                className="p-1.5 border border-neutral-950/15 dark:border-gray-700 rounded-lg disabled:opacity-50 hover:bg-neutral-50 dark:hover:bg-gray-850"
+                                className="p-1.5 border-[0.5px] border-black/50 dark:border-gray-700 rounded-lg disabled:opacity-50 hover:bg-neutral-50 dark:hover:bg-gray-850"
                             >
                                 <ChevronRight size={14} />
                             </button>
@@ -398,7 +398,7 @@ export default function ChangeRequestsPage() {
             {/* Reject Modal */}
             {rejectModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-sm animate-in fade-in duration-300">
-                    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-850 rounded-[10px] p-6 max-w-md w-full mx-4 shadow-2xl animate-in zoom-in-95 duration-200">
+                    <div className="bg-white dark:bg-gray-900 border-[0.5px] border-black/50 dark:border-gray-850 rounded-[10px] p-6 max-w-md w-full mx-4 shadow-none animate-in zoom-in-95 duration-200">
                         <div className="flex items-center gap-3 mb-4">
                             <div className="p-2 bg-red-50 rounded-md text-red-600">
                                 <X size={20} />
@@ -416,7 +416,7 @@ export default function ChangeRequestsPage() {
                                 value={rejectReason}
                                 onChange={(e) => setRejectReason(e.target.value)}
                                 placeholder="Provide a reason for rejection..."
-                                className="w-full px-3 py-2 border-[0.5px] border-neutral-950/15 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-[1.5px] focus:ring-black/10 focus:border-black dark:focus:ring-white/10 dark:focus:border-white text-xs min-h-[100px] resize-none leading-relaxed"
+                                className="w-full px-3 py-2 border-[0.5px] border-black/50 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-[1.5px] focus:ring-black/10 focus:border-black dark:focus:ring-white/10 dark:focus:border-white text-xs min-h-[100px] resize-none leading-relaxed"
                             />
                         </div>
                         <div className="flex gap-3 justify-end text-xs">

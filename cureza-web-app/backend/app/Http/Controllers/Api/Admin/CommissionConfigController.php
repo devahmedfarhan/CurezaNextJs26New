@@ -16,7 +16,7 @@ class CommissionConfigController extends Controller
      */
     public function index(Request $request)
     {
-        $query = SellerCommission::with('seller')
+        $query = SellerCommission::with(['seller', 'seller.brand'])
             ->where('is_active', true)
             ->orderBy('created_at', 'desc');
 
@@ -36,7 +36,7 @@ class CommissionConfigController extends Controller
      */
     public function show($sellerId)
     {
-        $seller = User::with('sellerProfile')->findOrFail($sellerId);
+        $seller = User::with(['sellerProfile', 'brand'])->findOrFail($sellerId);
         
         $currentCommission = SellerCommission::where('seller_id', $sellerId)
             ->where('is_active', true)
@@ -119,7 +119,7 @@ class CommissionConfigController extends Controller
     public function unconfigured()
     {
         $sellers = User::where('role', 'vendor')
-            ->with('sellerProfile')
+            ->with(['sellerProfile', 'brand'])
             ->whereDoesntHave('sellerCommissions', function ($q) {
                 $q->where('is_active', true);
             })

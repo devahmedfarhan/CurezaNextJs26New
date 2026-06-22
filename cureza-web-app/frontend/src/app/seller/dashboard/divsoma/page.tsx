@@ -18,7 +18,7 @@ export default function DivSomaRedirectPage() {
     return (
         <div className="flex h-[50vh] items-center justify-center bg-gray-55/20 rounded-3xl">
             <div className="flex flex-col items-center gap-3">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cureza-green"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-[0.5px] border-cureza-green"></div>
                 <span className="text-[10px] font-black uppercase tracking-wider text-gray-400">Redirecting to your brand ledger...</span>
             </div>
         </div>

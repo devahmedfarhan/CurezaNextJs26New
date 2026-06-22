@@ -100,7 +100,7 @@ export default function AdminPixelPage() {
     return (
         <div className="space-y-6 pb-12">
             {/* Header */}
-            <div className="flex justify-between items-center bg-white p-6 rounded-[10px] border-[0.35px] border-neutral-950/10">
+            <div className="flex justify-between items-center bg-white p-6 rounded-[10px] border-[0.35px] border-black/50">
                 <div className="space-y-1.5">
                     <h1 className="text-xl font-semibold text-gray-900 tracking-tight">Meta Pixel & Google Tags</h1>
                     <p className="text-xs text-gray-500 font-normal">Manage pixel analytics integration, event parameters, and check connection logs</p>
@@ -108,7 +108,7 @@ export default function AdminPixelPage() {
                 <button 
                     onClick={handleSave}
                     disabled={isSaving}
-                    className="flex items-center gap-2 bg-black text-white px-4 py-2.5 rounded-[10px] hover:bg-neutral-900 font-medium text-xs border-[0.35px] border-neutral-950/10 transition-all disabled:opacity-50"
+                    className="flex items-center gap-2 bg-black text-white px-4 py-2.5 rounded-[10px] hover:bg-neutral-900 font-medium text-xs border-[0.35px] border-black/50 transition-all disabled:opacity-50"
                 >
                     {isSaving ? (
                         <>
@@ -131,10 +131,10 @@ export default function AdminPixelPage() {
                     <h3 className="font-semibold text-sm text-gray-900">Active Tags Setup</h3>
 
                     {/* Meta Pixel Card */}
-                    <div className="bg-white p-5 rounded-[10px] border-[0.35px] border-neutral-950/10 space-y-4 hover:bg-neutral-50/10 transition-all">
+                    <div className="bg-white p-5 rounded-[10px] border-[0.35px] border-black/50 space-y-4 hover:bg-neutral-50/10 transition-all">
                         <div className="flex items-start justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="p-2.5 bg-neutral-50 border-[0.35px] border-neutral-950/10 text-black rounded-[10px]">
+                                <div className="p-2.5 bg-neutral-50 border-[0.35px] border-black/50 text-black rounded-[10px]">
                                     <Code size={18} />
                                 </div>
                                 <div className="space-y-0.5">
@@ -144,8 +144,8 @@ export default function AdminPixelPage() {
                             </div>
                              <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[10px] text-[10px] font-semibold ${
                                  isMetaConnected 
-                                     ? 'bg-emerald-50 text-emerald-700 border-[0.35px] border-emerald-500/10' 
-                                     : 'bg-neutral-50 text-neutral-500 border-[0.35px] border-neutral-950/10'
+                                     ? 'bg-emerald-50 text-emerald-700 border-[0.35px] border-black/50' 
+                                     : 'bg-neutral-50 text-neutral-500 border-[0.35px] border-black/50'
                               }`}>
                                 <span className={`h-1.5 w-1.5 rounded-full ${isMetaConnected ? 'bg-emerald-600' : 'bg-neutral-400'}`} />
                                 {isMetaConnected ? 'Connected' : 'Offline'}
@@ -155,7 +155,7 @@ export default function AdminPixelPage() {
                             <label className="block text-[10px] font-semibold text-gray-500 tracking-normal">Pixel ID</label>
                             <input
                                 type="text"
-                                className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3.5 py-2 bg-white text-gray-900 text-xs focus:ring-1 focus:ring-black focus:border-black font-semibold outline-none"
+                                className="w-full border-[0.35px] border-black/50 rounded-[10px] px-3.5 py-2 bg-white text-gray-900 text-xs focus:ring-1 focus:ring-black focus:border-black font-semibold outline-none"
                                 placeholder="Enter Meta Pixel ID..."
                                 value={metaPixelId}
                                 onChange={e => setMetaPixelId(e.target.value)}
@@ -164,10 +164,10 @@ export default function AdminPixelPage() {
                     </div>
 
                     {/* Google Analytics GA4 Card */}
-                    <div className="bg-white p-5 rounded-[10px] border-[0.35px] border-neutral-950/10 space-y-4 hover:bg-neutral-50/10 transition-all">
+                    <div className="bg-white p-5 rounded-[10px] border-[0.35px] border-black/50 space-y-4 hover:bg-neutral-50/10 transition-all">
                         <div className="flex items-start justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="p-2.5 bg-neutral-50 border-[0.35px] border-neutral-950/10 text-black rounded-[10px]">
+                                <div className="p-2.5 bg-neutral-50 border-[0.35px] border-black/50 text-black rounded-[10px]">
                                     <Code size={18} />
                                 </div>
                                 <div className="space-y-0.5">
@@ -177,8 +177,8 @@ export default function AdminPixelPage() {
                             </div>
                              <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[10px] text-[10px] font-semibold ${
                                  isGa4Connected 
-                                     ? 'bg-emerald-50 text-emerald-700 border-[0.35px] border-emerald-500/10' 
-                                     : 'bg-neutral-50 text-neutral-500 border-[0.35px] border-neutral-950/10'
+                                     ? 'bg-emerald-50 text-emerald-700 border-[0.35px] border-black/50' 
+                                     : 'bg-neutral-50 text-neutral-500 border-[0.35px] border-black/50'
                               }`}>
                                 <span className={`h-1.5 w-1.5 rounded-full ${isGa4Connected ? 'bg-emerald-600' : 'bg-neutral-400'}`} />
                                 {isGa4Connected ? 'Connected' : 'Offline'}
@@ -188,7 +188,7 @@ export default function AdminPixelPage() {
                             <label className="block text-[10px] font-semibold text-gray-500 tracking-normal">Measurement ID (G-XXXXXXXXXX)</label>
                             <input
                                 type="text"
-                                className="w-full border-[0.35px] border-neutral-950/10 rounded-[10px] px-3.5 py-2 bg-white text-gray-900 text-xs focus:ring-1 focus:ring-black focus:border-black font-semibold outline-none"
+                                className="w-full border-[0.35px] border-black/50 rounded-[10px] px-3.5 py-2 bg-white text-gray-900 text-xs focus:ring-1 focus:ring-black focus:border-black font-semibold outline-none"
                                 placeholder="Enter GA4 Measurement ID..."
                                 value={ga4Id}
                                 onChange={e => setGa4Id(e.target.value)}
@@ -197,7 +197,7 @@ export default function AdminPixelPage() {
                     </div>
 
                     {/* Simulator Trigger Buttons */}
-                    <div className="bg-white p-5 rounded-[10px] border-[0.35px] border-neutral-950/10 space-y-4">
+                    <div className="bg-white p-5 rounded-[10px] border-[0.35px] border-black/50 space-y-4">
                         <h4 className="font-semibold text-gray-900 text-sm flex items-center gap-1.5">
                             <Play size={14} className="text-black" />
                             Simulation Trigger Console
@@ -206,25 +206,25 @@ export default function AdminPixelPage() {
                         <div className="grid grid-cols-2 gap-3 pt-1">
                             <button 
                                 onClick={() => simulateEvent('PageView')} 
-                                className="py-2 px-3 bg-neutral-50 hover:bg-neutral-100 text-neutral-850 rounded-[10px] text-xs font-medium border-[0.35px] border-neutral-950/10 transition-colors flex items-center justify-center gap-1.5"
+                                className="py-2 px-3 bg-neutral-50 hover:bg-neutral-100 text-neutral-850 rounded-[10px] text-xs font-medium border-[0.35px] border-black/50 transition-colors flex items-center justify-center gap-1.5"
                             >
                                 PageView
                             </button>
                             <button 
                                 onClick={() => simulateEvent('AddToCart')} 
-                                className="py-2 px-3 bg-neutral-50 hover:bg-neutral-100 text-neutral-850 rounded-[10px] text-xs font-medium border-[0.35px] border-neutral-950/10 transition-colors flex items-center justify-center gap-1.5"
+                                className="py-2 px-3 bg-neutral-50 hover:bg-neutral-100 text-neutral-850 rounded-[10px] text-xs font-medium border-[0.35px] border-black/50 transition-colors flex items-center justify-center gap-1.5"
                             >
                                 AddToCart
                             </button>
                             <button 
                                 onClick={() => simulateEvent('InitiateCheckout')} 
-                                className="py-2 px-3 bg-neutral-50 hover:bg-neutral-100 text-neutral-850 rounded-[10px] text-xs font-medium border-[0.35px] border-neutral-950/10 transition-colors flex items-center justify-center gap-1.5"
+                                className="py-2 px-3 bg-neutral-50 hover:bg-neutral-100 text-neutral-850 rounded-[10px] text-xs font-medium border-[0.35px] border-black/50 transition-colors flex items-center justify-center gap-1.5"
                             >
                                 InitiateCheckout
                             </button>
                             <button 
                                 onClick={() => simulateEvent('Purchase')} 
-                                className="py-2 px-3 bg-black text-white hover:bg-neutral-900 rounded-[10px] text-xs font-medium transition-colors flex items-center justify-center gap-1.5 border-[0.35px] border-neutral-950/10"
+                                className="py-2 px-3 bg-black text-white hover:bg-neutral-900 rounded-[10px] text-xs font-medium transition-colors flex items-center justify-center gap-1.5 border-[0.35px] border-black/50"
                             >
                                 Purchase (Conversion)
                             </button>
@@ -249,7 +249,7 @@ export default function AdminPixelPage() {
                         )}
                     </div>
 
-                    <div className="bg-neutral-900 text-neutral-100 font-mono rounded-[10px] p-5 flex-1 min-h-[460px] max-h-[560px] overflow-y-auto border-[0.35px] border-neutral-950/10 space-y-4">
+                    <div className="bg-neutral-900 text-neutral-100 font-mono rounded-[10px] p-5 flex-1 min-h-[460px] max-h-[560px] overflow-y-auto border-[0.35px] border-black/50 space-y-4">
                         <div className="text-[10px] text-neutral-450 tracking-normal border-b-[0.35px] border-neutral-850/50 pb-3 flex justify-between items-center">
                             <span>Connection Logs</span>
                             <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 bg-emerald-500 rounded-full animate-ping" /> System Listening</span>
@@ -272,7 +272,7 @@ export default function AdminPixelPage() {
                                                 </span>
                                             </span>
                                         </div>
-                                        <pre className="text-[11px] text-neutral-300 bg-neutral-950/40 p-2.5 rounded-[10px] border-[0.35px] border-neutral-950/10 overflow-x-auto whitespace-pre-wrap leading-relaxed">
+                                        <pre className="text-[11px] text-neutral-300 bg-neutral-950/40 p-2.5 rounded-[10px] border-[0.35px] border-black/50 overflow-x-auto whitespace-pre-wrap leading-relaxed">
                                             {JSON.stringify(log.payload, null, 2)}
                                         </pre>
                                     </div>
@@ -284,7 +284,7 @@ export default function AdminPixelPage() {
             </div>
 
             {/* Tutorial / Guidelines Section */}
-            <div className="bg-neutral-50 border-[0.35px] border-neutral-950/10 rounded-[10px] p-6 space-y-4">
+            <div className="bg-neutral-50 border-[0.35px] border-black/50 rounded-[10px] p-6 space-y-4">
                 <div className="flex items-center gap-2">
                     <HelpCircle className="h-5 w-5 text-black" />
                     <h3 className="text-sm font-semibold text-gray-900">How It Works & Guidelines | Meta Pixel & GA4</h3>

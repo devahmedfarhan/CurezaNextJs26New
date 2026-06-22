@@ -43,7 +43,7 @@ export default function AdminSupportPage() {
                 {/* Right side: Multi-chat panels workspace */}
                 {openTickets.length > 0 ? (
                     <div className="flex-1 w-full space-y-4">
-                        <div className="flex items-center justify-between border-b-[0.35px] border-neutral-950/10 pb-3">
+                        <div className="flex items-center justify-between border-b-[0.35px] border-black/50 pb-3">
                             <span className="text-xs font-medium tracking-normal text-gray-500 flex items-center gap-1.5">
                                 <MessageSquare size={13} />
                                 Active Live Chats ({openTickets.length})
@@ -61,7 +61,7 @@ export default function AdminSupportPage() {
                             {openTickets.map((t) => (
                                 <div 
                                     key={t.id} 
-                                    className="relative bg-white rounded-[10px] border-[0.35px] border-neutral-950/10 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200"
+                                    className="relative bg-white rounded-[10px] border-[0.35px] border-black/50 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200"
                                 >
                                     {/* Overlay close button on the chat window */}
                                     <button
@@ -82,7 +82,7 @@ export default function AdminSupportPage() {
                         </div>
                     </div>
                 ) : (
-                    <div className="hidden lg:flex flex-1 min-h-[400px] border-[0.35px] border-dashed border-neutral-950/10 rounded-[10px] items-center justify-center text-center p-8 bg-neutral-50/10">
+                    <div className="hidden lg:flex flex-1 min-h-[400px] border-[0.35px] border-dashed border-black/50 rounded-[10px] items-center justify-center text-center p-8 bg-neutral-50/10">
                         <div className="space-y-2 max-w-sm">
                             <div className="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center text-gray-400 mx-auto">
                                 <AlertCircle size={20} />
@@ -98,7 +98,7 @@ export default function AdminSupportPage() {
             </div>
 
             {/* Tutorial & Guidelines Section */}
-            <div className="bg-neutral-50 border-[0.35px] border-neutral-950/10 rounded-[10px] p-6 space-y-4">
+            <div className="bg-neutral-50 border-[0.35px] border-black/50 rounded-[10px] p-6 space-y-4">
                 <div className="flex items-center gap-2">
                     <HelpCircle className="h-5 w-5 text-black" />
                     <h3 className="text-sm font-semibold text-gray-900">How It Works & Guidelines | Support Operations Hub</h3>
