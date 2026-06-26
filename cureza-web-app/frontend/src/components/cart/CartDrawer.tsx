@@ -9,6 +9,23 @@ import axios from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
 
+const formatCapitalize = (text: string) => {
+    if (!text) return '';
+    return text.replace(/[a-zA-Z]+/g, (match) => {
+        const upper = match.toUpperCase();
+        if (['CGST', 'SGST', 'IGST', 'UPI', 'ID', 'GST'].includes(upper)) {
+            return upper;
+        }
+        if (['GPAY', 'RUPAY', 'VISA', 'MASTERCARD'].includes(upper)) {
+            if (upper === 'GPAY') return 'GPay';
+            if (upper === 'RUPAY') return 'RuPay';
+            if (upper === 'VISA') return 'Visa';
+            if (upper === 'MASTERCARD') return 'Mastercard';
+        }
+        return match.charAt(0).toUpperCase() + match.slice(1).toLowerCase();
+    });
+};
+
 interface CartDrawerProps {
     isOpen: boolean;
     onClose: () => void;
@@ -144,15 +161,15 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     // Load visual settings dynamically with safe fallbacks
     const primaryColor = publicSettings?.cart_drawer_primary_color || '#052326';
     const transitionSpeed = publicSettings?.cart_drawer_animation_speed ? Number(publicSettings.cart_drawer_animation_speed) : 300;
-    const cartTitle = publicSettings?.cart_drawer_title || 'Your Cart';
-    const urgencyCopy = publicSettings?.cart_drawer_urgency_text || 'Get free items by meeting checkout milestones!';
+    const cartTitle = formatCapitalize(publicSettings?.cart_drawer_title || 'Your Cart');
+    const urgencyCopy = formatCapitalize(publicSettings?.cart_drawer_urgency_text || 'Get free items by meeting checkout milestones!');
     const logoUrl = publicSettings?.cart_drawer_logo_url || '';
-    const emptyText = publicSettings?.cart_drawer_empty_text || 'Your cart is empty';
-    const emptyCtaLabel = publicSettings?.cart_drawer_empty_cta_label || 'Continue Shopping';
-    const secureText = publicSettings?.cart_drawer_secure_text || '100% Safe & Secure Checkout';
-    const checkoutLabel = publicSettings?.cart_drawer_checkout_cta_label || 'Checkout';
-    const reviewsText = publicSettings?.cart_drawer_reviews_text || 'Trustified & Certified wellness products';
-    const upsellTitle = publicSettings?.cart_drawer_upsell_title || 'Best offers';
+    const emptyText = formatCapitalize(publicSettings?.cart_drawer_empty_text || 'Your cart is empty');
+    const emptyCtaLabel = formatCapitalize(publicSettings?.cart_drawer_empty_cta_label || 'Continue Shopping');
+    const secureText = formatCapitalize(publicSettings?.cart_drawer_secure_text || '100% Safe & Secure Checkout');
+    const checkoutLabel = formatCapitalize(publicSettings?.cart_drawer_checkout_cta_label || 'Checkout');
+    const reviewsText = formatCapitalize(publicSettings?.cart_drawer_reviews_text || 'Trustified & Certified wellness products');
+    const upsellTitle = formatCapitalize(publicSettings?.cart_drawer_upsell_title || 'Best offers');
     
     // Toggles
     const enableRewards = publicSettings?.cart_drawer_enable_rewards !== false;
@@ -195,9 +212,9 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         } else if (nextLockedSlab.discount_amount) {
             nextRewardLabel = `₹${nextLockedSlab.discount_amount} Cash Off 💰`;
         } else if (nextLockedSlab.gift_product) {
-            nextRewardLabel = `Free ${nextLockedSlab.gift_product.title} 🎁`;
+            nextRewardLabel = `Free ${formatCapitalize(nextLockedSlab.gift_product.title)} 🎁`;
         } else {
-            nextRewardLabel = nextLockedSlab.name;
+            nextRewardLabel = formatCapitalize(nextLockedSlab.name);
         }
     }
 
@@ -335,7 +352,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                                              
                                                              {/* Tooltip on hover */}
                                                              <div className="absolute bottom-6 left-0 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-[#052326] dark:bg-white text-white dark:text-[#052326] text-[8.5px] font-bold py-0.5 px-2 rounded shadow-lg whitespace-nowrap z-30 border border-[#052326]/10">
-                                                                 {slab.name} {slab.unlocked ? '(Unlocked)' : '(Locked)'}
+                                                                 {formatCapitalize(slab.name)} {slab.unlocked ? '(Unlocked)' : '(Locked)'}
                                                              </div>
 
                                                              <span className="text-[8.5px] font-bold text-[#052326]/40 dark:text-white/40 mt-5 absolute whitespace-nowrap -translate-x-1/2">
@@ -356,9 +373,9 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                                  } else if (slab.discount_amount) {
                                                      badgeLabel = `₹${slab.discount_amount} Off`;
                                                  } else if (slab.gift_product) {
-                                                     badgeLabel = slab.gift_product.title;
+                                                     badgeLabel = formatCapitalize(slab.gift_product.title);
                                                  } else {
-                                                     badgeLabel = slab.name;
+                                                     badgeLabel = formatCapitalize(slab.name);
                                                  }
 
                                                  return (
@@ -406,17 +423,17 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                                 <div>
                                                     <div className="flex justify-between items-start gap-1">
                                                         <h3 className="font-bold text-[12px] sm:text-[12.5px] text-[#052326] dark:text-[#EDE8E1] line-clamp-1 leading-tight capitalize">
-                                                            {item.title}
+                                                            {formatCapitalize(item.title)}
                                                         </h3>
                                                         <span className="font-bold text-[12px] sm:text-[12.5px] text-[#052326] dark:text-white shrink-0">
                                                             {item.is_gift ? 'FREE' : `₹${(item.price * item.quantity).toFixed(2)}`}
                                                         </span>
                                                     </div>
-                                                    <p className="text-[9px] text-[#052326]/60 dark:text-[#EDE8E1]/60 font-semibold tracking-wider capitalize mt-0.5">{item.brand}</p>
+                                                    <p className="text-[9px] text-[#052326]/60 dark:text-[#EDE8E1]/60 font-semibold tracking-wider capitalize mt-0.5">{formatCapitalize(item.brand)}</p>
                                                     
                                                     {item.patientDetails && (
                                                         <div className="mt-1.5 text-[8.5px] text-[#052326]/80 dark:text-[#EDE8E1]/80 bg-[#F2F2F2]/50 dark:bg-[#031416]/50 p-2 rounded-[12px] border border-[#052326]/8 dark:border-white/5 leading-tight capitalize">
-                                                            <p><span className="font-bold">Patient:</span> {item.patientDetails.patient_name} ({item.patientDetails.patient_gender})</p>
+                                                            <p><span className="font-bold">Patient:</span> {formatCapitalize(item.patientDetails.patient_name)} ({formatCapitalize(item.patientDetails.patient_gender)})</p>
                                                             <p><span className="font-bold">Doctor ID:</span> #{item.patientDetails.doctor_id}</p>
                                                         </div>
                                                     )}
@@ -501,7 +518,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                          {summary?.coupon_applied ? (
                                              <div className="flex justify-between items-center bg-[#052326]/5 dark:bg-[#EDE8E1]/5 p-3 rounded-[12px] border border-[#052326]/10 dark:border-[#EDE8E1]/10">
                                                  <div>
-                                                     <p className="text-[11px] font-bold text-[#052326] dark:text-[#EDE8E1] leading-none capitalize">Coupon: {summary.coupon_applied}</p>
+                                                     <p className="text-[11px] font-bold text-[#052326] dark:text-[#EDE8E1] leading-none capitalize">Coupon: {formatCapitalize(summary.coupon_applied)}</p>
                                                      <p className="text-[9px] text-[#052326] dark:text-[#F0C417] font-bold mt-1 capitalize">Saved ₹{discount.toFixed(2)}!</p>
                                                  </div>
                                                  <button onClick={removeCoupon} className="text-red-500 hover:bg-red-50 dark:hover:bg-red-955/20 p-1.5 rounded-[12px] transition active:scale-90">
@@ -555,8 +572,8 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                                                     className="flex items-center justify-between p-2.5 border border-dashed border-[#052326]/15 dark:border-white/15 hover:border-[#052326]/40 dark:hover:border-[#EDE8E1]/40 bg-[#F2F2F2]/30 dark:bg-[#031416]/30 rounded-[12px] cursor-pointer hover:bg-[#F2F2F2]/65 dark:hover:bg-[#031416]/50 transition active:scale-[0.99]"
                                                                 >
                                                                     <div className="flex flex-col text-left">
-                                                                        <span className="font-bold text-[10.5px] text-[#052326] dark:text-[#EDE8E1] tracking-wide capitalize">{coupon.code}</span>
-                                                                        <span className="text-[9px] text-[#052326]/50 dark:text-white/40 mt-0.5 capitalize">{coupon.description || 'Get discount on your purchase'}</span>
+                                                                        <span className="font-bold text-[10.5px] text-[#052326] dark:text-[#EDE8E1] tracking-wide capitalize">{formatCapitalize(coupon.code)}</span>
+                                                                        <span className="text-[9px] text-[#052326]/50 dark:text-white/40 mt-0.5 capitalize">{formatCapitalize(coupon.description || 'Get discount on your purchase')}</span>
                                                                     </div>
                                                                     <div className="flex items-center gap-1.5">
                                                                         <span className="text-[9px] text-[#052326] dark:text-[#F0C417] font-bold capitalize">{coupon.discount} OFF</span>
@@ -617,7 +634,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                                                 )}
                                                             </div>
                                                             <p className="text-[10px] font-semibold text-[#052326] dark:text-[#EDE8E1] line-clamp-1 mt-1.5 leading-tight capitalize">
-                                                                {product.title}
+                                                                {formatCapitalize(product.title)}
                                                             </p>
                                                             <p className="text-[10.5px] font-bold text-[#052326] dark:text-white mt-0.5">₹{product.price}</p>
                                                         </div>
@@ -703,7 +720,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                                  )}
                                                  <tr className="border-b border-[#052326]/10 dark:border-white/10">
                                                      <td className="p-2.5 font-medium text-[#052326]/80 dark:text-[#EDE8E1]/80 capitalize">
-                                                         {getTaxLabel()}
+                                                         {formatCapitalize(getTaxLabel())}
                                                      </td>
                                                      <td className="p-2.5 text-right font-bold text-[#052326] dark:text-white">₹{(summary?.total_tax || 0).toFixed(2)}</td>
                                                  </tr>
