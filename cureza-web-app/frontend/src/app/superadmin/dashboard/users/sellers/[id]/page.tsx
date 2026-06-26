@@ -177,7 +177,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                 </div>
                 <h3 className="text-lg font-bold text-gray-900">Seller Not Found</h3>
                 <p className="text-xs text-gray-500">The seller profile you are trying to access does not exist or has been removed.</p>
-                <Link href="/superadmin/dashboard/users/sellers" className="inline-flex h-10 items-center justify-center px-6 bg-gray-900 text-white text-xs font-bold uppercase rounded-xl hover:bg-gray-800 transition-all">
+                <Link href="/superadmin/dashboard/users/sellers" className="inline-flex h-10 items-center justify-center px-6 bg-gray-900 text-white text-xs font-bold uppercase rounded-[10px] hover:bg-gray-800 transition-all">
                     Go Back to Listings
                 </Link>
             </div>
@@ -402,15 +402,15 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
     } : null;
 
     return (
-        <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-24 font-sans selection:bg-emerald-500 selection:text-white">
+        <div className="w-full space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-24 font-sans selection:bg-emerald-500 selection:text-white">
             {/* Header / Command Center */}
-            <div className="sticky top-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-b-[0.5px] border-black/50 dark:border-gray-800 -mx-8 px-8 py-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-none">
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border-black/50 border-[0.5px] dark:border-neutral-800 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-none">
                 <div className="flex items-center gap-4">
                     <Link
                         href="/superadmin/dashboard/users/sellers"
-                        className="p-3 bg-gray-50 dark:bg-gray-800 text-gray-500 hover:bg-emerald-600 hover:text-white rounded-2xl transition-all shadow-inner border-[0.5px] border-black/50 dark:border-gray-700"
+                        className="p-2.5 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-[0.5px] border-black/10 dark:border-neutral-700 rounded-[10px] transition-all"
                     >
-                        <ArrowLeft size={16} />
+                        <ArrowLeft size={16} className="text-black dark:text-white" />
                     </Link>
                     <div>
                         <div className="flex items-center gap-3">
@@ -446,13 +446,13 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                         <>
                             <button
                                 onClick={() => setIsEditing(false)}
-                                className="flex items-center gap-2 px-5 py-3 bg-gray-100 hover:bg-gray-250 text-gray-600 rounded-2xl transition-all font-bold text-xs uppercase tracking-wider"
+                                className="flex items-center gap-2 px-5 py-3 bg-gray-100 hover:bg-gray-250 text-gray-655 rounded-[10px] transition-all font-bold text-xs uppercase tracking-wider border-[0.5px] border-black/10"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={handleSaveEdits}
-                                className="flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-2xl hover:bg-emerald-700 transition-all font-bold text-xs uppercase tracking-wider shadow-none shadow-emerald-100 border-black/50 border-[0.5px]"
+                                className="flex items-center gap-2 px-6 py-3 bg-neutral-900 text-white rounded-[10px] hover:bg-neutral-800 transition-all font-bold text-xs uppercase tracking-wider shadow-none border-black/50 border-[0.5px]"
                             >
                                 <Check size={14} strokeWidth={3} />
                                 Save Changes
@@ -462,7 +462,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                         <>
                             <button
                                 onClick={() => setIsEditing(true)}
-                                className="flex items-center gap-2 px-5 py-3 bg-white dark:bg-gray-800 border-[0.5px] border-black/50 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all font-bold text-xs uppercase tracking-wider shadow-none"
+                                className="flex items-center gap-2 px-5 py-3 bg-white dark:bg-gray-800 border-[0.5px] border-black/50 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-[10px] hover:bg-gray-50 dark:hover:bg-gray-700 transition-all font-bold text-xs uppercase tracking-wider shadow-none"
                             >
                                 <Edit3 size={14} />
                                 Edit Account info
@@ -471,7 +471,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                             {profile.status !== 'approved' && (
                                 <button
                                     onClick={handleApproveSeller}
-                                    className="flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-2xl hover:bg-emerald-700 shadow-none transition-all font-bold text-xs uppercase tracking-wider hover:-translate-y-0.5 border-black/50 border-[0.5px]"
+                                    className="flex items-center gap-2 px-6 py-3 bg-neutral-900 hover:bg-neutral-850 text-white rounded-[10px] shadow-none transition-all font-bold text-xs uppercase tracking-wider border-black/50 border-[0.5px]"
                                 >
                                     <CheckCircle size={14} />
                                     Approve Vendor
@@ -481,7 +481,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                             {profile.status !== 'rejected' && (
                                 <button
                                     onClick={handleRejectSeller}
-                                    className="flex items-center gap-2 px-5 py-3 bg-red-50 text-red-600 rounded-2xl hover:bg-red-100 transition-all font-bold text-xs uppercase tracking-wider"
+                                    className="flex items-center gap-2 px-5 py-3 bg-red-50 text-red-650 rounded-[10px] hover:bg-red-100 transition-all font-bold text-xs uppercase tracking-wider border-[0.5px] border-black/10"
                                 >
                                     <XCircle size={14} />
                                     Reject Vendor
@@ -655,7 +655,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                     <div className="flex flex-wrap gap-2">
                                         {profile.product_categories && profile.product_categories.length > 0 ? (
                                             profile.product_categories.map((cat: string) => (
-                                                <span key={cat} className="px-3 py-1 rounded-xl bg-emerald-50 text-emerald-700 text-[10px] font-extrabold uppercase tracking-wide border-[0.5px] border-black/50">
+                                                <span key={cat} className="px-3 py-1 rounded-[10px] bg-emerald-50 text-emerald-700 text-[10px] font-extrabold uppercase tracking-wide border-[0.5px] border-black/50">
                                                     {cat}
                                                 </span>
                                             ))
@@ -669,7 +669,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                     <div className="flex flex-wrap gap-2">
                                         {profile.concerns_catered && profile.concerns_catered.length > 0 ? (
                                             profile.concerns_catered.map((con: string) => (
-                                                <span key={con} className="px-3 py-1 rounded-xl bg-blue-50 text-blue-700 text-[10px] font-extrabold uppercase tracking-wide border-[0.5px] border-black/50">
+                                                <span key={con} className="px-3 py-1 rounded-[10px] bg-blue-50 text-blue-700 text-[10px] font-extrabold uppercase tracking-wide border-[0.5px] border-black/50">
                                                     {con}
                                                 </span>
                                             ))
@@ -753,7 +753,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                     {/* Banner Preview */}
                                     <div className="md:col-span-2 space-y-2">
                                         <span className="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Digital Storefront (Banner)</span>
-                                        <div className="relative w-full aspect-[21/9] bg-gray-50 dark:bg-gray-800 rounded-3xl overflow-hidden border-[0.5px] border-black/50 dark:border-gray-700">
+                                        <div className="relative w-full aspect-[21/9] bg-gray-50 dark:bg-gray-800 rounded-[10px] overflow-hidden border-[0.5px] border-black/50 dark:border-gray-700">
                                             {editForm?.brand?.banner_path || brand.banner_path ? (
                                                 <img 
                                                     src={editForm?.brand?.banner_path ? (editForm.brand.banner_path.startsWith('http') ? editForm.brand.banner_path : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'}${editForm.brand.banner_path}`) : (brand.banner_path.startsWith('http') ? brand.banner_path : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'}${brand.banner_path}`)} 
@@ -768,7 +768,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                     {/* Logo Preview */}
                                     <div className="space-y-2">
                                         <span className="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Identity Mark (Logo)</span>
-                                        <div className="w-28 h-28 bg-gray-50 dark:bg-gray-800 rounded-3xl overflow-hidden border-[0.5px] border-black/50 dark:border-gray-700 flex items-center justify-center">
+                                        <div className="w-28 h-28 bg-gray-50 dark:bg-gray-800 rounded-[10px] overflow-hidden border-[0.5px] border-black/50 dark:border-gray-700 flex items-center justify-center">
                                             {editForm?.brand?.logo || brand.logo ? (
                                                 <img 
                                                     src={editForm?.brand?.logo ? (editForm.brand.logo.startsWith('http') ? editForm.brand.logo : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'}${editForm.brand.logo}`) : (brand.logo.startsWith('http') ? brand.logo : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'}${brand.logo}`)} 
@@ -802,10 +802,10 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                             <textarea
                                                 value={editForm?.brand?.description || ''}
                                                 onChange={(e) => setEditForm({ ...editForm, brand: { ...editForm.brand, description: e.target.value } })}
-                                                className="w-full text-xs font-medium bg-white dark:bg-gray-800 border-[0.5px] rounded-2xl p-4 border-black/50 dark:border-gray-700 focus:border-emerald-500 focus:outline-none text-gray-900 dark:text-white transition-colors font-sans resize-none h-32 leading-relaxed"
+                                                className="w-full text-xs font-medium bg-white dark:bg-gray-800 border-[0.5px] rounded-[10px] p-4 border-black/50 dark:border-gray-700 focus:border-emerald-500 focus:outline-none text-gray-900 dark:text-white transition-colors font-sans resize-none h-32 leading-relaxed"
                                             />
                                         ) : (
-                                            <div className="text-xs font-medium text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-800/40 p-4 rounded-2xl leading-relaxed border-[0.5px] border-black/50 dark:border-gray-800" dangerouslySetInnerHTML={{ __html: brand.description || 'Not Provided' }} />
+                                            <div className="text-xs font-medium text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-800/40 p-4 rounded-[10px] leading-relaxed border-[0.5px] border-black/50 dark:border-gray-800" dangerouslySetInnerHTML={{ __html: brand.description || 'Not Provided' }} />
                                         )}
                                     </div>
                                 </div>
@@ -835,10 +835,10 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                                 <textarea
                                                     value={editForm?.brand?.meta_description || ''}
                                                     onChange={(e) => setEditForm({ ...editForm, brand: { ...editForm.brand, meta_description: e.target.value } })}
-                                                    className="w-full text-xs font-medium bg-white dark:bg-gray-800 border-[0.5px] rounded-2xl p-4 border-black/50 dark:border-gray-700 focus:border-emerald-500 focus:outline-none text-gray-900 dark:text-white transition-colors font-sans resize-none h-20 leading-relaxed"
+                                                    className="w-full text-xs font-medium bg-white dark:bg-gray-800 border-[0.5px] rounded-[10px] p-4 border-black/50 dark:border-gray-700 focus:border-emerald-500 focus:outline-none text-gray-900 dark:text-white transition-colors font-sans resize-none h-20 leading-relaxed"
                                                 />
                                             ) : (
-                                                <div className="text-xs font-medium text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-800/40 p-4 rounded-2xl leading-relaxed border-[0.5px] border-black/50 dark:border-gray-800">
+                                                <div className="text-xs font-medium text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-800/40 p-4 rounded-[10px] leading-relaxed border-[0.5px] border-black/50 dark:border-gray-800">
                                                     {brand.meta_description || 'Not Provided'}
                                                 </div>
                                             )}
@@ -854,7 +854,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                         {isEditing ? (
                                             <div className="max-h-48 overflow-y-auto space-y-2 pr-2">
                                                 {allCategories.map(cat => (
-                                                    <label key={cat.id} className="flex items-center gap-3 px-3 py-2 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100/50 cursor-pointer border-[0.5px] border-black/50 dark:border-gray-700 transition-all">
+                                                    <label key={cat.id} className="flex items-center gap-3 px-3 py-2 rounded-[10px] bg-gray-50 dark:bg-gray-800 hover:bg-gray-100/50 cursor-pointer border-[0.5px] border-black/50 dark:border-gray-700 transition-all">
                                                         <input
                                                             type="checkbox"
                                                             checked={editForm?.brand?.categories?.includes(cat.id)}
@@ -875,7 +875,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                             <div className="flex flex-wrap gap-2">
                                                 {brand.categories && brand.categories.length > 0 ? (
                                                     brand.categories.map((cat: any) => (
-                                                        <span key={cat.id} className="px-3 py-1 rounded-xl bg-emerald-50 text-emerald-700 text-[10px] font-extrabold uppercase tracking-wide border-[0.5px] border-black/50">
+                                                        <span key={cat.id} className="px-3 py-1 rounded-[10px] bg-emerald-50 text-emerald-700 text-[10px] font-extrabold uppercase tracking-wide border-[0.5px] border-black/50">
                                                             {cat.name}
                                                         </span>
                                                     ))
@@ -892,7 +892,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                         {isEditing ? (
                                             <div className="max-h-48 overflow-y-auto space-y-2 pr-2">
                                                 {allConcerns.map(concern => (
-                                                    <label key={concern.id} className="flex items-center gap-3 px-3 py-2 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100/50 cursor-pointer border-[0.5px] border-black/50 dark:border-gray-700 transition-all">
+                                                    <label key={concern.id} className="flex items-center gap-3 px-3 py-2 rounded-[10px] bg-gray-50 dark:bg-gray-800 hover:bg-gray-100/50 cursor-pointer border-[0.5px] border-black/50 dark:border-gray-700 transition-all">
                                                         <input
                                                             type="checkbox"
                                                             checked={editForm?.brand?.concerns?.includes(concern.id)}
@@ -913,7 +913,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                             <div className="flex flex-wrap gap-2">
                                                 {brand.concerns && brand.concerns.length > 0 ? (
                                                     brand.concerns.map((concern: any) => (
-                                                        <span key={concern.id} className="px-3 py-1 rounded-xl bg-blue-50 text-blue-700 text-[10px] font-extrabold uppercase tracking-wide border-[0.5px] border-black/50">
+                                                        <span key={concern.id} className="px-3 py-1 rounded-[10px] bg-blue-50 text-blue-700 text-[10px] font-extrabold uppercase tracking-wide border-[0.5px] border-black/50">
                                                             {concern.name}
                                                         </span>
                                                     ))
@@ -942,7 +942,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                                         }
                                                     });
                                                 }}
-                                                className="px-3 py-1.5 bg-gray-900 text-white rounded-xl text-[10px] font-bold uppercase tracking-wider hover:bg-black transition-colors"
+                                                className="px-3 py-1.5 bg-gray-900 text-white rounded-[10px] text-[10px] font-bold uppercase tracking-wider hover:bg-black transition-colors"
                                             >
                                                 + Add FAQ
                                             </button>
@@ -955,7 +955,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                                 <p className="text-xs text-gray-400 italic">No FAQs Configured</p>
                                             ) : (
                                                 (editForm?.brand?.faqs || []).map((faq: any, idx: number) => (
-                                                    <div key={idx} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border-[0.5px] border-black/50 dark:border-gray-700 space-y-2 relative">
+                                                    <div key={idx} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-700 space-y-2 relative">
                                                         <button
                                                             type="button"
                                                             onClick={() => {
@@ -982,7 +982,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                                                     currentFaqs[idx].question = e.target.value;
                                                                     setEditForm({ ...editForm, brand: { ...editForm.brand, faqs: currentFaqs } });
                                                                 }}
-                                                                className="w-full h-10 px-3 rounded-xl bg-white dark:bg-gray-900 border-[0.5px] border-black/50 dark:border-gray-700 text-xs font-bold focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none"
+                                                                className="w-full h-10 px-3 rounded-[10px] bg-white dark:bg-gray-900 border-[0.5px] border-black/50 dark:border-gray-700 text-xs font-bold focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none"
                                                             />
                                                         </div>
                                                         <div className="space-y-1">
@@ -994,7 +994,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                                                     currentFaqs[idx].answer = e.target.value;
                                                                     setEditForm({ ...editForm, brand: { ...editForm.brand, faqs: currentFaqs } });
                                                                 }}
-                                                                className="w-full p-3 h-16 rounded-xl bg-white dark:bg-gray-900 border-[0.5px] border-black/50 dark:border-gray-700 text-xs font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none resize-none leading-relaxed"
+                                                                className="w-full p-3 h-16 rounded-[10px] bg-white dark:bg-gray-900 border-[0.5px] border-black/50 dark:border-gray-700 text-xs font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none resize-none leading-relaxed"
                                                             />
                                                         </div>
                                                     </div>
@@ -1005,7 +1005,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                                 <span className="text-xs text-gray-400 italic">No FAQs Configured</span>
                                             ) : (
                                                 (brand.faqs || []).map((faq: any, idx: number) => (
-                                                    <div key={idx} className="p-4 bg-gray-50/50 dark:bg-gray-800/20 rounded-2xl border-[0.5px] border-black/50 dark:border-gray-800 space-y-1">
+                                                    <div key={idx} className="p-4 bg-gray-50/50 dark:bg-gray-800/20 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 space-y-1 font-sans">
                                                         <p className="text-xs font-bold text-gray-900 dark:text-white">Q: {faq.question}</p>
                                                         <p className="text-xs text-gray-650 dark:text-gray-400 pl-4">A: {faq.answer}</p>
                                                     </div>
@@ -1020,17 +1020,16 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                 </div>
 
                 {/* Right Dossier Cards: Review Panel */}
-                <div className="space-y-8">
-                    {/* Compliance resubmission manager card */}
-                    <div className="bg-white dark:bg-gray-900 rounded-3xl border-[0.5px] border-black/50 dark:border-gray-800 shadow-none p-6 space-y-6">
+                <div className="space-y-8">                    {/* Compliance resubmission manager card */}
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 shadow-none p-6 space-y-6">
                         <h3 className="font-extrabold text-gray-900 dark:text-white flex items-center gap-2 border-b-[0.5px] border-black/50 pb-3 text-sm">
                             <ShieldCheck size={18} className="text-emerald-600" />
                             Compliance Review Panel
                         </h3>
                         
                         <div className="space-y-6">
-                            <div className="p-4 bg-amber-50/50 border-[0.5px] border-black/50 rounded-2xl flex items-start gap-3">
-                                <AlertTriangle size={16} className="text-amber-600 shrink-0 mt-0.5" />
+                            <div className="p-4 bg-amber-50/50 border-[0.5px] border-black/50 rounded-[10px] flex items-start gap-3">
+                                <AlertTriangle size={16} className="text-amber-605 shrink-0 mt-0.5" />
                                 <div className="text-[11px] font-semibold text-amber-800 leading-normal">
                                     Enabling resubmission allows the seller to modify their onboarding details and re-upload invalid files on their registration flow step 3.
                                 </div>
@@ -1057,7 +1056,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                             showToast('Failed to update control', 'error');
                                         }
                                     }}
-                                    className={`px-3 py-1.5 rounded-xl font-extrabold text-[10px] uppercase tracking-wider transition-all border-[0.5px] ${
+                                    className={`px-3 py-1.5 rounded-[10px] font-extrabold text-[10px] uppercase tracking-wider transition-all border-[0.5px] ${
                                         profile.resubmit_allowed
                                             ? 'bg-emerald-100 text-emerald-800 border-black/50'
                                             : 'bg-gray-50 text-gray-600 border-black/50 dark:bg-gray-800 dark:text-gray-300'
@@ -1079,13 +1078,13 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                         }
                                     })}
                                     placeholder="Click Full Edit above to write feedback on the overall application discrepancy (e.g. GST matches company type, bank statement needs signature)..."
-                                    className="w-full h-28 p-3 rounded-2xl border-[0.5px] border-black/50 dark:border-gray-700 dark:bg-gray-800 text-xs focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all disabled:bg-gray-50/50 leading-relaxed font-medium"
+                                    className="w-full h-28 p-3 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-700 dark:bg-gray-800 text-xs focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all disabled:bg-gray-50/50 leading-relaxed font-medium"
                                 />
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-gray-900 rounded-3xl border-[0.5px] border-black/50 dark:border-gray-800 shadow-none overflow-hidden">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 shadow-none overflow-hidden">
                         <div className="bg-gray-50/50 dark:bg-gray-800/50 px-6 py-4 border-b-[0.5px] border-black/50 dark:border-gray-800">
                             <h3 className="font-bold text-gray-900 dark:text-white flex items-center gap-2 text-xs">
                                 <Clock size={16} className="text-emerald-600" />
@@ -1099,7 +1098,7 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                         </div>
                     </div>
 
-                    <div className="bg-emerald-50/50 dark:bg-emerald-950/10 rounded-3xl p-6 border-[0.5px] border-black/50 dark:border-emerald-900/30">
+                    <div className="bg-emerald-50/50 dark:bg-emerald-950/10 rounded-[10px] p-6 border-[0.5px] border-black/50 dark:border-emerald-900/30">
                         <h3 className="font-bold text-emerald-800 dark:text-emerald-400 mb-2 flex items-center gap-2 text-xs">
                             <ShieldCheck size={16} />
                             Platform Service SLA
@@ -1175,15 +1174,13 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                         </div>
                     );
                 })}
-            </div>
-
-            {/* Rejection Modal */}
+            </div>            {/* Rejection Modal */}
             {rejectionModal.show && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-300">
-                    <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-none w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-300 border-black/50 border-[0.5px]">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] shadow-none w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-300 border-black/50 border-[0.5px]">
                         <div className="p-8 space-y-6">
-                            <div className="flex items-center gap-3 text-red-600">
-                                <div className="p-3 bg-red-100 rounded-2xl">
+                            <div className="flex items-center gap-3 text-red-650">
+                                <div className="p-3 bg-red-105 rounded-[10px]">
                                     <AlertTriangle size={24} />
                                 </div>
                                 <h3 className="text-xl font-black">Reject {rejectionModal.section} Update</h3>
@@ -1195,20 +1192,20 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
                                     value={rejectionReason}
                                     onChange={(e) => setRejectionReason(e.target.value)}
                                     placeholder="Explain why this request is being rejected..."
-                                    className="w-full h-32 p-4 rounded-2xl border-[0.5px] border-black/50 dark:border-gray-700 dark:bg-gray-800 text-sm focus:ring-4 focus:ring-red-100 outline-none transition-all placeholder:text-gray-400"
+                                    className="w-full h-32 p-4 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-700 dark:bg-gray-800 text-sm focus:ring-4 focus:ring-red-100 outline-none transition-all placeholder:text-gray-400"
                                 />
                             </div>
 
                             <div className="flex gap-3 pt-2">
                                 <button
                                     onClick={() => setRejectionModal({ show: false, requestId: null, section: '' })}
-                                    className="flex-1 px-6 py-3.5 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-2xl font-bold hover:bg-gray-200 transition-all"
+                                    className="flex-1 px-6 py-3.5 bg-gray-100 dark:bg-gray-800 text-gray-650 dark:text-gray-400 rounded-[10px] font-bold hover:bg-gray-200 transition-all border-[0.5px] border-black/10"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleRejectRequest}
-                                    className="flex-1 px-6 py-3.5 bg-red-600 text-white rounded-2xl font-bold hover:bg-red-700 shadow-none shadow-red-200 transition-all hover:-translate-y-0.5 border-black/50 border-[0.5px]"
+                                    className="flex-1 px-6 py-3.5 bg-red-600 text-white rounded-[10px] font-bold hover:bg-red-750 shadow-none transition-all border-black/50 border-[0.5px]"
                                 >
                                     Confirm Rejection
                                 </button>
@@ -1225,10 +1222,10 @@ export default function AdminSellerDetailPage({ params }: { params: Promise<{ id
 
 function DetailSection({ title, icon: Icon, children, pending, onApprove, onReject }: any) {
     return (
-        <div className="bg-white dark:bg-gray-900 rounded-3xl border-[0.5px] border-black/50 dark:border-gray-800 shadow-none overflow-hidden group hover:border-gray-200/60 dark:hover:border-gray-700 transition-all">
+        <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 shadow-none overflow-hidden group hover:border-gray-200/60 dark:hover:border-gray-700 transition-all">
             <div className="bg-gray-50/50 dark:bg-gray-800/50 px-8 py-5 border-b-[0.5px] border-black/50 dark:border-gray-800 flex justify-between items-center">
                 <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-white dark:bg-gray-900 rounded-xl shadow-none border-[0.5px] border-black/50 dark:border-gray-800 group-hover:scale-110 transition-transform">
+                    <div className="p-2.5 bg-white dark:bg-gray-900 rounded-[10px] shadow-none border-[0.5px] border-black/50 dark:border-gray-800 group-hover:scale-110 transition-transform">
                         <Icon size={18} className="text-emerald-600" />
                     </div>
                     <h3 className="font-extrabold text-gray-900 dark:text-white tracking-tight">{title}</h3>
@@ -1242,7 +1239,7 @@ function DetailSection({ title, icon: Icon, children, pending, onApprove, onReje
                 <div className="bg-yellow-50/50 dark:bg-yellow-900/10 border-t-[0.5px] border-black/50 dark:border-yellow-900/30 p-8 space-y-6">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-yellow-400 text-white rounded-xl animate-bounce">
+                            <div className="p-2 bg-yellow-405 text-white rounded-[10px] animate-bounce">
                                 <Clock size={18} />
                             </div>
                             <div>
@@ -1253,13 +1250,13 @@ function DetailSection({ title, icon: Icon, children, pending, onApprove, onReje
                         <div className="flex gap-2">
                             <button
                                 onClick={() => onReject(pending.id)}
-                                className="px-4 py-2 bg-red-600 text-white rounded-xl text-xs font-bold hover:bg-red-700 transition-all shadow-none shadow-red-200 border-black/50 border-[0.5px]"
+                                className="px-4 py-2 bg-red-650 text-white rounded-[10px] text-xs font-bold hover:bg-red-700 transition-all shadow-none border-black/50 border-[0.5px]"
                             >
                                 Reject
                             </button>
                             <button
                                 onClick={() => onApprove(pending.id)}
-                                className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 transition-all shadow-none shadow-emerald-250 flex items-center gap-2 border-black/50 border-[0.5px]"
+                                className="px-4 py-2 bg-neutral-900 text-white rounded-[10px] text-xs font-bold hover:bg-neutral-800 transition-all shadow-none flex items-center gap-2 border-black/50 border-[0.5px]"
                             >
                                 <CheckCircle size={14} />
                                 Approve Changes
@@ -1271,7 +1268,7 @@ function DetailSection({ title, icon: Icon, children, pending, onApprove, onReje
                         {Object.entries(pending.new_data).map(([key, val]: any) => {
                             if (pending.old_data?.[key] === val) return null;
                             return (
-                                <div key={key} className="bg-white/80 dark:bg-gray-900/50 p-4 rounded-2xl border-[0.5px] border-black/50 dark:border-yellow-900/30">
+                                <div key={key} className="bg-white/80 dark:bg-gray-900/50 p-4 rounded-[10px] border-[0.5px] border-black/50 dark:border-yellow-900/30">
                                     <p className="text-[10px] font-black text-yellow-600 uppercase mb-1">{key.replace(/_/g, ' ')}</p>
                                     <div className="flex items-center gap-2">
                                         <span className="text-xs text-gray-400 line-through truncate max-w-[100px]">{pending.old_data?.[key] || '(empty)'}</span>
@@ -1418,7 +1415,7 @@ function KYCCard({ docType, sellerId, profile, onUpdate, showToast, labelOverrid
     }
 
     return (
-        <div className="bg-white dark:bg-gray-900 rounded-3xl border-[0.5px] border-black/50 dark:border-gray-800 shadow-none overflow-hidden flex flex-col group relative hover:border-gray-200/60 transition-all">
+        <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 shadow-none overflow-hidden flex flex-col group relative hover:border-gray-200/60 transition-all">
             <div className="p-4 border-b-[0.5px] border-black/50 flex justify-between items-start bg-gray-50/20">
                 <div className="min-w-0 flex-1">
                     <h4 className="font-extrabold text-gray-900 dark:text-white uppercase text-[9px] tracking-widest truncate" title={label}>{label}</h4>
@@ -1427,8 +1424,8 @@ function KYCCard({ docType, sellerId, profile, onUpdate, showToast, labelOverrid
                             status === 'approved' 
                                 ? 'bg-emerald-100 text-emerald-800' 
                                 : status === 'rejected' 
-                                    ? 'bg-red-100 text-red-800' 
-                                    : 'bg-yellow-100 text-yellow-800'
+                                    ? 'bg-red-105 text-red-800' 
+                                    : 'bg-yellow-105 text-yellow-800'
                         }`}>
                             {status}
                         </span>
@@ -1438,14 +1435,14 @@ function KYCCard({ docType, sellerId, profile, onUpdate, showToast, labelOverrid
                     {imagePath && (
                         <button
                             onClick={handleDelete}
-                            className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                            className="p-1 text-gray-400 hover:text-red-650 hover:bg-red-50 rounded-[10px] transition-all"
                             title="Delete Document"
                         >
                             <Trash2 size={12} />
                         </button>
                     )}
                     {status !== 'approved' && (
-                        <button onClick={() => updateStatus('approved')} className="p-1 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-600 hover:text-white transition-all shadow-none border-black/50 border-[0.5px]" title="Approve">
+                        <button onClick={() => updateStatus('approved')} className="p-1 bg-emerald-50 text-emerald-600 rounded-[10px] hover:bg-emerald-605 hover:text-white transition-all shadow-none border-black/50 border-[0.5px]" title="Approve">
                             <CheckCircle size={12} />
                         </button>
                     )}
@@ -1453,7 +1450,7 @@ function KYCCard({ docType, sellerId, profile, onUpdate, showToast, labelOverrid
             </div>
 
             <div className="p-4 flex-1 flex flex-col space-y-3">
-                <div className="aspect-[4/3] bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-center justify-center overflow-hidden border-[0.5px] border-black/50 dark:border-gray-700 relative group/view shrink-0">
+                <div className="aspect-[4/3] bg-gray-50 dark:bg-gray-800 rounded-[10px] flex items-center justify-center overflow-hidden border-[0.5px] border-black/50 dark:border-gray-700 relative group/view shrink-0">
                     {imagePath ? (
                         <>
                             {imagePath.toLowerCase().endsWith('.pdf') ? (
@@ -1491,7 +1488,7 @@ function KYCCard({ docType, sellerId, profile, onUpdate, showToast, labelOverrid
                 </div>
 
                 {status === 'rejected' && documentReason && (
-                    <div className="p-2.5 rounded-xl bg-amber-50 border-[0.5px] border-black/50 text-[10px] text-amber-800 font-bold leading-normal font-sans">
+                    <div className="p-2.5 rounded-[10px] bg-amber-50 border-[0.5px] border-black/50 text-[10px] text-amber-800 font-bold leading-normal font-sans">
                         <p className="uppercase text-[8px] text-amber-500 mb-0.5 font-extrabold tracking-wider">Rejection Reason:</p>
                         {documentReason}
                     </div>
@@ -1503,18 +1500,18 @@ function KYCCard({ docType, sellerId, profile, onUpdate, showToast, labelOverrid
                             value={rejectReasonText}
                             onChange={(e) => setRejectReasonText(e.target.value)}
                             placeholder="State reason for rejection..."
-                            className="w-full p-2 h-14 rounded-xl border-[0.5px] border-black/50 bg-white text-[10px] font-bold focus:ring-2 focus:ring-red-150 focus:border-red-500 outline-none transition-all placeholder:text-gray-400 leading-normal"
+                            className="w-full p-2 h-14 rounded-[10px] border-[0.5px] border-black/50 bg-white text-[10px] font-bold focus:ring-2 focus:ring-red-150 focus:border-red-500 outline-none transition-all placeholder:text-gray-400 leading-normal"
                         />
                         <div className="flex gap-2">
                             <button
                                 onClick={() => setShowRejectInput(false)}
-                                className="flex-1 py-1 text-[9px] font-bold text-gray-500 bg-gray-50 hover:bg-gray-100 rounded-lg transition-all"
+                                className="flex-1 py-1 text-[9px] font-bold text-gray-500 bg-gray-50 hover:bg-gray-100 rounded-[10px] transition-all"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={() => updateStatus('rejected', rejectReasonText)}
-                                className="flex-1 py-1 text-[9px] font-black text-white bg-red-650 hover:bg-red-700 rounded-lg transition-all shadow-none border-black/50 border-[0.5px]"
+                                className="flex-1 py-1 text-[9px] font-black text-white bg-red-650 hover:bg-red-750 rounded-[10px] transition-all shadow-none border-black/50 border-[0.5px]"
                             >
                                 Reject
                             </button>
@@ -1524,7 +1521,7 @@ function KYCCard({ docType, sellerId, profile, onUpdate, showToast, labelOverrid
                     status !== 'rejected' && (
                         <button
                             onClick={() => setShowRejectInput(true)}
-                            className="mt-2 w-full py-1.5 text-[8px] font-black uppercase tracking-widest text-red-600 border-[0.5px] border-black/50 rounded-xl hover:bg-red-50 transition-all shrink-0"
+                            className="mt-2 w-full py-1.5 text-[8px] font-black uppercase tracking-widest text-red-650 border-[0.5px] border-black/50 rounded-[10px] hover:bg-red-50 transition-all shrink-0"
                         >
                             Mark as Invalid
                         </button>
@@ -1547,8 +1544,8 @@ function StatusCard({ label, value, status, icon: Icon }: any) {
     };
 
     return (
-        <div className={`p-5 rounded-3xl border-[0.5px] ${colors[status as keyof typeof colors]} flex items-center gap-4 shadow-none transition-all duration-300 bg-white border-black/50 border-[0.5px]`}>
-            <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-2xl shadow-inner border-[0.5px] border-black/50 dark:border-gray-800 shrink-0">
+        <div className={`p-5 rounded-[10px] border-[0.5px] ${colors[status as keyof typeof colors]} flex items-center gap-4 shadow-none transition-all duration-300 bg-white border-black/50 border-[0.5px]`}>
+            <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-[10px] shadow-inner border-[0.5px] border-black/50 dark:border-gray-800 shrink-0">
                 <Icon size={18} />
             </div>
             <div>
@@ -1593,7 +1590,7 @@ function ActivityItem({ label, value, isBadge }: any) {
     return (
         <div className="flex justify-between items-center py-1">
             <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{label}</span>
-            <span className={`font-bold ${isBadge ? 'bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full text-[9px] font-extrabold border-[0.5px] border-black/50' : 'text-xs text-gray-900 dark:text-gray-100'}`}>
+            <span className={`font-bold ${isBadge ? 'bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-[10px] text-[9px] font-extrabold border-[0.5px] border-black/50' : 'text-xs text-gray-900 dark:text-gray-100'}`}>
                 {value}
             </span>
         </div>
