@@ -396,11 +396,17 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
             if (startDate) params.append('start_date', startDate);
             if (endDate) params.append('end_date', endDate);
 
-            const [overviewRes, sellersRes, doctorsRes, dashboardRes] = await Promise.all([
+            const orderParams = new URLSearchParams();
+            orderParams.append('per_page', '-1');
+            if (startDate) orderParams.append('from_date', startDate);
+            if (endDate) orderParams.append('to_date', endDate);
+
+            const [overviewRes, sellersRes, doctorsRes, dashboardRes, ordersRes] = await Promise.all([
                 api.get(`/admin/finance/overview?${params}`),
                 api.get(`/admin/finance/sellers?${params}`),
                 api.get(`/admin/finance/doctors?${params}`),
-                api.get('/admin/dashboard').catch(() => ({ data: { stats: null } }))
+                api.get('/admin/dashboard').catch(() => ({ data: { stats: null } })),
+                api.get(`/admin/orders?${orderParams}`)
             ]);
 
             setOverview(overviewRes.data);
@@ -408,6 +414,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
             setDoctors(doctorsRes.data.data || []);
             setDoctorAggregates(doctorsRes.data.aggregates || null);
             setSystemStats(dashboardRes.data?.stats || null);
+            setInvoiceOrders(ordersRes.data.data || ordersRes.data || []);
         } catch (error) {
             console.error('Failed to fetch finance overview data:', error);
         } finally {
@@ -457,7 +464,12 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
     const fetchInvoiceOrders = async () => {
         try {
             setInvoiceOrdersLoading(true);
-            const res = await api.get('/admin/orders');
+            const orderParams = new URLSearchParams();
+            orderParams.append('per_page', '-1');
+            if (startDate) orderParams.append('from_date', startDate);
+            if (endDate) orderParams.append('to_date', endDate);
+
+            const res = await api.get(`/admin/orders?${orderParams}`);
             setInvoiceOrders(res.data.data || res.data || []);
         } catch (error) {
             console.error('Failed to fetch orders for invoice tab:', error);
@@ -640,6 +652,28 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
     const productSalesTotal = overview?.revenue?.total || 0;
     const docSalesTotal = doctorAggregates?.total_gross || 0;
     const totalPlatformVolume = productSalesTotal + docSalesTotal;
+
+    // Detailed Product separations
+    const productGrossSubtotal = invoiceOrders.reduce((sum, order) => {
+        const itemsSum = order.items && order.items.length > 0 
+            ? order.items.reduce((itemSum, item) => itemSum + Number(item.price * item.quantity), 0) 
+            : (Number(order.final_amount) + Number(order.discount_amount || 0));
+        return sum + itemsSum;
+    }, 0);
+
+    const productDiscounts = invoiceOrders.reduce((sum, order) => {
+        const itemsSum = order.items && order.items.length > 0 
+            ? order.items.reduce((itemSum, item) => itemSum + Number(item.price * item.quantity), 0) 
+            : (Number(order.final_amount) + Number(order.discount_amount || 0));
+        const discount = Number(order.discount_amount || 0);
+        const calculatedDiscount = itemsSum - order.final_amount > 0 ? itemsSum - order.final_amount : discount;
+        return sum + calculatedDiscount;
+    }, 0);
+
+    const productNetSales = productSalesTotal;
+    const bookingGrossSales = docSalesTotal;
+    const bookingDiscounts = 0;
+    const bookingNetSales = docSalesTotal;
 
     const productCommissionTotal = overview?.revenue?.platform_commission || 0;
     const docCommissionTotal = doctorAggregates?.total_commission || 0;
@@ -886,20 +920,44 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                     Platform Volume
                                                 </span>
                                             </div>
-                                            <p className="text-[11px] font-normal text-neutral-500 mb-1">Total Gross Sales (Products + Bookings)</p>
+                                            <p className="text-[11px] font-normal text-neutral-500 mb-1">Total Paid by Customers (Net Sales)</p>
                                             <h3 className="text-2xl font-semibold text-neutral-900 tracking-tight">
                                                 ₹{totalPlatformVolume.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                             </h3>
                                             <p className="text-[10px] text-neutral-400 mt-2 mb-4 font-normal tracking-wide">
-                                                Products: ₹{productSalesTotal.toLocaleString('en-IN')} | Consults: ₹{docSalesTotal.toLocaleString('en-IN')}
+                                                Products Net: ₹{productNetSales.toLocaleString('en-IN')} | Consults Net: ₹{bookingNetSales.toLocaleString('en-IN')}
                                             </p>
                                         </div>
-                                        <div className="p-3 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/50 text-[10px] font-normal text-neutral-500 leading-relaxed">
-                                            <p className="font-medium text-neutral-400 mb-0.5 tracking-wide text-[9px]">Card Logic & Source</p>
-                                            <p>Aggregated marketplace product sales and doctor teleconsultation bookings before split processing.</p>
-                                            <div className="pt-1.5 mt-1.5 border-t-[0.5px] border-black/50 flex justify-between font-medium text-neutral-900">
-                                                <span>Formula</span>
-                                                <span>Product Gross + Booking Gross</span>
+                                        <div className="p-3 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/50 text-[10px] font-normal text-neutral-500 space-y-1.5 leading-relaxed">
+                                            <div>
+                                                <p className="font-semibold text-black uppercase tracking-wider text-[8px]">1. Products Marketplace</p>
+                                                <div className="flex justify-between font-mono text-[9px] mt-0.5">
+                                                    <span>Actual Gross Subtotal:</span>
+                                                    <span>₹{productGrossSubtotal.toLocaleString('en-IN')}</span>
+                                                </div>
+                                                <div className="flex justify-between font-mono text-[9px] text-red-500">
+                                                    <span>Discounts / Coupons:</span>
+                                                    <span>-₹{productDiscounts.toLocaleString('en-IN')}</span>
+                                                </div>
+                                                <div className="flex justify-between font-mono text-[9px] text-black font-semibold border-t-[0.5px] border-black/20 pt-0.5 mt-0.5">
+                                                    <span>Net Product Paid:</span>
+                                                    <span>₹{productNetSales.toLocaleString('en-IN')}</span>
+                                                </div>
+                                            </div>
+                                            <div className="border-t-[0.5px] border-black/10 pt-1.5">
+                                                <p className="font-semibold text-black uppercase tracking-wider text-[8px]">2. Clinical Bookings</p>
+                                                <div className="flex justify-between font-mono text-[9px] mt-0.5">
+                                                    <span>Actual Gross Consults:</span>
+                                                    <span>₹{bookingGrossSales.toLocaleString('en-IN')}</span>
+                                                </div>
+                                                <div className="flex justify-between font-mono text-[9px] text-black font-semibold border-t-[0.5px] border-black/20 pt-0.5 mt-0.5">
+                                                    <span>Net Consult Paid:</span>
+                                                    <span>₹{bookingNetSales.toLocaleString('en-IN')}</span>
+                                                </div>
+                                            </div>
+                                            <div className="border-t-[0.5px] border-black/20 pt-1.5 flex justify-between font-bold text-neutral-950 font-mono text-[9px]">
+                                                <span>Total Net Volume:</span>
+                                                <span>₹{totalPlatformVolume.toLocaleString('en-IN')}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -1015,7 +1073,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                 ₹{(overview?.revenue?.seller_earnings || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                             </h3>
                                             <p className="text-[10px] text-neutral-400 mt-2 mb-4 font-normal tracking-wide">
-                                                Gross: ₹{productSalesTotal.toLocaleString('en-IN')} | Active: {systemStats?.active_sellers || 0}
+                                                Gross: ₹{productGrossSubtotal.toLocaleString('en-IN')} | Active: {systemStats?.active_sellers || 0}
                                             </p>
                                         </div>
                                         <div className="p-3 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/50 text-[10px] font-normal text-neutral-500 leading-relaxed">
@@ -1072,20 +1130,40 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                         {/* Card 1: Platform Volume */}
                                         <div className="p-4 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/10">
                                             <div className="flex justify-between items-center mb-2">
-                                                <span className="text-xs font-semibold text-black">1. Platform Volume (Total Gross Sales)</span>
-                                                <span className="text-[10px] font-mono bg-neutral-200 px-2 py-0.5 rounded text-neutral-800">Formula: Product Gross + Booking Gross</span>
+                                                <span className="text-xs font-semibold text-black">1. Platform Volume (Total Sales Lifecycle)</span>
+                                                <span className="text-[10px] font-mono bg-neutral-200 px-2 py-0.5 rounded text-neutral-800">Formula: (Prod Gross - Prod Disc) + (Book Gross - Book Disc)</span>
                                             </div>
-                                            <div className="space-y-1 text-xs text-neutral-600">
-                                                <div className="flex justify-between">
-                                                    <span>Marketplace Products Gross Sales:</span>
-                                                    <span className="font-mono text-black font-medium">₹{productSalesTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                            <div className="space-y-2 text-xs text-neutral-600">
+                                                <div>
+                                                    <p className="font-semibold text-black text-[9px] uppercase tracking-wider mb-0.5">Products Marketplace</p>
+                                                    <div className="flex justify-between">
+                                                        <span>Product Actual Gross Sales (Subtotals):</span>
+                                                        <span className="font-mono text-black font-medium">₹{productGrossSubtotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                    </div>
+                                                    <div className="flex justify-between text-red-500">
+                                                        <span>Marketplace Coupon/Discount subtraction:</span>
+                                                        <span className="font-mono font-medium">- ₹{productDiscounts.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                    </div>
+                                                    <div className="flex justify-between text-neutral-900 font-medium">
+                                                        <span>Product Net Sales (Paid by Customers):</span>
+                                                        <span className="font-mono">₹{productNetSales.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                    </div>
                                                 </div>
-                                                <div className="flex justify-between">
-                                                    <span>Clinical Bookings Gross Sales:</span>
-                                                    <span className="font-mono text-black font-medium">+ ₹{docSalesTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                
+                                                <div className="border-t-[0.5px] border-neutral-300 pt-1.5">
+                                                    <p className="font-semibold text-black text-[9px] uppercase tracking-wider mb-0.5">Clinical Bookings</p>
+                                                    <div className="flex justify-between">
+                                                        <span>Booking Actual Gross Sales:</span>
+                                                        <span className="font-mono text-black font-medium">₹{bookingGrossSales.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                    </div>
+                                                    <div className="flex justify-between text-neutral-900 font-medium">
+                                                        <span>Booking Net Sales (Paid by Clients):</span>
+                                                        <span className="font-mono">₹{bookingNetSales.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                    </div>
                                                 </div>
-                                                <div className="flex justify-between border-t-[0.5px] border-neutral-300 pt-1 font-bold mt-1 text-neutral-900">
-                                                    <span>Total Realized Gross Sales:</span>
+
+                                                <div className="flex justify-between border-t-[0.5px] border-neutral-300 pt-1.5 font-bold text-neutral-900">
+                                                    <span>Total Platform Volume (Net Sales):</span>
                                                     <span className="font-mono text-black">₹{totalPlatformVolume.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
                                                 </div>
                                             </div>
@@ -1173,7 +1251,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                             <div className="space-y-1 text-xs text-neutral-600">
                                                 <div className="flex justify-between">
                                                     <span>Gross Product Sales:</span>
-                                                    <span className="font-mono text-black font-medium">₹{productSalesTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                    <span className="font-mono text-black font-medium">₹{productGrossSubtotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
                                                 </div>
                                                 <div className="flex justify-between">
                                                     <span>Marketplace Commission Deducted:</span>
@@ -1255,7 +1333,9 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                         <tbody className="divide-y divide-neutral-50 font-medium">
                                             {invoiceOrders && invoiceOrders.length > 0 ? (
                                                 invoiceOrders.map(order => {
-                                                    const itemsSubtotal = order.items ? order.items.reduce((sum, item) => sum + Number(item.price * item.quantity), 0) : order.final_amount;
+                                                    const itemsSubtotal = order.items && order.items.length > 0 
+                                                        ? order.items.reduce((sum, item) => sum + Number(item.price * item.quantity), 0) 
+                                                        : (Number(order.final_amount) + Number(order.discount_amount || 0));
                                                     const discount = Number(order.discount_amount || 0);
                                                     const calculatedDiscount = itemsSubtotal - order.final_amount > 0 ? itemsSubtotal - order.final_amount : discount;
                                                     const comm = Number(order.platform_commission_amount || 0);
@@ -1319,7 +1399,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                             <p className="text-[11px] text-gray-400 mt-1 leading-relaxed">Platform performance and commissions collected from third-party vendor listings.</p>
                                         </div>
                                         <div className="space-y-1.5 pt-3 border-t-[0.5px] text-[11px] font-medium text-gray-600">
-                                            <div className="flex justify-between"><span>Gross Volume</span><span className="text-gray-900 font-semibold font-mono">₹{productSalesTotal.toLocaleString('en-IN')}</span></div>
+                                            <div className="flex justify-between"><span>Gross Volume</span><span className="text-gray-900 font-semibold font-mono">₹{productGrossSubtotal.toLocaleString('en-IN')}</span></div>
                                             <div className="flex justify-between"><span>Commission Retained</span><span className="text-neutral-950 font-semibold font-mono">₹{productCommissionTotal.toLocaleString('en-IN')}</span></div>
                                             <div className="flex justify-between"><span>Gateway Charges</span><span className="text-neutral-500 font-mono">₹{gatewayFeesTotal.toLocaleString('en-IN')}</span></div>
                                         </div>

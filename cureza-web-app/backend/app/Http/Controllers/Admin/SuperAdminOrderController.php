@@ -68,7 +68,12 @@ class SuperAdminOrderController extends Controller
             });
         }
 
-        $orders = $query->latest()->paginate(15);
+        $perPage = $request->input('per_page', 15);
+        if ($perPage == -1) {
+            $orders = $query->latest()->get();
+            return response()->json($orders);
+        }
+        $orders = $query->latest()->paginate($perPage);
 
         return response()->json($orders);
     }
