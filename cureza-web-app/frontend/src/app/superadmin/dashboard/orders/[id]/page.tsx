@@ -1,11 +1,59 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Package, Truck, CheckCircle, Clock, MapPin, User, CreditCard, Printer, X } from 'lucide-react';
+import { 
+    ArrowLeft, Package, Truck, CheckCircle, Clock, MapPin, User, CreditCard, 
+    Printer, X, Wallet, Award, Activity, Globe, Monitor, DollarSign, 
+    Map, Receipt, Calendar, Hash, Store, Mail, Phone, ExternalLink, FileText 
+} from 'lucide-react';
 import Link from 'next/link';
 import api from '@/lib/api';
 import { useParams } from 'next/navigation';
 import EditOrderModal from '@/components/admin/EditOrderModal';
+
+interface UserAddress {
+    id: number;
+    name: string;
+    phone: string;
+    address_line_1: string;
+    address_line_2?: string | null;
+    city: string;
+    state: string;
+    zip: string;
+    country: string;
+    type: string;
+    is_default: boolean;
+}
+
+interface UserWallet {
+    balance: string;
+    points: number;
+}
+
+interface UserRecentOrder {
+    id: number;
+    order_number: string;
+    created_at: string;
+    status: string;
+    final_amount: string;
+}
+
+interface UserInfo {
+    id: number;
+    name: string;
+    email: string;
+    phone?: string;
+    created_at: string;
+    registration_source?: string;
+    registration_ip?: string;
+    device_info?: string;
+    referral_code?: string;
+    wallet?: UserWallet | null;
+    addresses?: UserAddress[];
+    total_orders?: number;
+    total_spent?: string;
+    recent_orders?: UserRecentOrder[];
+}
 
 interface OrderItem {
     id: number;
@@ -13,7 +61,38 @@ interface OrderItem {
     quantity: number;
     price: string;
     total: string;
-    seller: { name: string } | null;
+    seller: { 
+        id: number;
+        name: string; 
+        email?: string; 
+        phone?: string;
+        seller_profile?: {
+            contact_person?: string;
+            gst_number?: string;
+            pan_number?: string;
+            pickup_address_line_1?: string;
+            pickup_address_line_2?: string;
+            pickup_address_city?: string;
+            pickup_address_state?: string;
+            pickup_address_pin_code?: string;
+            pickup_address_country?: string;
+        } | null;
+        sellerProfile?: {
+            contact_person?: string;
+            gst_number?: string;
+            pan_number?: string;
+            pickup_address_line_1?: string;
+            pickup_address_line_2?: string;
+            pickup_address_city?: string;
+            pickup_address_state?: string;
+            pickup_address_pin_code?: string;
+            pickup_address_country?: string;
+        } | null;
+        brand?: {
+            name: string;
+            slug?: string;
+        } | null;
+    } | null;
     product: { brand: { name: string } | null; is_prescription_required: boolean } | null;
     patient_name?: string | null;
     patient_age?: number | null;
@@ -34,8 +113,11 @@ interface Order {
     final_amount: string;
     tax_amount: string;
     shipping_amount: string;
+    discount_amount?: string;
+    coupon_code?: string | null;
+    order_notes?: string | null;
     shipping_address_json: any;
-    user: { name: string; email: string; phone?: string } | null;
+    user: UserInfo | null;
     items: OrderItem[];
     shipments: any[];
     tracking_id?: string;
@@ -181,6 +263,20 @@ export default function AdminOrderDetailPage() {
         }
     };
 
+    // Calculate customer stats
+    const totalOrders = order.user?.total_orders || 0;
+    const totalSpent = parseFloat(order.user?.total_spent || '0');
+    const aov = totalOrders > 0 ? (totalSpent / totalOrders).toFixed(2) : '0.00';
+
+    // Calculate discount dynamically if stored discount_amount is 0 but final < subtotal + shipping
+    const subtotalNum = parseFloat(order.total_amount || '0');
+    const shippingNum = parseFloat(order.shipping_amount || '0');
+    const finalNum = parseFloat(order.final_amount || '0');
+    const calculatedDiscount = subtotalNum + shippingNum - finalNum;
+    const discountToShow = parseFloat(order.discount_amount || '0') > 0 
+        ? parseFloat(order.discount_amount || '0') 
+        : (calculatedDiscount > 0 ? calculatedDiscount : 0);
+
     return (
         <div className="w-full space-y-6 animate-in fade-in duration-300">
             {/* Header section with modern design language */}
@@ -196,7 +292,7 @@ export default function AdminOrderDetailPage() {
                                 {order.status}
                             </span>
                         </div>
-                        <p className="text-gray-500 dark:text-gray-400 text-xs mt-1.5">Placed on {new Date(order.created_at).toLocaleString()} • {order.items.length} {order.items.length === 1 ? 'Item' : 'Items'}</p>
+                        <p className="text-gray-550 dark:text-gray-400 text-xs mt-1.5">Placed on {new Date(order.created_at).toLocaleString()} • {order.items.length} {order.items.length === 1 ? 'Item' : 'Items'}</p>
                     </div>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -258,72 +354,193 @@ export default function AdminOrderDetailPage() {
                 </div>
             </div>
 
+            {/* Main Order Details Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Main Content */}
+                {/* Left Column: Order details & fulfillment */}
                 <div className="lg:col-span-2 space-y-6">
+                    
+                    {/* Customer Notes banner if present */}
+                    {order.order_notes && (
+                        <div className="bg-amber-50/50 dark:bg-amber-955/10 border-[0.5px] border-amber-250/30 dark:border-amber-900/30 rounded-[10px] p-5 text-xs text-amber-800 dark:text-amber-400 flex items-start gap-3">
+                            <FileText className="text-amber-700 dark:text-amber-500 mt-0.5 flex-shrink-0" size={18} />
+                            <div>
+                                <h4 className="font-bold uppercase tracking-wider text-[10px]">Customer Order Note</h4>
+                                <p className="mt-1 italic font-medium">"{order.order_notes}"</p>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Order Items */}
                     <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none overflow-hidden">
                         <div className="p-6 border-b-[0.5px] border-black/50 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-800/30 flex justify-between items-center">
                             <h3 className="font-semibold text-gray-900 dark:text-white text-base flex items-center gap-2">
                                 <Package className="text-black dark:text-white" size={18} />
-                                Order Items
+                                Order Items & Fulfillment
                             </h3>
-                            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 bg-neutral-100 dark:bg-neutral-800 px-2.5 py-1 rounded-[10px]">{order.items.length} {order.items.length === 1 ? 'Product' : 'Products'}</span>
+                            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 bg-neutral-100 dark:bg-neutral-800 px-2.5 py-1 rounded-[10px]">
+                                {order.items.length} {order.items.length === 1 ? 'Product' : 'Products'}
+                            </span>
                         </div>
+                        
                         <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
-                            {order.items.map((item) => (
-                                <div key={item.id} className="p-6 flex flex-col gap-4 hover:bg-neutral-50/30 dark:hover:bg-neutral-800/10 transition-all">
-                                    <div className="flex items-center gap-4">
-                                        <div className="h-14 w-14 bg-neutral-100 dark:bg-neutral-800 rounded-[10px] flex-shrink-0 flex items-center justify-center text-gray-900 dark:text-white font-bold border-[0.5px] border-black/50 dark:border-neutral-800">
-                                            {item.product_name.charAt(0)}
+                            {order.items.map((item) => {
+                                const sellerProfile = item.seller?.seller_profile || item.seller?.sellerProfile;
+                                const brandName = item.product?.brand?.name || item.seller?.brand?.name || item.seller?.name || 'N/A';
+                                
+                                return (
+                                    <div key={item.id} className="p-6 flex flex-col gap-4 hover:bg-neutral-50/30 dark:hover:bg-neutral-800/10 transition-all">
+                                        <div className="flex items-start justify-between gap-4">
+                                            <div className="flex gap-4">
+                                                <div className="h-14 w-14 bg-neutral-100 dark:bg-neutral-800 rounded-[10px] flex-shrink-0 flex items-center justify-center text-gray-900 dark:text-white font-bold border-[0.5px] border-black/50 dark:border-neutral-800">
+                                                    {item.product_name.charAt(0)}
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm leading-snug">{item.product_name}</h4>
+                                                    <p className="text-xs text-gray-550 dark:text-gray-400 mt-1 flex items-center gap-1">
+                                                        Brand: <span className="text-black dark:text-white font-semibold">{brandName}</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div className="text-right flex-shrink-0">
+                                                <p className="font-semibold text-gray-900 dark:text-white text-sm">₹{item.total}</p>
+                                                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{item.quantity} x ₹{item.price}</p>
+                                            </div>
                                         </div>
-                                        <div className="flex-1 min-w-0">
-                                            <h4 className="font-semibold text-gray-900 dark:text-white truncate text-sm">{item.product_name}</h4>
-                                            <p className="text-xs text-gray-550 dark:text-gray-400 mt-0.5">Brand: <span className="text-black dark:text-white font-semibold">{item.product?.brand?.name || item.seller?.name || 'N/A'}</span></p>
+
+                                        {/* Seller details for marketplace tracking */}
+                                        <div className="bg-neutral-50 dark:bg-neutral-800/20 border-[0.5px] border-black/10 dark:border-neutral-800 rounded-[10px] p-4 text-xs">
+                                            <div className="flex items-center gap-1.5 text-gray-800 dark:text-gray-200 font-semibold mb-2">
+                                                <Store size={14} className="text-gray-500" />
+                                                <span>Fulfillment Seller Details</span>
+                                            </div>
+                                            {item.seller ? (
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-gray-600 dark:text-gray-400">
+                                                    <div>
+                                                        <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Seller Name / Store</span>
+                                                        <p className="font-medium text-gray-900 dark:text-white mt-0.5">{item.seller.name}</p>
+                                                    </div>
+                                                    <div>
+                                                        <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Contact Person</span>
+                                                        <p className="font-medium text-gray-900 dark:text-white mt-0.5">{sellerProfile?.contact_person || 'N/A'}</p>
+                                                    </div>
+                                                    <div>
+                                                        <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Email Address</span>
+                                                        <p className="font-medium text-gray-900 dark:text-white mt-0.5">
+                                                            {item.seller.email ? (
+                                                                <a href={`mailto:${item.seller.email}`} className="hover:underline text-indigo-600 dark:text-indigo-400 flex items-center gap-1">
+                                                                    {item.seller.email} <ExternalLink size={10} />
+                                                                </a>
+                                                            ) : '-'}
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Phone Number</span>
+                                                        <p className="font-medium text-gray-900 dark:text-white mt-0.5">
+                                                            {item.seller.phone ? (
+                                                                <a href={`tel:${item.seller.phone}`} className="hover:underline">
+                                                                    {item.seller.phone}
+                                                                </a>
+                                                            ) : '-'}
+                                                        </p>
+                                                    </div>
+                                                    <div className="md:col-span-2">
+                                                        <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Pickup Address</span>
+                                                        <p className="font-medium text-gray-800 dark:text-gray-200 mt-0.5">
+                                                            {sellerProfile?.pickup_address_line_1 ? (
+                                                                <>
+                                                                    {sellerProfile.pickup_address_line_1}
+                                                                    {sellerProfile.pickup_address_line_2 && `, ${sellerProfile.pickup_address_line_2}`}
+                                                                    {`, ${sellerProfile.pickup_address_city}, ${sellerProfile.pickup_address_state} - ${sellerProfile.pickup_address_pin_code}`}
+                                                                    {`, ${sellerProfile.pickup_address_country || 'India'}`}
+                                                                </>
+                                                            ) : 'No pickup address defined'}
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">GSTIN</span>
+                                                        <p className="font-medium text-gray-800 dark:text-gray-200 mt-0.5">{sellerProfile?.gst_number || 'N/A'}</p>
+                                                    </div>
+                                                    <div>
+                                                        <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">PAN Number</span>
+                                                        <p className="font-medium text-gray-800 dark:text-gray-200 mt-0.5">{sellerProfile?.pan_number || 'N/A'}</p>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <p className="text-gray-400 dark:text-gray-500 italic">No seller information available for this product.</p>
+                                            )}
                                         </div>
-                                        <div className="text-right">
-                                            <p className="font-semibold text-gray-900 dark:text-white text-sm">₹{item.total}</p>
-                                            <p className="text-xs text-gray-400 dark:text-gray-550 mt-0.5">{item.quantity} x ₹{item.price}</p>
-                                        </div>
+
+                                        {/* Prescription Details (Cureza Healthcare Store Specific) */}
+                                        {item.patient_name && (
+                                            <div className="bg-blue-50/20 dark:bg-blue-950/10 border-[0.5px] border-blue-100 dark:border-blue-900/30 rounded-[10px] p-4 text-xs space-y-2">
+                                                <div className="flex items-center gap-1.5 text-blue-800 dark:text-blue-400 font-semibold">
+                                                    <FileText size={14} />
+                                                    <span>Prescription & Health Concern Details</span>
+                                                </div>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-gray-600 dark:text-gray-400">
+                                                    <div>
+                                                        <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Patient Info</span>
+                                                        <p className="font-medium text-gray-900 dark:text-white mt-0.5">
+                                                            {item.patient_name} ({item.patient_age} yrs, {item.patient_gender})
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Consulting Doctor</span>
+                                                        <p className="font-medium text-gray-900 dark:text-white mt-0.5">
+                                                            Dr. {item.doctor?.name || 'N/A'} {item.doctor?.specialization && `(${item.doctor.specialization})`}
+                                                        </p>
+                                                    </div>
+                                                    <div className="md:col-span-2">
+                                                        <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Health Concern</span>
+                                                        <p className="font-medium text-gray-800 dark:text-gray-200 mt-0.5 italic">"{item.health_concern}"</p>
+                                                    </div>
+                                                    <div className="md:col-span-2 flex items-center justify-between pt-2 border-t border-black/5 dark:border-neutral-800">
+                                                        <span className="font-bold text-[10px] text-gray-400 uppercase tracking-wider">Verification File</span>
+                                                        {item.prescription_path ? (
+                                                            <a 
+                                                                href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/storage/${item.prescription_path}`} 
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="text-gray-900 dark:text-white font-semibold hover:bg-neutral-200 dark:hover:bg-neutral-700 flex items-center gap-1.5 bg-neutral-100 dark:bg-neutral-800 border-[0.5px] border-black/50 dark:border-neutral-800 px-3 py-1.5 rounded-[10px] shadow-none text-xs transition-colors"
+                                                            >
+                                                                View Prescription Document <ExternalLink size={12} />
+                                                            </a>
+                                                        ) : (
+                                                            <span className="text-red-500 dark:text-red-400 font-semibold uppercase tracking-wider text-[10px] bg-red-50 dark:bg-red-950/20 px-2 py-0.5 rounded-full border border-red-100 dark:border-red-900/30">
+                                                                Pending Doctor Approval
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
-                                    {item.patient_name && (
-                                        <div className="ml-0 sm:ml-18 bg-neutral-50 dark:bg-neutral-800/30 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] p-4 text-xs text-gray-650 dark:text-gray-400 space-y-2">
-                                            <div className="flex flex-wrap gap-4 justify-between font-medium">
-                                                <div>Patient: <span className="text-gray-900 dark:text-white font-bold">{item.patient_name}</span> ({item.patient_age} yrs, {item.patient_gender})</div>
-                                                <div>Doctor: <span className="text-gray-900 dark:text-white font-bold">Dr. {item.doctor?.name || 'N/A'}</span></div>
-                                            </div>
-                                            <div>Concern: <span className="italic text-gray-800 dark:text-gray-300">"{item.health_concern}"</span></div>
-                                            <div className="flex items-center justify-between pt-2 border-t-[0.5px] border-black/50 dark:border-neutral-800">
-                                                <span className="font-medium">Prescription File:</span>
-                                                {item.prescription_path ? (
-                                                    <a 
-                                                        href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/storage/${item.prescription_path}`} 
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="text-gray-900 dark:text-white font-semibold hover:bg-neutral-200 dark:hover:bg-neutral-750 flex items-center gap-1.5 bg-neutral-100 dark:bg-neutral-800 border-[0.5px] border-black/50 dark:border-neutral-800 px-3 py-1 rounded-[10px] shadow-none text-xs transition-colors"
-                                                    >
-                                                        View Prescription PDF
-                                                    </a>
-                                                ) : (
-                                                    <span className="text-red-500 dark:text-red-450 font-semibold">Pending Approval</span>
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
-                        <div className="bg-neutral-50/50 dark:bg-neutral-800/20 p-6 border-t-[0.5px] border-black/50 dark:border-neutral-800">
-                            <div className="flex justify-between text-xs mb-2.5">
+
+                        {/* Financial calculations */}
+                        <div className="bg-neutral-50/50 dark:bg-neutral-800/20 p-6 border-t-[0.5px] border-black/50 dark:border-neutral-800 space-y-3">
+                            <div className="flex justify-between text-xs">
                                 <span className="text-gray-500 dark:text-gray-400 font-medium">Subtotal</span>
                                 <span className="font-semibold text-gray-700 dark:text-gray-300">₹{order.total_amount}</span>
                             </div>
-                            <div className="flex justify-between text-xs mb-2.5">
+                            
+                            {discountToShow > 0 && (
+                                <div className="flex justify-between text-xs text-green-600 dark:text-green-400 font-semibold font-mono">
+                                    <span className="font-medium flex items-center gap-1 font-sans">
+                                        Discount {order.coupon_code ? `(Coupon: ${order.coupon_code})` : ''}
+                                    </span>
+                                    <span className="font-bold">-₹{discountToShow.toFixed(2)}</span>
+                                </div>
+                            )}
+
+                            <div className="flex justify-between text-xs">
                                 <span className="text-gray-500 dark:text-gray-400 font-medium">Shipping Charges</span>
                                 <span className="font-semibold text-gray-700 dark:text-gray-300">₹{order.shipping_amount}</span>
                             </div>
-                            <div className="flex justify-between text-xs mb-2.5">
-                                <span className="text-gray-500 dark:text-gray-400 font-medium">GST / Taxes</span>
+                            <div className="flex justify-between text-xs">
+                                <span className="text-gray-500 dark:text-gray-400 font-medium">GST / Taxes (Inclusive)</span>
                                 <span className="font-semibold text-gray-700 dark:text-gray-300">₹{order.tax_amount}</span>
                             </div>
                             <div className="flex justify-between text-sm font-semibold border-t-[0.5px] border-black/50 dark:border-neutral-800 pt-4 mt-4">
@@ -343,27 +560,27 @@ export default function AdminOrderDetailPage() {
                             <div className="bg-neutral-50 dark:bg-neutral-800/30 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] p-5 space-y-4">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                                     <div>
-                                        <span className="text-gray-450 dark:text-gray-550 font-medium">Courier Provider</span>
+                                        <span className="text-gray-450 dark:text-gray-500 font-medium">Courier Provider</span>
                                         <p className="font-semibold text-gray-900 dark:text-white mt-0.5 text-sm">{order.tracking_provider || 'Manual Courier'}</p>
                                     </div>
                                     <div>
-                                        <span className="text-gray-450 dark:text-gray-555 font-medium">AWB Tracking Number</span>
+                                        <span className="text-gray-450 dark:text-gray-500 font-medium">AWB Tracking Number</span>
                                         <p className="font-semibold text-gray-900 dark:text-white mt-0.5 text-sm">{order.tracking_id}</p>
                                     </div>
                                 </div>
-                                <div className="pt-2">
+                                <div className="pt-2 flex gap-3">
                                     <a
                                         href={`https://track.cureza.com/?awb=${order.tracking_id}&provider=${encodeURIComponent(order.tracking_provider || '')}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-flex items-center gap-2 bg-black text-white dark:bg-white dark:text-black px-4 py-2 rounded-[10px] text-xs font-semibold hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-colors shadow-none border-[0.5px] border-transparent"
                                     >
-                                        Track Package Live
+                                        Track Package Live <ExternalLink size={12} />
                                     </a>
                                 </div>
                             </div>
                         ) : (
-                            <div className="bg-amber-50/50 dark:bg-amber-950/10 border-[0.5px] border-amber-250/20 dark:border-amber-900/30 rounded-[10px] p-5 text-sm text-amber-800 dark:text-amber-400 flex items-start gap-3">
+                            <div className="bg-amber-50/50 dark:bg-amber-955/10 border-[0.5px] border-amber-250/20 dark:border-amber-900/30 rounded-[10px] p-5 text-sm text-amber-850 dark:text-amber-400 flex items-start gap-3">
                                 <div>
                                     <p className="font-semibold text-xs">No active tracking information available.</p>
                                     <p className="text-[11px] text-amber-700 dark:text-amber-500 mt-1">Please update this order status and insert courier details to activate shipment tracking.</p>
@@ -385,8 +602,8 @@ export default function AdminOrderDetailPage() {
                                         event.completed ? 'bg-green-500 dark:bg-green-400' : 'bg-neutral-200 dark:bg-neutral-800'
                                     }`}></div>
                                     <div>
-                                        <p className={`font-semibold text-sm ${event.completed ? 'text-gray-900 dark:text-white' : 'text-gray-400 dark:text-gray-650'}`}>{event.status}</p>
-                                        <p className="text-xs text-gray-450 dark:text-gray-500 mt-0.5">{event.date}</p>
+                                        <p className={`font-semibold text-sm ${event.completed ? 'text-gray-900 dark:text-white' : 'text-gray-400 dark:text-gray-600'}`}>{event.status}</p>
+                                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{event.date}</p>
                                     </div>
                                 </div>
                             ))}
@@ -394,31 +611,141 @@ export default function AdminOrderDetailPage() {
                     </div>
                 </div>
 
-                {/* Sidebar Info */}
+                {/* Right Column: Customer Profile Analytics & Notes */}
                 <div className="space-y-6">
-                    {/* Customer Info */}
-                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none">
-                        <h3 className="font-semibold text-gray-900 dark:text-white text-base mb-4 flex items-center gap-2">
-                            <User className="text-gray-400 dark:text-gray-500" size={18} />
-                            Customer Information
+                    
+                    {/* Customer Identity Card */}
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none space-y-6">
+                        <div className="flex items-center gap-4">
+                            <div className="h-16 w-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                                {order.user?.name ? order.user.name.charAt(0).toUpperCase() : 'G'}
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-gray-900 dark:text-white text-lg">
+                                    {order.user?.name || 'Guest Customer'}
+                                </h3>
+                                <div className="flex items-center gap-2 mt-1">
+                                    <span className="px-2 py-0.5 bg-green-50 dark:bg-green-950/20 text-green-750 dark:text-green-400 border-[0.5px] border-green-200/50 rounded-full text-[10px] font-bold uppercase">
+                                        Registered
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4 pt-4 border-t-[0.5px] border-black/10 dark:border-neutral-800 text-xs">
+                            <div className="flex justify-between items-start gap-2">
+                                <span className="text-gray-400 dark:text-gray-500 font-semibold uppercase tracking-wider text-[9px] mt-0.5">Email</span>
+                                <span className="font-semibold text-gray-900 dark:text-white text-right break-all">
+                                    {order.user?.email ? (
+                                        <a href={`mailto:${order.user.email}`} className="hover:underline flex items-center justify-end gap-1 text-indigo-600 dark:text-indigo-400">
+                                            {order.user.email} <ExternalLink size={10} />
+                                        </a>
+                                    ) : '-'}
+                                </span>
+                            </div>
+                            <div className="flex justify-between items-start gap-2">
+                                <span className="text-gray-400 dark:text-gray-500 font-semibold uppercase tracking-wider text-[9px] mt-0.5">Phone</span>
+                                <span className="font-semibold text-gray-900 dark:text-white text-right">
+                                    {order.user?.phone ? (
+                                        <a href={`tel:${order.user.phone}`} className="hover:underline">
+                                            {order.user.phone}
+                                        </a>
+                                    ) : '-'}
+                                </span>
+                            </div>
+                            <div className="flex justify-between items-start gap-2">
+                                <span className="text-gray-400 dark:text-gray-500 font-semibold uppercase tracking-wider text-[9px] mt-0.5">Joined Date</span>
+                                <span className="font-semibold text-gray-800 dark:text-gray-200">
+                                    {order.user?.created_at ? new Date(order.user.created_at).toLocaleDateString() : '-'}
+                                </span>
+                            </div>
+                            {order.user?.referral_code && (
+                                <div className="flex justify-between items-start gap-2">
+                                    <span className="text-gray-400 dark:text-gray-500 font-semibold uppercase tracking-wider text-[9px] mt-0.5">Referral Code</span>
+                                    <span className="font-bold text-gray-805 dark:text-gray-200 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded text-[10px]">
+                                        {order.user.referral_code}
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Acquisition Details & IP Logging */}
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none space-y-4">
+                        <h3 className="font-semibold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
+                            <Globe size={16} className="text-gray-450" />
+                            Acquisition & Tracking
                         </h3>
-                        <div className="space-y-3 text-xs text-gray-600 dark:text-gray-400">
+                        <div className="space-y-3.5 text-xs">
                             <div>
-                                <span className="text-[10px] text-gray-450 dark:text-gray-500 font-bold uppercase tracking-wider">Name</span>
-                                <p className="font-semibold text-gray-900 dark:text-white text-sm mt-0.5">{order.user?.name || 'Guest'}</p>
+                                <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Signup Source</span>
+                                <p className="font-bold text-gray-900 dark:text-white mt-1 capitalize flex items-center gap-1">
+                                    <Activity size={12} className="text-indigo-500" />
+                                    {order.user?.registration_source || 'Direct Web Registration'}
+                                </p>
                             </div>
                             <div>
-                                <span className="text-[10px] text-gray-450 dark:text-gray-550 font-bold uppercase tracking-wider">Email</span>
-                                <p className="font-semibold text-gray-900 dark:text-white text-sm mt-0.5">{order.user?.email || '-'}</p>
+                                <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Registration IP</span>
+                                <p className="font-semibold text-gray-900 dark:text-white mt-0.5 font-mono">
+                                    {order.user?.registration_ip || 'N/A (Historical Account)'}
+                                </p>
                             </div>
                             <div>
-                                <span className="text-[10px] text-gray-450 dark:text-gray-555 font-bold uppercase tracking-wider">Phone</span>
-                                <p className="font-semibold text-gray-900 dark:text-white text-sm mt-0.5">{order.user?.phone || '-'}</p>
+                                <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Device & User Agent</span>
+                                <p className="text-gray-700 dark:text-gray-300 mt-0.5 font-medium leading-relaxed break-words">
+                                    {order.user?.device_info || 'Unknown Browser Agent'}
+                                </p>
                             </div>
                         </div>
                     </div>
 
-                    {/* Shipping Address */}
+                    {/* Customer Value statistics */}
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none space-y-4">
+                        <h3 className="font-semibold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
+                            <DollarSign size={16} className="text-gray-450" />
+                            Customer Lifetime Value (LTV)
+                        </h3>
+                        <div className="grid grid-cols-3 gap-2">
+                            <div className="bg-neutral-50 dark:bg-neutral-800/40 p-3 rounded-[10px] text-center border-[0.5px] border-black/10 dark:border-neutral-800">
+                                <span className="text-[10px] text-gray-400 uppercase font-bold">Orders</span>
+                                <p className="font-bold text-lg text-gray-900 dark:text-white mt-1">{totalOrders}</p>
+                            </div>
+                            <div className="bg-neutral-50 dark:bg-neutral-800/40 p-3 rounded-[10px] text-center border-[0.5px] border-black/10 dark:border-neutral-800 col-span-2">
+                                <span className="text-[10px] text-gray-400 uppercase font-bold">Total Spent</span>
+                                <p className="font-bold text-lg text-gray-900 dark:text-white mt-1">₹{totalSpent.toFixed(2)}</p>
+                            </div>
+                        </div>
+                        <div className="bg-neutral-50 dark:bg-neutral-800/40 p-3.5 rounded-[10px] border-[0.5px] border-black/10 dark:border-neutral-800 flex justify-between items-center text-xs">
+                            <span className="text-gray-400 uppercase font-bold text-[10px]">Average Order Value</span>
+                            <span className="font-bold text-gray-900 dark:text-white">₹{aov}</span>
+                        </div>
+                    </div>
+
+                    {/* Customer Wallet & Loyalty Points */}
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none space-y-4">
+                        <h3 className="font-semibold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
+                            <Wallet size={16} className="text-gray-450" />
+                            Wallet & Rewards
+                        </h3>
+                        <div className="grid grid-cols-2 gap-4 text-xs">
+                            <div className="bg-green-50/20 dark:bg-green-950/10 border-[0.5px] border-green-200/20 rounded-[10px] p-4 flex items-center gap-3">
+                                <Wallet size={20} className="text-green-600 dark:text-green-400" />
+                                <div>
+                                    <span className="text-[9px] text-gray-400 uppercase font-bold">Balance</span>
+                                    <p className="font-bold text-sm text-green-700 dark:text-green-400">₹{order.user?.wallet?.balance || '0.00'}</p>
+                                </div>
+                            </div>
+                            <div className="bg-amber-50/20 dark:bg-amber-955/10 border-[0.5px] border-amber-200/20 rounded-[10px] p-4 flex items-center gap-3">
+                                <Award size={20} className="text-amber-600 dark:text-amber-400" />
+                                <div>
+                                    <span className="text-[9px] text-gray-400 uppercase font-bold">Points</span>
+                                    <p className="font-bold text-sm text-amber-700 dark:text-amber-400">{order.user?.wallet?.points || '0'} pts</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Shipping Destination */}
                     <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none">
                         <h3 className="font-semibold text-gray-900 dark:text-white text-base mb-4 flex items-center gap-2">
                             <MapPin className="text-gray-400 dark:text-gray-500" size={18} />
@@ -428,15 +755,76 @@ export default function AdminOrderDetailPage() {
                             {order.shipping_address_json ? (
                                 <>
                                     <p className="font-semibold text-gray-900 dark:text-white text-sm mb-2">{order.shipping_address_json.name}</p>
-                                    <p className="leading-relaxed">{order.shipping_address_json.line}</p>
-                                    <p className="font-semibold text-gray-900 dark:text-white mt-1 text-sm">{order.shipping_address_json.city}, {order.shipping_address_json.state} - {order.shipping_address_json.zip}</p>
-                                    <p className="text-[10px] text-gray-450 dark:text-gray-550 uppercase tracking-wider font-bold mt-1.5">{order.shipping_address_json.country}</p>
+                                    <p className="leading-relaxed font-medium">{order.shipping_address_json.line}</p>
+                                    {order.shipping_address_json.line2 && <p className="leading-relaxed font-medium">{order.shipping_address_json.line2}</p>}
+                                    <p className="font-bold text-gray-950 dark:text-white mt-1 text-sm">{order.shipping_address_json.city}, {order.shipping_address_json.state} - {order.shipping_address_json.zip}</p>
+                                    <p className="text-[10px] text-gray-450 dark:text-gray-500 uppercase tracking-wider font-bold mt-1.5">{order.shipping_address_json.country}</p>
                                 </>
                             ) : (
-                                <p className="italic text-gray-400 dark:text-gray-500">No shipping address provided</p>
+                                <p className="italic text-gray-450 dark:text-gray-550">No shipping address provided</p>
                             )}
                         </div>
                     </div>
+
+                    {/* Saved Addresses list */}
+                    {order.user?.addresses && order.user.addresses.length > 0 && (
+                        <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none space-y-4">
+                            <h3 className="font-semibold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
+                                <Map size={16} className="text-gray-450" />
+                                Saved Addresses ({order.user.addresses.length})
+                            </h3>
+                            <div className="space-y-3 max-h-48 overflow-y-auto pr-1">
+                                {order.user.addresses.map((addr) => (
+                                    <div key={addr.id} className="border-[0.5px] border-black/10 dark:border-neutral-800 rounded-[10px] p-3 text-[11px] bg-neutral-50 dark:bg-neutral-800/10 space-y-1">
+                                        <div className="flex justify-between items-center font-bold">
+                                            <span className="capitalize text-gray-900 dark:text-white">{addr.type} Address</span>
+                                            {addr.is_default && (
+                                                <span className="text-[8px] bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 px-1.5 py-0.5 rounded border border-indigo-150">DEFAULT</span>
+                                            )}
+                                        </div>
+                                        <p className="font-semibold text-gray-800 dark:text-gray-200">{addr.name}</p>
+                                        <p className="text-gray-500 dark:text-gray-400">
+                                            {addr.address_line_1}
+                                            {addr.address_line_2 && `, ${addr.address_line_2}`}
+                                        </p>
+                                        <p className="text-gray-605 dark:text-gray-400 font-medium">
+                                            {addr.city}, {addr.state} - {addr.zip}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Customer Purchase History (Past orders) */}
+                    {order.user?.recent_orders && order.user.recent_orders.length > 0 && (
+                        <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none space-y-4">
+                            <h3 className="font-semibold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
+                                <Receipt size={16} className="text-gray-450" />
+                                Recent Customer Orders
+                            </h3>
+                            <div className="space-y-3">
+                                {order.user.recent_orders.map((histOrder) => (
+                                    <div key={histOrder.id} className="border-[0.5px] border-black/10 dark:border-neutral-800 rounded-[10px] p-3 text-[11px] bg-neutral-50 dark:bg-neutral-800/10 flex justify-between items-center">
+                                        <div>
+                                            <Link href={`/superadmin/dashboard/orders/${histOrder.id}`} className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline">
+                                                #{histOrder.order_number}
+                                            </Link>
+                                            <p className="text-gray-400 mt-1">{new Date(histOrder.created_at).toLocaleDateString()}</p>
+                                        </div>
+                                        <div className="text-right">
+                                            <span className="font-bold text-gray-900 dark:text-white">₹{histOrder.final_amount}</span>
+                                            <div className="mt-1">
+                                                <span className="text-[8px] font-bold uppercase px-1.5 py-0.5 rounded border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-850">
+                                                    {histOrder.status}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Payment Info */}
                     <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none">
@@ -472,11 +860,11 @@ export default function AdminOrderDetailPage() {
                                         <div className="flex justify-between font-bold text-gray-900 dark:text-white">
                                             <span>₹{ref.amount}</span>
                                             <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider font-bold border-[0.5px] ${
-                                                ref.status === 'approved' ? 'bg-green-55 text-green-750 border-green-200/50 dark:bg-green-950/20 dark:text-green-400 dark:border-green-900/30' : 'bg-amber-55 text-amber-750 border-amber-250/20 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30'
+                                                ref.status === 'approved' ? 'bg-green-55 text-green-755 border-green-200/50 dark:bg-green-950/20 dark:text-green-400 dark:border-green-900/30' : 'bg-amber-55 text-amber-755 border-amber-250/20 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30'
                                             }`}>{ref.status}</span>
                                         </div>
-                                        <p className="text-gray-500 dark:text-gray-400 mt-2 font-medium">Reason: {ref.reason}</p>
-                                        {ref.admin_notes && <p className="text-gray-400 dark:text-gray-550 mt-1 italic">Notes: {ref.admin_notes}</p>}
+                                        <p className="text-gray-550 dark:text-gray-400 mt-2 font-medium">Reason: {ref.reason}</p>
+                                        {ref.admin_notes && <p className="text-gray-400 dark:text-gray-500 mt-1 italic">Notes: {ref.admin_notes}</p>}
                                     </div>
                                 ))}
                             </div>
@@ -506,7 +894,7 @@ export default function AdminOrderDetailPage() {
                         </div>
                         <form onSubmit={handleRefundSubmit} className="p-6 space-y-4">
                             <div>
-                                <label className="block text-[10px] font-bold text-gray-450 dark:text-gray-550 uppercase tracking-wider mb-1.5">Refund Amount (₹)</label>
+                                <label className="block text-[10px] font-bold text-gray-450 dark:text-gray-500 uppercase tracking-wider mb-1.5">Refund Amount (₹)</label>
                                 <input
                                     type="number"
                                     step="0.01"
@@ -520,7 +908,7 @@ export default function AdminOrderDetailPage() {
                             </div>
 
                             <div>
-                                <label className="block text-[10px] font-bold text-gray-450 dark:text-gray-555 uppercase tracking-wider mb-1.5">Reason for Refund</label>
+                                <label className="block text-[10px] font-bold text-gray-450 dark:text-gray-500 uppercase tracking-wider mb-1.5">Reason for Refund</label>
                                 <textarea
                                     required
                                     rows={3}
@@ -532,7 +920,7 @@ export default function AdminOrderDetailPage() {
                             </div>
 
                             <div>
-                                <label className="block text-[10px] font-bold text-gray-450 dark:text-gray-555 uppercase tracking-wider mb-1.5">Admin Internal Notes (Optional)</label>
+                                <label className="block text-[10px] font-bold text-gray-450 dark:text-gray-550 uppercase tracking-wider mb-1.5">Admin Internal Notes (Optional)</label>
                                 <textarea
                                     rows={2}
                                     placeholder="Internal comments on package delivery confirmation"
@@ -565,5 +953,3 @@ export default function AdminOrderDetailPage() {
         </div>
     );
 }
-
-

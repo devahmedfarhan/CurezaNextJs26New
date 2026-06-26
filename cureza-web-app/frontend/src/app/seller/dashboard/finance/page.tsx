@@ -457,7 +457,7 @@ export default function SellerFinancePage() {
                                                     <div className="p-2.5 bg-purple-50 text-purple-600 rounded-xl mb-6 w-fit group-hover:bg-purple-600 group-hover:text-white transition-all duration-500 shadow-inner">
                                                         <CreditCard size={20} />
                                                     </div>
-                                                    <p className="text-[11px] font-semibold text-gray-500 capitalize mb-1">Successfully Injected</p>
+                                                    <p className="text-[11px] font-semibold text-gray-500 capitalize mb-1">Successful Payouts</p>
                                                     <h3 className="text-2xl font-bold text-gray-800 mb-2 tracking-tight">
                                                         ₹{paidNet.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                     </h3>

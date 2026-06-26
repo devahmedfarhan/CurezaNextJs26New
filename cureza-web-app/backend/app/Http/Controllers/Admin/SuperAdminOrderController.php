@@ -90,14 +90,26 @@ class SuperAdminOrderController extends Controller
     public function show($id)
     {
         $order = Order::with([
-            'items.seller', 
+            'items.seller.sellerProfile', 
+            'items.seller.brand',
             'items.product.brand', 
             'items.doctor',
-            'user', 
+            'user.wallet', 
+            'user.addresses',
             'shippingMethod', 
             'shipments', 
             'refunds'
         ])->findOrFail($id);
+
+        if ($order->user) {
+            $order->user->total_orders = Order::where('user_id', $order->user_id)->count();
+            $order->user->total_spent = Order::where('user_id', $order->user_id)->where('payment_status', 'paid')->sum('final_amount');
+            $order->user->recent_orders = Order::where('user_id', $order->user_id)
+                ->where('id', '!=', $order->id)
+                ->latest()
+                ->take(5)
+                ->get();
+        }
 
         return response()->json($order);
     }

@@ -578,11 +578,11 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                             {/* Step 2: Book Courier Pickup & AWB */}
                             <div className="relative">
                                 <span className={`absolute -left-[41px] top-0 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-none border-black/50 border-[0.5px] ${
-                                    shipment 
+                                    shipment || order.tracking_id
                                         ? 'bg-emerald-600 text-white' 
                                         : 'bg-emerald-500 text-white border-[0.5px] border-black/50 animate-pulse'
                                 }`}>
-                                    {shipment ? '✓' : '2'}
+                                    {shipment || order.tracking_id ? '✓' : '2'}
                                 </span>
                                 <div>
                                     <h4 className="font-bold text-sm text-gray-900 dark:text-gray-100 flex items-center gap-2">
@@ -590,11 +590,90 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                                         Step 2: Schedule Courier Pickup
                                     </h4>
                                     
-                                    {!shipment ? (
-                                        /* Booking Form if shipment doesn't exist */
-                                        order.status !== 'cancelled' && order.status !== 'delivered' ? (
+                                    {isEditingTracking ? (
+                                        /* Manual Tracking Editor Form */
+                                        <div className="mt-3 bg-gray-50 dark:bg-gray-850 p-4 rounded-xl border-[0.5px] border-black/50 dark:border-gray-800 space-y-4">
+                                            <p className="text-[11px] text-gray-505 font-semibold">Enter the courier company and tracking/AWB number manually.</p>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                <div>
+                                                    <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Courier Partner</label>
+                                                    <input 
+                                                        type="text" 
+                                                        value={trackingProvider} 
+                                                        onChange={e => setTrackingProvider(e.target.value)}
+                                                        placeholder="e.g. Delhivery, BlueDart"
+                                                        className="w-full px-3 py-1.5 rounded-lg border-[0.5px] border-black/50 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs font-bold text-black dark:text-white" 
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">AWB / Tracking Number</label>
+                                                    <input 
+                                                        type="text" 
+                                                        value={trackingId} 
+                                                        onChange={e => setTrackingId(e.target.value)}
+                                                        placeholder="Enter AWB Number"
+                                                        className="w-full px-3 py-1.5 rounded-lg border-[0.5px] border-black/50 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs font-bold text-black dark:text-white" 
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <button
+                                                    onClick={handleSaveTracking}
+                                                    disabled={isSavingTracking}
+                                                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-none border-black/50 border-[0.5px]"
+                                                >
+                                                    <Save size={12} />
+                                                    {isSavingTracking ? 'Saving...' : 'Save Tracking'}
+                                                </button>
+                                                <button
+                                                    onClick={() => setIsEditingTracking(false)}
+                                                    className="px-4 py-2 border-[0.5px] border-black/50 dark:border-gray-700 bg-gray-50 dark:bg-gray-850 rounded-lg text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors shadow-none"
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : !shipment ? (
+                                        /* If Delhivery Shipment does not exist */
+                                        order.tracking_id ? (
+                                            /* Display Manual Tracking details if order.tracking_id is set */
+                                            <div className="mt-3 bg-gray-50/50 dark:bg-gray-800/20 p-4 rounded-xl border-[0.5px] border-black/50 dark:border-gray-800">
+                                                <div className="grid grid-cols-2 gap-3 text-xs mb-3">
+                                                    <div>
+                                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">AWB / Tracking Number</p>
+                                                        <p className="font-mono font-bold text-sm text-gray-900 dark:text-gray-150 mt-0.5">{order.tracking_id}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Courier Partner</p>
+                                                        <p className="font-semibold text-gray-800 dark:text-gray-200 mt-0.5">{order.tracking_provider || 'Manual Courier'}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex flex-wrap gap-2">
+                                                    <a
+                                                        href={`https://track.cureza.com/?awb=${order.tracking_id}&provider=${encodeURIComponent(order.tracking_provider || '')}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-semibold transition-colors shadow-none border-[0.5px] border-transparent"
+                                                    >
+                                                        Track Order
+                                                    </a>
+                                                    <button
+                                                        onClick={() => {
+                                                            setTrackingId(order.tracking_id || '');
+                                                            setTrackingProvider(order.tracking_provider || '');
+                                                            setIsEditingTracking(true);
+                                                        }}
+                                                        className="inline-flex items-center gap-2 px-4 py-2 border-[0.5px] border-black/50 dark:border-gray-700 bg-gray-50 dark:bg-gray-850 rounded-lg text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors shadow-none"
+                                                    >
+                                                        <Edit2 size={12} />
+                                                        Edit Tracking
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ) : order.status !== 'cancelled' && order.status !== 'delivered' ? (
+                                            /* Show booking form if no tracking exists */
                                             <div className="mt-3 bg-gray-50 dark:bg-gray-800/40 p-4 rounded-xl border-[0.5px] border-black/50 dark:border-gray-800">
-                                                <p className="text-[11px] text-gray-500 font-semibold mb-3">Configure package dimensions and choose your convenient pickup window to generate the AWB tracking number.</p>
+                                                <p className="text-[11px] text-gray-550 font-semibold mb-3">Configure package dimensions and choose your convenient pickup window to generate the AWB tracking number.</p>
                                                 <form onSubmit={handleBookShipment} className="space-y-4">
                                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                                         <div>
@@ -650,12 +729,26 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                                                         {isBooking ? 'Booking Pickup...' : 'Schedule Pickup & Get AWB'}
                                                     </button>
                                                 </form>
+
+                                                <div className="mt-3 pt-3 border-t-[0.5px] border-dashed border-gray-300 dark:border-gray-750 flex justify-center">
+                                                    <button
+                                                        onClick={() => {
+                                                            setTrackingId('');
+                                                            setTrackingProvider('');
+                                                            setIsEditingTracking(true);
+                                                        }}
+                                                        className="text-xs text-emerald-650 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-350 font-bold flex items-center gap-1 cursor-pointer"
+                                                    >
+                                                        <Edit2 size={12} />
+                                                        Or enter tracking details manually
+                                                    </button>
+                                                </div>
                                             </div>
                                         ) : (
                                             <p className="text-xs text-gray-400 mt-2 font-medium">Delhivery pickup cannot be scheduled for cancelled or delivered orders.</p>
                                         )
                                     ) : (
-                                        /* Display Shipment Details & Status */
+                                        /* Display Delhivery Shipment Details & Status */
                                         <div className="mt-3 space-y-4 bg-gray-50/50 dark:bg-gray-800/20 p-4 rounded-xl border-[0.5px] border-black/50 dark:border-gray-800">
                                             <div className="grid grid-cols-2 gap-3 text-xs">
                                                 <div>
@@ -687,26 +780,30 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                             {/* Step 3: Courier Agent Handover */}
                             <div className="relative">
                                 <span className={`absolute -left-[41px] top-0 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-none border-black/50 border-[0.5px] ${
-                                    !shipment 
-                                        ? 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-600'
-                                        : shipment.status === 'delivered' 
-                                            ? 'bg-emerald-600 text-white' 
-                                            : 'bg-emerald-500 text-white border-[0.5px] border-black/50'
+                                    (shipment && shipment.status === 'delivered') || order.status.toLowerCase() === 'delivered'
+                                        ? 'bg-emerald-600 text-white' 
+                                        : (shipment || order.tracking_id)
+                                            ? 'bg-emerald-500 text-white border-[0.5px] border-black/50'
+                                            : 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-600'
                                 }`}>
-                                    {shipment && shipment.status === 'delivered' ? '✓' : '3'}
+                                    {(shipment && shipment.status === 'delivered') || order.status.toLowerCase() === 'delivered' ? '✓' : '3'}
                                 </span>
                                 <div>
                                     <h4 className={`font-bold text-sm flex items-center gap-2 ${
-                                        shipment ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400'
+                                        shipment || order.tracking_id ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400'
                                     }`}>
                                         <Truck size={15} />
-                                        Step 3: Handover to Delhivery Courier
+                                        Step 3: Handover to Courier {order.tracking_provider ? `(${order.tracking_provider})` : shipment ? '(Delhivery)' : ''}
                                     </h4>
                                     <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-                                        The Delhivery agent will arrive at your pickup address during the scheduled time window. Please handover the packed order with the printed shipping label affixed.
+                                        {order.tracking_id && !shipment ? (
+                                            `Package has been handed over to ${order.tracking_provider || 'the courier partner'} for shipment with tracking number ${order.tracking_id}.`
+                                        ) : (
+                                            "The Delhivery agent will arrive at your pickup address during the scheduled time window. Please handover the packed order with the printed shipping label affixed."
+                                        )}
                                     </p>
 
-                                    {shipment && (
+                                    {shipment ? (
                                         <div className="mt-3 bg-white dark:bg-gray-850 p-4 rounded-xl border-[0.5px] border-black/50 dark:border-gray-800 space-y-3">
                                             <div className="flex justify-between items-center text-xs">
                                                 <span className="font-semibold text-gray-500">Courier Tracking Status</span>
@@ -727,22 +824,32 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
 
                                             <p className="text-[10px] text-gray-400 italic">This timeline updates automatically as Delhivery scans the package status.</p>
                                         </div>
-                                    )}
+                                    ) : order.tracking_id ? (
+                                        <div className="mt-3 bg-white dark:bg-gray-850 p-4 rounded-xl border-[0.5px] border-black/50 dark:border-gray-800 space-y-3">
+                                            <div className="flex justify-between items-center text-xs">
+                                                <span className="font-semibold text-gray-500">Courier Tracking Status</span>
+                                                <span className="font-extrabold capitalize text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 px-2.5 py-0.5 rounded-full border-[0.5px] border-black/50 dark:border-emerald-900/30 text-[10px]">
+                                                    {order.status.toLowerCase() === 'delivered' ? 'delivered' : order.status.toLowerCase() === 'shipped' ? 'shipped' : 'dispatched'}
+                                                </span>
+                                            </div>
+                                            <p className="text-[10px] text-gray-400 italic">This manual shipment status is synchronized with the order status.</p>
+                                        </div>
+                                    ) : null}
                                 </div>
                             </div>
 
                             {/* Step 4: Payout Settlement */}
                             <div className="relative">
                                 <span className={`absolute -left-[41px] top-0 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-none border-black/50 border-[0.5px] ${
-                                    shipment && shipment.status === 'delivered' 
+                                    (shipment && shipment.status === 'delivered') || order.status.toLowerCase() === 'delivered'
                                         ? 'bg-emerald-600 text-white' 
                                         : 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-600'
                                 }`}>
-                                    {shipment && shipment.status === 'delivered' ? '✓' : '4'}
+                                    {(shipment && shipment.status === 'delivered') || order.status.toLowerCase() === 'delivered' ? '✓' : '4'}
                                 </span>
                                 <div>
                                     <h4 className={`font-bold text-sm flex items-center gap-2 ${
-                                        shipment && shipment.status === 'delivered' ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400'
+                                        (shipment && shipment.status === 'delivered') || order.status.toLowerCase() === 'delivered' ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400'
                                     }`}>
                                         <CreditCard size={15} />
                                         Step 4: Customer Delivery & Payout
@@ -751,7 +858,7 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                                         Once delivered to the customer, shipping charges & platform commission are programmatically deducted. The net earnings credit instantly to your Cureza wallet.
                                     </p>
 
-                                    {shipment && (
+                                    {shipment ? (
                                         <div className="mt-3 bg-gray-50/50 dark:bg-gray-800/10 p-3 rounded-lg border-[0.5px] border-black/50 dark:border-gray-800 space-y-1.5 text-[11px]">
                                             <div className="flex justify-between items-center text-gray-500">
                                                 <span>COD Remittance</span>
@@ -764,7 +871,16 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                                                 </span>
                                             </div>
                                         </div>
-                                    )}
+                                    ) : order.tracking_id ? (
+                                        <div className="mt-3 bg-gray-50/50 dark:bg-gray-800/10 p-3 rounded-lg border-[0.5px] border-black/50 dark:border-gray-800 space-y-1.5 text-[11px]">
+                                            <div className="flex justify-between items-center text-gray-500">
+                                                <span>Seller Wallet Payout</span>
+                                                <span className={`font-bold capitalize ${order.status.toLowerCase() === 'delivered' ? 'text-emerald-600' : 'text-gray-800 dark:text-gray-200'}`}>
+                                                    {order.status.toLowerCase() === 'delivered' ? 'credited' : 'pending delivery'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ) : null}
                                 </div>
                             </div>
                         </div>
@@ -1051,6 +1167,39 @@ export default function SellerOrderDetailsPage({ params }: { params: Promise<{ i
                                         <p className="text-xs text-gray-500 dark:text-gray-400 ml-6">
                                             Estimated Delivery: {order.shippingMethod.estimated_days}
                                         </p>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+
+                        {/* Tracking Details */}
+                        {order.tracking_id && (
+                            <>
+                                <div className="border-t-[0.5px] border-black/50 dark:border-gray-800"></div>
+                                <div>
+                                    <h3 className="font-bold text-base text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
+                                        <Truck className="text-gray-400" size={16} />
+                                        Tracking Details
+                                    </h3>
+                                    <div className="space-y-2 text-xs">
+                                        <div>
+                                            <span className="text-gray-400 font-semibold uppercase tracking-wider text-[10px]">Courier Partner</span>
+                                            <p className="font-semibold text-gray-900 dark:text-gray-100 mt-0.5">{order.tracking_provider || 'Manual Courier'}</p>
+                                        </div>
+                                        <div>
+                                            <span className="text-gray-400 font-semibold uppercase tracking-wider text-[10px]">Tracking Number</span>
+                                            <p className="font-mono font-bold text-gray-900 dark:text-gray-100 mt-0.5">{order.tracking_id}</p>
+                                        </div>
+                                        <div className="pt-1.5">
+                                            <a
+                                                href={`https://track.cureza.com/?awb=${order.tracking_id}&provider=${encodeURIComponent(order.tracking_provider || '')}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-semibold transition-colors shadow-none border-[0.5px] border-transparent"
+                                            >
+                                                Track Order
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </>
