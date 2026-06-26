@@ -124,21 +124,28 @@ class WalletService
      * @param int|null $payoutId
      * @return bool
      */
-    public function debitAmount($sellerId, $orderId, $amount, $description, $type = 'adjustment', $payoutId = null)
+    public function debitAmount($sellerId, $orderId, $amount, $description, $type = 'adjustment', $payoutId = null, $metadata = [], $tcs = 0.00, $tds = 0.00)
     {
         DB::beginTransaction();
         try {
             $wallet = $this->getWalletForUpdate($sellerId);
             $balanceBefore = $wallet->available_balance;
 
-            if ($wallet->available_balance < $amount) {
-                // If it's a refund and the money is still pending, we should deduct from pending!
-                if ($type === 'refund' && $wallet->pending_amount >= $amount) {
+            if ($type === 'refund') {
+                // Deduct from total earnings
+                $wallet->total_earnings -= $amount;
+
+                // Smart routing of debits between pending and available balances
+                if ($wallet->pending_amount >= $amount) {
                     $wallet->pending_amount -= $amount;
                 } else {
-                    throw new \Exception("Insufficient balance. Available: ₹{$wallet->available_balance}, Required: ₹{$amount}");
+                    $remaining = $amount - $wallet->pending_amount;
+                    $wallet->pending_amount = 0;
+                    $wallet->available_balance -= $remaining;
                 }
             } else {
+                // Deduct directly from available balance (e.g. payouts, non-refund adjustments)
+                // Balance is allowed to go negative to prevent deadlocks on required adjustments
                 $wallet->available_balance -= $amount;
             }
             $wallet->save();
@@ -150,10 +157,12 @@ class WalletService
                 'payout_id' => $payoutId,
                 'type' => $type,
                 'amount' => $amount,
+                'tcs_deduction' => $tcs,
+                'tds_deduction' => $tds,
                 'balance_before' => $balanceBefore,
                 'balance_after' => $wallet->available_balance,
                 'description' => $description,
-                'metadata' => [],
+                'metadata' => $metadata,
             ]);
 
             // Audit transaction log

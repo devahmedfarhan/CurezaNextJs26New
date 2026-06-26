@@ -30,8 +30,19 @@ class PayoutService
         try {
             $wallet = SellerWallet::where('seller_id', $sellerId)->lockForUpdate()->first();
 
-            if (!$wallet || $wallet->available_balance < $amount) {
-                throw new \Exception("Insufficient balance. Available: ₹" . ($wallet->available_balance ?? 0));
+            if (!$wallet) {
+                throw new \Exception("Wallet not found");
+            }
+
+            // Calculate pending payouts
+            $pendingPayoutsSum = Payout::where('seller_id', $sellerId)
+                ->where('status', 'pending')
+                ->sum('requested_amount');
+
+            $effectiveBalance = $wallet->available_balance - $pendingPayoutsSum;
+
+            if ($effectiveBalance < $amount) {
+                throw new \Exception("Insufficient balance. Available: ₹" . number_format($wallet->available_balance, 2) . " (Pending requests: ₹" . number_format($pendingPayoutsSum, 2) . ")");
             }
 
             // Minimum payout amount check

@@ -579,4 +579,122 @@ class MarketplaceAccountingTest extends TestCase
         $wallet = SellerWallet::where('seller_id', $this->seller1->id)->first();
         $this->assertEquals(18.65, $wallet->pending_amount);
     }
+
+    /** @test */
+    public function test_negative_wallet_balance_on_refund()
+    {
+        $walletService = new WalletService();
+        $commissionService = new CommissionService();
+
+        $wallet = $walletService->initializeWallet($this->seller1->id);
+        $this->assertEquals(0.00, $wallet->available_balance);
+
+        // We process a refund of 500.00 on an empty wallet
+        // This should run without throwing Insufficient Balance exceptions
+        $order = Order::create([
+            'order_number' => 'ORD-REFUND-TEST',
+            'user_id' => $this->customer->id,
+            'subtotal' => 500.00,
+            'discount_amount' => 0.00,
+            'shipping_amount' => 0.00,
+            'total_amount' => 500.00,
+            'tax_amount' => 0.00,
+            'final_amount' => 500.00,
+            'status' => 'refunded',
+            'payment_status' => 'refunded',
+            'payment_method' => 'razorpay',
+            'shipping_address_json' => ['state' => 'Rajasthan'],
+            'billing_address_json' => ['state' => 'Rajasthan']
+        ]);
+
+        $product = Product::create([
+            'seller_id' => $this->seller1->id,
+            'brand_id' => $this->brand1->id,
+            'category_id' => $this->category->id,
+            'title' => 'Refund Product',
+            'slug' => 'refund-product',
+            'price' => 500.00,
+            'gst_slab' => 0.00,
+            'gst_inclusive' => true,
+            'stock' => 10,
+            'stock_status' => 'in_stock',
+            'status' => 'published'
+        ]);
+
+        OrderItem::create([
+            'order_id' => $order->id,
+            'product_id' => $product->id,
+            'seller_id' => $this->seller1->id,
+            'product_name' => 'Refund Product',
+            'quantity' => 1,
+            'price' => 500.00,
+            'total' => 500.00,
+            'base_price' => 500.00,
+            'gst_slab' => 0.00,
+            'gst_amount' => 0.00,
+            'cgst' => 0.00,
+            'sgst' => 0.00,
+            'igst' => 0.00,
+            'net_amount' => 500.00
+        ]);
+
+        // Create a mock original transaction of type earning so we can find it
+        $originalTx = SellerTransaction::create([
+            'seller_id' => $this->seller1->id,
+            'order_id' => $order->id,
+            'type' => 'earning',
+            'amount' => 300.00,
+            'balance_before' => 0.00,
+            'balance_after' => 0.00,
+            'description' => 'Original earnings'
+        ]);
+
+        // Set order as having commission calculated
+        $order->commission_calculated_at = now();
+        $order->save();
+
+        // Process refund
+        $result = $commissionService->handleRefund($order);
+        $this->assertTrue($result);
+
+        $wallet->refresh();
+        // Since original earning transaction was 300.00, it debits 300.00.
+        // It allows balance to go negative: available_balance should be -300.00.
+        $this->assertEquals(-300.00, $wallet->available_balance);
+        $this->assertEquals(-300.00, $wallet->total_earnings);
+    }
+
+    /** @test */
+    public function test_prevent_double_payout_requests()
+    {
+        $walletService = new WalletService();
+        $payoutService = new \App\Services\PayoutService();
+
+        $wallet = $walletService->initializeWallet($this->seller1->id);
+        $wallet->available_balance = 500.00;
+        $wallet->save();
+
+        // Make first payout request of 300.00
+        $payout1 = $payoutService->requestPayout($this->seller1->id, 300.00, [
+            'account_holder_name' => 'Seller One H',
+            'account_number' => 'BANK-ACC-1111',
+            'ifsc_code' => 'IFSC0009999',
+            'bank_name' => 'Seller One Brand'
+        ]);
+
+        $this->assertNotNull($payout1);
+        $this->assertEquals('pending', $payout1->status);
+
+        // Make second payout request of 300.00
+        // Effective balance is 500 - 300 = 200. Requesting 300 should fail.
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("Insufficient balance");
+
+        $payoutService->requestPayout($this->seller1->id, 300.00, [
+            'account_holder_name' => 'Seller One H',
+            'account_number' => 'BANK-ACC-1111',
+            'ifsc_code' => 'IFSC0009999',
+            'bank_name' => 'Seller One Brand'
+        ]);
+    }
 }

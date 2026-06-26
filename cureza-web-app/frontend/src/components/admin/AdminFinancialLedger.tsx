@@ -32,6 +32,7 @@ interface SellerRevenue {
     gateway_fee: number;
     seller_earnings: number;
     wallet_balance: number;
+    paid_amount?: number;
     pending_payouts: number;
     commission_rate: {
         platform: number;
@@ -874,6 +875,7 @@ export default function AdminFinancialLedger({ activeSection }: AdminFinancialLe
                                                 <th className="py-3 px-4 font-semibold">Gateway Processing Fee</th>
                                                 <th className="py-3 px-4 font-semibold">Statutory Deductions (1% TCS + 1% TDS)</th>
                                                 <th className="py-3 px-4 font-semibold">Net Earnings</th>
+                                                <th className="py-3 px-4 font-semibold">Wallet Balance (Withdrawable)</th>
                                                 <th className="py-3 px-4 font-semibold">Settled Paid Amount</th>
                                                 <th className="py-3 px-4 font-semibold">Pending Escrow Hold</th>
                                             </tr>
@@ -884,9 +886,9 @@ export default function AdminFinancialLedger({ activeSection }: AdminFinancialLe
                                                 const tds = sel.tds_amount ?? (sel.total_sales * 0.01);
                                                 const withholdings = tcs + tds;
                                                 return (
-                                                    <tr key={sel.seller_id} className="hover:bg-neutral-50 transition-colors">
-                                                        <td className="py-3.5 px-4 font-bold text-neutral-900">
-                                                            <div>{sel.seller_name}</div>
+                                                    <tr key={sel.seller_id} className="hover:bg-neutral-50 transition-colors border-b border-neutral-950/5">
+                                                        <td className="py-3.5 px-4">
+                                                            <div className="font-bold text-neutral-900">{sel.seller_name}</div>
                                                             <div className="text-[10px] text-neutral-400 font-normal">{sel.brand_name || sel.seller_name}</div>
                                                         </td>
                                                         <td className="py-3.5 px-4 font-bold text-neutral-900">₹{sel.total_sales.toLocaleString('en-IN')}</td>
@@ -899,6 +901,7 @@ export default function AdminFinancialLedger({ activeSection }: AdminFinancialLe
                                                         </td>
                                                         <td className="py-3.5 px-4 text-green-700 font-extrabold">₹{sel.seller_earnings.toLocaleString('en-IN')}</td>
                                                         <td className="py-3.5 px-4 font-bold text-neutral-900">₹{sel.wallet_balance.toLocaleString('en-IN')}</td>
+                                                        <td className="py-3.5 px-4 font-bold text-neutral-900">₹{(sel.paid_amount ?? 0).toLocaleString('en-IN')}</td>
                                                         <td className="py-3.5 px-4 font-bold text-amber-700">₹{sel.pending_payouts.toLocaleString('en-IN')}</td>
                                                     </tr>
                                                 );

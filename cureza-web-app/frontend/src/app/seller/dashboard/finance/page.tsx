@@ -38,6 +38,8 @@ interface FinanceSummary {
         platform: number;
         gateway: number;
         total: number;
+        tcs?: number;
+        tds?: number;
     };
 }
 
@@ -131,6 +133,7 @@ export default function SellerFinancePage() {
     
     // Profit simulator state
     const [simulatorPrice, setSimulatorPrice] = useState('1000');
+    const [simulatorGstSlab, setSimulatorGstSlab] = useState('18');
     const [simulatorPaymentMode, setSimulatorPaymentMode] = useState<'prepaid' | 'cod'>('prepaid');
 
     useEffect(() => {
@@ -276,24 +279,27 @@ export default function SellerFinancePage() {
     }
 
     const price = parseFloat(simulatorPrice) || 0;
+    const gstRate = parseFloat(simulatorGstSlab) || 0;
     const platformRate = summary?.commission_rate?.platform ?? 25;
     const gatewayRate = summary?.commission_rate?.gateway ?? 2.5;
+    const profileTcsRate = summary?.commission_rate?.tcs ?? 1.00;
+    const profileTdsRate = summary?.commission_rate?.tds ?? 1.00;
 
-    const taxableValue = price / 1.18;
+    const taxableValue = price / (1 + (gstRate / 100));
     const platformFee = price * (platformRate / 100);
-    const gstOnPlatform = platformFee * 0.18;
-    const tcs = taxableValue * 0.01;
-    const tds = price * 0.01;
+    const gstOnPlatform = platformFee * 0.18; // Service GST remains standard 18%
+    const tcs = taxableValue * (profileTcsRate / 100);
+    const tds = price * (profileTdsRate / 100);
     const gatewayFee = simulatorPaymentMode === 'prepaid' ? (price * (gatewayRate / 100)) : 0;
     const netEarnings = price - platformFee - gstOnPlatform - tcs - tds - gatewayFee;
     
-    // Available balance tax calculations
+    // Available balance tax calculations (less any pending payouts)
     let netDisbursableYield = 0;
     let estimatedTaxesOnBalance = 0;
     let taxRatio = 0;
     if (summary) {
-        // Wallet balance is already net of all commissions, GST, and statutory withholdings (deducted at source).
-        netDisbursableYield = summary.wallet.available_balance;
+        // Net Withdrawable balance equals available balance minus pending payout requests
+        netDisbursableYield = Math.max(0, summary.wallet.available_balance - summary.payouts.pending);
         estimatedTaxesOnBalance = 0;
     }
 
@@ -630,9 +636,25 @@ export default function SellerFinancePage() {
                                         </div>
                                     </div>
                                     
+                                    {/* Product GST Slab Dropdown */}
+                                    <div className="space-y-1.5 mb-6">
+                                        <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Product GST Slab</label>
+                                        <select
+                                            value={simulatorGstSlab}
+                                            onChange={(e) => setSimulatorGstSlab(e.target.value)}
+                                            className="w-full h-11 px-4 rounded-xl bg-gray-50 border border-gray-150 text-sm font-semibold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green outline-none cursor-pointer"
+                                        >
+                                            <option value="0">0% GST (Nil Rated)</option>
+                                            <option value="5">5% GST</option>
+                                            <option value="12">12% GST</option>
+                                            <option value="18">18% GST (Standard)</option>
+                                            <option value="28">28% GST</option>
+                                        </select>
+                                    </div>
+
                                     {/* Payment Method Toggle Selector */}
                                     <div className="space-y-1.5 mb-6">
-                                        <label className="block text-xs font-semibold text-gray-500 capitalize px-1">Payment Method</label>
+                                        <label className="block text-xs font-semibold text-gray-550 capitalize px-1">Payment Method</label>
                                         <div className="grid grid-cols-2 gap-2">
                                             <button
                                                 type="button"
@@ -665,7 +687,7 @@ export default function SellerFinancePage() {
                                             <span>₹{price.toFixed(2)}</span>
                                         </div>
                                         <div className="flex justify-between items-center text-[10px] font-bold text-gray-400">
-                                            <span>Taxable Value (built-in 18% GST)</span>
+                                            <span>Taxable Value (built-in {gstRate}% GST)</span>
                                             <span>₹{taxableValue.toFixed(2)}</span>
                                         </div>
                                         <div className="flex justify-between items-center text-xs font-bold text-rose-500">
@@ -677,11 +699,11 @@ export default function SellerFinancePage() {
                                             <span>-₹{gstOnPlatform.toFixed(2)}</span>
                                         </div>
                                         <div className="flex justify-between items-center text-xs font-bold text-gray-500">
-                                            <span>TCS Deduction (1%)</span>
+                                            <span>TCS Deduction ({profileTcsRate}%)</span>
                                             <span>-₹{tcs.toFixed(2)}</span>
                                         </div>
                                         <div className="flex justify-between items-center text-xs font-bold text-gray-500">
-                                            <span>TDS Deduction (1%)</span>
+                                            <span>TDS Deduction ({profileTdsRate}%)</span>
                                             <span>-₹{tds.toFixed(2)}</span>
                                         </div>
                                         <div className="flex justify-between items-center text-xs font-bold text-rose-500">
@@ -789,9 +811,9 @@ export default function SellerFinancePage() {
                             const lifetimeShippingCharge = lifetimeSummary.summary.shipping_charge ?? 0;
 
                             const lifetimeGst = lifetimeSummary.summary.platform_commission_gst ?? (lifetimePlatformCommission * 0.18);
-                            const lifetimeTcs = lifetimeSummary.summary.tcs_deduction ?? (lifetimeGross * 0.01);
-                            const lifetimeTds = lifetimeSummary.summary.tds_deduction ?? (lifetimeGross * 0.01);
-                            const lifetimeActualHandYield = Math.max(0, lifetimeGross - lifetimePlatformCommission - lifetimeGst - lifetimeGatewayFee - lifetimeTcs - lifetimeTds - lifetimeShippingCharge);
+                            const lifetimeTcs = lifetimeSummary.summary.tcs_deduction ?? (lifetimeGross * (profileTcsRate / 100));
+                            const lifetimeTds = lifetimeSummary.summary.tds_deduction ?? (lifetimeGross * (profileTdsRate / 100));
+                            const lifetimeActualHandYield = lifetimeSummary.summary.net_earnings;
                             const lifetimeOrderCount = lifetimeSummary.summary.order_count;
 
                             return (
@@ -889,14 +911,14 @@ export default function SellerFinancePage() {
                                             {/* Card 6: TCS & TDS */}
                                             <div className="p-4 bg-amber-50/20 rounded-xl border border-amber-100 group hover:bg-white hover:shadow-2xl hover:shadow-amber-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
                                                 <div>
-                                                    <p className="text-[10px] font-bold text-amber-600 capitalize mb-1">Statutory Taxes (2%)</p>
+                                                    <p className="text-[10px] font-bold text-amber-600 capitalize mb-1">Statutory Taxes ({(profileTcsRate + profileTdsRate).toFixed(2)}%)</p>
                                                     <p className="text-xl font-extrabold text-amber-700 tracking-tight mb-2">
                                                         -₹{(tcs + tds).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                     </p>
                                                 </div>
                                                 <div className="p-2.5 bg-white/80 rounded-xl border border-amber-100/50 text-[10px] font-medium text-amber-700 leading-normal mb-2 font-mono">
-                                                    <p className="font-semibold capitalize text-[9px] text-amber-600 mb-0.5">TCS: ₹{tcs.toFixed(2)} | TDS: ₹{tds.toFixed(2)}</p>
-                                                    <p>Tax Collection at Source (1% TCS) and Tax Deducted at Source (1% TDS) withheld at source.</p>
+                                                    <p className="font-semibold capitalize text-[9px] text-amber-600 mb-0.5">TCS: ₹{tcs.toFixed(2)} ({profileTcsRate}%) | TDS: ₹{tds.toFixed(2)} ({profileTdsRate}%)</p>
+                                                    <p>Tax Collection at Source ({profileTcsRate}% TCS) and Tax Deducted at Source ({profileTdsRate}% TDS) withheld at source.</p>
                                                 </div>
                                                 <div className="w-12 h-1 bg-amber-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
                                             </div>
@@ -1012,14 +1034,14 @@ export default function SellerFinancePage() {
                                             {/* Card 6: TCS & TDS */}
                                             <div className="p-4 bg-amber-50/20 rounded-xl border border-amber-100 group hover:bg-white hover:shadow-2xl hover:shadow-amber-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
                                                 <div>
-                                                    <p className="text-[10px] font-bold text-amber-600 capitalize mb-1">Statutory Taxes (2%)</p>
+                                                    <p className="text-[10px] font-bold text-amber-600 capitalize mb-1">Statutory Taxes ({(profileTcsRate + profileTdsRate).toFixed(2)}%)</p>
                                                     <p className="text-xl font-extrabold text-amber-700 tracking-tight mb-2">
                                                         -₹{(lifetimeTcs + lifetimeTds).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                     </p>
                                                 </div>
                                                 <div className="p-2.5 bg-white/80 rounded-xl border border-amber-100/50 text-[10px] font-medium text-amber-700 leading-normal mb-2 font-mono">
-                                                    <p className="font-semibold capitalize text-[9px] text-amber-600 mb-0.5">TCS: ₹{lifetimeTcs.toFixed(2)} | TDS: ₹{lifetimeTds.toFixed(2)}</p>
-                                                    <p>Tax Collection at Source (1% TCS) and Tax Deducted at Source (1% TDS) withheld at source.</p>
+                                                    <p className="font-semibold capitalize text-[9px] text-amber-600 mb-0.5">TCS: ₹{lifetimeTcs.toFixed(2)} ({profileTcsRate}%) | TDS: ₹{lifetimeTds.toFixed(2)} ({profileTdsRate}%)</p>
+                                                    <p>Tax Collection at Source ({profileTcsRate}% TCS) and Tax Deducted at Source ({profileTdsRate}% TDS) withheld at source.</p>
                                                 </div>
                                                 <div className="w-12 h-1 bg-amber-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
                                             </div>

@@ -102,6 +102,7 @@ class AdminFinanceController extends Controller
                 'gateway_fee' => $summary['total_gateway_fee'],
                 'seller_earnings' => $summary['total_earnings'],
                 'wallet_balance' => round($seller->sellerWallet->available_balance ?? 0, 2),
+                'paid_amount' => round($seller->sellerWallet->paid_amount ?? 0, 2),
                 'pending_payouts' => round($seller->sellerWallet->pending_amount ?? 0, 2),
                 'commission_rate' => [
                     'platform' => $summary['current_commission_rate']['platform'],
@@ -490,7 +491,7 @@ class AdminFinanceController extends Controller
             $file = fopen('php://output', 'w');
 
             if ($type === 'sellers') {
-                fputcsv($file, ['Seller Name', 'Brand', 'Total Sales', 'Platform Commission', 'Gateway Fee', 'Seller Earnings', 'Wallet Balance', 'Orders']);
+                fputcsv($file, ['Seller Name', 'Brand', 'Total Sales', 'Platform Commission', 'Gateway Fee', 'Seller Earnings', 'Wallet Balance', 'Settled Paid Amount', 'Pending Escrow Hold', 'Orders']);
 
                 $sellers = User::where('role', 'vendor')
                     ->with(['sellerProfile', 'sellerWallet'])
@@ -506,7 +507,9 @@ class AdminFinanceController extends Controller
                         $summary['total_platform_commission'],
                         $summary['total_gateway_fee'],
                         $summary['total_earnings'],
-                        $seller->sellerWallet->available_balance ?? 0,
+                        round($seller->sellerWallet->available_balance ?? 0, 2),
+                        round($seller->sellerWallet->paid_amount ?? 0, 2),
+                        round($seller->sellerWallet->pending_amount ?? 0, 2),
                         $summary['order_count'],
                     ]);
                 }
@@ -658,13 +661,29 @@ class AdminFinanceController extends Controller
             })->sum('approved_amount');
         $totalPayouts = $totalSellerPayouts + $totalDoctorPayouts;
 
-        // Accumulated TCS & TDS deductions from seller_transactions
-        $txnQuery = SellerTransaction::query();
-        if ($startDate) $txnQuery->where('created_at', '>=', $startDate);
-        if ($endDate) $txnQuery->where('created_at', '<=', $endDate);
+        // Accumulated TCS & TDS deductions from seller_transactions (Earning minus Refunds/Reversals)
+        $tcsEarning = (float)SellerTransaction::where('type', 'earning')
+            ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+            ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
+            ->sum('tcs_deduction');
 
-        $accumulatedTcs = (float)$txnQuery->sum('tcs_deduction');
-        $accumulatedTds = (float)$txnQuery->sum('tds_deduction');
+        $tcsRefund = (float)SellerTransaction::whereIn('type', ['refund', 'reversal'])
+            ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+            ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
+            ->sum('tcs_deduction');
+
+        $tdsEarning = (float)SellerTransaction::where('type', 'earning')
+            ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+            ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
+            ->sum('tds_deduction');
+
+        $tdsRefund = (float)SellerTransaction::whereIn('type', ['refund', 'reversal'])
+            ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+            ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
+            ->sum('tds_deduction');
+
+        $accumulatedTcs = round($tcsEarning - $tcsRefund, 2);
+        $accumulatedTds = round($tdsEarning - $tdsRefund, 2);
 
         return response()->json([
             'revenue' => [
@@ -682,8 +701,8 @@ class AdminFinanceController extends Controller
                 'doctor_payouts' => round($totalDoctorPayouts, 2),
             ],
             'compliance' => [
-                'accumulated_tcs' => round($accumulatedTcs, 2),
-                'accumulated_tds' => round($accumulatedTds, 2),
+                'accumulated_tcs' => $accumulatedTcs,
+                'accumulated_tds' => $accumulatedTds,
             ]
         ]);
     }
