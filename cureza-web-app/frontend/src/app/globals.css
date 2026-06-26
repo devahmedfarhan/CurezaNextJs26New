@@ -562,13 +562,15 @@ body {
   scrollbar-width: none !important;
 }
 
-/* --- Superadmin Theme Override --- */
-.superadmin-theme .border-black\/50 {
+/* --- Theme Border Overrides --- */
+.superadmin-theme .border-black\/50,
+.seller-theme .border-black\/50 {
   border-color: rgba(0, 0, 0, 0.18) !important;
 }
 
 @supports (color: color-mix(in lab, red, red)) {
-  .superadmin-theme .border-black\/50 {
+  .superadmin-theme .border-black\/50,
+  .seller-theme .border-black\/50 {
     border-color: color-mix(in oklab, #00000029 50%, transparent) !important;
   }
 }

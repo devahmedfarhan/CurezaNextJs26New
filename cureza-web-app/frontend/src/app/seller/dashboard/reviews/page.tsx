@@ -94,19 +94,19 @@ export default function SellerReviewsPage() {
     };
 
     return (
-        <div className="space-y-6 w-full">
+        <div className="space-y-6 w-full animate-in fade-in duration-300">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-2">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Reviews & Ratings</h1>
-                    <p className="text-gray-500 mt-1 font-medium">Manage customer feedback and build trust.</p>
+                    <h1 className="text-2xl font-heading font-extrabold text-gray-900 dark:text-gray-100 tracking-tight">Reviews & Ratings</h1>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 font-medium">Manage customer feedback and build trust.</p>
                 </div>
             </div>
 
             {/* Statistics Cards */}
             {statistics && (
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div className="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-3xl p-6 text-white shadow-none shadow-indigo-100 relative overflow-hidden group border-black/50 border-[0.5px]">
+                    <div className="bg-gradient-to-br from-indigo-600 to-violet-750 rounded-[10px] p-6 text-white relative overflow-hidden group border border-neutral-955/15 dark:border-neutral-850">
                         <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
                             <Star size={80} />
                         </div>
@@ -117,68 +117,68 @@ export default function SellerReviewsPage() {
                                     {statistics.rating_aggregate?.average_rating ? Number(statistics.rating_aggregate.average_rating).toFixed(1) : '0.0'}
                                 </span>
                             </div>
-                            <p className="text-indigo-100 font-bold uppercase text-[10px] tracking-widest">Overall Rating</p>
+                            <p className="text-indigo-100 font-bold uppercase text-[10px] tracking-wider">Overall Rating</p>
                             <p className="text-xs text-indigo-200/80 mt-1 font-medium">
                                 Based on {statistics.rating_aggregate?.total_reviews || 0} reviews
                             </p>
                         </div>
                     </div>
 
-                    <div className="premium-card p-6 border-b-4 border-b-emerald-500/20">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] p-6 border border-neutral-955/15 dark:border-neutral-800 shadow-sm border-b-4 border-b-emerald-500/30 dark:border-b-emerald-500/40">
                         <div className="flex items-center justify-between mb-4">
-                            <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl">
-                                <MessageSquare className="w-6 h-6" />
+                            <div className="p-3 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 rounded-[10px]">
+                                <MessageSquare className="w-5 h-5" />
                             </div>
-                            <span className="text-3xl font-extrabold text-gray-900 font-mono">
+                            <span className="text-3xl font-bold text-gray-900 dark:text-white font-mono">
                                 {statistics.reply_stats?.replied_count || 0}
                             </span>
                         </div>
-                        <p className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">Replies Sent</p>
-                        <p className="text-xs text-emerald-600 mt-1 font-extrabold">
+                        <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Replies Sent</p>
+                        <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-1 font-bold">
                             {statistics.reply_stats?.reply_rate || 0}% Response Rate
                         </p>
                     </div>
 
-                    <div className="premium-card p-6 border-b-4 border-b-amber-500/20">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] p-6 border border-neutral-955/15 dark:border-neutral-800 shadow-sm border-b-4 border-b-amber-500/30 dark:border-b-amber-500/40">
                         <div className="flex items-center justify-between mb-4">
-                            <div className="p-3 bg-amber-50 text-amber-600 rounded-2xl">
-                                <Clock className="w-6 h-6" />
+                            <div className="p-3 bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400 rounded-[10px]">
+                                <Clock className="w-5 h-5" />
                             </div>
-                            <span className="text-3xl font-extrabold text-gray-900 font-mono">
+                            <span className="text-3xl font-bold text-gray-900 dark:text-white font-mono">
                                 {statistics.reply_stats?.pending_replies || 0}
                             </span>
                         </div>
-                        <p className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">Pending Replies</p>
-                        <p className="text-xs text-amber-600 mt-1 font-extrabold italic">Immediate attention</p>
+                        <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Pending Replies</p>
+                        <p className="text-xs text-amber-600 dark:text-amber-400 mt-1 font-bold italic">Immediate attention</p>
                     </div>
 
-                    <div className="premium-card p-6 border-b-4 border-b-blue-500/20">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] p-6 border border-neutral-955/15 dark:border-neutral-800 shadow-sm border-b-4 border-b-blue-500/30 dark:border-b-blue-500/40">
                         <div className="flex items-center justify-between mb-4">
-                            <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl">
-                                <TrendingUp className="w-6 h-6" />
+                            <div className="p-3 bg-blue-50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 rounded-[10px]">
+                                <TrendingUp className="w-5 h-5" />
                             </div>
-                            <span className="text-3xl font-extrabold text-gray-900 font-mono">
+                            <span className="text-3xl font-bold text-gray-900 dark:text-white font-mono">
                                 {statistics.recent_reviews?.length || 0}
                             </span>
                         </div>
-                        <p className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">Recent Feedback</p>
-                        <p className="text-xs text-blue-600 mt-1 font-extrabold">Updated just now</p>
+                        <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Recent Feedback</p>
+                        <p className="text-xs text-blue-600 dark:text-blue-400 mt-1 font-bold">Updated just now</p>
                     </div>
                 </div>
             )}
 
             {/* Filters */}
-            <div className="premium-card p-6">
+            <div className="bg-white dark:bg-gray-900 rounded-[10px] p-6 border border-neutral-955/15 dark:border-neutral-800 shadow-sm">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {/* Type Filter */}
                     <div>
-                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2">
+                        <label className="block text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">
                             Feedback Source
                         </label>
                         <select
                             value={filterType}
                             onChange={(e) => setFilterType(e.target.value)}
-                            className="w-full px-4 py-2.5 bg-gray-50 border-[0.5px] border-black/50 rounded-xl text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green transition-all"
+                            className="w-full px-3 py-2 bg-neutral-50/50 dark:bg-gray-850/50 border border-neutral-955/15 dark:border-neutral-800 rounded-[10px] text-xs font-semibold text-gray-900 dark:text-white focus:bg-white dark:focus:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black outline-none transition-all cursor-pointer"
                         >
                             <option value="all">All Channels</option>
                             <option value="product">Product Quality</option>
@@ -188,7 +188,7 @@ export default function SellerReviewsPage() {
 
                     {/* Rating Filter */}
                     <div>
-                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2">
+                        <label className="block text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">
                             Minimum Star Rating
                         </label>
                         <select
@@ -196,7 +196,7 @@ export default function SellerReviewsPage() {
                             onChange={(e) =>
                                 setFilterRating(e.target.value ? parseInt(e.target.value) : null)
                             }
-                            className="w-full px-4 py-2.5 bg-gray-50 border-[0.5px] border-black/50 rounded-xl text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green transition-all"
+                            className="w-full px-3 py-2 bg-neutral-50/50 dark:bg-gray-850/50 border border-neutral-955/15 dark:border-neutral-800 rounded-[10px] text-xs font-semibold text-gray-900 dark:text-white focus:bg-white dark:focus:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black outline-none transition-all cursor-pointer"
                         >
                             <option value="">Any Satisfaction</option>
                             <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
@@ -209,13 +209,13 @@ export default function SellerReviewsPage() {
 
                     {/* Reply Status Filter */}
                     <div>
-                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2">
+                        <label className="block text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">
                             Engagement Status
                         </label>
                         <select
                             value={filterReplied}
                             onChange={(e) => setFilterReplied(e.target.value)}
-                            className="w-full px-4 py-2.5 bg-gray-50 border-[0.5px] border-black/50 rounded-xl text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green transition-all"
+                            className="w-full px-3 py-2 bg-neutral-50/50 dark:bg-gray-850/50 border border-neutral-955/15 dark:border-neutral-800 rounded-[10px] text-xs font-semibold text-gray-900 dark:text-white focus:bg-white dark:focus:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black outline-none transition-all cursor-pointer"
                         >
                             <option value="all">Everything</option>
                             <option value="replied">Responded</option>
@@ -225,17 +225,17 @@ export default function SellerReviewsPage() {
 
                     {/* Search */}
                     <div>
-                        <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2">
+                        <label className="block text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">
                             Keyword Search
                         </label>
                         <div className="relative">
-                            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
                             <input
                                 type="text"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 placeholder="Search comments..."
-                                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-[0.5px] border-black/50 rounded-xl text-sm font-bold focus:ring-4 focus:ring-green-500/10 focus:border-cureza-green transition-all"
+                                className="w-full pl-9 pr-3 py-2 bg-neutral-50/50 dark:bg-gray-850/50 border border-neutral-955/15 dark:border-neutral-800 rounded-[10px] text-xs font-semibold text-gray-900 dark:text-white focus:bg-white dark:focus:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black outline-none transition-all placeholder-gray-450"
                             />
                         </div>
                     </div>
@@ -243,36 +243,36 @@ export default function SellerReviewsPage() {
             </div>
 
             {/* Reviews List with Reply Functionality */}
-            <div className="space-y-6">
-                <h2 className="text-xl font-extrabold text-gray-900 tracking-tight">
+            <div className="space-y-4">
+                <h2 className="text-lg font-heading font-extrabold text-gray-900 dark:text-gray-100 tracking-tight">
                     Feed Reader
                 </h2>
 
                 {loading && reviews.length === 0 ? (
-                    <div className="flex justify-center p-20 premium-card">
-                        <Loader2 className="w-10 h-10 text-cureza-green animate-spin" />
+                    <div className="flex justify-center p-20 bg-white dark:bg-gray-900 rounded-[10px] border border-neutral-955/15 dark:border-neutral-800">
+                        <Loader2 className="w-8 h-8 text-cureza-green animate-spin" />
                     </div>
                 ) : reviews.length === 0 ? (
-                    <div className="text-center p-20 premium-card">
-                        <MessageSquare className="w-16 h-16 text-gray-200 mx-auto mb-4" />
-                        <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">No feedback matches your criteria</p>
+                    <div className="text-center p-20 bg-white dark:bg-gray-900 rounded-[10px] border border-neutral-955/15 dark:border-neutral-800">
+                        <MessageSquare className="w-12 h-12 text-gray-250 dark:text-gray-700 mx-auto mb-4" />
+                        <p className="text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider text-[10px]">No feedback matches your criteria</p>
                     </div>
                 ) : (
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                         {reviews.map((review) => (
                             <div
                                 key={review.id}
-                                className="premium-card p-8 hover:bg-gray-50/20 transition-all border-l-4 border-l-transparent hover:border-l-indigo-500"
+                                className="bg-white dark:bg-gray-900 rounded-[10px] border border-neutral-955/15 dark:border-neutral-800 shadow-sm p-6 sm:p-8 hover:bg-neutral-55/20 dark:hover:bg-neutral-800/10 transition-all border-l-4 border-l-transparent hover:border-l-indigo-500"
                             >
                                 {/* Review Content */}
-                                <div className="mb-6">
+                                <div className="mb-4">
                                     <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-extrabold text-lg shrink-0">
+                                            <div className="w-10 h-10 rounded-[10px] bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-extrabold text-sm shrink-0">
                                                 {(review.customer?.name || review.full_name || 'Anonymous').charAt(0)}
                                             </div>
                                             <div>
-                                                <h4 className="font-extrabold text-gray-900 text-base">
+                                                <h4 className="font-bold text-gray-900 dark:text-white text-sm">
                                                     {review.customer?.name || review.full_name || 'Anonymous Customer'}
                                                 </h4>
                                                 <div className="flex items-center gap-3 mt-1">
@@ -280,62 +280,62 @@ export default function SellerReviewsPage() {
                                                         {[...Array(5)].map((_, i) => (
                                                             <Star
                                                                 key={i}
-                                                                className={`w-3.5 h-3.5 ${i < review.rating
+                                                                className={`w-3 h-3 ${i < review.rating
                                                                     ? 'text-amber-400 fill-amber-400'
-                                                                    : 'text-gray-200'
+                                                                    : 'text-gray-200 dark:text-gray-700'
                                                                     }`}
                                                             />
                                                         ))}
                                                     </div>
-                                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                                    <span className="text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase tracking-wider">
                                                         {new Date(review.reviewed_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                                                     </span>
                                                 </div>
                                             </div>
                                         </div>
                                         {review.product && (
-                                            <span className="text-[10px] font-extrabold bg-gray-100 text-gray-600 px-3 py-1 rounded-lg uppercase tracking-wider w-fit">
+                                            <span className="text-[10px] font-bold bg-neutral-100 dark:bg-neutral-850 text-gray-650 dark:text-gray-300 px-3 py-1 rounded-[10px] uppercase tracking-wider w-fit">
                                                 📦 {review.product.title || review.product.name}
                                             </span>
                                         )}
                                     </div>
 
                                     {review.review_text && (
-                                        <div className="relative pl-6 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-gray-100 before:rounded-full">
-                                            <p className="text-gray-700 leading-relaxed font-medium italic">"{review.review_text}"</p>
+                                        <div className="relative pl-5 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-0.5 before:bg-neutral-200 dark:before:bg-neutral-800 before:rounded-full">
+                                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed font-medium italic text-xs">"{review.review_text}"</p>
                                         </div>
                                     )}
                                 </div>
 
                                 {/* Reply Section */}
                                 {review.reply ? (
-                                    <div className="bg-indigo-50/50 rounded-2xl p-6 border-[0.5px] border-black/50 ml-4 sm:ml-12 relative">
-                                        <div className="absolute -top-3 left-6 px-2 bg-indigo-500 text-white text-[8px] font-extrabold uppercase tracking-widest rounded-full py-0.5 shadow-none border-black/50 border-[0.5px]">Merchant Response</div>
-                                        <p className="text-sm font-bold text-indigo-900 mb-2 leading-relaxed">
+                                    <div className="bg-indigo-50/30 dark:bg-indigo-950/15 rounded-[10px] p-5 border border-indigo-100/50 dark:border-indigo-900/30 ml-4 sm:ml-12 relative mt-4">
+                                        <div className="absolute -top-3 left-6 px-2.5 bg-indigo-600 text-white text-[8px] font-bold uppercase tracking-wider rounded-full py-0.5">Merchant Response</div>
+                                        <p className="text-xs font-semibold text-indigo-950 dark:text-indigo-300 mb-2 leading-relaxed">
                                             {review.reply.reply_text}
                                         </p>
-                                        <p className="text-[10px] text-indigo-400 font-extrabold uppercase tracking-tight">
+                                        <p className="text-[9px] text-indigo-450 dark:text-indigo-400 font-bold uppercase tracking-wider">
                                             Replied on {new Date(review.reply.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
                                         </p>
                                     </div>
                                 ) : replyingTo === review.id ? (
-                                    <div className="bg-gray-50 rounded-2xl p-6 ml-4 sm:ml-12 border-[0.5px] border-black/50 animate-in slide-in-from-top-2 duration-300">
+                                    <div className="bg-neutral-50/50 dark:bg-gray-850/50 rounded-[10px] p-5 ml-4 sm:ml-12 border border-neutral-955/15 dark:border-neutral-800 animate-in slide-in-from-top-2 duration-300 mt-4">
                                         <textarea
                                             value={replyText}
                                             onChange={(e) => setReplyText(e.target.value)}
                                             placeholder="Compose a thoughtful response..."
                                             rows={4}
-                                            className="w-full px-6 py-4 bg-white border-[0.5px] border-black/50 rounded-xl text-sm font-medium focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 resize-none transition-all shadow-none"
+                                            className="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-neutral-955/15 dark:border-neutral-800 rounded-[10px] text-xs font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 resize-none transition-all shadow-none"
                                         />
-                                        <div className="flex gap-3 mt-4">
+                                        <div className="flex gap-2.5 mt-3">
                                             <button
                                                 onClick={() => handleReply(review.id)}
                                                 disabled={submittingReply || !replyText.trim()}
-                                                className="px-6 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-bold text-sm shadow-none shadow-indigo-100 transition-all hover:-translate-y-0.5 border-black/50 border-[0.5px]"
+                                                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-750 text-white rounded-[10px] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 font-bold text-xs shadow-none transition-all"
                                             >
                                                 {submittingReply ? (
                                                     <>
-                                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
                                                         Sending...
                                                     </>
                                                 ) : (
@@ -347,19 +347,19 @@ export default function SellerReviewsPage() {
                                                     setReplyingTo(null);
                                                     setReplyText('');
                                                 }}
-                                                className="px-6 py-2.5 bg-white border-[0.5px] border-black/50 text-gray-500 rounded-xl hover:bg-gray-50 font-bold text-sm transition-all"
+                                                className="px-4 py-2 bg-white dark:bg-gray-900 border border-neutral-955/15 dark:border-neutral-800 text-gray-700 dark:text-gray-300 rounded-[10px] hover:bg-gray-50 dark:hover:bg-gray-850 font-semibold text-xs transition-all shadow-none"
                                             >
                                                 Dismiss
                                             </button>
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="ml-4 sm:ml-12 border-t-[0.5px] border-black/50 pt-4">
+                                    <div className="ml-4 sm:ml-12 border-t border-neutral-955/10 dark:border-neutral-800 pt-4 mt-4">
                                         <button
                                             onClick={() => setReplyingTo(review.id)}
-                                            className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 font-extrabold text-xs uppercase tracking-widest transition-all hover:gap-3"
+                                            className="flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-bold text-xs uppercase tracking-wider transition-all hover:gap-2"
                                         >
-                                            Draft Response <TrendingUp size={14} />
+                                            Draft Response <TrendingUp size={13} />
                                         </button>
                                     </div>
                                 )}
@@ -374,7 +374,7 @@ export default function SellerReviewsPage() {
                     <button
                         onClick={() => fetchReviews(currentPage + 1)}
                         disabled={loading}
-                        className="px-6 py-3 bg-white border-[0.5px] border-black/50 rounded-lg font-medium text-gray-700 hover:border-blue-500 hover:text-blue-500 transition-all disabled:opacity-50"
+                        className="px-5 py-2.5 bg-white dark:bg-gray-900 border border-neutral-955/15 dark:border-neutral-800 text-gray-700 dark:text-gray-300 rounded-[10px] hover:bg-neutral-50 dark:hover:bg-neutral-800 font-semibold text-xs transition-all disabled:opacity-50 shadow-none"
                     >
                         {loading ? 'Loading...' : 'Load More'}
                     </button>
