@@ -564,13 +564,92 @@ body {
 
 /* --- Theme Border Overrides --- */
 .superadmin-theme .border-black\/50,
-.seller-theme .border-black\/50 {
+.seller-theme .border-black\/50,
+.customer-theme .border-black\/50 {
   border-color: rgba(0, 0, 0, 0.18) !important;
 }
 
 @supports (color: color-mix(in lab, red, red)) {
   .superadmin-theme .border-black\/50,
-  .seller-theme .border-black\/50 {
+  .seller-theme .border-black\/50,
+  .customer-theme .border-black\/50 {
     border-color: color-mix(in oklab, #00000029 50%, transparent) !important;
   }
 }
+
+/* --- Customer Theme Override (My Account) --- */
+.customer-theme {
+  --radius-card: 10px;
+  --radius-button: 10px;
+  --radius: 10px;
+}
+
+.customer-theme .premium-card,
+.customer-theme .premium-glass,
+.customer-theme .glass-card {
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  border: 0.5px solid rgba(5, 35, 38, 0.15) !important;
+}
+
+.customer-theme .premium-shadow {
+  box-shadow: none !important;
+  border-right: 0.5px solid rgba(5, 35, 38, 0.15) !important;
+}
+
+.customer-theme .rounded-2xl,
+.customer-theme .rounded-3xl,
+.customer-theme .rounded-\[2rem\],
+.customer-theme .rounded-\[2\.5rem\],
+.customer-theme .rounded-\[4rem\],
+.customer-theme .rounded-\[1\.25rem\],
+.customer-theme .rounded-\[1\.5rem\],
+.customer-theme .rounded-\[3rem\],
+.customer-theme .rounded-xl {
+  border-radius: 10px !important;
+}
+
+.customer-theme .shadow-sm,
+.customer-theme .shadow,
+.customer-theme .shadow-md,
+.customer-theme .shadow-lg,
+.customer-theme .shadow-xl,
+.customer-theme .shadow-2xl,
+.customer-theme .shadow-premium-light,
+.customer-theme .shadow-premium-hover,
+.customer-theme .shadow-premium-deep {
+  box-shadow: none !important;
+  border: 0.5px solid rgba(5, 35, 38, 0.15) !important;
+}
+
+/* Ensure buttons and inputs in customer theme follow the 10px border-radius */
+.customer-theme button,
+.customer-theme input,
+.customer-theme select,
+.customer-theme textarea {
+  border-radius: 10px !important;
+}
+
+/* Custom scrollbar for customer dashboard */
+.customer-theme .custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.customer-theme .custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.customer-theme .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(5, 35, 38, 0.15);
+  border-radius: 10px;
+}
+.customer-theme .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(5, 35, 38, 0.3);
+}
+
+.dark .customer-theme .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(237, 232, 225, 0.15);
+}
+.dark .customer-theme .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(237, 232, 225, 0.3);
+}
+

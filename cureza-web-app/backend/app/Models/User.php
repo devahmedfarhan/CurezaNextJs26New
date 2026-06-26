@@ -23,6 +23,8 @@ class User extends Authenticatable
         'password',
         'role',
         'phone',
+        'gst_number',
+        'company_name',
         'brand_id',
         'admin_role_id',
         // Personal Information
