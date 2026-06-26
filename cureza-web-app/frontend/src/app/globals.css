@@ -569,6 +569,6 @@ body {
 
 @supports (color: color-mix(in lab, red, red)) {
   .superadmin-theme .border-black\/50 {
-    border-color: color-mix(in oklab, #0000005c 50%, transparent) !important;
+    border-color: color-mix(in oklab, #00000029 50%, transparent) !important;
   }
 }
