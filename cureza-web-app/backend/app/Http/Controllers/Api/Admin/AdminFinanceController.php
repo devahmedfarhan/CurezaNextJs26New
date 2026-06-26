@@ -53,6 +53,118 @@ class AdminFinanceController extends Controller
         if ($endDate) $refundQuery->where('updated_at', '<=', $endDate);
         $totalRefunds = $refundQuery->sum('final_amount');
 
+        // Dynamic timeline calculation for the past 6 months
+        $timeline = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $monthStart = \Carbon\Carbon::now()->subMonths($i)->startOfMonth();
+            $monthEnd = \Carbon\Carbon::now()->subMonths($i)->endOfMonth();
+            $monthName = $monthStart->format('M');
+
+            // Product gross sales
+            $productSales = (float)Order::whereIn('status', ['delivered', 'cod_reconciled'])
+                ->whereNotNull('commission_calculated_at')
+                ->whereBetween('created_at', [$monthStart, $monthEnd])
+                ->sum('final_amount');
+
+            // Product commission
+            $productComm = (float)Order::whereIn('status', ['delivered', 'cod_reconciled'])
+                ->whereNotNull('commission_calculated_at')
+                ->whereBetween('created_at', [$monthStart, $monthEnd])
+                ->sum('platform_commission_amount');
+
+            // Product gateway fee
+            $gatewayFee = (float)Order::whereIn('status', ['delivered', 'cod_reconciled'])
+                ->whereNotNull('commission_calculated_at')
+                ->whereBetween('created_at', [$monthStart, $monthEnd])
+                ->sum('payment_gateway_fee');
+
+            // Doctor bookings
+            $docSales = (float)\App\Models\Appointment::where('status', 'completed')
+                ->whereBetween('appointment_date', [$monthStart, $monthEnd])
+                ->sum('amount');
+
+            // Doctor commission (re-calculate the doctor split cuts)
+            $docAppointments = \App\Models\Appointment::where('status', 'completed')
+                ->whereBetween('appointment_date', [$monthStart, $monthEnd])
+                ->get();
+            
+            $docComm = 0;
+            foreach ($docAppointments as $appt) {
+                $amt = (float)$appt->amount;
+                $isFollowUp = $appt->is_follow_up == 1 || $appt->is_follow_up == true;
+                if ($isFollowUp) {
+                    $docShare = 1.0;
+                } else if ($appt->consultation_type === 'chat') {
+                    $docShare = 0.80;
+                } else {
+                    $docShare = 0.85;
+                }
+                $docComm += ($amt * (1 - $docShare));
+            }
+
+            // Total Sales
+            $totalSales = $productSales + $docSales;
+
+            // Product refunds in that month
+            $refunds = (float)Order::where('status', 'refunded')
+                ->whereBetween('updated_at', [$monthStart, $monthEnd])
+                ->sum('final_amount');
+
+            $totalCommission = $productComm + $docComm;
+            $netProfit = $totalCommission - $gatewayFee - $refunds;
+
+            $timeline[] = [
+                'month' => $monthName,
+                'Sales' => round($totalSales, 2),
+                'Profit' => round($netProfit, 2),
+            ];
+        }
+
+        // Aggregated compliance values (TCS, TDS, GST, Shipping)
+        $tcsEarning = (float)SellerTransaction::where('type', 'earning')
+            ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+            ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
+            ->sum('tcs_deduction');
+
+        $tcsRefund = (float)SellerTransaction::whereIn('type', ['refund', 'reversal'])
+            ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+            ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
+            ->sum('tcs_deduction');
+
+        $tdsEarning = (float)SellerTransaction::where('type', 'earning')
+            ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+            ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
+            ->sum('tds_deduction');
+
+        $tdsRefund = (float)SellerTransaction::whereIn('type', ['refund', 'reversal'])
+            ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+            ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
+            ->sum('tds_deduction');
+
+        $totalTcs = round($tcsEarning - $tcsRefund, 2);
+        $totalTds = round($tdsEarning - $tdsRefund, 2);
+
+        // Sum GST on commission and shipping from metadata
+        $transactions = SellerTransaction::whereIn('type', ['earning', 'refund', 'reversal'])
+            ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+            ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
+            ->get();
+            
+        $totalGst = 0;
+        $totalShipping = 0;
+        foreach ($transactions as $tx) {
+            $meta = $tx->metadata ?? [];
+            $gstVal = (float)($meta['platform_commission_gst'] ?? 0);
+            $shipVal = (float)($meta['shipping_charge'] ?? 0);
+            if ($tx->type === 'earning') {
+                $totalGst += $gstVal;
+                $totalShipping += $shipVal;
+            } else {
+                $totalGst -= $gstVal;
+                $totalShipping -= $shipVal;
+            }
+        }
+
         return response()->json([
             'revenue' => [
                 'total' => round($totalRevenue, 2),
@@ -66,6 +178,13 @@ class AdminFinanceController extends Controller
                 'count' => $refundQuery->count(),
             ],
             'net_platform_earnings' => round($platformCommission - $gatewayFees, 2),
+            'timeline' => $timeline,
+            'compliance' => [
+                'tcs' => round($totalTcs, 2),
+                'tds' => round($totalTds, 2),
+                'gst' => round($totalGst, 2),
+                'shipping' => round($totalShipping, 2),
+            ],
         ]);
     }
 
@@ -270,15 +389,30 @@ class AdminFinanceController extends Controller
             $sellerTransactions = $sellerTxQuery->orderBy('created_at', 'desc')->limit($limit)->get();
 
             foreach ($sellerTransactions as $tx) {
+                $meta = $tx->metadata ?? [];
+                $isEarning = $tx->type === \App\Models\SellerTransaction::TYPE_EARNING;
+                $isRefund = $tx->type === \App\Models\SellerTransaction::TYPE_REFUND;
+                $isReversal = $tx->type === \App\Models\SellerTransaction::TYPE_REVERSAL;
+
+                $gross = (float)$tx->amount;
+                $comm = 0.0;
+                $net = (float)$tx->amount;
+
+                if ($isEarning || $isRefund || $isReversal) {
+                    $gross = (float)($meta['order_total'] ?? $tx->amount);
+                    $comm = (float)($meta['platform_commission'] ?? 0.0);
+                    $net = (float)$tx->amount;
+                }
+
                 $allTransactions->push([
                     'id' => 'seller_' . $tx->id,
-                    'date' => $tx->created_at ? $tx->created_at->toISOString() : null,
+                    'date' => $tx->created_at ? $tx->created_at->toIso8601String() : null,
                     'stakeholder_name' => $tx->seller->name ?? 'Unknown Seller',
                     'stakeholder_role' => 'seller',
                     'type' => $tx->type,
-                    'gross_amount' => (float)$tx->amount,
-                    'net_amount' => (float)$tx->amount,
-                    'commission' => 0.0,
+                    'gross_amount' => $gross,
+                    'net_amount' => $net,
+                    'commission' => $comm,
                     'reference_id' => $tx->order->order_number ?? ($tx->payout->transaction_id ?? ($tx->payout_id ? 'Payout #' . $tx->payout_id : 'N/A')),
                     'description' => $tx->description ?? ucfirst($tx->type) . ' transaction'
                 ]);
@@ -324,7 +458,7 @@ class AdminFinanceController extends Controller
 
                 $allTransactions->push([
                     'id' => 'doctor_appt_' . $appt->id,
-                    'date' => $appt->appointment_date ? $appt->appointment_date->toISOString() : ($appt->created_at ? $appt->created_at->toISOString() : null),
+                    'date' => $appt->appointment_date ? $appt->appointment_date->toIso8601String() : ($appt->created_at ? $appt->created_at->toIso8601String() : null),
                     'stakeholder_name' => $appt->doctor->name ?? 'Unknown Doctor',
                     'stakeholder_role' => 'doctor',
                     'type' => 'earning',
@@ -365,7 +499,7 @@ class AdminFinanceController extends Controller
             foreach ($docPayouts as $payout) {
                 $allTransactions->push([
                     'id' => 'doctor_payout_' . $payout->id,
-                    'date' => $payout->processed_at ? $payout->processed_at->toISOString() : ($payout->created_at ? $payout->created_at->toISOString() : null),
+                    'date' => $payout->processed_at ? $payout->processed_at->toIso8601String() : ($payout->created_at ? $payout->created_at->toIso8601String() : null),
                     'stakeholder_name' => $payout->user->name ?? 'Unknown Doctor',
                     'stakeholder_role' => 'doctor',
                     'type' => 'payout',
@@ -403,7 +537,7 @@ class AdminFinanceController extends Controller
             foreach ($orders as $order) {
                 $allTransactions->push([
                     'id' => 'customer_order_' . $order->id,
-                    'date' => $order->created_at ? $order->created_at->toISOString() : null,
+                    'date' => $order->created_at ? $order->created_at->toIso8601String() : null,
                     'stakeholder_name' => $order->user->name ?? 'Guest Customer',
                     'stakeholder_role' => 'customer',
                     'type' => 'order_payment',
@@ -440,7 +574,7 @@ class AdminFinanceController extends Controller
             foreach ($refunds as $refund) {
                 $allTransactions->push([
                     'id' => 'customer_refund_' . $refund->id,
-                    'date' => $refund->created_at ? $refund->created_at->toISOString() : null,
+                    'date' => $refund->created_at ? $refund->created_at->toIso8601String() : null,
                     'stakeholder_name' => $refund->user->name ?? ($refund->order->user->name ?? 'Customer'),
                     'stakeholder_role' => 'customer',
                     'type' => 'refund',
@@ -511,6 +645,99 @@ class AdminFinanceController extends Controller
                         round($seller->sellerWallet->paid_amount ?? 0, 2),
                         round($seller->sellerWallet->pending_amount ?? 0, 2),
                         $summary['order_count'],
+                    ]);
+                }
+            } elseif ($type === 'doctors') {
+                fputcsv($file, ['Doctor Name', 'Specialization', 'Gross Sales', 'Platform Commission', 'TDS Withheld (10%)', 'Doctor Net Share', 'Bookings Count', 'Pending Payouts', 'Bank Account Holder', 'Bank Name', 'Bank Account Number', 'Bank IFSC']);
+
+                $doctors = User::where('role', 'doctor')
+                    ->where('doctor_status', 'approved')
+                    ->select('users.*')
+                    ->selectSub(function($q) use ($startDate, $endDate) {
+                        $q->from('appointments')
+                          ->whereColumn('appointments.doctor_id', 'users.id')
+                          ->where('appointments.status', 'completed')
+                          ->when($startDate, fn($query) => $query->where('appointments.appointment_date', '>=', $startDate))
+                          ->when($endDate, fn($query) => $query->where('appointments.appointment_date', '<=', $endDate))
+                          ->selectRaw('count(*)');
+                    }, 'bookings_count')
+                    ->selectSub(function($q) use ($startDate, $endDate) {
+                        $q->from('appointments')
+                          ->whereColumn('appointments.doctor_id', 'users.id')
+                          ->where('appointments.status', 'completed')
+                          ->when($startDate, fn($query) => $query->where('appointments.appointment_date', '>=', $startDate))
+                          ->when($endDate, fn($query) => $query->where('appointments.appointment_date', '<=', $endDate))
+                          ->selectRaw('coalesce(sum(amount), 0)');
+                    }, 'gross_sales')
+                    ->selectSub(function($q) use ($startDate, $endDate) {
+                        $q->from('appointments')
+                          ->whereColumn('appointments.doctor_id', 'users.id')
+                          ->where('appointments.status', 'completed')
+                          ->when($startDate, fn($query) => $query->where('appointments.appointment_date', '>=', $startDate))
+                          ->when($endDate, fn($query) => $query->where('appointments.appointment_date', '<=', $endDate))
+                          ->selectRaw('coalesce(sum(amount * case when is_follow_up = 1 then 1.0 when consultation_type = \'chat\' then 0.80 else 0.85 end), 0)');
+                    }, 'doctor_earnings')
+                    ->selectSub(function($q) {
+                        $q->from('payouts')
+                          ->whereColumn('payouts.user_id', 'users.id')
+                          ->where('payouts.status', 'pending')
+                          ->selectRaw('coalesce(sum(requested_amount), 0)');
+                    }, 'pending_payouts')
+                    ->get();
+
+                foreach ($doctors as $doc) {
+                    $grossSales = (float)$doc->gross_sales;
+                    $doctorEarnings = (float)$doc->doctor_earnings;
+                    $platformCommission = $grossSales - $doctorEarnings;
+                    $tds = $doctorEarnings * 0.10;
+                    $netDoctor = $doctorEarnings - $tds;
+
+                    fputcsv($file, [
+                        $doc->name,
+                        $doc->specialization ?? 'N/A',
+                        round($grossSales, 2),
+                        round($platformCommission, 2),
+                        round($tds, 2),
+                        round($netDoctor, 2),
+                        (int)$doc->bookings_count,
+                        round((float)$doc->pending_payouts, 2),
+                        $doc->bank_account_holder ?? 'N/A',
+                        $doc->bank_name ?? 'N/A',
+                        $doc->bank_account_number ?? 'N/A',
+                        $doc->bank_ifsc ?? 'N/A',
+                    ]);
+                }
+            } elseif ($type === 'customers') {
+                fputcsv($file, ['Customer Name', 'Email', 'Orders Count', 'Lifetime Gross Purchases', 'Average Order Value']);
+
+                $orders = Order::whereIn('status', ['delivered', 'cod_reconciled'])
+                    ->with('user')
+                    ->get();
+
+                $customerMap = [];
+                foreach ($orders as $order) {
+                    $customerName = $order->user ? $order->user->name : 'Guest Customer';
+                    $email = $order->user ? $order->user->email : 'N/A';
+                    if (!isset($customerMap[$customerName])) {
+                        $customerMap[$customerName] = [
+                            'name' => $customerName,
+                            'email' => $email,
+                            'orders_count' => 0,
+                            'total_spent' => 0,
+                        ];
+                    }
+                    $customerMap[$customerName]['orders_count'] += 1;
+                    $customerMap[$customerName]['total_spent'] += (float)$order->final_amount;
+                }
+
+                foreach ($customerMap as $cust) {
+                    $avgOrder = $cust['orders_count'] > 0 ? ($cust['total_spent'] / $cust['orders_count']) : 0;
+                    fputcsv($file, [
+                        $cust['name'],
+                        $cust['email'],
+                        $cust['orders_count'],
+                        round($cust['total_spent'], 2),
+                        round($avgOrder, 2),
                     ]);
                 }
             }

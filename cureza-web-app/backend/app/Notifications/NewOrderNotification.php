@@ -62,7 +62,7 @@ class NewOrderNotification extends Notification implements ShouldQueue
             'title' => 'New Order Received',
             'message' => "You have received a new order from {$this->order->user->name} for ₹" . number_format($this->sellerTotal, 2),
             'action_url' => '/seller/dashboard/orders/' . $this->order->id,
-            'created_at' => now()->toISOString(),
+            'created_at' => now()->toIso8601String(),
         ];
     }
 }

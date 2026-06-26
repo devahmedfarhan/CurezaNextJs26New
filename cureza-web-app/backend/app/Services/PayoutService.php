@@ -28,21 +28,32 @@ class PayoutService
     {
         DB::beginTransaction();
         try {
-            $wallet = SellerWallet::where('seller_id', $sellerId)->lockForUpdate()->first();
+            $user = \App\Models\User::find($sellerId);
+            $isDoctor = $user && $user->role === 'doctor';
 
-            if (!$wallet) {
-                throw new \Exception("Wallet not found");
-            }
+            if ($isDoctor) {
+                $effectiveBalance = $this->getDoctorEligibleBalance($sellerId);
+                
+                if ($effectiveBalance < $amount) {
+                    throw new \Exception("Insufficient balance. Available: ₹" . number_format($effectiveBalance, 2));
+                }
+            } else {
+                $wallet = SellerWallet::where('seller_id', $sellerId)->lockForUpdate()->first();
 
-            // Calculate pending payouts
-            $pendingPayoutsSum = Payout::where('seller_id', $sellerId)
-                ->where('status', 'pending')
-                ->sum('requested_amount');
+                if (!$wallet) {
+                    throw new \Exception("Wallet not found");
+                }
 
-            $effectiveBalance = $wallet->available_balance - $pendingPayoutsSum;
+                // Calculate pending payouts
+                $pendingPayoutsSum = Payout::where('seller_id', $sellerId)
+                    ->where('status', 'pending')
+                    ->sum('requested_amount');
 
-            if ($effectiveBalance < $amount) {
-                throw new \Exception("Insufficient balance. Available: ₹" . number_format($wallet->available_balance, 2) . " (Pending requests: ₹" . number_format($pendingPayoutsSum, 2) . ")");
+                $effectiveBalance = $wallet->available_balance - $pendingPayoutsSum;
+
+                if ($effectiveBalance < $amount) {
+                    throw new \Exception("Insufficient balance. Available: ₹" . number_format($wallet->available_balance, 2) . " (Pending requests: ₹" . number_format($pendingPayoutsSum, 2) . ")");
+                }
             }
 
             // Minimum payout amount check
@@ -105,13 +116,19 @@ class PayoutService
 
             $amount = $approvedAmount ?? $payout->requested_amount;
 
-            // Process wallet deduction
-            $this->walletService->processPayout(
-                $payout->seller_id,
-                $payout->id,
-                $amount,
-                "Payout #{$payout->id} approved and processed"
-            );
+            // Check if user is a doctor or vendor
+            $payout->load('user');
+            $isDoctor = $payout->user && $payout->user->role === 'doctor';
+
+            if (!$isDoctor) {
+                // Process wallet deduction
+                $this->walletService->processPayout(
+                    $payout->seller_id,
+                    $payout->id,
+                    $amount,
+                    "Payout #{$payout->id} approved and processed"
+                );
+            }
 
             // Update payout status
             $payout->approve($adminId, $amount, $transactionRef);
@@ -231,5 +248,44 @@ class PayoutService
             'rejected_count' => $rejected,
             'total_requests' => $query->count(),
         ];
+    }
+
+    /**
+     * Get eligible balance for doctor payout release
+     * 
+     * @param int $doctorId
+     * @return float
+     */
+    public function getDoctorEligibleBalance($doctorId)
+    {
+        // 1. Calculate lifetime earnings from completed appointments
+        $appointments = \App\Models\Appointment::where('doctor_id', $doctorId)
+            ->where('status', 'completed')
+            ->get();
+
+        $totalEarnings = 0;
+        foreach ($appointments as $appt) {
+            $amt = (float)$appt->amount;
+            $isFollowUp = $appt->is_follow_up == 1 || $appt->is_follow_up == true;
+            if ($isFollowUp) {
+                $docShare = 1.0;
+            } else if ($appt->consultation_type === 'chat') {
+                $docShare = 0.80;
+            } else {
+                $docShare = 0.85;
+            }
+            $totalEarnings += ($amt * $docShare);
+        }
+
+        // 2. Calculate approved and pending payouts sum
+        $approvedSum = Payout::where('user_id', $doctorId)
+            ->where('status', 'approved')
+            ->sum('approved_amount');
+
+        $pendingSum = Payout::where('user_id', $doctorId)
+            ->where('status', 'pending')
+            ->sum('requested_amount');
+
+        return max(0.00, $totalEarnings - ($approvedSum + $pendingSum));
     }
 }

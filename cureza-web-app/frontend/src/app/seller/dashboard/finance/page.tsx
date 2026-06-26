@@ -562,6 +562,109 @@ export default function SellerFinancePage() {
                             </div>
                         </div>
 
+                        {/* Live Wallet Arithmetic Ledger */}
+                        <div className="bg-white p-6 rounded-xl border border-gray-150 space-y-4 shadow-sm">
+                            <h3 className="text-sm font-bold text-gray-800 tracking-tight border-b border-gray-100 pb-2 flex items-center gap-2">
+                                <Calculator size={16} className="text-emerald-600" /> Live Wallet Arithmetic Ledger
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {/* Left Side: Withdrawable Balance & Total Value Locked */}
+                                <div className="space-y-4">
+                                    <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="text-xs font-bold text-gray-700">1. Withdrawable Balance (Net)</span>
+                                            <span className="text-[10px] font-mono bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-100">Formula: Available Balance - Pending Payouts</span>
+                                        </div>
+                                        <div className="space-y-1.5 text-xs text-gray-600">
+                                            <div className="flex justify-between">
+                                                <span>Total Available Balance (Gross Available):</span>
+                                                <span className="font-mono text-gray-800 font-semibold">₹{summary.wallet.available_balance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span>Pending Payout Requests (Liabilities):</span>
+                                                <span className="font-mono text-gray-800 font-semibold">- ₹{summary.payouts.pending.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                            </div>
+                                            <div className="flex justify-between border-t border-gray-200 pt-1.5 font-bold mt-1.5 text-emerald-600">
+                                                <span>Net Disbursable Yield:</span>
+                                                <span className="font-mono">₹{netDisbursableYield.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {(() => {
+                                        const tvlRaw = Math.max(0, summary.wallet.total_earnings - summary.wallet.paid_amount);
+                                        const tvlNet = tvlRaw;
+                                        
+                                        const pendingTransactions = transactions.filter(t => t.type === 'earning' && t.metadata?.escrow_status === 'held');
+                                        const pendingCODUnreconciled = pendingTransactions
+                                            .filter(t => t.reconciliation_status === 'pending')
+                                            .reduce((sum, t) => sum + Number(t.amount), 0);
+                                        const pendingReadyToPayout = Math.max(0, summary.wallet.pending_amount - pendingCODUnreconciled);
+                                        
+                                        return (
+                                            <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                                <div className="flex justify-between items-center mb-2">
+                                                    <span className="text-xs font-bold text-gray-700">2. Total Value Locked (TVL)</span>
+                                                    <span className="text-[10px] font-mono bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">Formula: Total Earnings - Paid Payouts</span>
+                                                </div>
+                                                <div className="space-y-1.5 text-xs text-gray-600">
+                                                    <div className="flex justify-between">
+                                                        <span>Ready to Payout (Held in Escrow):</span>
+                                                        <span className="font-mono text-gray-800 font-semibold">₹{pendingReadyToPayout.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                                    </div>
+                                                    <div className="flex justify-between">
+                                                        <span>Pending Courier Recon (COD):</span>
+                                                        <span className="font-mono text-gray-800 font-semibold">+ ₹{pendingCODUnreconciled.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                                    </div>
+                                                    <div className="flex justify-between border-t border-gray-200 pt-1.5 font-bold mt-1.5 text-blue-650">
+                                                        <span>Net Value Locked:</span>
+                                                        <span className="font-mono">₹{tvlNet.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })()}
+                                </div>
+
+                                {/* Right Side: Successful Payouts & In-Flight Pipeline */}
+                                <div className="space-y-4">
+                                    <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="text-xs font-bold text-gray-700">3. Successful Payouts (Realized Earnings)</span>
+                                            <span className="text-[10px] font-mono bg-purple-50 text-purple-700 px-2 py-0.5 rounded border border-purple-100">Formula: Approved Settlements</span>
+                                        </div>
+                                        <div className="space-y-1.5 text-xs text-gray-600">
+                                            <div className="flex justify-between">
+                                                <span>Total Settled Payouts:</span>
+                                                <span className="font-mono text-gray-800 font-semibold">₹{summary.wallet.paid_amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                            </div>
+                                            <div className="flex justify-between border-t border-gray-200 pt-1.5 font-bold mt-1.5 text-purple-650">
+                                                <span>Net Realized Earnings:</span>
+                                                <span className="font-mono">₹{summary.wallet.paid_amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="text-xs font-bold text-gray-700">4. In-Flight Pipeline (Awaiting Approval)</span>
+                                            <span className="text-[10px] font-mono bg-amber-50 text-amber-700 px-2 py-0.5 rounded border border-amber-100">Formula: Requested - Processed</span>
+                                        </div>
+                                        <div className="space-y-1.5 text-xs text-gray-600">
+                                            <div className="flex justify-between">
+                                                <span>Requested and Pending Settlements:</span>
+                                                <span className="font-mono text-gray-800 font-semibold">₹{summary.payouts.pending.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                            </div>
+                                            <div className="flex justify-between border-t border-gray-200 pt-1.5 font-bold mt-1.5 text-amber-600">
+                                                <span>Net Pipeline Volume:</span>
+                                                <span className="font-mono">₹{summary.payouts.pending.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         {/* Chart and Simulator Grid */}
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             {/* Recharts Chart Area */}

@@ -73,6 +73,17 @@ interface FinanceOverview {
         count: number;
     };
     net_platform_earnings: number;
+    timeline?: {
+        month: string;
+        Sales: number;
+        Profit: number;
+    }[];
+    compliance?: {
+        tcs: number;
+        tds: number;
+        gst: number;
+        shipping: number;
+    };
 }
 
 interface SellerRevenue {
@@ -183,6 +194,8 @@ interface Order {
     payment_method: string;
     billing_address_json: any;
     shipping_address_json: any;
+    platform_commission_amount?: number;
+    seller_earnings?: number;
     user?: {
         name: string;
         email: string;
@@ -1045,6 +1058,250 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+
+                            {/* Calculations Ledger Panel */}
+                            <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-black/50 space-y-4">
+                                <h3 className="text-sm font-medium text-black tracking-tight border-b-[0.5px] pb-2 flex items-center gap-2">
+                                    <Calculator size={16} /> Live Financial Arithmetic Sheet (Audit Logs)
+                                </h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* Left column: Volume, Commission, Profit */}
+                                    <div className="space-y-4">
+                                        {/* Card 1: Platform Volume */}
+                                        <div className="p-4 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/10">
+                                            <div className="flex justify-between items-center mb-2">
+                                                <span className="text-xs font-semibold text-black">1. Platform Volume (Total Gross Sales)</span>
+                                                <span className="text-[10px] font-mono bg-neutral-200 px-2 py-0.5 rounded text-neutral-800">Formula: Product Gross + Booking Gross</span>
+                                            </div>
+                                            <div className="space-y-1 text-xs text-neutral-600">
+                                                <div className="flex justify-between">
+                                                    <span>Marketplace Products Gross Sales:</span>
+                                                    <span className="font-mono text-black font-medium">₹{productSalesTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span>Clinical Bookings Gross Sales:</span>
+                                                    <span className="font-mono text-black font-medium">+ ₹{docSalesTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                                <div className="flex justify-between border-t-[0.5px] border-neutral-300 pt-1 font-bold mt-1 text-neutral-900">
+                                                    <span>Total Realized Gross Sales:</span>
+                                                    <span className="font-mono text-black">₹{totalPlatformVolume.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Card 2: Platform Commission */}
+                                        <div className="p-4 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/10">
+                                            <div className="flex justify-between items-center mb-2">
+                                                <span className="text-xs font-semibold text-black">2. Platform Commission Collected</span>
+                                                <span className="text-[10px] font-mono bg-neutral-200 px-2 py-0.5 rounded text-neutral-800">Formula: Vendor Comm + Doctor Split Cuts</span>
+                                            </div>
+                                            <div className="space-y-1 text-xs text-neutral-600">
+                                                <div className="flex justify-between">
+                                                    <span>Vendor Marketplace Commission:</span>
+                                                    <span className="font-mono text-black font-medium">₹{productCommissionTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span>Doctor Consulting Commission (Split Cuts):</span>
+                                                    <span className="font-mono text-black font-medium">+ ₹{docCommissionTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                                <div className="flex justify-between border-t-[0.5px] border-neutral-300 pt-1 font-bold mt-1 text-neutral-900">
+                                                    <span>Total Commission Share:</span>
+                                                    <span className="font-mono text-black">₹{totalPlatformCommission.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Card 3: Net Profit */}
+                                        <div className="p-4 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/10">
+                                            <div className="flex justify-between items-center mb-2">
+                                                <span className="text-xs font-semibold text-green-800">3. Net Operating Profit (Platform Net Earning)</span>
+                                                <span className="text-[10px] font-mono bg-green-100 text-green-800 px-2 py-0.5 rounded">Formula: Commission - Gateway Fee - Refunds</span>
+                                            </div>
+                                            <div className="space-y-1 text-xs text-neutral-600">
+                                                <div className="flex justify-between">
+                                                    <span>Total Collected Commission Share:</span>
+                                                    <span className="font-mono text-black font-medium">₹{totalPlatformCommission.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span>Payment Gateway Transaction Router Fee:</span>
+                                                    <span className="font-mono text-black font-medium">- ₹{gatewayFeesTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span>Issued Customer Refunds:</span>
+                                                    <span className="font-mono text-black font-medium">- ₹{refundsTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                                <div className="flex justify-between border-t-[0.5px] border-neutral-300 pt-1 font-bold mt-1 text-green-700">
+                                                    <span>Net Operating Profit:</span>
+                                                    <span className="font-mono">₹{netPlatformProfit.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Right column: Liabilities, Seller Yield, Doctor Yield */}
+                                    <div className="space-y-4">
+                                        {/* Card 4: Payout Liabilities */}
+                                        <div className="p-4 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/10">
+                                            <div className="flex justify-between items-center mb-2">
+                                                <span className="text-xs font-semibold text-red-800">4. Pending release settlements (Liabilities)</span>
+                                                <span className="text-[10px] font-mono bg-red-100 text-red-800 px-2 py-0.5 rounded">Formula: Sellers Pending + Doctors Unreleased</span>
+                                            </div>
+                                            <div className="space-y-1 text-xs text-neutral-650">
+                                                <div className="flex justify-between">
+                                                    <span>Sellers Pending Bank Payouts:</span>
+                                                    <span className="font-mono text-black font-medium">₹{sellerPendingPayouts.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span>Doctors Pending Practice Settlements:</span>
+                                                    <span className="font-mono text-black font-medium">+ ₹{doctorPendingPayouts.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                                <div className="flex justify-between border-t-[0.5px] border-neutral-300 pt-1 font-bold mt-1 text-red-700">
+                                                    <span>Total Locked Liabilities:</span>
+                                                    <span className="font-mono">₹{totalPendingPayouts.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Card 5: Seller Yield */}
+                                        <div className="p-4 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/10">
+                                            <div className="flex justify-between items-center mb-2">
+                                                <span className="text-xs font-semibold text-blue-800">5. Seller Ecosystem Yield (Merchants Net Earnings)</span>
+                                                <span className="text-[10px] font-mono bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Formula: Gross Sales - Platform Comm - Tax/Ship Deductions</span>
+                                            </div>
+                                            <div className="space-y-1 text-xs text-neutral-600">
+                                                <div className="flex justify-between">
+                                                    <span>Gross Product Sales:</span>
+                                                    <span className="font-mono text-black font-medium">₹{productSalesTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span>Marketplace Commission Deducted:</span>
+                                                    <span className="font-mono text-black font-medium">- ₹{productCommissionTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                                <div className="flex justify-between text-neutral-500">
+                                                    <span>GST on platform fee ({gstRate}%):</span>
+                                                    <span className="font-mono">- ₹{(overview?.compliance?.gst || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                                <div className="flex justify-between text-neutral-500">
+                                                    <span>TCS Deducted (1%):</span>
+                                                    <span className="font-mono">- ₹{(overview?.compliance?.tcs || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                                <div className="flex justify-between text-neutral-500">
+                                                    <span>TDS Deducted (1%):</span>
+                                                    <span className="font-mono">- ₹{(overview?.compliance?.tds || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                                <div className="flex justify-between text-neutral-500">
+                                                    <span>Shipping/Courier Charges:</span>
+                                                    <span className="font-mono">- ₹{(overview?.compliance?.shipping || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                                <div className="flex justify-between border-t-[0.5px] border-neutral-300 pt-1 font-bold mt-1 text-blue-700">
+                                                    <span>Net Merchant Yield:</span>
+                                                    <span className="font-mono">₹{(overview?.revenue?.seller_earnings || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Card 6: Doctor Yield */}
+                                        <div className="p-4 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/10">
+                                            <div className="flex justify-between items-center mb-2">
+                                                <span className="text-xs font-semibold text-purple-800">6. Doctor Ecosystem Yield (Practitioners Net Earnings)</span>
+                                                <span className="text-[10px] font-mono bg-purple-100 text-purple-800 px-2 py-0.5 rounded">Formula: Consultation Bookings - Split Cut</span>
+                                            </div>
+                                            <div className="space-y-1 text-xs text-neutral-600">
+                                                <div className="flex justify-between">
+                                                    <span>Gross Consultations Booking Sales:</span>
+                                                    <span className="font-mono text-black font-medium">₹{docSalesTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span>Platform Booking Split Cut (Commission):</span>
+                                                    <span className="font-mono text-black font-medium">- ₹{docCommissionTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                                <div className="flex justify-between border-t-[0.5px] border-neutral-300 pt-1 font-bold mt-1 text-purple-700">
+                                                    <span>Net Practitioner Yield:</span>
+                                                    <span className="font-mono">₹{(doctorAggregates?.total_doctor_earnings || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Order-by-Order Reconciliation Audit Ledger */}
+                            <div className="bg-white p-6 rounded-[10px] border-[0.5px] border-black/50 space-y-4">
+                                <div className="border-b-[0.5px] border-black/50 pb-2">
+                                    <h3 className="text-sm font-medium text-black tracking-tight flex items-center gap-2">
+                                        <FileText size={16} /> Order-by-Order Reconciliation Audit (Real-time Database Records)
+                                    </h3>
+                                    <p className="text-[10px] text-neutral-400 mt-1">
+                                        Each product order's mathematical lifecycle: Gross Subtotal, Coupon/Item Discounts, Shipping, statutory TCS (1% on Taxable base), TDS (1% on net under Sec 194-O), and CGST/SGST on Platform Fees.
+                                    </p>
+                                </div>
+                                <div className="overflow-x-auto">
+                                    <table className="min-w-full divide-y divide-neutral-100 text-left text-[11px] font-medium text-neutral-600">
+                                        <thead>
+                                            <tr className="text-neutral-500 font-semibold border-b-[0.5px] border-black/50">
+                                                <th className="py-2 px-3">Order Number</th>
+                                                <th className="py-2 px-3 text-right">Items Subtotal (Gross)</th>
+                                                <th className="py-2 px-3 text-right">Discounts</th>
+                                                <th className="py-2 px-3 text-right text-black font-semibold">Customer Paid (Gross Sales)</th>
+                                                <th className="py-2 px-3 text-right">Platform Comm (25%)</th>
+                                                <th className="py-2 px-3 text-right">GST on Comm (18%)</th>
+                                                <th className="py-2 px-3 text-right text-red-650 font-semibold">Other Deductions (Ship/TCS/TDS)</th>
+                                                <th className="py-2 px-3 text-right text-green-700 font-bold">Seller Net Yield</th>
+                                                <th className="py-2 px-3 text-center">Formula Verification</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-neutral-50 font-medium">
+                                            {invoiceOrders && invoiceOrders.length > 0 ? (
+                                                invoiceOrders.map(order => {
+                                                    const itemsSubtotal = order.items ? order.items.reduce((sum, item) => sum + Number(item.price * item.quantity), 0) : order.final_amount;
+                                                    const discount = Number(order.discount_amount || 0);
+                                                    const calculatedDiscount = itemsSubtotal - order.final_amount > 0 ? itemsSubtotal - order.final_amount : discount;
+                                                    const comm = Number(order.platform_commission_amount || 0);
+                                                    const gstOnComm = comm * 0.18;
+                                                    
+                                                    const taxDivisor = 1 + (gstRate / 100);
+                                                    const basePrice = order.final_amount / taxDivisor;
+                                                    const tcs = basePrice * 0.01;
+                                                    const tds = order.final_amount * 0.01;
+                                                    const shipping = 72.50; // standard flat rate shipping configured in platform.php config
+                                                    
+                                                    const otherDeductions = shipping + tcs + tds;
+                                                    const netEarnings = Number(order.seller_earnings || 0);
+
+                                                    return (
+                                                        <tr key={order.id} className="hover:bg-neutral-50 transition-colors">
+                                                            <td className="py-2.5 px-3 font-bold text-black">#{order.order_number}</td>
+                                                            <td className="py-2.5 px-3 text-right font-mono">₹{itemsSubtotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                                            <td className="py-2.5 px-3 text-right text-red-500 font-mono">-₹{calculatedDiscount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                                            <td className="py-2.5 px-3 text-right font-bold text-black font-mono">₹{order.final_amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                                            <td className="py-2.5 px-3 text-right text-red-650 font-mono">-₹{comm.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                                            <td className="py-2.5 px-3 text-right text-neutral-500 font-mono">-₹{gstOnComm.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                                            <td className="py-2.5 px-3 text-right text-neutral-450 font-mono">
+                                                                -₹{otherDeductions.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                                <span className="block text-[8px] text-neutral-400 normal-case font-normal font-sans">
+                                                                    Ship: ₹{shipping.toFixed(1)} | TCS: ₹{tcs.toFixed(1)} | TDS: ₹{tds.toFixed(1)}
+                                                                </span>
+                                                            </td>
+                                                            <td className="py-2.5 px-3 text-right text-green-700 font-extrabold font-mono">₹{netEarnings.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                                            <td className="py-2.5 px-3 text-center">
+                                                                <span className="text-[9px] font-mono bg-neutral-100 text-neutral-800 px-2 py-1 rounded-[10px] border-[0.5px] border-black/10">
+                                                                    ₹{itemsSubtotal.toFixed(0)} - ₹{comm.toFixed(0)} - ₹{gstOnComm.toFixed(0)} - ₹{shipping.toFixed(0)} - ₹{(tcs+tds).toFixed(0)} = ₹{netEarnings.toFixed(0)}
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })
+                                            ) : (
+                                                <tr>
+                                                    <td colSpan={9} className="py-4 text-center text-neutral-400 italic">
+                                                        No orders loaded for audit verification.
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
 

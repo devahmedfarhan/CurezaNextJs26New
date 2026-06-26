@@ -79,7 +79,7 @@ class ProductChangeRequestApproved extends Notification implements ShouldQueue
                 'delete' => "Product \"{$product->title}\" has been deleted.",
                 default => "Product request approved.",
             },
-            'created_at' => now()->toISOString(),
+            'created_at' => now()->toIso8601String(),
         ];
     }
 }

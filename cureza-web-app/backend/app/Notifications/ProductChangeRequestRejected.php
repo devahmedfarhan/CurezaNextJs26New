@@ -83,7 +83,7 @@ class ProductChangeRequestRejected extends Notification implements ShouldQueue
                 'delete' => "Deletion of \"{$product->title}\" was denied.",
                 default => "Product request rejected.",
             },
-            'created_at' => now()->toISOString(),
+            'created_at' => now()->toIso8601String(),
         ];
     }
 }

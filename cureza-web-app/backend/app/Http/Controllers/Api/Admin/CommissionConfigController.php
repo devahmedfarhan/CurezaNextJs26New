@@ -40,8 +40,10 @@ class CommissionConfigController extends Controller
         
         $currentCommission = SellerCommission::where('seller_id', $sellerId)
             ->where('is_active', true)
-            ->whereNull('valid_until')
-            ->orWhere('valid_until', '>=', now())
+            ->where(function ($query) {
+                $query->whereNull('valid_until')
+                      ->orWhere('valid_until', '>=', now());
+            })
             ->orderBy('valid_from', 'desc')
             ->first();
 
