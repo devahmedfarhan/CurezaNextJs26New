@@ -671,18 +671,24 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
 
     // Detailed Product separations
     const productGrossSubtotal = invoiceOrders.reduce((sum, order) => {
+        const shippingNum = Number(order.shipping_amount || 0);
+        const taxNum = Number(order.tax_amount || 0);
         const itemsSum = order.items && order.items.length > 0 
             ? order.items.reduce((itemSum, item) => itemSum + Number(item.price * item.quantity), 0) 
-            : (Number(order.final_amount) + Number(order.discount_amount || 0));
+            : (Number(order.final_amount) + Number(order.discount_amount || 0) - shippingNum - taxNum);
         return sum + itemsSum;
     }, 0);
 
     const productDiscounts = invoiceOrders.reduce((sum, order) => {
+        const shippingNum = Number(order.shipping_amount || 0);
+        const taxNum = Number(order.tax_amount || 0);
         const itemsSum = order.items && order.items.length > 0 
             ? order.items.reduce((itemSum, item) => itemSum + Number(item.price * item.quantity), 0) 
-            : (Number(order.final_amount) + Number(order.discount_amount || 0));
+            : (Number(order.final_amount) + Number(order.discount_amount || 0) - shippingNum - taxNum);
         const discount = Number(order.discount_amount || 0);
-        const calculatedDiscount = itemsSum - order.final_amount > 0 ? itemsSum - order.final_amount : discount;
+        const calculatedDiscount = itemsSum + shippingNum + taxNum - Number(order.final_amount) > 0 
+            ? itemsSum + shippingNum + taxNum - Number(order.final_amount) 
+            : discount;
         return sum + calculatedDiscount;
     }, 0);
 

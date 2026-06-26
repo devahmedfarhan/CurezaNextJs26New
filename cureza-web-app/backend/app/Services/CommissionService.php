@@ -83,7 +83,7 @@ class CommissionService
         foreach ($itemsBySeller as $sellerId => $items) {
             if (!$sellerId) continue; // Skip if no seller
 
-            $sellerTotal = $items->sum('total');
+            $sellerTotal = (float)($items->sum('net_amount') ?: $items->sum('total'));
             $commission = $this->getSellerCommissionRate($sellerId, $order->created_at);
 
             // Get shipping charge for this seller's shipment

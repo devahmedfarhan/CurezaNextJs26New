@@ -268,11 +268,12 @@ export default function AdminOrderDetailPage() {
     const totalSpent = parseFloat(order.user?.total_spent || '0');
     const aov = totalOrders > 0 ? (totalSpent / totalOrders).toFixed(2) : '0.00';
 
-    // Calculate discount dynamically if stored discount_amount is 0 but final < subtotal + shipping
+    // Calculate discount dynamically if stored discount_amount is 0 but final < subtotal + shipping + tax
     const subtotalNum = parseFloat(order.total_amount || '0');
     const shippingNum = parseFloat(order.shipping_amount || '0');
+    const taxNum = parseFloat(order.tax_amount || '0');
     const finalNum = parseFloat(order.final_amount || '0');
-    const calculatedDiscount = subtotalNum + shippingNum - finalNum;
+    const calculatedDiscount = subtotalNum + shippingNum + taxNum - finalNum;
     const discountToShow = parseFloat(order.discount_amount || '0') > 0 
         ? parseFloat(order.discount_amount || '0') 
         : (calculatedDiscount > 0 ? calculatedDiscount : 0);

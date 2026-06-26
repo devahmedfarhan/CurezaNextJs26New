@@ -33,7 +33,7 @@ echo "\n";
 // 2. ORDER FINANCE (Sellers & Super Admin)
 echo "--- 2. Order Finance Details ---\n";
 $totalOrders = Order::count();
-$deliveredOrders = Order::where('status', 'delivered')->get();
+$deliveredOrders = Order::whereIn('status', ['delivered', 'cod_reconciled'])->get();
 $deliveredCount = $deliveredOrders->count();
 
 $totalSalesVal = Order::sum('final_amount');
@@ -43,12 +43,12 @@ $calculatedGateway = $deliveredOrders->sum('payment_gateway_fee');
 $calculatedSellerEarnings = $deliveredOrders->sum('seller_earnings');
 
 echo "Total Orders: {$totalOrders}\n";
-echo "Delivered Orders: {$deliveredCount}\n";
+echo "Delivered/Reconciled Orders: {$deliveredCount}\n";
 echo "Total Sales Volume (All Orders): ₹" . number_format($totalSalesVal, 2) . "\n";
-echo "Total Sales Volume (Delivered Orders): ₹" . number_format($deliveredSalesVal, 2) . "\n";
-echo "Calculated Admin Commissions (Delivered): ₹" . number_format($calculatedCommissions, 2) . "\n";
-echo "Calculated Payment Gateway Fees (Delivered): ₹" . number_format($calculatedGateway, 2) . "\n";
-echo "Calculated Seller Earnings (Delivered): ₹" . number_format($calculatedSellerEarnings, 2) . "\n";
+echo "Total Sales Volume (Delivered/Reconciled Orders): ₹" . number_format($deliveredSalesVal, 2) . "\n";
+echo "Calculated Admin Commissions (Delivered/Reconciled): ₹" . number_format($calculatedCommissions, 2) . "\n";
+echo "Calculated Payment Gateway Fees (Delivered/Reconciled): ₹" . number_format($calculatedGateway, 2) . "\n";
+echo "Calculated Seller Earnings (Delivered/Reconciled): ₹" . number_format($calculatedSellerEarnings, 2) . "\n";
 
 // Check order commission calculations logic
 $orderDiscrepancies = [];
@@ -110,30 +110,19 @@ foreach ($sellerWallets as $wallet) {
     $sum = $available + $pending + $paid + $onHold;
     $diff = abs($totalEarnings - $sum);
     
-    // Also cross check with delivered orders for this seller
-    $deliveredItems = OrderItem::where('seller_id', $seller->id)
-        ->whereHas('order', function($q) {
-            $q->where('status', 'delivered');
-        })->get();
+    // Also cross check with delivered/reconciled orders for this seller
+    $deliveredOrdersForSeller = Order::whereHas('items', function($q) use ($seller) {
+            $q->where('seller_id', $seller->id);
+        })
+        ->whereIn('status', ['delivered', 'cod_reconciled'])
+        ->get();
         
     $deliveredSum = 0;
-    foreach ($deliveredItems as $item) {
-        // Look up commission rate
-        $order = $item->order;
-        $commission = (new CommissionService())->getSellerCommissionRate($seller->id, $order->created_at);
-        $platRate = $commission->base_commission_percentage;
-        $gateRate = $commission->payment_gateway_percentage;
-        $isCOD = strtolower($order->payment_method ?? '') === 'cod';
-        
-        $itemTotal = (float)$item->total;
-        $platformComm = $itemTotal * ($platRate / 100);
-        $gatewayFee = $isCOD ? 0 : ($itemTotal * ($gateRate / 100));
-        
-        // Get shipment shipping charge
-        $shipment = Shipment::where('order_id', $order->id)->where('seller_id', $seller->id)->first();
-        $shippingCharge = $shipment ? (float)$shipment->shipping_charge : 0.0;
-        
-        $deliveredSum += ($itemTotal - $platformComm - $gatewayFee - $shippingCharge);
+    foreach ($deliveredOrdersForSeller as $order) {
+        $recalculated = (new CommissionService())->calculateOrderCommission($order);
+        if (isset($recalculated['breakdown'][$seller->id])) {
+            $deliveredSum += $recalculated['breakdown'][$seller->id]['seller_earnings'];
+        }
     }
     
     // Sum of transactions of type 'earning' minus reversals

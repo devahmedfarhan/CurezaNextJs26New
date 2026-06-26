@@ -100,8 +100,8 @@ class DashboardController extends Controller
         $totalCodAmount = (float) Order::where('payment_method', 'cod')->where('payment_status', 'paid')->sum('final_amount');
         $todayCodAmount = (float) Order::where('payment_method', 'cod')->where('payment_status', 'paid')->whereDate('created_at', Carbon::today())->sum('final_amount');
 
-        $totalPaidOrders = Order::where('payment_method', '!=', 'cod')->count();
-        $todayPaidOrders = Order::where('payment_method', '!=', 'cod')->whereDate('created_at', Carbon::today())->count();
+        $totalPaidOrders = Order::where('payment_method', '!=', 'cod')->where('payment_status', 'paid')->count();
+        $todayPaidOrders = Order::where('payment_method', '!=', 'cod')->where('payment_status', 'paid')->whereDate('created_at', Carbon::today())->count();
         $totalPaidAmount = (float) Order::where('payment_method', '!=', 'cod')->where('payment_status', 'paid')->sum('final_amount');
         $todayPaidAmount = (float) Order::where('payment_method', '!=', 'cod')->where('payment_status', 'paid')->whereDate('created_at', Carbon::today())->sum('final_amount');
 

@@ -76,12 +76,15 @@ export default function DoctorEarningsPage() {
             typeLabel = 'Audio Consultation';
         }
 
-        const doctorEarning = amt * doctorSharePercent;
+        const doctorGrossEarning = amt * doctorSharePercent;
+        const tds = doctorGrossEarning * 0.10; // 10% TDS professional services Section 194J
+        const doctorEarning = doctorGrossEarning - tds;
         const commission = amt * commissionPercent;
 
         return {
             doctorEarning,
             commission,
+            tds,
             doctorSharePercent: Math.round(doctorSharePercent * 100),
             commissionPercent: Math.round(commissionPercent * 100),
             typeLabel
@@ -94,12 +97,14 @@ export default function DoctorEarningsPage() {
     let totalGrossSales = 0;
     let totalDoctorEarnings = 0;
     let totalPlatformCommission = 0;
+    let totalTdsWithheld = 0;
 
     const transactionLedger = completedAppointments.map(appt => {
         const splits = getSplitDetails(appt);
         totalGrossSales += Number(appt.amount || 0);
         totalDoctorEarnings += splits.doctorEarning;
         totalPlatformCommission += splits.commission;
+        totalTdsWithheld += splits.tds;
 
         return {
             id: `CON-${appt.id.toString().padStart(4, '0')}`,
@@ -112,6 +117,7 @@ export default function DoctorEarningsPage() {
             gross: Number(appt.amount || 0),
             earning: splits.doctorEarning,
             commission: splits.commission,
+            tds: splits.tds,
             share: `${splits.doctorSharePercent}%`,
             type: appt.consultation_type
         };
@@ -267,14 +273,18 @@ export default function DoctorEarningsPage() {
                         <p className="text-[9px] text-gray-400 uppercase tracking-widest font-semibold">Net Earned Balance</p>
                         <h4 className="text-xl font-bold text-gray-800 mt-0.5">₹{totalDoctorEarnings.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</h4>
                         
-                        <div className="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-black/[0.04] text-[10px]">
+                        <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-black/[0.04] text-[10px]">
                             <div>
-                                <span className="text-gray-400 block font-medium">Gross Consultations</span>
-                                <span className="font-bold text-gray-900">₹{totalGrossSales.toLocaleString('en-IN')}</span>
+                                <span className="text-gray-400 block font-medium">Gross Consults</span>
+                                <span className="font-bold text-gray-950">₹{totalGrossSales.toLocaleString('en-IN')}</span>
                             </div>
                             <div>
-                                <span className="text-gray-400 block font-medium">Platform Commission</span>
+                                <span className="text-gray-400 block font-medium">Platform Fee</span>
                                 <span className="font-bold text-gray-500">₹{totalPlatformCommission.toLocaleString('en-IN')}</span>
+                            </div>
+                            <div>
+                                <span className="text-gray-400 block font-medium">TDS Sec 194J (10%)</span>
+                                <span className="font-bold text-red-500">₹{totalTdsWithheld.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                             </div>
                         </div>
                     </div>
@@ -370,6 +380,7 @@ export default function DoctorEarningsPage() {
                                     <th className="px-4 py-2.5 font-bold text-gray-500 text-[10px] uppercase">Ref ID</th>
                                     <th className="px-4 py-2.5 font-bold text-gray-500 text-[10px] uppercase">Total Fee</th>
                                     <th className="px-4 py-2.5 font-bold text-cureza-green text-[10px] uppercase">Commission</th>
+                                    <th className="px-4 py-2.5 font-bold text-red-500 text-[10px] uppercase">TDS (10%)</th>
                                     <th className="px-4 py-2.5 font-bold text-gray-500 text-[10px] uppercase text-right">Earning (Net)</th>
                                 </tr>
                             </thead>
@@ -387,6 +398,9 @@ export default function DoctorEarningsPage() {
                                         <td className="px-4 py-3 font-medium text-gray-600">₹{txn.gross.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
                                         <td className="px-4 py-3 text-red-500 font-medium">
                                             {txn.commission > 0 ? `-₹${txn.commission.toLocaleString('en-IN', { minimumFractionDigits: 2 })} (${txn.share})` : '0% (Follow-Up Bonus)'}
+                                        </td>
+                                        <td className="px-4 py-3 text-red-500 font-medium">
+                                            {txn.tds > 0 ? `-₹${txn.tds.toLocaleString('en-IN', { minimumFractionDigits: 2 })}` : '₹0.00'}
                                         </td>
                                         <td className="px-4 py-3 font-bold text-cureza-green text-right">
                                             +₹{txn.earning.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
