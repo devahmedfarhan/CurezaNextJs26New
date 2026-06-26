@@ -55,10 +55,10 @@ class SellerOrderController extends Controller
         $wallet = \App\Models\SellerWallet::where('seller_id', $sellerId)->first();
         $totalPaidOut = $wallet ? (float)$wallet->paid_amount : 0.0;
 
-        // Fetch all delivered order items of this seller, sorted by the order's created_at ascending (oldest first)
+        // Fetch all delivered/reconciled order items of this seller, sorted by the order's created_at ascending (oldest first)
         $allDeliveredItems = \App\Models\OrderItem::where('order_items.seller_id', $sellerId)
             ->join('orders', 'order_items.order_id', '=', 'orders.id')
-            ->where('orders.status', 'delivered')
+            ->whereIn('orders.status', ['delivered', 'cod_reconciled'])
             ->select('order_items.*', 'orders.created_at as order_created_at', 'orders.payment_method')
             ->orderBy('orders.created_at', 'asc')
             ->get();
@@ -66,21 +66,63 @@ class SellerOrderController extends Controller
         $itemSettlements = [];
         $runningPaidOut = $totalPaidOut;
 
+        // Group the delivered items by order_id so we don't recalculate multiple times for the same order
+        $orderIds = $allDeliveredItems->pluck('order_id')->unique();
+        $orderCommissionData = [];
+        foreach ($orderIds as $orderId) {
+            $orderObj = Order::find($orderId);
+            if ($orderObj) {
+                $orderCommissionData[$orderId] = (new \App\Services\CommissionService())->calculateOrderCommission($orderObj);
+            }
+        }
+
         foreach ($allDeliveredItems as $item) {
-            $commission = (new \App\Services\CommissionService())->getSellerCommissionRate($sellerId, $item->order_created_at);
-            $platRate = $commission->base_commission_percentage;
-            $gateRate = $commission->payment_gateway_percentage;
-
-            $isCOD = strtolower($item->payment_method ?? '') === 'cod';
-
-            $lineTotal = (float)$item->total;
-            $comm = floor(($lineTotal * ($platRate / 100)) * 100) / 100;
-            $gst = floor(($comm * 0.18) * 100) / 100;
-            $tcs = floor(($lineTotal * 0.01) * 100) / 100;
-            $tds = floor(($lineTotal * 0.01) * 100) / 100;
-            $gate = $isCOD ? 0.0 : floor(($lineTotal * ($gateRate / 100)) * 100) / 100;
+            $orderId = $item->order_id;
+            $itemPayable = 0.0;
+            $itemComm = 0.0;
+            $itemCommGst = 0.0;
+            $itemTcs = 0.0;
+            $itemTds = 0.0;
+            $itemGateway = 0.0;
+            $itemShipping = 0.0;
             
-            $itemPayable = floor(($lineTotal - $comm - $gst - $tcs - $tds - $gate) * 100) / 100;
+            if (isset($orderCommissionData[$orderId]['breakdown'][$sellerId])) {
+                $sellerData = $orderCommissionData[$orderId]['breakdown'][$sellerId];
+                // Find all items of this seller in this order
+                $orderItems = $allDeliveredItems->where('order_id', $orderId)->where('seller_id', $sellerId);
+                $sellerTotalNet = $orderItems->sum(function($i) { return (float)($i->net_amount ?: $i->total); });
+                
+                $itemNet = (float)($item->net_amount ?: $item->total);
+                if ($sellerTotalNet > 0) {
+                    $ratio = $itemNet / $sellerTotalNet;
+                    $itemPayable = $ratio * $sellerData['seller_earnings'];
+                    $itemComm = $ratio * $sellerData['platform_commission_amount'];
+                    $itemCommGst = $ratio * $sellerData['platform_commission_gst'];
+                    $itemTcs = $ratio * $sellerData['tcs_amount'];
+                    $itemTds = $ratio * $sellerData['tds_amount'];
+                    $itemGateway = $ratio * $sellerData['payment_gateway_fee'];
+                    $itemShipping = $ratio * $sellerData['shipping_charge'];
+                } else {
+                    $count = max(1, $orderItems->count());
+                    $itemPayable = $sellerData['seller_earnings'] / $count;
+                    $itemComm = $sellerData['platform_commission_amount'] / $count;
+                    $itemCommGst = $sellerData['platform_commission_gst'] / $count;
+                    $itemTcs = $sellerData['tcs_amount'] / $count;
+                    $itemTds = $sellerData['tds_amount'] / $count;
+                    $itemGateway = $sellerData['payment_gateway_fee'] / $count;
+                    $itemShipping = $sellerData['shipping_charge'] / $count;
+                }
+            } else {
+                $itemPayable = (float)($item->net_amount ?: $item->total);
+            }
+            
+            $itemPayable = round($itemPayable, 2);
+            $itemComm = round($itemComm, 2);
+            $itemCommGst = round($itemCommGst, 2);
+            $itemTcs = round($itemTcs, 2);
+            $itemTds = round($itemTds, 2);
+            $itemGateway = round($itemGateway, 2);
+            $itemShipping = round($itemShipping, 2);
 
             if ($runningPaidOut >= $itemPayable) {
                 $itemPaid = $itemPayable;
@@ -89,38 +131,88 @@ class SellerOrderController extends Controller
                 $itemPaid = $runningPaidOut;
                 $runningPaidOut = 0.0;
             }
-            $itemBalance = max(0.0, floor(($itemPayable - $itemPaid) * 100) / 100);
+            $itemBalance = max(0.0, round($itemPayable - $itemPaid, 2));
 
             $itemSettlements[$item->id] = [
                 'paid' => $itemPaid,
-                'balance' => $itemBalance
+                'balance' => $itemBalance,
+                'commission' => $itemComm,
+                'gst_on_commission' => $itemCommGst,
+                'tcs' => $itemTcs,
+                'tds' => $itemTds,
+                'gateway_fee' => $itemGateway,
+                'shipping_charge' => $itemShipping,
+                'payable' => $itemPayable
             ];
         }
 
         $attachSettlements = function ($order) use ($itemSettlements, $sellerId) {
+            $calc = (new \App\Services\CommissionService())->calculateOrderCommission($order);
+
             foreach ($order->items as $item) {
                 if (isset($itemSettlements[$item->id])) {
                     $item->settled_paid = $itemSettlements[$item->id]['paid'];
                     $item->settled_balance = $itemSettlements[$item->id]['balance'];
+                    $item->commission_amt = $itemSettlements[$item->id]['commission'];
+                    $item->gst_on_commission_amt = $itemSettlements[$item->id]['gst_on_commission'];
+                    $item->tcs_amt = $itemSettlements[$item->id]['tcs'];
+                    $item->tds_amt = $itemSettlements[$item->id]['tds'];
+                    $item->gateway_fee_amt = $itemSettlements[$item->id]['gateway_fee'];
+                    $item->shipping_charge_amt = $itemSettlements[$item->id]['shipping_charge'];
+                    $item->amount_payable_amt = $itemSettlements[$item->id]['payable'];
                 } else {
                     // Not delivered yet, calculate expected amountPayable
-                    $commission = (new \App\Services\CommissionService())->getSellerCommissionRate($sellerId, $order->created_at);
-                    $platRate = $commission->base_commission_percentage;
-                    $gateRate = $commission->payment_gateway_percentage;
+                    $itemPayable = 0.0;
+                    $itemComm = 0.0;
+                    $itemCommGst = 0.0;
+                    $itemTcs = 0.0;
+                    $itemTds = 0.0;
+                    $itemGateway = 0.0;
+                    $itemShipping = 0.0;
 
-                    $isCOD = strtolower($order->payment_method ?? '') === 'cod';
-
-                    $lineTotal = (float)$item->total;
-                    $comm = floor(($lineTotal * ($platRate / 100)) * 100) / 100;
-                    $gst = floor(($comm * 0.18) * 100) / 100;
-                    $tcs = floor(($lineTotal * 0.01) * 100) / 100;
-                    $tds = floor(($lineTotal * 0.01) * 100) / 100;
-                    $gate = $isCOD ? 0.0 : floor(($lineTotal * ($gateRate / 100)) * 100) / 100;
-                    
-                    $itemPayable = floor(($lineTotal - $comm - $gst - $tcs - $tds - $gate) * 100) / 100;
+                    if (isset($calc['breakdown'][$sellerId])) {
+                        $sellerData = $calc['breakdown'][$sellerId];
+                        $orderItems = $order->items->where('seller_id', $sellerId);
+                        $sellerTotalNet = $orderItems->sum(function($i) { return (float)($i->net_amount ?: $i->total); });
+                        
+                        $itemNet = (float)($item->net_amount ?: $item->total);
+                        if ($sellerTotalNet > 0) {
+                            $ratio = $itemNet / $sellerTotalNet;
+                            $itemPayable = $ratio * $sellerData['seller_earnings'];
+                            $itemComm = $ratio * $sellerData['platform_commission_amount'];
+                            $itemCommGst = $ratio * $sellerData['platform_commission_gst'];
+                            $itemTcs = $ratio * $sellerData['tcs_amount'];
+                            $itemTds = $ratio * $sellerData['tds_amount'];
+                            $itemGateway = $ratio * $sellerData['payment_gateway_fee'];
+                            $itemShipping = $ratio * $sellerData['shipping_charge'];
+                        } else {
+                            $count = max(1, $orderItems->count());
+                            $itemPayable = $sellerData['seller_earnings'] / $count;
+                            $itemComm = $sellerData['platform_commission_amount'] / $count;
+                            $itemCommGst = $sellerData['platform_commission_gst'] / $count;
+                            $itemTcs = $sellerData['tcs_amount'] / $count;
+                            $itemTds = $sellerData['tds_amount'] / $count;
+                            $itemGateway = $sellerData['payment_gateway_fee'] / $count;
+                            $itemShipping = $sellerData['shipping_charge'] / $count;
+                        }
+                    }
+                    $itemPayable = round($itemPayable, 2);
+                    $itemComm = round($itemComm, 2);
+                    $itemCommGst = round($itemCommGst, 2);
+                    $itemTcs = round($itemTcs, 2);
+                    $itemTds = round($itemTds, 2);
+                    $itemGateway = round($itemGateway, 2);
+                    $itemShipping = round($itemShipping, 2);
 
                     $item->settled_paid = 0.0;
                     $item->settled_balance = $itemPayable;
+                    $item->commission_amt = $itemComm;
+                    $item->gst_on_commission_amt = $itemCommGst;
+                    $item->tcs_amt = $itemTcs;
+                    $item->tds_amt = $itemTds;
+                    $item->gateway_fee_amt = $itemGateway;
+                    $item->shipping_charge_amt = $itemShipping;
+                    $item->amount_payable_amt = $itemPayable;
                 }
             }
             return $order;

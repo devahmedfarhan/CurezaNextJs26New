@@ -199,14 +199,36 @@ export default function DynamicBrandReconciliationPage() {
                 const codProcessingFee = 0;
                 
                 // Financial splits (multiplied by quantity for total row valuation)
-                const lineTotal = salePrice * qty;
+                const lineTotal = item.net_amount !== undefined ? Number(item.net_amount) : (salePrice * qty);
                 const taxableValue = Math.floor((lineTotal / 1.18) * 100) / 100; // assuming standard 18% GST built-in
-                const commission = Math.floor((lineTotal * (platRate / 100)) * 100) / 100;
-                const gstOnCommission = Math.floor((commission * 0.18) * 100) / 100;
-                const tcs = Math.floor((lineTotal * 0.01) * 100) / 100;
-                const tds = Math.floor((lineTotal * 0.01) * 100) / 100;
-                const gatewayFee = isCOD ? 0 : Math.floor((lineTotal * (gateRate / 100)) * 100) / 100;
-                const amountPayable = Math.floor((lineTotal - commission - gstOnCommission - tcs - tds - gatewayFee) * 100) / 100;
+                
+                const commission = (item as any).commission_amt !== undefined 
+                    ? Number((item as any).commission_amt) 
+                    : Math.floor((lineTotal * (platRate / 100)) * 100) / 100;
+                    
+                const gstOnCommission = (item as any).gst_on_commission_amt !== undefined 
+                    ? Number((item as any).gst_on_commission_amt) 
+                    : Math.floor((commission * 0.18) * 100) / 100;
+                    
+                const tcs = (item as any).tcs_amt !== undefined 
+                    ? Number((item as any).tcs_amt) 
+                    : Math.floor(((item.base_price !== undefined ? Number(item.base_price) : lineTotal) * 0.01) * 100) / 100;
+                    
+                const tds = (item as any).tds_amt !== undefined 
+                    ? Number((item as any).tds_amt) 
+                    : Math.floor((lineTotal * 0.01) * 100) / 100;
+                    
+                const gatewayFee = (item as any).gateway_fee_amt !== undefined 
+                    ? Number((item as any).gateway_fee_amt) 
+                    : (isCOD ? 0 : Math.floor((lineTotal * (gateRate / 100)) * 100) / 100);
+                    
+                const shippingCharge = (item as any).shipping_charge_amt !== undefined 
+                    ? Number((item as any).shipping_charge_amt) 
+                    : 0;
+                    
+                const amountPayable = (item as any).amount_payable_amt !== undefined 
+                    ? Number((item as any).amount_payable_amt) 
+                    : Math.floor((lineTotal - commission - gstOnCommission - tcs - tds - gatewayFee - shippingCharge) * 100) / 100;
                 
                 const isPaid = order.payment_status?.toLowerCase() === 'paid';
                 const paid = (item as any).settled_paid !== undefined 
@@ -238,6 +260,7 @@ export default function DynamicBrandReconciliationPage() {
                     tcs,
                     tds,
                     gatewayFee,
+                    shippingCharge,
                     amountPayable,
                     paid,
                     balance,
@@ -281,7 +304,7 @@ export default function DynamicBrandReconciliationPage() {
                 "Prescription Link", 
                 "Tracking ID", "Total Value", 
                 "Taxable Value", "Commission", "GST on Commission", "TCS", "TDS", "Gateway Fee", 
-                "Amount Payable", "Paid", "Balance"
+                "Shipping Charge", "Amount Payable", "Paid", "Balance"
             ];
 
             const csvRows = [headers.join(",")];
@@ -307,6 +330,7 @@ export default function DynamicBrandReconciliationPage() {
                     r.tcs.toFixed(2),
                     r.tds.toFixed(2),
                     r.gatewayFee.toFixed(2),
+                    r.shippingCharge.toFixed(2),
                     r.amountPayable.toFixed(2),
                     r.paid.toFixed(2),
                     r.balance.toFixed(2)
@@ -358,9 +382,8 @@ export default function DynamicBrandReconciliationPage() {
                     )}
                 </button>
             </div>
-
             {/* Quick Metrics Summary */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
                 <div className="premium-card p-6 bg-white border-[0.5px] border-black/50 rounded-2xl relative overflow-hidden flex flex-col justify-between h-[140px] shadow-none">
                     <div>
                         <span className="text-[10px] font-semibold text-gray-500 capitalize block mb-1">Total Items Sold</span>
@@ -368,27 +391,32 @@ export default function DynamicBrandReconciliationPage() {
                             {rows.reduce((acc, r) => acc + r.qty, 0)} Units
                         </h3>
                     </div>
-                    <div className="text-[9px] font-medium text-gray-500">Across {totalRecords} order transactions</div>
+                    <div className="text-[9px] font-medium text-gray-505">Across {totalRecords} order transactions</div>
                 </div>
-
                 <div className="premium-card p-6 bg-white border-[0.5px] border-black/50 rounded-2xl relative overflow-hidden flex flex-col justify-between h-[140px] shadow-none">
                     <div>
-                        <span className="text-[10px] font-semibold text-gray-500 capitalize block mb-1">Gross Selling Volume</span>
+                        <span className="text-[10px] font-semibold text-gray-500 capitalize block mb-1">Net Selling Value</span>
                         <h3 className="text-2xl font-bold text-gray-800 tracking-tight">
-                            ₹{rows.reduce((acc, r) => acc + (r.salePrice * r.qty), 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                            ₹{rows.reduce((acc, r) => acc + r.lineTotal, 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                         </h3>
                     </div>
-                    <div className="text-[9px] font-medium text-gray-500">Before platform charges & deductions</div>
+                    <div className="text-[9px] font-medium text-gray-505 font-sans leading-relaxed">
+                        Gross (MRP): ₹{rows.reduce((acc, r) => acc + (r.mrp * r.qty), 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}<br />
+                        Vendor Disc: -₹{rows.reduce((acc, r) => acc + r.discount, 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })} | Coupon: -₹{rows.reduce((acc, r) => acc + ((r.salePrice * r.qty) - r.lineTotal), 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                    </div>
                 </div>
 
                 <div className="premium-card p-6 bg-white border-[0.5px] border-black/50 rounded-2xl relative overflow-hidden flex flex-col justify-between h-[140px] shadow-none">
                     <div>
-                        <span className="text-[10px] font-semibold text-rose-600 capitalize block mb-1">Platform Commission + GST</span>
+                        <span className="text-[10px] font-semibold text-rose-600 capitalize block mb-1">Platform Fees & Taxes</span>
                         <h3 className="text-2xl font-bold text-rose-600 tracking-tight">
-                            -₹{rows.reduce((acc, r) => acc + (r.commission + r.gstOnCommission), 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                            -₹{rows.reduce((acc, r) => acc + (r.commission + r.gstOnCommission + r.tcs + r.tds + r.gatewayFee), 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                         </h3>
                     </div>
-                    <div className="text-[9px] font-medium text-rose-500">Includes {summary?.commission_rate?.platform ?? 25}% platform cut + 18% GST</div>
+                    <div className="text-[9px] font-medium text-rose-500 font-sans leading-relaxed">
+                        Comm+GST: ₹{rows.reduce((acc, r) => acc + (r.commission + r.gstOnCommission), 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}<br />
+                        TCS (1%): ₹{rows.reduce((acc, r) => acc + r.tcs, 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })} | TDS (1%): ₹{rows.reduce((acc, r) => acc + r.tds, 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                    </div>
                 </div>
 
                 <div className="premium-card p-6 bg-white border-[0.5px] border-black/50 rounded-2xl relative overflow-hidden flex flex-col justify-between h-[140px] shadow-none">
@@ -398,7 +426,33 @@ export default function DynamicBrandReconciliationPage() {
                             ₹{rows.reduce((acc, r) => acc + r.amountPayable, 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                         </h3>
                     </div>
-                    <div className="text-[9px] font-medium text-emerald-600">Net credited into wallet balance (minus TCS/TDS)</div>
+                    <div className="text-[9px] font-medium text-emerald-600 font-sans leading-relaxed">
+                        Net Earnings (Wallet Balance)<br />
+                        After Shipping Deduction: -₹{rows.reduce((acc, r) => acc + r.shippingCharge, 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                    </div>
+                </div>
+
+                <div className="premium-card p-6 bg-white border-[0.5px] border-black/50 rounded-2xl relative overflow-hidden flex flex-col justify-between h-[140px] shadow-none">
+                    <div>
+                        <span className="text-[10px] font-semibold text-indigo-600 capitalize block mb-1">Settled & Remaining</span>
+                        <div className="flex justify-between items-baseline mt-1 gap-2">
+                            <div>
+                                <span className="text-[8px] font-semibold text-gray-400 block uppercase">Settled</span>
+                                <h4 className="text-sm font-bold text-emerald-650 tracking-tight">
+                                    ₹{rows.reduce((acc, r) => acc + r.paid, 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                </h4>
+                            </div>
+                            <div className="text-right">
+                                <span className="text-[8px] font-semibold text-gray-400 block uppercase">Remaining</span>
+                                <h4 className="text-sm font-bold text-indigo-650 tracking-tight">
+                                    ₹{rows.reduce((acc, r) => acc + r.balance, 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="text-[9px] font-medium text-indigo-500 font-sans leading-relaxed">
+                        Total settlement progress for delivered items
+                    </div>
                 </div>
             </div>
 
@@ -511,6 +565,7 @@ export default function DynamicBrandReconciliationPage() {
                                 <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">TCS</th>
                                 <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">TDS</th>
                                 <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">Gateway Fee</th>
+                                <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">Shipping Charge</th>
                                 <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">Amount Payable</th>
                                 <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">Paid</th>
                                 <th className="px-5 py-4 text-[10px] font-semibold tracking-wide text-gray-550 whitespace-nowrap capitalize text-right">Balance</th>
@@ -519,7 +574,7 @@ export default function DynamicBrandReconciliationPage() {
                         <tbody className="divide-y divide-gray-50 text-[11px] font-semibold text-gray-650">
                             {loading ? (
                                 <tr>
-                                    <td colSpan={22} className="px-8 py-20 text-center">
+                                    <td colSpan={23} className="px-8 py-20 text-center">
                                         <div className="flex flex-col items-center justify-center gap-2">
                                             <div className="animate-spin rounded-full h-8 w-8 border-b-[0.5px] border-cureza-green"></div>
                                             <span className="text-xs font-semibold capitalize text-gray-500 mt-2">Loading data portfolio...</span>
@@ -528,7 +583,7 @@ export default function DynamicBrandReconciliationPage() {
                                 </tr>
                             ) : rows.length === 0 ? (
                                 <tr>
-                                    <td colSpan={22} className="px-8 py-20 text-center text-gray-500 font-medium">
+                                    <td colSpan={23} className="px-8 py-20 text-center text-gray-500 font-medium">
                                         No order data available matching active filter options.
                                     </td>
                                 </tr>
@@ -564,6 +619,7 @@ export default function DynamicBrandReconciliationPage() {
                                         <td className="px-5 py-4 text-right whitespace-nowrap text-gray-500 font-medium">₹{r.tcs.toFixed(2)}</td>
                                         <td className="px-5 py-4 text-right whitespace-nowrap text-gray-500 font-medium">₹{r.tds.toFixed(2)}</td>
                                         <td className="px-5 py-4 text-right whitespace-nowrap text-rose-500 font-medium">₹{r.gatewayFee.toFixed(2)}</td>
+                                        <td className="px-5 py-4 text-right whitespace-nowrap text-rose-500 font-medium">₹{r.shippingCharge.toFixed(2)}</td>
                                         <td className="px-5 py-4 text-right whitespace-nowrap font-semibold text-gray-800 bg-emerald-50/10">₹{r.amountPayable.toFixed(2)}</td>
                                         <td className="px-5 py-4 text-right whitespace-nowrap text-emerald-600 font-semibold">₹{r.paid.toFixed(2)}</td>
                                         <td className="px-5 py-4 text-right whitespace-nowrap text-rose-600 font-semibold">₹{r.balance.toFixed(2)}</td>
@@ -586,6 +642,7 @@ export default function DynamicBrandReconciliationPage() {
                                     <td className="px-5 py-4 text-right text-gray-800 whitespace-nowrap font-semibold">₹{rows.reduce((acc, r) => acc + r.tcs, 0).toFixed(2)}</td>
                                     <td className="px-5 py-4 text-right text-gray-800 whitespace-nowrap font-semibold">₹{rows.reduce((acc, r) => acc + r.tds, 0).toFixed(2)}</td>
                                     <td className="px-5 py-4 text-right text-rose-600 whitespace-nowrap font-semibold">₹{rows.reduce((acc, r) => acc + r.gatewayFee, 0).toFixed(2)}</td>
+                                    <td className="px-5 py-4 text-right text-rose-600 whitespace-nowrap font-semibold">₹{rows.reduce((acc, r) => acc + r.shippingCharge, 0).toFixed(2)}</td>
                                     <td className="px-5 py-4 text-right font-bold text-gray-950 bg-emerald-50/20 whitespace-nowrap">₹{rows.reduce((acc, r) => acc + r.amountPayable, 0).toFixed(2)}</td>
                                     <td className="px-5 py-4 text-right text-emerald-600 font-semibold whitespace-nowrap">₹{rows.reduce((acc, r) => acc + r.paid, 0).toFixed(2)}</td>
                                     <td className="px-5 py-4 text-right text-rose-600 font-semibold whitespace-nowrap">₹{rows.reduce((acc, r) => acc + r.balance, 0).toFixed(2)}</td>
