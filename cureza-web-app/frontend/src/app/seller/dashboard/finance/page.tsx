@@ -18,6 +18,10 @@ interface FinanceSummary {
         gateway_fee: number;
         net_earnings: number;
         order_count: number;
+        shipping_charge?: number;
+        platform_commission_gst?: number;
+        tcs_deduction?: number;
+        tds_deduction?: number;
     };
     wallet: {
         total_earnings: number;
@@ -47,6 +51,8 @@ interface Transaction {
     order_id: number | null;
     payout_id: number | null;
     reconciliation_status?: string | null;
+    tcs_deduction?: number;
+    tds_deduction?: number;
     metadata: Record<string, any> | null;
     created_at: string;
     order?: {
@@ -79,9 +85,36 @@ interface PayoutRequest {
     transaction_id?: string | null;
 }
 
+const isDateInRange = (dateStr: string, selectedRange: string) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    switch (selectedRange) {
+        case 'today':
+            return date.toDateString() === now.toDateString();
+        case '7_days':
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(now.getDate() - 7);
+            return date >= sevenDaysAgo;
+        case '30_days':
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(now.getDate() - 30);
+            return date >= thirtyDaysAgo;
+        case 'this_month':
+            return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+        case 'last_month':
+            const lastMonth = new Date();
+            lastMonth.setMonth(now.getMonth() - 1);
+            return date.getMonth() === lastMonth.getMonth() && date.getFullYear() === lastMonth.getFullYear();
+        case 'all_time':
+        default:
+            return true;
+    }
+};
+
 export default function SellerFinancePage() {
     const { showToast } = useToast();
     const [summary, setSummary] = useState<FinanceSummary | null>(null);
+    const [lifetimeSummary, setLifetimeSummary] = useState<FinanceSummary | null>(null);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [payoutRequests, setPayoutRequests] = useState<PayoutRequest[]>([]);
     const [loading, setLoading] = useState(true);
@@ -107,8 +140,9 @@ export default function SellerFinancePage() {
     const fetchFinanceData = async () => {
         try {
             setLoading(true);
-            const [summaryRes, transactionsRes, payoutsRes, settingsRes] = await Promise.all([
+            const [summaryRes, lifetimeSummaryRes, transactionsRes, payoutsRes, settingsRes] = await Promise.all([
                 axios.get(`/seller/finance/summary?range=${range}`),
+                axios.get('/seller/finance/summary?range=all_time'),
                 axios.get('/seller/finance/transactions?per_page=100'),
                 axios.get('/seller/finance/payouts?per_page=50'),
                 axios.get('/seller/settings').catch(err => {
@@ -118,6 +152,7 @@ export default function SellerFinancePage() {
             ]);
 
             setSummary(summaryRes.data);
+            setLifetimeSummary(lifetimeSummaryRes.data);
             setTransactions(transactionsRes.data.data || []);
             setPayoutRequests(payoutsRes.data.data || []);
             
@@ -229,7 +264,7 @@ export default function SellerFinancePage() {
         return chartData;
     };
 
-    if (loading || !summary) {
+    if (loading || !summary || !lifetimeSummary) {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
                 <div className="text-center">
@@ -670,132 +705,340 @@ export default function SellerFinancePage() {
 
                         {/* Segments Metrics */}
                         {(() => {
-                            const gross = summary.summary.total_sales;
-                            const platformCommission = summary.summary.platform_commission;
-                            const gatewayFee = summary.summary.gateway_fee;
-                            const netEarnings = summary.summary.net_earnings;
+                            // Section 1: Active/Running Calculation (FIFO method)
+                            const allEarnings = transactions
+                                .filter(t => t.type === 'earning')
+                                .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()); // oldest first
 
-                            const gst = platformCommission * 0.18;
-                            const tcs = gross * 0.01;
-                            const tds = gross * 0.01;
-                            const actualHandYield = Math.max(0, gross - platformCommission - gst - gatewayFee - tcs - tds);
+                            let runningPaidPool = summary.wallet.paid_amount;
+                            const platRate = Number(summary?.commission_rate?.platform ?? 25);
+                            const gateRate = Number(summary?.commission_rate?.gateway ?? 2.5);
+
+                            const earningsWithUnpaidPortion = allEarnings.map(t => {
+                                const grossVal = t.metadata?.order_total 
+                                    ? Number(t.metadata.order_total) 
+                                    : (t.order?.total_amount ? Number(t.order.total_amount) : Math.abs(t.amount) / 0.685);
+                                
+                                const platformFeeVal = t.metadata?.platform_commission 
+                                    ? Number(t.metadata.platform_commission) 
+                                    : grossVal * (platRate / 100);
+                                    
+                                const gstVal = t.metadata?.platform_commission_gst 
+                                    ? Number(t.metadata.platform_commission_gst) 
+                                    : platformFeeVal * 0.18;
+                                const tcsVal = t.tcs_deduction !== undefined && t.tcs_deduction !== null
+                                    ? Number(t.tcs_deduction)
+                                    : (t.metadata?.tcs_amount 
+                                        ? Number(t.metadata.tcs_amount) 
+                                        : grossVal * 0.01);
+                                const tdsVal = t.tds_deduction !== undefined && t.tds_deduction !== null
+                                    ? Number(t.tds_deduction)
+                                    : (t.metadata?.tds_amount 
+                                        ? Number(t.metadata.tds_amount) 
+                                        : grossVal * 0.01);
+                                
+                                const shippingCharge = t.metadata?.shipping_charge ? Number(t.metadata.shipping_charge) : 0;
+                                const isCOD = t.order ? (t.order as any).payment_method?.toLowerCase() === 'cod' : false;
+                                const gatewayFeeVal = t.metadata?.gateway_fee 
+                                    ? Number(t.metadata.gateway_fee) 
+                                    : (isCOD ? 0 : grossVal * (gateRate / 100));
+                                    
+                                const netYieldVal = Number(t.amount);
+
+                                let unpaidYield = netYieldVal;
+                                if (runningPaidPool > 0) {
+                                    if (runningPaidPool >= netYieldVal) {
+                                        unpaidYield = 0;
+                                        runningPaidPool -= netYieldVal;
+                                    } else {
+                                        unpaidYield = netYieldVal - runningPaidPool;
+                                        runningPaidPool = 0;
+                                    }
+                                }
+
+                                const unpaidRatio = netYieldVal > 0 ? (unpaidYield / netYieldVal) : 1;
+
+                                return {
+                                    created_at: t.created_at,
+                                    gross: grossVal * unpaidRatio,
+                                    platformFee: platformFeeVal * unpaidRatio,
+                                    gst: gstVal * unpaidRatio,
+                                    gatewayFee: gatewayFeeVal * unpaidRatio,
+                                    tcs: tcsVal * unpaidRatio,
+                                    tds: tdsVal * unpaidRatio,
+                                    shippingCharge: shippingCharge * unpaidRatio,
+                                    orderCount: unpaidRatio > 0 ? 1 : 0
+                                };
+                            });
+
+                            const rangeEarnings = earningsWithUnpaidPortion.filter(t => isDateInRange(t.created_at, range));
+                            const gross = rangeEarnings.reduce((sum, t) => sum + t.gross, 0);
+                            const platformCommission = rangeEarnings.reduce((sum, t) => sum + t.platformFee, 0);
+                            const gst = rangeEarnings.reduce((sum, t) => sum + t.gst, 0);
+                            const gatewayFee = rangeEarnings.reduce((sum, t) => sum + t.gatewayFee, 0);
+                            const tcs = rangeEarnings.reduce((sum, t) => sum + t.tcs, 0);
+                            const tds = rangeEarnings.reduce((sum, t) => sum + t.tds, 0);
+                            const shippingCharge = rangeEarnings.reduce((sum, t) => sum + (t.shippingCharge || 0), 0);
+                            const actualHandYield = Math.max(0, gross - platformCommission - gst - gatewayFee - tcs - tds - shippingCharge);
+                            const orderCount = rangeEarnings.reduce((sum, t) => sum + t.orderCount, 0);
+
+                            // Section 2: Lifetime / All-Time Calculation
+                            const lifetimeGross = lifetimeSummary.summary.total_sales;
+                            const lifetimePlatformCommission = lifetimeSummary.summary.platform_commission;
+                            const lifetimeGatewayFee = lifetimeSummary.summary.gateway_fee;
+                            const lifetimeShippingCharge = lifetimeSummary.summary.shipping_charge ?? 0;
+
+                            const lifetimeGst = lifetimeSummary.summary.platform_commission_gst ?? (lifetimePlatformCommission * 0.18);
+                            const lifetimeTcs = lifetimeSummary.summary.tcs_deduction ?? (lifetimeGross * 0.01);
+                            const lifetimeTds = lifetimeSummary.summary.tds_deduction ?? (lifetimeGross * 0.01);
+                            const lifetimeActualHandYield = Math.max(0, lifetimeGross - lifetimePlatformCommission - lifetimeGst - lifetimeGatewayFee - lifetimeTcs - lifetimeTds - lifetimeShippingCharge);
+                            const lifetimeOrderCount = lifetimeSummary.summary.order_count;
 
                             return (
-                                <div className="premium-card p-6 bg-white border-b-8 border-b-gray-900 rounded-xl border border-gray-100 shadow-sm">
-                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
-                                        <div>
-                                            <h3 className="font-bold text-xl text-gray-800 tracking-tight">Segmented Analytics Portfolio</h3>
-                                            <p className="text-gray-500 text-xs font-semibold capitalize mt-2 italic">Current Audit Focus: {range.replace('_', ' ')} Window</p>
+                                <div className="space-y-8">
+                                    {/* Active Segmented Portfolio */}
+                                    <div className="premium-card p-6 bg-white border-b-8 border-b-emerald-600 rounded-xl border border-gray-100 shadow-sm animate-in fade-in duration-500">
+                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+                                            <div>
+                                                <h3 className="font-bold text-xl text-gray-800 tracking-tight">Segmented Analytics Portfolio (Active & In-Escrow)</h3>
+                                                <p className="text-gray-500 text-xs font-semibold capitalize mt-2 italic">Current Audit Focus: {range.replace('_', ' ')} Window (Excludes Successful Payouts)</p>
+                                            </div>
+                                            <div className="flex items-center gap-4 px-4 py-2 bg-gray-50 rounded-xl border border-gray-100 text-xs font-semibold text-gray-500 capitalize shadow-inner group">
+                                                <Info size={14} className="text-cureza-green" />
+                                                Running Revenue & Active Hold Logic
+                                            </div>
                                         </div>
-                                        <div className="flex items-center gap-4 px-4 py-2 bg-gray-50 rounded-xl border border-gray-100 text-xs font-semibold text-gray-500 capitalize shadow-inner group">
-                                            <Info size={14} className="text-cureza-green" />
-                                            Live Revenue Architecture Logic
+                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+                                            {/* Card 1: Gross Sales */}
+                                            <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 shadow-inner group hover:bg-white hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-500 flex flex-col justify-between h-[260px]">
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-gray-550 capitalize mb-1">Total Sales (Gross)</p>
+                                                    <p className="text-xl font-extrabold text-gray-800 tracking-tight mb-2">
+                                                        ₹{gross.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    </p>
+                                                </div>
+                                                <div className="p-2.5 bg-white rounded-xl border border-gray-100/50 text-[10px] font-medium text-gray-550 leading-normal mb-2">
+                                                    <p className="font-semibold capitalize text-[9px] text-gray-400 mb-0.5">Details</p>
+                                                    <p>Total gross customer sales volume before platform fee deductions.</p>
+                                                </div>
+                                                <div className="flex items-center justify-between">
+                                                    <span className="px-2 py-0.5 bg-white text-gray-500 text-[9px] font-bold rounded-lg shadow-sm border border-gray-100 group-hover:border-emerald-600 group-hover:text-emerald-600 transition-all">{orderCount} Nodes</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Card 2: Platform Charge */}
+                                            <div className="p-4 bg-rose-50/20 rounded-xl border border-rose-100 group hover:bg-white hover:shadow-2xl hover:shadow-rose-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-rose-500 capitalize mb-1">Platform Commission ({summary.commission_rate.platform}%)</p>
+                                                    <p className="text-xl font-extrabold text-rose-600 tracking-tight mb-2">
+                                                        -₹{platformCommission.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    </p>
+                                                </div>
+                                                <div className="p-2.5 bg-white/80 rounded-xl border border-rose-100/50 text-[10px] font-medium text-rose-500 leading-normal mb-2">
+                                                    <p className="font-semibold capitalize text-[9px] text-rose-450 mb-0.5">Details</p>
+                                                    <p>Standard B2B platform commission of {Number(summary.commission_rate.platform).toFixed(2)}% applied on gross sales.</p>
+                                                </div>
+                                                <div className="w-12 h-1 bg-rose-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
+                                            </div>
+
+                                            {/* Card 3: GST on Commission */}
+                                            <div className="p-4 bg-rose-50/25 rounded-xl border border-rose-100 group hover:bg-white hover:shadow-2xl hover:shadow-rose-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-rose-500 capitalize mb-1">GST on Commission (18%)</p>
+                                                    <p className="text-xl font-extrabold text-rose-600 tracking-tight mb-2">
+                                                        -₹{gst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    </p>
+                                                </div>
+                                                <div className="p-2.5 bg-white/80 rounded-xl border border-rose-100/50 text-[10px] font-medium text-rose-500 leading-normal mb-2">
+                                                    <p className="font-semibold capitalize text-[9px] text-rose-450 mb-0.5">Details</p>
+                                                    <p>18% Goods and Services Tax (GST) applied on platform commission fee.</p>
+                                                </div>
+                                                <div className="w-12 h-1 bg-rose-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
+                                            </div>
+
+                                            {/* Card 4: Gateway Fee */}
+                                            <div className="p-4 bg-rose-50/20 rounded-xl border border-rose-100 group hover:bg-white hover:shadow-2xl hover:shadow-rose-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-rose-500 capitalize mb-1">Gateway Fee ({summary.commission_rate.gateway}%)</p>
+                                                    <p className="text-xl font-extrabold text-rose-600 tracking-tight mb-2">
+                                                        -₹{gatewayFee.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    </p>
+                                                </div>
+                                                <div className="p-2.5 bg-white/80 rounded-xl border border-rose-100/50 text-[10px] font-medium text-rose-500 leading-normal mb-2">
+                                                    <p className="font-semibold capitalize text-[9px] text-rose-450 mb-0.5">Details</p>
+                                                    <p>Gateway fee for online transactions. 0% is charged for cash-on-delivery (COD).</p>
+                                                </div>
+                                                <div className="w-12 h-1 bg-rose-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
+                                            </div>
+
+                                            {/* Card 5: Shipping Charges */}
+                                            <div className="p-4 bg-rose-50/20 rounded-xl border border-rose-100 group hover:bg-white hover:shadow-2xl hover:shadow-rose-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-rose-500 capitalize mb-1">Shipping & Delivery</p>
+                                                    <p className="text-xl font-extrabold text-rose-600 tracking-tight mb-2">
+                                                        -₹{shippingCharge.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    </p>
+                                                </div>
+                                                <div className="p-2.5 bg-white/80 rounded-xl border border-rose-100/50 text-[10px] font-medium text-rose-500 leading-normal mb-2">
+                                                    <p className="font-semibold capitalize text-[9px] text-rose-450 mb-0.5">Details</p>
+                                                    <p>Fulfillments fees and shipping charges deducted by courier partners.</p>
+                                                </div>
+                                                <div className="w-12 h-1 bg-rose-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
+                                            </div>
+
+                                            {/* Card 6: TCS & TDS */}
+                                            <div className="p-4 bg-amber-50/20 rounded-xl border border-amber-100 group hover:bg-white hover:shadow-2xl hover:shadow-amber-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-amber-600 capitalize mb-1">Statutory Taxes (2%)</p>
+                                                    <p className="text-xl font-extrabold text-amber-700 tracking-tight mb-2">
+                                                        -₹{(tcs + tds).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    </p>
+                                                </div>
+                                                <div className="p-2.5 bg-white/80 rounded-xl border border-amber-100/50 text-[10px] font-medium text-amber-700 leading-normal mb-2 font-mono">
+                                                    <p className="font-semibold capitalize text-[9px] text-amber-600 mb-0.5">TCS: ₹{tcs.toFixed(2)} | TDS: ₹{tds.toFixed(2)}</p>
+                                                    <p>Tax Collection at Source (1% TCS) and Tax Deducted at Source (1% TDS) withheld at source.</p>
+                                                </div>
+                                                <div className="w-12 h-1 bg-amber-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
+                                            </div>
+
+                                            {/* Card 7: Net Payout */}
+                                            <div className="p-4 bg-emerald-50 text-emerald-900 rounded-xl border border-emerald-100 group hover:shadow-2xl hover:shadow-emerald-200/50 transition-all duration-700 h-[260px] flex flex-col justify-between relative overflow-hidden">
+                                                <div className="absolute top-0 right-0 w-24 h-24 bg-white/20 blur-3xl rounded-full -mr-12 -mt-12"></div>
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-emerald-700 capitalize mb-1">Net Payout (Actual Yield)</p>
+                                                    <p className="text-xl font-extrabold text-gray-800 tracking-tight mb-2">
+                                                        ₹{actualHandYield.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    </p>
+                                                </div>
+                                                <div className="p-2.5 bg-white/80 rounded-xl border border-emerald-100/50 text-[10px] font-medium text-emerald-700 leading-normal mb-2 z-10">
+                                                    <p className="font-semibold capitalize text-[9px] text-emerald-600 mb-0.5">Yield Formula</p>
+                                                    <p>Net balance generated after all commissions, GST, gateway, shipping, and TCS/TDS deductions (excluding successful payouts).</p>
+                                                </div>
+                                                <p className="text-[9px] font-bold text-emerald-600 capitalize bg-white/50 w-fit px-2 py-0.5 rounded-lg shadow-sm border border-emerald-100 z-10">Running Net Yield</p>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-                                        {/* Card 1: Gross Sales */}
-                                        <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 shadow-inner group hover:bg-white hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-500 flex flex-col justify-between h-[260px]">
-                                            <div>
-                                                <p className="text-[10px] font-bold text-gray-550 capitalize mb-1">Total Sales (Gross)</p>
-                                                <p className="text-xl font-extrabold text-gray-800 tracking-tight mb-2">
-                                                    ₹{gross.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                </p>
-                                            </div>
-                                            
-                                            <div className="p-2.5 bg-white rounded-xl border border-gray-100/50 text-[10px] font-medium text-gray-550 leading-normal mb-2">
-                                                <p className="font-semibold capitalize text-[9px] text-gray-400 mb-0.5">Details</p>
-                                                <p>Total gross customer sales volume before platform fee deductions.</p>
-                                            </div>
 
-                                            <div className="flex items-center justify-between">
-                                                <span className="px-2 py-0.5 bg-white text-gray-500 text-[9px] font-bold rounded-lg shadow-sm border border-gray-100 group-hover:border-emerald-600 group-hover:text-emerald-600 transition-all">{summary.summary.order_count} Nodes</span>
+                                    {/* All-Time Cumulative Segmented Portfolio */}
+                                    <div className="premium-card p-6 bg-white border-b-8 border-b-purple-600 rounded-xl border border-gray-100 shadow-sm animate-in fade-in duration-500">
+                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+                                            <div>
+                                                <h3 className="font-bold text-xl text-gray-800 tracking-tight">Segmented Analytics Portfolio (All-Time Cumulative)</h3>
+                                                <p className="text-gray-500 text-xs font-semibold capitalize mt-2 italic font-medium">Lifetime Performance & Historical Settlement Aggregate</p>
+                                            </div>
+                                            <div className="flex items-center gap-4 px-4 py-2 bg-purple-50 rounded-xl border border-purple-100 text-xs font-semibold text-purple-600 capitalize shadow-inner group">
+                                                <Info size={14} className="text-purple-600" />
+                                                All-Time Performance Ledger Log
                                             </div>
                                         </div>
-
-                                        {/* Card 2: Platform Charge */}
-                                        <div className="p-4 bg-rose-50/20 rounded-xl border border-rose-100 group hover:bg-white hover:shadow-2xl hover:shadow-rose-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
-                                            <div>
-                                                <p className="text-[10px] font-bold text-rose-500 capitalize mb-1">Platform Commission ({summary.commission_rate.platform}%)</p>
-                                                <p className="text-xl font-extrabold text-rose-600 tracking-tight mb-2">
-                                                    -₹{platformCommission.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                </p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+                                            {/* Card 1: Gross Sales */}
+                                            <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 shadow-inner group hover:bg-white hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-500 flex flex-col justify-between h-[260px]">
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-gray-550 capitalize mb-1">Total Sales (Gross)</p>
+                                                    <p className="text-xl font-extrabold text-gray-800 tracking-tight mb-2">
+                                                        ₹{lifetimeGross.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    </p>
+                                                </div>
+                                                <div className="p-2.5 bg-white rounded-xl border border-gray-100/50 text-[10px] font-medium text-gray-550 leading-normal mb-2">
+                                                    <p className="font-semibold capitalize text-[9px] text-gray-400 mb-0.5">Details</p>
+                                                    <p>Total lifetime gross sales volume before platform fee deductions.</p>
+                                                </div>
+                                                <div className="flex items-center justify-between">
+                                                    <span className="px-2 py-0.5 bg-white text-gray-500 text-[9px] font-bold rounded-lg shadow-sm border border-gray-100 group-hover:border-purple-600 group-hover:text-purple-600 transition-all">{lifetimeOrderCount} Nodes</span>
+                                                </div>
                                             </div>
 
-                                            <div className="p-2.5 bg-white/80 rounded-xl border border-rose-100/50 text-[10px] font-medium text-rose-500 leading-normal mb-2">
-                                                <p className="font-semibold capitalize text-[9px] text-rose-450 mb-0.5">Details</p>
-                                                <p>Standard B2B platform commission of {Number(summary.commission_rate.platform).toFixed(2)}% applied on gross sales.</p>
+                                            {/* Card 2: Platform Charge */}
+                                            <div className="p-4 bg-purple-50/20 rounded-xl border border-purple-100 group hover:bg-white hover:shadow-2xl hover:shadow-purple-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-purple-600 capitalize mb-1">Platform Commission ({lifetimeSummary.commission_rate.platform}%)</p>
+                                                    <p className="text-xl font-extrabold text-purple-600 tracking-tight mb-2">
+                                                        -₹{lifetimePlatformCommission.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    </p>
+                                                </div>
+                                                <div className="p-2.5 bg-white/80 rounded-xl border border-purple-100/50 text-[10px] font-medium text-purple-600 leading-normal mb-2">
+                                                    <p className="font-semibold capitalize text-[9px] text-purple-450 mb-0.5">Details</p>
+                                                    <p>Total platform commission of {Number(lifetimeSummary.commission_rate.platform).toFixed(2)}% applied on lifetime gross sales.</p>
+                                                </div>
+                                                <div className="w-12 h-1 bg-purple-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
                                             </div>
 
-                                            <div className="w-12 h-1 bg-rose-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
-                                        </div>
-
-                                        {/* Card 3: GST on Commission */}
-                                        <div className="p-4 bg-rose-50/25 rounded-xl border border-rose-100 group hover:bg-white hover:shadow-2xl hover:shadow-rose-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
-                                            <div>
-                                                <p className="text-[10px] font-bold text-rose-500 capitalize mb-1">GST on Commission (18%)</p>
-                                                <p className="text-xl font-extrabold text-rose-600 tracking-tight mb-2">
-                                                    -₹{gst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                </p>
+                                            {/* Card 3: GST on Commission */}
+                                            <div className="p-4 bg-purple-50/25 rounded-xl border border-purple-100 group hover:bg-white hover:shadow-2xl hover:shadow-purple-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-purple-600 capitalize mb-1">GST on Commission (18%)</p>
+                                                    <p className="text-xl font-extrabold text-purple-600 tracking-tight mb-2">
+                                                        -₹{lifetimeGst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    </p>
+                                                </div>
+                                                <div className="p-2.5 bg-white/80 rounded-xl border border-purple-100/50 text-[10px] font-medium text-purple-600 leading-normal mb-2">
+                                                    <p className="font-semibold capitalize text-[9px] text-purple-450 mb-0.5">Details</p>
+                                                    <p>18% Goods and Services Tax (GST) applied on platform commission fee.</p>
+                                                </div>
+                                                <div className="w-12 h-1 bg-purple-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
                                             </div>
 
-                                            <div className="p-2.5 bg-white/80 rounded-xl border border-rose-100/50 text-[10px] font-medium text-rose-500 leading-normal mb-2">
-                                                <p className="font-semibold capitalize text-[9px] text-rose-450 mb-0.5">Details</p>
-                                                <p>18% Goods and Services Tax (GST) applied on platform commission fee.</p>
+                                            {/* Card 4: Gateway Fee */}
+                                            <div className="p-4 bg-purple-50/20 rounded-xl border border-purple-100 group hover:bg-white hover:shadow-2xl hover:shadow-purple-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-purple-600 capitalize mb-1">Gateway Fee ({lifetimeSummary.commission_rate.gateway}%)</p>
+                                                    <p className="text-xl font-extrabold text-purple-600 tracking-tight mb-2">
+                                                        -₹{lifetimeGatewayFee.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    </p>
+                                                </div>
+                                                <div className="p-2.5 bg-white/80 rounded-xl border border-purple-100/50 text-[10px] font-medium text-purple-600 leading-normal mb-2">
+                                                    <p className="font-semibold capitalize text-[9px] text-purple-450 mb-0.5">Details</p>
+                                                    <p>Gateway fee for online transactions. 0% is charged for cash-on-delivery (COD).</p>
+                                                </div>
+                                                <div className="w-12 h-1 bg-purple-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
                                             </div>
 
-                                            <div className="w-12 h-1 bg-rose-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
-                                        </div>
-
-                                        {/* Card 4: Gateway Fee */}
-                                        <div className="p-4 bg-rose-50/20 rounded-xl border border-rose-100 group hover:bg-white hover:shadow-2xl hover:shadow-rose-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
-                                            <div>
-                                                <p className="text-[10px] font-bold text-rose-500 capitalize mb-1">Gateway Fee ({summary.commission_rate.gateway}%)</p>
-                                                <p className="text-xl font-extrabold text-rose-600 tracking-tight mb-2">
-                                                    -₹{gatewayFee.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                </p>
+                                            {/* Card 5: Shipping Charges */}
+                                            <div className="p-4 bg-purple-50/20 rounded-xl border border-purple-100 group hover:bg-white hover:shadow-2xl hover:shadow-purple-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-purple-600 capitalize mb-1">Shipping & Delivery</p>
+                                                    <p className="text-xl font-extrabold text-purple-600 tracking-tight mb-2">
+                                                        -₹{lifetimeShippingCharge.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    </p>
+                                                </div>
+                                                <div className="p-2.5 bg-white/80 rounded-xl border border-purple-100/50 text-[10px] font-medium text-purple-600 leading-normal mb-2">
+                                                    <p className="font-semibold capitalize text-[9px] text-purple-450 mb-0.5">Details</p>
+                                                    <p>Total lifetime shipping fees and delivery charges deducted by courier partners.</p>
+                                                </div>
+                                                <div className="w-12 h-1 bg-purple-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
                                             </div>
 
-                                            <div className="p-2.5 bg-white/80 rounded-xl border border-rose-100/50 text-[10px] font-medium text-rose-500 leading-normal mb-2">
-                                                <p className="font-semibold capitalize text-[9px] text-rose-450 mb-0.5">Details</p>
-                                                <p>Gateway fee for online transactions. 0% is charged for cash-on-delivery (COD).</p>
+                                            {/* Card 6: TCS & TDS */}
+                                            <div className="p-4 bg-amber-50/20 rounded-xl border border-amber-100 group hover:bg-white hover:shadow-2xl hover:shadow-amber-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-amber-600 capitalize mb-1">Statutory Taxes (2%)</p>
+                                                    <p className="text-xl font-extrabold text-amber-700 tracking-tight mb-2">
+                                                        -₹{(lifetimeTcs + lifetimeTds).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    </p>
+                                                </div>
+                                                <div className="p-2.5 bg-white/80 rounded-xl border border-amber-100/50 text-[10px] font-medium text-amber-700 leading-normal mb-2 font-mono">
+                                                    <p className="font-semibold capitalize text-[9px] text-amber-600 mb-0.5">TCS: ₹{lifetimeTcs.toFixed(2)} | TDS: ₹{lifetimeTds.toFixed(2)}</p>
+                                                    <p>Tax Collection at Source (1% TCS) and Tax Deducted at Source (1% TDS) withheld at source.</p>
+                                                </div>
+                                                <div className="w-12 h-1 bg-amber-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
                                             </div>
 
-                                            <div className="w-12 h-1 bg-rose-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
-                                        </div>
-
-                                        {/* Card 5: TCS & TDS */}
-                                        <div className="p-4 bg-amber-50/20 rounded-xl border border-amber-100 group hover:bg-white hover:shadow-2xl hover:shadow-amber-100/50 transition-all duration-500 h-[260px] flex flex-col justify-between">
-                                            <div>
-                                                <p className="text-[10px] font-bold text-amber-600 capitalize mb-1">Statutory Taxes (2%)</p>
-                                                <p className="text-xl font-extrabold text-amber-700 tracking-tight mb-2">
-                                                    -₹{(tcs + tds).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                </p>
+                                            {/* Card 7: Net Payout */}
+                                            <div className="p-4 bg-purple-50 text-purple-900 rounded-xl border border-purple-100 group hover:shadow-2xl hover:shadow-purple-200/50 transition-all duration-700 h-[260px] flex flex-col justify-between relative overflow-hidden">
+                                                <div className="absolute top-0 right-0 w-24 h-24 bg-white/20 blur-3xl rounded-full -mr-12 -mt-12"></div>
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-purple-700 capitalize mb-1">Lifetime Net Yield</p>
+                                                    <p className="text-xl font-extrabold text-gray-800 tracking-tight mb-2">
+                                                        ₹{lifetimeActualHandYield.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    </p>
+                                                </div>
+                                                <div className="p-2.5 bg-purple-100/50 rounded-xl border border-purple-100/50 text-[10px] font-medium text-purple-700 leading-normal mb-2 z-10">
+                                                    <p className="font-semibold capitalize text-[9px] text-purple-650 mb-0.5">Yield Formula</p>
+                                                    <p>Lifetime Net balance generated after all commissions, GST, gateway, shipping, and TCS/TDS deductions.</p>
+                                                </div>
+                                                <p className="text-[9px] font-bold text-purple-650 capitalize bg-white/50 w-fit px-2 py-0.5 rounded-lg shadow-sm border border-purple-100 z-10">Lifetime Yield</p>
                                             </div>
-
-                                            <div className="p-2.5 bg-white/80 rounded-xl border border-amber-100/50 text-[10px] font-medium text-amber-700 leading-normal mb-2 font-mono">
-                                                <p className="font-semibold capitalize text-[9px] text-amber-600 mb-0.5">TCS: ₹{tcs.toFixed(2)} | TDS: ₹{tds.toFixed(2)}</p>
-                                                <p>Tax Collection at Source (1% TCS) and Tax Deducted at Source (1% TDS) withheld at source.</p>
-                                            </div>
-
-                                            <div className="w-12 h-1 bg-amber-200 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
-                                        </div>
-
-                                        {/* Card 6: Net Payout */}
-                                        <div className="p-4 bg-emerald-50 text-emerald-900 rounded-xl border border-emerald-100 group hover:shadow-2xl hover:shadow-emerald-200/50 transition-all duration-700 h-[260px] flex flex-col justify-between relative overflow-hidden">
-                                            <div className="absolute top-0 right-0 w-24 h-24 bg-white/20 blur-3xl rounded-full -mr-12 -mt-12"></div>
-                                            <div>
-                                                <p className="text-[10px] font-bold text-emerald-700 capitalize mb-1">Net Payout (Actual Yield)</p>
-                                                <p className="text-xl font-extrabold text-gray-800 tracking-tight mb-2">
-                                                    ₹{actualHandYield.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                </p>
-                                            </div>
-
-                                            <div className="p-2.5 bg-white/80 rounded-xl border border-emerald-100/50 text-[10px] font-medium text-emerald-700 leading-normal mb-2 z-10">
-                                                <p className="font-semibold capitalize text-[9px] text-emerald-600 mb-0.5">Yield Formula</p>
-                                                <p>Net balance generated after all commissions, GST on Commission, gateway cuts, and TCS/TDS withholdings.</p>
-                                            </div>
-
-                                            <p className="text-[9px] font-bold text-emerald-600 capitalize bg-white/50 w-fit px-2 py-0.5 rounded-lg shadow-sm border border-emerald-100 z-10">Calculated Net Payout</p>
                                         </div>
                                     </div>
                                 </div>
@@ -1138,6 +1381,7 @@ export default function SellerFinancePage() {
                                                 let tcs = 0;
                                                 let tds = 0;
                                                 let gatewayFee = 0;
+                                                let shippingCharge = 0;
                                                 let netDisbursable = Math.abs(txn.amount);
 
                                                 if (txn.type === 'earning') {
@@ -1152,14 +1396,18 @@ export default function SellerFinancePage() {
                                                     gst = txn.metadata?.platform_commission_gst 
                                                         ? Number(txn.metadata.platform_commission_gst) 
                                                         : platformFee * 0.18;
-                                                    tcs = txn.metadata?.tcs_amount 
-                                                        ? Number(txn.metadata.tcs_amount) 
-                                                        : gross * 0.01;
-                                                    tds = txn.metadata?.tds_amount 
-                                                        ? Number(txn.metadata.tds_amount) 
-                                                        : gross * 0.01;
+                                                    tcs = txn.tcs_deduction !== undefined && txn.tcs_deduction !== null
+                                                        ? Number(txn.tcs_deduction)
+                                                        : (txn.metadata?.tcs_amount 
+                                                            ? Number(txn.metadata.tcs_amount) 
+                                                            : gross * 0.01);
+                                                    tds = txn.tds_deduction !== undefined && txn.tds_deduction !== null
+                                                        ? Number(txn.tds_deduction)
+                                                        : (txn.metadata?.tds_amount 
+                                                            ? Number(txn.metadata.tds_amount) 
+                                                            : gross * 0.01);
                                                     
-                                                    const shippingCharge = txn.metadata?.shipping_charge
+                                                    shippingCharge = txn.metadata?.shipping_charge
                                                         ? Number(txn.metadata.shipping_charge)
                                                         : 0;
                                                     
@@ -1302,6 +1550,10 @@ export default function SellerFinancePage() {
                                                                         <span className="text-gray-400">→</span>
                                                                         <span className="bg-rose-50 px-1.5 py-0.5 rounded text-rose-500 font-mono" title={`Gateway Fee (${gateRate}%)`}>
                                                                             -₹{gatewayFee.toFixed(2)}
+                                                                        </span>
+                                                                        <span className="text-gray-400">→</span>
+                                                                        <span className="bg-rose-100/50 px-1.5 py-0.5 rounded text-rose-600 font-mono" title="Shipping & Delivery Charges">
+                                                                            -₹{shippingCharge.toFixed(2)}
                                                                         </span>
                                                                         <span className="text-gray-400">→</span>
                                                                         <span className="bg-emerald-50 px-1.5 py-0.5 rounded text-emerald-600 font-bold font-mono" title="Actual Hand Yield Net Payout">
