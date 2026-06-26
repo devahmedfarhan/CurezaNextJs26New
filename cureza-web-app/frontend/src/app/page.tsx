@@ -11,33 +11,63 @@ import FAQSection from '@/components/home/FAQSection';
 import BlogList from '@/components/blogs/BlogList';
 import ProductGrid from '@/components/product/ProductGrid';
 
-export default function Home() {
+async function getSettings() {
+  try {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000';
+    const res = await fetch(`${backendUrl}/api/settings/public`, {
+      next: { revalidate: 10 } // Revalidate every 10 seconds to reflect admin changes quickly
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (error) {
+    console.error('Failed to fetch public settings on home page:', error);
+  }
+  return {
+    homepage_section_order: 'hero,stats,purpose,partners,consultation,testimonials,marquee'
+  };
+}
+
+export default async function Home() {
+  const settings = await getSettings();
+  const sectionOrder = (settings.homepage_section_order || 'hero,stats,purpose,partners,consultation,testimonials,marquee').split(',');
+
   return (
     <div className="w-full bg-[#F8F3EF]">
-
-      {/* 1. CINEMATIC HERO SLIDER */}
-      <HeroSlider />
-
-      {/* 2. CARE FOR YOUR CONCERN (HEALTH CATEGORIES CIRCLE GRID) */}
-      <ShopByTabs />
-
-      {/* 3. PIONEERING STATS BANNER */}
-      <PioneeringBanner />
-
-      {/* 4. FORMULATED WITH PURPOSE (SCIENTIFIC EXTRACTION PANELS) */}
-      <FormulatedWithPurpose />
-
-      {/* 5. WATCH & EXPLORE (SHOPPABLE VIDEO CAROUSEL) */}
-      <WatchAndExplore />
-
-      {/* 6. RECOGNIZED. REWARDED. (PRESS LOGO SLIDER) */}
-      <PressMarquee />
-
-      {/* 7. RX DOCTOR CONSULTATION TIMELINE */}
-      <DoctorConsultationTimeline />
-
-      {/* 8. PARTNER WITH CUREZA / SELL ON CUREZA */}
-      <PartnerShowcase />
+      {sectionOrder.map((sectionKey: string) => {
+        switch (sectionKey.trim()) {
+          case 'hero':
+            return (
+              <div key="hero-section">
+                {/* 1. CINEMATIC HERO SLIDER */}
+                <HeroSlider />
+                {/* 2. CARE FOR YOUR CONCERN (HEALTH CATEGORIES CIRCLE GRID) */}
+                <ShopByTabs />
+              </div>
+            );
+          case 'stats':
+            return <PioneeringBanner key="stats-section" />;
+          case 'purpose':
+            return <FormulatedWithPurpose key="purpose-section" />;
+          case 'marquee':
+            return (
+              <div key="marquee-section">
+                {/* 5. WATCH & EXPLORE (SHOPPABLE VIDEO CAROUSEL) */}
+                <WatchAndExplore />
+                {/* 6. RECOGNIZED. REWARDED. (PRESS LOGO SLIDER) */}
+                <PressMarquee />
+              </div>
+            );
+          case 'consultation':
+            return <DoctorConsultationTimeline key="consultation-section" />;
+          case 'partners':
+            return <PartnerShowcase key="partners-section" />;
+          case 'testimonials':
+            return <TestimonialSlider key="testimonials-section" />;
+          default:
+            return null;
+        }
+      })}
 
       {/* 9. NEW LAUNCHES (Dynamic Grid from DB) */}
       <div className="bg-white py-16">
@@ -71,9 +101,6 @@ export default function Home() {
         />
       </div>
 
-      {/* 11. CUSTOMER TESTIMONIALS SLIDER */}
-      <TestimonialSlider />
-
       {/* 12. FAQ SECTION */}
       <div className="bg-[#F8F3EF] py-16 border-t border-[#052326]/5">
         <FAQSection />
@@ -88,7 +115,6 @@ export default function Home() {
           isDarkBg={false}
         />
       </div>
-
     </div>
   );
 }

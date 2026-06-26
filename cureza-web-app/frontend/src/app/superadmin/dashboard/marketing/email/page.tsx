@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { Mail, Send, Users, BarChart2, Plus, X, Eye, CheckCircle2, Inbox, ArrowRight, HelpCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Mail, Send, Users, BarChart2, Plus, X, Eye, CheckCircle2, Inbox, ArrowRight, HelpCircle, Loader2, RefreshCw } from 'lucide-react';
 import { useToast } from '@/contexts/ToastContext';
+import api from '@/lib/api';
 
 interface Campaign {
     id: number;
@@ -10,19 +11,18 @@ interface Campaign {
     subject: string;
     segment: string;
     template: string;
-    sentAt: string;
+    status: string;
     recipients: number;
     delivered: number;
-    openRate: number;
+    open_rate: number;
+    sent_at?: string;
+    created_at: string;
 }
 
 export default function AdminEmailPage() {
     const { showToast } = useToast();
-    const [campaigns, setCampaigns] = useState<Campaign[]>([
-        { id: 1, title: 'November Wellness Newsletter', subject: 'Your guide to winter wellness ❄️', segment: 'All Customers', template: 'Weekly Newsletter', sentAt: 'Nov 24, 2025', recipients: 12500, delivered: 98, openRate: 24 },
-        { id: 2, title: 'Supplements Flash Sale', subject: 'Flat 20% off on premium proteins!', segment: 'Inactive Users', template: 'Flash Sale Alert', sentAt: 'Dec 02, 2025', recipients: 4200, delivered: 99, openRate: 31 },
-        { id: 3, title: 'Herbals Product Launch', subject: 'Introducing Cureza Organic Tea Blend 🌿', segment: 'Repeat Buyers', template: 'Product Launch', sentAt: 'Jan 15, 2026', recipients: 8400, delivered: 97, openRate: 28 },
-    ]);
+    const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+    const [loading, setLoading] = useState(true);
 
     const templates = [
         { id: 'launch', name: 'Product Launch', desc: 'Promote a new wellness product or collection with high visibility.', subject: 'Introducing our latest wellness solution! 🌟' },
@@ -33,16 +33,13 @@ export default function AdminEmailPage() {
     const segments = [
         { id: 'all', name: 'All Customers', count: 14820 },
         { id: 'repeat', name: 'Repeat Buyers', count: 5240 },
-        { id: 'inactive', name: 'Inactive Users (>30 days)', count: 3180 },
-        { id: 'newsletter', name: 'Newsletter Subscribers', count: 9600 }
+        { id: 'inactive', name: 'Inactive Users (>30 days)', count: 3180 }
     ];
 
     // Modal state
     const [isCreating, setIsCreating] = useState(false);
     const [previewTemplate, setPreviewTemplate] = useState<string | null>(null);
     const [isSending, setIsSending] = useState(false);
-    const [sendProgress, setSendProgress] = useState(0);
-    const [sendingStage, setSendingStage] = useState('');
 
     // Form inputs
     const [formData, setFormData] = useState({
@@ -52,11 +49,42 @@ export default function AdminEmailPage() {
         template: 'weekly'
     });
 
+    const fetchCampaigns = async (silent = false) => {
+        if (!silent) setLoading(true);
+        try {
+            const res = await api.get('/admin/campaigns');
+            setCampaigns(res.data || []);
+        } catch (error) {
+            console.error('Failed to fetch campaigns list:', error);
+            showToast('Failed to load campaigns list', 'error');
+        } finally {
+            if (!silent) setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchCampaigns();
+    }, []);
+
+    // Polling effect while campaign is sending/queued
+    useEffect(() => {
+        const hasActiveCampaigns = campaigns.some(c => c.status === 'queued' || c.status === 'sending');
+        if (!hasActiveCampaigns) return;
+
+        const interval = setInterval(() => {
+            fetchCampaigns(true);
+        }, 3000);
+
+        return () => clearInterval(interval);
+    }, [campaigns]);
+
     const getTemplateHTML = (templateName: string, subject: string) => {
         const primaryColor = '#16A34A'; // Cureza Green
         let content = '';
 
-        if (templateName.includes('Launch')) {
+        const normalizedName = templateName.toLowerCase();
+
+        if (normalizedName.includes('launch')) {
             content = `
                 <div style="background-color: #F8F3EF; padding: 30px; border-radius: 12px; font-family: sans-serif;">
                     <div style="text-align: center; margin-bottom: 20px;">
@@ -72,7 +100,7 @@ export default function AdminEmailPage() {
                     </div>
                 </div>
             `;
-        } else if (templateName.includes('Sale')) {
+        } else if (normalizedName.includes('sale')) {
             content = `
                 <div style="background-color: #111827; padding: 30px; border-radius: 12px; font-family: sans-serif; color: white;">
                     <div style="text-align: center; margin-bottom: 20px;">
@@ -116,7 +144,6 @@ export default function AdminEmailPage() {
 
     const handleCreateCampaign = () => {
         setIsCreating(true);
-        // Pre-fill subject based on first template
         const matched = templates.find(t => t.id === 'weekly');
         setFormData({
             title: '',
@@ -135,50 +162,28 @@ export default function AdminEmailPage() {
         }));
     };
 
-    const handleSendSimulate = () => {
+    const handleDispatchCampaign = async () => {
         if (!formData.title || !formData.subject) {
             return showToast("Please fill all fields", "error");
         }
 
         setIsSending(true);
-        setSendProgress(0);
-        setSendingStage('Segmenting list and identifying recipients...');
-
-        // Start progress ticker
-        const interval = setInterval(() => {
-            setSendProgress(prev => {
-                const next = prev + 10;
-                if (next === 30) setSendingStage('Rendering email layout and tags...');
-                if (next === 60) setSendingStage('Dispatching messages through SMTP relays...');
-                if (next === 90) setSendingStage('Awaiting delivery receipt signals...');
-                if (next >= 100) {
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        const targetSegment = segments.find(s => s.id === formData.segment);
-                        const templateDetails = templates.find(t => t.id === formData.template);
-                        
-                        const newCampaign: Campaign = {
-                            id: Date.now(),
-                            title: formData.title,
-                            subject: formData.subject,
-                            segment: targetSegment?.name || 'All Customers',
-                            template: templateDetails?.name || 'Custom Template',
-                            sentAt: 'Just Now',
-                            recipients: targetSegment?.count || 12500,
-                            delivered: 100,
-                            openRate: 0
-                        };
-
-                        setCampaigns([newCampaign, ...campaigns]);
-                        showToast("Campaign Sent Successfully (Simulated)!", "success");
-                        setIsSending(false);
-                        setIsCreating(false);
-                    }, 500);
-                    return 100;
-                }
-                return next;
+        try {
+            await api.post('/admin/campaigns', {
+                title: formData.title,
+                subject: formData.subject,
+                segment: formData.segment,
+                template: templates.find(t => t.id === formData.template)?.name || formData.template
             });
-        }, 150);
+            showToast("Campaign dispatched successfully to background queue!", "success");
+            setIsCreating(false);
+            fetchCampaigns();
+        } catch (error) {
+            console.error('Failed to dispatch campaign:', error);
+            showToast('Failed to dispatch campaign to database queue', 'error');
+        } finally {
+            setIsSending(false);
+        }
     };
 
     return (
@@ -189,31 +194,48 @@ export default function AdminEmailPage() {
                     <h1 className="text-xl font-semibold text-gray-900 tracking-tight">Email Campaign Builder</h1>
                     <p className="text-xs text-gray-500 font-normal">Design, segment, and dispatch promotional newsletters</p>
                 </div>
-                <button 
-                    onClick={handleCreateCampaign}
-                    className="bg-black text-white px-4 py-2.5 rounded-[10px] flex items-center gap-2 hover:bg-neutral-900 transition-colors font-medium text-xs"
-                >
-                    <Plus size={14} />
-                    New Campaign
-                </button>
+                <div className="flex gap-2">
+                    <button 
+                        onClick={() => fetchCampaigns()}
+                        className="p-2.5 border-[0.35px] border-black/50 rounded-[10px] hover:bg-neutral-50"
+                    >
+                        <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
+                    </button>
+                    <button 
+                        onClick={handleCreateCampaign}
+                        className="bg-black text-white px-4 py-2.5 rounded-[10px] flex items-center gap-2 hover:bg-neutral-900 transition-colors font-medium text-xs"
+                    >
+                        <Plus size={14} />
+                        New Campaign
+                    </button>
+                </div>
             </div>
 
             {/* Metrics cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-white border-[0.35px] border-black/50 p-5 rounded-[10px] space-y-2">
                     <span className="text-[10px] text-gray-550 font-medium tracking-normal block">Sent Newsletters</span>
-                    <h3 className="text-2xl font-semibold text-gray-900">25,100</h3>
-                    <p className="text-xs text-gray-400 font-normal">Total delivered email units this month</p>
+                    <h3 className="text-2xl font-semibold text-gray-900">
+                        {campaigns.filter(c => c.status === 'sent').reduce((sum, c) => sum + c.recipients, 0).toLocaleString()}
+                    </h3>
+                    <p className="text-xs text-gray-400 font-normal">Total delivered email units from database records</p>
                 </div>
                 <div className="bg-white border-[0.35px] border-black/50 p-5 rounded-[10px] space-y-2">
                     <span className="text-[10px] text-gray-550 font-medium tracking-normal block">Avg. Open Rate</span>
-                    <h3 className="text-2xl font-semibold text-gray-900">27.6%</h3>
-                    <p className="text-xs text-gray-400 font-normal">Benchmark average is 21.3%</p>
+                    <h3 className="text-2xl font-semibold text-gray-900">
+                        {campaigns.filter(c => c.status === 'sent').length > 0
+                            ? (campaigns.filter(c => c.status === 'sent').reduce((sum, c) => sum + c.open_rate, 0) / campaigns.filter(c => c.status === 'sent').length).toFixed(1) + '%'
+                            : '0.0%'
+                        }
+                    </h3>
+                    <p className="text-xs text-gray-400 font-normal">Benchmark average open rate across database logs</p>
                 </div>
                 <div className="bg-white border-[0.35px] border-black/50 p-5 rounded-[10px] space-y-2">
-                    <span className="text-[10px] text-gray-550 font-medium tracking-normal block">Delivery Success</span>
-                    <h3 className="text-2xl font-semibold text-emerald-700">98.0%</h3>
-                    <p className="text-xs text-gray-400 font-normal">SMTP Server bounce rate is 2.0%</p>
+                    <span className="text-[10px] text-gray-550 font-medium tracking-normal block">Active Campaigns</span>
+                    <h3 className="text-2xl font-semibold text-emerald-700">
+                        {campaigns.filter(c => c.status === 'queued' || c.status === 'sending').length}
+                    </h3>
+                    <p className="text-xs text-gray-400 font-normal">Campaigns currently running in background queues</p>
                 </div>
             </div>
 
@@ -221,38 +243,51 @@ export default function AdminEmailPage() {
                 {/* Recent Campaigns list */}
                 <div className="lg:col-span-2 space-y-4">
                     <h3 className="font-semibold text-sm text-gray-900">Sent Campaigns Log</h3>
-                    <div className="bg-white rounded-[10px] border-[0.35px] border-black/50 divide-y-[0.35px] divide-neutral-950/10 overflow-hidden">
-                        {campaigns.map((c) => (
-                            <div key={c.id} className="p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-neutral-50/50 transition-colors">
-                                <div className="flex items-start gap-4">
-                                    <div className="p-2.5 bg-neutral-50 text-black border-[0.35px] border-black/50 rounded-[10px] mt-0.5">
-                                        <Mail size={18} />
-                                    </div>
-                                    <div>
-                                        <h4 className="font-semibold text-gray-900 text-sm">{c.title}</h4>
-                                        <p className="text-xs text-gray-400 mt-0.5 font-normal">Subject: "{c.subject}"</p>
-                                        <div className="flex flex-wrap items-center gap-2 mt-2">
-                                            <span className="text-[9px] font-medium bg-neutral-50 border-[0.35px] border-black/50 text-neutral-800 px-2 py-0.5 rounded-[10px]">{c.segment}</span>
-                                            <span className="text-[9px] font-medium bg-neutral-100 text-gray-655 px-2 py-0.5 rounded-[10px]">{c.template}</span>
-                                            <span className="text-xs text-gray-400 font-normal">• Sent {c.sentAt} • {c.recipients.toLocaleString()} Recipients</span>
+                    
+                    {loading ? (
+                        <div className="flex h-48 items-center justify-center bg-white border-[0.35px] border-black/50 rounded-[10px]">
+                            <Loader2 className="animate-spin text-black" size={24} />
+                        </div>
+                    ) : campaigns.length === 0 ? (
+                        <div className="flex h-48 flex-col items-center justify-center bg-white border-[0.35px] border-black/50 rounded-[10px] text-gray-400 text-xs">
+                            <Mail size={24} className="mb-2 text-neutral-300" />
+                            No campaigns created yet.
+                        </div>
+                    ) : (
+                        <div className="bg-white rounded-[10px] border-[0.35px] border-black/50 divide-y-[0.35px] divide-neutral-950/10 overflow-hidden">
+                            {campaigns.map((c) => (
+                                <div key={c.id} className="p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-neutral-50/50 transition-colors">
+                                    <div className="flex items-start gap-4">
+                                        <div className="p-2.5 bg-neutral-50 text-black border-[0.35px] border-black/50 rounded-[10px] mt-0.5">
+                                            <Mail size={18} />
+                                        </div>
+                                        <div>
+                                            <h4 className="font-semibold text-gray-900 text-sm">{c.title}</h4>
+                                            <p className="text-xs text-gray-400 mt-0.5 font-normal">Subject: "{c.subject}"</p>
+                                            <div className="flex flex-wrap items-center gap-2 mt-2">
+                                                <span className="text-[9px] font-medium bg-neutral-50 border-[0.35px] border-black/50 text-neutral-800 px-2 py-0.5 rounded-[10px]">{c.segment}</span>
+                                                <span className="text-[9px] font-medium bg-neutral-100 text-gray-655 px-2 py-0.5 rounded-[10px]">{c.template}</span>
+                                                <span className="text-xs text-gray-400 font-normal">• {c.recipients.toLocaleString()} Recipients</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto pt-3 sm:pt-0 border-t-[0.5px] sm:border-t-0 border-black/50">
-                                    <span className="text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-[10px] border-[0.35px] border-black/50">
-                                        {c.delivered}% Delivered
-                                    </span>
-                                    {c.openRate > 0 ? (
-                                        <span className="text-xs font-medium text-gray-700 bg-gray-50 px-2.5 py-0.5 rounded-[10px] border-[0.35px] border-black/50 sm:mt-1.5">
-                                            {c.openRate}% Open Rate
+                                    <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto pt-3 sm:pt-0 border-t-[0.5px] sm:border-t-0 border-black/50">
+                                        <span className={`text-xs font-medium px-2.5 py-0.5 rounded-[10px] border-[0.35px] border-black/50 ${
+                                            c.status === 'sent' ? 'text-emerald-700 bg-emerald-50' :
+                                            c.status === 'sending' || c.status === 'queued' ? 'text-amber-700 bg-amber-50' : 'text-red-700 bg-red-50'
+                                        }`}>
+                                            {c.status === 'sent' ? 'Delivered' : c.status === 'sending' ? `Sending ${c.delivered}%` : 'Queued'}
                                         </span>
-                                    ) : (
-                                        <span className="text-xs text-gray-400 sm:mt-1.5 italic font-normal">Gathering metrics...</span>
-                                    )}
+                                        {c.status === 'sent' && (
+                                            <span className="text-xs font-medium text-gray-700 bg-gray-50 px-2.5 py-0.5 rounded-[10px] border-[0.35px] border-black/50 sm:mt-1.5">
+                                                {c.open_rate}% Open Rate
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Newsletter design template presets */}
@@ -354,7 +389,7 @@ export default function AdminEmailPage() {
                                     Cancel
                                 </button>
                                 <button
-                                    onClick={handleSendSimulate}
+                                    onClick={handleDispatchCampaign}
                                     disabled={isSending}
                                     className="px-4 py-2 bg-black text-white rounded-[10px] hover:bg-neutral-900 text-xs font-medium flex items-center gap-2 disabled:opacity-50"
                                 >
@@ -390,31 +425,6 @@ export default function AdminEmailPage() {
                                     }}
                                 />
                             </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Simulated progress overlay */}
-            {isSending && (
-                <div className="fixed inset-0 bg-black/75 flex items-center justify-center z-[60] p-4 backdrop-blur-md animate-in fade-in duration-300">
-                    <div className="bg-white rounded-[10px] p-6 max-w-md w-full border-[0.35px] border-black/50 text-center space-y-6">
-                        <div className="w-12 h-12 bg-neutral-50 border-[0.35px] border-black/50 text-black rounded-[10px] flex items-center justify-center mx-auto animate-bounce">
-                            <Send size={20} />
-                        </div>
-                        <div className="space-y-2">
-                            <h3 className="font-semibold text-base text-gray-900">Dispatching Newsletter</h3>
-                            <p className="text-xs text-gray-500 font-normal">{sendingStage}</p>
-                        </div>
-                        
-                        <div className="space-y-2">
-                            <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
-                                <div 
-                                    className="bg-black h-full transition-all duration-300 rounded-full"
-                                    style={{ width: `${sendProgress}%` }}
-                                />
-                            </div>
-                            <span className="text-[10px] text-gray-450 font-medium">{sendProgress}% complete</span>
                         </div>
                     </div>
                 </div>
@@ -470,9 +480,9 @@ export default function AdminEmailPage() {
                         </p>
                     </div>
                     <div className="space-y-2">
-                        <h4 className="font-medium text-gray-900">3. Simulated SMTP Dispatch</h4>
+                        <h4 className="font-medium text-gray-900">3. Database SMTP Queue Dispatch</h4>
                         <p>
-                            Jab aap "Dispatch Campaign" par click karte hain, toh system background process start karke recipient users ko emails queue aur send karta hai. Logs me conversion rates aur delivery reports real-time update hote hain.
+                            Jab aap "Dispatch Campaign" par click karte hain, toh system background database queue job (SendCampaignJob) create karta hai. Queue jobs background parameters check karke emails log aur process karte hain. Logs periodically refresh hokar active state updates aur open rates report display karte hain.
                         </p>
                     </div>
                 </div>

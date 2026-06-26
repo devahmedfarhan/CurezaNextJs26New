@@ -29,6 +29,7 @@ import {
     X,
     Eye,
     Save,
+    Loader2,
     CreditCard,
     Calculator,
     Landmark,
@@ -333,43 +334,58 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
     const [simSellerBase, setSimSellerBase] = useState(25);
     const [simSellerGateway, setSimSellerGateway] = useState(2.5);
 
+    const [complianceSaving, setComplianceSaving] = useState(false);
+
+    const fetchComplianceSettings = async () => {
+        try {
+            const res = await api.get('/admin/settings');
+            const data = res.data;
+            if (data.compliance) {
+                data.compliance.forEach((item: any) => {
+                    if (item.key === 'comp_name') setCompanyName(item.value || '');
+                    else if (item.key === 'comp_address') setCompanyAddress(item.value || '');
+                    else if (item.key === 'comp_gstin') setCompanyGstin(item.value || '');
+                    else if (item.key === 'comp_pan') setCompanyPan(item.value || '');
+                    else if (item.key === 'comp_signatory') setAuthSignatory(item.value || '');
+                    else if (item.key === 'comp_hsn') setDefaultHsn(item.value || '');
+                    else if (item.key === 'comp_tds') setDoctorTdsRate(Number(item.value) || 10);
+                    else if (item.key === 'comp_origin') setStateOfOrigin(item.value || 'maharashtra');
+                    else if (item.key === 'comp_gst_rate') setGstRate(Number(item.value) || 18);
+                });
+            }
+        } catch (error) {
+            console.error('Failed to load compliance settings from database:', error);
+        }
+    };
+
     // Initialization check and load compliance parameters
     useEffect(() => {
         setIsMounted(true);
-        if (typeof window !== 'undefined') {
-            const savedName = localStorage.getItem('comp_name');
-            const savedAddress = localStorage.getItem('comp_address');
-            const savedGstin = localStorage.getItem('comp_gstin');
-            const savedPan = localStorage.getItem('comp_pan');
-            const savedSignatory = localStorage.getItem('comp_signatory');
-            const savedHsn = localStorage.getItem('comp_hsn');
-            const savedTds = localStorage.getItem('comp_tds');
-            const savedOrigin = localStorage.getItem('comp_origin');
-            const savedGst = localStorage.getItem('comp_gst_rate');
-
-            if (savedName) setCompanyName(savedName);
-            if (savedAddress) setCompanyAddress(savedAddress);
-            if (savedGstin) setCompanyGstin(savedGstin);
-            if (savedPan) setCompanyPan(savedPan);
-            if (savedSignatory) setAuthSignatory(savedSignatory);
-            if (savedHsn) setDefaultHsn(savedHsn);
-            if (savedTds) setDoctorTdsRate(Number(savedTds));
-            if (savedOrigin) setStateOfOrigin(savedOrigin);
-            if (savedGst) setGstRate(Number(savedGst));
-        }
+        fetchComplianceSettings();
     }, []);
 
-    const handleSaveComplianceSettings = () => {
-        localStorage.setItem('comp_name', companyName);
-        localStorage.setItem('comp_address', companyAddress);
-        localStorage.setItem('comp_gstin', companyGstin);
-        localStorage.setItem('comp_pan', companyPan);
-        localStorage.setItem('comp_signatory', authSignatory);
-        localStorage.setItem('comp_hsn', defaultHsn);
-        localStorage.setItem('comp_tds', doctorTdsRate.toString());
-        localStorage.setItem('comp_origin', stateOfOrigin);
-        localStorage.setItem('comp_gst_rate', gstRate.toString());
-        alert('Compliance and billing settings updated successfully!');
+    const handleSaveComplianceSettings = async () => {
+        setComplianceSaving(true);
+        try {
+            const settingsArray = [
+                { key: 'comp_name', value: companyName },
+                { key: 'comp_address', value: companyAddress },
+                { key: 'comp_gstin', value: companyGstin },
+                { key: 'comp_pan', value: companyPan },
+                { key: 'comp_signatory', value: authSignatory },
+                { key: 'comp_hsn', value: defaultHsn },
+                { key: 'comp_tds', value: doctorTdsRate.toString() },
+                { key: 'comp_origin', value: stateOfOrigin },
+                { key: 'comp_gst_rate', value: gstRate.toString() }
+            ];
+            await api.post('/admin/settings', { settings: settingsArray });
+            alert('Compliance and billing settings updated successfully in database!');
+        } catch (error) {
+            console.error('Failed to save compliance settings to database:', error);
+            alert('Failed to save compliance settings. Please try again.');
+        } finally {
+            setComplianceSaving(false);
+        }
     };
 
     useEffect(() => {
@@ -1973,9 +1989,11 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                     <div className="pt-4 border-t-[0.5px] border-black/50 flex justify-end">
                                         <button 
                                             onClick={handleSaveComplianceSettings}
-                                            className="px-6 py-2.5 bg-black hover:bg-neutral-900 text-white font-medium rounded-[10px] text-xs transition-all active:scale-95"
+                                            disabled={complianceSaving}
+                                            className="px-6 py-2.5 bg-black hover:bg-neutral-900 text-white font-medium rounded-[10px] text-xs transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none flex items-center gap-1.5"
                                         >
-                                            Save Compliance Parameters
+                                            {complianceSaving && <Loader2 className="animate-spin" size={12} />}
+                                            {complianceSaving ? 'Saving...' : 'Save Compliance Parameters'}
                                         </button>
                                     </div>
                                 </div>

@@ -53,6 +53,7 @@ const data = {
       permission: "dashboard",
       items: [
         { title: "Overview", url: "/superadmin/dashboard" },
+        { title: "Notifications", url: "/superadmin/dashboard/notifications" },
         { title: "Analytics", url: "/superadmin/dashboard/analytics" },
         { title: "Reports", url: "/superadmin/dashboard/reports" },
       ],

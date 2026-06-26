@@ -28,7 +28,18 @@ class SystemSettingsController extends Controller
                     'whatsapp_provider' => ['value' => 'aisensy', 'group' => 'whatsapp'],
                     'whatsapp_aisensy_api_key' => ['value' => 'simulate', 'group' => 'whatsapp'],
                     'whatsapp_sender_number' => ['value' => '+919999999999', 'group' => 'whatsapp'],
-                    'whatsapp_enabled' => ['value' => '0', 'group' => 'whatsapp']
+                    'whatsapp_enabled' => ['value' => '0', 'group' => 'whatsapp'],
+                    
+                    // Compliance & Billing settings
+                    'comp_name' => ['value' => 'Cureza India (AglowSciences Marketing LLP)', 'group' => 'compliance'],
+                    'comp_address' => ['value' => 'Veer Nariman Rd, Fort, Mumbai 400001, MH', 'group' => 'compliance'],
+                    'comp_gstin' => ['value' => '27ABVFA8814A1ZB', 'group' => 'compliance'],
+                    'comp_pan' => ['value' => 'ABVFA8814A', 'group' => 'compliance'],
+                    'comp_signatory' => ['value' => 'Sukrit Goel', 'group' => 'compliance'],
+                    'comp_hsn' => ['value' => '33019049', 'group' => 'compliance'],
+                    'comp_tds' => ['value' => '10', 'group' => 'compliance'],
+                    'comp_origin' => ['value' => 'maharashtra', 'group' => 'compliance'],
+                    'comp_gst_rate' => ['value' => '18', 'group' => 'compliance']
                 ];
 
                 foreach ($defaults as $key => $data) {
@@ -181,7 +192,18 @@ class SystemSettingsController extends Controller
             'shipping_cod_charge',
             'shipping_prepaid_free_enabled',
             'checkout_native_enabled',
-            'maintenance_mode'
+            'maintenance_mode',
+
+            // Compliance & Billing settings
+            'comp_name',
+            'comp_address',
+            'comp_gstin',
+            'comp_pan',
+            'comp_signatory',
+            'comp_hsn',
+            'comp_tds',
+            'comp_origin',
+            'comp_gst_rate'
         ];
 
         $settings = SystemSetting::whereIn('key', $publicKeys)->get();

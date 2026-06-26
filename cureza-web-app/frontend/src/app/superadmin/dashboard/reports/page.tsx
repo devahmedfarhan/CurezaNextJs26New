@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   FileText, 
   Download, 
@@ -17,98 +17,115 @@ import {
   Plus
 } from 'lucide-react';
 import Link from 'next/link';
+import api from '@/lib/api';
+import { useToast } from '@/contexts/ToastContext';
 
 export default function SuperAdminReportsPage() {
+    const { showToast } = useToast();
     const [reportType, setReportType] = useState('sales');
     const [dateRange, setDateRange] = useState('7days');
     const [fileFormat, setFileFormat] = useState('csv');
     const [isSimulating, setIsSimulating] = useState(false);
     const [simulatedProgress, setSimulatedProgress] = useState(0);
     const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
+    const [reportsLedger, setReportsLedger] = useState<any[]>([]);
+    const [loadingLedger, setLoadingLedger] = useState(true);
 
-    // Initial mock list of generated reports ledger
-    const [reportsLedger, setReportsLedger] = useState<any[]>([
-        {
-            id: 'REP-082',
-            name: 'June Platform Sales Statement',
-            type: 'Sales & Revenue',
-            format: 'PDF',
-            size: '2.4 MB',
-            date: '2026-06-18',
-            generatedBy: 'Super Admin',
-            status: 'Ready'
-        },
-        {
-            id: 'REP-081',
-            name: 'AYUSH Doctor Panel consultations',
-            type: 'Doctor Activity',
-            format: 'CSV',
-            size: '890 KB',
-            date: '2026-06-15',
-            generatedBy: 'Staff Editor',
-            status: 'Ready'
-        },
-        {
-            id: 'REP-079',
-            name: 'Sellers Commission Ledger (May)',
-            type: 'Finance & Ledger',
-            format: 'Excel',
-            size: '4.1 MB',
-            date: '2026-06-01',
-            generatedBy: 'Super Admin',
-            status: 'Ready'
-        },
-        {
-            id: 'REP-078',
-            name: 'System Security Audit Trails',
-            type: 'Global Audit',
-            format: 'PDF',
-            size: '1.2 MB',
-            date: '2026-05-28',
-            generatedBy: 'System Cron',
-            status: 'Ready'
+    const fetchReports = async () => {
+        try {
+            setLoadingLedger(true);
+            const res = await api.get('/admin/reports');
+            setReportsLedger(res.data || []);
+        } catch (error) {
+            console.error('Failed to fetch reports list:', error);
+            showToast('Failed to load reports ledger', 'error');
+        } finally {
+            setLoadingLedger(false);
         }
-    ]);
+    };
 
-    const handleGenerateReport = (e: React.FormEvent) => {
+    useEffect(() => {
+        fetchReports();
+    }, []);
+
+    const handleGenerateReport = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSimulating(true);
         setSimulatedProgress(10);
         setFeedbackMessage(null);
 
-        // Simulate progress timer
-        const timer = setInterval(() => {
-            setSimulatedProgress((prev) => {
-                if (prev >= 100) {
-                    clearInterval(timer);
-                    setTimeout(() => {
-                        const newReportId = `REP-${Math.floor(100 + Math.random() * 900)}`;
-                        const typeLabel = 
-                            reportType === 'sales' ? 'Sales & Revenue' :
-                            reportType === 'doctors' ? 'Doctor Activity' :
-                            reportType === 'sellers' ? 'Finance & Ledger' : 'Global Audit';
-                        const formatLabel = fileFormat.toUpperCase();
-                        
-                        const newReport = {
-                            id: newReportId,
-                            name: `${typeLabel} Report (${dateRange === 'today' ? 'Today' : dateRange === '7days' ? '7 Days' : 'Month'})`,
-                            type: typeLabel,
-                            format: formatLabel,
-                            size: `${(1 + Math.random() * 5).toFixed(1)} MB`,
-                            date: new Date().toISOString().split('T')[0],
-                            generatedBy: 'Super Admin',
-                            status: 'Ready'
-                        };
+        try {
+            // Determine start date based on dateRange
+            let startDate = new Date();
+            if (dateRange === 'today') {
+                startDate.setHours(0, 0, 0, 0);
+            } else if (dateRange === '7days') {
+                startDate.setDate(startDate.getDate() - 7);
+            } else if (dateRange === '30days') {
+                startDate.setMonth(startDate.getMonth() - 1);
+            } else {
+                startDate.setFullYear(startDate.getFullYear() - 1);
+            }
 
-                        setReportsLedger(prevLedger => [newReport, ...prevLedger]);
-                        setIsSimulating(false);
-                        setFeedbackMessage(`Success! ${newReport.name} has been compiled and saved to ledger.`);
-                    }, 500);
-                    return 100;
+            const formattedType = reportType === 'sales' ? 'orders' : 'users';
+
+            // Post request to queue report generation
+            const res = await api.get(`/admin/reports/generate`, {
+                params: {
+                    type: formattedType,
+                    start_date: startDate.toISOString().split('T')[0],
+                    end_date: new Date().toISOString().split('T')[0]
                 }
-                return prev + 30;
             });
-        }, 300);
+
+            const reportId = res.data.report?.id;
+            if (!reportId) {
+                throw new new Error("Invalid report response from backend");
+            }
+
+            setSimulatedProgress(30);
+
+            // Poll the status until completed
+            let pollInterval = setInterval(async () => {
+                try {
+                    const statusRes = await api.get(`/admin/reports/${reportId}`);
+                    const report = statusRes.data;
+
+                    if (report.status === 'processing') {
+                        setSimulatedProgress(60);
+                    } else if (report.status === 'completed') {
+                        clearInterval(pollInterval);
+                        setSimulatedProgress(100);
+                        setIsSimulating(false);
+                        
+                        // Trigger file download
+                        if (report.file_path) {
+                            window.open(report.file_path, '_blank');
+                        }
+                        
+                        setFeedbackMessage(`Report successfully compiled and downloaded!`);
+                        showToast('Report generated successfully!', 'success');
+                        fetchReports();
+                    } else if (report.status === 'failed') {
+                        clearInterval(pollInterval);
+                        setIsSimulating(false);
+                        setFeedbackMessage(`Report generation failed: ${report.error || 'Unknown error'}`);
+                        showToast('Report compilation failed', 'error');
+                    }
+                } catch (pollErr) {
+                    clearInterval(pollInterval);
+                    setIsSimulating(false);
+                    console.error('Failed while polling report status:', pollErr);
+                    showToast('Error tracking report status', 'error');
+                }
+            }, 1500);
+
+        } catch (error) {
+            console.error('Failed to generate report:', error);
+            setIsSimulating(false);
+            setFeedbackMessage("Failed to connect to reports generation service.");
+            showToast('Failed to start report generation', 'error');
+        }
     };
 
     return (
@@ -148,9 +165,7 @@ export default function SuperAdminReportsPage() {
                                 className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800/30 border-[0.5px] border-black/50 rounded-md text-xs font-bold text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-black dark:focus:ring-white/10 dark:focus:border-white"
                             >
                                 <option value="sales">Sales, Taxes & Revenue</option>
-                                <option value="doctors">Doctor Consultation Metrics</option>
-                                <option value="sellers">Seller Ledgers & Commissions</option>
-                                <option value="audit">System Log & Audit Trails</option>
+                                <option value="doctors">User Registration Audit</option>
                             </select>
                         </div>
 
@@ -181,8 +196,9 @@ export default function SuperAdminReportsPage() {
                                     <button
                                         key={fmt.id}
                                         type="button"
+                                        disabled={fmt.id !== 'csv'}
                                         onClick={() => setFileFormat(fmt.id)}
-                                        className={`py-2 rounded-md text-xs font-bold border-[0.5px] transition-all
+                                        className={`py-2 rounded-md text-xs font-bold border-[0.5px] transition-all disabled:opacity-30
                                             ${fileFormat === fmt.id 
                                                 ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white' 
                                                 : 'bg-white dark:bg-gray-900 text-neutral-600 dark:text-gray-300 border-black/50 dark:border-gray-700 hover:bg-neutral-50 dark:hover:bg-gray-850'}`}
@@ -270,52 +286,81 @@ export default function SuperAdminReportsPage() {
 
             {/* Generated Reports History ledger */}
             <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-gray-800 p-6 space-y-4">
-                <div className="pb-2 border-b-[0.5px] border-black/50 dark:border-gray-800">
-                    <h2 className="text-lg font-extrabold text-gray-900 dark:text-white">Generated Reports History</h2>
-                    <p className="text-xs text-gray-400 font-semibold">Repository of previously compiled archives</p>
+                <div className="pb-2 border-b-[0.5px] border-black/50 dark:border-gray-800 flex justify-between items-center">
+                    <div>
+                        <h2 className="text-lg font-extrabold text-gray-900 dark:text-white">Generated Reports History</h2>
+                        <p className="text-xs text-gray-400 font-semibold">Repository of previously compiled archives</p>
+                    </div>
+                    <button 
+                        onClick={fetchReports} 
+                        className="p-2 border-[0.5px] border-black/50 rounded-md hover:bg-neutral-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200"
+                    >
+                        <RefreshCw size={14} className={loadingLedger ? 'animate-spin' : ''} />
+                    </button>
                 </div>
 
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs">
-                        <thead>
-                            <tr className="text-[10px] font-bold text-neutral-500 tracking-wider border-b-[0.5px] border-black/50 dark:border-gray-800">
-                                <th className="py-3">Report ID</th>
-                                <th className="py-3">Document Name</th>
-                                <th className="py-3">Category</th>
-                                <th className="py-3">Format</th>
-                                <th className="py-3">File Size</th>
-                                <th className="py-3">Generated Date</th>
-                                <th className="py-3">Admin User</th>
-                                <th className="py-3 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-50 dark:divide-gray-850 font-semibold text-neutral-750 dark:text-gray-300">
-                            {reportsLedger.map((rep) => (
-                                <tr key={rep.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-850/30 transition-colors">
-                                    <td className="py-3.5 font-extrabold text-slate-800 dark:text-white">{rep.id}</td>
-                                    <td className="py-3.5 text-gray-950 dark:text-white font-extrabold">{rep.name}</td>
-                                    <td className="py-3.5">{rep.type}</td>
-                                    <td className="py-3.5">
-                                        <span className="px-2 py-0.5 rounded text-[9px] font-bold border-[0.5px] bg-neutral-50 dark:bg-gray-800 text-neutral-800 dark:text-gray-200 border-black/50 dark:border-gray-700">
-                                            {rep.format}
-                                        </span>
-                                    </td>
-                                    <td className="py-3.5 text-gray-500 dark:text-gray-400 font-semibold">{rep.size}</td>
-                                    <td className="py-3.5">{rep.date}</td>
-                                    <td className="py-3.5">{rep.generatedBy}</td>
-                                    <td className="py-3.5 text-right">
-                                        <button 
-                                            onClick={() => alert(`Simulated download for ${rep.id} started.`)}
-                                            className="bg-white dark:bg-gray-900 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black border-[0.5px] border-black/50 dark:border-gray-700 px-2.5 py-1.5 rounded-md transition-all inline-flex items-center justify-center gap-1 font-bold text-[10px] tracking-wider cursor-pointer"
-                                        >
-                                            <Download size={12} />
-                                            Download
-                                        </button>
-                                    </td>
+                    {loadingLedger ? (
+                        <div className="py-8 text-center text-xs font-bold text-gray-400 uppercase tracking-widest">
+                            Fetching database ledger records...
+                        </div>
+                    ) : reportsLedger.length === 0 ? (
+                        <div className="py-8 text-center text-xs text-gray-400">
+                            No report exports recorded in the database.
+                        </div>
+                    ) : (
+                        <table className="w-full text-left text-xs">
+                            <thead>
+                                <tr className="text-[10px] font-bold text-neutral-500 tracking-wider border-b-[0.5px] border-black/50 dark:border-gray-800">
+                                    <th className="py-3">Report ID</th>
+                                    <th className="py-3">Document Name</th>
+                                    <th className="py-3">Category</th>
+                                    <th className="py-3">Format</th>
+                                    <th className="py-3">Generated Date</th>
+                                    <th className="py-3">Admin User</th>
+                                    <th className="py-3">Status</th>
+                                    <th className="py-3 text-right">Actions</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody className="divide-y divide-gray-50 dark:divide-gray-850 font-semibold text-neutral-750 dark:text-gray-300">
+                                {reportsLedger.map((rep) => (
+                                    <tr key={rep.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-850/30 transition-colors">
+                                        <td className="py-3.5 font-extrabold text-slate-800 dark:text-white">REP-{rep.id}</td>
+                                        <td className="py-3.5 text-gray-950 dark:text-white font-extrabold">{rep.name}</td>
+                                        <td className="py-3.5">{rep.type === 'orders' ? 'Sales & Revenue' : 'User Audit'}</td>
+                                        <td className="py-3.5">
+                                            <span className="px-2 py-0.5 rounded text-[9px] font-bold border-[0.5px] bg-neutral-50 dark:bg-gray-800 text-neutral-800 dark:text-gray-200 border-black/50 dark:border-gray-700">
+                                                {rep.format}
+                                            </span>
+                                        </td>
+                                        <td className="py-3.5">{new Date(rep.created_at).toISOString().split('T')[0]}</td>
+                                        <td className="py-3.5">{rep.generated_by}</td>
+                                        <td className="py-3.5">
+                                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                                                rep.status === 'completed' ? 'bg-green-50 text-green-700' :
+                                                rep.status === 'pending' || rep.status === 'processing' ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'
+                                            }`}>
+                                                {rep.status}
+                                            </span>
+                                        </td>
+                                        <td className="py-3.5 text-right">
+                                            {rep.status === 'completed' && rep.file_path && (
+                                                <a 
+                                                    href={rep.file_path}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="bg-white dark:bg-gray-900 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black border-[0.5px] border-black/50 dark:border-gray-700 px-2.5 py-1.5 rounded-md transition-all inline-flex items-center justify-center gap-1 font-bold text-[10px] tracking-wider cursor-pointer"
+                                                >
+                                                    <Download size={12} />
+                                                    Download
+                                                </a>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
                 </div>
             </div>
 

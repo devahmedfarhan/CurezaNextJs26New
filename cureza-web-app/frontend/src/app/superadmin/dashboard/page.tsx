@@ -73,13 +73,21 @@ export default function SuperAdminDashboardHome() {
         today_orders: 0,
         today_revenue: 0,
         platform_gross_sales: 0,
+        platform_gross_sales_before_discount: 0,
+        platform_total_discounts: 0,
         platform_net_revenue: 0,
         today_platform_gross_sales: 0,
+        today_platform_gross_sales_before_discount: 0,
+        today_platform_total_discounts: 0,
         today_platform_net_revenue: 0,
         seller_gross_sales: 0,
+        seller_gross_sales_before_discount: 0,
+        seller_total_discounts: 0,
         seller_net_earnings: 0,
         seller_platform_commission: 0,
         today_seller_gross_sales: 0,
+        today_seller_gross_sales_before_discount: 0,
+        today_seller_total_discounts: 0,
         today_seller_net_earnings: 0,
         today_seller_platform_commission: 0,
         doctor_gross_sales: 0,
@@ -461,7 +469,23 @@ export default function SuperAdminDashboardHome() {
                     <div className="mt-4 space-y-1.5">
                         <p className="text-neutral-400 text-[10px] font-bold tracking-widest uppercase">Total Platform Sales (Gross)</p>
                         <h3 className="text-2xl font-black text-gray-900">₹{parseFloat(stats.platform_gross_sales).toLocaleString('en-IN')}</h3>
-                        <div className="text-xs font-semibold text-gray-550 pt-1 border-t-[0.5px] border-black/50 mt-2 space-y-1">
+                        
+                        <div className="text-[10px] space-y-0.5 pt-1.5 border-t border-neutral-100 font-medium text-neutral-500">
+                            <div className="flex justify-between">
+                                <span>Before Discount:</span>
+                                <span>₹{parseFloat(stats.platform_gross_sales_before_discount).toLocaleString('en-IN')}</span>
+                            </div>
+                            <div className="flex justify-between text-red-650 font-semibold">
+                                <span>Total Discounts:</span>
+                                <span>-₹{parseFloat(stats.platform_total_discounts).toLocaleString('en-IN')}</span>
+                            </div>
+                            <div className="flex justify-between font-bold text-neutral-800">
+                                <span>After Discount:</span>
+                                <span>₹{parseFloat(stats.platform_gross_sales).toLocaleString('en-IN')}</span>
+                            </div>
+                        </div>
+
+                        <div className="text-xs font-semibold text-gray-555 pt-1 border-t-[0.5px] border-black/50 mt-2 space-y-1">
                             <div className="flex justify-between">
                                 <span>Cureza Net Earnings:</span>
                                 <span className="font-extrabold text-neutral-950">₹{parseFloat(stats.platform_net_revenue).toLocaleString('en-IN')}</span>
@@ -483,14 +507,30 @@ export default function SuperAdminDashboardHome() {
                         <div className="p-3 bg-emerald-50 text-emerald-700 rounded-lg border-[0.5px] border-black/50">
                             <Store size={22} />
                         </div>
-                        <Link href="/superadmin/dashboard/finance" className="text-gray-400 hover:text-gray-650 transition-colors">
+                        <Link href="/superadmin/dashboard/finance" className="text-gray-400 hover:text-gray-655 transition-colors">
                             <ArrowUpRight size={18} />
                         </Link>
                     </div>
                     <div className="mt-4 space-y-1.5">
                         <p className="text-neutral-400 text-[10px] font-bold tracking-widest uppercase">Seller Sales (Gross)</p>
                         <h3 className="text-2xl font-black text-gray-900">₹{parseFloat(stats.seller_gross_sales).toLocaleString('en-IN')}</h3>
-                        <div className="text-xs font-semibold text-gray-550 pt-1 border-t-[0.5px] border-black/50 mt-2 space-y-1">
+
+                        <div className="text-[10px] space-y-0.5 pt-1.5 border-t border-neutral-100 font-medium text-neutral-500">
+                            <div className="flex justify-between">
+                                <span>Before Discount:</span>
+                                <span>₹{parseFloat(stats.seller_gross_sales_before_discount).toLocaleString('en-IN')}</span>
+                            </div>
+                            <div className="flex justify-between text-red-655 font-semibold">
+                                <span>Total Discounts:</span>
+                                <span>-₹{parseFloat(stats.seller_total_discounts).toLocaleString('en-IN')}</span>
+                            </div>
+                            <div className="flex justify-between font-bold text-neutral-800">
+                                <span>After Discount:</span>
+                                <span>₹{parseFloat(stats.seller_gross_sales).toLocaleString('en-IN')}</span>
+                            </div>
+                        </div>
+
+                        <div className="text-xs font-semibold text-gray-555 pt-1 border-t-[0.5px] border-black/50 mt-2 space-y-1">
                             <div className="flex justify-between">
                                 <span>Seller Net:</span>
                                 <span className="font-bold text-gray-800">₹{parseFloat(stats.seller_net_earnings).toLocaleString('en-IN')}</span>

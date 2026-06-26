@@ -792,8 +792,8 @@ export default function AdminFinancialLedger({ activeSection }: AdminFinancialLe
                                                             <button
                                                                 onClick={() => {
                                                                     setSelectedSellerForComm({ id: c.seller_id, name: c.seller?.name || 'Seller ID #' + c.seller_id });
-                                                                    setBaseCommRate(c.base_commission_percentage);
-                                                                    setGatewayCommRate(c.payment_gateway_percentage);
+                                                                    setBaseCommRate(Number(c.base_commission_percentage));
+                                                                    setGatewayCommRate(Number(c.payment_gateway_percentage));
                                                                     setCommNotes(c.notes || '');
                                                                     setCommissionModalOpen(true);
                                                                 }}
@@ -1048,7 +1048,7 @@ export default function AdminFinancialLedger({ activeSection }: AdminFinancialLe
                             <div>
                                 <label className="block text-neutral-400 font-bold uppercase tracking-wider text-[9px] mb-1">Effective Platform Cut</label>
                                 <div className="p-3 bg-neutral-50 text-black font-extrabold text-sm rounded-[10px] border border-neutral-950/10">
-                                    {(baseCommRate + gatewayCommRate).toFixed(2)}% of Gross Sales
+                                    {(Number(baseCommRate) + Number(gatewayCommRate)).toFixed(2)}% of Gross Sales
                                 </div>
                             </div>
 

@@ -27,6 +27,10 @@ class DashboardController extends Controller
 
         // 1. Platform & Seller Stats
         $sellerGrossSales = (float) Order::where('payment_status', 'paid')->sum('final_amount');
+        $sellerGrossSalesBeforeDiscount = (float) Order::where('payment_status', 'paid')->sum('total_amount');
+        $sellerTotalDiscounts = (float) Order::where('payment_status', 'paid')
+            ->selectRaw('SUM(CASE WHEN total_amount + shipping_amount > final_amount THEN total_amount + shipping_amount - final_amount ELSE 0 END) as val')
+            ->value('val') ?? 0;
         $sellerNetEarnings = (float) Order::where('payment_status', 'paid')
             ->selectRaw('SUM(CASE WHEN commission_calculated_at IS NOT NULL THEN seller_earnings ELSE final_amount * 0.725 END) as val')
             ->value('val') ?? 0;
@@ -38,6 +42,13 @@ class DashboardController extends Controller
         $todaySellerGrossSales = (float) Order::where('payment_status', 'paid')
             ->whereDate('created_at', Carbon::today())
             ->sum('final_amount');
+        $todaySellerGrossSalesBeforeDiscount = (float) Order::where('payment_status', 'paid')
+            ->whereDate('created_at', Carbon::today())
+            ->sum('total_amount');
+        $todaySellerTotalDiscounts = (float) Order::where('payment_status', 'paid')
+            ->whereDate('created_at', Carbon::today())
+            ->selectRaw('SUM(CASE WHEN total_amount + shipping_amount > final_amount THEN total_amount + shipping_amount - final_amount ELSE 0 END) as val')
+            ->value('val') ?? 0;
         $todaySellerNetEarnings = (float) Order::where('payment_status', 'paid')
             ->whereDate('created_at', Carbon::today())
             ->selectRaw('SUM(CASE WHEN commission_calculated_at IS NOT NULL THEN seller_earnings ELSE final_amount * 0.725 END) as val')
@@ -69,6 +80,11 @@ class DashboardController extends Controller
         $platformNetRevenue = $sellerPlatformCommission + $doctorPlatformCommission;
         $todayPlatformGrossSales = $todaySellerGrossSales + $todayDoctorGrossSales;
         $todayPlatformNetRevenue = $todaySellerPlatformCommission + $todayDoctorPlatformCommission;
+
+        $platformGrossSalesBeforeDiscount = $sellerGrossSalesBeforeDiscount + $doctorGrossSales;
+        $platformTotalDiscounts = $sellerTotalDiscounts;
+        $todayPlatformGrossSalesBeforeDiscount = $todaySellerGrossSalesBeforeDiscount + $todayDoctorGrossSales;
+        $todayPlatformTotalDiscounts = $todaySellerTotalDiscounts;
 
         // 4. Order Stats
         $totalOrders = Order::count();
@@ -107,14 +123,22 @@ class DashboardController extends Controller
                 'today_orders' => $todayOrders,
 
                 'platform_gross_sales' => $platformGrossSales,
+                'platform_gross_sales_before_discount' => $platformGrossSalesBeforeDiscount,
+                'platform_total_discounts' => $platformTotalDiscounts,
                 'platform_net_revenue' => $platformNetRevenue,
                 'today_platform_gross_sales' => $todayPlatformGrossSales,
+                'today_platform_gross_sales_before_discount' => $todayPlatformGrossSalesBeforeDiscount,
+                'today_platform_total_discounts' => $todayPlatformTotalDiscounts,
                 'today_platform_net_revenue' => $todayPlatformNetRevenue,
 
                 'seller_gross_sales' => $sellerGrossSales,
+                'seller_gross_sales_before_discount' => $sellerGrossSalesBeforeDiscount,
+                'seller_total_discounts' => $sellerTotalDiscounts,
                 'seller_net_earnings' => $sellerNetEarnings,
                 'seller_platform_commission' => $sellerPlatformCommission,
                 'today_seller_gross_sales' => $todaySellerGrossSales,
+                'today_seller_gross_sales_before_discount' => $todaySellerGrossSalesBeforeDiscount,
+                'today_seller_total_discounts' => $todaySellerTotalDiscounts,
                 'today_seller_net_earnings' => $todaySellerNetEarnings,
                 'today_seller_platform_commission' => $todaySellerPlatformCommission,
 

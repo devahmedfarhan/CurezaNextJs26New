@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Bell, Check, Info, User, ShieldAlert, Sparkles, Plus, AlertCircle, HelpCircle } from 'lucide-react';
+import { Bell, Check, Info, User, ShieldAlert, Sparkles, AlertCircle, HelpCircle } from 'lucide-react';
 import api from '@/lib/api';
 import { useRouter } from 'next/navigation';
 
@@ -26,10 +26,11 @@ export default function NotificationBell() {
     const [unreadCount, setUnreadCount] = useState(0);
     const [notifications, setNotifications] = useState<NotificationItem[]>([]);
     const [open, setOpen] = useState(false);
-    const [showTestPanel, setShowTestPanel] = useState(false);
-    const [triggeringTest, setTriggeringTest] = useState<string | null>(null);
+    const [bellTab, setBellTab] = useState<'customer' | 'seller' | 'doctor'>('customer');
     const router = useRouter();
     const dropdownRef = useRef<HTMLDivElement>(null);
+
+    const isSuperAdmin = typeof window !== 'undefined' && window.location.pathname.includes('/superadmin');
 
     const fetchUnreadCount = async () => {
         try {
@@ -98,22 +99,6 @@ export default function NotificationBell() {
         }
     };
 
-    const triggerServerNotification = async (type: string) => {
-        setTriggeringTest(type);
-        try {
-            await api.post('/notifications/test-trigger', { type });
-            // Small delay to allow DB writing
-            setTimeout(() => {
-                void fetchUnreadCount();
-                void fetchNotifications();
-                setTriggeringTest(null);
-            }, 800);
-        } catch (err) {
-            console.error('Failed to trigger server notification:', err);
-            setTriggeringTest(null);
-        }
-    };
-
     // Fetch count periodically or on mount
     useEffect(() => {
         const initialLoad = window.setTimeout(() => {
@@ -136,7 +121,6 @@ export default function NotificationBell() {
         function handleClickOutside(event: MouseEvent) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
                 setOpen(false);
-                setShowTestPanel(false);
             }
         }
         document.addEventListener('mousedown', handleClickOutside);
@@ -190,6 +174,29 @@ export default function NotificationBell() {
         };
     };
 
+    // Filter notifications based on the active tab for Super Admins
+    const getFilteredNotifications = () => {
+        if (!isSuperAdmin) return notifications;
+
+        return notifications.filter(notif => {
+            const type = notif.type;
+            const dataType = notif.data.type || '';
+            
+            const isSeller = dataType === 'seller_registration' || dataType === 'product_change' || 
+                             type.includes('Seller') || dataType.includes('seller') || 
+                             notif.data.action_url?.includes('seller') || notif.data.action_url?.includes('change-requests');
+                             
+            const isDoctor = dataType === 'doctor_registration' || type.includes('Doctor') || 
+                             dataType.includes('doctor') || notif.data.action_url?.includes('doctor');
+
+            if (bellTab === 'seller') return isSeller;
+            if (bellTab === 'doctor') return isDoctor;
+            return !isSeller && !isDoctor;
+        });
+    };
+
+    const filteredList = getFilteredNotifications();
+
     return (
         <div className="relative" ref={dropdownRef}>
             <button
@@ -213,73 +220,68 @@ export default function NotificationBell() {
                             <h3 className="font-bold text-sm text-neutral-900">Notifications</h3>
                             <p className="text-xs text-neutral-500 mt-0.5">{unreadCount} unread action items</p>
                         </div>
-                        <div className="flex gap-2">
+                        {unreadCount > 0 && (
                             <button 
-                                onClick={() => setShowTestPanel(!showTestPanel)}
-                                className="text-[10px] uppercase font-bold tracking-wider text-neutral-500 hover:text-neutral-900 border-[0.5px] border-neutral-950/10 px-2 py-1 rounded bg-white transition-colors"
+                                onClick={handleMarkAllRead}
+                                className="text-[10px] uppercase font-bold tracking-wider text-neutral-900 hover:underline flex items-center gap-1"
                             >
-                                {showTestPanel ? 'Hide Test' : 'Test Actions'}
+                                <Check size={12} /> Mark read
                             </button>
-                            {unreadCount > 0 && (
-                                <button 
-                                    onClick={handleMarkAllRead}
-                                    className="text-[10px] uppercase font-bold tracking-wider text-neutral-900 hover:underline flex items-center gap-1"
-                                >
-                                    <Check size={12} /> Mark read
-                                </button>
-                            )}
-                        </div>
+                        )}
                     </div>
 
-                    {/* Test Notification Trigger Box */}
-                    {showTestPanel && (
-                        <div className="p-3 bg-neutral-50 border-b-[0.5px] border-neutral-950/10 text-xs">
-                            <p className="font-bold text-neutral-800 mb-2">Simulate Server-Side Notifications:</p>
-                            <div className="flex flex-col gap-1.5">
-                                <button
-                                    disabled={triggeringTest !== null}
-                                    onClick={() => triggerServerNotification('seller_registration')}
-                                    className="w-full text-left px-2.5 py-1.5 bg-white border-[0.5px] border-neutral-950/10 hover:border-neutral-950 rounded flex justify-between items-center font-medium transition-all"
-                                >
-                                    <span>New Seller Registrations alert</span>
-                                    <span className="text-[9px] text-neutral-400 font-normal">
-                                        {triggeringTest === 'seller_registration' ? 'Triggering...' : 'Trigger'}
-                                    </span>
-                                </button>
-                                <button
-                                    disabled={triggeringTest !== null}
-                                    onClick={() => triggerServerNotification('doctor_registration')}
-                                    className="w-full text-left px-2.5 py-1.5 bg-white border-[0.5px] border-neutral-950/10 hover:border-neutral-950 rounded flex justify-between items-center font-medium transition-all"
-                                >
-                                    <span>New Doctor Verification request</span>
-                                    <span className="text-[9px] text-neutral-400 font-normal">
-                                        {triggeringTest === 'doctor_registration' ? 'Triggering...' : 'Trigger'}
-                                    </span>
-                                </button>
-                                <button
-                                    disabled={triggeringTest !== null}
-                                    onClick={() => triggerServerNotification('product_change')}
-                                    className="w-full text-left px-2.5 py-1.5 bg-white border-[0.5px] border-neutral-950/10 hover:border-neutral-950 rounded flex justify-between items-center font-medium transition-all"
-                                >
-                                    <span>Seller Product Change request</span>
-                                    <span className="text-[9px] text-neutral-400 font-normal">
-                                        {triggeringTest === 'product_change' ? 'Triggering...' : 'Trigger'}
-                                    </span>
-                                </button>
-                            </div>
+                    {/* Super Admin Tabs */}
+                    {isSuperAdmin && (
+                        <div className="flex border-b border-neutral-950/10 bg-neutral-50/30 text-[10px] font-bold text-neutral-500">
+                            {[
+                                { id: 'customer', label: 'Customer' },
+                                { id: 'seller', label: 'Seller' },
+                                { id: 'doctor', label: 'Doctor' }
+                            ].map(tab => {
+                                const count = notifications.filter(notif => {
+                                    const type = notif.type;
+                                    const dataType = notif.data.type || '';
+                                    const isSeller = dataType === 'seller_registration' || dataType === 'product_change' || type.includes('Seller') || dataType.includes('seller') || notif.data.action_url?.includes('seller') || notif.data.action_url?.includes('change-requests');
+                                    const isDoctor = dataType === 'doctor_registration' || type.includes('Doctor') || dataType.includes('doctor') || notif.data.action_url?.includes('doctor');
+                                    if (tab.id === 'seller') return isSeller;
+                                    if (tab.id === 'doctor') return isDoctor;
+                                    return !isSeller && !isDoctor;
+                                }).filter(n => !n.read_at).length;
+
+                                return (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => setBellTab(tab.id as any)}
+                                        className={`flex-1 py-2.5 text-center border-b transition-all flex items-center justify-center gap-1.5 ${
+                                            bellTab === tab.id 
+                                                ? 'border-black text-black bg-white' 
+                                                : 'border-transparent hover:text-neutral-700 bg-neutral-50/20'
+                                        }`}
+                                    >
+                                        <span>{tab.label}</span>
+                                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full border ${
+                                            count > 0 
+                                                ? 'bg-red-50 text-red-600 border-red-200/60' 
+                                                : 'bg-emerald-50 text-emerald-700 border-emerald-200/60'
+                                        }`}>
+                                            {count}
+                                        </span>
+                                    </button>
+                                );
+                            })}
                         </div>
                     )}
 
                     {/* Notifications List */}
                     <div className="overflow-y-auto flex-1 divide-y-[0.5px] divide-neutral-950/10">
-                        {notifications.length === 0 ? (
+                        {filteredList.length === 0 ? (
                             <div className="p-8 text-center flex flex-col items-center justify-center">
                                 <Bell size={24} className="text-neutral-300 mb-2" />
                                 <p className="text-sm font-medium text-neutral-800">All caught up!</p>
-                                <p className="text-xs text-neutral-400 mt-1">No alerts or action requests needing attention.</p>
+                                <p className="text-xs text-neutral-400 mt-1">No alerts or action requests in this category.</p>
                             </div>
                         ) : (
-                            notifications.map(notif => {
+                            filteredList.map(notif => {
                                 const badge = getNotificationBadge(notif);
                                 return (
                                     <div
@@ -324,12 +326,12 @@ export default function NotificationBell() {
                     <div className="p-3 border-t-[0.5px] border-neutral-950/10 bg-neutral-50/50 text-center">
                         <button
                             onClick={() => {
-                                router.push('/superadmin/dashboard/settings/logs');
+                                router.push('/superadmin/dashboard/notifications');
                                 setOpen(false);
                             }}
                             className="text-xs font-bold text-neutral-800 hover:text-neutral-950 hover:underline"
                         >
-                            View Audit Log History
+                            Open Notification Action Center
                         </button>
                     </div>
                 </div>

@@ -576,7 +576,13 @@ Route::middleware('auth:sanctum')->group(function () {
         });
 
         // Reports
+        Route::get('/reports', [\App\Http\Controllers\Api\Admin\ReportController::class, 'index']);
         Route::get('/reports/generate', [\App\Http\Controllers\Api\Admin\ReportController::class, 'generate']);
+        Route::get('/reports/{id}', [\App\Http\Controllers\Api\Admin\ReportController::class, 'show']);
+
+        // Campaigns
+        Route::get('/campaigns', [\App\Http\Controllers\Api\Admin\CampaignController::class, 'index']);
+        Route::post('/campaigns', [\App\Http\Controllers\Api\Admin\CampaignController::class, 'store']);
 
         // Finance & Payouts
         Route::prefix('finance')->group(function () {
@@ -650,6 +656,9 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::put('/{id}', [\App\Http\Controllers\Admin\AdminBundleController::class, 'update']);
             Route::delete('/{id}', [\App\Http\Controllers\Admin\AdminBundleController::class, 'destroy']);
         });
+
+        // Banner Management (Super Admin)
+        Route::apiResource('banners', \App\Http\Controllers\Api\Admin\BannerController::class);
     });
 });
 
