@@ -81,11 +81,11 @@ Route::get('/products/latest', [ProductController::class, 'latest']);
 Route::get('/products', [ProductController::class, 'index'])->middleware('throttle:public-catalog');
 Route::get('/products/search', [ProductController::class, 'index'])->middleware('throttle:public-catalog'); // Alias for search
 Route::get('/products/compare', [ComparisonController::class, 'getComparisonDetails']);
+Route::get('/products/recently-viewed', [ProductController::class, 'getRecentlyViewed']);
 Route::get('/products/{slug}', [ProductController::class, 'show']);
 Route::get('/products/{id}/related', [ProductController::class, 'getRelated']);
 Route::get('/products/{id}/upsells', [ProductController::class, 'getUpsells']);
 Route::get('/products/{id}/bundles', [ProductController::class, 'getBundles']);
-Route::get('/products/recently-viewed', [ProductController::class, 'getRecentlyViewed']);
 Route::get('/products/{id}/reviews', [ReviewController::class, 'index']);
 Route::post('/reviews', [ReviewController::class, 'store']);
 Route::get('/categories', [CategoryController::class, 'publicIndex']);

@@ -221,7 +221,7 @@ export default function PrescriptionsPage() {
 
             {/* Review Dialog */}
             <Dialog open={isReviewOpen} onOpenChange={setIsReviewOpen}>
-                <DialogContent className="sm:max-w-[425px] rounded-[14px] border border-[#052326]/12 bg-white p-6">
+                <DialogContent className="customer-theme sm:max-w-[425px] rounded-[14px] border border-[#052326]/12 bg-white p-6">
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-2 text-base font-bold font-heading text-[#052326]">
                             <MessageSquare className="h-5 w-5 text-[#F0C417]" />

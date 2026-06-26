@@ -564,70 +564,95 @@ body {
 
 /* --- Theme Border Overrides --- */
 .superadmin-theme .border-black\/50,
-.seller-theme .border-black\/50,
-.customer-theme .border-black\/50 {
+.seller-theme .border-black\/50 {
   border-color: rgba(0, 0, 0, 0.18) !important;
 }
 
 @supports (color: color-mix(in lab, red, red)) {
   .superadmin-theme .border-black\/50,
-  .seller-theme .border-black\/50,
-  .customer-theme .border-black\/50 {
+  .seller-theme .border-black\/50 {
     border-color: color-mix(in oklab, #00000029 50%, transparent) !important;
   }
 }
 
 /* --- Customer Theme Override (My Account) --- */
 .customer-theme {
-  --radius-card: 10px;
-  --radius-button: 10px;
-  --radius: 10px;
+  --radius-card: 8px;
+  --radius-button: 8px;
+  --radius: 8px;
+  /* System-wide font size reduction */
+  font-size: 13px !important;
 }
 
-.customer-theme .premium-card,
-.customer-theme .premium-glass,
-.customer-theme .glass-card {
-  border-radius: 10px !important;
-  box-shadow: none !important;
-  border: 0.5px solid rgba(5, 35, 38, 0.15) !important;
+/* Force smaller and more compact typography */
+.customer-theme h1,
+.customer-theme .text-2xl,
+.customer-theme .text-3xl,
+.customer-theme .text-xl {
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
 }
 
-.customer-theme .premium-shadow {
-  box-shadow: none !important;
-  border-right: 0.5px solid rgba(5, 35, 38, 0.15) !important;
+.customer-theme h2,
+.customer-theme h3,
+.customer-theme .text-lg,
+.customer-theme .text-base {
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
 }
 
-.customer-theme .rounded-2xl,
-.customer-theme .rounded-3xl,
-.customer-theme .rounded-\[2rem\],
-.customer-theme .rounded-\[2\.5rem\],
-.customer-theme .rounded-\[4rem\],
-.customer-theme .rounded-\[1\.25rem\],
-.customer-theme .rounded-\[1\.5rem\],
-.customer-theme .rounded-\[3rem\],
-.customer-theme .rounded-xl {
-  border-radius: 10px !important;
-}
-
-.customer-theme .shadow-sm,
-.customer-theme .shadow,
-.customer-theme .shadow-md,
-.customer-theme .shadow-lg,
-.customer-theme .shadow-xl,
-.customer-theme .shadow-2xl,
-.customer-theme .shadow-premium-light,
-.customer-theme .shadow-premium-hover,
-.customer-theme .shadow-premium-deep {
-  box-shadow: none !important;
-  border: 0.5px solid rgba(5, 35, 38, 0.15) !important;
-}
-
-/* Ensure buttons and inputs in customer theme follow the 10px border-radius */
+.customer-theme p,
+.customer-theme span,
+.customer-theme a,
 .customer-theme button,
 .customer-theme input,
 .customer-theme select,
+.customer-theme textarea,
+.customer-theme label,
+.customer-theme .text-sm,
+.customer-theme .text-xs {
+  font-size: 11.5px !important;
+}
+
+/* Force border-radius to exactly 8px for non-circular items */
+.customer-theme [class*="rounded-"]:not(.rounded-full):not([class*="rounded-full"]),
+.customer-theme .rounded,
+.customer-theme button:not(.rounded-full):not([class*="rounded-full"]),
+.customer-theme input,
+.customer-theme select,
 .customer-theme textarea {
-  border-radius: 10px !important;
+  border-radius: 8px !important;
+}
+
+/* Force all borders to be exactly 18% opacity (or white/18% in dark mode) */
+.customer-theme [class*="border"] {
+  border-color: rgba(0, 0, 0, 0.18) !important;
+}
+
+.dark .customer-theme [class*="border"] {
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+/* Force specific directional border widths to 0.5px without adding to other sides */
+.customer-theme .border {
+  border-width: 0.5px !important;
+}
+.customer-theme .border-t {
+  border-top-width: 0.5px !important;
+}
+.customer-theme .border-b {
+  border-bottom-width: 0.5px !important;
+}
+.customer-theme .border-l {
+  border-left-width: 0.5px !important;
+}
+.customer-theme .border-r {
+  border-right-width: 0.5px !important;
+}
+
+/* Force all box shadows to be removed */
+.customer-theme * {
+  box-shadow: none !important;
 }
 
 /* Custom scrollbar for customer dashboard */
@@ -639,17 +664,17 @@ body {
   background: transparent;
 }
 .customer-theme .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(5, 35, 38, 0.15);
+  background: rgba(0, 0, 0, 0.2);
   border-radius: 10px;
 }
 .customer-theme .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(5, 35, 38, 0.3);
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .dark .customer-theme .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(237, 232, 225, 0.15);
+  background: rgba(255, 255, 255, 0.2);
 }
 .dark .customer-theme .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(237, 232, 225, 0.3);
+  background: rgba(255, 255, 255, 0.4);
 }
 
