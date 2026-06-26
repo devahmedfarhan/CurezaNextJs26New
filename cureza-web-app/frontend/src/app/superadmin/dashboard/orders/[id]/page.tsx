@@ -106,9 +106,66 @@ export default function AdminOrderDetailPage() {
         { status: 'Order Placed', date: new Date(order.created_at).toLocaleString(), completed: true },
         { status: 'Payment (' + order.payment_status + ')', date: order.payment_status === 'paid' ? 'Completed' : 'Pending', completed: order.payment_status === 'paid' },
         { status: 'Processing', date: order.status !== 'pending' && order.status !== 'cancelled' ? 'Active' : 'Pending', completed: order.status !== 'pending' && order.status !== 'cancelled' },
-        { status: 'Shipped', date: order.shipments && order.shipments.length > 0 ? new Date(order.shipments[0].shipped_at || Date.now()).toLocaleDateString() : 'Pending', completed: order.shipments && order.shipments.some(s => s.status === 'shipped' || s.status === 'delivered') },
-        { status: 'Delivered', date: order.shipments && order.shipments.length > 0 && order.shipments[0].delivered_at ? new Date(order.shipments[0].delivered_at).toLocaleDateString() : 'Pending', completed: order.shipments && order.shipments.some(s => s.status === 'delivered') },
     ];
+
+    if (order.shipments && order.shipments.length > 0) {
+        order.shipments.forEach((shipment, index) => {
+            const prefix = order.shipments.length > 1 ? `[Shipment #${index + 1}] ` : '';
+            const isPickupScheduled = ['pickup_scheduled', 'picked_up', 'out_for_delivery', 'delivered'].includes(shipment.status);
+            const isPickedUp = ['picked_up', 'out_for_delivery', 'delivered'].includes(shipment.status);
+            const isOutForDelivery = ['out_for_delivery', 'delivered'].includes(shipment.status);
+            const isDelivered = shipment.status === 'delivered';
+
+            timeline.push({
+                status: `${prefix}Shipment Created (${shipment.courier_name || 'Pending Courier'})`,
+                date: new Date(shipment.created_at).toLocaleString(),
+                completed: true
+            });
+
+            timeline.push({
+                status: `${prefix}Pickup Scheduled`,
+                date: shipment.pickup_scheduled_at ? new Date(shipment.pickup_scheduled_at).toLocaleString() : (isPickupScheduled ? 'Scheduled' : 'Pending'),
+                completed: isPickupScheduled
+            });
+
+            timeline.push({
+                status: `${prefix}Picked Up (In Transit)`,
+                date: shipment.shipped_at ? new Date(shipment.shipped_at).toLocaleString() : (isPickedUp ? 'In Transit' : 'Pending'),
+                completed: isPickedUp
+            });
+
+            timeline.push({
+                status: `${prefix}Out For Delivery`,
+                date: isOutForDelivery ? 'Out for Delivery' : 'Pending',
+                completed: isOutForDelivery
+            });
+
+            timeline.push({
+                status: `${prefix}Delivered`,
+                date: shipment.delivered_at ? new Date(shipment.delivered_at).toLocaleString() : (isDelivered ? 'Delivered' : 'Pending'),
+                completed: isDelivered
+            });
+
+            if (shipment.status === 'cancelled') {
+                timeline.push({
+                    status: `${prefix}Shipment Cancelled`,
+                    date: 'Terminated',
+                    completed: true
+                });
+            }
+        });
+    } else {
+        timeline.push({
+            status: 'Shipped',
+            date: 'Pending',
+            completed: false
+        });
+        timeline.push({
+            status: 'Delivered',
+            date: 'Pending',
+            completed: false
+        });
+    }
 
     if (order.status === 'cancelled') {
         timeline.push({ status: 'Cancelled', date: 'Order terminated', completed: true });
@@ -116,30 +173,30 @@ export default function AdminOrderDetailPage() {
 
     const getStatusBadge = (status: string) => {
         switch (status) {
-            case 'delivered': return 'bg-emerald-100 text-emerald-800 border-emerald-200';
-            case 'shipped': return 'bg-sky-100 text-sky-800 border-sky-200';
-            case 'processing': return 'bg-amber-100 text-amber-800 border-amber-200';
-            case 'cancelled': return 'bg-rose-100 text-rose-800 border-rose-200';
-            default: return 'bg-gray-100 text-gray-800 border-gray-200';
+            case 'delivered': return 'bg-green-50 text-green-700 border-green-200/50 dark:bg-green-950/20 dark:text-green-400 dark:border-green-900/30';
+            case 'shipped': return 'bg-sky-50 text-sky-700 border-sky-200/50 dark:bg-sky-950/20 dark:text-sky-400 dark:border-sky-900/30';
+            case 'processing': return 'bg-amber-50 text-amber-700 border-amber-200/50 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30';
+            case 'cancelled': return 'bg-red-50 text-red-700 border-red-200/50 dark:bg-red-950/20 dark:text-red-400 dark:border-red-900/30';
+            default: return 'bg-neutral-50 text-neutral-700 border-neutral-200 dark:bg-neutral-850 dark:text-neutral-350 dark:border-neutral-800';
         }
     };
 
     return (
-        <div className="space-y-6 max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 bg-slate-50 min-h-screen">
-            {/* Header section with modern background gradient */}
-            <div className="bg-gradient-to-r from-teal-700 to-emerald-600 rounded-2xl p-6 sm:p-8 text-white shadow-none flex flex-col md:flex-row md:items-center justify-between gap-6 border-black/50 border-[0.5px]">
+        <div className="w-full space-y-6 animate-in fade-in duration-300">
+            {/* Header section with modern design language */}
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-[10px] p-6 border-black/50 border-[0.5px] dark:border-neutral-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="flex items-center gap-4">
-                    <Link href="/superadmin/dashboard/orders" className="p-3 bg-white/10 hover:bg-white/20 border-[0.5px] border-white/15 rounded-xl transition-all">
-                        <ArrowLeft size={20} className="text-white" />
+                    <Link href="/superadmin/dashboard/orders" className="p-2.5 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-[0.5px] border-black/10 dark:border-neutral-700 rounded-[10px] transition-all">
+                        <ArrowLeft size={16} className="text-black dark:text-white" />
                     </Link>
                     <div>
                         <div className="flex items-center gap-3">
-                            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Order #{order.order_number}</h1>
-                            <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase border-[0.5px] ${getStatusBadge(order.status)}`}>
+                            <h1 className="text-xl font-semibold text-gray-900 dark:text-white tracking-tight">Order #{order.order_number}</h1>
+                            <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase border-[0.5px] ${getStatusBadge(order.status)}`}>
                                 {order.status}
                             </span>
                         </div>
-                        <p className="text-teal-50 text-sm mt-1">Placed on {new Date(order.created_at).toLocaleString()} • {order.items.length} Items</p>
+                        <p className="text-gray-500 dark:text-gray-400 text-xs mt-1.5">Placed on {new Date(order.created_at).toLocaleString()} • {order.items.length} {order.items.length === 1 ? 'Item' : 'Items'}</p>
                     </div>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -159,31 +216,31 @@ export default function AdminOrderDetailPage() {
                                 alert('Failed to download invoice');
                             }
                         }}
-                        className="flex items-center gap-2 bg-white text-teal-800 px-4 py-2.5 rounded-xl font-semibold hover:bg-teal-50 transition-colors shadow-none text-sm border-black/50 border-[0.5px]"
+                        className="flex items-center justify-center gap-2 bg-neutral-100 hover:bg-neutral-200 text-black dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-white px-4 py-2.5 rounded-[10px] font-medium transition-all active:scale-95 text-xs border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none"
                     >
-                        <Printer size={18} />
-                        Download Invoice
+                        <Printer size={16} />
+                        Invoice
                     </button>
 
                     {/* Request Refund */}
                     {order.payment_status === 'paid' && (
                         <button
                             onClick={() => setIsRefundModalOpen(true)}
-                            className="flex items-center gap-2 bg-rose-600 text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-rose-700 transition-colors shadow-none text-sm border-black/50 border-[0.5px]"
+                            className="flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-700 dark:bg-red-950/20 dark:hover:bg-red-950/40 dark:text-red-400 px-4 py-2.5 rounded-[10px] font-medium transition-all active:scale-95 text-xs border-[0.5px] border-red-200/50 dark:border-red-900/30 shadow-none"
                         >
-                            Initiate Refund
+                            Refund
                         </button>
                     )}
 
                     <button
-                        className="flex items-center gap-2 bg-amber-500 text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-amber-600 transition-colors shadow-none text-sm border-black/50 border-[0.5px]"
+                        className="flex items-center justify-center gap-2 bg-black text-white dark:bg-white dark:text-black hover:bg-neutral-900 dark:hover:bg-neutral-100 px-4 py-2.5 rounded-[10px] font-medium transition-all active:scale-95 text-xs border-[0.5px] border-transparent shadow-none"
                         onClick={() => setIsEditModalOpen(true)}
                     >
                         Update Order
                     </button>
 
                     <button
-                        className="flex items-center gap-2 bg-rose-700 text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-rose-800 transition-colors shadow-none text-sm border-black/50 border-[0.5px]"
+                        className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-[10px] font-medium transition-all active:scale-95 text-xs border-[0.5px] border-transparent shadow-none"
                         onClick={async () => {
                             if (confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
                                 try {
@@ -201,54 +258,54 @@ export default function AdminOrderDetailPage() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Main Content */}
-                <div className="lg:col-span-2 space-y-8">
+                <div className="lg:col-span-2 space-y-6">
                     {/* Order Items */}
-                    <div className="bg-white rounded-2xl border-[0.5px] border-black/50 shadow-none overflow-hidden">
-                        <div className="p-6 border-b-[0.5px] border-black/50 bg-slate-50/50 flex justify-between items-center">
-                            <h3 className="font-bold text-slate-800 text-lg flex items-center gap-2">
-                                <Package className="text-teal-600" size={20} />
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none overflow-hidden">
+                        <div className="p-6 border-b-[0.5px] border-black/50 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-800/30 flex justify-between items-center">
+                            <h3 className="font-semibold text-gray-900 dark:text-white text-base flex items-center gap-2">
+                                <Package className="text-black dark:text-white" size={18} />
                                 Order Items
                             </h3>
-                            <span className="text-xs font-semibold text-slate-500 bg-slate-150 px-2.5 py-1 rounded-md">{order.items.length} Products</span>
+                            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 bg-neutral-100 dark:bg-neutral-800 px-2.5 py-1 rounded-[10px]">{order.items.length} {order.items.length === 1 ? 'Product' : 'Products'}</span>
                         </div>
-                        <div className="divide-y divide-slate-100">
+                        <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
                             {order.items.map((item) => (
-                                <div key={item.id} className="p-6 flex flex-col gap-4 hover:bg-slate-50/30 transition-all">
+                                <div key={item.id} className="p-6 flex flex-col gap-4 hover:bg-neutral-50/30 dark:hover:bg-neutral-800/10 transition-all">
                                     <div className="flex items-center gap-4">
-                                        <div className="h-16 w-16 bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl flex-shrink-0 flex items-center justify-center text-teal-600 font-bold border-[0.5px] border-black/50 shadow-inner">
+                                        <div className="h-14 w-14 bg-neutral-100 dark:bg-neutral-800 rounded-[10px] flex-shrink-0 flex items-center justify-center text-gray-900 dark:text-white font-bold border-[0.5px] border-black/50 dark:border-neutral-800">
                                             {item.product_name.charAt(0)}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <h4 className="font-bold text-slate-800 truncate text-base">{item.product_name}</h4>
-                                            <p className="text-sm text-slate-500 mt-0.5">Brand: <span className="text-teal-600 font-medium">{item.product?.brand?.name || item.seller?.name || 'N/A'}</span></p>
+                                            <h4 className="font-semibold text-gray-900 dark:text-white truncate text-sm">{item.product_name}</h4>
+                                            <p className="text-xs text-gray-550 dark:text-gray-400 mt-0.5">Brand: <span className="text-black dark:text-white font-semibold">{item.product?.brand?.name || item.seller?.name || 'N/A'}</span></p>
                                         </div>
                                         <div className="text-right">
-                                            <p className="font-bold text-slate-800 text-base">₹{item.total}</p>
-                                            <p className="text-xs text-slate-400 mt-0.5">{item.quantity} x ₹{item.price}</p>
+                                            <p className="font-semibold text-gray-900 dark:text-white text-sm">₹{item.total}</p>
+                                            <p className="text-xs text-gray-400 dark:text-gray-550 mt-0.5">{item.quantity} x ₹{item.price}</p>
                                         </div>
                                     </div>
                                     {item.patient_name && (
-                                        <div className="ml-0 sm:ml-20 bg-teal-50/40 border-[0.5px] border-black/50 rounded-xl p-4 text-xs text-slate-600 space-y-2">
+                                        <div className="ml-0 sm:ml-18 bg-neutral-50 dark:bg-neutral-800/30 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] p-4 text-xs text-gray-650 dark:text-gray-400 space-y-2">
                                             <div className="flex flex-wrap gap-4 justify-between font-medium">
-                                                <div>Patient: <span className="text-slate-900 font-bold">{item.patient_name}</span> ({item.patient_age} yrs, {item.patient_gender})</div>
-                                                <div>Doctor: <span className="text-slate-900 font-bold">Dr. {item.doctor?.name || 'N/A'}</span></div>
+                                                <div>Patient: <span className="text-gray-900 dark:text-white font-bold">{item.patient_name}</span> ({item.patient_age} yrs, {item.patient_gender})</div>
+                                                <div>Doctor: <span className="text-gray-900 dark:text-white font-bold">Dr. {item.doctor?.name || 'N/A'}</span></div>
                                             </div>
-                                            <div>Concern: <span className="italic text-slate-800">"{item.health_concern}"</span></div>
-                                            <div className="flex items-center justify-between pt-2 border-t-[0.5px] border-black/50">
+                                            <div>Concern: <span className="italic text-gray-800 dark:text-gray-300">"{item.health_concern}"</span></div>
+                                            <div className="flex items-center justify-between pt-2 border-t-[0.5px] border-black/50 dark:border-neutral-800">
                                                 <span className="font-medium">Prescription File:</span>
                                                 {item.prescription_path ? (
                                                     <a 
                                                         href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/storage/${item.prescription_path}`} 
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="text-teal-700 font-bold hover:underline hover:text-teal-800 flex items-center gap-1 bg-white border-[0.5px] border-black/50 px-3 py-1 rounded-lg shadow-none"
+                                                        className="text-gray-900 dark:text-white font-semibold hover:bg-neutral-200 dark:hover:bg-neutral-750 flex items-center gap-1.5 bg-neutral-100 dark:bg-neutral-800 border-[0.5px] border-black/50 dark:border-neutral-800 px-3 py-1 rounded-[10px] shadow-none text-xs transition-colors"
                                                     >
                                                         View Prescription PDF
                                                     </a>
                                                 ) : (
-                                                    <span className="text-rose-500 font-bold">Pending Approval</span>
+                                                    <span className="text-red-500 dark:text-red-450 font-semibold">Pending Approval</span>
                                                 )}
                                             </div>
                                         </div>
@@ -256,42 +313,42 @@ export default function AdminOrderDetailPage() {
                                 </div>
                             ))}
                         </div>
-                        <div className="bg-slate-50/80 p-6 border-t-[0.5px] border-black/50">
-                            <div className="flex justify-between text-sm mb-2">
-                                <span className="text-slate-500 font-medium">Subtotal</span>
-                                <span className="font-semibold text-slate-700">₹{order.total_amount}</span>
+                        <div className="bg-neutral-50/50 dark:bg-neutral-800/20 p-6 border-t-[0.5px] border-black/50 dark:border-neutral-800">
+                            <div className="flex justify-between text-xs mb-2.5">
+                                <span className="text-gray-500 dark:text-gray-400 font-medium">Subtotal</span>
+                                <span className="font-semibold text-gray-700 dark:text-gray-300">₹{order.total_amount}</span>
                             </div>
-                            <div className="flex justify-between text-sm mb-2">
-                                <span className="text-slate-500 font-medium">Shipping Charges</span>
-                                <span className="font-semibold text-slate-700">₹{order.shipping_amount}</span>
+                            <div className="flex justify-between text-xs mb-2.5">
+                                <span className="text-gray-500 dark:text-gray-400 font-medium">Shipping Charges</span>
+                                <span className="font-semibold text-gray-700 dark:text-gray-300">₹{order.shipping_amount}</span>
                             </div>
-                            <div className="flex justify-between text-sm mb-2">
-                                <span className="text-slate-500 font-medium">GST / Taxes</span>
-                                <span className="font-semibold text-slate-700">₹{order.tax_amount}</span>
+                            <div className="flex justify-between text-xs mb-2.5">
+                                <span className="text-gray-500 dark:text-gray-400 font-medium">GST / Taxes</span>
+                                <span className="font-semibold text-gray-700 dark:text-gray-300">₹{order.tax_amount}</span>
                             </div>
-                            <div className="flex justify-between text-lg font-bold border-t-[0.5px] border-black/50 pt-4 mt-4">
-                                <span className="text-slate-850">Grand Total</span>
-                                <span className="text-emerald-600 text-xl font-extrabold">₹{order.final_amount}</span>
+                            <div className="flex justify-between text-sm font-semibold border-t-[0.5px] border-black/50 dark:border-neutral-800 pt-4 mt-4">
+                                <span className="text-gray-900 dark:text-white">Grand Total</span>
+                                <span className="text-black dark:text-white text-base font-bold">₹{order.final_amount}</span>
                             </div>
                         </div>
                     </div>
 
                     {/* Shipment Details & AWB Tracking */}
-                    <div className="bg-white p-6 rounded-2xl border-[0.5px] border-black/50 shadow-none">
-                        <h3 className="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
-                            <Truck className="text-teal-600" size={20} />
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none">
+                        <h3 className="font-semibold text-gray-900 dark:text-white text-base mb-4 flex items-center gap-2">
+                            <Truck className="text-black dark:text-white" size={18} />
                             Shipping & Courier Integration
                         </h3>
                         {order.tracking_id ? (
-                            <div className="bg-slate-50 border-[0.5px] border-black/50 rounded-xl p-5 space-y-4">
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                            <div className="bg-neutral-50 dark:bg-neutral-800/30 border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] p-5 space-y-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                                     <div>
-                                        <span className="text-slate-450 font-medium">Courier Provider</span>
-                                        <p className="font-bold text-slate-800 mt-0.5">{order.tracking_provider || 'Manual Courier'}</p>
+                                        <span className="text-gray-450 dark:text-gray-550 font-medium">Courier Provider</span>
+                                        <p className="font-semibold text-gray-900 dark:text-white mt-0.5 text-sm">{order.tracking_provider || 'Manual Courier'}</p>
                                     </div>
                                     <div>
-                                        <span className="text-slate-450 font-medium">AWB Tracking Number</span>
-                                        <p className="font-bold text-slate-800 mt-0.5">{order.tracking_id}</p>
+                                        <span className="text-gray-450 dark:text-gray-555 font-medium">AWB Tracking Number</span>
+                                        <p className="font-semibold text-gray-900 dark:text-white mt-0.5 text-sm">{order.tracking_id}</p>
                                     </div>
                                 </div>
                                 <div className="pt-2">
@@ -299,36 +356,37 @@ export default function AdminOrderDetailPage() {
                                         href={`https://track.cureza.com/?awb=${order.tracking_id}&provider=${encodeURIComponent(order.tracking_provider || '')}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-teal-700 transition-colors shadow-none border-black/50 border-[0.5px]"
+                                        className="inline-flex items-center gap-2 bg-black text-white dark:bg-white dark:text-black px-4 py-2 rounded-[10px] text-xs font-semibold hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-colors shadow-none border-[0.5px] border-transparent"
                                     >
                                         Track Package Live
                                     </a>
                                 </div>
                             </div>
                         ) : (
-                            <div className="bg-amber-50/50 border-[0.5px] border-black/50 rounded-xl p-5 text-sm text-amber-800 flex items-start gap-3">
+                            <div className="bg-amber-50/50 dark:bg-amber-950/10 border-[0.5px] border-amber-250/20 dark:border-amber-900/30 rounded-[10px] p-5 text-sm text-amber-800 dark:text-amber-400 flex items-start gap-3">
                                 <div>
-                                    <p className="font-semibold">No active tracking information available.</p>
-                                    <p className="text-xs text-amber-700 mt-1">Please update this order status and insert courier details to activate shipment tracking.</p>
+                                    <p className="font-semibold text-xs">No active tracking information available.</p>
+                                    <p className="text-[11px] text-amber-700 dark:text-amber-500 mt-1">Please update this order status and insert courier details to activate shipment tracking.</p>
                                 </div>
                             </div>
                         )}
                     </div>
 
                     {/* Timeline */}
-                    <div className="bg-white p-6 rounded-2xl border-[0.5px] border-black/50 shadow-none">
-                        <h3 className="font-bold text-slate-800 text-lg mb-6 flex items-center gap-2">
-                            <Clock className="text-teal-600" size={20} />
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none">
+                        <h3 className="font-semibold text-gray-900 dark:text-white text-base mb-6 flex items-center gap-2">
+                            <Clock className="text-black dark:text-white" size={18} />
                             Order Tracking Timeline
                         </h3>
-                        <div className="relative pl-6 border-l-[0.5px] border-black/50 space-y-8 ml-3">
+                        <div className="relative pl-6 border-l-[0.5px] border-black/50 dark:border-neutral-800 space-y-8 ml-3">
                             {timeline.map((event, index) => (
                                 <div key={index} className="relative">
-                                    <div className={`absolute -left-[31px] top-1 h-5 w-5 rounded-full border-4 shadow-none transition-all border-[0.5px] ${event.completed ? 'bg-emerald-500 border-black/50' : 'bg-white border-black/50'
-                                        }`}></div>
+                                    <div className={`absolute -left-[31px] top-1 h-5 w-5 rounded-full border-4 border-white dark:border-gray-900 transition-all shadow-none ${
+                                        event.completed ? 'bg-green-500 dark:bg-green-400' : 'bg-neutral-200 dark:bg-neutral-800'
+                                    }`}></div>
                                     <div>
-                                        <p className={`font-bold text-sm ${event.completed ? 'text-slate-850' : 'text-slate-400'}`}>{event.status}</p>
-                                        <p className="text-xs text-slate-450 mt-0.5">{event.date}</p>
+                                        <p className={`font-semibold text-sm ${event.completed ? 'text-gray-900 dark:text-white' : 'text-gray-400 dark:text-gray-650'}`}>{event.status}</p>
+                                        <p className="text-xs text-gray-450 dark:text-gray-500 mt-0.5">{event.date}</p>
                                     </div>
                                 </div>
                             ))}
@@ -337,84 +395,88 @@ export default function AdminOrderDetailPage() {
                 </div>
 
                 {/* Sidebar Info */}
-                <div className="space-y-8">
+                <div className="space-y-6">
                     {/* Customer Info */}
-                    <div className="bg-white p-6 rounded-2xl border-[0.5px] border-black/50 shadow-none">
-                        <h3 className="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
-                            <User className="text-slate-400" size={18} />
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none">
+                        <h3 className="font-semibold text-gray-900 dark:text-white text-base mb-4 flex items-center gap-2">
+                            <User className="text-gray-400 dark:text-gray-500" size={18} />
                             Customer Information
                         </h3>
-                        <div className="space-y-3 text-sm text-slate-650">
+                        <div className="space-y-3 text-xs text-gray-600 dark:text-gray-400">
                             <div>
-                                <span className="text-xs text-slate-400 font-medium">Name</span>
-                                <p className="font-bold text-slate-800">{order.user?.name || 'Guest'}</p>
+                                <span className="text-[10px] text-gray-450 dark:text-gray-500 font-bold uppercase tracking-wider">Name</span>
+                                <p className="font-semibold text-gray-900 dark:text-white text-sm mt-0.5">{order.user?.name || 'Guest'}</p>
                             </div>
                             <div>
-                                <span className="text-xs text-slate-400 font-medium">Email</span>
-                                <p className="font-bold text-slate-800">{order.user?.email || '-'}</p>
+                                <span className="text-[10px] text-gray-450 dark:text-gray-550 font-bold uppercase tracking-wider">Email</span>
+                                <p className="font-semibold text-gray-900 dark:text-white text-sm mt-0.5">{order.user?.email || '-'}</p>
                             </div>
                             <div>
-                                <span className="text-xs text-slate-400 font-medium">Phone</span>
-                                <p className="font-bold text-slate-800">{order.user?.phone || '-'}</p>
+                                <span className="text-[10px] text-gray-450 dark:text-gray-555 font-bold uppercase tracking-wider">Phone</span>
+                                <p className="font-semibold text-gray-900 dark:text-white text-sm mt-0.5">{order.user?.phone || '-'}</p>
                             </div>
                         </div>
                     </div>
 
                     {/* Shipping Address */}
-                    <div className="bg-white p-6 rounded-2xl border-[0.5px] border-black/50 shadow-none">
-                        <h3 className="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
-                            <MapPin className="text-slate-400" size={18} />
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none">
+                        <h3 className="font-semibold text-gray-900 dark:text-white text-base mb-4 flex items-center gap-2">
+                            <MapPin className="text-gray-400 dark:text-gray-500" size={18} />
                             Shipping Destination
                         </h3>
-                        <div className="space-y-2 text-sm text-slate-650">
+                        <div className="space-y-2 text-xs text-gray-600 dark:text-gray-400">
                             {order.shipping_address_json ? (
                                 <>
-                                    <p className="font-bold text-slate-800 mb-2">{order.shipping_address_json.name}</p>
+                                    <p className="font-semibold text-gray-900 dark:text-white text-sm mb-2">{order.shipping_address_json.name}</p>
                                     <p className="leading-relaxed">{order.shipping_address_json.line}</p>
-                                    <p className="font-medium text-slate-800 mt-1">{order.shipping_address_json.city}, {order.shipping_address_json.state} - {order.shipping_address_json.zip}</p>
-                                    <p className="text-xs text-slate-450 uppercase tracking-wider font-semibold mt-1">{order.shipping_address_json.country}</p>
+                                    <p className="font-semibold text-gray-900 dark:text-white mt-1 text-sm">{order.shipping_address_json.city}, {order.shipping_address_json.state} - {order.shipping_address_json.zip}</p>
+                                    <p className="text-[10px] text-gray-450 dark:text-gray-550 uppercase tracking-wider font-bold mt-1.5">{order.shipping_address_json.country}</p>
                                 </>
                             ) : (
-                                <p className="italic text-slate-400">No shipping address provided</p>
+                                <p className="italic text-gray-400 dark:text-gray-500">No shipping address provided</p>
                             )}
                         </div>
                     </div>
 
                     {/* Payment Info */}
-                    <div className="bg-white p-6 rounded-2xl border-[0.5px] border-black/50 shadow-none">
-                        <h3 className="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
-                            <CreditCard className="text-slate-400" size={18} />
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none">
+                        <h3 className="font-semibold text-gray-900 dark:text-white text-base mb-4 flex items-center gap-2">
+                            <CreditCard className="text-gray-400 dark:text-gray-500" size={18} />
                             Payment Method Details
                         </h3>
-                        <div className="space-y-4 text-sm text-slate-650">
+                        <div className="space-y-4 text-xs text-gray-600 dark:text-gray-400">
                             <div className="flex justify-between items-center">
-                                <span className="text-slate-450">Payment Status</span>
-                                <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold border-[0.5px] capitalize ${order.payment_status === 'paid' ? 'bg-emerald-50 text-emerald-700 border-black/50' : 'bg-amber-50 text-amber-700 border-black/50'}`}>
+                                <span className="text-gray-450 dark:text-gray-500">Payment Status</span>
+                                <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border-[0.5px] capitalize ${
+                                    order.payment_status === 'paid' ? 'bg-green-50 text-green-700 border-green-200/50 dark:bg-green-950/20 dark:text-green-400 dark:border-green-900/30' : 'bg-amber-50 text-amber-700 border-amber-200/50 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30'
+                                }`}>
                                     {order.payment_status}
                                 </span>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span className="text-slate-450">Payment Method</span>
-                                <span className="font-bold text-slate-800 uppercase">{order.payment_method}</span>
+                                <span className="text-gray-450 dark:text-gray-500">Payment Method</span>
+                                <span className="font-bold text-gray-900 dark:text-white uppercase">{order.payment_method}</span>
                             </div>
                         </div>
                     </div>
 
                     {/* Active Refunds Display */}
                     {order.refunds && order.refunds.length > 0 && (
-                        <div className="bg-white p-6 rounded-2xl border-[0.5px] border-black/50 shadow-none">
-                            <h3 className="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
-                                <span className="text-rose-500 font-bold">Refund History</span>
+                        <div className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/50 dark:border-neutral-800 shadow-none">
+                            <h3 className="font-semibold text-red-650 dark:text-red-400 text-sm mb-4">
+                                Refund History
                             </h3>
                             <div className="space-y-3">
                                 {order.refunds.map((ref: any) => (
-                                    <div key={ref.id} className="border-[0.5px] border-black/50 rounded-xl p-4 bg-slate-50 text-xs">
-                                        <div className="flex justify-between font-bold text-slate-850">
+                                    <div key={ref.id} className="border-[0.5px] border-black/50 dark:border-neutral-800 rounded-[10px] p-4 bg-neutral-50 dark:bg-neutral-800/30 text-xs">
+                                        <div className="flex justify-between font-bold text-gray-900 dark:text-white">
                                             <span>₹{ref.amount}</span>
-                                            <span className={`px-2 py-0.5 rounded-full uppercase tracking-wider ${ref.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>{ref.status}</span>
+                                            <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider font-bold border-[0.5px] ${
+                                                ref.status === 'approved' ? 'bg-green-55 text-green-750 border-green-200/50 dark:bg-green-950/20 dark:text-green-400 dark:border-green-900/30' : 'bg-amber-55 text-amber-750 border-amber-250/20 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30'
+                                            }`}>{ref.status}</span>
                                         </div>
-                                        <p className="text-slate-500 mt-2 font-medium">Reason: {ref.reason}</p>
-                                        {ref.admin_notes && <p className="text-slate-400 mt-1 italic">Notes: {ref.admin_notes}</p>}
+                                        <p className="text-gray-500 dark:text-gray-400 mt-2 font-medium">Reason: {ref.reason}</p>
+                                        {ref.admin_notes && <p className="text-gray-400 dark:text-gray-550 mt-1 italic">Notes: {ref.admin_notes}</p>}
                                     </div>
                                 ))}
                             </div>
@@ -434,17 +496,17 @@ export default function AdminOrderDetailPage() {
 
             {/* Manual Refund Dialog */}
             {isRefundModalOpen && order && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-2xl shadow-none w-full max-w-md mx-4 overflow-hidden border-[0.5px] border-black/50 animate-fadeIn">
-                        <div className="flex justify-between items-center p-5 border-b-[0.5px] border-black/50 bg-slate-50/50">
-                            <h3 className="font-bold text-slate-800 text-lg">Initiate Refund</h3>
-                            <button onClick={() => setIsRefundModalOpen(false)} className="text-slate-400 hover:text-slate-650">
-                                <X size={20} />
+                <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in duration-200">
+                    <div className="bg-white dark:bg-gray-900 rounded-[10px] shadow-xl w-full max-w-md mx-4 overflow-hidden border border-neutral-955/15 dark:border-neutral-800 animate-in zoom-in-95 duration-200">
+                        <div className="flex justify-between items-center p-4 border-b border-neutral-955/10 dark:border-neutral-800 bg-neutral-50/50 dark:bg-gray-850/50">
+                            <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Initiate Refund</h3>
+                            <button onClick={() => setIsRefundModalOpen(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-neutral-200 transition-colors">
+                                <X size={18} />
                             </button>
                         </div>
                         <form onSubmit={handleRefundSubmit} className="p-6 space-y-4">
                             <div>
-                                <label className="block text-xs font-bold text-slate-450 uppercase mb-1">Refund Amount (₹)</label>
+                                <label className="block text-[10px] font-bold text-gray-450 dark:text-gray-550 uppercase tracking-wider mb-1.5">Refund Amount (₹)</label>
                                 <input
                                     type="number"
                                     step="0.01"
@@ -452,46 +514,46 @@ export default function AdminOrderDetailPage() {
                                     value={refundAmount}
                                     onChange={(e) => setRefundAmount(e.target.value)}
                                     max={order.final_amount}
-                                    className="w-full px-4 py-2 border-[0.5px] border-black/50 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 text-sm font-semibold"
+                                    className="w-full px-3 py-2 border border-neutral-955/15 dark:border-neutral-800 rounded-[10px] bg-neutral-50/50 dark:bg-gray-850/50 focus:bg-white dark:focus:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black dark:text-white text-xs outline-none transition-all"
                                 />
-                                <span className="text-xs text-slate-450 mt-1 block">Maximum refundable: ₹{order.final_amount}</span>
+                                <span className="text-[10px] text-gray-450 dark:text-gray-500 mt-1 block">Maximum refundable: ₹{order.final_amount}</span>
                             </div>
 
                             <div>
-                                <label className="block text-xs font-bold text-slate-450 uppercase mb-1">Reason for Refund</label>
+                                <label className="block text-[10px] font-bold text-gray-450 dark:text-gray-555 uppercase tracking-wider mb-1.5">Reason for Refund</label>
                                 <textarea
                                     required
                                     rows={3}
                                     placeholder="Customer returns damaged goods, etc."
                                     value={refundReason}
                                     onChange={(e) => setRefundReason(e.target.value)}
-                                    className="w-full px-4 py-2 border-[0.5px] border-black/50 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 text-sm"
+                                    className="w-full px-3 py-2 border border-neutral-955/15 dark:border-neutral-800 rounded-[10px] bg-neutral-50/50 dark:bg-gray-850/50 focus:bg-white dark:focus:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black dark:text-white text-xs outline-none transition-all resize-none"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-xs font-bold text-slate-450 uppercase mb-1">Admin Internal Notes (Optional)</label>
+                                <label className="block text-[10px] font-bold text-gray-450 dark:text-gray-555 uppercase tracking-wider mb-1.5">Admin Internal Notes (Optional)</label>
                                 <textarea
                                     rows={2}
                                     placeholder="Internal comments on package delivery confirmation"
                                     value={refundNotes}
                                     onChange={(e) => setRefundNotes(e.target.value)}
-                                    className="w-full px-4 py-2 border-[0.5px] border-black/50 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 text-sm"
+                                    className="w-full px-3 py-2 border border-neutral-955/15 dark:border-neutral-800 rounded-[10px] bg-neutral-50/50 dark:bg-gray-850/50 focus:bg-white dark:focus:bg-gray-900 focus:ring-1 focus:ring-black focus:border-black dark:text-white text-xs outline-none transition-all resize-none"
                                 />
                             </div>
 
-                            <div className="pt-4 flex justify-end gap-3">
+                            <div className="pt-4 flex justify-end gap-2.5 border-t border-neutral-955/10 dark:border-neutral-800">
                                 <button
                                     type="button"
                                     onClick={() => setIsRefundModalOpen(false)}
-                                    className="px-4 py-2 border-[0.5px] border-black/50 rounded-xl text-slate-650 hover:bg-slate-50 font-semibold text-sm transition-all"
+                                    className="px-4 py-2 border border-neutral-955/10 dark:border-neutral-800 rounded-[10px] text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 font-semibold text-xs transition-all"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={refunding}
-                                    className="px-5 py-2 bg-rose-600 text-white rounded-xl hover:bg-rose-700 font-semibold text-sm disabled:opacity-50 transition-all shadow-none border-black/50 border-[0.5px]"
+                                    className="px-4 py-2 bg-black text-white dark:bg-white dark:text-black rounded-[10px] font-semibold text-xs disabled:opacity-50 hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-all shadow-none"
                                 >
                                     {refunding ? 'Processing...' : 'Confirm Refund'}
                                 </button>
