@@ -187,11 +187,11 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
         brand_id: initialData?.brand_id || initialData?.brand?.id || '',
         category_id: initialData?.category_id || '',
         concern_id: initialData?.concern_id || '',
-        price: initialData?.price || '',
-        original_price: initialData?.original_price || '',
-        stock: initialData?.stock || '',
+        price: (initialData?.price !== undefined && initialData?.price !== null) ? String(initialData.price) : '',
+        original_price: (initialData?.original_price !== undefined && initialData?.original_price !== null) ? String(initialData.original_price) : '',
+        stock: (initialData?.stock !== undefined && initialData?.stock !== null) ? String(initialData.stock) : '',
         stock_status: initialData?.stock_status || 'in_stock',
-        bought_last_month: initialData?.bought_last_month || '',
+        bought_last_month: (initialData?.bought_last_month !== undefined && initialData?.bought_last_month !== null) ? String(initialData.bought_last_month) : '',
         short_description: initialData?.short_description || '',
         long_description: initialData?.long_description || '',
         video_url: initialData?.video_url || '',
@@ -254,11 +254,11 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                 brand_id: dataToUse.brand_id || dataToUse.brand?.id || '',
                 category_id: dataToUse.category_id || dataToUse.category?.id || '',
                 concern_id: dataToUse.concern_id || '',
-                price: dataToUse.price || '',
-                original_price: dataToUse.original_price || '',
-                stock: dataToUse.stock || '',
+                price: (dataToUse.price !== undefined && dataToUse.price !== null) ? String(dataToUse.price) : '',
+                original_price: (dataToUse.original_price !== undefined && dataToUse.original_price !== null) ? String(dataToUse.original_price) : '',
+                stock: (dataToUse.stock !== undefined && dataToUse.stock !== null) ? String(dataToUse.stock) : '',
                 stock_status: dataToUse.stock_status || 'in_stock',
-                bought_last_month: dataToUse.bought_last_month || '',
+                bought_last_month: (dataToUse.bought_last_month !== undefined && dataToUse.bought_last_month !== null) ? String(dataToUse.bought_last_month) : '',
                 short_description: dataToUse.short_description || '',
                 long_description: dataToUse.long_description || '',
                 video_url: dataToUse.video_url || '',
@@ -550,11 +550,15 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
             if (formData.brand_id) data.append('brand_id', formData.brand_id);
             data.append('category_id', formData.category_id);
             if (formData.concern_id) data.append('concern_id', formData.concern_id);
-            data.append('price', formData.price);
-            if (formData.original_price) data.append('original_price', formData.original_price);
-            data.append('stock', formData.stock);
+            data.append('price', formData.price !== '' && formData.price !== null && formData.price !== undefined ? String(formData.price) : '0');
+            if (formData.original_price !== '' && formData.original_price !== null && formData.original_price !== undefined) {
+                data.append('original_price', String(formData.original_price));
+            }
+            data.append('stock', formData.stock !== '' && formData.stock !== null && formData.stock !== undefined ? String(formData.stock) : '0');
             data.append('stock_status', formData.stock_status);
-            if (formData.bought_last_month) data.append('bought_last_month', formData.bought_last_month);
+            if (formData.bought_last_month !== '' && formData.bought_last_month !== null && formData.bought_last_month !== undefined) {
+                data.append('bought_last_month', String(formData.bought_last_month));
+            }
             if (formData.short_description) data.append('short_description', formData.short_description);
             data.append('long_description', formData.long_description || '');
             if (formData.video_url) data.append('video_url', formData.video_url);
