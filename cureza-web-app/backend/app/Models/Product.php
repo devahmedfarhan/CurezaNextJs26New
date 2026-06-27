@@ -63,6 +63,8 @@ class Product extends Model
         'banners',
         'faqs',
         'is_prescription_required',
+        'is_bestseller',
+        'is_new_arrival',
         'gst_slab',
         'gst_inclusive',
         'hsn_code',
@@ -82,6 +84,8 @@ class Product extends Model
         'original_price' => 'decimal:2',
         'rating' => 'decimal:2',
         'is_prescription_required' => 'boolean',
+        'is_bestseller' => 'boolean',
+        'is_new_arrival' => 'boolean',
         'gst_slab' => 'decimal:2',
         'gst_inclusive' => 'boolean',
     ];

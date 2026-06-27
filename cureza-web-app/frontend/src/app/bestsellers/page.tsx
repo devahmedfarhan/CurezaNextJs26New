@@ -9,10 +9,15 @@ async function getBestsellers() {
     if (!res.ok) return [];
     const products = await res.json();
     
-    // Sort by rating descending to show bestsellers
-    const sorted = products.sort((a: any, b: any) => Number(b.rating || 0) - Number(a.rating || 0));
+    // Filter by is_bestseller flag
+    let filtered = products.filter((p: any) => p.is_bestseller === true || p.is_bestseller === 1 || String(p.is_bestseller) === '1');
     
-    return sorted.slice(0, 12).map((p: any) => ({
+    // Fallback: if no products flagged, sort by rating and take top 12
+    if (filtered.length === 0) {
+      filtered = products.sort((a: any, b: any) => Number(b.rating || 0) - Number(a.rating || 0)).slice(0, 12);
+    }
+    
+    return filtered.map((p: any) => ({
       id: p.id,
       title: p.title,
       brand: p.brand,

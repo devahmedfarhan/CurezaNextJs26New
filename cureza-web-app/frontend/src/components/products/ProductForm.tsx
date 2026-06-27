@@ -210,6 +210,8 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
         banners: initialData?.banners || [{ desktop: null, mobile: null }, { desktop: null, mobile: null }, { desktop: null, mobile: null }],
         faqs: initialData?.faqs || [] as { question: string; answer: string }[],
         is_prescription_required: initialData?.is_prescription_required || false,
+        is_bestseller: initialData?.is_bestseller || false,
+        is_new_arrival: initialData?.is_new_arrival || false,
         gst_slab: initialData?.gst_slab !== undefined ? String(Number(initialData.gst_slab)) : '18',
         gst_inclusive: initialData?.gst_inclusive ?? true,
         hsn_code: initialData?.hsn_code || '',
@@ -275,6 +277,8 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
                 banners: loadedBanners,
                 faqs: dataToUse.faqs || [],
                 is_prescription_required: dataToUse.is_prescription_required || false,
+                is_bestseller: dataToUse.is_bestseller || false,
+                is_new_arrival: dataToUse.is_new_arrival || false,
                 video_cover: dataToUse.video_cover || null,
                 gst_slab: dataToUse.gst_slab !== undefined ? String(Number(dataToUse.gst_slab)) : '18',
                 gst_inclusive: dataToUse.gst_inclusive ?? true,
@@ -567,6 +571,8 @@ export default function ProductForm({ isSuperAdmin, initialData }: ProductFormPr
             if (formData.seo_title) data.append('seo_title', formData.seo_title);
             if (formData.seo_description) data.append('seo_description', formData.seo_description);
             data.append('is_prescription_required', formData.is_prescription_required ? '1' : '0');
+            data.append('is_bestseller', formData.is_bestseller ? '1' : '0');
+            data.append('is_new_arrival', formData.is_new_arrival ? '1' : '0');
             if (formData.gst_slab) data.append('gst_slab', formData.gst_slab);
             data.append('gst_inclusive', formData.gst_inclusive ? '1' : '0');
             if (formData.hsn_code) data.append('hsn_code', formData.hsn_code);

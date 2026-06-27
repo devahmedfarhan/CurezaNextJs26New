@@ -9,10 +9,15 @@ async function getNewLaunches() {
     if (!res.ok) return [];
     const products = await res.json();
     
-    // Sort by ID descending to get the newest products
-    const sorted = products.sort((a: any, b: any) => b.id - a.id);
+    // Filter by is_new_arrival flag
+    let filtered = products.filter((p: any) => p.is_new_arrival === true || p.is_new_arrival === 1 || String(p.is_new_arrival) === '1');
     
-    return sorted.slice(0, 12).map((p: any) => ({
+    // Fallback: if no products flagged, sort by ID descending and take top 12
+    if (filtered.length === 0) {
+      filtered = products.sort((a: any, b: any) => b.id - a.id).slice(0, 12);
+    }
+    
+    return filtered.map((p: any) => ({
       id: p.id,
       title: p.title,
       brand: p.brand,

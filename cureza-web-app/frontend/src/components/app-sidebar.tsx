@@ -176,6 +176,7 @@ const data = {
         { title: "Blog Tags", url: "/superadmin/dashboard/cms/tags" },
         { title: "Blog Authors", url: "/superadmin/dashboard/cms/blogs/authors" },
         { title: "FAQ & Help", url: "/superadmin/dashboard/cms/faq" },
+        { title: "Public Pages", url: "/superadmin/dashboard/cms/public-pages" },
         { title: "Menu Builder", url: "/superadmin/dashboard/menu" },
       ],
     },

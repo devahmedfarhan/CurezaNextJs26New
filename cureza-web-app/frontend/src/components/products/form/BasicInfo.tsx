@@ -1,4 +1,4 @@
-import { Info, Tag, Layers, Briefcase, FileText } from 'lucide-react';
+import { Info, Tag, Layers, Briefcase, FileText, Award, Sparkles } from 'lucide-react';
 import RichTextEditor from '@/components/RichTextEditor';
 
 interface BasicInfoProps {
@@ -232,6 +232,69 @@ export default function BasicInfo({
                     />
                     <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-rose-600"></div>
                 </label>
+            </div>
+
+            {/* Row 6: Bestseller & New Arrival Flags */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Bestseller Toggle */}
+                <div className={`p-4 ${isSuperAdmin ? 'rounded-[10px] border-[0.5px]' : 'rounded-2xl border-2 shadow-sm'} transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                    formData.is_bestseller 
+                        ? (isSuperAdmin ? 'bg-[#FDF9EA]/50 border-[#F5E2A8]/60' : 'bg-amber-50/40 border-amber-100/70') 
+                        : (isSuperAdmin ? 'bg-neutral-50/50 border-neutral-950/15' : 'bg-cureza-green-50/20 border-cureza-green-100/20')
+                }`}>
+                    <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 ${isSuperAdmin ? 'rounded-lg border-[0.5px] border-neutral-950/15 bg-white text-black' : 'rounded-xl shadow-sm bg-white text-[#E5A93C] border border-[#F5E2A8]/30'} flex items-center justify-center`}>
+                            <Award size={18} />
+                        </div>
+                        <div>
+                            <h4 className="font-outfit font-bold text-gray-900 dark:text-gray-100 text-sm capitalize tracking-tight">Bestseller?</h4>
+                            <p className="text-[11px] font-semibold text-neutral-500 mt-0.5">
+                                {formData.is_bestseller ? "Flagged: Shows in Bestsellers list." : "Regular item."}
+                            </p>
+                        </div>
+                    </div>
+
+                    <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                            type="checkbox"
+                            name="is_bestseller"
+                            checked={formData.is_bestseller || false}
+                            onChange={handleInputChange}
+                            className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                    </label>
+                </div>
+
+                {/* New Arrival Toggle */}
+                <div className={`p-4 ${isSuperAdmin ? 'rounded-[10px] border-[0.5px]' : 'rounded-2xl border-2 shadow-sm'} transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                    formData.is_new_arrival 
+                        ? (isSuperAdmin ? 'bg-blue-50/20 border-blue-200/30' : 'bg-blue-50/40 border-blue-100/70') 
+                        : (isSuperAdmin ? 'bg-neutral-50/50 border-neutral-950/15' : 'bg-cureza-green-50/20 border-cureza-green-100/20')
+                }`}>
+                    <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 ${isSuperAdmin ? 'rounded-lg border-[0.5px] border-neutral-950/15 bg-white text-black' : 'rounded-xl shadow-sm bg-white text-blue-600 border border-blue-100/30'} flex items-center justify-center`}>
+                            <Sparkles size={18} />
+                        </div>
+                        <div>
+                            <h4 className="font-outfit font-bold text-gray-900 dark:text-gray-100 text-sm capitalize tracking-tight">New Arrival?</h4>
+                            <p className="text-[11px] font-semibold text-neutral-500 mt-0.5">
+                                {formData.is_new_arrival ? "Flagged: Shows in New Launches list." : "Standard catalog item."}
+                            </p>
+                        </div>
+                    </div>
+
+                    <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                            type="checkbox"
+                            name="is_new_arrival"
+                            checked={formData.is_new_arrival || false}
+                            onChange={handleInputChange}
+                            className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                </div>
             </div>
         </div>
     );

@@ -48,5 +48,17 @@ class LegalPage extends Model
                 Log::error("Failed to write static legal page file: " . $e->getMessage());
             }
         });
+
+        static::deleted(function ($page) {
+            try {
+                $filePath = base_path('../frontend/src/data/legal-pages/' . $page->slug . '.json');
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                }
+                Log::info("Deleted static legal page JSON on frontend: {$filePath}");
+            } catch (\Exception $e) {
+                Log::error("Failed to delete static legal page file: " . $e->getMessage());
+            }
+        });
     }
 }

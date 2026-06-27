@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { HelpCircle, Menu as MenuIcon, ArrowRight, BookOpen, Layers, Tag, Users } from 'lucide-react';
+import { HelpCircle, Menu as MenuIcon, ArrowRight, BookOpen, Layers, Tag, Users, Globe } from 'lucide-react';
 
 export default function AdminCMSPage() {
     const modules = [
@@ -32,6 +32,12 @@ export default function AdminCMSPage() {
             desc: "Manage dynamic Help Center articles (Topics & Subtopics) and homepage FAQs.",
             href: "/superadmin/dashboard/cms/faq",
             icon: HelpCircle,
+        },
+        {
+            title: "Public Pages",
+            desc: "Manage custom dynamic landing pages, offers, legal agreements, and view core pages.",
+            href: "/superadmin/dashboard/cms/public-pages",
+            icon: Globe,
         },
         {
             title: "Menu Builder",
