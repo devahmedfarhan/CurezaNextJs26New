@@ -14,6 +14,16 @@ class CategoryController extends Controller
         if ($request->has('type')) {
             $query->where('type', $request->type);
         }
+        
+        $query->withCount([
+            'products' => function ($q) {
+                $q->where('status', 'published');
+            },
+            'concernProducts' => function ($q) {
+                $q->where('status', 'published');
+            }
+        ]);
+
         return response()->json($query->orderBy('created_at', 'desc')->get());
     }
 

@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import api from '@/lib/api';
+import { useState } from 'react';
 import Link from 'next/link';
 import { Search, Loader2, ArrowRight, Sparkles, Grid } from 'lucide-react';
+import { useCategories } from '@/contexts/CategoryContext';
 
 interface Category {
     id: number;
@@ -17,20 +17,8 @@ interface Category {
 }
 
 export default function AllCategoriesPage() {
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { categories, isLoading: loading } = useCategories();
     const [searchTerm, setSearchTerm] = useState('');
-
-    useEffect(() => {
-        api.get('/categories?all=true')
-            .then(res => {
-                if (Array.isArray(res.data)) {
-                    setCategories(res.data.filter((c: Category) => c.type === 'category'));
-                }
-            })
-            .catch(err => console.error('Failed to load categories:', err))
-            .finally(() => setLoading(false));
-    }, []);
 
     const getImageUrl = (path?: string) => {
         if (!path) return '/fallback.png';

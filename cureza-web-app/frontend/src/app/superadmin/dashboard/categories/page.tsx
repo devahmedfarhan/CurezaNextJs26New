@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Folder, FolderOpen, Search, X, Loader2, Layers, Database } from 'lucide-react';
+import { Plus, Edit, Trash2, Folder, FolderOpen, Search, X, Loader2, Layers, Database, ArrowUpDown, ChevronUp, ChevronDown } from 'lucide-react';
 import api from '@/lib/api';
 import { useToast } from '@/contexts/ToastContext';
 import { useAuth } from '@/context/AuthContext';
@@ -19,6 +19,7 @@ interface Category {
     bottom_description?: string;
     is_active: boolean;
     products_count?: number;
+    concern_products_count?: number;
     children?: Category[];
 }
 
@@ -42,6 +43,9 @@ export default function AdminCategoriesPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<TabType>('category');
     const [searchQuery, setSearchQuery] = useState('');
+    const [selectedIds, setSelectedIds] = useState<number[]>([]);
+    const [sortField, setSortField] = useState<string>('name');
+    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
     const { showToast } = useToast();
     const { user, isLoading: authLoading } = useAuth();
 
@@ -105,6 +109,12 @@ export default function AdminCategoriesPage() {
             fetchProductsList();
         }
     }, [authLoading, user]);
+
+    useEffect(() => {
+        setSelectedIds([]);
+        setSortField('name');
+        setSortDirection('asc');
+    }, [activeTab]);
 
     const handleInitDB = async () => {
         setIsInitializingDb(true);
@@ -252,6 +262,98 @@ export default function AdminCategoriesPage() {
         }
     };
 
+    const handleBulkDelete = async () => {
+        if (!window.confirm(`Are you sure you want to delete the ${selectedIds.length} selected items?`)) return;
+        setIsLoading(true);
+        try {
+            for (const id of selectedIds) {
+                const url = activeTab === 'collection' ? `/admin/collections/${id}` : `/admin/categories/${id}`;
+                await api.delete(url);
+            }
+            showToast('Selected items deleted successfully', 'success');
+            setSelectedIds([]);
+            fetchCategories();
+        } catch (error) {
+            console.error('Bulk delete failed', error);
+            showToast('Failed to delete some items', 'error');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleBulkStatusChange = async (is_active: boolean) => {
+        setIsLoading(true);
+        try {
+            for (const id of selectedIds) {
+                const item = activeTab === 'collection' 
+                    ? collections.find(c => c.id === id) 
+                    : categories.find(c => c.id === id);
+                if (!item) continue;
+                
+                const url = activeTab === 'collection' ? `/admin/collections/${id}` : `/admin/categories/${id}`;
+                const data = new FormData();
+                data.append('name', item.name);
+                data.append('is_active', is_active ? '1' : '0');
+                data.append('_method', 'PUT');
+                await api.post(url, data);
+            }
+            showToast('Status updated successfully', 'success');
+            setSelectedIds([]);
+            fetchCategories();
+        } catch (error) {
+            console.error('Bulk status update failed', error);
+            showToast('Failed to update status on some items', 'error');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleSort = (field: string) => {
+        if (sortField === field) {
+            setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortField(field);
+            setSortDirection('asc');
+        }
+    };
+
+    const getSortedItems = () => {
+        const sorted = [...filteredItems];
+        
+        sorted.sort((a, b) => {
+            let valA: any = '';
+            let valB: any = '';
+
+            if (sortField === 'name') {
+                valA = a.name.toLowerCase();
+                valB = b.name.toLowerCase();
+            } else if (sortField === 'slug') {
+                valA = a.slug.toLowerCase();
+                valB = b.slug.toLowerCase();
+            } else if (sortField === 'products_count') {
+                if (activeTab === 'collection') {
+                    valA = a.products_count ?? 0;
+                    valB = b.products_count ?? 0;
+                } else if (activeTab === 'category') {
+                    valA = a.products_count ?? 0;
+                    valB = b.products_count ?? 0;
+                } else {
+                    valA = a.concern_products_count ?? 0;
+                    valB = b.concern_products_count ?? 0;
+                }
+            } else if (sortField === 'status') {
+                valA = a.is_active ? 1 : 0;
+                valB = b.is_active ? 1 : 0;
+            }
+
+            if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+            if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+        return sorted;
+    };
+
     return (
         <div className="w-full space-y-6 animate-in fade-in duration-500">
             {/* Header Section */}
@@ -355,94 +457,327 @@ export default function AdminCategoriesPage() {
 
             {/* Grid List with skeleton states */}
             {isLoading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {[1, 2, 3].map((n) => (
-                        <div key={n} className="bg-white dark:bg-gray-900 border-[0.5px] border-black/50 dark:border-gray-800 rounded-[10px] p-5 space-y-4 animate-pulse">
-                            <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 bg-neutral-100 dark:bg-gray-800 rounded-lg" />
-                                <div className="space-y-2 flex-1">
-                                    <div className="h-4 bg-neutral-100 dark:bg-gray-800 rounded-md w-2/3" />
-                                    <div className="h-3 bg-neutral-100 dark:bg-gray-800 rounded-md w-1/3" />
-                                </div>
-                            </div>
-                            <div className="h-10 bg-neutral-100 dark:bg-gray-800 rounded-lg w-full" />
-                        </div>
-                    ))}
+                <div className="bg-white dark:bg-gray-900 border-[0.5px] border-black/50 dark:border-gray-800 rounded-[10px] overflow-hidden shadow-sm">
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
+                            <thead>
+                                <tr className="border-b-[0.5px] border-black/50 bg-neutral-50/50 dark:bg-gray-850/50 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                                    <th className="px-6 py-4 w-12 text-center">
+                                        <div className="w-4 h-4 bg-neutral-100 rounded animate-pulse mx-auto" />
+                                    </th>
+                                    <th className="px-6 py-4">Item Details</th>
+                                    <th className="px-6 py-4">Slug</th>
+                                    {activeTab !== 'collection' && <th className="px-6 py-4">Hierarchy / Group</th>}
+                                    <th className="px-6 py-4">Product Count</th>
+                                    <th className="px-6 py-4">Status</th>
+                                    <th className="px-6 py-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y-[0.5px] divide-black/50 dark:divide-gray-800 text-xs">
+                                {[1, 2, 3, 4, 5].map((n) => (
+                                    <tr key={n} className="animate-pulse">
+                                        <td className="px-6 py-4 text-center">
+                                            <div className="w-4 h-4 bg-neutral-100 dark:bg-gray-800 rounded mx-auto" />
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 rounded-lg bg-neutral-100 dark:bg-gray-850 shrink-0" />
+                                                <div className="space-y-2 flex-1">
+                                                    <div className="h-3.5 bg-neutral-100 dark:bg-gray-800 rounded w-24" />
+                                                    <div className="h-3 bg-neutral-100/60 dark:bg-gray-800/60 rounded w-36" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="h-3 bg-neutral-100 dark:bg-gray-800 rounded w-16" />
+                                        </td>
+                                        {activeTab !== 'collection' && (
+                                            <td className="px-6 py-4">
+                                                <div className="h-3 bg-neutral-100 dark:bg-gray-800 rounded w-28" />
+                                            </td>
+                                        )}
+                                        <td className="px-6 py-4">
+                                            <div className="h-3.5 bg-neutral-100 dark:bg-gray-800 rounded w-12" />
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="w-16 h-5 bg-neutral-100 dark:bg-gray-800 rounded-full" />
+                                        </td>
+                                        <td className="px-6 py-4 text-right">
+                                            <div className="flex gap-2 justify-end">
+                                                <div className="w-6 h-6 bg-neutral-100 dark:bg-gray-800 rounded-lg" />
+                                                <div className="w-6 h-6 bg-neutral-100 dark:bg-gray-800 rounded-lg" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredItems.map((item) => (
-                        <div 
-                            key={item.id} 
-                            className="group bg-white dark:bg-gray-900 border-[0.5px] border-black/50 dark:border-gray-800 rounded-[10px] p-5 hover:border-black dark:hover:border-white transition-all flex flex-col justify-between"
-                        >
-                            <div>
-                                <div className="flex justify-between items-start">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 border-[0.5px] bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white border-black/50">
-                                            {activeTab !== 'collection' && (item as Category).icon ? (
-                                                <span className="text-lg leading-none">{(item as Category).icon}</span>
-                                            ) : (
-                                                <Folder size={18} />
-                                            )}
-                                        </div>
-                                        <div className="min-w-0">
-                                            <h3 className="font-outfit font-bold text-sm text-gray-955 dark:text-gray-100 tracking-tight truncate leading-tight" title={item.name}>
-                                                {item.name}
-                                            </h3>
-                                            <p className="text-[11px] font-semibold text-gray-400 tracking-wider truncate">/{item.slug}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity translate-x-1 group-hover:translate-x-0 transition-transform">
-                                        <button
-                                            onClick={() => handleOpenModal(item)}
-                                            className="p-2 text-gray-400 hover:text-black dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg transition-all"
-                                            title="Edit"
-                                        >
-                                            <Edit size={14} />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(item.id)}
-                                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-955/20 rounded-lg transition-all"
-                                            title="Delete"
-                                        >
-                                            <Trash2 size={14} />
-                                        </button>
-                                    </div>
-                                </div>
-                                {item.description && (
-                                    <p className="mt-3.5 text-xs font-normal text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">
-                                        {item.description}
-                                    </p>
-                                )}
-                            </div>
-                            <div className="mt-5 flex items-center justify-between pt-3.5 border-t-[0.5px] border-black/50 dark:border-gray-800">
-                                <span className={`text-[10px] font-semibold tracking-wider px-2.5 py-0.5 rounded-lg ${
-                                    item.is_active 
-                                        ? 'bg-green-50 dark:bg-green-950/30 text-green-755 dark:text-green-400 border-[0.5px] border-black/50' 
-                                        : 'bg-neutral-100 dark:bg-gray-800 text-gray-500'
-                                }`}>
-                                    {item.is_active ? 'Active' : 'Inactive'}
+                <div className="bg-white dark:bg-gray-900 border-[0.5px] border-black/50 dark:border-gray-800 rounded-[10px] overflow-hidden shadow-sm">
+                    {/* Bulk Actions Bar */}
+                    {selectedIds.length > 0 && (
+                        <div className="bg-[#052326]/5 border-b border-black/50 dark:border-gray-800 px-6 py-3 flex items-center justify-between animate-in slide-in-from-top-2 duration-300">
+                            <div className="flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-[#2E7D32] animate-pulse" />
+                                <span className="text-xs font-bold text-[#052326]">
+                                    {selectedIds.length} items selected
                                 </span>
-                                {activeTab === 'collection' && (
-                                    <span className="text-[11px] font-semibold text-gray-400 tracking-wider">
-                                        {item.products_count ?? 0} Products
-                                    </span>
-                                )}
                             </div>
-                        </div>
-                    ))}
-                    {filteredItems.length === 0 && (
-                        <div className="col-span-full py-20 bg-neutral-50/50 dark:bg-gray-800/20 rounded-[10px] border-[0.5px] border-dashed border-black/50 dark:border-gray-800 flex flex-col items-center justify-center text-center space-y-4">
-                            <div className="w-14 h-14 bg-white dark:bg-gray-900 rounded-lg flex items-center justify-center border-[0.5px] border-black/50 text-gray-250">
-                                <Layers size={24} />
-                            </div>
-                            <div className="space-y-1">
-                                <h3 className="text-base font-semibold text-gray-900 dark:text-white">No items found</h3>
-                                <p className="text-gray-450 text-xs font-normal max-w-xs">There are no matches for "{searchQuery}". Create a new item to populate the database.</p>
+                            <div className="flex items-center gap-3">
+                                <button
+                                    onClick={() => handleBulkStatusChange(true)}
+                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2E7D32]/10 border border-[#2E7D32]/20 hover:bg-[#2E7D32]/25 text-[#2E7D32] rounded-[8px] text-[11px] font-extrabold uppercase transition-colors"
+                                >
+                                    Activate
+                                </button>
+                                <button
+                                    onClick={() => handleBulkStatusChange(false)}
+                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 text-gray-700 rounded-[8px] text-[11px] font-extrabold uppercase transition-colors border border-black/5"
+                                >
+                                    Deactivate
+                                </button>
+                                <button
+                                    onClick={handleBulkDelete}
+                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-[8px] text-[11px] font-extrabold uppercase transition-colors border border-red-200"
+                                >
+                                    Delete
+                                </button>
+                                <button
+                                    onClick={() => setSelectedIds([])}
+                                    className="text-xs text-gray-400 hover:text-gray-650 font-semibold px-2"
+                                >
+                                    Clear Selection
+                                </button>
                             </div>
                         </div>
                     )}
+
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
+                            <thead>
+                                <tr className="border-b-[0.5px] border-black/50 bg-neutral-50/50 dark:bg-gray-850/50 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                                    <th className="px-6 py-4 w-12 text-center">
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedIds.length > 0 && selectedIds.length === filteredItems.length}
+                                            onChange={(e) => {
+                                                if (e.target.checked) {
+                                                    setSelectedIds(filteredItems.map(item => item.id));
+                                                } else {
+                                                    setSelectedIds([]);
+                                                }
+                                            }}
+                                            className="w-4 h-4 rounded-[3px] border-black/50 text-black focus:ring-black/10 cursor-pointer"
+                                        />
+                                    </th>
+                                    <th 
+                                        className="px-6 py-4 cursor-pointer hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50 select-none transition-colors"
+                                        onClick={() => handleSort('name')}
+                                    >
+                                        <div className="flex items-center gap-1.5">
+                                            Item Details
+                                            {sortField === 'name' ? (
+                                                sortDirection === 'asc' ? <ChevronUp size={14} className="text-[#2E7D32]" /> : <ChevronDown size={14} className="text-[#2E7D32]" />
+                                            ) : (
+                                                <ArrowUpDown size={12} className="text-gray-300 hover:text-gray-400" />
+                                            )}
+                                        </div>
+                                    </th>
+                                    <th 
+                                        className="px-6 py-4 cursor-pointer hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50 select-none transition-colors"
+                                        onClick={() => handleSort('slug')}
+                                    >
+                                        <div className="flex items-center gap-1.5">
+                                            Slug
+                                            {sortField === 'slug' ? (
+                                                sortDirection === 'asc' ? <ChevronUp size={14} className="text-[#2E7D32]" /> : <ChevronDown size={14} className="text-[#2E7D32]" />
+                                            ) : (
+                                                <ArrowUpDown size={12} className="text-gray-300 hover:text-gray-400" />
+                                            )}
+                                        </div>
+                                    </th>
+                                    {activeTab !== 'collection' && <th className="px-6 py-4">Hierarchy / Group</th>}
+                                    <th 
+                                        className="px-6 py-4 cursor-pointer hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50 select-none transition-colors"
+                                        onClick={() => handleSort('products_count')}
+                                    >
+                                        <div className="flex items-center gap-1.5">
+                                            Product Count
+                                            {sortField === 'products_count' ? (
+                                                sortDirection === 'asc' ? <ChevronUp size={14} className="text-[#2E7D32]" /> : <ChevronDown size={14} className="text-[#2E7D32]" />
+                                            ) : (
+                                                <ArrowUpDown size={12} className="text-gray-300 hover:text-gray-400" />
+                                            )}
+                                        </div>
+                                    </th>
+                                    <th 
+                                        className="px-6 py-4 cursor-pointer hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50 select-none transition-colors"
+                                        onClick={() => handleSort('status')}
+                                    >
+                                        <div className="flex items-center gap-1.5">
+                                            Status
+                                            {sortField === 'status' ? (
+                                                sortDirection === 'asc' ? <ChevronUp size={14} className="text-[#2E7D32]" /> : <ChevronDown size={14} className="text-[#2E7D32]" />
+                                            ) : (
+                                                <ArrowUpDown size={12} className="text-gray-300 hover:text-gray-400" />
+                                            )}
+                                        </div>
+                                    </th>
+                                    <th className="px-6 py-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y-[0.5px] divide-black/50 dark:divide-gray-800 text-xs">
+                                {getSortedItems().map((item) => {
+                                    const isSelected = selectedIds.includes(item.id);
+                                    const getImageUrl = (path?: string) => {
+                                        if (!path) return '';
+                                        if (path.startsWith('http')) return path;
+                                        const backend = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+                                        return path.startsWith('/') ? `${backend}${path}` : `${backend}/storage/${path}`;
+                                    };
+
+                                    return (
+                                        <tr 
+                                            key={item.id}
+                                            className={`hover:bg-neutral-50/40 dark:hover:bg-gray-850/20 transition-colors ${
+                                                isSelected ? 'bg-neutral-50/50 dark:bg-gray-850/10' : ''
+                                            }`}
+                                        >
+                                            <td className="px-6 py-4 text-center">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={isSelected}
+                                                    onChange={(e) => {
+                                                        if (e.target.checked) {
+                                                            setSelectedIds(prev => [...prev, item.id]);
+                                                        } else {
+                                                            setSelectedIds(prev => prev.filter(id => id !== item.id));
+                                                        }
+                                                    }}
+                                                    className="w-4 h-4 rounded-[3px] border-black/50 text-black focus:ring-black/10 cursor-pointer"
+                                                />
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center gap-3">
+                                                    {item.image ? (
+                                                        <div className="w-10 h-10 rounded-lg overflow-hidden border border-black/8 shrink-0 bg-neutral-100 flex items-center justify-center">
+                                                            <img 
+                                                                src={getImageUrl(item.image)} 
+                                                                alt={item.name} 
+                                                                className="w-full h-full object-cover"
+                                                            />
+                                                        </div>
+                                                    ) : (
+                                                        <div className="w-10 h-10 rounded-lg flex items-center justify-center border border-black/8 bg-neutral-100 dark:bg-neutral-800 text-gray-500 shrink-0">
+                                                            {activeTab !== 'collection' && (item as Category).icon ? (
+                                                                <span className="text-lg">{(item as Category).icon}</span>
+                                                            ) : (
+                                                                <Folder size={16} />
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                    <div>
+                                                        <div className="font-bold text-gray-900 dark:text-white text-xs">{item.name}</div>
+                                                        {item.description && (
+                                                            <div className="text-[11px] text-gray-400 font-light truncate max-w-[240px] mt-0.5" title={item.description}>
+                                                                {item.description}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 font-mono text-[11px] text-gray-400">
+                                                /{item.slug}
+                                            </td>
+                                            {activeTab !== 'collection' && (
+                                                <td className="px-6 py-4">
+                                                    <div className="space-y-1">
+                                                        {(item as Category).parent_id ? (
+                                                            <div className="text-[11px] font-semibold text-gray-550 flex items-center gap-1">
+                                                                <FolderOpen size={10} />
+                                                                Parent ID: {(item as Category).parent_id}
+                                                            </div>
+                                                        ) : (
+                                                            <div className="text-[10px] text-gray-400 font-medium">Top Level</div>
+                                                        )}
+                                                        {(item as Category).mega_menu_section ? (
+                                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[4px] bg-[#2E7D32]/10 border border-[#2E7D32]/20 text-[9px] text-[#2E7D32] font-bold uppercase tracking-wider">
+                                                                Section: {(item as Category).mega_menu_section}
+                                                            </span>
+                                                        ) : (
+                                                            <span className="inline-flex items-center px-2 py-0.5 rounded-[4px] bg-neutral-100 text-[9px] text-gray-400 font-bold uppercase tracking-wider border border-black/5">
+                                                                Ungrouped
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </td>
+                                            )}
+                                            <td className="px-6 py-4">
+                                                {activeTab === 'collection' ? (
+                                                    <span className="text-[11px] font-bold text-gray-500">
+                                                        {item.products_count ?? 0} Products
+                                                    </span>
+                                                ) : activeTab === 'category' ? (
+                                                    <span className="text-[11px] font-bold text-[#2E7D32] bg-[#2E7D32]/5 px-2 py-1 rounded-[6px]">
+                                                        {(item as Category).products_count ?? 0} Products
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2 py-1 rounded-[6px]">
+                                                        {(item as Category).concern_products_count ?? 0} Products
+                                                    </span>
+                                                )}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <button
+                                                    onClick={async () => {
+                                                        try {
+                                                            const url = activeTab === 'collection' ? `/admin/collections/${item.id}` : `/admin/categories/${item.id}`;
+                                                            const data = new FormData();
+                                                            data.append('name', item.name);
+                                                            data.append('is_active', item.is_active ? '0' : '1');
+                                                            data.append('_method', 'PUT');
+                                                            await api.post(url, data);
+                                                            showToast('Status updated successfully', 'success');
+                                                            fetchCategories();
+                                                        } catch (err) {
+                                                            showToast('Failed to update status', 'error');
+                                                        }
+                                                    }}
+                                                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wide border transition-all cursor-pointer ${
+                                                        item.is_active 
+                                                            ? 'bg-green-50/50 border-green-200 text-green-700 hover:bg-green-100/50' 
+                                                            : 'bg-neutral-100 border-neutral-200 text-gray-400 hover:bg-neutral-200'
+                                                    }`}
+                                                >
+                                                    {item.is_active ? 'Active' : 'Inactive'}
+                                                </button>
+                                            </td>
+                                            <td className="px-6 py-4 text-right">
+                                                <div className="flex gap-2 justify-end">
+                                                    <button
+                                                        onClick={() => handleOpenModal(item)}
+                                                        className="p-1.5 text-gray-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 rounded-lg transition-colors cursor-pointer"
+                                                        title="Edit"
+                                                    >
+                                                        <Edit size={13} />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDelete(item.id)}
+                                                        className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                                                        title="Delete"
+                                                    >
+                                                        <Trash2 size={13} />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             )}
 

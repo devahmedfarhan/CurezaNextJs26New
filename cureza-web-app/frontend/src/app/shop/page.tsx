@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import ProductCard from '@/components/product/ProductCard';
 import api from '@/lib/api';
-import { SlidersHorizontal, ChevronDown, Check, X, ShieldAlert } from 'lucide-react';
+import { SlidersHorizontal, ChevronDown, Check, X, ShieldAlert, Loader2 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 
 interface APIProduct {
@@ -206,14 +206,6 @@ function ShopContent() {
     setSortBy('default');
   };
 
-  if (loading) {
-    return (
-      <div className="container mx-auto px-6 py-24 flex justify-center items-center min-h-[50vh]">
-        <div className="animate-spin rounded-full h-10 w-10 border-2 border-[#052326] border-t-transparent"></div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-[#F8F3EF] text-[#052326] py-12 px-6 md:px-12 lg:px-20">
       <div className="container mx-auto">
@@ -386,7 +378,12 @@ function ShopContent() {
 
           {/* CATALOG GRID */}
           <main className="lg:col-span-9">
-            {filteredProducts.length > 0 ? (
+            {loading ? (
+              <div className="flex flex-col items-center justify-center py-24 gap-3">
+                <Loader2 className="animate-spin text-[#2E7D32]" size={36} />
+                <p className="text-xs font-bold uppercase tracking-wider text-[#052326]/50">Loading products...</p>
+              </div>
+            ) : filteredProducts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                 {filteredProducts.map((product) => (
                   <div key={product.id} className="h-full">
