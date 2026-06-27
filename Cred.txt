@@ -17,12 +17,10 @@ Seller / Vendor	seller@cureza.com	password	http://localhost:3000/seller
 12	Green Earth	greenearth@cureza-seller.com	password123
 
 
-open herd  "C:\Program Files\Herd\Herd.exe"
-
-cd d:\Cureza\cureza-web-app\backend
-php artisan serve
+open herd  "C:\Program Files\Herd\Herd.exe" --profile 
 
 cd d:\Cureza\cureza-web-app\frontend
 npm run dev
 
-
+cd d:\Cureza\cureza-web-app\backend
+php artisan serve
