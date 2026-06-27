@@ -184,7 +184,7 @@ export default function DoctorProfilePage() {
     const hasPendingUpdates = !!doctor.pending_updates;
 
     return (
-        <div className="w-full max-w-[98%] mx-auto px-4 py-6 space-y-6">
+        <div className="w-full space-y-6">
 
             {hasPendingUpdates && (
                 <Alert className="bg-yellow-50 border-yellow-200 text-yellow-800">
@@ -260,8 +260,8 @@ export default function DoctorProfilePage() {
             </div>
 
             <Tabs defaultValue="overview" className="w-full">
-                <div className="flex items-center justify-between border-b pb-px">
-                    <TabsList className="w-full justify-start rounded-none border-b bg-transparent p-0">
+                <div className="flex items-center justify-between border-b pb-px overflow-x-auto no-scrollbar">
+                    <TabsList className="w-full justify-start rounded-none bg-transparent p-0 flex flex-row min-w-max border-b-0">
                         <TabsTrigger value="overview" className="relative h-9 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none">Overview</TabsTrigger>
                         <TabsTrigger value="professional" className="relative h-9 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none">Professional</TabsTrigger>
                         <TabsTrigger value="documents" className="relative h-9 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none">Documents</TabsTrigger>

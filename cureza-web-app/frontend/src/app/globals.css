@@ -714,3 +714,59 @@ body {
   border: 1px solid rgba(0, 0, 0, 0.05) !important;
   border-color: rgba(85, 85, 85, 0.18) !important;
 }
+
+/* --- Doctor Dashboard Theme Override --- */
+.doctor-dashboard-theme {
+  --radius-card: 8px !important;
+  --radius-button: 8px !important;
+  --radius: 8px !important;
+  --radius-sm: 8px !important;
+  --radius-md: 8px !important;
+  --radius-lg: 8px !important;
+  --radius-xl: 8px !important;
+  --radius-2xl: 8px !important;
+  --radius-3xl: 8px !important;
+  --radius-4xl: 8px !important;
+}
+
+/* Force border-radius to exactly 8px for non-circular items under doctor dashboard */
+.doctor-dashboard-theme [class*="rounded-"]:not(.rounded-full):not([class*="rounded-full"]),
+.doctor-dashboard-theme .rounded,
+.doctor-dashboard-theme button:not(.rounded-full):not([class*="rounded-full"]),
+.doctor-dashboard-theme input,
+.doctor-dashboard-theme select,
+.doctor-dashboard-theme textarea {
+  border-radius: 8px !important;
+}
+
+/* Force flat card borders and border colors matching user requirements for all cards under doctor dashboard */
+.doctor-dashboard-theme .flat-card,
+.doctor-dashboard-theme .card,
+.doctor-dashboard-theme [class*="bg-white"][class*="border"],
+.doctor-dashboard-theme [class*="bg-card"] {
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  border-color: rgba(85, 85, 85, 0.18) !important;
+}
+
+/* Force all box shadows and drop-shadow filters to be removed under doctor dashboard */
+.doctor-dashboard-theme * {
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+/* Custom scrollbar for doctor dashboard */
+.doctor-dashboard-theme .custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.doctor-dashboard-theme .custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.doctor-dashboard-theme .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+.doctor-dashboard-theme .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+

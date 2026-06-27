@@ -176,7 +176,7 @@ export default function CreatePrescriptionPage() {
     };
 
     return (
-        <div className="max-w-5xl mx-auto pb-10">
+        <div className="w-full pb-10">
             <div className="flex justify-between items-center mb-6">
                 <div>
                     <h1 className="text-base font-bold text-gray-800 tracking-tight">Create Prescription</h1>

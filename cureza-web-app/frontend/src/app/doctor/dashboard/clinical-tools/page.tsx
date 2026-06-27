@@ -48,8 +48,28 @@ function ClinicalToolsContent() {
 
     return (
         <div className="h-[calc(100vh-8rem)] flex flex-col md:flex-row gap-4">
+            {/* Mobile horizontal scroller (Carousel) for calculators */}
+            <div className="md:hidden overflow-x-auto flex pb-2.5 gap-2 snap-x no-scrollbar shrink-0 border-b border-black/[0.03]">
+                {filteredTools.map(tool => {
+                    const isActive = tool.id === activeToolId;
+                    return (
+                        <button
+                            key={tool.id}
+                            onClick={() => router.push(`/doctor/dashboard/clinical-tools?calc=${tool.id}`)}
+                            className={`snap-start shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition-all border ${
+                                isActive 
+                                    ? 'bg-emerald-600 text-white border-emerald-600' 
+                                    : 'bg-white text-gray-500 border-black/[0.08] hover:bg-gray-50'
+                            }`}
+                        >
+                            {tool.name}
+                        </button>
+                    );
+                })}
+            </div>
+
             {/* Sidebar List */}
-            <div className="w-full md:w-80 bg-white rounded-lg border border-black/[0.05] flex flex-col overflow-hidden">
+            <div className="hidden md:flex w-full md:w-80 bg-white rounded-lg border border-black/[0.05] flex-col overflow-hidden">
                 <div className="p-3 border-b border-black/[0.05] bg-gray-50/50">
                     <h2 className="text-[13px] font-bold text-gray-800 flex items-center gap-1.5 mb-2">
                         <Activity size={14} className="text-emerald-600" />

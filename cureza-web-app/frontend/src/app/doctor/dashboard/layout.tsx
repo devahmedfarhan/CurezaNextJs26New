@@ -172,7 +172,7 @@ export default function DoctorDashboardLayout({ children }: { children: React.Re
     );
 
     return (
-        <div className="min-h-screen bg-gray-50/80 flex flex-col md:flex-row">
+        <div className="min-h-screen bg-gray-50/80 flex flex-col md:flex-row doctor-dashboard-theme">
             {/* Mobile Header */}
             <header className="md:hidden bg-white border-b border-black/[0.05] px-4 py-2.5 flex items-center justify-between sticky top-0 z-50">
                 <div className="flex items-center gap-2">
@@ -407,7 +407,7 @@ export default function DoctorDashboardLayout({ children }: { children: React.Re
                     </div>
                 </header>
 
-                <div className="p-4 md:p-6 w-full max-w-7xl mx-auto flex-1">
+                <div className="p-4 md:p-6 w-full flex-1">
                     {user?.doctor_status !== 'approved' ? (
                         <div className="min-h-[80vh] flex flex-col items-center justify-center text-center space-y-5 max-w-xl mx-auto bg-white p-6 rounded-lg border border-black/[0.05] my-4">
                             <div className={`w-16 h-16 rounded-xl flex items-center justify-center ${user?.doctor_status === 'rejected' ? 'bg-red-50 text-red-500' : 'bg-blue-50 text-blue-500'}`}>

@@ -191,7 +191,7 @@ export default function DoctorSettingsPage() {
     const hasPendingUpdates = doctor && !!doctor.pending_updates;
 
     return (
-        <div className="w-full max-w-[98%] mx-auto px-4 py-6 space-y-6">
+        <div className="w-full space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-base font-bold tracking-tight text-gray-800">Settings</h1>
