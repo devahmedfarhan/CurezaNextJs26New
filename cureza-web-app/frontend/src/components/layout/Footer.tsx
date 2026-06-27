@@ -164,7 +164,6 @@ export default function Footer() {
                 <li><Link href="/track-order" className="hover:text-[#F0C417] transition-colors">Track Your Order</Link></li>
                 <li><Link href="/faq" className="hover:text-[#F0C417] transition-colors">Help Center / FAQs</Link></li>
                 <li><Link href="/contact" className="hover:text-[#F0C417] transition-colors">Contact Support</Link></li>
-                <li><Link href="/compare" className="hover:text-[#F0C417] transition-colors">Compare Products</Link></li>
               </ul>
             </div>
 

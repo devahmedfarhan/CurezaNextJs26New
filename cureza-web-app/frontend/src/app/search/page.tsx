@@ -6,7 +6,6 @@ import { useSearchParams } from 'next/navigation';
 import ProductCard from '@/components/product/ProductCard';
 import { useSearchFilters } from '@/hooks/useSearchFilters';
 import api from '@/lib/api';
-import FloatingCompareBar from '@/components/FloatingCompareBar';
 import { Filter, X, Search as SearchIcon } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -182,8 +181,6 @@ function SearchContent() {
                     </div>
                 </div>
             </main>
-
-            <FloatingCompareBar />
         </div>
     );
 }

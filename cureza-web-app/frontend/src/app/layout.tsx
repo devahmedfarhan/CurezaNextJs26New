@@ -8,7 +8,6 @@ import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { ToastProvider } from "@/contexts/ToastContext";
 import { CategoryProvider } from "@/contexts/CategoryContext";
-import FloatingCompareBar from "@/components/FloatingCompareBar";
 import { SWRConfig } from "swr";
 
 const inter = Inter({
@@ -57,7 +56,6 @@ export default function RootLayout({
                       {children}
                     </main>
                     <ConditionalFooter />
-                    <FloatingCompareBar />
                   </CategoryProvider>
                 </ToastProvider>
               </WishlistProvider>

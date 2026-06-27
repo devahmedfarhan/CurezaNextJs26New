@@ -2,11 +2,10 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Heart, Star, Shuffle, ShoppingBag, ShieldAlert } from "lucide-react";
+import { Heart, Star, ShoppingBag, ShieldAlert } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useToast } from "@/contexts/ToastContext";
-import { useCompareStore } from "@/store/useCompareStore";
 import { useAuth } from "@/context/AuthContext";
 
 export default function ProductCard({ product }: any) {
@@ -16,7 +15,6 @@ export default function ProductCard({ product }: any) {
   const { addToCart } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { showToast } = useToast();
-  const { addItem, removeItem, isInCompare } = useCompareStore();
   const { user } = useAuth();
 
   // Normalize data keys (API snake_case vs Mock camelCase)
@@ -118,25 +116,6 @@ export default function ProductCard({ product }: any) {
             <Heart
               size={13}
               className={`transition-colors duration-300 ${isInWishlist(product.id) ? "text-[#D32F2F] fill-[#D32F2F]" : "text-[#052326] group-hover/wishlist:text-[#F8F3EF]"}`}
-            />
-          </button>
-
-          {/* COMPARE BUTTON */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              if (isInCompare(product.id)) {
-                removeItem(product.id);
-              } else {
-                addItem(product);
-              }
-            }}
-            className={`bg-white/95 backdrop-blur-md rounded-[6px] sm:rounded-[8px] p-1.5 sm:p-2 border border-[#052326]/10 shadow-sm hover:bg-[#052326] hover:text-[#F8F3EF] hover:scale-105 transition-all duration-300 group/compare ${isInCompare(product.id) ? 'bg-[#052326] text-[#F8F3EF]' : 'text-[#052326]'}`}
-            title="Compare Product"
-          >
-            <Shuffle
-              size={13}
-              className={`transition-colors duration-300 ${isInCompare(product.id) ? "text-[#F8F3EF]" : "group-hover/compare:text-[#F8F3EF]"}`}
             />
           </button>
         </div>
