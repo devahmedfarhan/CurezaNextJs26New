@@ -12,9 +12,7 @@ class MenuItemController extends Controller
         // Public endpoint: Return active items hierarchically
         return MenuItem::whereNull('parent_id')
             ->where('is_active', true)
-            ->with(['children' => function ($query) {
-                $query->where('is_active', true)->orderBy('order');
-            }])
+            ->with('activeChildren')
             ->orderBy('order')
             ->get();
     }
@@ -107,10 +105,15 @@ class MenuItemController extends Controller
             'items' => 'required|array',
             'items.*.id' => 'required|exists:menu_items,id',
             'items.*.order' => 'required|integer',
+            'items.*.parent_id' => 'nullable|exists:menu_items,id',
         ]);
 
         foreach ($request->items as $item) {
-            MenuItem::where('id', $item['id'])->update(['order' => $item['order']]);
+            $updateData = ['order' => $item['order']];
+            if (array_key_exists('parent_id', $item)) {
+                $updateData['parent_id'] = $item['parent_id'];
+            }
+            MenuItem::where('id', $item['id'])->update($updateData);
         }
 
         MenuItem::writeStaticJson();

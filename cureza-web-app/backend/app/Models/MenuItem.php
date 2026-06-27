@@ -29,7 +29,15 @@ class MenuItem extends Model
 
     public function children()
     {
-        return $this->hasMany(MenuItem::class, 'parent_id')->orderBy('order');
+        return $this->hasMany(MenuItem::class, 'parent_id')->with('children')->orderBy('order');
+    }
+
+    public function activeChildren()
+    {
+        return $this->hasMany(MenuItem::class, 'parent_id')
+            ->where('is_active', true)
+            ->with('activeChildren')
+            ->orderBy('order');
     }
 
     /**
@@ -45,9 +53,7 @@ class MenuItem extends Model
 
             $menuItems = self::whereNull('parent_id')
                 ->where('is_active', true)
-                ->with(['children' => function ($query) {
-                    $query->where('is_active', true)->orderBy('order');
-                }])
+                ->with('activeChildren')
                 ->orderBy('order')
                 ->get();
 

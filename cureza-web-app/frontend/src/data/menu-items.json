@@ -6,107 +6,142 @@
         "parent_id": null,
         "order": 1,
         "is_active": true,
-        "created_at": "2026-06-17T19:26:44.000000Z",
-        "updated_at": "2026-06-17T19:26:44.000000Z",
-        "children": []
+        "created_at": "2026-06-27T12:02:57.000000Z",
+        "updated_at": "2026-06-27T12:02:57.000000Z",
+        "active_children": []
     },
     {
         "id": 2,
-        "title": "New Launches",
-        "url": "\/new-launches",
+        "title": "Shop By Categories",
+        "url": "\/shop",
         "parent_id": null,
         "order": 2,
         "is_active": true,
-        "created_at": "2026-06-17T19:26:44.000000Z",
-        "updated_at": "2026-06-17T19:26:44.000000Z",
-        "children": []
+        "created_at": "2026-06-27T12:02:57.000000Z",
+        "updated_at": "2026-06-27T12:02:57.000000Z",
+        "active_children": []
     },
     {
         "id": 3,
-        "title": "Bestsellers",
-        "url": "\/bestsellers",
+        "title": "Shop By Brand",
+        "url": "\/brands",
         "parent_id": null,
         "order": 3,
         "is_active": true,
-        "created_at": "2026-06-17T19:26:44.000000Z",
-        "updated_at": "2026-06-17T19:26:44.000000Z",
-        "children": []
+        "created_at": "2026-06-27T12:02:57.000000Z",
+        "updated_at": "2026-06-27T12:02:57.000000Z",
+        "active_children": []
     },
     {
         "id": 4,
-        "title": "Ayurveda",
-        "url": "\/category\/ayurveda",
+        "title": "Shop By Concern",
+        "url": "\/concerns",
         "parent_id": null,
         "order": 4,
         "is_active": true,
-        "created_at": "2026-06-17T19:26:44.000000Z",
-        "updated_at": "2026-06-17T19:26:44.000000Z",
-        "children": []
+        "created_at": "2026-06-27T12:02:57.000000Z",
+        "updated_at": "2026-06-27T12:02:57.000000Z",
+        "active_children": []
     },
     {
         "id": 5,
-        "title": "Wellness",
-        "url": "\/category\/wellness",
+        "title": "About Us",
+        "url": "\/about",
         "parent_id": null,
         "order": 5,
         "is_active": true,
-        "created_at": "2026-06-17T19:26:44.000000Z",
-        "updated_at": "2026-06-17T19:26:44.000000Z",
-        "children": []
-    },
-    {
-        "id": 6,
-        "title": "Supplements",
-        "url": "\/category\/supplements",
-        "parent_id": null,
-        "order": 6,
-        "is_active": true,
-        "created_at": "2026-06-17T19:26:44.000000Z",
-        "updated_at": "2026-06-17T19:26:44.000000Z",
-        "children": []
-    },
-    {
-        "id": 7,
-        "title": "Immunity",
-        "url": "\/concern\/immunity",
-        "parent_id": null,
-        "order": 7,
-        "is_active": true,
-        "created_at": "2026-06-17T19:26:44.000000Z",
-        "updated_at": "2026-06-17T19:26:44.000000Z",
-        "children": []
-    },
-    {
-        "id": 8,
-        "title": "Stress & Anxiety",
-        "url": "\/concern\/stress-anxiety",
-        "parent_id": null,
-        "order": 8,
-        "is_active": true,
-        "created_at": "2026-06-17T19:26:44.000000Z",
-        "updated_at": "2026-06-17T19:26:44.000000Z",
-        "children": []
-    },
-    {
-        "id": 9,
-        "title": "Blog",
-        "url": "\/blog",
-        "parent_id": null,
-        "order": 10,
-        "is_active": true,
-        "created_at": "2026-06-17T19:26:44.000000Z",
-        "updated_at": "2026-06-17T19:26:44.000000Z",
-        "children": []
+        "created_at": "2026-06-27T12:02:57.000000Z",
+        "updated_at": "2026-06-27T12:02:57.000000Z",
+        "active_children": [
+            {
+                "id": 6,
+                "title": "Our Story",
+                "url": "\/about",
+                "parent_id": 5,
+                "order": 1,
+                "is_active": true,
+                "created_at": "2026-06-27T12:02:57.000000Z",
+                "updated_at": "2026-06-27T12:02:57.000000Z",
+                "active_children": []
+            },
+            {
+                "id": 7,
+                "title": "Careers",
+                "url": "\/careers",
+                "parent_id": 5,
+                "order": 2,
+                "is_active": true,
+                "created_at": "2026-06-27T12:02:57.000000Z",
+                "updated_at": "2026-06-27T12:02:57.000000Z",
+                "active_children": []
+            },
+            {
+                "id": 8,
+                "title": "Press & Media",
+                "url": "\/press",
+                "parent_id": 5,
+                "order": 3,
+                "is_active": true,
+                "created_at": "2026-06-27T12:02:57.000000Z",
+                "updated_at": "2026-06-27T12:02:57.000000Z",
+                "active_children": []
+            },
+            {
+                "id": 9,
+                "title": "Community Hub",
+                "url": "\/community",
+                "parent_id": 5,
+                "order": 4,
+                "is_active": true,
+                "created_at": "2026-06-27T12:02:57.000000Z",
+                "updated_at": "2026-06-27T12:02:57.000000Z",
+                "active_children": []
+            }
+        ]
     },
     {
         "id": 10,
+        "title": "Knowledge Hub",
+        "url": "\/blog",
+        "parent_id": null,
+        "order": 6,
+        "is_active": true,
+        "created_at": "2026-06-27T12:02:57.000000Z",
+        "updated_at": "2026-06-27T12:02:57.000000Z",
+        "active_children": [
+            {
+                "id": 11,
+                "title": "Wellness Library",
+                "url": "\/blog",
+                "parent_id": 10,
+                "order": 1,
+                "is_active": true,
+                "created_at": "2026-06-27T12:02:57.000000Z",
+                "updated_at": "2026-06-27T12:02:57.000000Z",
+                "active_children": []
+            },
+            {
+                "id": 12,
+                "title": "FAQs",
+                "url": "\/faq",
+                "parent_id": 10,
+                "order": 2,
+                "is_active": true,
+                "created_at": "2026-06-27T12:02:57.000000Z",
+                "updated_at": "2026-06-27T12:02:57.000000Z",
+                "active_children": []
+            }
+        ]
+    },
+    {
+        "id": 13,
         "title": "Offers",
         "url": "\/offers",
         "parent_id": null,
-        "order": 11,
+        "order": 7,
         "is_active": true,
-        "created_at": "2026-06-17T19:26:44.000000Z",
-        "updated_at": "2026-06-17T19:26:44.000000Z",
-        "children": []
+        "created_at": "2026-06-27T12:02:57.000000Z",
+        "updated_at": "2026-06-27T12:02:57.000000Z",
+        "active_children": []
     }
 ]

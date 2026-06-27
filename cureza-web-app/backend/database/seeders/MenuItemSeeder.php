@@ -21,49 +21,91 @@ class MenuItemSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        // 2. New Launches
+        // 2. Shop By Categories (Mega Menu)
         MenuItem::create([
-            'title' => 'New Launches',
-            'url' => '/new-launches',
+            'title' => 'Shop By Categories',
+            'url' => '/shop',
             'order' => 2,
             'is_active' => true,
         ]);
 
-        // 3. Bestsellers
+        // 3. Shop By Brand (Mega Menu)
         MenuItem::create([
-            'title' => 'Bestsellers',
-            'url' => '/bestsellers',
+            'title' => 'Shop By Brand',
+            'url' => '/brands',
             'order' => 3,
             'is_active' => true,
         ]);
 
-        // 4. Categories (Dynamic)
-        $categories = Category::where('type', 'category')->limit(3)->get();
-        foreach ($categories as $index => $category) {
-            MenuItem::create([
-                'title' => $category->name,
-                'url' => "/category/{$category->slug}",
-                'order' => 4 + $index,
-                'is_active' => true,
-            ]);
-        }
-
-        // 5. Concerns (Dynamic)
-        $concerns = Category::where('type', 'concern')->limit(2)->get();
-        foreach ($concerns as $index => $concern) {
-            MenuItem::create([
-                'title' => $concern->name,
-                'url' => "/concern/{$concern->slug}",
-                'order' => 7 + $index,
-                'is_active' => true,
-            ]);
-        }
-
-        // 6. Blog
+        // 4. Shop By Concern (Mega Menu)
         MenuItem::create([
-            'title' => 'Blog',
+            'title' => 'Shop By Concern',
+            'url' => '/concerns',
+            'order' => 4,
+            'is_active' => true,
+        ]);
+
+        // 5. About Us (Dropdown)
+        $aboutUs = MenuItem::create([
+            'title' => 'About Us',
+            'url' => '/about',
+            'order' => 5,
+            'is_active' => true,
+        ]);
+
+        MenuItem::create([
+            'title' => 'Our Story',
+            'url' => '/about',
+            'parent_id' => $aboutUs->id,
+            'order' => 1,
+            'is_active' => true,
+        ]);
+
+        MenuItem::create([
+            'title' => 'Careers',
+            'url' => '/careers',
+            'parent_id' => $aboutUs->id,
+            'order' => 2,
+            'is_active' => true,
+        ]);
+
+        MenuItem::create([
+            'title' => 'Press & Media',
+            'url' => '/press',
+            'parent_id' => $aboutUs->id,
+            'order' => 3,
+            'is_active' => true,
+        ]);
+
+        MenuItem::create([
+            'title' => 'Community Hub',
+            'url' => '/community',
+            'parent_id' => $aboutUs->id,
+            'order' => 4,
+            'is_active' => true,
+        ]);
+
+        // 6. Knowledge Hub (Dropdown)
+        $knowledgeHub = MenuItem::create([
+            'title' => 'Knowledge Hub',
             'url' => '/blog',
-            'order' => 10,
+            'order' => 6,
+            'is_active' => true,
+        ]);
+
+        MenuItem::create([
+            'title' => 'Wellness Library',
+            'url' => '/blog',
+            'parent_id' => $knowledgeHub->id,
+            'order' => 1,
+            'is_active' => true,
+        ]);
+
+        MenuItem::create([
+            'title' => 'FAQs',
+            'url' => '/faq',
+            'parent_id' => $knowledgeHub->id,
+            'order' => 2,
             'is_active' => true,
         ]);
 
@@ -71,8 +113,11 @@ class MenuItemSeeder extends Seeder
         MenuItem::create([
             'title' => 'Offers',
             'url' => '/offers',
-            'order' => 11,
+            'order' => 7,
             'is_active' => true,
         ]);
+
+        // Write static JSON file
+        MenuItem::writeStaticJson();
     }
 }

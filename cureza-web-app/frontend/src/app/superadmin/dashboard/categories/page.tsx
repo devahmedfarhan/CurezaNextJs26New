@@ -20,6 +20,8 @@ interface Category {
     is_active: boolean;
     products_count?: number;
     concern_products_count?: number;
+    show_in_mega_menu?: boolean;
+    mega_menu_section?: string | null;
     children?: Category[];
 }
 
@@ -338,8 +340,8 @@ export default function AdminCategoriesPage() {
                     valA = a.products_count ?? 0;
                     valB = b.products_count ?? 0;
                 } else {
-                    valA = a.concern_products_count ?? 0;
-                    valB = b.concern_products_count ?? 0;
+                    valA = (a as Category).concern_products_count ?? 0;
+                    valB = (b as Category).concern_products_count ?? 0;
                 }
             } else if (sortField === 'status') {
                 valA = a.is_active ? 1 : 0;
