@@ -30,9 +30,27 @@ export default function ShopByTabs() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-6 py-12 md:py-16 text-center text-[#052326]/50 bg-[#F8F3EF]">
-        Loading wellness catalog...
-      </div>
+      <section className="container mx-auto px-6 py-12 md:py-16 bg-[#F8F3EF]">
+        {/* HEADER SKELETON */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6 border-b border-[#052326]/10 pb-6">
+          <div className="animate-pulse space-y-3 flex-1">
+            <div className="h-3.5 bg-[#052326]/5 rounded w-1/4" />
+            <div className="h-8 bg-[#052326]/5 rounded w-1/2" />
+            <div className="h-4 bg-[#052326]/5 rounded w-3/4" />
+          </div>
+          <div className="h-10 bg-[#052326]/5 rounded-[12px] w-48 animate-pulse" />
+        </div>
+        
+        {/* CIRCULAR BADGES SKELETON */}
+        <div className="flex gap-6 overflow-x-auto py-4">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="flex flex-col items-center animate-pulse gap-3 flex-shrink-0 w-[42%] sm:w-[25%] md:w-[18%] lg:w-[15%]">
+              <div className="w-24 h-24 md:w-28 md:h-28 rounded-full bg-[#052326]/5" />
+              <div className="h-4 bg-[#052326]/5 rounded w-2/3" />
+            </div>
+          ))}
+        </div>
+      </section>
     );
   }
 

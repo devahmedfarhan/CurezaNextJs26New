@@ -28,8 +28,36 @@ async function getSettings() {
   };
 }
 
+async function getProducts(params: { category?: string; collection?: string; limit?: number }) {
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000';
+  const query = new URLSearchParams();
+  if (params.limit) query.append('limit', String(params.limit));
+  if (params.category) query.append('category', params.category);
+  if (params.collection) query.append('collection', params.collection);
+
+  try {
+    const res = await fetch(`${backendUrl}/api/products?${query.toString()}`, {
+      next: { revalidate: 300 } // Cache homepage products for 5 minutes
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data)) return data;
+      if (data && Array.isArray(data.data)) return data.data;
+      return [];
+    }
+  } catch (error) {
+    console.error('Failed to fetch homepage products:', error);
+  }
+  return [];
+}
+
 export default async function Home() {
-  const settings = await getSettings();
+  const [settings, newLaunches, specialOffers, bestSellers] = await Promise.all([
+    getSettings(),
+    getProducts({ category: 'latest-launch', limit: 8 }),
+    getProducts({ collection: 'summer-sale', limit: 8 }),
+    getProducts({ limit: 8 })
+  ]);
   const sectionOrder = (settings.homepage_section_order || 'hero,stats,purpose,partners,consultation,testimonials,marquee').split(',');
 
   return (
@@ -76,6 +104,7 @@ export default async function Home() {
           subtitle="Exclusive new arrivals added this week"
           columns={4}
           categorySlug="latest-launch"
+          products={newLaunches}
         />
       </div>
 
@@ -87,6 +116,7 @@ export default async function Home() {
           collectionSlug="summer-sale"
           columns={4}
           layout="carousel"
+          products={specialOffers}
         />
       </div>
 
@@ -98,6 +128,7 @@ export default async function Home() {
           layout="grid"
           columns={4}
           limit={8}
+          products={bestSellers}
         />
       </div>
 

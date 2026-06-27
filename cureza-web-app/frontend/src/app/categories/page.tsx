@@ -67,9 +67,27 @@ export default function AllCategoriesPage() {
             {/* Grid display of category cards */}
             <div className="container mx-auto px-6 py-12">
                 {loading ? (
-                    <div className="flex flex-col items-center justify-center py-24 gap-3">
-                        <Loader2 className="animate-spin text-[#2E7D32]" size={36} />
-                        <p className="text-xs font-bold uppercase tracking-wider text-[#052326]/50">Loading categories...</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        {Array.from({ length: 8 }).map((_, i) => (
+                            <div key={i} className="bg-white rounded-2xl p-6 flex flex-col justify-between border border-[#052326]/8 animate-pulse min-h-[220px]">
+                                <div>
+                                    {/* Icon / Image circle skeleton */}
+                                    <div className="w-16 h-16 rounded-2xl bg-[#052326]/5 mb-5" />
+                                    {/* Category Title skeleton */}
+                                    <div className="h-5 bg-[#052326]/5 rounded w-1/2 mb-3" />
+                                    {/* Description skeleton */}
+                                    <div className="space-y-2 mb-4">
+                                        <div className="h-3 bg-[#052326]/5 rounded w-full" />
+                                        <div className="h-3 bg-[#052326]/5 rounded w-3/4" />
+                                    </div>
+                                </div>
+                                {/* Footer row skeleton */}
+                                <div className="flex justify-between items-center border-t border-[#052326]/5 pt-4 mt-auto">
+                                    <div className="h-5 bg-[#052326]/5 rounded-full w-20" />
+                                    <div className="h-4 bg-[#052326]/5 rounded w-12" />
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 ) : filteredCategories.length === 0 ? (
                     <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-[#052326]/15 p-8 max-w-md mx-auto">

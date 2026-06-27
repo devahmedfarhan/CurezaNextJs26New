@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import ProductCard from './ProductCard';
+import ProductCardSkeleton from './ProductCardSkeleton';
 import axios from 'axios';
 
 interface ProductGridProps {
@@ -167,18 +168,7 @@ export default function ProductGrid({
         {loading ? (
           <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ${getGridCols()} gap-8`}>
             {Array.from({ length: limit }).map((_, i) => (
-              <div key={i} className="animate-pulse bg-white border border-[#052326]/10 rounded-[14px] p-4 flex flex-col justify-between h-[420px]">
-                <div className="rounded-[10px] bg-[#052326]/5 aspect-[4/5] w-full" />
-                <div className="space-y-3 mt-4 flex-1">
-                  <div className="h-3.5 bg-[#052326]/5 rounded w-1/3" />
-                  <div className="h-4 bg-[#052326]/5 rounded w-3/4" />
-                  <div className="h-3 bg-[#052326]/5 rounded w-full" />
-                </div>
-                <div className="flex justify-between items-center mt-4 pt-3 border-t border-[#052326]/5">
-                  <div className="h-6 bg-[#052326]/5 rounded w-1/4" />
-                  <div className="h-10 bg-[#052326]/5 rounded w-1/2" />
-                </div>
-              </div>
+              <ProductCardSkeleton key={i} />
             ))}
           </div>
         ) : layout === 'grid' ? (

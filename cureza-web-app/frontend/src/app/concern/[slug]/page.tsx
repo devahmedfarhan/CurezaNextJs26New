@@ -5,7 +5,7 @@ async function getConcern(slug: string) {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000';
     try {
         const res = await fetch(`${backendUrl}/api/categories?type=concern`, {
-            cache: 'no-store'
+            next: { revalidate: 300 }
         });
 
         if (!res.ok) {
@@ -110,7 +110,7 @@ export default async function ConcernPage({ params }: { params: Promise<{ slug: 
 async function ProductGrid({ concernSlug }: { concernSlug: string }) {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000';
     try {
-        const res = await fetch(`${backendUrl}/api/products?concern=${concernSlug}`, { cache: 'no-store' });
+        const res = await fetch(`${backendUrl}/api/products?concern=${concernSlug}`, { next: { revalidate: 300 } });
         if (!res.ok) throw new Error('Failed to fetch products');
         const products = await res.json();
 

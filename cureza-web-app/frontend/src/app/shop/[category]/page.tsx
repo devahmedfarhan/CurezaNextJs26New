@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import ProductCard from '@/components/product/ProductCard';
+import ProductCardSkeleton from '@/components/product/ProductCardSkeleton';
 import api from '@/lib/api';
 import { ShieldAlert, X, SlidersHorizontal } from 'lucide-react';
 
@@ -118,13 +119,6 @@ export default function CategoryPage() {
     setSortBy('default');
   };
 
-  if (loading) {
-    return (
-      <div className="container mx-auto px-6 py-24 flex justify-center items-center min-h-[50vh]">
-        <div className="animate-spin rounded-full h-10 w-10 border-2 border-[#052326] border-t-transparent"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-[#F8F3EF] text-[#052326] py-12 px-6 md:px-12 lg:px-20">
@@ -254,7 +248,13 @@ export default function CategoryPage() {
 
           {/* PRODUCT CATALOG */}
           <main className="lg:col-span-9">
-            {filteredProducts.length > 0 ? (
+            {loading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <ProductCardSkeleton key={i} />
+                ))}
+              </div>
+            ) : filteredProducts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                 {filteredProducts.map((product) => (
                   <div key={product.id} className="h-full">

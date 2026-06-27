@@ -16,7 +16,7 @@ export default async function ProductPage({ params }: { params: Promise<{ catego
     try {
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000';
         const res = await fetch(`${backendUrl}/api/products/${slug}`, {
-            cache: 'no-store'
+            next: { revalidate: 300 }
         });
         if (res.ok) {
             const apiData = await res.json();

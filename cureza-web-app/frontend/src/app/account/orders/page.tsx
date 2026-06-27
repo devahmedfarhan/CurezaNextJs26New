@@ -25,7 +25,38 @@ export default function OrdersPage() {
     };
 
     if (isLoading) {
-        return <div className="p-8 text-center">Loading orders...</div>;
+        return (
+            <div className="container mx-auto px-4 py-8">
+                <div className="space-y-6">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 animate-pulse">
+                        <div className="h-8 bg-gray-200 dark:bg-gray-800 rounded w-48" />
+                        <div className="flex gap-2 w-full sm:w-auto">
+                            <div className="h-10 bg-gray-200 dark:bg-gray-800 rounded w-48" />
+                            <div className="h-10 bg-gray-200 dark:bg-gray-800 rounded w-24" />
+                        </div>
+                    </div>
+                    <div className="space-y-4">
+                        {Array.from({ length: 3 }).map((_, i) => (
+                            <div key={i} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden animate-pulse p-6 flex flex-col md:flex-row gap-6">
+                                <div className="w-20 h-20 bg-gray-200 dark:bg-gray-800 rounded-lg flex-shrink-0" />
+                                <div className="flex-1 space-y-3">
+                                    <div className="flex justify-between items-center">
+                                        <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-1/3" />
+                                        <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded-full w-20" />
+                                    </div>
+                                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-1/4" />
+                                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-1/6" />
+                                </div>
+                                <div className="flex flex-row md:flex-col justify-between items-end min-w-[120px] gap-2">
+                                    <div className="h-7 bg-gray-200 dark:bg-gray-800 rounded w-16" />
+                                    <div className="h-5 bg-gray-200 dark:bg-gray-800 rounded w-24" />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     return (

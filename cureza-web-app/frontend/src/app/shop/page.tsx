@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import ProductCard from '@/components/product/ProductCard';
+import ProductCardSkeleton from '@/components/product/ProductCardSkeleton';
 import api from '@/lib/api';
 import { SlidersHorizontal, ChevronDown, Check, X, ShieldAlert, Loader2 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
@@ -379,9 +380,10 @@ function ShopContent() {
           {/* CATALOG GRID */}
           <main className="lg:col-span-9">
             {loading ? (
-              <div className="flex flex-col items-center justify-center py-24 gap-3">
-                <Loader2 className="animate-spin text-[#2E7D32]" size={36} />
-                <p className="text-xs font-bold uppercase tracking-wider text-[#052326]/50">Loading products...</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <ProductCardSkeleton key={i} />
+                ))}
               </div>
             ) : filteredProducts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
