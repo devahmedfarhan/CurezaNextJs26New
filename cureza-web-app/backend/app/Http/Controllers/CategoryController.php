@@ -134,7 +134,7 @@ class CategoryController extends Controller
     public function publicIndex(Request $request)
     {
         $type = $request->input('type', 'all');
-        $all = filter_var($request->input('all', false), FILTER_VALIDATE_BOOLEAN) || auth('sanctum')->check();
+        $all = filter_var($request->input('all', false), FILTER_VALIDATE_BOOLEAN);
 
         if ($all) {
             $query = Category::where('is_active', true);

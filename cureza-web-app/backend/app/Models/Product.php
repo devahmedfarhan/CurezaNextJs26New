@@ -99,10 +99,16 @@ class Product extends Model
 
         static::saved(function ($product) {
             \Illuminate\Support\Facades\Cache::forget('products_latest_3');
+            \Illuminate\Support\Facades\Cache::forget('public_categories_all');
+            \Illuminate\Support\Facades\Cache::forget('public_categories_category');
+            \Illuminate\Support\Facades\Cache::forget('public_categories_concern');
         });
 
         static::deleted(function ($product) {
             \Illuminate\Support\Facades\Cache::forget('products_latest_3');
+            \Illuminate\Support\Facades\Cache::forget('public_categories_all');
+            \Illuminate\Support\Facades\Cache::forget('public_categories_category');
+            \Illuminate\Support\Facades\Cache::forget('public_categories_concern');
         });
     }
 

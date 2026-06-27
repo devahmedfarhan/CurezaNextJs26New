@@ -13,9 +13,19 @@ export interface Category {
     is_active: boolean;
 }
 
+export interface Collection {
+    id: number;
+    name: string;
+    slug: string;
+    description?: string;
+    image?: string;
+    is_active: boolean;
+}
+
 interface CategoryContextType {
     categories: Category[];
     concerns: Category[];
+    collections: Collection[];
     refreshCategories: () => Promise<void>;
     isLoading: boolean;
 }
@@ -25,21 +35,30 @@ const CategoryContext = createContext<CategoryContextType | undefined>(undefined
 export function CategoryProvider({ children }: { children: ReactNode }) {
     const [categories, setCategories] = useState<Category[]>([]);
     const [concerns, setConcerns] = useState<Category[]>([]);
+    const [collections, setCollections] = useState<Collection[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     const fetchCategories = async () => {
-        console.log('CategoryContext: Fetching categories...');
+        console.log('CategoryContext: Fetching categories & collections...');
+        setIsLoading(true);
         try {
-            const response = await api.get('/categories');
-            console.log('CategoryContext: Fetched successfully', response.data);
-            const all = response.data;
+            const categoriesRes = await api.get('/categories');
+            console.log('CategoryContext: Categories fetched successfully', categoriesRes.data);
+            const all = categoriesRes.data;
             setCategories(all.filter((c: Category) => c.type === 'category'));
             setConcerns(all.filter((c: Category) => c.type === 'concern'));
         } catch (error) {
             console.error('CategoryContext: Failed to fetch categories', error);
-        } finally {
-            setIsLoading(false);
         }
+
+        try {
+            const collectionsRes = await api.get('/collections');
+            console.log('CategoryContext: Collections fetched successfully', collectionsRes.data);
+            setCollections(collectionsRes.data);
+        } catch (error) {
+            console.error('CategoryContext: Failed to fetch collections', error);
+        }
+        setIsLoading(false);
     };
 
     useEffect(() => {
@@ -47,7 +66,7 @@ export function CategoryProvider({ children }: { children: ReactNode }) {
     }, []);
 
     return (
-        <CategoryContext.Provider value={{ categories, concerns, refreshCategories: fetchCategories, isLoading }}>
+        <CategoryContext.Provider value={{ categories, concerns, collections, refreshCategories: fetchCategories, isLoading }}>
             {children}
         </CategoryContext.Provider>
     );

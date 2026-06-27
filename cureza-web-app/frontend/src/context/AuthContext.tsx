@@ -20,6 +20,15 @@ interface User {
     profile_image_url?: string;
     permissions?: string[];
     admin_role_id?: number;
+    date_of_birth?: string;
+    gender?: string;
+    address?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    postal_code?: string;
+    gst_number?: string;
+    company_name?: string;
 }
 
 interface AuthContextType {

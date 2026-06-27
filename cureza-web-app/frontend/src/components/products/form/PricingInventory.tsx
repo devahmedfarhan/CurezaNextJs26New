@@ -10,6 +10,7 @@ interface PricingInventoryProps {
     formData: any;
     handleInputChange: (e: any) => void;
     isSuperAdmin?: boolean;
+    pendingTaxRequest?: any;
 }
 
 export default function PricingInventory({ formData, handleInputChange, isSuperAdmin }: PricingInventoryProps) {

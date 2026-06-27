@@ -22,6 +22,21 @@ export default function Navbar() {
   const hasCategory = (slug: string) => categories.some((c) => c.slug === slug);
   const [activeBrands, setActiveBrands] = useState<string[]>([]);
 
+  // Group concerns logically for the Concern Mega Menu
+  const getGroupedConcerns = () => {
+    const mentalSlugs = ['anxiety-stress', 'stress-anxiety', 'depression-mood-disorders', 'insomnia-sleep-disorders', 'sleep-disorders', 'adhd-cognitive-focus', 'de-addiction-detox', 'addiction-detox', 'mental-health'];
+    const physicalSlugs = ['chronic-pain', 'pain-relief', 'arthritis-joint-pain', 'back-pain-muscle-spasms', 'migraines-headaches', 'headaches-migraines', 'cancer-support-palliative-care', 'palliative-care', 'injury-recovery'];
+
+    const mental = concerns.filter(c => mentalSlugs.some(s => c.slug.includes(s) || s.includes(c.slug)));
+    const physical = concerns.filter(c => physicalSlugs.some(s => c.slug.includes(s) || s.includes(c.slug)));
+    const general = concerns.filter(c => !mental.some(m => m.id === c.id) && !physical.some(p => p.id === c.id));
+
+    return { mental, physical, general };
+  };
+
+  const groupedConcerns = getGroupedConcerns();
+
+
   useEffect(() => {
     api.get('/brands')
       .then((res) => {
@@ -285,94 +300,79 @@ export default function Navbar() {
         <div className="hidden md:block border-t border-[#052326]/5 bg-white relative">
           <div className="container mx-auto px-6 flex justify-center">
             <nav>
-              <ul className="flex items-center gap-10 text-[12px] font-black tracking-wider uppercase py-3.5 text-[#052326]/90 relative">
+              <ul className="flex items-center gap-10 text-[12px] font-bold tracking-wide py-3.5 text-[#052326]/90 relative">
                 
                 {/* 1. SHOP BY CATEGORIES (MEGA MENU) */}
                 <li className="group">
-                  <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold pb-2">
+                  <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold pb-2 capitalize">
                     Shop By Categories <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                   </button>
                   
-                  {/* Visual Split Dropdown Panel Wrapper */}
-                  <div className="absolute left-1/2 -translate-x-1/2 top-[70%] mt-0 pt-0.5 w-[1160px] opacity-0 translate-y-3 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 ease-out z-50">
-                    <div className="bg-white/95 backdrop-blur-xl border border-[#052326]/8 shadow-[0_25px_60px_rgba(5,35,38,0.15)] rounded-2xl flex overflow-hidden">
+                  {/* Visual Dropdown Panel Wrapper */}
+                  <div className="absolute left-1/2 -translate-x-1/2 top-[100%] mt-0 pt-3 w-[1200px] opacity-0 scale-95 translate-y-4 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) z-50">
+                    <div className="bg-white/98 backdrop-blur-xl border border-[#052326]/8 shadow-[0_20px_50px_rgba(5,35,38,0.08)] rounded-[10px] p-6 flex gap-6 z-50">
                       
-                      {/* Left Sidebar - Branding & Featured Spot */}
-                      <div className="w-[320px] bg-[#052326] text-white p-8 flex flex-col justify-between relative overflow-hidden shrink-0 border-r border-[#052326]/10">
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(46,125,50,0.25),transparent_70%)] pointer-events-none" />
-                        <div className="relative z-10">
-                          <span className="text-[9px] tracking-widest font-black text-[#F0C417] uppercase block mb-1">Cureza Wellness</span>
-                          <h3 className="font-bold text-lg leading-tight font-heading">Explore Natural Healing</h3>
-                          <p className="text-[11px] text-white/70 font-medium mt-2 leading-relaxed">
-                            Discover our clinically-assessed medical cannabis selections, pure organic CBD extracts, holistic Ayurveda formulations, and high-potency adaptogenic fungi.
-                          </p>
-                        </div>
-                        
-                        <div className="relative z-10 mt-8 space-y-4">
-                          <div className="p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-colors duration-200">
-                            <h5 className="text-[10px] font-black text-[#F0C417] uppercase tracking-wider flex items-center gap-1">
-                              <ShieldAlert size={12} /> Prescription Required?
-                            </h5>
-                            <p className="text-[10px] text-white/60 mt-1 leading-relaxed">Certain formulations require doctor approval. Get certified prescriptions via our consultation portal.</p>
-                          </div>
-                          <Link href="/consultation" className="block text-center bg-[#F0C417] text-[#052326] text-[10.5px] font-black uppercase py-3 rounded-xl hover:bg-white hover:text-[#052326] transition-all duration-300 shadow-md">
-                            Book Consultation
-                          </Link>
-                        </div>
-                      </div>
-
-                      {/* Right Panel - Category Link Grids */}
-                      <div className="flex-1 p-8 grid grid-cols-4 gap-8 bg-white/40">
+                      {/* Left 4 Columns of Category Link Grids */}
+                      <div className="flex-1 grid grid-cols-4 gap-6">
                         
                         {/* Col 1: Medical Cannabis (THC) */}
-                        <div className="flex flex-col gap-4">
-                          <h4 className="font-extrabold text-[11px] tracking-widest text-[#052326] border-b border-[#052326]/5 pb-2.5 flex items-center gap-1.5 uppercase">
+                        <div className="flex flex-col gap-2.5">
+                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
                             <ShieldAlert size={14} className="text-[#2E7D32]" /> Medical Cannabis THC
                           </h4>
-                          <ul className="space-y-1.5 text-[11.5px] font-bold normal-case text-[#052326]/75">
-                            <li>
-                              <Link href="/shop?requireRx=true" className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                All Medical Cannabis (with THC)
-                              </Link>
-                            </li>
+                          <ul className="space-y-0.5 text-[#052326]/75">
                             {hasCategory('thc-oils') && (
                               <li>
-                                <Link href="/shop?category=thc-oils&requireRx=true" className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                  THC Dominant Products
-                                </Link>
-                              </li>
-                            )}
-                            {hasCategory('cbd-oils-tinctures') && (
-                              <li>
-                                <Link href="/shop?category=cbd-oils-tinctures&requireRx=true" className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                  Medical Cannabis Oils
+                                <Link href="/shop?category=thc-oils&requireRx=true" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">All Medical Cannabis (with THC)</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
                             )}
                             {hasCategory('thc-oils') && (
                               <li>
-                                <Link href="/shop?category=thc-oils&requireRx=true" className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                  Pure THC Extracts
+                                <Link href="/shop?category=thc-oils" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">THC Oils & Drops</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
                             )}
-                            {hasCategory('gummies-edibles') && (
+                            {hasCategory('classical-ayurvedic-medicines') && (
                               <li>
-                                <Link href="/shop?category=gummies-edibles&requireRx=true" className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                  THC Gummies
+                                <Link href="/shop?category=classical-ayurvedic-medicines" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Classical Ayurvedic Medicines</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                </Link>
+                              </li>
+                            )}
+                            {hasCategory('capsules-tablets') && (
+                              <li>
+                                <Link href="/shop?category=capsules-tablets&requireRx=true" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Full Spectrum Capsules (Rx)</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
                             )}
                             {hasCategory('vapes-inhalables') && (
                               <li>
-                                <Link href="/shop?category=vapes-inhalables&requireRx=true" className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                  Dhumra Yoga Smoke
+                                <Link href="/shop?category=vapes-inhalables" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Vapes & Inhalables</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
                             )}
@@ -380,46 +380,74 @@ export default function Navbar() {
                         </div>
 
                         {/* Col 2: CBD Oil Products */}
-                        <div className="flex flex-col gap-4">
-                          <h4 className="font-extrabold text-[11px] tracking-widest text-[#052326] border-b border-[#052326]/5 pb-2.5 flex items-center gap-1.5 uppercase">
-                            <Leaf size={14} className="text-[#2E7D32]" /> CBD Oil Products
+                        <div className="flex flex-col gap-2.5">
+                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
+                            <Leaf size={14} className="text-[#2E7D32]" /> CBD & Hemp Products
                           </h4>
-                          <ul className="space-y-1.5 text-[11.5px] font-bold normal-case text-[#052326]/75">
-                            <li>
-                              <Link href="/shop?requireRx=false" className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                All CBD Oil Products
-                              </Link>
-                            </li>
+                          <ul className="space-y-0.5 text-[#052326]/75">
                             {hasCategory('cbd-oils-tinctures') && (
                               <li>
-                                <Link href="/shop?category=cbd-oils-tinctures&requireRx=false" className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                  CBD Oil Tinctures
+                                <Link href="/shop?category=cbd-oils-tinctures" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">All CBD Oils & Extracts</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
                             )}
-                            {hasCategory('combo-packs-kits') && (
+                            {hasCategory('cbd-oils-tinctures') && (
                               <li>
-                                <Link href="/shop?category=combo-packs-kits&requireRx=false" className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                  Pure CBD Oil Bundles
+                                <Link href="/shop?category=cbd-oils-tinctures" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">CBD Oils & Tinctures</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
                             )}
                             {hasCategory('gummies-edibles') && (
                               <li>
-                                <Link href="/shop?category=gummies-edibles&requireRx=false" className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                  CBD Gummies & Edibles
+                                <Link href="/shop?category=gummies-edibles" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">CBD Gummies & Edibles</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                </Link>
+                              </li>
+                            )}
+                            {hasCategory('capsules-tablets') && (
+                              <li>
+                                <Link href="/shop?category=capsules-tablets&requireRx=false" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">CBD Capsules & Softgels</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                </Link>
+                              </li>
+                            )}
+                            {hasCategory('topicals-roll-ons') && (
+                              <li>
+                                <Link href="/shop?category=topicals-roll-ons" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">CBD Topicals & Roll-Ons</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
                             )}
                             {hasCategory('pet-care') && (
                               <li>
-                                <Link href="/shop?category=pet-care&requireRx=false" className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                  CBD Oil for Pets
+                                <Link href="/shop?category=pet-care" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">CBD Oil for Pets</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
                             )}
@@ -427,73 +455,116 @@ export default function Navbar() {
                         </div>
 
                         {/* Col 3: Herbal & Ayurveda */}
-                        <div className="flex flex-col gap-4">
-                          <h4 className="font-extrabold text-[11px] tracking-widest text-[#052326] border-b border-[#052326]/5 pb-2.5 flex items-center gap-1.5 uppercase">
+                        <div className="flex flex-col gap-2.5">
+                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
                             <Activity size={14} className="text-[#2E7D32]" /> Herbal & Ayurveda
                           </h4>
-                          <ul className="space-y-1.5 text-[11.5px] font-bold normal-case text-[#052326]/75">
+                          <ul className="space-y-0.5 text-[#052326]/75">
+                            {hasCategory('herbal-ayurveda') && (
+                              <li>
+                                <Link href="/shop?category=herbal-ayurveda" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">All Herbal & Ayurveda</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                </Link>
+                              </li>
+                            )}
                             {hasCategory('ayurveda') && (
                               <li>
-                                <Link href="/shop?category=ayurveda" className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                  Ayurvedic Remedies
+                                <Link href="/shop?category=ayurveda" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Ayurvedic Remedies</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
                             )}
-                            {hasCategory('wellness') && (
+                            {hasCategory('organic-groceries-pantry') && (
                               <li>
-                                <Link href="/shop?category=wellness" className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                  Herbal Wellness
-                                </Link>
-                              </li>
-                            )}
-                            {hasCategory('tea-beverages') && (
-                              <li>
-                                <Link href="/shop?category=tea-beverages" className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                  Infusion & Herbal Teas
+                                <Link href="/shop?category=organic-groceries-pantry" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Organic Groceries & Pantry</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
                             )}
                             {hasCategory('aromatherapy-essential-oils') && (
                               <li>
-                                <Link href="/shop?category=aromatherapy-essential-oils" className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                  Essential Oils
+                                <Link href="/shop?category=aromatherapy-essential-oils" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Aromatherapy & Essential Oils</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
                             )}
                           </ul>
                         </div>
 
-                        {/* Col 4: Fungi & Mushrooms */}
-                        <div className="flex flex-col gap-4">
-                          <h4 className="font-extrabold text-[11px] tracking-widest text-[#052326] border-b border-[#052326]/5 pb-2.5 flex items-center gap-1.5 uppercase">
-                            <Brain size={14} className="text-[#2E7D32]" /> Fungi / Mushrooms
+                        {/* Col 4: Supplements & Wellness */}
+                        <div className="flex flex-col gap-2.5">
+                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
+                            <Brain size={14} className="text-[#2E7D32]" /> Supplements & Wellness
                           </h4>
-                          <ul className="space-y-1.5 text-[11.5px] font-bold normal-case text-[#052326]/75">
-                            {hasCategory('supplements') && (
+                          <ul className="space-y-0.5 text-[#052326]/75">
+                            {hasCategory('supplements-vitamins') && (
                               <li>
-                                <Link href="/shop?category=supplements" className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                  Adaptogen Supplements
+                                <Link href="/shop?category=supplements-vitamins" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">All Supplements & Vitamins</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
                             )}
-                            {hasCategory('supplements') && (
+                            {hasCategory('single-herb-supplements') && (
                               <li>
-                                <Link href="/shop?category=supplements" className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                  Lions Mane & Reishi
+                                <Link href="/shop?category=single-herb-supplements" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Single Herb Supplements</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
                             )}
-                            {hasCategory('tea-beverages') && (
+                            {hasCategory('combo-packs-kits') && (
                               <li>
-                                <Link href="/shop?category=tea-beverages" className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                  Fungi Drinks & Tea
+                                <Link href="/shop?category=combo-packs-kits" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Combo Packs & Kits</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                </Link>
+                              </li>
+                            )}
+                            {hasCategory('intimate-wellness') && (
+                              <li>
+                                <Link href="/shop?category=intimate-wellness" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Intimate & Sexual Wellness</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                </Link>
+                              </li>
+                            )}
+                            {hasCategory('skincare') && (
+                              <li>
+                                <Link href="/shop?category=skincare" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Skincare & Beauty</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
                             )}
@@ -501,51 +572,63 @@ export default function Navbar() {
                         </div>
 
                       </div>
+
+                      {/* Right Panel - Branding & Featured Spot */}   
+                      <div className="w-[280px] bg-gradient-to-br from-[#052326]/5 via-[#083a3f]/8 to-[#0c4d53]/10 border border-[#052326]/8 p-6 flex flex-col justify-between relative overflow-hidden shrink-0 rounded-[8px]">
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(46,125,50,0.06),transparent_70%)] pointer-events-none" />
+                        <div className="relative z-10">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#2E7D32]/10 border border-[#2E7D32]/25 text-[9px] tracking-[0.15em] font-extrabold text-[#2E7D32] capitalize block mb-1">
+                            Cureza Wellness
+                          </span>
+                          <h3 className="font-heading font-bold text-[15px] tracking-tight text-[#052326] leading-tight mt-3">Explore Natural Healing</h3>
+                          <p className="text-[11px] text-[#052326]/80 mt-2 leading-relaxed font-normal">
+                            Discover our clinically-assessed medical cannabis selections, pure organic CBD extracts, holistic Ayurveda formulations, and high-potency adaptogens.
+                          </p>
+                        </div>
+                        
+                        <div className="relative z-10 mt-6 p-4 bg-white/60 backdrop-blur-md border border-[#052326]/8 rounded-[8px] group/card hover:bg-white/80 transition-all duration-300">
+                          <h5 className="text-[10px] font-bold text-[#2E7D32] capitalize tracking-wide flex items-center gap-1.5">
+                            <ShieldAlert size={12} className="text-[#2E7D32]" /> Prescription Required?
+                          </h5>
+                          <p className="text-[10px] text-[#052326]/70 mt-1 leading-relaxed font-medium">Certain formulations require doctor approval. Get certified prescriptions via our consultation portal.</p>
+                          <Link href="/consultation" className="relative mt-3.5 flex items-center justify-center gap-2 bg-[#2E7D32] text-white text-[11px] font-bold uppercase py-2.5 rounded-[8px] transition-all duration-300 shadow-[0_4px_12px_rgba(46,125,50,0.15)] hover:bg-[#225c25] hover:shadow-[0_4px_16px_rgba(46,125,50,0.25)] hover:-translate-y-0.5 tracking-wider w-full">
+                            <span>Book Consultation</span>
+                            <Sparkles size={12} className="animate-pulse" />
+                          </Link>
+                        </div>
+                      </div>
+
                     </div>
                   </div>
                 </li>
 
                 {/* 2. SHOP BY BRAND (MEGA MENU) */}
                 <li className="group">
-                  <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold pb-2">
+                  <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold pb-2 capitalize">
                     Shop By Brand <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                   </button>
 
                   {/* Mega Menu Dropdown Wrapper */}
-                  <div className="absolute left-1/2 -translate-x-1/2 top-[70%] mt-0 pt-0.5 w-[980px] opacity-0 translate-y-3 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 ease-out z-50">
-                    <div className="bg-white/95 backdrop-blur-xl border border-[#052326]/8 shadow-[0_25px_60px_rgba(5,35,38,0.15)] rounded-2xl flex overflow-hidden">
+                  <div className="absolute left-1/2 -translate-x-1/2 top-[100%] mt-0 pt-3 w-[1000px] opacity-0 scale-95 translate-y-4 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) z-50">
+                    <div className="bg-white/98 backdrop-blur-xl border border-[#052326]/8 shadow-[0_20px_50px_rgba(5,35,38,0.08)] rounded-[10px] p-6 flex gap-6 z-50">
                       
-                      {/* Left Sidebar - Brand Spotlight */}
-                      <div className="w-[260px] bg-[#052326] text-white p-8 flex flex-col justify-between relative overflow-hidden shrink-0 border-r border-[#052326]/10">
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(46,125,50,0.25),transparent_70%)] pointer-events-none" />
-                        <div className="relative z-10">
-                          <span className="text-[9px] tracking-widest font-black text-[#F0C417] uppercase block mb-1">Cureza Partners</span>
-                          <h3 className="font-bold text-base leading-tight font-heading">Trusted Brands</h3>
-                          <p className="text-[10.5px] text-white/70 font-medium mt-2 leading-relaxed">
-                            We only collaborate with laboratories and cultivators that practice sustainable farming and maintain certified safety regulations.
-                          </p>
-                        </div>
-                        
-                        <div className="relative z-10 mt-6 pt-4 border-t border-white/10">
-                          <span className="text-[9px] uppercase tracking-wider text-[#F0C417] font-bold">Quality Guarantee</span>
-                          <p className="text-[9.5px] text-white/50 mt-1 leading-normal">Every brand is checked for lab certification (COA) prior to display.</p>
-                        </div>
-                      </div>
-
-                      {/* Right Panel - Brand Columns */}
-                      <div className="flex-1 p-8 grid grid-cols-3 gap-6 bg-white/40">
+                      {/* Left Brand Columns */}
+                      <div className="flex-1 grid grid-cols-3 gap-6">
                         
                         {/* Col 1: Cannabis & Hemp */}
-                        <div className="flex flex-col gap-4">
-                          <h4 className="font-extrabold text-[10.5px] tracking-widest text-[#052326] border-b border-[#052326]/5 pb-2.5 flex items-center gap-1.5 uppercase">
+                        <div className="flex flex-col gap-2.5">
+                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
                             <Leaf size={14} className="text-[#2E7D32]" /> Cannabis & Hemp
                           </h4>
-                          <ul className="space-y-1.5 text-[11.5px] font-bold normal-case text-[#052326]/75">
+                          <ul className="space-y-0.5 text-[#052326]/75">
                             {brandsGrouped.cannabisHemp.filter((b) => activeBrands.includes(b.slug)).map((b) => (
                               <li key={b.slug}>
-                                <Link href={`/brand/${b.slug}`} className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                  {b.name}
+                                <Link href={`/brand/${b.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{b.name}</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
                             ))}
@@ -553,16 +636,19 @@ export default function Navbar() {
                         </div>
 
                         {/* Col 2: Ayurvedic & Herbal */}
-                        <div className="flex flex-col gap-4">
-                          <h4 className="font-extrabold text-[10.5px] tracking-widest text-[#052326] border-b border-[#052326]/5 pb-2.5 flex items-center gap-1.5 uppercase">
+                        <div className="flex flex-col gap-2.5">
+                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
                             <Activity size={14} className="text-[#2E7D32]" /> Ayurvedic & Herbal
                           </h4>
-                          <ul className="space-y-1.5 text-[11.5px] font-bold normal-case text-[#052326]/75">
+                          <ul className="space-y-0.5 text-[#052326]/75">
                             {brandsGrouped.ayurvedicHerbal.filter((b) => activeBrands.includes(b.slug)).map((b) => (
                               <li key={b.slug}>
-                                <Link href={`/brand/${b.slug}`} className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                  {b.name}
+                                <Link href={`/brand/${b.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{b.name}</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
                             ))}
@@ -570,16 +656,19 @@ export default function Navbar() {
                         </div>
 
                         {/* Col 3: Wellness & Body */}
-                        <div className="flex flex-col gap-4">
-                          <h4 className="font-extrabold text-[10.5px] tracking-widest text-[#052326] border-b border-[#052326]/5 pb-2.5 flex items-center gap-1.5 uppercase">
+                        <div className="flex flex-col gap-2.5">
+                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
                             <Sparkles size={14} className="text-[#2E7D32]" /> Wellness & Care
                           </h4>
-                          <ul className="space-y-1.5 text-[11.5px] font-bold normal-case text-[#052326]/75">
+                          <ul className="space-y-0.5 text-[#052326]/75">
                             {brandsGrouped.wellnessPersonal.filter((b) => activeBrands.includes(b.slug)).map((b) => (
                               <li key={b.slug}>
-                                <Link href={`/brand/${b.slug}`} className="group/item flex items-center gap-1.5 hover:text-[#2E7D32] py-1 transition-all duration-200 hover:translate-x-1">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                                  {b.name}
+                                <Link href={`/brand/${b.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{b.name}</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
                             ))}
@@ -587,35 +676,139 @@ export default function Navbar() {
                         </div>
 
                       </div>
+
+                      {/* Right Promo Card */}
+                      <div className="w-[260px] bg-gradient-to-br from-[#052326]/5 via-[#083a3f]/8 to-[#0c4d53]/10 border border-[#052326]/8 p-6 flex flex-col justify-between relative overflow-hidden shrink-0 rounded-[8px]">
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(46,125,50,0.06),transparent_70%)] pointer-events-none" />
+                        <div className="relative z-10">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#2E7D32]/10 border border-[#2E7D32]/25 text-[9px] tracking-[0.15em] font-extrabold text-[#2E7D32] capitalize block mb-1">
+                            Cureza Partners
+                          </span>
+                          <h3 className="font-heading font-bold text-[15px] tracking-tight text-[#052326] leading-tight mt-3">Trusted Brands</h3>
+                          <p className="text-[11px] text-[#052326]/80 mt-2 leading-relaxed font-normal">
+                            We only collaborate with laboratories and cultivators that practice sustainable farming and maintain certified safety regulations.
+                          </p>
+                        </div>
+                        
+                        <div className="relative z-10 mt-6 pt-4 border-t border-[#052326]/8">
+                          <span className="text-[10px] capitalize tracking-wide text-[#2E7D32] font-bold block">Quality Guarantee</span>
+                          <p className="text-[10px] text-[#052326]/70 mt-1 leading-normal font-medium">Every brand is checked for lab certification (COA) prior to display.</p>
+                        </div>
+                      </div>
+
                     </div>
                   </div>
                 </li>
 
-                {/* 3. SHOP BY CONCERN (DROPDOWN) */}
-                <li className="relative group">
-                  <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold pb-2">
+                {/* 3. SHOP BY CONCERN (MEGA MENU) */}
+                <li className="group">
+                  <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold pb-2 capitalize">
                     Shop By Concern <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                   </button>
 
-                  {/* Shop by Concern Dropdown Wrapper */}
-                  <div className="absolute left-0 top-[70%] mt-0 pt-0.5 w-72 opacity-0 translate-y-3 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 ease-out z-50">
-                    <div className="bg-white/95 backdrop-blur-xl border border-[#052326]/8 shadow-[0_25px_60px_rgba(5,35,38,0.15)] rounded-2xl py-3 max-h-96 overflow-y-auto scrollbar-thin">
-                      {concerns.map((c) => (
-                        <Link 
-                          key={c.id} 
-                          href={`/shop?concern=${c.slug}`} 
-                          className="group/item flex items-center justify-between px-5 py-2.5 text-[12px] font-bold text-[#052326] hover:bg-[#2E7D32]/5 hover:text-[#2E7D32] transition-all duration-200 normal-case rounded-xl mx-2"
-                        >
-                          <span className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
-                            {c.name}
+                  {/* Mega Menu Dropdown Wrapper */}
+                  <div className="absolute left-1/2 -translate-x-1/2 top-[100%] mt-0 pt-3 w-[1100px] opacity-0 scale-95 translate-y-4 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) z-50">
+                    <div className="bg-white/98 backdrop-blur-xl border border-[#052326]/8 shadow-[0_20px_50px_rgba(5,35,38,0.08)] rounded-[10px] p-6 flex gap-6 z-50">
+                      
+                      {/* Left Concern Columns */}
+                      <div className="flex-1 grid grid-cols-3 gap-6">
+                        
+                        {/* Col 1: Mental Wellness */}
+                        <div className="flex flex-col gap-2.5">
+                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
+                            <Brain size={14} className="text-[#2E7D32]" /> Mental Wellness
+                          </h4>
+                          <ul className="space-y-0.5 text-[#052326]/75">
+                            {groupedConcerns.mental.map((c) => (
+                              <li key={c.id}>
+                                <Link href={`/shop?concern=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                </Link>
+                              </li>
+                            ))}
+                            {groupedConcerns.mental.length === 0 && (
+                              <div className="text-[11px] text-[#052326]/40 italic font-semibold p-2">No active concerns</div>
+                            )}
+                          </ul>
+                        </div>
+
+                        {/* Col 2: Physical & Pain Relief */}
+                        <div className="flex flex-col gap-2.5">
+                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
+                            <Activity size={14} className="text-[#2E7D32]" /> Physical & Pain Relief
+                          </h4>
+                          <ul className="space-y-0.5 text-[#052326]/75">
+                            {groupedConcerns.physical.map((c) => (
+                              <li key={c.id}>
+                                <Link href={`/shop?concern=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                </Link>
+                              </li>
+                            ))}
+                            {groupedConcerns.physical.length === 0 && (
+                              <div className="text-[11px] text-[#052326]/40 italic font-semibold p-2">No active concerns</div>
+                            )}
+                          </ul>
+                        </div>
+
+                        {/* Col 3: General & Skin Health */}
+                        <div className="flex flex-col gap-2.5">
+                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
+                            <HeartPulse size={14} className="text-[#2E7D32]" /> General & Skin Health
+                          </h4>
+                          <ul className="space-y-0.5 text-[#052326]/75">
+                            {groupedConcerns.general.map((c) => (
+                              <li key={c.id}>
+                                <Link href={`/shop?concern=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
+                                  </span>
+                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                </Link>
+                              </li>
+                            ))}
+                            {groupedConcerns.general.length === 0 && (
+                              <div className="text-[11px] text-[#052326]/40 italic font-semibold p-2">No active concerns</div>
+                            )}
+                          </ul>
+                        </div>
+
+                      </div>
+
+                      {/* Right Promo Card */}
+                      <div className="w-[280px] bg-gradient-to-br from-[#052326]/5 via-[#083a3f]/8 to-[#0c4d53]/10 border border-[#052326]/8 p-6 flex flex-col justify-between relative overflow-hidden shrink-0 rounded-[8px]">
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(46,125,50,0.06),transparent_70%)] pointer-events-none" />
+                        <div className="relative z-10">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#2E7D32]/10 border border-[#2E7D32]/25 text-[9px] tracking-[0.15em] font-extrabold text-[#2E7D32] capitalize block mb-1">
+                            Cureza Care
                           </span>
-                          <ChevronRight size={12} className="opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-1 transition-all duration-200 text-[#2E7D32]" />
-                        </Link>
-                      ))}
-                      {concerns.length === 0 && (
-                        <div className="px-5 py-3 text-[11.5px] text-gray-400 font-bold">No active concerns</div>
-                      )}
+                          <h3 className="font-heading font-bold text-[15px] tracking-tight text-[#052326] leading-tight mt-3">Find Your Path</h3>
+                          <p className="text-[11px] text-[#052326]/80 mt-2 leading-relaxed font-normal">
+                            Discover customized formulations tailored specifically to your body's unique requirements. Every product is checked for quality and certifications.
+                          </p>
+                        </div>
+                        
+                        <div className="relative z-10 mt-6 p-4 bg-white/60 backdrop-blur-md border border-[#052326]/8 rounded-[8px] group/card hover:bg-white/80 transition-all duration-300">
+                          <h5 className="text-[10px] font-bold text-[#2E7D32] capitalize tracking-wide flex items-center gap-1.5">
+                            <Brain size={12} className="text-[#2E7D32]" /> Holistic Support?
+                          </h5>
+                          <p className="text-[10px] text-[#052326]/70 mt-1 leading-relaxed font-medium">Consult with certified doctors via our consultation portal to get custom prescriptions.</p>
+                          <Link href="/consultation" className="relative mt-3.5 flex items-center justify-center gap-2 bg-[#2E7D32] text-white text-[11px] font-bold uppercase py-2.5 rounded-[8px] transition-all duration-300 shadow-[0_4px_12px_rgba(46,125,50,0.15)] hover:bg-[#225c25] hover:shadow-[0_4px_16px_rgba(46,125,50,0.25)] hover:-translate-y-0.5 tracking-wider w-full">
+                            <span>Book Consultation</span>
+                            <Sparkles size={12} className="animate-pulse" />
+                          </Link>
+                        </div>
+                      </div>
+
                     </div>
                   </div>
                 </li>
@@ -629,30 +822,30 @@ export default function Navbar() {
                     About Us <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                   </button>
                   {/* About Us Dropdown Wrapper */}
-                  <div className="absolute left-0 top-[70%] mt-0 pt-0.5 w-56 opacity-0 translate-y-3 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 ease-out z-50">
-                    <div className="bg-white/95 backdrop-blur-xl border border-[#052326]/8 shadow-[0_25px_60px_rgba(5,35,38,0.15)] rounded-2xl py-3">
-                      <Link href="/about" className="group/item flex items-center justify-between px-5 py-2.5 text-[12px] font-bold text-[#052326] hover:bg-[#2E7D32]/5 hover:text-[#2E7D32] transition-all duration-200 normal-case rounded-xl mx-2">
+                  <div className="absolute left-0 top-[80%] mt-0 pt-0.5 w-56 opacity-0 translate-y-3 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 ease-out z-50">
+                    <div className="bg-white/95 backdrop-blur-xl border border-[#052326]/8 shadow-[0_25px_60px_rgba(5,35,38,0.15)] rounded-[10px] py-3">
+                      <Link href="/about" className="group/item flex items-center justify-between px-5 py-2.5 text-[12px] font-bold text-[#052326] hover:bg-[#2E7D32]/5 hover:text-[#2E7D32] transition-all duration-200 normal-case rounded-[8px] mx-2">
                         <span className="flex items-center gap-2">
                           <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
                           Our Story
                         </span>
                         <ChevronRight size={12} className="opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-1 transition-all duration-200 text-[#2E7D32]" />
                       </Link>
-                      <Link href="/careers" className="group/item flex items-center justify-between px-5 py-2.5 text-[12px] font-bold text-[#052326] hover:bg-[#2E7D32]/5 hover:text-[#2E7D32] transition-all duration-200 normal-case rounded-xl mx-2">
+                      <Link href="/careers" className="group/item flex items-center justify-between px-5 py-2.5 text-[12px] font-bold text-[#052326] hover:bg-[#2E7D32]/5 hover:text-[#2E7D32] transition-all duration-200 normal-case rounded-[8px] mx-2">
                         <span className="flex items-center gap-2">
                           <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
                           Careers
                         </span>
                         <ChevronRight size={12} className="opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-1 transition-all duration-200 text-[#2E7D32]" />
                       </Link>
-                      <Link href="/press" className="group/item flex items-center justify-between px-5 py-2.5 text-[12px] font-bold text-[#052326] hover:bg-[#2E7D32]/5 hover:text-[#2E7D32] transition-all duration-200 normal-case rounded-xl mx-2">
+                      <Link href="/press" className="group/item flex items-center justify-between px-5 py-2.5 text-[12px] font-bold text-[#052326] hover:bg-[#2E7D32]/5 hover:text-[#2E7D32] transition-all duration-200 normal-case rounded-[8px] mx-2">
                         <span className="flex items-center gap-2">
                           <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
                           Press & Media
                         </span>
                         <ChevronRight size={12} className="opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-1 transition-all duration-200 text-[#2E7D32]" />
                       </Link>
-                      <Link href="/community" className="group/item flex items-center justify-between px-5 py-2.5 text-[12px] font-bold text-[#052326] hover:bg-[#2E7D32]/5 hover:text-[#2E7D32] transition-all duration-200 normal-case rounded-xl mx-2">
+                      <Link href="/community" className="group/item flex items-center justify-between px-5 py-2.5 text-[12px] font-bold text-[#052326] hover:bg-[#2E7D32]/5 hover:text-[#2E7D32] transition-all duration-200 normal-case rounded-[8px] mx-2">
                         <span className="flex items-center gap-2">
                           <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
                           Community Hub
@@ -669,16 +862,16 @@ export default function Navbar() {
                     Knowledge Hub <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                   </button>
                   {/* Knowledge Hub Dropdown Wrapper */}
-                  <div className="absolute left-0 top-[70%] mt-0 pt-0.5 w-56 opacity-0 translate-y-3 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 ease-out z-50">
-                    <div className="bg-white/95 backdrop-blur-xl border border-[#052326]/8 shadow-[0_25px_60px_rgba(5,35,38,0.15)] rounded-2xl py-3">
-                      <Link href="/blog" className="group/item flex items-center justify-between px-5 py-2.5 text-[12px] font-bold text-[#052326] hover:bg-[#2E7D32]/5 hover:text-[#2E7D32] transition-all duration-200 normal-case rounded-xl mx-2">
+                  <div className="absolute left-0 top-[80%] mt-0 pt-0.5 w-56 opacity-0 translate-y-3 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 ease-out z-50">
+                    <div className="bg-white/95 backdrop-blur-xl border border-[#052326]/8 shadow-[0_25px_60px_rgba(5,35,38,0.15)] rounded-[10px] py-3">
+                      <Link href="/blog" className="group/item flex items-center justify-between px-5 py-2.5 text-[12px] font-bold text-[#052326] hover:bg-[#2E7D32]/5 hover:text-[#2E7D32] transition-all duration-200 normal-case rounded-[8px] mx-2">
                         <span className="flex items-center gap-2">
                           <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
                           Wellness Library
                         </span>
                         <ChevronRight size={12} className="opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-1 transition-all duration-200 text-[#2E7D32]" />
                       </Link>
-                      <Link href="/faq" className="group/item flex items-center justify-between px-5 py-2.5 text-[12px] font-bold text-[#052326] hover:bg-[#2E7D32]/5 hover:text-[#2E7D32] transition-all duration-200 normal-case rounded-xl mx-2">
+                      <Link href="/faq" className="group/item flex items-center justify-between px-5 py-2.5 text-[12px] font-bold text-[#052326] hover:bg-[#2E7D32]/5 hover:text-[#2E7D32] transition-all duration-200 normal-case rounded-[8px] mx-2">
                         <span className="flex items-center gap-2">
                           <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
                           FAQs
@@ -715,7 +908,7 @@ export default function Navbar() {
               
               {/* Header */}
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-base font-extrabold text-[#052326] tracking-wider uppercase">Navigation</h2>
+                <h2 className="text-base font-extrabold text-[#052326] tracking-wider capitalize">Navigation</h2>
                 <button onClick={() => setIsMobileMenuOpen(false)} className="p-1 text-gray-500 hover:bg-gray-100 rounded-full">
                   <X size={20} />
                 </button>
@@ -752,12 +945,11 @@ export default function Navbar() {
                         </button>
                         {activeMobileSubTab === 'mc-thc' && (
                           <div className="pl-3 py-1 space-y-2 text-[11px] font-semibold normal-case text-gray-550">
-                            <Link href="/shop?requireRx=true" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">All Medical Cannabis (with THC)</Link>
-                            {hasCategory('thc-oils') && <Link href="/shop?category=thc-oils&requireRx=true" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">THC Dominant Products</Link>}
-                            {hasCategory('cbd-oils-tinctures') && <Link href="/shop?category=cbd-oils-tinctures&requireRx=true" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Medical Cannabis Oil/Tinctures</Link>}
-                            {hasCategory('thc-oils') && <Link href="/shop?category=thc-oils&requireRx=true" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Pure THC Paste & Extracts</Link>}
-                            {hasCategory('gummies-edibles') && <Link href="/shop?category=gummies-edibles&requireRx=true" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">THC Gummies</Link>}
-                            {hasCategory('vapes-inhalables') && <Link href="/shop?category=vapes-inhalables&requireRx=true" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Smoke Bundles</Link>}
+                            {hasCategory('thc-oils') && <Link href="/shop?category=thc-oils&requireRx=true" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">All Medical Cannabis (with THC)</Link>}
+                            {hasCategory('thc-oils') && <Link href="/shop?category=thc-oils" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">THC Oils & Drops</Link>}
+                            {hasCategory('classical-ayurvedic-medicines') && <Link href="/shop?category=classical-ayurvedic-medicines" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Classical Ayurvedic Medicines</Link>}
+                            {hasCategory('capsules-tablets') && <Link href="/shop?category=capsules-tablets&requireRx=true" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Full Spectrum Capsules (Rx)</Link>}
+                            {hasCategory('vapes-inhalables') && <Link href="/shop?category=vapes-inhalables" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Vapes & Inhalables</Link>}
                           </div>
                         )}
                       </div>
@@ -768,17 +960,17 @@ export default function Navbar() {
                           onClick={() => setActiveMobileSubTab(activeMobileSubTab === 'cbd-oil' ? null : 'cbd-oil')}
                           className="flex justify-between w-full py-2 text-gray-700 focus:outline-none font-bold"
                         >
-                          <span className="flex items-center gap-1.5 text-xs text-emerald-800"><Leaf size={12} /> CBD Oil Products</span>
+                          <span className="flex items-center gap-1.5 text-xs text-[#2E7D32]"><Leaf size={12} /> CBD & Hemp Products</span>
                           <ChevronDown size={12} className={`transform transition-transform ${activeMobileSubTab === 'cbd-oil' ? 'rotate-180' : ''}`} />
                         </button>
                         {activeMobileSubTab === 'cbd-oil' && (
                           <div className="pl-3 py-1 space-y-2 text-[11px] font-semibold normal-case text-gray-550">
-                            <Link href="/shop?requireRx=false" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">All CBD Oil Products</Link>
-                            {hasCategory('cbd-oils-tinctures') && <Link href="/shop?category=cbd-oils-tinctures&requireRx=false" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">CBD Tinctures</Link>}
-                            {hasCategory('combo-packs-kits') && <Link href="/shop?category=combo-packs-kits&requireRx=false" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">CBD Oil Bundles</Link>}
-                            {hasCategory('gummies-edibles') && <Link href="/shop?category=gummies-edibles&requireRx=false" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">CBD Gummies & Edibles</Link>}
-                            {hasCategory('pet-care') && <Link href="/shop?category=pet-care&requireRx=false" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">CBD Oil for Pets</Link>}
-                            {hasCategory('topicals-roll-ons') && <Link href="/shop?category=topicals-roll-ons&requireRx=false" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">CBD Lotions & Balms</Link>}
+                            {hasCategory('cbd-oils-tinctures') && <Link href="/shop?category=cbd-oils-tinctures" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">All CBD Oils & Extracts</Link>}
+                            {hasCategory('cbd-oils-tinctures') && <Link href="/shop?category=cbd-oils-tinctures" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">CBD Oils & Tinctures</Link>}
+                            {hasCategory('gummies-edibles') && <Link href="/shop?category=gummies-edibles" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">CBD Gummies & Edibles</Link>}
+                            {hasCategory('capsules-tablets') && <Link href="/shop?category=capsules-tablets&requireRx=false" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">CBD Capsules & Softgels</Link>}
+                            {hasCategory('topicals-roll-ons') && <Link href="/shop?category=topicals-roll-ons" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">CBD Topicals & Roll-Ons</Link>}
+                            {hasCategory('pet-care') && <Link href="/shop?category=pet-care" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">CBD Oil for Pets</Link>}
                           </div>
                         )}
                       </div>
@@ -789,33 +981,34 @@ export default function Navbar() {
                           onClick={() => setActiveMobileSubTab(activeMobileSubTab === 'herbal' ? null : 'herbal')}
                           className="flex justify-between w-full py-2 text-gray-700 focus:outline-none font-bold"
                         >
-                          <span className="flex items-center gap-1.5 text-xs text-emerald-800"><Activity size={12} /> Herbal & Ayurveda</span>
+                          <span className="flex items-center gap-1.5 text-xs text-[#2E7D32]"><Activity size={12} /> Herbal & Ayurveda</span>
                           <ChevronDown size={12} className={`transform transition-transform ${activeMobileSubTab === 'herbal' ? 'rotate-180' : ''}`} />
                         </button>
                         {activeMobileSubTab === 'herbal' && (
                           <div className="pl-3 py-1 space-y-2 text-[11px] font-semibold normal-case text-gray-550">
+                            {hasCategory('herbal-ayurveda') && <Link href="/shop?category=herbal-ayurveda" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">All Herbal & Ayurveda</Link>}
                             {hasCategory('ayurveda') && <Link href="/shop?category=ayurveda" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Ayurvedic Remedies</Link>}
-                            {hasCategory('wellness') && <Link href="/shop?category=wellness" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Herbal Wellness</Link>}
-                            {hasCategory('tea-beverages') && <Link href="/shop?category=tea-beverages" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Herbal Teas</Link>}
-                            {hasCategory('aromatherapy-essential-oils') && <Link href="/shop?category=aromatherapy-essential-oils" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Herbal Blends & Oils</Link>}
+                            {hasCategory('organic-groceries-pantry') && <Link href="/shop?category=organic-groceries-pantry" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Organic Groceries & Pantry</Link>}
+                            {hasCategory('aromatherapy-essential-oils') && <Link href="/shop?category=aromatherapy-essential-oils" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Aromatherapy & Essential Oils</Link>}
                           </div>
                         )}
                       </div>
 
-                      {/* Sub-group 4: Fungi & Mushrooms */}
+                      {/* Sub-group 4: Supplements & Wellness */}
                       <div>
                         <button 
-                          onClick={() => setActiveMobileSubTab(activeMobileSubTab === 'fungi' ? null : 'fungi')}
+                          onClick={() => setActiveMobileSubTab(activeMobileSubTab === 'supplements' ? null : 'supplements')}
                           className="flex justify-between w-full py-2 text-gray-700 focus:outline-none font-bold"
                         >
-                          <span className="flex items-center gap-1.5 text-xs text-emerald-800"><Brain size={12} /> Fungi / Mushrooms</span>
-                          <ChevronDown size={12} className={`transform transition-transform ${activeMobileSubTab === 'fungi' ? 'rotate-180' : ''}`} />
+                          <span className="flex items-center gap-1.5 text-xs text-[#2E7D32]"><Brain size={12} /> Supplements & Wellness</span>
+                          <ChevronDown size={12} className={`transform transition-transform ${activeMobileSubTab === 'supplements' ? 'rotate-180' : ''}`} />
                         </button>
-                        {activeMobileSubTab === 'fungi' && (
+                        {activeMobileSubTab === 'supplements' && (
                           <div className="pl-3 py-1 space-y-2 text-[11px] font-semibold normal-case text-gray-550">
-                            {hasCategory('supplements') && <Link href="/shop?category=supplements" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">All Mushrooms Supplements</Link>}
-                            {hasCategory('supplements') && <Link href="/shop?category=supplements" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Lions Mane & Cordyceps</Link>}
-                            {hasCategory('tea-beverages') && <Link href="/shop?category=tea-beverages" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Fungi Tea & Drinks</Link>}
+                            {hasCategory('supplements-vitamins') && <Link href="/shop?category=supplements-vitamins" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">All Supplements & Vitamins</Link>}
+                            {hasCategory('single-herb-supplements') && <Link href="/shop?category=single-herb-supplements" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Single Herb Supplements</Link>}
+                            {hasCategory('combo-packs-kits') && <Link href="/shop?category=combo-packs-kits" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Combo Packs & Kits</Link>}
+                            {hasCategory('skincare') && <Link href="/shop?category=skincare" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Skincare & Beauty</Link>}
                           </div>
                         )}
                       </div>
@@ -955,7 +1148,7 @@ export default function Navbar() {
                     logout();
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full py-3 bg-[#052326] text-white rounded-xl text-xs font-bold uppercase text-center tracking-wider hover:opacity-90 transition-opacity"
+                  className="w-full py-3 bg-[#052326] text-white rounded-[8px] text-xs font-bold capitalize text-center tracking-wider hover:opacity-90 transition-opacity"
                 >
                   Sign Out
                 </button>
@@ -963,7 +1156,7 @@ export default function Navbar() {
                 <Link
                   href="/login"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block w-full py-3 bg-[#052326] text-white rounded-xl text-xs font-bold uppercase text-center tracking-wider hover:opacity-90 transition-opacity"
+                  className="block w-full py-3 bg-[#052326] text-white rounded-[8px] text-xs font-bold capitalize text-center tracking-wider hover:opacity-90 transition-opacity"
                 >
                   Log In
                 </Link>

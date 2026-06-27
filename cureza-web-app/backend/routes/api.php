@@ -89,6 +89,7 @@ Route::get('/products/{id}/bundles', [ProductController::class, 'getBundles']);
 Route::get('/products/{id}/reviews', [ReviewController::class, 'index']);
 Route::post('/reviews', [ReviewController::class, 'store']);
 Route::get('/categories', [CategoryController::class, 'publicIndex']);
+Route::get('/collections', [\App\Http\Controllers\CollectionController::class, 'publicIndex']);
 Route::get('/collections/{slug}', [\App\Http\Controllers\CollectionController::class, 'showPublic']);
 Route::get('/menu-items', [MenuItemController::class, 'index']);
 Route::get('/attributes', [AttributeController::class, 'index']);

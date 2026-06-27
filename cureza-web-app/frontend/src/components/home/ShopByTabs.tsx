@@ -1,26 +1,43 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useCategories } from "@/contexts/CategoryContext";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function ShopByTabs() {
-  const { categories, concerns } = useCategories();
-
-  const clearanceSale = categories.slice(0, 10).map((c) => ({
-    ...c,
-    name: c.name + " (Sale)",
-  }));
+  const { categories, concerns, collections = [], isLoading } = useCategories();
 
   const [activeTab, setActiveTab] = useState<"categories" | "concerns" | "clearance">("categories");
   const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef<HTMLDivElement | null>(null);
 
+  useEffect(() => {
+    if (categories.length > 0) {
+      setActiveTab("categories");
+    } else if (concerns.length > 0) {
+      setActiveTab("concerns");
+    } else if (collections.length > 0) {
+      setActiveTab("clearance");
+    }
+  }, [categories, concerns, collections]);
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-6 py-12 md:py-16 text-center text-[#052326]/50 bg-[#F8F3EF]">
+        Loading wellness catalog...
+      </div>
+    );
+  }
+
+  if (categories.length === 0 && concerns.length === 0 && collections.length === 0) {
+    return null;
+  }
+
   const getItems = () => {
     if (activeTab === "categories") return categories;
     if (activeTab === "concerns") return concerns;
-    if (activeTab === "clearance") return clearanceSale;
+    if (activeTab === "clearance") return collections;
     return [];
   };
 
@@ -61,41 +78,47 @@ export default function ShopByTabs() {
 
         {/* TABS CONTAINER */}
         <div className="flex bg-[#052326]/5 p-1.5 rounded-[12px] gap-1 self-start md:self-end">
-          <button
-            onClick={() => setActiveTab("categories")}
-            className={`px-5 py-2.5 rounded-[10px] text-xs font-semibold tracking-wide transition-all ${
-              activeTab === "categories"
-                ? "bg-[#052326] text-[#F8F3EF] shadow-md"
-                : "text-[#052326]/75 hover:bg-[#052326]/5"
-            }`}
-          >
-            Categories
-          </button>
+          {categories.length > 0 && (
+            <button
+              onClick={() => setActiveTab("categories")}
+              className={`px-5 py-2.5 rounded-[10px] text-xs font-semibold tracking-wide transition-all ${
+                activeTab === "categories"
+                  ? "bg-[#052326] text-[#F8F3EF] shadow-md"
+                  : "text-[#052326]/75 hover:bg-[#052326]/5"
+              }`}
+            >
+              Categories
+            </button>
+          )}
 
-          <button
-            onClick={() => setActiveTab("concerns")}
-            className={`px-5 py-2.5 rounded-[10px] text-xs font-semibold tracking-wide transition-all ${
-              activeTab === "concerns"
-                ? "bg-[#052326] text-[#F8F3EF] shadow-md"
-                : "text-[#052326]/75 hover:bg-[#052326]/5"
-            }`}
-          >
-            Health Concerns
-          </button>
+          {concerns.length > 0 && (
+            <button
+              onClick={() => setActiveTab("concerns")}
+              className={`px-5 py-2.5 rounded-[10px] text-xs font-semibold tracking-wide transition-all ${
+                activeTab === "concerns"
+                  ? "bg-[#052326] text-[#F8F3EF] shadow-md"
+                  : "text-[#052326]/75 hover:bg-[#052326]/5"
+              }`}
+            >
+              Health Concerns
+            </button>
+          )}
 
-          <button
-            onClick={() => setActiveTab("clearance")}
-            className={`px-5 py-2.5 rounded-[10px] text-xs font-semibold tracking-wide transition-all flex items-center gap-1.5 ${
-              activeTab === "clearance"
-                ? "bg-[#D32F2F] text-white shadow-md"
-                : "text-[#D32F2F]/80 hover:bg-[#D32F2F]/5"
-            }`}
-          >
-            Clearance Sale
-            <span className={`w-1.5 h-1.5 rounded-full ${
-              activeTab === "clearance" ? "bg-white" : "bg-[#D32F2F] animate-pulse"
-            }`} />
-          </button>
+          {collections.length > 0 && (
+            <button
+              onClick={() => setActiveTab("clearance")}
+              className={`px-5 py-2.5 rounded-[10px] text-xs font-semibold tracking-wide transition-all flex items-center gap-1.5 ${
+                activeTab === "clearance"
+                  ? "bg-[#D32F2F] text-white shadow-md"
+                  : "text-[#D32F2F]/80 hover:bg-[#D32F2F]/5"
+              }`}
+            >
+              Clearance Sale
+              <span className={`w-1.5 h-1.5 rounded-full ${
+                activeTab === "clearance" ? "bg-white" : "bg-[#D32F2F] animate-pulse"
+              }`} />
+            </button>
+          )}
         </div>
       </div>
 
@@ -104,7 +127,7 @@ export default function ShopByTabs() {
         {/* Navigation Arrows */}
         <button
           onClick={handlePrev}
-          className="absolute -left-4 top-1/2 -translate-y-1/2 bg-white hover:bg-[#052326] hover:text-[#F8F3EF] text-[#052326] border border-[#052326]/10 p-2.5 rounded-[10px] shadow-sm transition-all z-20"
+          className="absolute -left-4 top-1/2 -translate-y-1/2 bg-white hover:bg-[#052326] hover:text-white text-[#052326] border border-[#052326]/8 p-3 rounded-full shadow-[0_4px_12px_rgba(5,35,38,0.08)] hover:shadow-[0_6px_18px_rgba(5,35,38,0.15)] transition-all duration-300 hover:scale-105 z-20 cursor-pointer"
           aria-label="Previous Concerns"
         >
           <ChevronLeft size={16} />
@@ -112,7 +135,7 @@ export default function ShopByTabs() {
 
         <button
           onClick={handleNext}
-          className="absolute -right-4 top-1/2 -translate-y-1/2 bg-white hover:bg-[#052326] hover:text-[#F8F3EF] text-[#052326] border border-[#052326]/10 p-2.5 rounded-[10px] shadow-sm transition-all z-20"
+          className="absolute -right-4 top-1/2 -translate-y-1/2 bg-white hover:bg-[#052326] hover:text-white text-[#052326] border border-[#052326]/8 p-3 rounded-full shadow-[0_4px_12px_rgba(5,35,38,0.08)] hover:shadow-[0_6px_18px_rgba(5,35,38,0.15)] transition-all duration-300 hover:scale-105 z-20 cursor-pointer"
           aria-label="Next Concerns"
         >
           <ChevronRight size={16} />
@@ -126,13 +149,19 @@ export default function ShopByTabs() {
           {items.map((item: any) => (
             <Link
               key={item.id}
-              href={`/category/${item.slug}`}
+              href={
+                activeTab === 'concerns'
+                  ? `/concern/${item.slug}`
+                  : activeTab === 'clearance'
+                  ? `/${item.slug}`
+                  : `/category/${item.slug}`
+              }
               className="snap-start flex-shrink-0 w-[42%] sm:w-[25%] md:w-[18%] lg:w-[15%]"
             >
               <div className="flex flex-col items-center text-center group">
                 {/* Circular image badge with gold hover scale ring */}
-                <div className="relative w-24 h-24 md:w-28 md:h-28 rounded-full p-[2px] border border-[#052326]/10 group-hover:border-[#F0C417] transition-all duration-300">
-                  <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center p-1">
+                <div className="relative w-24 h-24 md:w-28 md:h-28 rounded-full p-[3px] bg-gradient-to-tr from-[#052326]/5 to-[#2E7D32]/10 group-hover:from-[#2E7D32] group-hover:to-[#F0C417] shadow-[0_8px_20px_rgba(5,35,38,0.03)] group-hover:shadow-[0_12px_28px_rgba(46,125,50,0.15)] transition-all duration-500 ease-out transform group-hover:-translate-y-1">
+                  <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center p-1.5">
                     <img
                       src={
                         item.image
@@ -141,13 +170,13 @@ export default function ShopByTabs() {
                             : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'}${item.image.startsWith('/') ? '' : '/storage/'}${item.image}`)
                           : '/fallback.png'
                       }
-                      className="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-700 ease-out"
                       alt={item.name}
                     />
                   </div>
                 </div>
 
-                <p className="mt-4 text-xs md:text-sm font-semibold tracking-wide text-[#052326] group-hover:text-[#F0C417] transition-colors line-clamp-1">
+                <p className="mt-4 text-xs md:text-sm font-bold tracking-wide text-[#052326]/90 group-hover:text-[#2E7D32] transition-colors duration-300 line-clamp-1">
                   {item.name}
                 </p>
               </div>

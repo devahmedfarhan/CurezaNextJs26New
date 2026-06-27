@@ -127,6 +127,21 @@ class CollectionController extends Controller
     }
 
     /**
+     * Display a listing of active collections that have at least one product for public store front.
+     */
+    public function publicIndex(Request $request)
+    {
+        $collections = Collection::where('is_active', true)
+            ->whereHas('products', function ($q) {
+                $q->where('status', 'published');
+            })
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return response()->json($collections);
+    }
+
+    /**
      * Display the specified collection and its active products for public store front.
      */
     public function showPublic($slug)

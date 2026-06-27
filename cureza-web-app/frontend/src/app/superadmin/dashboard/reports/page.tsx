@@ -80,7 +80,7 @@ export default function SuperAdminReportsPage() {
 
             const reportId = res.data.report?.id;
             if (!reportId) {
-                throw new new Error("Invalid report response from backend");
+                throw new Error("Invalid report response from backend");
             }
 
             setSimulatedProgress(30);

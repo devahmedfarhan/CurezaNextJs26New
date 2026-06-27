@@ -31,6 +31,8 @@ interface OrderItem {
     price: string | number;
     total: string | number;
     product_name?: string;
+    net_amount?: string | number;
+    base_price?: string | number;
     product?: {
         name: string;
         original_price: string | number;
