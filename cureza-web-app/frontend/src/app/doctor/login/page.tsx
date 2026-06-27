@@ -7,10 +7,12 @@ import api from '@/lib/api';
 import { useToast } from '@/contexts/ToastContext';
 import { Stethoscope, ArrowRight, Mail, Lock, ShieldCheck, Leaf, Heart } from 'lucide-react';
 import AuthFooter from '@/components/common/AuthFooter';
+import { useAuth } from '@/context/AuthContext';
 
 export default function DoctorLoginPage() {
     const router = useRouter();
     const { showToast } = useToast();
+    const { login } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -20,16 +22,12 @@ export default function DoctorLoginPage() {
         setIsLoading(true);
 
         try {
-            // Get CSRF cookie first
-            await api.get('/sanctum/csrf-cookie', { baseURL: 'http://localhost:8000' });
-
             const response = await api.post('/doctor/login', { email, password });
 
-            // Store token and user info
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('user', JSON.stringify(response.data.user));
-
             showToast('Login successful!', 'success');
+
+            // Use the login function from context which handles headers and storage
+            login(response.data.token, response.data.user);
 
             // Redirect based on status
             router.push('/doctor/dashboard');

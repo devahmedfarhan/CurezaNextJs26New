@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import api from '@/lib/api';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/context/AuthContext';
 
 const SEARCHABLE_ITEMS = [
     // Pages
@@ -47,11 +48,6 @@ const SEARCHABLE_ITEMS = [
     { type: 'drug', label: 'Pantoprazole Proton Pump Inhibitor Guidance', path: '/doctor/dashboard?search=Pantoprazole', keywords: 'pantoprazole ppi acid reflux gerd stomach breakfast' },
     { type: 'drug', label: 'Salbutamol Bronchodilator Guidance', path: '/doctor/dashboard?search=Salbutamol', keywords: 'salbutamol albuterol asthma inhaler breathing' },
     { type: 'drug', label: 'Cetirizine Antihistamine Guidance', path: '/doctor/dashboard?search=Cetirizine', keywords: 'cetirizine allergy antihistamine zyrtec runny nose' },
-
-    // Patients in waiting room/queue
-    { type: 'patient', label: 'Patient Record: Farhan Ahmed', path: '/doctor/dashboard?search=Farhan', keywords: 'farhan ahmed waiting lobby consult' },
-    { type: 'patient', label: 'Patient Record: Priya Sharma', path: '/doctor/dashboard?search=Priya', keywords: 'priya sharma lobby wait session' },
-    { type: 'patient', label: 'Patient Record: John Doe', path: '/doctor/dashboard?search=John', keywords: 'john doe consult lobby wait' }
 ];
 
 const navItems = [
@@ -70,50 +66,25 @@ const navItems = [
 export default function DoctorDashboardLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const pathname = usePathname();
+    const { user: authUser, isLoading: authLoading, logout: authLogout, mutate } = useAuth();
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    interface User {
-        id: string;
-        name: string;
-        email: string;
-        role: 'doctor' | 'patient';
-        profile_image_url?: string;
-        doctor_status?: 'draft' | 'pending' | 'otp_verified' | 'under_review' | 'approved' | 'rejected';
-    }
     useEffect(() => {
-        checkAuth();
-    }, []);
-
-    const checkAuth = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
+        if (!authLoading) {
+            if (!authUser) {
                 router.push('/doctor/login');
                 return;
             }
-
-            const response = await api.get('/user');
-            if (response.data.role !== 'doctor') {
+            if (authUser.role !== 'doctor') {
                 router.push('/doctor/login');
                 return;
             }
-
-            if (response.data.doctor_status !== 'approved') {
-                setUser(response.data);
-                setLoading(false);
-                return;
-            }
-
-            setUser(response.data);
-        } catch (error) {
-            console.error('Auth check failed:', error);
-            router.push('/doctor/login');
-        } finally {
+            setUser(authUser);
             setLoading(false);
         }
-    };
+    }, [authUser, authLoading, router]);
 
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -139,22 +110,11 @@ export default function DoctorDashboardLayout({ children }: { children: React.Re
     };
 
     const handleLogout = async () => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            try {
-                await api.post('/logout', {}, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-            } catch (error) {
-                console.error('Logout API failed:', error);
-            }
+        try {
+            await authLogout(false);
+        } catch (error) {
+            console.error('Logout failed:', error);
         }
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        delete api.defaults.headers.common['Authorization'];
-        router.push('/doctor/login');
     };
 
     const isActive = (href: string, exact?: boolean) => {
@@ -470,6 +430,7 @@ export default function DoctorDashboardLayout({ children }: { children: React.Re
                                                                             headers: { 'Content-Type': 'multipart/form-data' }
                                                                         });
                                                                         setUser(res.data.user);
+                                                                        mutate(); // Refresh global auth state
                                                                         alert(`${doc.label} reuploaded successfully!`);
                                                                     } catch (err: any) {
                                                                         alert(err.response?.data?.message || 'Upload failed.');
