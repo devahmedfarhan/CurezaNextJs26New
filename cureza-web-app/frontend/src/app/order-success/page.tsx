@@ -1025,7 +1025,9 @@ function OrderSuccessContent() {
             >
                 {feedbackSubmitted !== null ? (
                     <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }}>
-                        <p className="text-[#2d7c80] font-bold text-sm">Thank you for your feedback! 💚</p>
+                        <p className="text-[#2d7c80] font-bold text-sm flex items-center justify-center gap-1.5">
+                            Thank you for your feedback! <CheckCircle size={16} className="text-[#2d7c80]" />
+                        </p>
                         <p className="text-xs text-gray-500 mt-1">We read every review to make shopping better for you.</p>
                     </motion.div>
                 ) : (

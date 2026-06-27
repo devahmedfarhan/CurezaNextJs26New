@@ -1,26 +1,75 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { 
     Star, Video, Calendar, Clock, MapPin, Search, Sparkles, 
     ChevronRight, Check, Users, Award, ShieldCheck, Heart, 
     FileText, Activity, Sliders, DollarSign, ArrowRight,
-    Leaf, Microscope, Droplet, Scroll, Sprout, ShieldAlert
+    Leaf, Microscope, Droplet, Scroll, Sprout, ShieldAlert, X
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import api from '@/lib/api';
 import { useToast } from '@/contexts/ToastContext';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export default function DoctorPage() {
+const getDoctorConcerns = (specialization: string) => {
+    const spec = specialization.toLowerCase();
+    if (spec.includes('skin') || spec.includes('hair') || spec.includes('dermat')) {
+        return ['Acne & Pigmentation', 'Hair Fall', 'Eczema & Rashes'];
+    }
+    if (spec.includes('digest') || spec.includes('gut') || spec.includes('gastro') || spec.includes('stomach')) {
+        return ['IBS & Bloating', 'Acidity & Reflux', 'Chronic Constipation'];
+    }
+    if (spec.includes('stress') || spec.includes('anxiety') || spec.includes('mental') || spec.includes('psych')) {
+        return ['Anxiety & Stress', 'Sleep Issues/Insomnia', 'Chronic Fatigue'];
+    }
+    if (spec.includes('women') || spec.includes('gynae') || spec.includes('hormon')) {
+        return ['PCOS / PCOD', 'Irregular Periods', 'Thyroid Imbalance'];
+    }
+    if (spec.includes('ayur') || spec.includes('panchakarma')) {
+        return ['Dosha Balancing', 'Joint Pain & Arthritis', 'Immunity Boost'];
+    }
+    return ['General Wellness', 'Lifestyle Coaching', 'Immunity Restoration'];
+};
+
+const getDoctorSystemBadge = (specialization: string) => {
+    const spec = specialization.toLowerCase();
+    if (spec.includes('ayur')) {
+        return { label: 'AYUSH / Ayurvedic', style: 'bg-emerald-50 text-emerald-700 border-emerald-100', icon: Leaf };
+    }
+    if (spec.includes('homeo')) {
+        return { label: 'Homeopathic', style: 'bg-purple-50 text-purple-700 border-purple-100', icon: Droplet };
+    }
+    if (spec.includes('cbd') || spec.includes('canna') || spec.includes('hemp')) {
+        return { label: 'Hemp/CBD Panel', style: 'bg-teal-50 text-teal-800 border-teal-100', icon: Sprout };
+    }
+    if (spec.includes('unani')) {
+        return { label: 'Unani Practice', style: 'bg-amber-50 text-amber-800 border-amber-100', icon: Scroll };
+    }
+    return { label: 'Allopathic / MD', style: 'bg-blue-50 text-blue-700 border-blue-100', icon: Microscope };
+};
+
+function DoctorContent() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const { showToast } = useToast();
     const [doctors, setDoctors] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
+    
+    // Read tag, search, or concern from URL query parameters
+    const queryParam = searchParams.get('search') || searchParams.get('tag') || searchParams.get('concern') || '';
+    const [searchTerm, setSearchTerm] = useState(queryParam);
     const [activeSpecialty, setActiveSpecialty] = useState('All Specialists');
+
+    // Sync search input if URL params change dynamically
+    useEffect(() => {
+        const query = searchParams.get('search') || searchParams.get('tag') || searchParams.get('concern') || '';
+        if (query) {
+            setSearchTerm(query);
+        }
+    }, [searchParams]);
 
     useEffect(() => {
         fetchDoctors();
@@ -42,81 +91,62 @@ export default function DoctorPage() {
     };
 
     const filteredDoctors = doctors.filter(doctor => {
-        const matchesSearch = doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            doctor.specialization.toLowerCase().includes(searchTerm.toLowerCase());
+        const query = (searchTerm || '').toLowerCase().trim();
+        
+        const containsQuery = (field: any): boolean => {
+            if (!field) return false;
+            if (typeof field === 'string') {
+                return field.toLowerCase().includes(query);
+            }
+            if (Array.isArray(field)) {
+                return field.some(item => typeof item === 'string' && item.toLowerCase().includes(query));
+            }
+            return false;
+        };
+
+        const matchesSearch = !query || 
+            containsQuery(doctor.name) ||
+            containsQuery(doctor.specialization) ||
+            containsQuery(doctor.secondary_specializations) ||
+            containsQuery(doctor.areas_of_expertise) ||
+            containsQuery(doctor.treatable_conditions) ||
+            containsQuery(doctor.clinic_name) ||
+            containsQuery(doctor.clinic_city) ||
+            containsQuery(getDoctorConcerns(doctor.specialization)) ||
+            containsQuery(getDoctorSystemBadge(doctor.specialization).label);
+        
+        if (!matchesSearch) return false;
         
         if (activeSpecialty === 'All Specialists') {
-            return matchesSearch;
+            return true;
         }
         
         // Custom matching logic for specialty filters
-        const spec = doctor.specialization.toLowerCase();
+        const spec = (doctor.specialization || '').toLowerCase();
         const active = activeSpecialty.toLowerCase();
         
         if (active === 'general physician') {
-            return matchesSearch && (spec.includes('general') || spec.includes('physician'));
+            return spec.includes('general') || spec.includes('physician');
         }
         if (active === 'skin & hair') {
-            return matchesSearch && (spec.includes('skin') || spec.includes('hair') || spec.includes('dermat'));
+            return spec.includes('skin') || spec.includes('hair') || spec.includes('dermat');
         }
         if (active === 'digestion') {
-            return matchesSearch && (spec.includes('digest') || spec.includes('gut') || spec.includes('gastro'));
+            return spec.includes('digest') || spec.includes('gut') || spec.includes('gastro');
         }
         if (active === 'stress') {
-            return matchesSearch && (spec.includes('stress') || spec.includes('anxiety') || spec.includes('mental'));
+            return spec.includes('stress') || spec.includes('anxiety') || spec.includes('mental');
         }
         if (active === "women's health") {
-            return matchesSearch && (spec.includes('women') || spec.includes('gynae'));
+            return spec.includes('women') || spec.includes('gynae');
         }
         
-        return matchesSearch && spec.includes(active);
+        return spec.includes(active);
     });
 
-    const specialties = [
-        'All Specialists',
-        'General Physician',
-        'Skin & Hair',
-        'Digestion',
-        'Stress',
-        "Women's Health"
-    ];
+    // Specialties list is replaced by suggested search queries
 
-    const getDoctorConcerns = (specialization: string) => {
-        const spec = specialization.toLowerCase();
-        if (spec.includes('skin') || spec.includes('hair') || spec.includes('dermat')) {
-            return ['Acne & Pigmentation', 'Hair Fall', 'Eczema & Rashes'];
-        }
-        if (spec.includes('digest') || spec.includes('gut') || spec.includes('gastro') || spec.includes('stomach')) {
-            return ['IBS & Bloating', 'Acidity & Reflux', 'Chronic Constipation'];
-        }
-        if (spec.includes('stress') || spec.includes('anxiety') || spec.includes('mental') || spec.includes('psych')) {
-            return ['Anxiety & Stress', 'Sleep Issues/Insomnia', 'Chronic Fatigue'];
-        }
-        if (spec.includes('women') || spec.includes('gynae') || spec.includes('hormon')) {
-            return ['PCOS / PCOD', 'Irregular Periods', 'Thyroid Imbalance'];
-        }
-        if (spec.includes('ayur') || spec.includes('panchakarma')) {
-            return ['Dosha Balancing', 'Joint Pain & Arthritis', 'Immunity Boost'];
-        }
-        return ['General Wellness', 'Lifestyle Coaching', 'Immunity Restoration'];
-    };
 
-    const getDoctorSystemBadge = (specialization: string) => {
-        const spec = specialization.toLowerCase();
-        if (spec.includes('ayur')) {
-            return { label: 'AYUSH / Ayurvedic', style: 'bg-emerald-50 text-emerald-700 border-emerald-100', icon: Leaf };
-        }
-        if (spec.includes('homeo')) {
-            return { label: 'Homeopathic', style: 'bg-purple-50 text-purple-700 border-purple-100', icon: Droplet };
-        }
-        if (spec.includes('cbd') || spec.includes('canna') || spec.includes('hemp')) {
-            return { label: 'Hemp/CBD Panel', style: 'bg-teal-50 text-teal-800 border-teal-100', icon: Sprout };
-        }
-        if (spec.includes('unani')) {
-            return { label: 'Unani Practice', style: 'bg-amber-50 text-amber-800 border-amber-100', icon: Scroll };
-        }
-        return { label: 'Allopathic / MD', style: 'bg-blue-50 text-blue-700 border-blue-100', icon: Microscope };
-    };
 
     const dashboardFeatures = [
         {
@@ -222,13 +252,13 @@ export default function DoctorPage() {
                     <div className="flex flex-col lg:flex-row items-center gap-16">
                         {/* Hero Left Content */}
                         <div className="flex-1 space-y-8 text-center lg:text-left">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-semibold text-[#052326] tracking-wider uppercase">
-                                <Sparkles size={14} className="animate-pulse" />
+                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/25 rounded-full text-xs font-semibold text-emerald-400 tracking-wider uppercase backdrop-blur-sm">
+                                <Sparkles size={14} className="animate-pulse text-emerald-400" />
                                 Premium Telehealth & Clinical Workspace
                             </div>
 
-                            <h1 className="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight font-heading">
-                                Join India's Elite <span className="text-[#052326]">Clinical Wellness Network</span>
+                            <h1 className="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight font-heading text-white">
+                                Join India's Elite <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 bg-clip-text text-transparent font-black">Clinical Wellness Network</span>
                             </h1>
 
                             <p className="text-lg md:text-xl text-[#F8F3EF]/85 leading-relaxed font-normal max-w-2xl mx-auto lg:mx-0">
@@ -241,7 +271,7 @@ export default function DoctorPage() {
                                         const el = document.getElementById('directory-section');
                                         el?.scrollIntoView({ behavior: 'smooth' });
                                     }}
-                                    className="px-8 py-6 bg-[#052326] text-[#101828] font-bold rounded-[10px] hover:bg-[#101828] hover:text-[#052326] hover:border-[#052326] border border-transparent transition duration-300 text-xs capitalize tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-[#052326]/10"
+                                    className="px-8 py-6 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold rounded-[10px] transition duration-300 text-xs capitalize tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 border-none cursor-pointer"
                                 >
                                     Book a Specialist
                                     <ChevronRight size={16} />
@@ -250,13 +280,13 @@ export default function DoctorPage() {
                                 <div className="flex gap-3">
                                     <Button
                                         onClick={() => router.push('/doctor/register')}
-                                        className="px-6 py-6 bg-transparent border border-white/20 text-white font-bold rounded-[10px] hover:bg-white/10 transition duration-300 text-xs capitalize tracking-wider flex items-center justify-center"
+                                        className="px-6 py-6 bg-transparent border border-white/20 text-white font-bold rounded-[10px] hover:bg-white/10 transition duration-300 text-xs capitalize tracking-wider flex items-center justify-center cursor-pointer"
                                     >
                                         Practitioner Signup
                                     </Button>
                                     <Button
                                         onClick={() => router.push('/doctor/login')}
-                                        className="px-6 py-6 bg-white/5 border border-white/10 text-[#052326] hover:text-white font-bold rounded-[10px] hover:bg-white/10 transition duration-300 text-xs capitalize tracking-wider flex items-center justify-center"
+                                        className="px-6 py-6 bg-white/5 border border-white/10 text-white hover:text-white font-bold rounded-[10px] hover:bg-white/10 transition duration-300 text-xs capitalize tracking-wider flex items-center justify-center cursor-pointer"
                                     >
                                         Doctor Login
                                     </Button>
@@ -267,7 +297,7 @@ export default function DoctorPage() {
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-10 border-t border-white/10">
                                 {trustStats.map((stat, i) => (
                                     <div key={i} className="text-center lg:text-left">
-                                        <div className="text-2xl md:text-3xl font-extrabold text-[#052326] font-heading">{stat.value}</div>
+                                        <div className="text-2xl md:text-3xl font-extrabold text-emerald-400 font-heading">{stat.value}</div>
                                         <div className="text-xs text-[#F8F3EF]/60 font-medium mt-1">{stat.label}</div>
                                     </div>
                                 ))}
@@ -313,7 +343,7 @@ export default function DoctorPage() {
                                         <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
                                         <span className="text-[10px] text-white/45 font-mono ml-2">Cureza Clinical Suite v1.4</span>
                                     </div>
-                                    <div className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[9px] text-[#052326] font-semibold tracking-wider uppercase">
+                                    <div className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-[9px] text-emerald-400 font-semibold tracking-wider uppercase">
                                         Active
                                     </div>
                                 </div>
@@ -342,7 +372,7 @@ export default function DoctorPage() {
                                             <div className="text-[8px] text-white/45 uppercase tracking-wider">Upcoming Session</div>
                                             <div className="flex items-center justify-between mt-1">
                                                 <div className="text-[11px] font-bold text-white">Consultation: Rohan Verma</div>
-                                                <span className="text-[9px] text-[#052326] bg-[#052326]/10 px-1.5 py-0.5 rounded">Join Room</span>
+                                                <span className="text-[9px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded">Join Room</span>
                                             </div>
                                         </div>
 
@@ -360,7 +390,7 @@ export default function DoctorPage() {
 
                             {/* Floating Card 1: Doctor Recommendation */}
                             <div className="absolute top-[-20px] left-[-30px] bg-white text-[#052326] p-3 rounded-xl border border-[#052326]/10 shadow-xl flex items-center gap-3 animate-float-1 z-20">
-                                <div className="p-2 bg-emerald-50 text-[#052326] rounded-lg">
+                                <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
                                     <Video size={18} />
                                 </div>
                                 <div>
@@ -371,12 +401,12 @@ export default function DoctorPage() {
 
                             {/* Floating Card 2: Sales Notification */}
                             <div className="absolute bottom-[-15px] right-[-20px] bg-[#101828] text-white p-3 rounded-xl border border-white/10 shadow-2xl flex items-center gap-3 animate-float-2 z-20">
-                                <div className="p-2 bg-[#052326]/10 text-[#052326] rounded-lg">
+                                <div className="p-2 bg-amber-400/10 text-amber-400 rounded-lg">
                                     <Award size={18} />
                                 </div>
                                 <div>
-                                    <div className="text-[8px] font-bold text-[#052326] uppercase tracking-wider">Certified Practice</div>
-                                    <div className="text-xs font-bold">Ayush & MCI Verified</div>
+                                    <div className="text-[8px] font-bold text-amber-400/90 uppercase tracking-wider">Certified Practice</div>
+                                    <div className="text-xs font-bold text-gray-100">Ayush & MCI Verified</div>
                                 </div>
                             </div>
                         </div>
@@ -401,35 +431,45 @@ export default function DoctorPage() {
                     </div>
 
                     {/* Search Panel with premium backdrop */}
-                    <div className="mb-16 space-y-6 max-w-7xl mx-auto bg-[#F8F3EF]/50 p-4 md:p-6 rounded-2xl border border-[#052326]/8 shadow-[0_10px_30px_rgba(5,35,38,0.03)]">
-                        <div className="relative">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#052326]/40 h-5 w-5" />
-                            <Input
-                                placeholder="Search by practitioner name, medical system (e.g. Ayush, MD) or symptom tags..."
-                                className="pl-12 h-14 rounded-[12px] border-[#052326]/12 bg-white text-sm focus:ring-2 focus:ring-[#052326]/40 placeholder-[#052326]/30 shadow-sm"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
-                        </div>
-                        
-                        {/* Specialty Filter Buttons */}
-                        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide justify-start md:justify-center">
-                            {specialties.map((filter) => {
-                                const isActive = activeSpecialty === filter;
-                                return (
-                                    <button
-                                        key={filter}
-                                        onClick={() => setActiveSpecialty(filter)}
-                                        className={`px-5 py-2.5 rounded-[10px] whitespace-nowrap border text-xs font-semibold uppercase tracking-wider transition-all duration-200 select-none ${
-                                            isActive
-                                                ? 'bg-[#052326] text-[#F8F3EF] border-[#052326] shadow-md shadow-[#052326]/10'
-                                                : 'bg-white text-[#052326]/75 border-[#052326]/10 hover:border-[#052326]/20 hover:bg-[#F8F3EF]/40'
-                                        }`}
+                    <div className="mb-16 max-w-4xl mx-auto">
+                        <div className="relative group">
+                            {/* Outer Glow Effect on Hover/Focus */}
+                            <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl blur opacity-25 group-hover:opacity-35 transition duration-1000 group-focus-within:opacity-50"></div>
+                            
+                            <div className="relative bg-white rounded-2xl border border-[#052326]/8 shadow-[0_15px_45px_rgba(5,35,38,0.04)] flex items-center p-2.5">
+                                <div className="pl-4 pr-2 flex items-center justify-center text-emerald-600">
+                                    <Search className="h-6 w-6 stroke-[2.2]" />
+                                </div>
+                                <Input
+                                    placeholder="Search by practitioner name, medical system, symptoms (e.g. IBS, Anxiety, Acne)..."
+                                    className="h-14 bg-transparent border-0 shadow-none text-base text-[#052326] placeholder-[#052326]/40 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-transparent w-full"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                                {searchTerm && (
+                                    <button 
+                                        onClick={() => setSearchTerm('')} 
+                                        className="p-2 hover:bg-slate-100 rounded-lg text-[#052326]/50 hover:text-[#052326] transition-colors mr-2 cursor-pointer"
+                                        title="Clear Search"
                                     >
-                                        {filter}
+                                        <X size={18} />
                                     </button>
-                                );
-                            })}
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Suggested Tags / Fast Search */}
+                        <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-xs">
+                            <span className="text-[#052326]/50 font-semibold uppercase tracking-wider">Suggested Searches:</span>
+                            {['Ayurveda', 'IBS', 'Stress & Anxiety', 'Hair Fall', 'PCOS', 'Skin Care'].map((tag) => (
+                                <button
+                                    key={tag}
+                                    onClick={() => setSearchTerm(tag)}
+                                    className="px-3.5 py-1.5 rounded-full bg-white hover:bg-[#052326] border border-[#052326]/8 hover:border-[#052326] text-[#052326]/80 hover:text-white font-medium shadow-xs hover:shadow-md transition-all duration-300 cursor-pointer"
+                                >
+                                    {tag}
+                                </button>
+                            ))}
                         </div>
                     </div>
 
@@ -459,7 +499,7 @@ export default function DoctorPage() {
                                             className="bg-white rounded-2xl border border-[#052326]/10 shadow-[0_8px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_15px_40px_rgba(5,35,38,0.08)] hover:border-[#052326]/40 transition-all duration-300 p-6 flex flex-col justify-between group relative overflow-hidden"
                                         >
                                             {/* Glowing Top Bar on Hover */}
-                                            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#052326]/80 to-[#052326]/80 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                                            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-400 via-teal-500 to-amber-300 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
 
                                             <div>
                                                 {/* Header Row */}
@@ -486,7 +526,7 @@ export default function DoctorPage() {
                                                             <span className="text-2xl">👨‍⚕️</span>
                                                         )}
                                                         {/* Active Status Ring */}
-                                                        <span className="absolute bottom-1 right-1 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full animate-pulse"></span>
+                                                        <span className="absolute bottom-1 right-1 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full animate-pulse"></span>
                                                     </div>
                                                     <div className="min-w-0">
                                                         <h3 className="font-extrabold text-base text-[#052326] group-hover:text-[#052326] transition-colors truncate">
@@ -525,13 +565,13 @@ export default function DoctorPage() {
                                                     <Button 
                                                         variant="outline"
                                                         onClick={() => router.push(`/doctor/${doctor.id}`)}
-                                                        className="border-[#052326]/15 text-[#052326] hover:bg-[#052326]/5 hover:text-[#052326] px-3 h-9 rounded-[10px] text-[10px] font-bold uppercase tracking-wider transition-all"
+                                                        className="border-[#052326]/20 text-[#052326] hover:bg-[#052326] hover:text-[#F8F3EF] px-3 h-9 rounded-[10px] text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer"
                                                     >
                                                         View Profile
                                                     </Button>
                                                     <Button 
                                                         onClick={() => handleBookNow(doctor)}
-                                                        className="bg-[#052326] text-[#F8F3EF] hover:bg-[#052326] hover:text-[#101828] gap-1 px-4.5 h-9 rounded-[10px] text-[10px] font-bold uppercase tracking-wider transition-all flex items-center"
+                                                        className="bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white border-0 gap-1 px-4.5 h-9 rounded-[10px] text-[10px] font-bold uppercase tracking-wider transition-all flex items-center cursor-pointer shadow-sm hover:shadow-[0_4px_12px_rgba(16,185,129,0.2)]"
                                                     >
                                                         <Calendar size={11} /> Book Slots
                                                     </Button>
@@ -565,7 +605,7 @@ export default function DoctorPage() {
                             return (
                                 <div 
                                     key={i}
-                                    className={`p-6 bg-gradient-to-b ${system.color} rounded-[12px] border border-[#052326]/8 flex flex-col justify-between space-y-4 hover:shadow-md transition duration-300`}
+                                    className={`p-6 bg-gradient-to-b ${system.color} rounded-[12px] border border-[#052326]/8 flex flex-col justify-between space-y-4 hover:shadow-lg hover:-translate-y-1 transition duration-300`}
                                 >
                                     <div className="space-y-4">
                                         <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-white shadow-sm border border-[#052326]/8 text-[#052326]">
@@ -603,7 +643,7 @@ export default function DoctorPage() {
                             return (
                                 <div 
                                     key={i}
-                                    className="bg-[#F8F3EF]/30 p-8 rounded-[12px] border border-[#052326]/8 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:border-[#052326]/55 transition duration-300 flex flex-col justify-between"
+                                    className="bg-[#F8F3EF]/30 p-8 rounded-[12px] border border-[#052326]/8 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:border-emerald-500/20 hover:-translate-y-1 hover:shadow-lg transition duration-300 flex flex-col justify-between"
                                 >
                                     <div className="space-y-6">
                                         <div className="flex justify-between items-start">
@@ -623,7 +663,7 @@ export default function DoctorPage() {
 
                                     <div className="pt-6 mt-6 border-t border-gray-100 flex items-center justify-between text-xs font-semibold text-[#052326]">
                                         <span>Included in Console</span>
-                                        <Check size={14} className="text-[#052326]" />
+                                        <Check size={14} className="text-emerald-600" />
                                     </div>
                                 </div>
                             );
@@ -636,7 +676,7 @@ export default function DoctorPage() {
             <section className="py-24 bg-[#052326] text-white border-t border-white/5 text-center relative overflow-hidden">
                 <div className="absolute inset-0 opacity-[0.02] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none"></div>
                 <div className="container mx-auto px-6 relative z-10 space-y-6 max-w-3xl">
-                    <span className="text-[#052326] text-xs font-bold uppercase tracking-widest block">Become a Cureza Practitioner</span>
+                    <span className="text-emerald-400 text-xs font-bold uppercase tracking-widest block">Become a Cureza Practitioner</span>
                     <h2 className="text-3xl md:text-4xl font-extrabold font-heading">
                         Start Your Digital Practice Today
                     </h2>
@@ -646,14 +686,14 @@ export default function DoctorPage() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
                         <Button 
                             onClick={() => router.push('/doctor/register')}
-                            className="bg-[#052326] text-[#101828] hover:bg-[#052326]/90 font-bold px-8 h-12 rounded-[10px] text-xs uppercase tracking-wider transition-all"
+                            className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-extrabold px-8 h-12 rounded-[10px] text-xs uppercase tracking-wider transition-all duration-300 shadow-md shadow-emerald-500/25 border-none cursor-pointer"
                         >
                             Register as Doctor
                         </Button>
                         <Button 
                             variant="outline" 
                             onClick={() => router.push('/doctor/login')}
-                            className="bg-transparent text-white border-white/20 hover:bg-white/10 font-bold px-8 h-12 rounded-[10px] text-xs uppercase tracking-wider transition-all"
+                            className="bg-white/5 border border-white/15 text-[#F8F3EF] hover:bg-white/10 hover:border-white/30 font-bold px-8 h-12 rounded-[10px] text-xs uppercase tracking-wider transition-all cursor-pointer"
                         >
                             Doctor Sign In
                         </Button>
@@ -662,5 +702,18 @@ export default function DoctorPage() {
             </section>
 
         </div>
+    );
+}
+
+export default function DoctorPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-[#F8F3EF] flex flex-col items-center justify-center py-20">
+                <div className="w-9 h-9 rounded-full border-[3px] border-t-transparent border-[#052326] animate-spin"></div>
+                <span className="text-sm font-semibold mt-3 text-[#052326]/60 animate-pulse">Loading clinical workspace...</span>
+            </div>
+        }>
+            <DoctorContent />
+        </Suspense>
     );
 }

@@ -19,8 +19,10 @@ Seller / Vendor	seller@cureza.com	password	http://localhost:3000/seller
 
 open herd  "C:\Program Files\Herd\Herd.exe" --profile 
 
-cd d:\Cureza\cureza-web-app\frontend
+cd C:\Users\Admin\OneDrive\Documents\Cureza\cureza-web-app\frontend
 npm run dev
 
-cd d:\Cureza\cureza-web-app\backend
+cd C:\Users\Admin\OneDrive\Documents\Cureza\cureza-web-app\backend
 php artisan serve
+
+

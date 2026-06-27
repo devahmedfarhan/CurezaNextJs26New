@@ -282,7 +282,7 @@ export default function Navbar() {
         )}
 
         {/* ---------------- 4. ROW 2: CATEGORY NAV PILLARS (DESKTOP) ---------------- */}
-        <div className="hidden md:block border-t border-white/10 bg-[#052326] relative">
+        <div className="hidden md:block border-t border-white/10 border-b border-white/20 bg-[#052326] relative">
           <div className="container mx-auto px-6 flex justify-center">
             <nav>
               <ul className="flex items-center gap-10 text-[12px] font-bold tracking-wide py-0 text-white/90 relative">
