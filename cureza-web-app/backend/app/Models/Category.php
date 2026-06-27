@@ -19,13 +19,20 @@ class Category extends Model
         'sub_heading',
         'description',
         'bottom_description',
-        'is_active'
+        'is_active',
+        'show_in_mega_menu',
+        'mega_menu_section'
     ];
 
     public function parent()
     {
         return $this->belongsTo(Category::class, 'parent_id');
     }
+
+    protected $casts = [
+        'is_active' => 'boolean',
+        'show_in_mega_menu' => 'boolean',
+    ];
 
     public function children()
     {

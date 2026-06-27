@@ -22,13 +22,16 @@ class Brand extends Model
         'faqs',
         'purity_standards',
         'genuine_badge_text',
-        'brand_vision'
+        'brand_vision',
+        'show_in_mega_menu',
+        'mega_menu_section'
     ];
 
     protected $casts = [
         'keywords' => 'array',
         'faqs' => 'array',
         'is_active' => 'boolean',
+        'show_in_mega_menu' => 'boolean',
         'purity_standards' => 'array',
     ];
 

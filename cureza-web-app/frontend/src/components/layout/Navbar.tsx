@@ -17,31 +17,37 @@ import CartDrawer from '@/components/cart/CartDrawer';
 import SearchBar from './SearchBar';
 import AnnouncementBar from './AnnouncementBar';
 
+interface BrandItem {
+  id: number;
+  name: string;
+  slug: string;
+  show_in_mega_menu?: boolean;
+  mega_menu_section?: string;
+}
+
 export default function Navbar() {
   const { categories, concerns } = useCategories();
-  const hasCategory = (slug: string) => categories.some((c) => c.slug === slug);
-  const [activeBrands, setActiveBrands] = useState<string[]>([]);
+  const [activeBrands, setActiveBrands] = useState<BrandItem[]>([]);
 
   // Group concerns logically for the Concern Mega Menu
   const getGroupedConcerns = () => {
-    const mentalSlugs = ['anxiety-stress', 'stress-anxiety', 'depression-mood-disorders', 'insomnia-sleep-disorders', 'sleep-disorders', 'adhd-cognitive-focus', 'de-addiction-detox', 'addiction-detox', 'mental-health'];
-    const physicalSlugs = ['chronic-pain', 'pain-relief', 'arthritis-joint-pain', 'back-pain-muscle-spasms', 'migraines-headaches', 'headaches-migraines', 'cancer-support-palliative-care', 'palliative-care', 'injury-recovery'];
+    // Filter active concerns that should show in mega menu
+    const visibleConcerns = concerns.filter(c => c.show_in_mega_menu !== false);
 
-    const mental = concerns.filter(c => mentalSlugs.some(s => c.slug.includes(s) || s.includes(c.slug)));
-    const physical = concerns.filter(c => physicalSlugs.some(s => c.slug.includes(s) || s.includes(c.slug)));
-    const general = concerns.filter(c => !mental.some(m => m.id === c.id) && !physical.some(p => p.id === c.id));
+    const mental = visibleConcerns.filter(c => c.mega_menu_section === 'mental');
+    const physical = visibleConcerns.filter(c => c.mega_menu_section === 'physical');
+    const general = visibleConcerns.filter(c => c.mega_menu_section === 'general' || !c.mega_menu_section);
 
     return { mental, physical, general };
   };
 
   const groupedConcerns = getGroupedConcerns();
 
-
   useEffect(() => {
     api.get('/brands')
       .then((res) => {
         if (Array.isArray(res.data)) {
-          setActiveBrands(res.data.map((b: any) => b.slug));
+          setActiveBrands(res.data);
         }
       })
       .catch((err) => console.error("Error fetching active brands:", err));
@@ -74,29 +80,6 @@ export default function Navbar() {
     document.addEventListener('click', handleOutsideClick);
     return () => document.removeEventListener('click', handleOutsideClick);
   }, [isAccountDropdownOpen]);
-
-  // Database Brands mapped logically
-  const brandsGrouped = {
-    cannabisHemp: [
-      { name: 'Aura Wellness', slug: 'aura-wellness' },
-      { name: 'Hemp Horizon', slug: 'hemp-horizon' },
-      { name: 'Green Earth', slug: 'green-earth' }
-    ],
-    ayurvedicHerbal: [
-      { name: 'AyurLife Organics', slug: 'ayurlife-organics' },
-      { name: 'Vedic Pure', slug: 'vedic-pure' },
-      { name: 'Somya Herbals', slug: 'somya-herbals' },
-      { name: 'Pure Ayur', slug: 'pure-ayur' },
-      { name: 'Sattva Remedies', slug: 'sattva-remedies' },
-      { name: 'Amrit Life', slug: 'amrit-life' }
-    ],
-    wellnessPersonal: [
-      { name: 'Prana Naturals', slug: 'prana-naturals' },
-      { name: 'Green Elements', slug: 'green-elements' },
-      { name: 'Ojas Organics', slug: 'ojas-organics' },
-      { name: 'Noelle Rosa', slug: 'noelle-rosa' }
-    ]
-  };
 
   return (
     <>
@@ -300,16 +283,16 @@ export default function Navbar() {
         <div className="hidden md:block border-t border-[#052326]/5 bg-white relative">
           <div className="container mx-auto px-6 flex justify-center">
             <nav>
-              <ul className="flex items-center gap-10 text-[12px] font-bold tracking-wide py-3.5 text-[#052326]/90 relative">
+              <ul className="flex items-center gap-10 text-[12px] font-bold tracking-wide py-0 text-[#052326]/90 relative">
                 
                 {/* 1. SHOP BY CATEGORIES (MEGA MENU) */}
-                <li className="group">
-                  <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold pb-2 capitalize">
+                <li className="group flex items-center">
+                  <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4 capitalize">
                     Shop By Categories <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                   </button>
                   
                   {/* Visual Dropdown Panel Wrapper */}
-                  <div className="absolute left-1/2 -translate-x-1/2 top-[100%] mt-0 pt-3 w-[1200px] opacity-0 scale-95 translate-y-4 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) z-50">
+                  <div className="absolute left-1/2 -translate-x-1/2 top-[100%] mt-0 pt-1.5 w-[1200px] opacity-0 scale-95 translate-y-4 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) z-50">
                     <div className="bg-white/98 backdrop-blur-xl border border-[#052326]/8 shadow-[0_20px_50px_rgba(5,35,38,0.08)] rounded-[10px] p-6 flex gap-6 z-50">
                       
                       {/* Left 4 Columns of Category Link Grids */}
@@ -321,136 +304,37 @@ export default function Navbar() {
                             <ShieldAlert size={14} className="text-[#2E7D32]" /> Medical Cannabis THC
                           </h4>
                           <ul className="space-y-0.5 text-[#052326]/75">
-                            {hasCategory('thc-oils') && (
-                              <li>
-                                <Link href="/shop?category=thc-oils&requireRx=true" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                            {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'thc').map((c) => (
+                              <li key={c.id}>
+                                <Link href={`/shop?category=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
                                   <span className="flex items-center gap-2">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">All Medical Cannabis (with THC)</span>
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
                                   </span>
                                   <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
-                            )}
-                            {hasCategory('thc-oils') && (
-                              <li>
-                                <Link href="/shop?category=thc-oils" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">THC Oils & Drops</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            )}
-                            {hasCategory('classical-ayurvedic-medicines') && (
-                              <li>
-                                <Link href="/shop?category=classical-ayurvedic-medicines" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Classical Ayurvedic Medicines</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            )}
-                            {hasCategory('capsules-tablets') && (
-                              <li>
-                                <Link href="/shop?category=capsules-tablets&requireRx=true" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Full Spectrum Capsules (Rx)</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            )}
-                            {hasCategory('vapes-inhalables') && (
-                              <li>
-                                <Link href="/shop?category=vapes-inhalables" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Vapes & Inhalables</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            )}
+                            ))}
                           </ul>
                         </div>
 
-                        {/* Col 2: CBD Oil Products */}
+                        {/* Col 2: CBD & Hemp Products */}
                         <div className="flex flex-col gap-2.5">
                           <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
                             <Leaf size={14} className="text-[#2E7D32]" /> CBD & Hemp Products
                           </h4>
                           <ul className="space-y-0.5 text-[#052326]/75">
-                            {hasCategory('cbd-oils-tinctures') && (
-                              <li>
-                                <Link href="/shop?category=cbd-oils-tinctures" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                            {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'cbd').map((c) => (
+                              <li key={c.id}>
+                                <Link href={`/shop?category=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
                                   <span className="flex items-center gap-2">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">All CBD Oils & Extracts</span>
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
                                   </span>
                                   <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
-                            )}
-                            {hasCategory('cbd-oils-tinctures') && (
-                              <li>
-                                <Link href="/shop?category=cbd-oils-tinctures" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">CBD Oils & Tinctures</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            )}
-                            {hasCategory('gummies-edibles') && (
-                              <li>
-                                <Link href="/shop?category=gummies-edibles" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">CBD Gummies & Edibles</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            )}
-                            {hasCategory('capsules-tablets') && (
-                              <li>
-                                <Link href="/shop?category=capsules-tablets&requireRx=false" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">CBD Capsules & Softgels</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            )}
-                            {hasCategory('topicals-roll-ons') && (
-                              <li>
-                                <Link href="/shop?category=topicals-roll-ons" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">CBD Topicals & Roll-Ons</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            )}
-                            {hasCategory('pet-care') && (
-                              <li>
-                                <Link href="/shop?category=pet-care" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">CBD Oil for Pets</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            )}
+                            ))}
                           </ul>
                         </div>
 
@@ -460,50 +344,17 @@ export default function Navbar() {
                             <Activity size={14} className="text-[#2E7D32]" /> Herbal & Ayurveda
                           </h4>
                           <ul className="space-y-0.5 text-[#052326]/75">
-                            {hasCategory('herbal-ayurveda') && (
-                              <li>
-                                <Link href="/shop?category=herbal-ayurveda" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                            {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'herbal').map((c) => (
+                              <li key={c.id}>
+                                <Link href={`/shop?category=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
                                   <span className="flex items-center gap-2">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">All Herbal & Ayurveda</span>
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
                                   </span>
                                   <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
-                            )}
-                            {hasCategory('ayurveda') && (
-                              <li>
-                                <Link href="/shop?category=ayurveda" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Ayurvedic Remedies</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            )}
-                            {hasCategory('organic-groceries-pantry') && (
-                              <li>
-                                <Link href="/shop?category=organic-groceries-pantry" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Organic Groceries & Pantry</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            )}
-                            {hasCategory('aromatherapy-essential-oils') && (
-                              <li>
-                                <Link href="/shop?category=aromatherapy-essential-oils" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Aromatherapy & Essential Oils</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            )}
+                            ))}
                           </ul>
                         </div>
 
@@ -513,61 +364,17 @@ export default function Navbar() {
                             <Brain size={14} className="text-[#2E7D32]" /> Supplements & Wellness
                           </h4>
                           <ul className="space-y-0.5 text-[#052326]/75">
-                            {hasCategory('supplements-vitamins') && (
-                              <li>
-                                <Link href="/shop?category=supplements-vitamins" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                            {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'supplements').map((c) => (
+                              <li key={c.id}>
+                                <Link href={`/shop?category=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
                                   <span className="flex items-center gap-2">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">All Supplements & Vitamins</span>
+                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
                                   </span>
                                   <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
                                 </Link>
                               </li>
-                            )}
-                            {hasCategory('single-herb-supplements') && (
-                              <li>
-                                <Link href="/shop?category=single-herb-supplements" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Single Herb Supplements</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            )}
-                            {hasCategory('combo-packs-kits') && (
-                              <li>
-                                <Link href="/shop?category=combo-packs-kits" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Combo Packs & Kits</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            )}
-                            {hasCategory('intimate-wellness') && (
-                              <li>
-                                <Link href="/shop?category=intimate-wellness" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Intimate & Sexual Wellness</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            )}
-                            {hasCategory('skincare') && (
-                              <li>
-                                <Link href="/shop?category=skincare" className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">Skincare & Beauty</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            )}
+                            ))}
                           </ul>
                         </div>
 
@@ -603,13 +410,13 @@ export default function Navbar() {
                 </li>
 
                 {/* 2. SHOP BY BRAND (MEGA MENU) */}
-                <li className="group">
-                  <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold pb-2 capitalize">
+                <li className="group flex items-center">
+                  <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4 capitalize">
                     Shop By Brand <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                   </button>
 
                   {/* Mega Menu Dropdown Wrapper */}
-                  <div className="absolute left-1/2 -translate-x-1/2 top-[100%] mt-0 pt-3 w-[1000px] opacity-0 scale-95 translate-y-4 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) z-50">
+                  <div className="absolute left-1/2 -translate-x-1/2 top-[100%] mt-0 pt-1.5 w-[1000px] opacity-0 scale-95 translate-y-4 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) z-50">
                     <div className="bg-white/98 backdrop-blur-xl border border-[#052326]/8 shadow-[0_20px_50px_rgba(5,35,38,0.08)] rounded-[10px] p-6 flex gap-6 z-50">
                       
                       {/* Left Brand Columns */}
@@ -621,8 +428,8 @@ export default function Navbar() {
                             <Leaf size={14} className="text-[#2E7D32]" /> Cannabis & Hemp
                           </h4>
                           <ul className="space-y-0.5 text-[#052326]/75">
-                            {brandsGrouped.cannabisHemp.filter((b) => activeBrands.includes(b.slug)).map((b) => (
-                              <li key={b.slug}>
+                            {activeBrands.filter(b => b.show_in_mega_menu !== false && b.mega_menu_section === 'cannabis_hemp').map((b) => (
+                              <li key={b.id}>
                                 <Link href={`/brand/${b.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
                                   <span className="flex items-center gap-2">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
@@ -641,8 +448,8 @@ export default function Navbar() {
                             <Activity size={14} className="text-[#2E7D32]" /> Ayurvedic & Herbal
                           </h4>
                           <ul className="space-y-0.5 text-[#052326]/75">
-                            {brandsGrouped.ayurvedicHerbal.filter((b) => activeBrands.includes(b.slug)).map((b) => (
-                              <li key={b.slug}>
+                            {activeBrands.filter(b => b.show_in_mega_menu !== false && b.mega_menu_section === 'ayurvedic_herbal').map((b) => (
+                              <li key={b.id}>
                                 <Link href={`/brand/${b.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
                                   <span className="flex items-center gap-2">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
@@ -661,8 +468,8 @@ export default function Navbar() {
                             <Sparkles size={14} className="text-[#2E7D32]" /> Wellness & Care
                           </h4>
                           <ul className="space-y-0.5 text-[#052326]/75">
-                            {brandsGrouped.wellnessPersonal.filter((b) => activeBrands.includes(b.slug)).map((b) => (
-                              <li key={b.slug}>
+                            {activeBrands.filter(b => b.show_in_mega_menu !== false && b.mega_menu_section === 'wellness_care').map((b) => (
+                              <li key={b.id}>
                                 <Link href={`/brand/${b.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
                                   <span className="flex items-center gap-2">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
@@ -701,13 +508,13 @@ export default function Navbar() {
                 </li>
 
                 {/* 3. SHOP BY CONCERN (MEGA MENU) */}
-                <li className="group">
-                  <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold pb-2 capitalize">
+                <li className="group flex items-center">
+                  <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4 capitalize">
                     Shop By Concern <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                   </button>
 
                   {/* Mega Menu Dropdown Wrapper */}
-                  <div className="absolute left-1/2 -translate-x-1/2 top-[100%] mt-0 pt-3 w-[1100px] opacity-0 scale-95 translate-y-4 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) z-50">
+                  <div className="absolute left-1/2 -translate-x-1/2 top-[100%] mt-0 pt-1.5 w-[1100px] opacity-0 scale-95 translate-y-4 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) z-50">
                     <div className="bg-white/98 backdrop-blur-xl border border-[#052326]/8 shadow-[0_20px_50px_rgba(5,35,38,0.08)] rounded-[10px] p-6 flex gap-6 z-50">
                       
                       {/* Left Concern Columns */}
@@ -817,12 +624,12 @@ export default function Navbar() {
                 <li className="h-4 w-[1px] bg-[#052326]/10 self-center"></li>
 
                 {/* 4. ABOUT US (DROPDOWN) */}
-                <li className="relative group">
-                  <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold pb-2">
+                <li className="relative group flex items-center">
+                  <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4">
                     About Us <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                   </button>
                   {/* About Us Dropdown Wrapper */}
-                  <div className="absolute left-0 top-[80%] mt-0 pt-0.5 w-56 opacity-0 translate-y-3 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 ease-out z-50">
+                  <div className="absolute left-0 top-[100%] mt-0 pt-1.5 w-56 opacity-0 translate-y-3 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 ease-out z-50">
                     <div className="bg-white/95 backdrop-blur-xl border border-[#052326]/8 shadow-[0_25px_60px_rgba(5,35,38,0.15)] rounded-[10px] py-3">
                       <Link href="/about" className="group/item flex items-center justify-between px-5 py-2.5 text-[12px] font-bold text-[#052326] hover:bg-[#2E7D32]/5 hover:text-[#2E7D32] transition-all duration-200 normal-case rounded-[8px] mx-2">
                         <span className="flex items-center gap-2">
@@ -857,12 +664,12 @@ export default function Navbar() {
                 </li>
 
                 {/* 5. KNOWLEDGE HUB (DROPDOWN) */}
-                <li className="relative group">
-                  <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold pb-2">
+                <li className="relative group flex items-center">
+                  <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4">
                     Knowledge Hub <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                   </button>
                   {/* Knowledge Hub Dropdown Wrapper */}
-                  <div className="absolute left-0 top-[80%] mt-0 pt-0.5 w-56 opacity-0 translate-y-3 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 ease-out z-50">
+                  <div className="absolute left-0 top-[100%] mt-0 pt-1.5 w-56 opacity-0 translate-y-3 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 ease-out z-50">
                     <div className="bg-white/95 backdrop-blur-xl border border-[#052326]/8 shadow-[0_25px_60px_rgba(5,35,38,0.15)] rounded-[10px] py-3">
                       <Link href="/blog" className="group/item flex items-center justify-between px-5 py-2.5 text-[12px] font-bold text-[#052326] hover:bg-[#2E7D32]/5 hover:text-[#2E7D32] transition-all duration-200 normal-case rounded-[8px] mx-2">
                         <span className="flex items-center gap-2">
@@ -944,12 +751,12 @@ export default function Navbar() {
                           <ChevronDown size={12} className={`transform transition-transform ${activeMobileSubTab === 'mc-thc' ? 'rotate-180' : ''}`} />
                         </button>
                         {activeMobileSubTab === 'mc-thc' && (
-                          <div className="pl-3 py-1 space-y-2 text-[11px] font-semibold normal-case text-gray-550">
-                            {hasCategory('thc-oils') && <Link href="/shop?category=thc-oils&requireRx=true" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">All Medical Cannabis (with THC)</Link>}
-                            {hasCategory('thc-oils') && <Link href="/shop?category=thc-oils" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">THC Oils & Drops</Link>}
-                            {hasCategory('classical-ayurvedic-medicines') && <Link href="/shop?category=classical-ayurvedic-medicines" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Classical Ayurvedic Medicines</Link>}
-                            {hasCategory('capsules-tablets') && <Link href="/shop?category=capsules-tablets&requireRx=true" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Full Spectrum Capsules (Rx)</Link>}
-                            {hasCategory('vapes-inhalables') && <Link href="/shop?category=vapes-inhalables" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Vapes & Inhalables</Link>}
+                          <div className="pl-3 py-1 space-y-2 text-[11px] font-semibold normal-case text-gray-555">
+                            {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'thc').map((c) => (
+                              <Link key={c.id} href={`/shop?category=${c.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="block py-1">
+                                {c.name}
+                              </Link>
+                            ))}
                           </div>
                         )}
                       </div>
@@ -964,13 +771,12 @@ export default function Navbar() {
                           <ChevronDown size={12} className={`transform transition-transform ${activeMobileSubTab === 'cbd-oil' ? 'rotate-180' : ''}`} />
                         </button>
                         {activeMobileSubTab === 'cbd-oil' && (
-                          <div className="pl-3 py-1 space-y-2 text-[11px] font-semibold normal-case text-gray-550">
-                            {hasCategory('cbd-oils-tinctures') && <Link href="/shop?category=cbd-oils-tinctures" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">All CBD Oils & Extracts</Link>}
-                            {hasCategory('cbd-oils-tinctures') && <Link href="/shop?category=cbd-oils-tinctures" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">CBD Oils & Tinctures</Link>}
-                            {hasCategory('gummies-edibles') && <Link href="/shop?category=gummies-edibles" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">CBD Gummies & Edibles</Link>}
-                            {hasCategory('capsules-tablets') && <Link href="/shop?category=capsules-tablets&requireRx=false" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">CBD Capsules & Softgels</Link>}
-                            {hasCategory('topicals-roll-ons') && <Link href="/shop?category=topicals-roll-ons" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">CBD Topicals & Roll-Ons</Link>}
-                            {hasCategory('pet-care') && <Link href="/shop?category=pet-care" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">CBD Oil for Pets</Link>}
+                          <div className="pl-3 py-1 space-y-2 text-[11px] font-semibold normal-case text-gray-555">
+                            {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'cbd').map((c) => (
+                              <Link key={c.id} href={`/shop?category=${c.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="block py-1">
+                                {c.name}
+                              </Link>
+                            ))}
                           </div>
                         )}
                       </div>
@@ -985,11 +791,12 @@ export default function Navbar() {
                           <ChevronDown size={12} className={`transform transition-transform ${activeMobileSubTab === 'herbal' ? 'rotate-180' : ''}`} />
                         </button>
                         {activeMobileSubTab === 'herbal' && (
-                          <div className="pl-3 py-1 space-y-2 text-[11px] font-semibold normal-case text-gray-550">
-                            {hasCategory('herbal-ayurveda') && <Link href="/shop?category=herbal-ayurveda" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">All Herbal & Ayurveda</Link>}
-                            {hasCategory('ayurveda') && <Link href="/shop?category=ayurveda" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Ayurvedic Remedies</Link>}
-                            {hasCategory('organic-groceries-pantry') && <Link href="/shop?category=organic-groceries-pantry" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Organic Groceries & Pantry</Link>}
-                            {hasCategory('aromatherapy-essential-oils') && <Link href="/shop?category=aromatherapy-essential-oils" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Aromatherapy & Essential Oils</Link>}
+                          <div className="pl-3 py-1 space-y-2 text-[11px] font-semibold normal-case text-gray-555">
+                            {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'herbal').map((c) => (
+                              <Link key={c.id} href={`/shop?category=${c.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="block py-1">
+                                {c.name}
+                              </Link>
+                            ))}
                           </div>
                         )}
                       </div>
@@ -1004,11 +811,12 @@ export default function Navbar() {
                           <ChevronDown size={12} className={`transform transition-transform ${activeMobileSubTab === 'supplements' ? 'rotate-180' : ''}`} />
                         </button>
                         {activeMobileSubTab === 'supplements' && (
-                          <div className="pl-3 py-1 space-y-2 text-[11px] font-semibold normal-case text-gray-550">
-                            {hasCategory('supplements-vitamins') && <Link href="/shop?category=supplements-vitamins" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">All Supplements & Vitamins</Link>}
-                            {hasCategory('single-herb-supplements') && <Link href="/shop?category=single-herb-supplements" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Single Herb Supplements</Link>}
-                            {hasCategory('combo-packs-kits') && <Link href="/shop?category=combo-packs-kits" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Combo Packs & Kits</Link>}
-                            {hasCategory('skincare') && <Link href="/shop?category=skincare" onClick={() => setIsMobileMenuOpen(false)} className="block py-1">Skincare & Beauty</Link>}
+                          <div className="pl-3 py-1 space-y-2 text-[11px] font-semibold normal-case text-gray-555">
+                            {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'supplements').map((c) => (
+                              <Link key={c.id} href={`/shop?category=${c.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="block py-1">
+                                {c.name}
+                              </Link>
+                            ))}
                           </div>
                         )}
                       </div>
@@ -1033,11 +841,7 @@ export default function Navbar() {
                   </button>
                   {activeMobileTab === 'brands' && (
                     <div className="pl-3 mt-1 space-y-2 border-l-2 border-[#2E7D32]/20 text-[11px] font-semibold normal-case text-gray-500 max-h-60 overflow-y-auto">
-                      {[
-                        ...brandsGrouped.cannabisHemp,
-                        ...brandsGrouped.ayurvedicHerbal,
-                        ...brandsGrouped.wellnessPersonal
-                      ].filter((b) => activeBrands.includes(b.slug)).map((b) => (
+                      {activeBrands.filter(b => b.show_in_mega_menu !== false).map((b) => (
                         <Link 
                           key={b.slug} 
                           href={`/brand/${b.slug}`} 

@@ -10,6 +10,9 @@ interface Brand {
     name: string;
     slug: string;
     description: string;
+    is_active?: boolean;
+    show_in_mega_menu?: boolean;
+    mega_menu_section?: string;
     user?: {
         name: string;
         email: string;
@@ -28,7 +31,10 @@ export default function AdminBrandsPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
-        description: ''
+        description: '',
+        is_active: true,
+        show_in_mega_menu: true,
+        mega_menu_section: ''
     });
 
     const fetchBrands = async () => {
@@ -53,13 +59,19 @@ export default function AdminBrandsPage() {
             setEditingBrand(brand);
             setFormData({
                 name: brand.name,
-                description: brand.description || ''
+                description: brand.description || '',
+                is_active: brand.is_active !== undefined ? brand.is_active : true,
+                show_in_mega_menu: brand.show_in_mega_menu !== undefined ? brand.show_in_mega_menu : true,
+                mega_menu_section: brand.mega_menu_section || ''
             });
         } else {
             setEditingBrand(null);
             setFormData({
                 name: '',
-                description: ''
+                description: '',
+                is_active: true,
+                show_in_mega_menu: true,
+                mega_menu_section: ''
             });
         }
         setIsModalOpen(true);
@@ -305,6 +317,47 @@ export default function AdminBrandsPage() {
                                         rows={3}
                                         placeholder="Optional description of the brand identity..."
                                     />
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-neutral-50/30 p-3 rounded-lg border border-neutral-100 dark:border-neutral-800">
+                                    <div className="flex items-center gap-2 pt-1">
+                                        <input
+                                            type="checkbox"
+                                            id="show_in_mega_menu"
+                                            checked={formData.show_in_mega_menu}
+                                            onChange={(e) => setFormData({ ...formData, show_in_mega_menu: e.target.checked })}
+                                            className="w-4 h-4 rounded-[3px] border-black/50 text-black focus:ring-black/10 cursor-pointer"
+                                        />
+                                        <label htmlFor="show_in_mega_menu" className="text-xs font-semibold text-gray-700 cursor-pointer">Show In Mega Menu</label>
+                                    </div>
+
+                                    {formData.show_in_mega_menu && (
+                                        <div>
+                                            <label className="block text-[10px] font-semibold text-gray-550 mb-1">Mega Menu Column</label>
+                                            <select
+                                                name="mega_menu_section"
+                                                value={formData.mega_menu_section}
+                                                onChange={(e) => setFormData({ ...formData, mega_menu_section: e.target.value })}
+                                                className="w-full h-10 px-3 border-[0.5px] border-black/50 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-950 dark:text-gray-100 transition-all cursor-pointer"
+                                            >
+                                                <option value="">None (Don't Group)</option>
+                                                <option value="cannabis_hemp">Cannabis & Hemp</option>
+                                                <option value="ayurvedic_herbal">Ayurvedic & Herbal</option>
+                                                <option value="wellness_care">Wellness & Care</option>
+                                            </select>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="flex items-center gap-2 pt-1">
+                                    <input
+                                        type="checkbox"
+                                        id="is_active"
+                                        checked={formData.is_active}
+                                        onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
+                                        className="w-4 h-4 rounded-[3px] border-black/50 text-black focus:ring-black/10 cursor-pointer"
+                                    />
+                                    <label htmlFor="is_active" className="text-xs font-semibold text-gray-700 cursor-pointer">Active</label>
                                 </div>
 
                                 <div className="pt-2">

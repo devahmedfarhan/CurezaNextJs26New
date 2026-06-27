@@ -11,6 +11,8 @@ export interface Category {
     image?: string;
     description?: string;
     is_active: boolean;
+    show_in_mega_menu?: boolean;
+    mega_menu_section?: string;
 }
 
 export interface Collection {

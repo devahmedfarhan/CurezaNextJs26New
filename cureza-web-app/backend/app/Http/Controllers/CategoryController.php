@@ -44,7 +44,9 @@ class CategoryController extends Controller
             'sub_heading' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'bottom_description' => 'nullable|string',
-            'is_active' => 'boolean' // Accept boolean or string 'true'/'false'
+            'is_active' => 'boolean',
+            'show_in_mega_menu' => 'sometimes|boolean',
+            'mega_menu_section' => 'nullable|string|max:255'
         ]);
 
         $slug = Str::slug($validated['name']);
@@ -69,7 +71,9 @@ class CategoryController extends Controller
             'sub_heading' => $validated['sub_heading'] ?? null,
             'description' => $validated['description'] ?? null,
             'bottom_description' => $validated['bottom_description'] ?? null,
-            'is_active' => filter_var($request->input('is_active', true), FILTER_VALIDATE_BOOLEAN)
+            'is_active' => filter_var($request->input('is_active', true), FILTER_VALIDATE_BOOLEAN),
+            'show_in_mega_menu' => filter_var($request->input('show_in_mega_menu', true), FILTER_VALIDATE_BOOLEAN),
+            'mega_menu_section' => $request->input('mega_menu_section') ?? null
         ]);
 
         \Illuminate\Support\Facades\Cache::forget('public_categories_all');
@@ -92,7 +96,9 @@ class CategoryController extends Controller
             'sub_heading' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'bottom_description' => 'nullable|string',
-            'is_active' => 'sometimes'
+            'is_active' => 'sometimes',
+            'show_in_mega_menu' => 'sometimes',
+            'mega_menu_section' => 'nullable|string|max:255'
         ]);
 
         $data = $validated;
@@ -110,6 +116,9 @@ class CategoryController extends Controller
 
         if (isset($validated['is_active'])) {
              $data['is_active'] = filter_var($validated['is_active'], FILTER_VALIDATE_BOOLEAN);
+        }
+        if (isset($validated['show_in_mega_menu'])) {
+             $data['show_in_mega_menu'] = filter_var($validated['show_in_mega_menu'], FILTER_VALIDATE_BOOLEAN);
         }
 
         \Illuminate\Support\Facades\Cache::forget('public_categories_all');

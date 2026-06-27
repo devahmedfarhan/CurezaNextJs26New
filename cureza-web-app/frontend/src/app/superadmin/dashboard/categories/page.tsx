@@ -58,6 +58,8 @@ export default function AdminCategoriesPage() {
         bottom_description: '',
         type: 'category' as TabType,
         is_active: true,
+        show_in_mega_menu: true,
+        mega_menu_section: '',
         product_ids: [] as number[]
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -145,6 +147,8 @@ export default function AdminCategoriesPage() {
                 bottom_description: item.bottom_description || '',
                 type: activeTab,
                 is_active: item.is_active,
+                show_in_mega_menu: item.show_in_mega_menu !== undefined ? item.show_in_mega_menu : true,
+                mega_menu_section: item.mega_menu_section || '',
                 product_ids: item.products ? item.products.map((p: any) => p.id) : []
             });
         } else {
@@ -159,6 +163,8 @@ export default function AdminCategoriesPage() {
                 bottom_description: '',
                 type: activeTab,
                 is_active: true,
+                show_in_mega_menu: true,
+                mega_menu_section: '',
                 product_ids: []
             });
         }
@@ -173,6 +179,8 @@ export default function AdminCategoriesPage() {
         const data = new FormData();
         data.append('name', formData.name);
         data.append('is_active', formData.is_active ? '1' : '0');
+        data.append('show_in_mega_menu', formData.show_in_mega_menu ? '1' : '0');
+        data.append('mega_menu_section', formData.mega_menu_section || '');
 
         if (formData.description) data.append('description', formData.description);
 
@@ -569,6 +577,48 @@ export default function AdminCategoriesPage() {
                                             <p className="text-xs text-gray-500 text-center py-4">No published products available.</p>
                                         )}
                                     </div>
+                                </div>
+                            )}
+
+                            {activeTab !== 'collection' && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-neutral-50/30 p-3 rounded-lg border border-neutral-100 dark:border-neutral-800">
+                                    <div className="flex items-center gap-2 pt-1">
+                                        <input
+                                            type="checkbox"
+                                            id="show_in_mega_menu"
+                                            checked={formData.show_in_mega_menu}
+                                            onChange={(e) => setFormData({ ...formData, show_in_mega_menu: e.target.checked })}
+                                            className="w-4 h-4 rounded-[3px] border-black/50 text-black focus:ring-black/10"
+                                        />
+                                        <label htmlFor="show_in_mega_menu" className="text-xs font-semibold text-gray-700">Show In Mega Menu</label>
+                                    </div>
+
+                                    {formData.show_in_mega_menu && (
+                                        <div>
+                                            <label className="block text-[10px] font-semibold text-gray-550 mb-1">Mega Menu Section</label>
+                                            <select
+                                                value={formData.mega_menu_section}
+                                                onChange={(e) => setFormData({ ...formData, mega_menu_section: e.target.value })}
+                                                className="w-full h-10 px-3 border-[0.5px] border-black/50 rounded-lg bg-neutral-50/50 dark:bg-gray-800/30 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black font-semibold text-gray-950 dark:text-gray-100 transition-all cursor-pointer"
+                                            >
+                                                <option value="">None (Don't Group)</option>
+                                                {activeTab === 'category' ? (
+                                                    <>
+                                                        <option value="thc">Medical Cannabis THC</option>
+                                                        <option value="cbd">CBD & Hemp Products</option>
+                                                        <option value="herbal">Herbal & Ayurveda</option>
+                                                        <option value="supplements">Supplements & Wellness</option>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <option value="mental">Mental Wellness</option>
+                                                        <option value="physical">Physical & Pain Relief</option>
+                                                        <option value="general">General & Skin Health</option>
+                                                    </>
+                                                )}
+                                            </select>
+                                        </div>
+                                    )}
                                 </div>
                             )}
 
