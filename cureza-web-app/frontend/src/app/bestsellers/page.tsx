@@ -4,7 +4,7 @@ async function getBestsellers() {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000';
   try {
     const res = await fetch(`${backendUrl}/api/products`, {
-      cache: 'no-store'
+      next: { revalidate: 300 }
     });
     if (!res.ok) return [];
     const products = await res.json();
