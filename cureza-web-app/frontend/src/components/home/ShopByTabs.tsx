@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useCategories } from "@/contexts/CategoryContext";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -8,22 +8,25 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 export default function ShopByTabs() {
   const { categories: allCategories, concerns: allConcerns, collections = [], isLoading } = useCategories();
 
-  const categories = allCategories.filter(c => (c.products_count ?? 0) > 0);
-  const concerns = allConcerns.filter(c => (c.concern_products_count ?? 0) > 0);
+  const categories = useMemo(() => allCategories.filter(c => (c.products_count ?? 0) > 0), [allCategories]);
+  const concerns = useMemo(() => allConcerns.filter(c => (c.concern_products_count ?? 0) > 0), [allConcerns]);
 
   const [activeTab, setActiveTab] = useState<"categories" | "concerns" | "clearance">("categories");
   const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef<HTMLDivElement | null>(null);
 
+  // Set the default tab once when categories/concerns finish loading
   useEffect(() => {
-    if (categories.length > 0) {
-      setActiveTab("categories");
-    } else if (concerns.length > 0) {
-      setActiveTab("concerns");
-    } else if (collections.length > 0) {
-      setActiveTab("clearance");
+    if (!isLoading) {
+      if (categories.length > 0) {
+        setActiveTab("categories");
+      } else if (concerns.length > 0) {
+        setActiveTab("concerns");
+      } else if (collections.length > 0) {
+        setActiveTab("clearance");
+      }
     }
-  }, [categories, concerns, collections]);
+  }, [isLoading, categories.length, concerns.length, collections.length]);
 
   if (isLoading) {
     return (
