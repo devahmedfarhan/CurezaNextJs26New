@@ -114,6 +114,8 @@ Route::get('/debug-auth', function (Request $request) {
 // Public Order Placement (Guest Checkout Support)
 Route::post('/orders', [OrderController::class, 'store'])->middleware('throttle:sensitive');
 Route::get('/orders/{id}', [OrderController::class, 'show']); // Public order view for guests
+Route::get('/orders/{id}/invoice', [OrderController::class, 'downloadInvoice']); // Public invoice download
+Route::post('/orders/{id}/feedback', [OrderController::class, 'saveFeedback']); // Save checkout rating
 Route::get('/orders/{id}/track', [\App\Http\Controllers\OrderTrackingController::class, 'track']);
 
 // Payment Webhook Callback
@@ -273,7 +275,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Order Routes (Authenticated)
     Route::get('/orders', [OrderController::class, 'index']); // List user's orders
-    Route::get('/orders/{id}/invoice', [OrderController::class, 'downloadInvoice']);
     Route::get('/orders/{id}/commission-invoice', [OrderController::class, 'downloadCommissionInvoice']);
     Route::get('/user/reviews', [ReviewController::class, 'userIndex']);
     

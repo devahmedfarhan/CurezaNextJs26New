@@ -16,7 +16,7 @@ class Order extends Model
         'cgst', 'sgst', 'igst', 'shipping_method_id',
         'status', 'payment_status', 'payment_method',
         'shipping_address_json', 'billing_address_json', 'coupon_code', 'order_notes',
-        'tracking_id', 'tracking_provider'
+        'tracking_id', 'tracking_provider', 'checkout_rating'
     ];
 
     protected $casts = [

@@ -708,3 +708,9 @@ body {
 .dark .customer-theme .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.4);
 }
+
+/* Custom flat card borders matching user requirements */
+.flat-card {
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  border-color: rgba(85, 85, 85, 0.18) !important;
+}

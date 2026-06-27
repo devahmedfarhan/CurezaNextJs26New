@@ -369,12 +369,25 @@ class OrderController extends Controller
 
     public function downloadInvoice($id)
     {
+        $user = Auth::guard('sanctum')->user();
+
         $order = Order::with(['items.product', 'shippingMethod'])
             ->where('id', $id)
             ->orWhere('order_number', $id)
             ->firstOrFail();
         
-        \Illuminate\Support\Facades\Gate::authorize('view', $order);
+        if ($user) {
+            \Illuminate\Support\Facades\Gate::forUser($user)->authorize('view', $order);
+        } else {
+            // Guest order view validation:
+            if ($order->user_id !== null) {
+                return response()->json(['message' => 'Unauthorized'], 403);
+            }
+            $allowedOrders = session()->get('placed_guest_orders', []);
+            if (!in_array($order->id, $allowedOrders)) {
+                return response()->json(['message' => 'Unauthorized access to guest order'], 403);
+            }
+        }
 
         $logoPath = public_path('storage/images/logo.png');
         $logoBase64 = '';
@@ -384,11 +397,9 @@ class OrderController extends Controller
             $logoBase64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
         }
 
-        $html = view('invoice', compact('order', 'logoBase64'))->render();
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('invoice', compact('order', 'logoBase64'));
 
-        return response($html)
-            ->header('Content-Type', 'text/html')
-            ->header('Content-Disposition', 'attachment; filename="invoice-' . $order->order_number . '.html"');
+        return $pdf->download('invoice-' . $order->order_number . '.pdf');
     }
 
     public function downloadCommissionInvoice($id)
@@ -456,5 +467,20 @@ class OrderController extends Controller
                 'error' => $e->getMessage()
             ]);
         }
+    }
+
+    public function saveFeedback(Request $request, $id)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+        ]);
+
+        $order = Order::where('id', $id)
+            ->orWhere('order_number', $id)
+            ->firstOrFail();
+
+        $order->update(['checkout_rating' => $request->rating]);
+
+        return response()->json(['message' => 'Feedback saved successfully']);
     }
 }

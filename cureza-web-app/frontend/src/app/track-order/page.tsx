@@ -88,7 +88,10 @@ export default function PublicTrackOrderPage() {
         setTrackingData(null);
         setIsSimulated(false);
 
-        const cleanId = searchId.trim();
+        let cleanId = searchId.trim();
+        if (cleanId.startsWith('#')) {
+            cleanId = cleanId.substring(1).trim();
+        }
 
         // Check if it's a demo order
         if (cleanId.toUpperCase().includes('DEMO')) {

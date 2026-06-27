@@ -12,6 +12,7 @@ import AuthFooter from '@/components/common/AuthFooter';
 function RegisterContent() {
     const searchParams = useSearchParams();
     const prefillLoginId = searchParams.get('login_id') || '';
+    const referredBy = searchParams.get('ref') || '';
 
     // Determine if prefill is email or phone
     const isEmail = prefillLoginId.includes('@');
@@ -128,6 +129,7 @@ function RegisterContent() {
                 phone,
                 brand_name: role === 'vendor' ? brandName : undefined,
                 cf_turnstile_token: turnstileToken || undefined,
+                referred_by: referredBy || undefined,
             });
 
             // Store token and user data

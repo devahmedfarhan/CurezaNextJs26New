@@ -57,8 +57,12 @@ export default function TrackOrderPage() {
     const fetchTrackingDetails = async (idOrNumber: string) => {
         setLoading(true);
         setError(null);
+        let cleanId = idOrNumber.trim();
+        if (cleanId.startsWith('#')) {
+            cleanId = cleanId.substring(1).trim();
+        }
         try {
-            const response = await api.get(`/orders/${idOrNumber}/track`);
+            const response = await api.get(`/orders/${cleanId}/track`);
             const normalized = { ...response.data };
             const backendStatus = normalized.current_status?.toLowerCase();
             
