@@ -522,7 +522,7 @@ export default function AdminCategoriesPage() {
                     {selectedIds.length > 0 && (
                         <div className="bg-[#052326]/5 border-b border-black/50 dark:border-gray-800 px-6 py-3 flex items-center justify-between animate-in slide-in-from-top-2 duration-300">
                             <div className="flex items-center gap-2">
-                                <span className="w-2 h-2 rounded-full bg-[#2E7D32] animate-pulse" />
+                                <span className="w-2 h-2 rounded-full bg-[#052326] animate-pulse" />
                                 <span className="text-xs font-bold text-[#052326]">
                                     {selectedIds.length} items selected
                                 </span>
@@ -530,7 +530,7 @@ export default function AdminCategoriesPage() {
                             <div className="flex items-center gap-3">
                                 <button
                                     onClick={() => handleBulkStatusChange(true)}
-                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2E7D32]/10 border border-[#2E7D32]/20 hover:bg-[#2E7D32]/25 text-[#2E7D32] rounded-[8px] text-[11px] font-extrabold uppercase transition-colors"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#052326]/10 border border-[#052326]/20 hover:bg-[#052326]/25 text-[#052326] rounded-[8px] text-[11px] font-extrabold uppercase transition-colors"
                                 >
                                     Activate
                                 </button>
@@ -581,7 +581,7 @@ export default function AdminCategoriesPage() {
                                         <div className="flex items-center gap-1.5">
                                             Item Details
                                             {sortField === 'name' ? (
-                                                sortDirection === 'asc' ? <ChevronUp size={14} className="text-[#2E7D32]" /> : <ChevronDown size={14} className="text-[#2E7D32]" />
+                                                sortDirection === 'asc' ? <ChevronUp size={14} className="text-[#052326]" /> : <ChevronDown size={14} className="text-[#052326]" />
                                             ) : (
                                                 <ArrowUpDown size={12} className="text-gray-300 hover:text-gray-400" />
                                             )}
@@ -594,7 +594,7 @@ export default function AdminCategoriesPage() {
                                         <div className="flex items-center gap-1.5">
                                             Slug
                                             {sortField === 'slug' ? (
-                                                sortDirection === 'asc' ? <ChevronUp size={14} className="text-[#2E7D32]" /> : <ChevronDown size={14} className="text-[#2E7D32]" />
+                                                sortDirection === 'asc' ? <ChevronUp size={14} className="text-[#052326]" /> : <ChevronDown size={14} className="text-[#052326]" />
                                             ) : (
                                                 <ArrowUpDown size={12} className="text-gray-300 hover:text-gray-400" />
                                             )}
@@ -608,7 +608,7 @@ export default function AdminCategoriesPage() {
                                         <div className="flex items-center gap-1.5">
                                             Product Count
                                             {sortField === 'products_count' ? (
-                                                sortDirection === 'asc' ? <ChevronUp size={14} className="text-[#2E7D32]" /> : <ChevronDown size={14} className="text-[#2E7D32]" />
+                                                sortDirection === 'asc' ? <ChevronUp size={14} className="text-[#052326]" /> : <ChevronDown size={14} className="text-[#052326]" />
                                             ) : (
                                                 <ArrowUpDown size={12} className="text-gray-300 hover:text-gray-400" />
                                             )}
@@ -621,7 +621,7 @@ export default function AdminCategoriesPage() {
                                         <div className="flex items-center gap-1.5">
                                             Status
                                             {sortField === 'status' ? (
-                                                sortDirection === 'asc' ? <ChevronUp size={14} className="text-[#2E7D32]" /> : <ChevronDown size={14} className="text-[#2E7D32]" />
+                                                sortDirection === 'asc' ? <ChevronUp size={14} className="text-[#052326]" /> : <ChevronDown size={14} className="text-[#052326]" />
                                             ) : (
                                                 <ArrowUpDown size={12} className="text-gray-300 hover:text-gray-400" />
                                             )}
@@ -705,7 +705,7 @@ export default function AdminCategoriesPage() {
                                                             <div className="text-[10px] text-gray-400 font-medium">Top Level</div>
                                                         )}
                                                         {(item as Category).mega_menu_section ? (
-                                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[4px] bg-[#2E7D32]/10 border border-[#2E7D32]/20 text-[9px] text-[#2E7D32] font-bold uppercase tracking-wider">
+                                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[4px] bg-[#052326]/10 border border-[#052326]/20 text-[9px] text-[#052326] font-bold uppercase tracking-wider">
                                                                 Section: {(item as Category).mega_menu_section}
                                                             </span>
                                                         ) : (
@@ -722,7 +722,7 @@ export default function AdminCategoriesPage() {
                                                         {item.products_count ?? 0} Products
                                                     </span>
                                                 ) : activeTab === 'category' ? (
-                                                    <span className="text-[11px] font-bold text-[#2E7D32] bg-[#2E7D32]/5 px-2 py-1 rounded-[6px]">
+                                                    <span className="text-[11px] font-bold text-[#052326] bg-[#052326]/5 px-2 py-1 rounded-[6px]">
                                                         {(item as Category).products_count ?? 0} Products
                                                     </span>
                                                 ) : (

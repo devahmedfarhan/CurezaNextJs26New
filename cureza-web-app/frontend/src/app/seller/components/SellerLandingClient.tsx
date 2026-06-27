@@ -76,20 +76,20 @@ export default function SellerLandingClient() {
             <section className="relative bg-[#052326] text-white py-28 overflow-hidden">
                 {/* Background Details */}
                 <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none"></div>
-                <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-[#00bba7]/10 blur-[100px] pointer-events-none"></div>
-                <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-[#00bba7]/15 blur-[120px] pointer-events-none"></div>
+                <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-[#052326]/10 blur-[100px] pointer-events-none"></div>
+                <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-[#052326]/15 blur-[120px] pointer-events-none"></div>
 
                 <div className="container mx-auto px-6 relative z-10">
                     <div className="flex flex-col lg:flex-row items-center gap-16">
                         {/* Hero Left Content */}
                         <div className="flex-1 space-y-8 text-center lg:text-left">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-semibold text-[#00bba7] tracking-wider uppercase">
+                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-semibold text-[#052326] tracking-wider uppercase">
                                 <Sparkles size={14} className="animate-pulse" />
                                 World's First Doctor-Integrated Platform
                             </div>
 
                             <h1 className="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight font-heading">
-                                Grow Your Brand in India's Premier <span className="text-[#00bba7]">Wellness Ecosystem</span>
+                                Grow Your Brand in India's Premier <span className="text-[#052326]">Wellness Ecosystem</span>
                             </h1>
 
                             <p className="text-lg md:text-xl text-[#F8F3EF]/85 leading-relaxed font-normal max-w-2xl mx-auto lg:mx-0">
@@ -99,7 +99,7 @@ export default function SellerLandingClient() {
                             <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 pt-4">
                                 <a
                                     href="/seller/register"
-                                    className="px-8 py-4 bg-[#00bba7] text-[#101828] font-bold rounded-[10px] hover:bg-[#101828] hover:text-[#00bba7] hover:border-[#00bba7] border border-transparent transition duration-300 text-xs capitalize tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-[#00bba7]/10"
+                                    className="px-8 py-4 bg-[#052326] text-[#101828] font-bold rounded-[10px] hover:bg-[#101828] hover:text-[#052326] hover:border-[#052326] border border-transparent transition duration-300 text-xs capitalize tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-[#052326]/10"
                                 >
                                     Register as Seller
                                     <ChevronRight size={16} />
@@ -117,7 +117,7 @@ export default function SellerLandingClient() {
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-10 border-t border-white/10">
                                 {trustStats.map((stat, i) => (
                                     <div key={i} className="text-center lg:text-left">
-                                        <div className="text-2xl md:text-3xl font-extrabold text-[#00bba7] font-heading">{stat.value}</div>
+                                        <div className="text-2xl md:text-3xl font-extrabold text-[#052326] font-heading">{stat.value}</div>
                                         <div className="text-xs text-[#F8F3EF]/60 font-medium mt-1">{stat.label}</div>
                                     </div>
                                 ))}
@@ -127,7 +127,7 @@ export default function SellerLandingClient() {
                         {/* Hero Right Image / Graphic */}
                         <div className="flex-1 flex justify-center relative w-full max-w-[480px]">
                             {/* Glow Effects */}
-                            <div className="absolute inset-0 bg-gradient-to-tr from-[#00bba7]/20 to-transparent rounded-full blur-[80px] pointer-events-none"></div>
+                            <div className="absolute inset-0 bg-gradient-to-tr from-[#052326]/20 to-transparent rounded-full blur-[80px] pointer-events-none"></div>
                             
                             {/* Premium Animated Dashboard Vector Mockup */}
                             <div className="relative w-full aspect-[4/3] bg-[#052326]/60 border border-white/10 rounded-2xl shadow-2xl backdrop-blur-md p-5 overflow-hidden animate-dashboard-float">
@@ -172,7 +172,7 @@ export default function SellerLandingClient() {
                                         <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
                                         <span className="text-[10px] text-white/45 font-mono ml-2">Cureza Seller Portal v2.0</span>
                                     </div>
-                                    <div className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[9px] text-[#00bba7] font-semibold tracking-wider uppercase">
+                                    <div className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[9px] text-[#052326] font-semibold tracking-wider uppercase">
                                         Live
                                     </div>
                                 </div>
@@ -183,7 +183,7 @@ export default function SellerLandingClient() {
                                     {/* Sidebar representation */}
                                     <div className="col-span-3 border-r border-white/5 pr-3 space-y-3">
                                         <div className="h-6 w-full bg-white/5 rounded-md flex items-center px-2 gap-1.5">
-                                            <div className="w-3 h-3 rounded-sm bg-[#00bba7]/20"></div>
+                                            <div className="w-3 h-3 rounded-sm bg-[#052326]/20"></div>
                                             <div className="w-10 h-1.5 bg-white/25 rounded"></div>
                                         </div>
                                         <div className="h-4 w-full bg-white/5 rounded flex items-center px-2 gap-1.5">
@@ -209,7 +209,7 @@ export default function SellerLandingClient() {
                                             </div>
                                             <div className="bg-white/5 p-3 rounded-lg border border-white/5">
                                                 <div className="text-[9px] text-white/50">Doctor Referrals</div>
-                                                <div className="text-sm font-bold text-[#00bba7] mt-1">+180% Growth</div>
+                                                <div className="text-sm font-bold text-[#052326] mt-1">+180% Growth</div>
                                             </div>
                                         </div>
 
@@ -219,7 +219,7 @@ export default function SellerLandingClient() {
                                                 <path
                                                     d="M0,45 Q15,40 30,25 T60,20 T90,5 T100,5"
                                                     fill="none"
-                                                    stroke="#00bba7"
+                                                    stroke="#052326"
                                                     strokeWidth="2.5"
                                                     className="animate-chart-line"
                                                 />
@@ -230,8 +230,8 @@ export default function SellerLandingClient() {
                                                 />
                                                 <defs>
                                                     <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
-                                                        <stop offset="0%" stopColor="#00bba7" />
-                                                        <stop offset="100%" stopColor="#00bba7" stopOpacity="0" />
+                                                        <stop offset="0%" stopColor="#052326" />
+                                                        <stop offset="100%" stopColor="#052326" stopOpacity="0" />
                                                     </linearGradient>
                                                 </defs>
                                             </svg>
@@ -249,7 +249,7 @@ export default function SellerLandingClient() {
 
                             {/* Floating Card 1: Doctor Recommendation */}
                             <div className="absolute top-[-20px] left-[-30px] bg-white text-[#052326] p-3 rounded-xl border border-[#052326]/10 shadow-xl flex items-center gap-3 animate-float-1 z-20">
-                                <div className="p-2 bg-emerald-50 text-[#00bba7] rounded-lg">
+                                <div className="p-2 bg-emerald-50 text-[#052326] rounded-lg">
                                     <Stethoscope size={18} />
                                 </div>
                                 <div>
@@ -260,11 +260,11 @@ export default function SellerLandingClient() {
 
                             {/* Floating Card 2: Sales Notification */}
                             <div className="absolute bottom-[-15px] right-[-20px] bg-[#101828] text-white p-3 rounded-xl border border-white/10 shadow-2xl flex items-center gap-3 animate-float-2 z-20">
-                                <div className="p-2 bg-[#00bba7]/10 text-[#00bba7] rounded-lg">
+                                <div className="p-2 bg-[#052326]/10 text-[#052326] rounded-lg">
                                     <Sparkles size={18} />
                                 </div>
                                 <div>
-                                    <div className="text-[8px] font-bold text-[#00bba7] uppercase tracking-wider">New Order Ingested</div>
+                                    <div className="text-[8px] font-bold text-[#052326] uppercase tracking-wider">New Order Ingested</div>
                                     <div className="text-xs font-bold">Payout Settled Monthly</div>
                                 </div>
                             </div>
@@ -279,7 +279,7 @@ export default function SellerLandingClient() {
             <section className="py-24 bg-white border-b border-[#052326]/5">
                 <div className="container mx-auto px-6">
                     <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
-                        <span className="text-[#00bba7] text-xs font-bold uppercase tracking-widest block">The Cureza Difference</span>
+                        <span className="text-[#052326] text-xs font-bold uppercase tracking-widest block">The Cureza Difference</span>
                         <h2 className="text-3xl md:text-4xl font-extrabold text-[#052326] font-heading">
                             How Our Doctor-Integrated Platform Benefits You
                         </h2>
@@ -289,8 +289,8 @@ export default function SellerLandingClient() {
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-8">
-                        <div className="p-8 bg-[#F8F3EF]/50 rounded-[12px] border border-[#052326]/5 hover:border-[#00bba7]/40 transition duration-300 group">
-                            <div className="w-12 h-12 rounded-[10px] bg-[#052326]/5 flex items-center justify-center text-[#052326] mb-6 group-hover:bg-[#00bba7] group-hover:text-[#101828] transition duration-300">
+                        <div className="p-8 bg-[#F8F3EF]/50 rounded-[12px] border border-[#052326]/5 hover:border-[#052326]/40 transition duration-300 group">
+                            <div className="w-12 h-12 rounded-[10px] bg-[#052326]/5 flex items-center justify-center text-[#052326] mb-6 group-hover:bg-[#052326] group-hover:text-[#101828] transition duration-300">
                                 <Stethoscope size={24} />
                             </div>
                             <h3 className="text-xl font-bold text-[#052326] mb-3 font-heading">Doctor Recommendations</h3>
@@ -299,8 +299,8 @@ export default function SellerLandingClient() {
                             </p>
                         </div>
 
-                        <div className="p-8 bg-[#F8F3EF]/50 rounded-[12px] border border-[#052326]/5 hover:border-[#00bba7]/40 transition duration-300 group">
-                            <div className="w-12 h-12 rounded-[10px] bg-[#052326]/5 flex items-center justify-center text-[#052326] mb-6 group-hover:bg-[#00bba7] group-hover:text-[#101828] transition duration-300">
+                        <div className="p-8 bg-[#F8F3EF]/50 rounded-[12px] border border-[#052326]/5 hover:border-[#052326]/40 transition duration-300 group">
+                            <div className="w-12 h-12 rounded-[10px] bg-[#052326]/5 flex items-center justify-center text-[#052326] mb-6 group-hover:bg-[#052326] group-hover:text-[#101828] transition duration-300">
                                 <ShieldCheck size={24} />
                             </div>
                             <h3 className="text-xl font-bold text-[#052326] mb-3 font-heading">Credibility & Verification</h3>
@@ -309,8 +309,8 @@ export default function SellerLandingClient() {
                             </p>
                         </div>
 
-                        <div className="p-8 bg-[#F8F3EF]/50 rounded-[12px] border border-[#052326]/5 hover:border-[#00bba7]/40 transition duration-300 group">
-                            <div className="w-12 h-12 rounded-[10px] bg-[#052326]/5 flex items-center justify-center text-[#052326] mb-6 group-hover:bg-[#00bba7] group-hover:text-[#101828] transition duration-300">
+                        <div className="p-8 bg-[#F8F3EF]/50 rounded-[12px] border border-[#052326]/5 hover:border-[#052326]/40 transition duration-300 group">
+                            <div className="w-12 h-12 rounded-[10px] bg-[#052326]/5 flex items-center justify-center text-[#052326] mb-6 group-hover:bg-[#052326] group-hover:text-[#101828] transition duration-300">
                                 <Users size={24} />
                             </div>
                             <h3 className="text-xl font-bold text-[#052326] mb-3 font-heading">Highly Targeted Audience</h3>
@@ -326,7 +326,7 @@ export default function SellerLandingClient() {
             <section className="py-24 bg-[#F8F3EF]">
                 <div className="container mx-auto px-6">
                     <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
-                        <span className="text-[#00bba7] text-xs font-bold uppercase tracking-widest block">Platform Features</span>
+                        <span className="text-[#052326] text-xs font-bold uppercase tracking-widest block">Platform Features</span>
                         <h2 className="text-3xl md:text-4xl font-extrabold text-[#052326] font-heading">
                             The Unified Seller Command Center
                         </h2>
@@ -341,7 +341,7 @@ export default function SellerLandingClient() {
                             return (
                                 <div 
                                     key={feat.id}
-                                    className="bg-white p-8 rounded-[12px] border border-[#052326]/8 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:border-[#00bba7]/55 transition duration-300 flex flex-col justify-between"
+                                    className="bg-white p-8 rounded-[12px] border border-[#052326]/8 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:border-[#052326]/55 transition duration-300 flex flex-col justify-between"
                                 >
                                     <div className="space-y-6">
                                         <div className="flex justify-between items-start">
@@ -361,7 +361,7 @@ export default function SellerLandingClient() {
 
                                     <div className="pt-6 mt-6 border-t border-gray-100 flex items-center justify-between text-xs font-semibold text-[#052326]">
                                         <span>Included in Dashboard</span>
-                                        <Check size={14} className="text-[#00bba7]" />
+                                        <Check size={14} className="text-[#052326]" />
                                     </div>
                                 </div>
                             );
@@ -374,7 +374,7 @@ export default function SellerLandingClient() {
             <section className="py-24 bg-white border-t border-[#052326]/5">
                 <div className="container mx-auto px-6">
                     <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
-                        <span className="text-[#00bba7] text-xs font-bold uppercase tracking-widest block">Launch & Grow With Us</span>
+                        <span className="text-[#052326] text-xs font-bold uppercase tracking-widest block">Launch & Grow With Us</span>
                         <h2 className="text-3xl md:text-4xl font-extrabold text-[#052326] font-heading">
                             Cureza Launchpad Services
                         </h2>
@@ -385,7 +385,7 @@ export default function SellerLandingClient() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {/* 1. 24/6 Sales Team */}
-                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300">
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#052326]/40 transition duration-300">
                             <h3 className="font-bold text-lg text-[#052326] font-heading">24/6 Sales Team</h3>
                             <p className="text-gray-600 text-xs leading-relaxed font-light">
                                 Our highly trained sales team has over 2 years of experience managing customer expectations, legal compliance, doctor coordination, and shipping. We provide seamless 24/6 support (except Sundays).
@@ -393,7 +393,7 @@ export default function SellerLandingClient() {
                         </div>
 
                         {/* 2. Inhouse SEO Services */}
-                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300">
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#052326]/40 transition duration-300">
                             <h3 className="font-bold text-lg text-[#052326] font-heading">Inhouse SEO Services</h3>
                             <p className="text-gray-600 text-xs leading-relaxed font-light">
                                 We regularly outperform established brands in Google rankings. Our dedicated SEO team handles backlinks, keyword optimization, blogs, and alt tags to place your products at the top.
@@ -401,7 +401,7 @@ export default function SellerLandingClient() {
                         </div>
 
                         {/* 3. Inhouse Content Writers */}
-                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300">
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#052326]/40 transition duration-300">
                             <h3 className="font-bold text-lg text-[#052326] font-heading">Inhouse Content Writers</h3>
                             <p className="text-gray-600 text-xs leading-relaxed font-light">
                                 Our content writers build a seamless bridge between your product and the end user with engaging blogs, unique descriptions, and product reviews conforming to all search engine requirements.
@@ -409,7 +409,7 @@ export default function SellerLandingClient() {
                         </div>
 
                         {/* 4. Inhouse Graphics & Photography */}
-                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300">
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#052326]/40 transition duration-300">
                             <h3 className="font-bold text-lg text-[#052326] font-heading">Inhouse Graphics & Photography</h3>
                             <p className="text-gray-600 text-xs leading-relaxed font-light">
                                 With four visual creators and two photographers, we secure talented models and beautiful locations to ensure your visual assets are premium, posting weekly across all social channels.
@@ -417,7 +417,7 @@ export default function SellerLandingClient() {
                         </div>
 
                         {/* 5. Marketing & Influencer Management */}
-                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300">
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#052326]/40 transition duration-300">
                             <h3 className="font-bold text-lg text-[#052326] font-heading">Marketing & Influencers</h3>
                             <p className="text-gray-600 text-xs leading-relaxed font-light">
                                 Reach hundreds of thousands of buyers. We provide a range of 200+ influencers across YouTube and Instagram for reviews, reels, and posts to build maximum brand authority.
@@ -425,7 +425,7 @@ export default function SellerLandingClient() {
                         </div>
 
                         {/* 6. Inhouse B2B Operations */}
-                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300">
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#052326]/40 transition duration-300">
                             <h3 className="font-bold text-lg text-[#052326] font-heading">Inhouse B2B Operations</h3>
                             <p className="text-gray-600 text-xs leading-relaxed font-light">
                                 Our dedicated B2B team manages direct database collection and outreach to clinics, wellness centers, and distributors looking to buy your products in bulk or via white-label partnerships.
@@ -433,7 +433,7 @@ export default function SellerLandingClient() {
                         </div>
 
                         {/* 7. Product Development & White Labelling */}
-                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300">
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#052326]/40 transition duration-300">
                             <h3 className="font-bold text-lg text-[#052326] font-heading">Product Development</h3>
                             <p className="text-gray-600 text-xs leading-relaxed font-light">
                                 We formulate premium, high-quality products sourcing raw materials from Uttarakhand to Auroville. Our team handles complete formulation, R&D, and packaging design at highly affordable rates.
@@ -441,7 +441,7 @@ export default function SellerLandingClient() {
                         </div>
 
                         {/* 8. Medical Team Integration */}
-                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300">
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#052326]/40 transition duration-300">
                             <h3 className="font-bold text-lg text-[#052326] font-heading">Medical Team Integration</h3>
                             <p className="text-gray-600 text-xs leading-relaxed font-light">
                                 We partner with certified doctors across Ayurveda, Homeopathy, and Allopathy. Vetted products are highlighted and celebrated directly on our medical panel for customer trust.
@@ -449,7 +449,7 @@ export default function SellerLandingClient() {
                         </div>
 
                         {/* 9. Event & Physical Visibility */}
-                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300">
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#052326]/40 transition duration-300">
                             <h3 className="font-bold text-lg text-[#052326] font-heading">Physical Locations & Events</h3>
                             <p className="text-gray-600 text-xs leading-relaxed font-light">
                                 We drive offline visibility in hotspots like Kasardevi, Auroville, Goa, Pune, and Mumbai. From wall graffiti to pamphlet distribution, we establish your physical presence.
@@ -457,7 +457,7 @@ export default function SellerLandingClient() {
                         </div>
 
                         {/* 10. International Expansion */}
-                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#00bba7]/40 transition duration-300 md:col-span-2 lg:col-span-3">
+                        <div className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/8 space-y-4 hover:border-[#052326]/40 transition duration-300 md:col-span-2 lg:col-span-3">
                             <h3 className="font-bold text-lg text-[#052326] font-heading">International Expansion</h3>
                             <p className="text-gray-600 text-xs leading-relaxed font-light">
                                 Our international division, supported by our sister company Featherscale (co-founded by Blake Luvon), manages relationships and compliance to easily import/export products between global markets.
@@ -467,7 +467,7 @@ export default function SellerLandingClient() {
 
                     {/* WhatsApp CTA */}
                     <div className="mt-12 bg-[#052326] text-white p-8 rounded-2xl border border-white/10 text-center space-y-4">
-                        <h4 className="text-xl font-bold text-[#00bba7] font-heading">Manifest the Brand of Your Dreams</h4>
+                        <h4 className="text-xl font-bold text-[#052326] font-heading">Manifest the Brand of Your Dreams</h4>
                         <p className="text-sm text-white/80 max-w-xl mx-auto font-light">
                             Want to discuss product development, white labelling, or launching your brand on Cureza? Speak directly with our partnership desk.
                         </p>
@@ -475,7 +475,7 @@ export default function SellerLandingClient() {
                             href="https://wa.me/919887860015" 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-[#00bba7] text-[#101828] font-bold rounded-xl text-xs uppercase tracking-wider hover:bg-emerald-600 transition-colors shadow-lg"
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-[#052326] text-[#101828] font-bold rounded-xl text-xs uppercase tracking-wider hover:bg-emerald-600 transition-colors shadow-lg"
                         >
                             Connect on WhatsApp (+91 98878 60015)
                         </a>
@@ -488,7 +488,7 @@ export default function SellerLandingClient() {
 
                 <div className="container mx-auto px-6">
                     <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
-                        <span className="text-[#00bba7] text-xs font-bold uppercase tracking-widest block">Pricing & Payouts</span>
+                        <span className="text-[#052326] text-xs font-bold uppercase tracking-widest block">Pricing & Payouts</span>
                         <h2 className="text-3xl md:text-4xl font-extrabold text-[#052326] font-heading">
                             Transparent Commission, Zero Setup Fees
                         </h2>
@@ -501,7 +501,7 @@ export default function SellerLandingClient() {
                         {/* Referral Fees */}
                         <div className="bg-[#F8F3EF]/30 p-8 rounded-[12px] border border-[#052326]/8 text-center flex flex-col justify-between space-y-6">
                             <div className="space-y-4">
-                                <div className="w-12 h-12 mx-auto rounded-[10px] bg-[#00bba7]/10 text-[#00bba7] flex items-center justify-center">
+                                <div className="w-12 h-12 mx-auto rounded-[10px] bg-[#052326]/10 text-[#052326] flex items-center justify-center">
                                     <Percent size={24} />
                                 </div>
                                 <h3 className="font-bold text-lg text-[#052326] font-heading">Referral Fees</h3>
@@ -516,7 +516,7 @@ export default function SellerLandingClient() {
                         {/* Payment Gateway */}
                         <div className="bg-[#F8F3EF]/30 p-8 rounded-[12px] border border-[#052326]/8 text-center flex flex-col justify-between space-y-6">
                             <div className="space-y-4">
-                                <div className="w-12 h-12 mx-auto rounded-[10px] bg-[#00bba7]/10 text-[#00bba7] flex items-center justify-center">
+                                <div className="w-12 h-12 mx-auto rounded-[10px] bg-[#052326]/10 text-[#052326] flex items-center justify-center">
                                     <Landmark size={24} />
                                 </div>
                                 <h3 className="font-bold text-lg text-[#052326] font-heading">Gateway Charges</h3>
@@ -534,7 +534,7 @@ export default function SellerLandingClient() {
                         {/* Closing Fee */}
                         <div className="bg-[#F8F3EF]/30 p-8 rounded-[12px] border border-[#052326]/8 text-center flex flex-col justify-between space-y-6">
                             <div className="space-y-4">
-                                <div className="w-12 h-12 mx-auto rounded-[10px] bg-[#00bba7]/10 text-[#00bba7] flex items-center justify-center">
+                                <div className="w-12 h-12 mx-auto rounded-[10px] bg-[#052326]/10 text-[#052326] flex items-center justify-center">
                                     <FileCheck size={24} />
                                 </div>
                                 <h3 className="font-bold text-lg text-[#052326] font-heading">Fixed Closing Fee</h3>
@@ -553,7 +553,7 @@ export default function SellerLandingClient() {
             <section className="py-24 bg-[#F8F3EF]">
                 <div className="container mx-auto px-6">
                     <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
-                        <span className="text-[#00bba7] text-xs font-bold uppercase tracking-widest block">Simple Onboarding</span>
+                        <span className="text-[#052326] text-xs font-bold uppercase tracking-widest block">Simple Onboarding</span>
                         <h2 className="text-3xl md:text-4xl font-extrabold text-[#052326] font-heading">
                             How to Launch Your Shop
                         </h2>
@@ -570,7 +570,7 @@ export default function SellerLandingClient() {
                         <div className="space-y-12">
                             {/* Step 1 */}
                             <div className="flex flex-col md:flex-row items-start md:items-center gap-8 relative">
-                                <div className="absolute left-6 md:left-1/2 w-8 h-8 rounded-full bg-[#052326] text-[#00bba7] border-4 border-[#F8F3EF] flex items-center justify-center font-bold text-xs -translate-x-1/2 z-10 shadow-sm">
+                                <div className="absolute left-6 md:left-1/2 w-8 h-8 rounded-full bg-[#052326] text-[#052326] border-4 border-[#F8F3EF] flex items-center justify-center font-bold text-xs -translate-x-1/2 z-10 shadow-sm">
                                     1
                                 </div>
                                 <div className="flex-1 md:text-right pl-12 md:pl-0 md:pr-16">
@@ -584,7 +584,7 @@ export default function SellerLandingClient() {
 
                             {/* Step 2 */}
                             <div className="flex flex-col md:flex-row items-start md:items-center gap-8 relative">
-                                <div className="absolute left-6 md:left-1/2 w-8 h-8 rounded-full bg-[#052326] text-[#00bba7] border-4 border-[#F8F3EF] flex items-center justify-center font-bold text-xs -translate-x-1/2 z-10 shadow-sm">
+                                <div className="absolute left-6 md:left-1/2 w-8 h-8 rounded-full bg-[#052326] text-[#052326] border-4 border-[#F8F3EF] flex items-center justify-center font-bold text-xs -translate-x-1/2 z-10 shadow-sm">
                                     2
                                 </div>
                                 <div className="flex-1 hidden md:block"></div>
@@ -598,7 +598,7 @@ export default function SellerLandingClient() {
 
                             {/* Step 3 */}
                             <div className="flex flex-col md:flex-row items-start md:items-center gap-8 relative">
-                                <div className="absolute left-6 md:left-1/2 w-8 h-8 rounded-full bg-[#052326] text-[#00bba7] border-4 border-[#F8F3EF] flex items-center justify-center font-bold text-xs -translate-x-1/2 z-10 shadow-sm">
+                                <div className="absolute left-6 md:left-1/2 w-8 h-8 rounded-full bg-[#052326] text-[#052326] border-4 border-[#F8F3EF] flex items-center justify-center font-bold text-xs -translate-x-1/2 z-10 shadow-sm">
                                     3
                                 </div>
                                 <div className="flex-1 md:text-right pl-12 md:pl-0 md:pr-16">
@@ -612,7 +612,7 @@ export default function SellerLandingClient() {
 
                             {/* Step 4 */}
                             <div className="flex flex-col md:flex-row items-start md:items-center gap-8 relative">
-                                <div className="absolute left-6 md:left-1/2 w-8 h-8 rounded-full bg-[#052326] text-[#00bba7] border-4 border-[#F8F3EF] flex items-center justify-center font-bold text-xs -translate-x-1/2 z-10 shadow-sm">
+                                <div className="absolute left-6 md:left-1/2 w-8 h-8 rounded-full bg-[#052326] text-[#052326] border-4 border-[#F8F3EF] flex items-center justify-center font-bold text-xs -translate-x-1/2 z-10 shadow-sm">
                                     4
                                 </div>
                                 <div className="flex-1 hidden md:block"></div>
@@ -626,7 +626,7 @@ export default function SellerLandingClient() {
 
                             {/* Step 5 */}
                             <div className="flex flex-col md:flex-row items-start md:items-center gap-8 relative">
-                                <div className="absolute left-6 md:left-1/2 w-8 h-8 rounded-full bg-[#052326] text-[#00bba7] border-4 border-[#F8F3EF] flex items-center justify-center font-bold text-xs -translate-x-1/2 z-10 shadow-sm">
+                                <div className="absolute left-6 md:left-1/2 w-8 h-8 rounded-full bg-[#052326] text-[#052326] border-4 border-[#F8F3EF] flex items-center justify-center font-bold text-xs -translate-x-1/2 z-10 shadow-sm">
                                     5
                                 </div>
                                 <div className="flex-1 md:text-right pl-12 md:pl-0 md:pr-16">
@@ -646,11 +646,11 @@ export default function SellerLandingClient() {
             <section className="py-24 bg-white">
                 <div className="container mx-auto px-6">
                     <div className="max-w-5xl mx-auto bg-[#052326] text-white rounded-[12px] p-8 md:p-12 shadow-xl relative overflow-hidden">
-                        <div className="absolute top-[-40%] right-[-20%] w-[350px] h-[350px] rounded-full bg-[#00bba7]/10 blur-[80px] pointer-events-none"></div>
+                        <div className="absolute top-[-40%] right-[-20%] w-[350px] h-[350px] rounded-full bg-[#052326]/10 blur-[80px] pointer-events-none"></div>
 
                         <div className="grid md:grid-cols-2 gap-12 items-center">
                             <div className="space-y-6">
-                                <span className="text-[#00bba7] text-xs font-bold uppercase tracking-wider block">Compliance Requirements</span>
+                                <span className="text-[#052326] text-xs font-bold uppercase tracking-wider block">Compliance Requirements</span>
                                 <h3 className="text-3xl font-extrabold font-heading">Check Your Selling Eligibility</h3>
                                 <p className="text-[#F8F3EF]/75 text-sm leading-relaxed">
                                     To ensure Cureza maintains its status as India's most trusted wellness ecosystem, we mandate that all registering sellers provide authentic documentation.
@@ -660,31 +660,31 @@ export default function SellerLandingClient() {
                             <div className="space-y-4 bg-white/5 p-6 rounded-[10px] border border-white/10 backdrop-blur-md">
                                 <ul className="space-y-4">
                                     <li className="flex items-center gap-3 text-sm font-semibold text-[#F8F3EF]">
-                                        <div className="w-5 h-5 rounded-full bg-[#00bba7]/25 text-[#00bba7] flex items-center justify-center shrink-0">
+                                        <div className="w-5 h-5 rounded-full bg-[#052326]/25 text-[#052326] flex items-center justify-center shrink-0">
                                             <Check size={12} />
                                         </div>
                                         <span>Active GST Registration certificate</span>
                                     </li>
                                     <li className="flex items-center gap-3 text-sm font-semibold text-[#F8F3EF]">
-                                        <div className="w-5 h-5 rounded-full bg-[#00bba7]/25 text-[#00bba7] flex items-center justify-center shrink-0">
+                                        <div className="w-5 h-5 rounded-full bg-[#052326]/25 text-[#052326] flex items-center justify-center shrink-0">
                                             <Check size={12} />
                                         </div>
                                         <span>FSSAI / AYUSH / Cosmetic license</span>
                                     </li>
                                     <li className="flex items-center gap-3 text-sm font-semibold text-[#F8F3EF]">
-                                        <div className="w-5 h-5 rounded-full bg-[#00bba7]/25 text-[#00bba7] flex items-center justify-center shrink-0">
+                                        <div className="w-5 h-5 rounded-full bg-[#052326]/25 text-[#052326] flex items-center justify-center shrink-0">
                                             <Check size={12} />
                                         </div>
                                         <span>Authentic, clinically verified wellness products</span>
                                     </li>
                                     <li className="flex items-center gap-3 text-sm font-semibold text-[#F8F3EF]">
-                                        <div className="w-5 h-5 rounded-full bg-[#00bba7]/25 text-[#00bba7] flex items-center justify-center shrink-0">
+                                        <div className="w-5 h-5 rounded-full bg-[#052326]/25 text-[#052326] flex items-center justify-center shrink-0">
                                             <Check size={12} />
                                         </div>
                                         <span>Brand Authorization letter (if reseller)</span>
                                     </li>
                                     <li className="flex items-center gap-3 text-sm font-semibold text-[#F8F3EF]">
-                                        <div className="w-5 h-5 rounded-full bg-[#00bba7]/25 text-[#00bba7] flex items-center justify-center shrink-0">
+                                        <div className="w-5 h-5 rounded-full bg-[#052326]/25 text-[#052326] flex items-center justify-center shrink-0">
                                             <Check size={12} />
                                         </div>
                                         <span>Active business bank account & IFS code</span>
@@ -700,7 +700,7 @@ export default function SellerLandingClient() {
             <section className="container mx-auto px-6 mt-12">
                 <div className="text-center bg-[#052326] text-white py-16 rounded-[12px] shadow-xl relative overflow-hidden">
                     <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none"></div>
-                    <div className="absolute top-[-50%] left-[-20%] w-[400px] h-[400px] rounded-full bg-[#00bba7]/10 blur-[90px] pointer-events-none"></div>
+                    <div className="absolute top-[-50%] left-[-20%] w-[400px] h-[400px] rounded-full bg-[#052326]/10 blur-[90px] pointer-events-none"></div>
                     
                     <h2 className="text-3xl md:text-5xl font-extrabold mb-4 font-heading">
                         Ready to Start Selling on Cureza?
@@ -712,7 +712,7 @@ export default function SellerLandingClient() {
                     <div className="flex flex-col sm:flex-row justify-center gap-4 max-w-xs sm:max-w-md mx-auto">
                         <a
                             href="/seller/register"
-                            className="px-8 py-4 bg-[#00bba7] text-[#101828] font-bold rounded-[10px] hover:bg-[#101828] hover:text-[#00bba7] hover:border-[#00bba7] border border-transparent transition duration-300 text-xs capitalize tracking-wider flex items-center justify-center gap-2"
+                            className="px-8 py-4 bg-[#052326] text-[#101828] font-bold rounded-[10px] hover:bg-[#101828] hover:text-[#052326] hover:border-[#052326] border border-transparent transition duration-300 text-xs capitalize tracking-wider flex items-center justify-center gap-2"
                         >
                             Register as Seller
                             <ChevronRight size={16} />

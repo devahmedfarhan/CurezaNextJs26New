@@ -59,7 +59,28 @@ export default function TrackOrderPage() {
         setError(null);
         try {
             const response = await api.get(`/orders/${idOrNumber}/track`);
-            setTrackingData(response.data);
+            const normalized = { ...response.data };
+            const backendStatus = normalized.current_status?.toLowerCase();
+            
+            if (backendStatus === 'cod_reconciled' || backendStatus === 'completed') {
+                normalized.current_status = 'delivered';
+            }
+            
+            if (Array.isArray(normalized.timeline)) {
+                normalized.timeline = normalized.timeline.map((step: any) => {
+                    const stepStatus = step.status?.toLowerCase();
+                    if (stepStatus === 'cod_reconciled' || stepStatus === 'completed') {
+                        return {
+                            ...step,
+                            step: 'Delivered',
+                            status: 'delivered',
+                            description: 'Package delivered safely. Secure OTP verified.'
+                        };
+                    }
+                    return step;
+                });
+            }
+            setTrackingData(normalized);
         } catch (err: any) {
             console.error('Failed to track order:', err);
             setError(err.response?.data?.message || 'Could not find tracking details for this order. Please verify the order number.');
@@ -109,11 +130,21 @@ export default function TrackOrderPage() {
         return `https://www.google.com/search?q=${provider}+tracking+${id}`;
     };
 
-    // Calculate progress percentage based on completed steps
-    const getProgressPercent = (timeline: TrackingStep[]) => {
-        if (!timeline || timeline.length === 0) return 0;
-        const completedCount = timeline.filter(step => step.is_completed).length;
-        return (completedCount / timeline.length) * 100;
+    const getStatusIndex = (status: string) => {
+        const s = status?.toLowerCase();
+        if (s === 'placed') return 0;
+        if (s === 'processing' || s === 'packed') return 1;
+        if (s === 'shipped') return 2;
+        if (s === 'out_for_delivery' || s === 'in_transit') return 3;
+        if (s === 'delivered' || s === 'cod_reconciled' || s === 'completed') return 4;
+        return -1;
+    };
+
+    // Calculate progress percentage based on currentStatusIndex (0 to 4 steps)
+    const getProgressPercent = (status: string) => {
+        const currentIdx = getStatusIndex(status);
+        if (currentIdx === -1) return 0;
+        return (currentIdx / 4) * 100;
     };
 
     return (
@@ -207,7 +238,7 @@ export default function TrackOrderPage() {
                             <div className="bg-gray-100 dark:bg-gray-800 h-1.5 rounded-full overflow-hidden">
                                 <div 
                                     className="bg-cureza-green h-full transition-all duration-500" 
-                                    style={{ width: `${getProgressPercent(trackingData.timeline)}%` }}
+                                    style={{ width: `${getProgressPercent(trackingData.current_status)}%` }}
                                 ></div>
                             </div>
                         </div>

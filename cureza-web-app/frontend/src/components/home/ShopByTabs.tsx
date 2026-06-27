@@ -184,7 +184,7 @@ export default function ShopByTabs() {
             >
               <div className="flex flex-col items-center text-center group">
                 {/* Circular image badge with gold hover scale ring */}
-                <div className="relative w-24 h-24 md:w-28 md:h-28 rounded-full p-[3px] bg-gradient-to-tr from-[#052326]/5 to-[#2E7D32]/10 group-hover:from-[#2E7D32] group-hover:to-[#F0C417] shadow-[0_8px_20px_rgba(5,35,38,0.03)] group-hover:shadow-[0_12px_28px_rgba(46,125,50,0.15)] transition-all duration-500 ease-out transform group-hover:-translate-y-1">
+                <div className="relative w-24 h-24 md:w-28 md:h-28 rounded-full p-[3px] bg-gradient-to-tr from-[#052326]/5 to-[#052326]/10 group-hover:from-[#052326] group-hover:to-[#F0C417] shadow-[0_8px_20px_rgba(5,35,38,0.03)] group-hover:shadow-[0_12px_28px_rgba(46,125,50,0.15)] transition-all duration-500 ease-out transform group-hover:-translate-y-1">
                   <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center p-1.5">
                     <img
                       src={
@@ -200,7 +200,7 @@ export default function ShopByTabs() {
                   </div>
                 </div>
 
-                <p className="mt-4 text-xs md:text-sm font-bold tracking-wide text-[#052326]/90 group-hover:text-[#2E7D32] transition-colors duration-300 line-clamp-1">
+                <p className="mt-4 text-xs md:text-sm font-bold tracking-wide text-[#052326]/90 group-hover:text-[#052326] transition-colors duration-300 line-clamp-1">
                   {item.name}
                 </p>
               </div>

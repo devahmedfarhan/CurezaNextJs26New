@@ -13,12 +13,12 @@ export default function AffiliatePage() {
             {/* HERO SECTION */}
             <section className="w-full bg-[#052326] text-white py-32 px-6 text-center relative overflow-hidden">
                 <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none"></div>
-                <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-[#00bba7]/10 blur-[100px] pointer-events-none"></div>
+                <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-[#052326]/10 blur-[100px] pointer-events-none"></div>
                 
                 <div className="relative z-10 max-w-4xl mx-auto space-y-6">
-                    <span className="text-[#00bba7] text-xs font-bold uppercase tracking-widest block">Collaborate & Grow</span>
+                    <span className="text-[#052326] text-xs font-bold uppercase tracking-widest block">Collaborate & Grow</span>
                     <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight font-heading leading-tight">
-                        Cureza <span className="text-[#00bba7]">Affiliate & Ambassador</span> Program
+                        Cureza <span className="text-[#052326]">Affiliate & Ambassador</span> Program
                     </h1>
                     <p className="text-lg md:text-xl text-[#F8F3EF]/85 leading-relaxed max-w-2xl mx-auto font-light">
                         Join India's leading modern wellness and Ayurveda platform. Share the benefits of conscious living and earn rewarding incentives while promoting premium products.
@@ -31,9 +31,9 @@ export default function AffiliatePage() {
                 <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
                     
                     {/* AFFILIATES TRACK */}
-                    <div className="bg-white p-10 rounded-3xl border border-[#052326]/5 shadow-sm space-y-8 flex flex-col justify-between hover:border-[#00bba7]/30 transition-all duration-300">
+                    <div className="bg-white p-10 rounded-3xl border border-[#052326]/5 shadow-sm space-y-8 flex flex-col justify-between hover:border-[#052326]/30 transition-all duration-300">
                         <div className="space-y-6">
-                            <div className="w-12 h-12 rounded-2xl bg-[#00bba7]/10 text-[#00bba7] flex items-center justify-center">
+                            <div className="w-12 h-12 rounded-2xl bg-[#052326]/10 text-[#052326] flex items-center justify-center">
                                 <Users size={24} />
                             </div>
                             <div className="space-y-2">
@@ -55,7 +55,7 @@ export default function AffiliatePage() {
                         <div className="pt-6">
                             <a 
                                 href="mailto:info@cureza.com?subject=Affiliate Program Application" 
-                                className="w-full py-4 px-6 bg-[#052326] text-white hover:bg-[#00bba7] hover:text-[#101828] font-bold rounded-xl text-xs uppercase tracking-wider transition duration-300 flex items-center justify-center gap-2"
+                                className="w-full py-4 px-6 bg-[#052326] text-white hover:bg-[#052326] hover:text-[#101828] font-bold rounded-xl text-xs uppercase tracking-wider transition duration-300 flex items-center justify-center gap-2"
                             >
                                 <Mail size={16} />
                                 Email info@cureza.com
@@ -64,9 +64,9 @@ export default function AffiliatePage() {
                     </div>
 
                     {/* BRAND AMBASSADORS TRACK */}
-                    <div className="bg-white p-10 rounded-3xl border border-[#052326]/5 shadow-sm space-y-8 flex flex-col justify-between hover:border-[#00bba7]/30 transition-all duration-300">
+                    <div className="bg-white p-10 rounded-3xl border border-[#052326]/5 shadow-sm space-y-8 flex flex-col justify-between hover:border-[#052326]/30 transition-all duration-300">
                         <div className="space-y-6">
-                            <div className="w-12 h-12 rounded-2xl bg-[#00bba7]/10 text-[#00bba7] flex items-center justify-center">
+                            <div className="w-12 h-12 rounded-2xl bg-[#052326]/10 text-[#052326] flex items-center justify-center">
                                 <Award size={24} />
                             </div>
                             <div className="space-y-2">
@@ -90,7 +90,7 @@ export default function AffiliatePage() {
                                 href="https://wa.me/919887860015" 
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="w-full py-4 px-6 bg-[#00bba7] text-[#101828] hover:bg-[#052326] hover:text-white font-bold rounded-xl text-xs uppercase tracking-wider transition duration-300 flex items-center justify-center gap-2 shadow-md"
+                                className="w-full py-4 px-6 bg-[#052326] text-[#101828] hover:bg-[#052326] hover:text-white font-bold rounded-xl text-xs uppercase tracking-wider transition duration-300 flex items-center justify-center gap-2 shadow-md"
                             >
                                 <Send size={16} />
                                 WhatsApp +91 98878 60015
@@ -108,7 +108,7 @@ export default function AffiliatePage() {
                     
                     <div className="grid md:grid-cols-3 gap-8">
                         <div className="space-y-3">
-                            <div className="flex items-center gap-2 text-[#00bba7]">
+                            <div className="flex items-center gap-2 text-[#052326]">
                                 <Check size={18} />
                                 <h3 className="font-bold text-[#052326]">High Quality Products</h3>
                             </div>
@@ -118,7 +118,7 @@ export default function AffiliatePage() {
                         </div>
 
                         <div className="space-y-3">
-                            <div className="flex items-center gap-2 text-[#00bba7]">
+                            <div className="flex items-center gap-2 text-[#052326]">
                                 <Check size={18} />
                                 <h3 className="font-bold text-[#052326]">Conscious Community</h3>
                             </div>
@@ -128,7 +128,7 @@ export default function AffiliatePage() {
                         </div>
 
                         <div className="space-y-3">
-                            <div className="flex items-center gap-2 text-[#00bba7]">
+                            <div className="flex items-center gap-2 text-[#052326]">
                                 <Check size={18} />
                                 <h3 className="font-bold text-[#052326]">Premium Support</h3>
                             </div>

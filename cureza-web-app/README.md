@@ -67,11 +67,13 @@ npm run dev
 ### 🎯 One-Liner Commands (PowerShell)
 
 **Start Backend:**
+
 ```powershell
 cd c:\Users\Dr Farhan Ahmed Khan\.gemini\antigravity\scratch\cureza-web-app\backend; php artisan serve
 ```
 
 **Start Frontend:**
+
 ```powershell
 cd c:\Users\Dr Farhan Ahmed Khan\.gemini\antigravity\scratch\cureza-web-app\frontend; npm run dev
 ```
@@ -80,16 +82,16 @@ cd c:\Users\Dr Farhan Ahmed Khan\.gemini\antigravity\scratch\cureza-web-app\fron
 
 ### 📋 Quick Reference Card
 
-| Action | Command |
-|--------|---------|
-| **Start Backend** | `cd cureza-web-app/backend && php artisan serve` |
-| **Start Frontend** | `cd cureza-web-app/frontend && npm run dev` |
-| **Stop Server** | Press `Ctrl + C` in terminal |
-| **Open Website** | http://localhost:3000 |
-| **Open API** | http://localhost:8000/api |
-| **Admin Panel** | http://localhost:3000/superadmin |
-| **Seller Panel** | http://localhost:3000/seller |
-| **Doctor Panel** | http://localhost:3000/doctor |
+| Action             | Command                                          |
+| ------------------ | ------------------------------------------------ |
+| **Start Backend**  | `cd cureza-web-app/backend && php artisan serve` |
+| **Start Frontend** | `cd cureza-web-app/frontend && npm run dev`      |
+| **Stop Server**    | Press `Ctrl + C` in terminal                     |
+| **Open Website**   | http://localhost:3000                            |
+| **Open API**       | http://localhost:8000/api                        |
+| **Admin Panel**    | http://localhost:3000/superadmin                 |
+| **Seller Panel**   | http://localhost:3000/seller                     |
+| **Doctor Panel**   | http://localhost:3000/doctor                     |
 
 ---
 
@@ -108,39 +110,46 @@ cd c:\Users\Dr Farhan Ahmed Khan\.gemini\antigravity\scratch\cureza-web-app\fron
 ## ✨ Features
 
 ### 🛍️ E-Commerce System
+
 - Advanced product catalog with simple, variable, and bundle products
 - Smart search & filtering with category, brand, price, and health concerns
 - Persistent cart with guest checkout support
 - Wishlist & Save for Later functionality
 
 ### 👥 Multi-Vendor System
+
 - Seller onboarding with KYC verification (GST, PAN, FSSAI/Ayush)
 - Dedicated vendor dashboard for inventory and order management
 - Automated commission engine with split payments
 - Shipping integration for automated label generation
 
 ### 💊 Prescription & Consultation
+
 - Prescription upload for restricted medicines
 - Integrated video/chat consultations with Ayurvedic doctors
 - Digital prescription generation
 - Doctor verification with registration validation
 
 ### 🎯 Affiliate & Referral
+
 - Unique tracking links with marketing assets
 - "Give X, Get Y" referral program
 - Tiered commission system
 
 ### ⭐ Reviews & UGC
+
 - Verified purchase reviews only
 - Photo/video reviews with loyalty points
 - Public Q&A sections
 
 ### 🏅 Cureza Circle (Loyalty)
+
 - XP system for user actions
 - Bronze, Silver, Gold loyalty tiers
 - Reward store for point redemption
 
 ### 📝 CMS & SEO
+
 - Full-featured blog engine
 - Dynamic landing page builder
 - Granular SEO control
@@ -180,25 +189,27 @@ cureza-web-app/
 ## 🛠️ Tech Stack
 
 ### Frontend
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| **Next.js** | 16.0.4 | React framework with SSR/ISR |
-| **TypeScript** | 5.x | Type-safe JavaScript |
-| **Tailwind CSS** | 4.x | Utility-first CSS |
-| **Framer Motion** | 12.x | Animations |
-| **Radix UI** | Latest | Accessible UI components |
-| **TipTap** | 3.x | Rich text editor |
-| **Axios** | 1.x | HTTP client |
-| **SWR** | 2.x | Data fetching |
+
+| Technology        | Version | Purpose                      |
+| ----------------- | ------- | ---------------------------- |
+| **Next.js**       | 16.0.4  | React framework with SSR/ISR |
+| **TypeScript**    | 5.x     | Type-safe JavaScript         |
+| **Tailwind CSS**  | 4.x     | Utility-first CSS            |
+| **Framer Motion** | 12.x    | Animations                   |
+| **Radix UI**      | Latest  | Accessible UI components     |
+| **TipTap**        | 3.x     | Rich text editor             |
+| **Axios**         | 1.x     | HTTP client                  |
+| **SWR**           | 2.x     | Data fetching                |
 
 ### Backend
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| **Laravel** | 12.x | PHP framework |
-| **PHP** | 8.2+ | Server-side language |
-| **MySQL** | 8.0 | Primary database |
-| **Laravel Sanctum** | 4.x | API authentication |
-| **DomPDF** | 3.x | PDF generation |
+
+| Technology          | Version | Purpose              |
+| ------------------- | ------- | -------------------- |
+| **Laravel**         | 12.x    | PHP framework        |
+| **PHP**             | 8.2+    | Server-side language |
+| **MySQL**           | 8.0     | Primary database     |
+| **Laravel Sanctum** | 4.x     | API authentication   |
+| **DomPDF**          | 3.x     | PDF generation       |
 
 ---
 
@@ -215,22 +226,26 @@ cureza-web-app/
 ### Backend Setup
 
 1. **Navigate to the backend directory:**
+
    ```bash
    cd cureza-web-app/backend
    ```
 
 2. **Install PHP dependencies:**
+
    ```bash
    composer install
    ```
 
 3. **Configure environment:**
+
    ```bash
    cp .env.example .env
    php artisan key:generate
    ```
 
 4. **Update `.env` with your database credentials:**
+
    ```env
    DB_CONNECTION=mysql
    DB_HOST=127.0.0.1
@@ -241,45 +256,52 @@ cureza-web-app/
    ```
 
 5. **Run database migrations:**
+
    ```bash
    php artisan migrate
    ```
 
 6. **Seed the database (optional):**
+
    ```bash
    php artisan db:seed
    ```
 
 7. **Start the backend server:**
+
    ```bash
    php artisan serve
    ```
-   
+
    The API will be available at: **http://localhost:8000/api**
 
 ### Frontend Setup
 
 1. **Navigate to the frontend directory:**
+
    ```bash
    cd cureza-web-app/frontend
    ```
 
 2. **Install dependencies:**
+
    ```bash
    npm install
    ```
 
 3. **Configure environment:**
+
    ```bash
    # Create .env.local file
    echo "NEXT_PUBLIC_BACKEND_URL=http://localhost:8000/api" > .env.local
    ```
 
 4. **Start the development server:**
+
    ```bash
    npm run dev
    ```
-   
+
    The frontend will be available at: **http://localhost:3000**
 
 ### 🐳 Alternative: Using Laravel Sail (Docker)
@@ -295,73 +317,78 @@ composer install
 
 ## 🔗 Access Points
 
-| Panel | URL | Description |
-|-------|-----|-------------|
-| 🏠 **Customer Frontend** | http://localhost:3000 | Main customer-facing website |
-| 🔌 **Backend API** | http://localhost:8000/api | RESTful API endpoints |
-| 👤 **Customer Dashboard** | http://localhost:3000/dashboard | User account & orders |
-| 🛒 **Seller Dashboard** | http://localhost:3000/seller | Vendor management panel |
-| 👨‍⚕️ **Doctor Dashboard** | http://localhost:3000/doctor | Doctor consultation panel |
-| ⚙️ **Super Admin Panel** | http://localhost:3000/superadmin | Full platform control |
+| Panel                     | URL                              | Description                  |
+| ------------------------- | -------------------------------- | ---------------------------- |
+| 🏠 **Customer Frontend**  | http://localhost:3000            | Main customer-facing website |
+| 🔌 **Backend API**        | http://localhost:8000/api        | RESTful API endpoints        |
+| 👤 **Customer Dashboard** | http://localhost:3000/dashboard  | User account & orders        |
+| 🛒 **Seller Dashboard**   | http://localhost:3000/seller     | Vendor management panel      |
+| 👨‍⚕️ **Doctor Dashboard**   | http://localhost:3000/doctor     | Doctor consultation panel    |
+| ⚙️ **Super Admin Panel**  | http://localhost:3000/superadmin | Full platform control        |
 
 ---
 
 ## 📂 Application Modules
 
 ### Customer Routes
-| Route | Description |
-|-------|-------------|
-| `/` | Homepage with featured products |
-| `/shop` | Product listing with filters |
-| `/shop/[category]` | Category-specific products |
-| `/product/[slug]` | Product detail page |
-| `/cart` | Shopping cart |
-| `/checkout` | Checkout process |
-| `/login` | User login |
-| `/register` | User registration |
-| `/dashboard` | Customer dashboard |
-| `/wishlist` | Saved products |
-| `/blog` | Wellness articles |
-| `/doctor` | Doctor consultation booking |
-| `/community` | Cureza Circle loyalty program |
+
+| Route              | Description                     |
+| ------------------ | ------------------------------- |
+| `/`                | Homepage with featured products |
+| `/shop`            | Product listing with filters    |
+| `/shop/[category]` | Category-specific products      |
+| `/product/[slug]`  | Product detail page             |
+| `/cart`            | Shopping cart                   |
+| `/checkout`        | Checkout process                |
+| `/login`           | User login                      |
+| `/register`        | User registration               |
+| `/dashboard`       | Customer dashboard              |
+| `/wishlist`        | Saved products                  |
+| `/blog`            | Wellness articles               |
+| `/doctor`          | Doctor consultation booking     |
+| `/community`       | Cureza Circle loyalty program   |
 
 ### Seller Routes (`/seller/*`)
-| Route | Description |
-|-------|-------------|
+
+| Route               | Description                |
+| ------------------- | -------------------------- |
 | `/seller/dashboard` | Sales overview & analytics |
-| `/seller/products` | Product management |
-| `/seller/orders` | Order processing |
-| `/seller/inventory` | Stock management |
-| `/seller/payments` | Revenue & payouts |
+| `/seller/products`  | Product management         |
+| `/seller/orders`    | Order processing           |
+| `/seller/inventory` | Stock management           |
+| `/seller/payments`  | Revenue & payouts          |
 
 ### Doctor Routes (`/doctor/*`)
-| Route | Description |
-|-------|-------------|
-| `/doctor/dashboard` | Appointments overview |
-| `/doctor/appointments` | Schedule management |
+
+| Route                   | Description                  |
+| ----------------------- | ---------------------------- |
+| `/doctor/dashboard`     | Appointments overview        |
+| `/doctor/appointments`  | Schedule management          |
 | `/doctor/prescriptions` | Digital prescription builder |
-| `/doctor/earnings` | Consultation earnings |
+| `/doctor/earnings`      | Consultation earnings        |
 
 ### Super Admin Routes (`/superadmin/*`)
-| Route | Description |
-|-------|-------------|
-| `/superadmin/dashboard` | Platform analytics |
-| `/superadmin/users` | User management |
-| `/superadmin/sellers` | Seller verification & management |
-| `/superadmin/doctors` | Doctor verification |
-| `/superadmin/products` | Master catalog |
-| `/superadmin/orders` | Global order management |
-| `/superadmin/categories` | Category management |
-| `/superadmin/brands` | Brand management |
-| `/superadmin/blog` | Content management |
-| `/superadmin/settings` | Global settings |
-| `/superadmin/reports` | Analytics & reports |
+
+| Route                    | Description                      |
+| ------------------------ | -------------------------------- |
+| `/superadmin/dashboard`  | Platform analytics               |
+| `/superadmin/users`      | User management                  |
+| `/superadmin/sellers`    | Seller verification & management |
+| `/superadmin/doctors`    | Doctor verification              |
+| `/superadmin/products`   | Master catalog                   |
+| `/superadmin/orders`     | Global order management          |
+| `/superadmin/categories` | Category management              |
+| `/superadmin/brands`     | Brand management                 |
+| `/superadmin/blog`       | Content management               |
+| `/superadmin/settings`   | Global settings                  |
+| `/superadmin/reports`    | Analytics & reports              |
 
 ---
 
 ## 🔌 API Endpoints
 
 ### Authentication
+
 ```
 POST   /api/register          # User registration
 POST   /api/login             # User login
@@ -371,6 +398,7 @@ GET    /api/user              # Current user
 ```
 
 ### Products
+
 ```
 GET    /api/products              # List all products
 GET    /api/products/{id}         # Product details
@@ -380,6 +408,7 @@ GET    /api/brands                # Product brands
 ```
 
 ### Cart & Orders
+
 ```
 GET    /api/cart                  # Get cart
 POST   /api/cart                  # Add to cart
@@ -391,6 +420,7 @@ GET    /api/orders/{id}           # Order details
 ```
 
 ### Doctor Consultations
+
 ```
 GET    /api/doctors               # List doctors
 GET    /api/doctors/{id}          # Doctor profile
@@ -399,6 +429,7 @@ GET    /api/consultations         # User consultations
 ```
 
 ### Seller APIs
+
 ```
 POST   /api/seller/register       # Seller registration
 GET    /api/seller/products       # Seller products
@@ -413,14 +444,14 @@ GET    /api/seller/orders         # Seller orders
 
 ### Color Palette
 
-| Color | Hex | Usage |
-|-------|-----|-------|
-| **Cureza Green** | `#2E7D32` | Primary brand color |
-| **Sage Green** | `#A5D6A7` | Secondary accents |
-| **Trust Blue** | `#1976D2` | Medical module |
-| **Warm Sand** | `#F5F5F5` | Background |
-| **Charcoal** | `#212121` | Primary text |
-| **Alert Red** | `#D32F2F` | Errors & warnings |
+| Color            | Hex       | Usage               |
+| ---------------- | --------- | ------------------- |
+| **Cureza Green** | `#052326` | Primary brand color |
+| **Sage Green**   | `#A5D6A7` | Secondary accents   |
+| **Trust Blue**   | `#1976D2` | Medical module      |
+| **Warm Sand**    | `#F5F5F5` | Background          |
+| **Charcoal**     | `#212121` | Primary text        |
+| **Alert Red**    | `#D32F2F` | Errors & warnings   |
 
 ### Typography
 
@@ -436,6 +467,7 @@ GET    /api/seller/orders         # Seller orders
 ## 📝 Environment Variables
 
 ### Backend (`.env`)
+
 ```env
 APP_NAME=Cureza
 APP_ENV=local
@@ -461,6 +493,7 @@ MAIL_PASSWORD=
 ```
 
 ### Frontend (`.env.local`)
+
 ```env
 NEXT_PUBLIC_BACKEND_URL=http://localhost:8000/api
 ```
@@ -470,18 +503,21 @@ NEXT_PUBLIC_BACKEND_URL=http://localhost:8000/api
 ## 🧪 Testing
 
 ### Backend Tests
+
 ```bash
 cd cureza-web-app/backend
 php artisan test
 ```
 
 ### Frontend Lint
+
 ```bash
 cd cureza-web-app/frontend
 npm run lint
 ```
 
 ### Build Check
+
 ```bash
 cd cureza-web-app/frontend
 npm run build
@@ -492,6 +528,7 @@ npm run build
 ## 📁 Directory Structure
 
 ### Frontend (`/frontend/src`)
+
 ```
 src/
 ├── app/                    # Next.js App Router
@@ -515,6 +552,7 @@ src/
 ```
 
 ### Backend (`/backend`)
+
 ```
 backend/
 ├── app/

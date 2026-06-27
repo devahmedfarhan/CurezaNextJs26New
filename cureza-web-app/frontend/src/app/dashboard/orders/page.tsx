@@ -70,11 +70,11 @@ export default function OrdersPage() {
                                 <div className="flex-1">
                                     <div className="flex flex-col md:flex-row justify-between mb-2">
                                         <h3 className="font-bold text-lg text-charcoal dark:text-gray-100">Order #{order.order_number}</h3>
-                                        <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider w-fit ${order.status === 'delivered' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' :
+                                        <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider w-fit ${(order.status === 'delivered' || order.status === 'cod_reconciled' || order.status === 'completed') ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' :
                                             order.status === 'processing' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' :
                                                 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300'
                                             }`}>
-                                            {order.status}
+                                            {(order.status === 'cod_reconciled' || order.status === 'completed') ? 'delivered' : order.status}
                                         </span>
                                     </div>
                                     <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Placed on {new Date(order.created_at).toLocaleDateString()}</p>

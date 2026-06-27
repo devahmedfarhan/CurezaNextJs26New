@@ -531,13 +531,13 @@ export default function AdminMenuPage() {
                             className="absolute top-0 bottom-0 flex pointer-events-none" 
                             style={{ left: `${(depth - 1) * 32 + 20}px` }}
                         >
-                            <div className="absolute top-0 bottom-0 w-[1.5px] bg-[#2E7D32]/25" />
-                            <div className="absolute h-[1.5px] bg-[#2E7D32]/25 w-4 top-1/2" />
+                            <div className="absolute top-0 bottom-0 w-[1.5px] bg-[#052326]/25" />
+                            <div className="absolute h-[1.5px] bg-[#052326]/25 w-4 top-1/2" />
                         </div>
                     )}
 
                     <div className="flex items-center gap-3 z-10">
-                        {depth > 0 && <CornerDownRight size={14} className="text-[#2E7D32]/40" />}
+                        {depth > 0 && <CornerDownRight size={14} className="text-[#052326]/40" />}
                         <span className="font-semibold text-sm text-slate-800">{item.title}</span>
                         <span className="hidden sm:inline-block text-[11px] text-slate-500 font-mono bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200/60 max-w-xs truncate">
                             {item.url || '/'}
@@ -714,7 +714,7 @@ export default function AdminMenuPage() {
                         onClick={() => setActiveTab(tab.id as any)}
                         className={`flex items-center gap-2 py-2.5 px-4 text-xs font-bold rounded-lg transition-all ${
                             activeTab === tab.id
-                            ? 'bg-white text-[#2E7D32] shadow-sm'
+                            ? 'bg-white text-[#052326] shadow-sm'
                             : 'text-slate-500 hover:text-slate-800'
                         }`}
                     >

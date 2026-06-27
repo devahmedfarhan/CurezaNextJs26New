@@ -23,7 +23,11 @@ export default function OrderDetailsPage() {
     const fetchOrderDetails = async () => {
         try {
             const response = await axios.get(`/orders/${params.id}`);
-            setOrder(response.data);
+            const data = response.data;
+            if (data && (data.status === 'cod_reconciled' || data.status === 'completed')) {
+                data.status = 'delivered';
+            }
+            setOrder(data);
         } catch (error) {
             console.error('Failed to fetch order details:', error);
         }
@@ -34,7 +38,20 @@ export default function OrderDetailsPage() {
     const fetchOrderTracking = async () => {
         try {
             const response = await axios.get(`/orders/${params.id}/track`);
-            setTimeline(response.data.timeline || []);
+            let steps = response.data.timeline || [];
+            steps = steps.map((step: any) => {
+                const stepStatus = step.status?.toLowerCase();
+                if (stepStatus === 'cod_reconciled' || stepStatus === 'completed') {
+                    return {
+                        ...step,
+                        step: 'Delivered',
+                        status: 'delivered',
+                        description: 'Package delivered safely. Secure OTP verified.'
+                    };
+                }
+                return step;
+            });
+            setTimeline(steps);
             if (response.data.tracking_id) {
                 setTrackingInfo({
                     id: response.data.tracking_id,

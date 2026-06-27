@@ -32,11 +32,11 @@ export default function AboutCureza() {
             {/* HERO SECTION */}
             <section className="w-full bg-[#052326] text-white py-32 px-6 text-center relative overflow-hidden">
                 <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none"></div>
-                <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-[#00bba7]/10 blur-[100px] pointer-events-none"></div>
+                <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-[#052326]/10 blur-[100px] pointer-events-none"></div>
                 
                 <div className="relative z-10 max-w-4xl mx-auto space-y-6">
                     <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight font-heading leading-tight">
-                        About <span className="text-[#00bba7]">Cureza</span>
+                        About <span className="text-[#052326]">Cureza</span>
                     </h1>
                     <p className="text-lg md:text-xl text-[#F8F3EF]/85 leading-relaxed max-w-3xl mx-auto">
                         Introducing Cureza, an embodiment of a profound vision reborn—an Odyssey that encapsulates the aspirations of our forebears. This endeavor seamlessly resurrects ancient dreams and wisdom, fusing them with contemporary innovation.
@@ -50,7 +50,7 @@ export default function AboutCureza() {
             {/* THE ODYSSEY & VISION */}
             <section className="container mx-auto px-6 py-20">
                 <div className="max-w-4xl mx-auto space-y-8">
-                    <div className="border-l-4 border-[#00bba7] pl-6 py-2">
+                    <div className="border-l-4 border-[#052326] pl-6 py-2">
                         <p className="text-xl md:text-2xl font-semibold italic text-[#052326] leading-relaxed">
                             "While the nomenclature 'Cureza' may suggest its nature as a simple wellness marketplace, it goes far beyond the surface. Uncover a realm of limitless dimensions, an intricate fusion of Medical Cannabis, CBD, Fungi, Hemp, Herbal, and other avant-garde Supplements."
                         </p>
@@ -81,7 +81,7 @@ export default function AboutCureza() {
             <section className="bg-white py-20 border-t border-b border-[#052326]/5">
                 <div className="container mx-auto px-6">
                     <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
-                        <span className="text-[#00bba7] text-xs font-bold uppercase tracking-widest block">Explore Our Offerings</span>
+                        <span className="text-[#052326] text-xs font-bold uppercase tracking-widest block">Explore Our Offerings</span>
                         <h2 className="text-3xl md:text-4xl font-extrabold text-[#052326] font-heading">
                             Our Curated Modern Wellness Marketplace
                         </h2>
@@ -94,8 +94,8 @@ export default function AboutCureza() {
                         {offerings.map((item, idx) => {
                             const IconComp = item.icon;
                             return (
-                                <div key={idx} className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/5 space-y-4 hover:border-[#00bba7]/40 transition duration-300">
-                                    <div className="w-10 h-10 rounded-xl bg-[#00bba7]/10 flex items-center justify-center text-[#00bba7]">
+                                <div key={idx} className="bg-[#F8F3EF]/40 p-8 rounded-2xl border border-[#052326]/5 space-y-4 hover:border-[#052326]/40 transition duration-300">
+                                    <div className="w-10 h-10 rounded-xl bg-[#052326]/10 flex items-center justify-center text-[#052326]">
                                         <IconComp size={20} />
                                     </div>
                                     <h3 className="font-bold text-lg text-[#052326]">{item.title}</h3>
@@ -131,21 +131,21 @@ export default function AboutCureza() {
                         </p>
                     </div>
                     <div className="bg-[#052326] text-white p-8 rounded-2xl space-y-6">
-                        <h3 className="text-xl font-bold text-[#00bba7]">Join Our Conscious Movement</h3>
+                        <h3 className="text-xl font-bold text-[#052326]">Join Our Conscious Movement</h3>
                         <p className="text-sm text-white/80 leading-relaxed font-light">
                             Stepping into Cureza is an immersive venture, a passage into a realm far beyond the ordinary—a testament to the convergence of heritage and progress, redefining wellness and holistic living.
                         </p>
                         <div className="pt-4 border-t border-white/10 space-y-3">
                             <div className="flex items-center gap-3 text-xs text-white/90">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#00bba7]"></span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#052326]"></span>
                                 Certified Ayurvedic & Homeopathic Panel
                             </div>
                             <div className="flex items-center gap-3 text-xs text-white/90">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#00bba7]"></span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#052326]"></span>
                                 Shamanic & Yoga Retreat Programs
                             </div>
                             <div className="flex items-center gap-3 text-xs text-white/90">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#00bba7]"></span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#052326]"></span>
                                 Influencer & Brand Collaborations
                             </div>
                         </div>
@@ -286,7 +286,7 @@ export default function AboutCureza() {
 
                         <a
                             href="/contact"
-                            className="inline-block px-12 py-4 rounded-[10px] bg-[#00bba7] text-[#101828] font-bold text-sm transition hover:bg-[#00bba7]/90"
+                            className="inline-block px-12 py-4 rounded-[10px] bg-[#052326] text-[#101828] font-bold text-sm transition hover:bg-[#052326]/90"
                         >
                             Contact Cureza
                         </a>

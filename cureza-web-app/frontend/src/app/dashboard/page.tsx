@@ -223,12 +223,11 @@ export default function DashboardOverviewPage() {
                                         </div>
                                         <div className="text-right">
                                             <p className="font-bold text-sm text-charcoal dark:text-gray-100">₹{order.total_amount}</p>
-                                            <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider mt-1 ${
-                                                order.status === 'delivered' ? 'bg-green-50 text-green-700' :
+                                            <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] md:text-xs font-semibold uppercase tracking-wider mt-1 ${(order.status === 'delivered' || order.status === 'cod_reconciled' || order.status === 'completed') ? 'bg-green-50 text-green-700' :
                                                 order.status === 'processing' ? 'bg-blue-50 text-blue-700' :
                                                 'bg-yellow-50 text-yellow-700'
                                             }`}>
-                                                {order.status}
+                                                {(order.status === 'cod_reconciled' || order.status === 'completed') ? 'delivered' : order.status}
                                             </span>
                                         </div>
                                     </div>

@@ -94,16 +94,16 @@ export default function Navbar() {
         <div className="hidden md:block bg-[#F8F3EF] border-b border-[#052326]/8 text-[11px] font-bold tracking-wider py-2">
           <div className="container mx-auto px-6 flex justify-between items-center">
             <div className="flex gap-6">
-              <Link href="/track-order" className="hover:text-[#2E7D32] flex items-center gap-1.5 transition-colors">
+              <Link href="/track-order" className="hover:text-[#052326] flex items-center gap-1.5 transition-colors">
                 <ClipboardList size={12} /> Track Your Order
               </Link>
-              <Link href="/faq" className="hover:text-[#2E7D32] flex items-center gap-1.5 transition-colors">
+              <Link href="/faq" className="hover:text-[#052326] flex items-center gap-1.5 transition-colors">
                 <HelpCircle size={12} /> Help Center / FAQs
               </Link>
             </div>
             <div className="flex gap-6">
-              <Link href="/doctor" className="hover:text-[#2E7D32] transition-colors">For Doctors</Link>
-              <Link href="/seller" className="hover:text-[#2E7D32] transition-colors">Sell on Cureza</Link>
+              <Link href="/doctor" className="hover:text-[#052326] transition-colors">For Doctors</Link>
+              <Link href="/seller" className="hover:text-[#052326] transition-colors">Sell on Cureza</Link>
             </div>
           </div>
         </div>
@@ -126,7 +126,7 @@ export default function Navbar() {
             
             {/* Search Toggler (Mobile/Tablet fallback) */}
             <button 
-              className="lg:hidden hover:text-[#2E7D32] transition-colors p-1"
+              className="lg:hidden hover:text-[#052326] transition-colors p-1"
               onClick={() => setIsSearchOpen(!isSearchOpen)}
               title="Search"
             >
@@ -136,12 +136,12 @@ export default function Navbar() {
             {/* Wishlist Trigger */}
             <Link 
               href={user ? "/dashboard/wishlist" : "/login?redirect=/dashboard/wishlist"} 
-              className="hover:text-[#2E7D32] relative transition-colors p-1 hidden sm:block"
+              className="hover:text-[#052326] relative transition-colors p-1 hidden sm:block"
               title="Wishlist"
             >
               <Heart size={22} />
               {wishlistItems?.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#2E7D32] text-white text-[8px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center border border-white">
+                <span className="absolute -top-1 -right-1 bg-[#052326] text-white text-[8px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center border border-white">
                   {wishlistItems.length}
                 </span>
               )}
@@ -150,12 +150,12 @@ export default function Navbar() {
             {/* Cart Trigger */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="hover:text-[#2E7D32] relative transition-colors p-1 focus:outline-none"
+              className="hover:text-[#052326] relative transition-colors p-1 focus:outline-none"
               title="Shopping Cart"
             >
               <ShoppingCart size={22} />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#2E7D32] text-white text-[8px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center border border-white">
+                <span className="absolute -top-1 -right-1 bg-[#052326] text-white text-[8px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center border border-white">
                   {totalItems}
                 </span>
               )}
@@ -257,7 +257,7 @@ export default function Navbar() {
                 )}
               </div>
             ) : (
-              <Link href="/login" className="flex items-center gap-1.5 hover:text-[#2E7D32] text-xs font-black tracking-wider transition-colors" title="Login / Register">
+              <Link href="/login" className="flex items-center gap-1.5 hover:text-[#052326] text-xs font-black tracking-wider transition-colors" title="Login / Register">
                 <User size={16} />
                 <span className="hidden sm:inline">Login</span>
               </Link>
@@ -265,7 +265,7 @@ export default function Navbar() {
 
             {/* Mobile menu trigger */}
             <button
-              className="md:hidden hover:text-[#2E7D32] transition-colors p-1"
+              className="md:hidden hover:text-[#052326] transition-colors p-1"
               onClick={() => setIsMobileMenuOpen(true)}
               title="Open Menu"
             >
@@ -298,7 +298,7 @@ export default function Navbar() {
                     if (isCategories) {
                       return (
                         <li key={item.id} className="group flex items-center">
-                          <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4 capitalize">
+                          <button className="hover:text-[#052326] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4 capitalize">
                             {item.title} <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                           </button>
                           
@@ -313,17 +313,17 @@ export default function Navbar() {
                                   {/* Col 1: Medical Cannabis (THC) */}
                                   <div className="flex flex-col gap-2.5">
                                     <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                                      <ShieldAlert size={14} className="text-[#2E7D32]" /> Medical Cannabis THC
+                                      <ShieldAlert size={14} className="text-[#052326]" /> Medical Cannabis THC
                                     </h4>
                                     <ul className="space-y-0.5 text-[#052326]/75">
                                       {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'thc').map((c) => (
                                         <li key={c.id}>
                                           <Link href={`/shop?category=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
                                             <span className="flex items-center gap-2">
-                                              <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                              <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
+                                              <span className="w-1.5 h-1.5 rounded-full bg-[#052326]/35 group-hover/item:bg-[#052326] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                              <span className="text-[#052326]/80 group-hover/item:text-[#052326] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
                                             </span>
-                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#052326]" />
                                           </Link>
                                         </li>
                                       ))}
@@ -333,17 +333,17 @@ export default function Navbar() {
                                   {/* Col 2: CBD & Hemp Products */}
                                   <div className="flex flex-col gap-2.5">
                                     <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                                      <Leaf size={14} className="text-[#2E7D32]" /> CBD & Hemp Products
+                                      <Leaf size={14} className="text-[#052326]" /> CBD & Hemp Products
                                     </h4>
                                     <ul className="space-y-0.5 text-[#052326]/75">
                                       {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'cbd').map((c) => (
                                         <li key={c.id}>
                                           <Link href={`/shop?category=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
                                             <span className="flex items-center gap-2">
-                                              <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                              <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
+                                              <span className="w-1.5 h-1.5 rounded-full bg-[#052326]/35 group-hover/item:bg-[#052326] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                              <span className="text-[#052326]/80 group-hover/item:text-[#052326] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
                                             </span>
-                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#052326]" />
                                           </Link>
                                         </li>
                                       ))}
@@ -353,17 +353,17 @@ export default function Navbar() {
                                   {/* Col 3: Herbal & Ayurveda */}
                                   <div className="flex flex-col gap-2.5">
                                     <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                                      <Activity size={14} className="text-[#2E7D32]" /> Herbal & Ayurveda
+                                      <Activity size={14} className="text-[#052326]" /> Herbal & Ayurveda
                                     </h4>
                                     <ul className="space-y-0.5 text-[#052326]/75">
                                       {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'herbal').map((c) => (
                                         <li key={c.id}>
                                           <Link href={`/shop?category=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
                                             <span className="flex items-center gap-2">
-                                              <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                              <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
+                                              <span className="w-1.5 h-1.5 rounded-full bg-[#052326]/35 group-hover/item:bg-[#052326] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                              <span className="text-[#052326]/80 group-hover/item:text-[#052326] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
                                             </span>
-                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#052326]" />
                                           </Link>
                                         </li>
                                       ))}
@@ -373,17 +373,17 @@ export default function Navbar() {
                                   {/* Col 4: Supplements & Wellness */}
                                   <div className="flex flex-col gap-2.5">
                                     <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                                      <Brain size={14} className="text-[#2E7D32]" /> Supplements & Wellness
+                                      <Brain size={14} className="text-[#052326]" /> Supplements & Wellness
                                     </h4>
                                     <ul className="space-y-0.5 text-[#052326]/75">
                                       {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'supplements').map((c) => (
                                         <li key={c.id}>
                                           <Link href={`/shop?category=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
                                             <span className="flex items-center gap-2">
-                                              <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                              <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
+                                              <span className="w-1.5 h-1.5 rounded-full bg-[#052326]/35 group-hover/item:bg-[#052326] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                              <span className="text-[#052326]/80 group-hover/item:text-[#052326] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
                                             </span>
-                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#052326]" />
                                           </Link>
                                         </li>
                                       ))}
@@ -393,7 +393,7 @@ export default function Navbar() {
                                 </div>
                                 <div className="border-t border-[#052326]/5 pt-3.5 flex justify-between items-center">
                                   <span className="text-[11px] text-[#052326]/60 font-semibold">Looking for other categories?</span>
-                                  <Link href="/categories" className="text-[#2E7D32] hover:text-[#225c25] text-[11px] font-extrabold flex items-center gap-1 transition-colors">
+                                  <Link href="/categories" className="text-[#052326] hover:text-[#225c25] text-[11px] font-extrabold flex items-center gap-1 transition-colors">
                                     Show All Categories <ChevronRight size={13} />
                                   </Link>
                                 </div>
@@ -403,7 +403,7 @@ export default function Navbar() {
                               <div className="w-[280px] bg-gradient-to-br from-[#052326]/5 via-[#083a3f]/8 to-[#0c4d53]/10 border border-[#052326]/8 p-6 flex flex-col justify-between relative overflow-hidden shrink-0 rounded-[8px]">
                                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(46,125,50,0.06),transparent_70%)] pointer-events-none" />
                                 <div className="relative z-10">
-                                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#2E7D32]/10 border border-[#2E7D32]/25 text-[9px] tracking-[0.15em] font-extrabold text-[#2E7D32] capitalize block mb-1">
+                                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#052326]/10 border border-[#052326]/25 text-[9px] tracking-[0.15em] font-extrabold text-[#052326] capitalize block mb-1">
                                     Cureza Wellness
                                   </span>
                                   <h3 className="font-heading font-bold text-[15px] tracking-tight text-[#052326] leading-tight mt-3">Explore Natural Healing</h3>
@@ -413,11 +413,11 @@ export default function Navbar() {
                                 </div>
                                 
                                 <div className="relative z-10 mt-6 p-4 bg-white/60 backdrop-blur-md border border-[#052326]/8 rounded-[8px] group/card hover:bg-white/80 transition-all duration-300">
-                                  <h5 className="text-[10px] font-bold text-[#2E7D32] capitalize tracking-wide flex items-center gap-1.5">
-                                    <ShieldAlert size={12} className="text-[#2E7D32]" /> Prescription Required?
+                                  <h5 className="text-[10px] font-bold text-[#052326] capitalize tracking-wide flex items-center gap-1.5">
+                                    <ShieldAlert size={12} className="text-[#052326]" /> Prescription Required?
                                   </h5>
                                   <p className="text-[10px] text-[#052326]/70 mt-1 leading-relaxed font-medium">Certain formulations require doctor approval. Get certified prescriptions via our consultation portal.</p>
-                                  <Link href="/consultation" className="relative mt-3.5 flex items-center justify-center gap-2 bg-[#2E7D32] text-white text-[11px] font-bold uppercase py-2.5 rounded-[8px] transition-all duration-300 shadow-[0_4px_12px_rgba(46,125,50,0.15)] hover:bg-[#225c25] hover:shadow-[0_4px_16px_rgba(46,125,50,0.25)] hover:-translate-y-0.5 tracking-wider w-full">
+                                  <Link href="/consultation" className="relative mt-3.5 flex items-center justify-center gap-2 bg-[#052326] text-white text-[11px] font-bold uppercase py-2.5 rounded-[8px] transition-all duration-300 shadow-[0_4px_12px_rgba(46,125,50,0.15)] hover:bg-[#225c25] hover:shadow-[0_4px_16px_rgba(46,125,50,0.25)] hover:-translate-y-0.5 tracking-wider w-full">
                                     <span>Book Consultation</span>
                                     <Sparkles size={12} className="animate-pulse" />
                                   </Link>
@@ -434,7 +434,7 @@ export default function Navbar() {
                     if (isBrands) {
                       return (
                         <li key={item.id} className="group flex items-center">
-                          <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4 capitalize">
+                          <button className="hover:text-[#052326] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4 capitalize">
                             {item.title} <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                           </button>
 
@@ -449,17 +449,17 @@ export default function Navbar() {
                                   {/* Col 1: Cannabis & Hemp */}
                                   <div className="flex flex-col gap-2.5">
                                     <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                                      <Leaf size={14} className="text-[#2E7D32]" /> Cannabis & Hemp
+                                      <Leaf size={14} className="text-[#052326]" /> Cannabis & Hemp
                                     </h4>
                                     <ul className="space-y-0.5 text-[#052326]/75">
                                       {activeBrands.filter(b => b.show_in_mega_menu !== false && b.mega_menu_section === 'cannabis_hemp').map((b) => (
                                         <li key={b.id}>
                                           <Link href={`/brand/${b.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
                                             <span className="flex items-center gap-2">
-                                              <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                              <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{b.name}</span>
+                                              <span className="w-1.5 h-1.5 rounded-full bg-[#052326]/35 group-hover/item:bg-[#052326] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                              <span className="text-[#052326]/80 group-hover/item:text-[#052326] font-semibold text-[11.5px] transition-colors duration-300">{b.name}</span>
                                             </span>
-                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#052326]" />
                                           </Link>
                                         </li>
                                       ))}
@@ -469,17 +469,17 @@ export default function Navbar() {
                                   {/* Col 2: Ayurvedic & Herbal */}
                                   <div className="flex flex-col gap-2.5">
                                     <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                                      <Activity size={14} className="text-[#2E7D32]" /> Ayurvedic & Herbal
+                                      <Activity size={14} className="text-[#052326]" /> Ayurvedic & Herbal
                                     </h4>
                                     <ul className="space-y-0.5 text-[#052326]/75">
                                       {activeBrands.filter(b => b.show_in_mega_menu !== false && b.mega_menu_section === 'ayurvedic_herbal').map((b) => (
                                         <li key={b.id}>
                                           <Link href={`/brand/${b.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
                                             <span className="flex items-center gap-2">
-                                              <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                              <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{b.name}</span>
+                                              <span className="w-1.5 h-1.5 rounded-full bg-[#052326]/35 group-hover/item:bg-[#052326] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                              <span className="text-[#052326]/80 group-hover/item:text-[#052326] font-semibold text-[11.5px] transition-colors duration-300">{b.name}</span>
                                             </span>
-                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#052326]" />
                                           </Link>
                                         </li>
                                       ))}
@@ -489,17 +489,17 @@ export default function Navbar() {
                                   {/* Col 3: Wellness & Body */}
                                   <div className="flex flex-col gap-2.5">
                                     <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                                      <Sparkles size={14} className="text-[#2E7D32]" /> Wellness & Care
+                                      <Sparkles size={14} className="text-[#052326]" /> Wellness & Care
                                     </h4>
                                     <ul className="space-y-0.5 text-[#052326]/75">
                                       {activeBrands.filter(b => b.show_in_mega_menu !== false && b.mega_menu_section === 'wellness_care').map((b) => (
                                         <li key={b.id}>
                                           <Link href={`/brand/${b.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
                                             <span className="flex items-center gap-2">
-                                              <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                              <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{b.name}</span>
+                                              <span className="w-1.5 h-1.5 rounded-full bg-[#052326]/35 group-hover/item:bg-[#052326] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                              <span className="text-[#052326]/80 group-hover/item:text-[#052326] font-semibold text-[11.5px] transition-colors duration-300">{b.name}</span>
                                             </span>
-                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#052326]" />
                                           </Link>
                                         </li>
                                       ))}
@@ -509,7 +509,7 @@ export default function Navbar() {
                                 </div>
                                 <div className="border-t border-[#052326]/5 pt-3.5 flex justify-between items-center">
                                   <span className="text-[11px] text-[#052326]/60 font-semibold">Looking for other brands?</span>
-                                  <Link href="/brands" className="text-[#2E7D32] hover:text-[#225c25] text-[11px] font-extrabold flex items-center gap-1 transition-colors">
+                                  <Link href="/brands" className="text-[#052326] hover:text-[#225c25] text-[11px] font-extrabold flex items-center gap-1 transition-colors">
                                     Show All Brands <ChevronRight size={13} />
                                   </Link>
                                 </div>
@@ -519,7 +519,7 @@ export default function Navbar() {
                               <div className="w-[260px] bg-gradient-to-br from-[#052326]/5 via-[#083a3f]/8 to-[#0c4d53]/10 border border-[#052326]/8 p-6 flex flex-col justify-between relative overflow-hidden shrink-0 rounded-[8px]">
                                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(46,125,50,0.06),transparent_70%)] pointer-events-none" />
                                 <div className="relative z-10">
-                                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#2E7D32]/10 border border-[#2E7D32]/25 text-[9px] tracking-[0.15em] font-extrabold text-[#2E7D32] capitalize block mb-1">
+                                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#052326]/10 border border-[#052326]/25 text-[9px] tracking-[0.15em] font-extrabold text-[#052326] capitalize block mb-1">
                                     Cureza Partners
                                   </span>
                                   <h3 className="font-heading font-bold text-[15px] tracking-tight text-[#052326] leading-tight mt-3">Trusted Brands</h3>
@@ -529,7 +529,7 @@ export default function Navbar() {
                                 </div>
                                 
                                 <div className="relative z-10 mt-6 pt-4 border-t border-[#052326]/8">
-                                  <span className="text-[10px] capitalize tracking-wide text-[#2E7D32] font-bold block">Quality Guarantee</span>
+                                  <span className="text-[10px] capitalize tracking-wide text-[#052326] font-bold block">Quality Guarantee</span>
                                   <p className="text-[10px] text-[#052326]/70 mt-1 leading-normal font-medium">Every brand is checked for lab certification (COA) prior to display.</p>
                                 </div>
                               </div>
@@ -544,7 +544,7 @@ export default function Navbar() {
                     if (isConcerns) {
                       return (
                         <li key={item.id} className="group flex items-center">
-                          <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4 capitalize">
+                          <button className="hover:text-[#052326] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4 capitalize">
                             {item.title} <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                           </button>
 
@@ -559,17 +559,17 @@ export default function Navbar() {
                                   {/* Col 1: Mental Wellness */}
                                   <div className="flex flex-col gap-2.5">
                                     <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                                      <Brain size={14} className="text-[#2E7D32]" /> Mental Wellness
+                                      <Brain size={14} className="text-[#052326]" /> Mental Wellness
                                     </h4>
                                     <ul className="space-y-0.5 text-[#052326]/75">
                                       {groupedConcerns.mental.map((c) => (
                                         <li key={c.id}>
                                           <Link href={`/shop?concern=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
                                             <span className="flex items-center gap-2">
-                                              <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                              <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
+                                              <span className="w-1.5 h-1.5 rounded-full bg-[#052326]/35 group-hover/item:bg-[#052326] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                              <span className="text-[#052326]/80 group-hover/item:text-[#052326] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
                                             </span>
-                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#052326]" />
                                           </Link>
                                         </li>
                                       ))}
@@ -582,17 +582,17 @@ export default function Navbar() {
                                   {/* Col 2: Physical & Pain Relief */}
                                   <div className="flex flex-col gap-2.5">
                                     <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                                      <Activity size={14} className="text-[#2E7D32]" /> Physical & Pain Relief
+                                      <Activity size={14} className="text-[#052326]" /> Physical & Pain Relief
                                     </h4>
                                     <ul className="space-y-0.5 text-[#052326]/75">
                                       {groupedConcerns.physical.map((c) => (
                                         <li key={c.id}>
                                           <Link href={`/shop?concern=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
                                             <span className="flex items-center gap-2">
-                                              <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                              <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
+                                              <span className="w-1.5 h-1.5 rounded-full bg-[#052326]/35 group-hover/item:bg-[#052326] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                              <span className="text-[#052326]/80 group-hover/item:text-[#052326] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
                                             </span>
-                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#052326]" />
                                           </Link>
                                         </li>
                                       ))}
@@ -605,17 +605,17 @@ export default function Navbar() {
                                   {/* Col 3: General & Skin Health */}
                                   <div className="flex flex-col gap-2.5">
                                     <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                                      <HeartPulse size={14} className="text-[#2E7D32]" /> General & Skin Health
+                                      <HeartPulse size={14} className="text-[#052326]" /> General & Skin Health
                                     </h4>
                                     <ul className="space-y-0.5 text-[#052326]/75">
                                       {groupedConcerns.general.map((c) => (
                                         <li key={c.id}>
                                           <Link href={`/shop?concern=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
                                             <span className="flex items-center gap-2">
-                                              <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                              <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
+                                              <span className="w-1.5 h-1.5 rounded-full bg-[#052326]/35 group-hover/item:bg-[#052326] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                              <span className="text-[#052326]/80 group-hover/item:text-[#052326] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
                                             </span>
-                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                            <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#052326]" />
                                           </Link>
                                         </li>
                                       ))}
@@ -628,7 +628,7 @@ export default function Navbar() {
                                 </div>
                                 <div className="border-t border-[#052326]/5 pt-3.5 flex justify-between items-center">
                                   <span className="text-[11px] text-[#052326]/60 font-semibold">Looking for other health concerns?</span>
-                                  <Link href="/concerns" className="text-[#2E7D32] hover:text-[#225c25] text-[11px] font-extrabold flex items-center gap-1 transition-colors">
+                                  <Link href="/concerns" className="text-[#052326] hover:text-[#225c25] text-[11px] font-extrabold flex items-center gap-1 transition-colors">
                                     Show All Concerns <ChevronRight size={13} />
                                   </Link>
                                 </div>
@@ -638,7 +638,7 @@ export default function Navbar() {
                               <div className="w-[280px] bg-gradient-to-br from-[#052326]/5 via-[#083a3f]/8 to-[#0c4d53]/10 border border-[#052326]/8 p-6 flex flex-col justify-between relative overflow-hidden shrink-0 rounded-[8px]">
                                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(46,125,50,0.06),transparent_70%)] pointer-events-none" />
                                 <div className="relative z-10">
-                                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#2E7D32]/10 border border-[#2E7D32]/25 text-[9px] tracking-[0.15em] font-extrabold text-[#2E7D32] capitalize block mb-1">
+                                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#052326]/10 border border-[#052326]/25 text-[9px] tracking-[0.15em] font-extrabold text-[#052326] capitalize block mb-1">
                                     Cureza Care
                                   </span>
                                   <h3 className="font-heading font-bold text-[15px] tracking-tight text-[#052326] leading-tight mt-3">Find Your Path</h3>
@@ -648,11 +648,11 @@ export default function Navbar() {
                                 </div>
                                 
                                 <div className="relative z-10 mt-6 p-4 bg-white/60 backdrop-blur-md border border-[#052326]/8 rounded-[8px] group/card hover:bg-white/80 transition-all duration-300">
-                                  <h5 className="text-[10px] font-bold text-[#2E7D32] capitalize tracking-wide flex items-center gap-1.5">
-                                    <Brain size={12} className="text-[#2E7D32]" /> Holistic Support?
+                                  <h5 className="text-[10px] font-bold text-[#052326] capitalize tracking-wide flex items-center gap-1.5">
+                                    <Brain size={12} className="text-[#052326]" /> Holistic Support?
                                   </h5>
                                   <p className="text-[10px] text-[#052326]/70 mt-1 leading-relaxed font-medium">Consult with certified doctors via our consultation portal to get custom prescriptions.</p>
-                                  <Link href="/consultation" className="relative mt-3.5 flex items-center justify-center gap-2 bg-[#2E7D32] text-white text-[11px] font-bold uppercase py-2.5 rounded-[8px] transition-all duration-300 shadow-[0_4px_12px_rgba(46,125,50,0.15)] hover:bg-[#225c25] hover:shadow-[0_4px_16px_rgba(46,125,50,0.25)] hover:-translate-y-0.5 tracking-wider w-full">
+                                  <Link href="/consultation" className="relative mt-3.5 flex items-center justify-center gap-2 bg-[#052326] text-white text-[11px] font-bold uppercase py-2.5 rounded-[8px] transition-all duration-300 shadow-[0_4px_12px_rgba(46,125,50,0.15)] hover:bg-[#225c25] hover:shadow-[0_4px_16px_rgba(46,125,50,0.25)] hover:-translate-y-0.5 tracking-wider w-full">
                                     <span>Book Consultation</span>
                                     <Sparkles size={12} className="animate-pulse" />
                                   </Link>
@@ -680,7 +680,7 @@ export default function Navbar() {
                     if (item.children && item.children.length > 0) {
                       return (
                         <li key={item.id} className="relative group flex items-center">
-                          <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4">
+                          <button className="hover:text-[#052326] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4">
                             {item.title} <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                           </button>
                           
@@ -691,13 +691,13 @@ export default function Navbar() {
                                 <Link 
                                   key={child.id}
                                   href={child.url} 
-                                  className="group/item flex items-center justify-between px-5 py-2.5 text-[12px] font-bold text-[#052326] hover:bg-[#2E7D32]/5 hover:text-[#2E7D32] transition-all duration-200 normal-case rounded-[8px] mx-2"
+                                  className="group/item flex items-center justify-between px-5 py-2.5 text-[12px] font-bold text-[#052326] hover:bg-[#052326]/5 hover:text-[#052326] transition-all duration-200 normal-case rounded-[8px] mx-2"
                                 >
                                   <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#052326] scale-0 group-hover/item:scale-100 transition-transform duration-200 shrink-0" />
                                     {child.title}
                                   </span>
-                                  <ChevronRight size={12} className="opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-1 transition-all duration-200 text-[#2E7D32]" />
+                                  <ChevronRight size={12} className="opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-1 transition-all duration-200 text-[#052326]" />
                                 </Link>
                               ))}
                             </div>
@@ -709,7 +709,7 @@ export default function Navbar() {
                     // 6. DIRECT LINK (e.g. Shop All)
                     return (
                       <li key={item.id}>
-                        <Link href={item.url} className="hover:text-[#2E7D32] transition-colors py-4 inline-block font-bold">
+                        <Link href={item.url} className="hover:text-[#052326] transition-colors py-4 inline-block font-bold">
                           {item.title}
                         </Link>
                       </li>
@@ -718,7 +718,7 @@ export default function Navbar() {
                 ) : (
                   <>
                     <li className="group flex items-center">
-                      <button className="hover:text-[#2E7D32] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4 capitalize">
+                      <button className="hover:text-[#052326] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4 capitalize">
                         Shop By Categories <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                       </button>
                     </li>
@@ -775,7 +775,7 @@ export default function Navbar() {
                             <ChevronDown size={14} className={`transform transition-transform duration-300 ${activeMobileTab === 'categories' ? 'rotate-180' : ''}`} />
                           </button>
                           {activeMobileTab === 'categories' && (
-                            <div className="pl-3 mt-1 space-y-2 border-l-2 border-[#2E7D32]/20">
+                            <div className="pl-3 mt-1 space-y-2 border-l-2 border-[#052326]/20">
                               
                               {/* Sub-group 1: Medical Cannabis (THC) */}
                               <div>
@@ -803,7 +803,7 @@ export default function Navbar() {
                                   onClick={() => setActiveMobileSubTab(activeMobileSubTab === 'cbd-oil' ? null : 'cbd-oil')}
                                   className="flex justify-between w-full py-2 text-gray-700 focus:outline-none font-bold"
                                 >
-                                  <span className="flex items-center gap-1.5 text-xs text-[#2E7D32]"><Leaf size={12} /> CBD & Hemp Products</span>
+                                  <span className="flex items-center gap-1.5 text-xs text-[#052326]"><Leaf size={12} /> CBD & Hemp Products</span>
                                   <ChevronDown size={12} className={`transform transition-transform ${activeMobileSubTab === 'cbd-oil' ? 'rotate-180' : ''}`} />
                                 </button>
                                 {activeMobileSubTab === 'cbd-oil' && (
@@ -823,7 +823,7 @@ export default function Navbar() {
                                   onClick={() => setActiveMobileSubTab(activeMobileSubTab === 'herbal' ? null : 'herbal')}
                                   className="flex justify-between w-full py-2 text-gray-700 focus:outline-none font-bold"
                                 >
-                                  <span className="flex items-center gap-1.5 text-xs text-[#2E7D32]"><Activity size={12} /> Herbal & Ayurveda</span>
+                                  <span className="flex items-center gap-1.5 text-xs text-[#052326]"><Activity size={12} /> Herbal & Ayurveda</span>
                                   <ChevronDown size={12} className={`transform transition-transform ${activeMobileSubTab === 'herbal' ? 'rotate-180' : ''}`} />
                                 </button>
                                 {activeMobileSubTab === 'herbal' && (
@@ -843,7 +843,7 @@ export default function Navbar() {
                                   onClick={() => setActiveMobileSubTab(activeMobileSubTab === 'supplements' ? null : 'supplements')}
                                   className="flex justify-between w-full py-2 text-gray-700 focus:outline-none font-bold"
                                 >
-                                  <span className="flex items-center gap-1.5 text-xs text-[#2E7D32]"><Brain size={12} /> Supplements & Wellness</span>
+                                  <span className="flex items-center gap-1.5 text-xs text-[#052326]"><Brain size={12} /> Supplements & Wellness</span>
                                   <ChevronDown size={12} className={`transform transition-transform ${activeMobileSubTab === 'supplements' ? 'rotate-180' : ''}`} />
                                 </button>
                                 {activeMobileSubTab === 'supplements' && (
@@ -858,8 +858,8 @@ export default function Navbar() {
                               </div>
 
                               <div className="pt-2 border-t border-gray-100 flex flex-col gap-2">
-                                <Link href="/consultation" onClick={() => setIsMobileMenuOpen(false)} className="block py-1.5 text-xs text-[#2E7D32]">Book Doctor Consultation</Link>
-                                <Link href="/shop?category=pet-care" onClick={() => setIsMobileMenuOpen(false)} className="block py-1.5 text-xs text-[#2E7D32]">Pet Care Experts</Link>
+                                <Link href="/consultation" onClick={() => setIsMobileMenuOpen(false)} className="block py-1.5 text-xs text-[#052326]">Book Doctor Consultation</Link>
+                                <Link href="/shop?category=pet-care" onClick={() => setIsMobileMenuOpen(false)} className="block py-1.5 text-xs text-[#052326]">Pet Care Experts</Link>
                               </div>
 
                             </div>
@@ -879,13 +879,13 @@ export default function Navbar() {
                             <ChevronDown size={14} className={`transform transition-transform duration-300 ${activeMobileTab === 'brands' ? 'rotate-180' : ''}`} />
                           </button>
                           {activeMobileTab === 'brands' && (
-                            <div className="pl-3 mt-1 space-y-2 border-l-2 border-[#2E7D32]/20 text-[11px] font-semibold normal-case text-gray-550 max-h-60 overflow-y-auto">
+                            <div className="pl-3 mt-1 space-y-2 border-l-2 border-[#052326]/20 text-[11px] font-semibold normal-case text-gray-550 max-h-60 overflow-y-auto">
                               {activeBrands.filter(b => b.show_in_mega_menu !== false).map((b) => (
                                 <Link 
                                   key={b.slug} 
                                   href={`/brand/${b.slug}`} 
                                   onClick={() => setIsMobileMenuOpen(false)} 
-                                  className="block py-1 hover:text-[#2E7D32] transition-colors"
+                                  className="block py-1 hover:text-[#052326] transition-colors"
                                 >
                                   {b.name}
                                 </Link>
@@ -907,13 +907,13 @@ export default function Navbar() {
                             <ChevronDown size={14} className={`transform transition-transform duration-300 ${activeMobileTab === 'concerns' ? 'rotate-180' : ''}`} />
                           </button>
                           {activeMobileTab === 'concerns' && (
-                            <div className="pl-3 mt-1 space-y-2 border-l-2 border-[#2E7D32]/20 text-[11px] font-semibold normal-case text-gray-550 max-h-60 overflow-y-auto">
+                            <div className="pl-3 mt-1 space-y-2 border-l-2 border-[#052326]/20 text-[11px] font-semibold normal-case text-gray-550 max-h-60 overflow-y-auto">
                               {concerns.map((c) => (
                                 <Link 
                                   key={c.id} 
                                   href={`/shop?concern=${c.slug}`} 
                                   onClick={() => setIsMobileMenuOpen(false)} 
-                                  className="block py-1 hover:text-[#2E7D32] transition-colors"
+                                  className="block py-1 hover:text-[#052326] transition-colors"
                                 >
                                   {c.name}
                                 </Link>
@@ -952,13 +952,13 @@ export default function Navbar() {
                             <ChevronDown size={14} className={`transform transition-transform duration-300 ${activeMobileTab === String(item.id) ? 'rotate-180' : ''}`} />
                           </button>
                           {activeMobileTab === String(item.id) && (
-                            <div className="pl-3 mt-1 space-y-2 border-l-2 border-[#2E7D32]/20 text-[11px] font-semibold normal-case text-gray-550">
+                            <div className="pl-3 mt-1 space-y-2 border-l-2 border-[#052326]/20 text-[11px] font-semibold normal-case text-gray-550">
                               {item.children.map(child => (
                                 <Link 
                                   key={child.id} 
                                   href={child.url} 
                                   onClick={() => setIsMobileMenuOpen(false)} 
-                                  className="block py-1 hover:text-[#2E7D32]"
+                                  className="block py-1 hover:text-[#052326]"
                                 >
                                   {child.title}
                                 </Link>
@@ -997,16 +997,16 @@ export default function Navbar() {
 
               {/* Secondary utilities (Desktop top bar options) */}
               <div className="mt-2 pt-4 border-t border-[#052326]/5 space-y-3 text-xs font-bold text-[#052326]/70">
-                <Link href="/track-order" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2 py-1 hover:text-[#2E7D32] transition-colors">
+                <Link href="/track-order" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2 py-1 hover:text-[#052326] transition-colors">
                   <ClipboardList size={14} /> Track Your Order
                 </Link>
-                <Link href="/faq" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2 py-1 hover:text-[#2E7D32] transition-colors">
+                <Link href="/faq" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2 py-1 hover:text-[#052326] transition-colors">
                   <HelpCircle size={14} /> Help Center / FAQs
                 </Link>
-                <Link href="/doctor" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 hover:text-[#2E7D32] transition-colors">
+                <Link href="/doctor" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 hover:text-[#052326] transition-colors">
                   For Doctors
                 </Link>
-                <Link href="/seller" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 hover:text-[#2E7D32] transition-colors">
+                <Link href="/seller" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 hover:text-[#052326] transition-colors">
                   Sell on Cureza
                 </Link>
               </div>
