@@ -6,7 +6,10 @@ import { useCategories } from "@/contexts/CategoryContext";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function ShopByTabs() {
-  const { categories, concerns, collections = [], isLoading } = useCategories();
+  const { categories: allCategories, concerns: allConcerns, collections = [], isLoading } = useCategories();
+
+  const categories = allCategories.filter(c => (c.products_count ?? 0) > 0);
+  const concerns = allConcerns.filter(c => (c.concern_products_count ?? 0) > 0);
 
   const [activeTab, setActiveTab] = useState<"categories" | "concerns" | "clearance">("categories");
   const [currentIndex, setCurrentIndex] = useState(0);

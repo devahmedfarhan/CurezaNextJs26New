@@ -21,23 +21,44 @@ class ProductController extends Controller
 
         if ($request->has('category')) {
             $categorySlug = $request->input('category');
-            $query->whereHas('category', function ($q) use ($categorySlug) {
-                $q->where('slug', $categorySlug);
-            });
+            if ($categorySlug === 'ungrouped') {
+                $query->whereHas('category', function ($q) {
+                    $q->whereNull('mega_menu_section')
+                      ->orWhereNotIn('mega_menu_section', ['thc', 'cbd', 'herbal', 'supplements']);
+                });
+            } else {
+                $query->whereHas('category', function ($q) use ($categorySlug) {
+                    $q->where('slug', $categorySlug);
+                });
+            }
         }
 
         if ($request->has('concern')) {
             $concernSlug = $request->input('concern');
-            $query->whereHas('concern', function ($q) use ($concernSlug) {
-                $q->where('slug', $concernSlug);
-            });
+            if ($concernSlug === 'ungrouped') {
+                $query->whereHas('concern', function ($q) {
+                    $q->whereNull('mega_menu_section')
+                      ->orWhereNotIn('mega_menu_section', ['mental', 'physical', 'general']);
+                });
+            } else {
+                $query->whereHas('concern', function ($q) use ($concernSlug) {
+                    $q->where('slug', $concernSlug);
+                });
+            }
         }
 
         if ($request->has('brand')) {
             $brandSlug = $request->input('brand');
-            $query->whereHas('brand', function ($q) use ($brandSlug) {
-                $q->where('slug', $brandSlug);
-            });
+            if ($brandSlug === 'ungrouped') {
+                $query->whereHas('brand', function ($q) {
+                    $q->whereNull('mega_menu_section')
+                      ->orWhereNotIn('mega_menu_section', ['cannabis_hemp', 'ayurvedic_herbal', 'wellness_care']);
+                });
+            } else {
+                $query->whereHas('brand', function ($q) use ($brandSlug) {
+                    $q->where('slug', $brandSlug);
+                });
+            }
         }
 
         if ($request->has('collection')) {

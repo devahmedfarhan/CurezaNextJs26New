@@ -36,6 +36,7 @@ function ShopContent() {
   // Filter States
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedConcerns, setSelectedConcerns] = useState<string[]>([]);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [maxPrice, setMaxPrice] = useState<number>(5000);
   const [minPrice, setMinPrice] = useState<number>(0);
   const [sortBy, setSortBy] = useState<string>('default');
@@ -58,6 +59,13 @@ function ShopContent() {
       setSelectedConcerns([con]);
     } else {
       setSelectedConcerns([]);
+    }
+
+    const brand = searchParams.get('brand');
+    if (brand) {
+      setSelectedBrands([brand]);
+    } else {
+      setSelectedBrands([]);
     }
 
     const rx = searchParams.get('requireRx');
@@ -116,6 +124,12 @@ function ShopContent() {
     if (selectedCategories.length > 0) {
       result = result.filter(p => {
         const catSlug = typeof p.category === 'object' ? p.category?.slug : p.category?.toLowerCase();
+        if (selectedCategories.includes('ungrouped')) {
+          const catGroup = p.category?.mega_menu_section;
+          if (!catGroup || !['thc', 'cbd', 'herbal', 'supplements'].includes(catGroup)) {
+            return true;
+          }
+        }
         return selectedCategories.includes(catSlug);
       });
     }
@@ -124,7 +138,27 @@ function ShopContent() {
     if (selectedConcerns.length > 0) {
       result = result.filter(p => {
         const conSlug = typeof p.concern === 'object' ? p.concern?.slug : p.concern?.toLowerCase();
+        if (selectedConcerns.includes('ungrouped')) {
+          const conGroup = p.concern?.mega_menu_section;
+          if (!conGroup || !['mental', 'physical', 'general'].includes(conGroup)) {
+            return true;
+          }
+        }
         return selectedConcerns.includes(conSlug);
+      });
+    }
+
+    // Brand Filter
+    if (selectedBrands.length > 0) {
+      result = result.filter(p => {
+        const brandSlug = typeof p.brand === 'object' ? p.brand?.slug : p.brand?.toLowerCase();
+        if (selectedBrands.includes('ungrouped')) {
+          const brandGroup = p.brand?.mega_menu_section;
+          if (!brandGroup || !['cannabis_hemp', 'ayurvedic_herbal', 'wellness_care'].includes(brandGroup)) {
+            return true;
+          }
+        }
+        return selectedBrands.includes(brandSlug);
       });
     }
 
@@ -148,7 +182,7 @@ function ShopContent() {
     }
 
     setFilteredProducts(result);
-  }, [selectedCategories, selectedConcerns, maxPrice, minPrice, sortBy, requireRx, products]);
+  }, [selectedCategories, selectedConcerns, selectedBrands, maxPrice, minPrice, sortBy, requireRx, products]);
 
   const handleCategoryToggle = (slug: string) => {
     setSelectedCategories(prev =>
@@ -165,6 +199,7 @@ function ShopContent() {
   const clearFilters = () => {
     setSelectedCategories([]);
     setSelectedConcerns([]);
+    setSelectedBrands([]);
     setMinPrice(0);
     setMaxPrice(5000);
     setRequireRx(null);
@@ -189,7 +224,13 @@ function ShopContent() {
             Wellness Collection
           </span>
           <h1 className="text-3xl md:text-5xl font-semibold tracking-tight text-[#052326]">
-            Shop All Products
+            {selectedCategories.includes('ungrouped') 
+              ? 'Other Categories\' Products' 
+              : selectedConcerns.includes('ungrouped') 
+              ? 'Other Health Concerns\' Products' 
+              : selectedBrands.includes('ungrouped') 
+              ? 'Other Brands\' Products' 
+              : 'Shop All Products'}
           </h1>
           <p className="text-sm md:text-base text-[#052326]/75 font-light mt-3 max-w-2xl leading-relaxed">
             Browse our full catalog of Ayurvedic formulas, organic hemp extracts, and doctor-approved recovery balms designed to target your specific wellness goals.

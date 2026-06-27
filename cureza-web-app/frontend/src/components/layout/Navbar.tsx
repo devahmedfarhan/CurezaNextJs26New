@@ -36,7 +36,7 @@ export default function Navbar() {
 
     const mental = visibleConcerns.filter(c => c.mega_menu_section === 'mental');
     const physical = visibleConcerns.filter(c => c.mega_menu_section === 'physical');
-    const general = visibleConcerns.filter(c => c.mega_menu_section === 'general' || !c.mega_menu_section);
+    const general = visibleConcerns.filter(c => c.mega_menu_section === 'general');
 
     return { mental, physical, general };
   };
@@ -296,88 +296,96 @@ export default function Navbar() {
                     <div className="bg-white/98 backdrop-blur-xl border border-[#052326]/8 shadow-[0_20px_50px_rgba(5,35,38,0.08)] rounded-[10px] p-6 flex gap-6 z-50">
                       
                       {/* Left 4 Columns of Category Link Grids */}
-                      <div className="flex-1 grid grid-cols-4 gap-6">
-                        
-                        {/* Col 1: Medical Cannabis (THC) */}
-                        <div className="flex flex-col gap-2.5">
-                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                            <ShieldAlert size={14} className="text-[#2E7D32]" /> Medical Cannabis THC
-                          </h4>
-                          <ul className="space-y-0.5 text-[#052326]/75">
-                            {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'thc').map((c) => (
-                              <li key={c.id}>
-                                <Link href={`/shop?category=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
+                      <div className="flex-1 flex flex-col gap-5">
+                        <div className="grid grid-cols-4 gap-6">
+                          
+                          {/* Col 1: Medical Cannabis (THC) */}
+                          <div className="flex flex-col gap-2.5">
+                            <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
+                              <ShieldAlert size={14} className="text-[#2E7D32]" /> Medical Cannabis THC
+                            </h4>
+                            <ul className="space-y-0.5 text-[#052326]/75">
+                              {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'thc').map((c) => (
+                                <li key={c.id}>
+                                  <Link href={`/shop?category=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                    <span className="flex items-center gap-2">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                      <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
+                                    </span>
+                                    <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
 
-                        {/* Col 2: CBD & Hemp Products */}
-                        <div className="flex flex-col gap-2.5">
-                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                            <Leaf size={14} className="text-[#2E7D32]" /> CBD & Hemp Products
-                          </h4>
-                          <ul className="space-y-0.5 text-[#052326]/75">
-                            {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'cbd').map((c) => (
-                              <li key={c.id}>
-                                <Link href={`/shop?category=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
+                          {/* Col 2: CBD & Hemp Products */}
+                          <div className="flex flex-col gap-2.5">
+                            <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
+                              <Leaf size={14} className="text-[#2E7D32]" /> CBD & Hemp Products
+                            </h4>
+                            <ul className="space-y-0.5 text-[#052326]/75">
+                              {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'cbd').map((c) => (
+                                <li key={c.id}>
+                                  <Link href={`/shop?category=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                    <span className="flex items-center gap-2">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                      <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
+                                    </span>
+                                    <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
 
-                        {/* Col 3: Herbal & Ayurveda */}
-                        <div className="flex flex-col gap-2.5">
-                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                            <Activity size={14} className="text-[#2E7D32]" /> Herbal & Ayurveda
-                          </h4>
-                          <ul className="space-y-0.5 text-[#052326]/75">
-                            {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'herbal').map((c) => (
-                              <li key={c.id}>
-                                <Link href={`/shop?category=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
+                          {/* Col 3: Herbal & Ayurveda */}
+                          <div className="flex flex-col gap-2.5">
+                            <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
+                              <Activity size={14} className="text-[#2E7D32]" /> Herbal & Ayurveda
+                            </h4>
+                            <ul className="space-y-0.5 text-[#052326]/75">
+                              {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'herbal').map((c) => (
+                                <li key={c.id}>
+                                  <Link href={`/shop?category=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                    <span className="flex items-center gap-2">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                      <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
+                                    </span>
+                                    <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
 
-                        {/* Col 4: Supplements & Wellness */}
-                        <div className="flex flex-col gap-2.5">
-                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                            <Brain size={14} className="text-[#2E7D32]" /> Supplements & Wellness
-                          </h4>
-                          <ul className="space-y-0.5 text-[#052326]/75">
-                            {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'supplements').map((c) => (
-                              <li key={c.id}>
-                                <Link href={`/shop?category=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
+                          {/* Col 4: Supplements & Wellness */}
+                          <div className="flex flex-col gap-2.5">
+                            <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
+                              <Brain size={14} className="text-[#2E7D32]" /> Supplements & Wellness
+                            </h4>
+                            <ul className="space-y-0.5 text-[#052326]/75">
+                              {categories.filter(c => c.show_in_mega_menu !== false && c.mega_menu_section === 'supplements').map((c) => (
+                                <li key={c.id}>
+                                  <Link href={`/shop?category=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                    <span className="flex items-center gap-2">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                      <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
+                                    </span>
+                                    <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
 
+                        </div>
+                        <div className="border-t border-[#052326]/5 pt-3.5 flex justify-between items-center">
+                          <span className="text-[11px] text-[#052326]/60 font-semibold">Looking for other categories?</span>
+                          <Link href="/categories" className="text-[#2E7D32] hover:text-[#225c25] text-[11px] font-extrabold flex items-center gap-1 transition-colors">
+                            Show All Categories <ChevronRight size={13} />
+                          </Link>
+                        </div>
                       </div>
 
                       {/* Right Panel - Branding & Featured Spot */}   
@@ -420,68 +428,76 @@ export default function Navbar() {
                     <div className="bg-white/98 backdrop-blur-xl border border-[#052326]/8 shadow-[0_20px_50px_rgba(5,35,38,0.08)] rounded-[10px] p-6 flex gap-6 z-50">
                       
                       {/* Left Brand Columns */}
-                      <div className="flex-1 grid grid-cols-3 gap-6">
-                        
-                        {/* Col 1: Cannabis & Hemp */}
-                        <div className="flex flex-col gap-2.5">
-                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                            <Leaf size={14} className="text-[#2E7D32]" /> Cannabis & Hemp
-                          </h4>
-                          <ul className="space-y-0.5 text-[#052326]/75">
-                            {activeBrands.filter(b => b.show_in_mega_menu !== false && b.mega_menu_section === 'cannabis_hemp').map((b) => (
-                              <li key={b.id}>
-                                <Link href={`/brand/${b.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{b.name}</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
+                      <div className="flex-1 flex flex-col gap-5">
+                        <div className="grid grid-cols-3 gap-6">
+                          
+                          {/* Col 1: Cannabis & Hemp */}
+                          <div className="flex flex-col gap-2.5">
+                            <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
+                              <Leaf size={14} className="text-[#2E7D32]" /> Cannabis & Hemp
+                            </h4>
+                            <ul className="space-y-0.5 text-[#052326]/75">
+                              {activeBrands.filter(b => b.show_in_mega_menu !== false && b.mega_menu_section === 'cannabis_hemp').map((b) => (
+                                <li key={b.id}>
+                                  <Link href={`/brand/${b.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                    <span className="flex items-center gap-2">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                      <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{b.name}</span>
+                                    </span>
+                                    <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
 
-                        {/* Col 2: Ayurvedic & Herbal */}
-                        <div className="flex flex-col gap-2.5">
-                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                            <Activity size={14} className="text-[#2E7D32]" /> Ayurvedic & Herbal
-                          </h4>
-                          <ul className="space-y-0.5 text-[#052326]/75">
-                            {activeBrands.filter(b => b.show_in_mega_menu !== false && b.mega_menu_section === 'ayurvedic_herbal').map((b) => (
-                              <li key={b.id}>
-                                <Link href={`/brand/${b.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{b.name}</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
+                          {/* Col 2: Ayurvedic & Herbal */}
+                          <div className="flex flex-col gap-2.5">
+                            <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
+                              <Activity size={14} className="text-[#2E7D32]" /> Ayurvedic & Herbal
+                            </h4>
+                            <ul className="space-y-0.5 text-[#052326]/75">
+                              {activeBrands.filter(b => b.show_in_mega_menu !== false && b.mega_menu_section === 'ayurvedic_herbal').map((b) => (
+                                <li key={b.id}>
+                                  <Link href={`/brand/${b.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                    <span className="flex items-center gap-2">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                      <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{b.name}</span>
+                                    </span>
+                                    <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
 
-                        {/* Col 3: Wellness & Body */}
-                        <div className="flex flex-col gap-2.5">
-                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                            <Sparkles size={14} className="text-[#2E7D32]" /> Wellness & Care
-                          </h4>
-                          <ul className="space-y-0.5 text-[#052326]/75">
-                            {activeBrands.filter(b => b.show_in_mega_menu !== false && b.mega_menu_section === 'wellness_care').map((b) => (
-                              <li key={b.id}>
-                                <Link href={`/brand/${b.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{b.name}</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
+                          {/* Col 3: Wellness & Body */}
+                          <div className="flex flex-col gap-2.5">
+                            <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
+                              <Sparkles size={14} className="text-[#2E7D32]" /> Wellness & Care
+                            </h4>
+                            <ul className="space-y-0.5 text-[#052326]/75">
+                              {activeBrands.filter(b => b.show_in_mega_menu !== false && b.mega_menu_section === 'wellness_care').map((b) => (
+                                <li key={b.id}>
+                                  <Link href={`/brand/${b.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                    <span className="flex items-center gap-2">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                      <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{b.name}</span>
+                                    </span>
+                                    <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
 
+                        </div>
+                        <div className="border-t border-[#052326]/5 pt-3.5 flex justify-between items-center">
+                          <span className="text-[11px] text-[#052326]/60 font-semibold">Looking for other brands?</span>
+                          <Link href="/brands" className="text-[#2E7D32] hover:text-[#225c25] text-[11px] font-extrabold flex items-center gap-1 transition-colors">
+                            Show All Brands <ChevronRight size={13} />
+                          </Link>
+                        </div>
                       </div>
 
                       {/* Right Promo Card */}
@@ -518,77 +534,85 @@ export default function Navbar() {
                     <div className="bg-white/98 backdrop-blur-xl border border-[#052326]/8 shadow-[0_20px_50px_rgba(5,35,38,0.08)] rounded-[10px] p-6 flex gap-6 z-50">
                       
                       {/* Left Concern Columns */}
-                      <div className="flex-1 grid grid-cols-3 gap-6">
-                        
-                        {/* Col 1: Mental Wellness */}
-                        <div className="flex flex-col gap-2.5">
-                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                            <Brain size={14} className="text-[#2E7D32]" /> Mental Wellness
-                          </h4>
-                          <ul className="space-y-0.5 text-[#052326]/75">
-                            {groupedConcerns.mental.map((c) => (
-                              <li key={c.id}>
-                                <Link href={`/shop?concern=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            ))}
-                            {groupedConcerns.mental.length === 0 && (
-                              <div className="text-[11px] text-[#052326]/40 italic font-semibold p-2">No active concerns</div>
-                            )}
-                          </ul>
-                        </div>
+                      <div className="flex-1 flex flex-col gap-5">
+                        <div className="grid grid-cols-3 gap-6">
+                          
+                          {/* Col 1: Mental Wellness */}
+                          <div className="flex flex-col gap-2.5">
+                            <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
+                              <Brain size={14} className="text-[#2E7D32]" /> Mental Wellness
+                            </h4>
+                            <ul className="space-y-0.5 text-[#052326]/75">
+                              {groupedConcerns.mental.map((c) => (
+                                <li key={c.id}>
+                                  <Link href={`/shop?concern=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                    <span className="flex items-center gap-2">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                      <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
+                                    </span>
+                                    <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                  </Link>
+                                </li>
+                              ))}
+                              {groupedConcerns.mental.length === 0 && (
+                                <div className="text-[11px] text-[#052326]/40 italic font-semibold p-2">No active concerns</div>
+                              )}
+                            </ul>
+                          </div>
 
-                        {/* Col 2: Physical & Pain Relief */}
-                        <div className="flex flex-col gap-2.5">
-                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                            <Activity size={14} className="text-[#2E7D32]" /> Physical & Pain Relief
-                          </h4>
-                          <ul className="space-y-0.5 text-[#052326]/75">
-                            {groupedConcerns.physical.map((c) => (
-                              <li key={c.id}>
-                                <Link href={`/shop?concern=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            ))}
-                            {groupedConcerns.physical.length === 0 && (
-                              <div className="text-[11px] text-[#052326]/40 italic font-semibold p-2">No active concerns</div>
-                            )}
-                          </ul>
-                        </div>
+                          {/* Col 2: Physical & Pain Relief */}
+                          <div className="flex flex-col gap-2.5">
+                            <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
+                              <Activity size={14} className="text-[#2E7D32]" /> Physical & Pain Relief
+                            </h4>
+                            <ul className="space-y-0.5 text-[#052326]/75">
+                              {groupedConcerns.physical.map((c) => (
+                                <li key={c.id}>
+                                  <Link href={`/shop?concern=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                    <span className="flex items-center gap-2">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                      <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
+                                    </span>
+                                    <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                  </Link>
+                                </li>
+                              ))}
+                              {groupedConcerns.physical.length === 0 && (
+                                <div className="text-[11px] text-[#052326]/40 italic font-semibold p-2">No active concerns</div>
+                              )}
+                            </ul>
+                          </div>
 
-                        {/* Col 3: General & Skin Health */}
-                        <div className="flex flex-col gap-2.5">
-                          <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
-                            <HeartPulse size={14} className="text-[#2E7D32]" /> General & Skin Health
-                          </h4>
-                          <ul className="space-y-0.5 text-[#052326]/75">
-                            {groupedConcerns.general.map((c) => (
-                              <li key={c.id}>
-                                <Link href={`/shop?concern=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
-                                  <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
-                                    <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
-                                  </span>
-                                  <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
-                                </Link>
-                              </li>
-                            ))}
-                            {groupedConcerns.general.length === 0 && (
-                              <div className="text-[11px] text-[#052326]/40 italic font-semibold p-2">No active concerns</div>
-                            )}
-                          </ul>
-                        </div>
+                          {/* Col 3: General & Skin Health */}
+                          <div className="flex flex-col gap-2.5">
+                            <h4 className="font-heading font-bold text-[13px] tracking-wide pb-2 border-b border-[#052326]/8 mb-1.5 flex items-center gap-2 text-[#052326] capitalize">
+                              <HeartPulse size={14} className="text-[#2E7D32]" /> General & Skin Health
+                            </h4>
+                            <ul className="space-y-0.5 text-[#052326]/75">
+                              {groupedConcerns.general.map((c) => (
+                                <li key={c.id}>
+                                  <Link href={`/shop?concern=${c.slug}`} className="group/item flex items-center justify-between p-2 rounded-[8px] hover:bg-emerald-50/40 border border-transparent transition-all duration-300 cursor-pointer">
+                                    <span className="flex items-center gap-2">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]/35 group-hover/item:bg-[#2E7D32] group-hover/item:scale-125 transition-all duration-300 shrink-0" />
+                                      <span className="text-[#052326]/80 group-hover/item:text-[#2E7D32] font-semibold text-[11.5px] transition-colors duration-300">{c.name}</span>
+                                    </span>
+                                    <ChevronRight size={12} className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 text-[#2E7D32]" />
+                                  </Link>
+                                </li>
+                              ))}
+                              {groupedConcerns.general.length === 0 && (
+                                <div className="text-[11px] text-[#052326]/40 italic font-semibold p-2">No active concerns</div>
+                              )}
+                            </ul>
+                          </div>
 
+                        </div>
+                        <div className="border-t border-[#052326]/5 pt-3.5 flex justify-between items-center">
+                          <span className="text-[11px] text-[#052326]/60 font-semibold">Looking for other health concerns?</span>
+                          <Link href="/concerns" className="text-[#2E7D32] hover:text-[#225c25] text-[11px] font-extrabold flex items-center gap-1 transition-colors">
+                            Show All Concerns <ChevronRight size={13} />
+                          </Link>
+                        </div>
                       </div>
 
                       {/* Right Promo Card */}

@@ -9,11 +9,17 @@ use Illuminate\Http\Request;
 class PublicStoreController extends Controller
 {
     public function index(Request $request) {
-        // Only return active brands that have at least one published product
-        $query = Brand::where('is_active', true)
-            ->whereHas('products', function ($q) {
-                $q->where('status', 'published');
-            });
+        $all = filter_var($request->input('all', false), FILTER_VALIDATE_BOOLEAN);
+
+        if ($all) {
+            $query = Brand::where('is_active', true);
+        } else {
+            // Only return active brands that have at least one published product
+            $query = Brand::where('is_active', true)
+                ->whereHas('products', function ($q) {
+                    $q->where('status', 'published');
+                });
+        }
 
         if ($request->has('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');

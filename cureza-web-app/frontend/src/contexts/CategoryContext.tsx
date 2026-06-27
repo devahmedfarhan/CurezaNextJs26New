@@ -13,6 +13,8 @@ export interface Category {
     is_active: boolean;
     show_in_mega_menu?: boolean;
     mega_menu_section?: string;
+    products_count?: number;
+    concern_products_count?: number;
 }
 
 export interface Collection {
@@ -44,7 +46,7 @@ export function CategoryProvider({ children }: { children: ReactNode }) {
         console.log('CategoryContext: Fetching categories & collections...');
         setIsLoading(true);
         try {
-            const categoriesRes = await api.get('/categories');
+            const categoriesRes = await api.get('/categories?all=true');
             console.log('CategoryContext: Categories fetched successfully', categoriesRes.data);
             const all = categoriesRes.data;
             setCategories(all.filter((c: Category) => c.type === 'category'));
