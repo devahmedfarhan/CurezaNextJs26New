@@ -282,10 +282,10 @@ export default function Navbar() {
         )}
 
         {/* ---------------- 4. ROW 2: CATEGORY NAV PILLARS (DESKTOP) ---------------- */}
-        <div className="hidden md:block border-t border-[#052326]/5 bg-white relative">
+        <div className="hidden md:block border-t border-white/10 bg-[#052326] relative">
           <div className="container mx-auto px-6 flex justify-center">
             <nav>
-              <ul className="flex items-center gap-10 text-[12px] font-bold tracking-wide py-0 text-[#052326]/90 relative">
+              <ul className="flex items-center gap-10 text-[12px] font-bold tracking-wide py-0 text-white/90 relative">
                 {menuItems && menuItems.length > 0 ? (
                   menuItems.map((item) => {
                     const titleLower = item.title.toLowerCase();
@@ -298,7 +298,7 @@ export default function Navbar() {
                     if (isCategories) {
                       return (
                         <li key={item.id} className="group flex items-center">
-                          <button className="hover:text-[#052326] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4 capitalize">
+                          <button className="hover:text-white flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4 capitalize">
                             {item.title} <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                           </button>
                           
@@ -434,7 +434,7 @@ export default function Navbar() {
                     if (isBrands) {
                       return (
                         <li key={item.id} className="group flex items-center">
-                          <button className="hover:text-[#052326] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4 capitalize">
+                          <button className="hover:text-white flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4 capitalize">
                             {item.title} <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                           </button>
 
@@ -544,7 +544,7 @@ export default function Navbar() {
                     if (isConcerns) {
                       return (
                         <li key={item.id} className="group flex items-center">
-                          <button className="hover:text-[#052326] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4 capitalize">
+                          <button className="hover:text-white flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4 capitalize">
                             {item.title} <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                           </button>
 
@@ -680,7 +680,7 @@ export default function Navbar() {
                     if (item.children && item.children.length > 0) {
                       return (
                         <li key={item.id} className="relative group flex items-center">
-                          <button className="hover:text-[#052326] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4">
+                          <button className="hover:text-white flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4">
                             {item.title} <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                           </button>
                           
@@ -709,7 +709,7 @@ export default function Navbar() {
                     // 6. DIRECT LINK (e.g. Shop All)
                     return (
                       <li key={item.id}>
-                        <Link href={item.url} className="hover:text-[#052326] transition-colors py-4 inline-block font-bold">
+                        <Link href={item.url} className="hover:text-white transition-colors py-4 inline-block font-bold">
                           {item.title}
                         </Link>
                       </li>
@@ -718,7 +718,7 @@ export default function Navbar() {
                 ) : (
                   <>
                     <li className="group flex items-center">
-                      <button className="hover:text-[#052326] flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4 capitalize">
+                      <button className="hover:text-white flex items-center gap-1 focus:outline-none transition-colors duration-300 cursor-pointer font-bold py-4 capitalize">
                         Shop By Categories <ChevronDown size={12} className="group-hover:rotate-180 transition-transform duration-300" />
                       </button>
                     </li>

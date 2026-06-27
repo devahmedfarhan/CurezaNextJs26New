@@ -10,9 +10,9 @@
 :root {
   /* --- BOHECO Theme Design System --- */
   --primary-rgb: 5, 35, 38;
-  --bg-rgb: 248, 243, 239;
+  --bg-rgb: 242, 242, 242; /* #f2f2f2 */
   --accent-rgb: 240, 196, 23;
-  --light-rgb: 248, 243, 239;
+  --light-rgb: 242, 242, 242; /* #f2f2f2 */
 
   --primary: rgb(var(--primary-rgb));
   --background: rgb(var(--bg-rgb));

@@ -419,7 +419,7 @@ function OrderSuccessContent() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#f8f3ef] flex flex-col items-center justify-center">
+            <div className="min-h-screen bg-background flex flex-col items-center justify-center">
                 <RefreshCw size={44} className="text-[#052326] animate-spin mb-4" />
                 <p className="text-[#052326] font-medium text-lg">Fetching your order confirmation...</p>
             </div>
@@ -428,7 +428,7 @@ function OrderSuccessContent() {
 
     if (error || !orderId) {
         return (
-            <div className="min-h-screen bg-[#f8f3ef] py-16 px-4 flex items-center justify-center">
+            <div className="min-h-screen bg-background py-16 px-4 flex items-center justify-center">
                 <div className="max-w-md w-full bg-white rounded-xl shadow-xl p-8 text-center border border-[#052326]/10">
                     <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-100">
                         <Info size={32} />
@@ -439,7 +439,7 @@ function OrderSuccessContent() {
                         <Link href="/shop" className="block w-full bg-[#052326] text-white py-3 rounded-lg font-bold hover:bg-[#0b484e] transition-all">
                             Explore Shop
                         </Link>
-                        <Link href="/track-order" className="block w-full bg-white text-[#052326] border border-[#052326] py-3 rounded-lg font-bold hover:bg-[#f8f3ef] transition-all">
+                        <Link href="/track-order" className="block w-full bg-white text-[#052326] border border-[#052326] py-3 rounded-lg font-bold hover:bg-background transition-all">
                             Track Existing Order
                         </Link>
                     </div>
@@ -507,30 +507,613 @@ function OrderSuccessContent() {
     })();
 
     // Referral code logic (real code fetched from backend, falling back to CZ-order_number)
+    // Referral code logic (real code fetched from backend, falling back to CZ-order_number)
     const activeReferralCode = referralData?.referral_code || `REF-${order?.order_number}`;
     const referralLink = `http://localhost:3000/register?ref=${activeReferralCode}`;
 
+    const renderOrderDetails = () => {
+        if (!order) return null;
+        return (
+            <>
+                <div className="bg-white rounded-lg border border-gray-100 p-6 space-y-6 flat-card">
+                    
+                    {/* Header Section */}
+                    <div className="pb-4 border-b border-gray-100 flex justify-between items-start">
+                        <div>
+                            <h3 className="text-lg font-extrabold text-[#052326]">Order Details</h3>
+                            <p className="text-[11px] font-mono text-gray-400 mt-1">ID: #{order?.order_number}</p>
+                        </div>
+                        <span className={`text-[10px] uppercase tracking-wider font-extrabold px-3 py-1 rounded-lg border ${
+                            order?.payment_status === 'paid' 
+                                ? 'bg-emerald-55 text-emerald-700 border-emerald-100' 
+                                : 'bg-amber-55 text-amber-700 border-amber-100'
+                        }`}>
+                            {order?.payment_status === 'paid' ? 'PAID RECEIPT' : 'COD - PENDING'}
+                        </span>
+                    </div>
+
+                    {/* Estimated Delivery Date Notification */}
+                    {estimatedDeliveryDate && (
+                        <div className="bg-[#f0f9f9] border border-[#2d7c80]/20 p-3.5 rounded-lg flex items-center gap-3">
+                            <Calendar className="text-[#2d7c80] flex-shrink-0" size={20} />
+                            <div>
+                                <p className="text-[10px] text-[#2d7c80] font-black uppercase tracking-wider">Estimated Delivery</p>
+                                <p className="text-xs font-bold text-gray-800 mt-0.5">{estimatedDeliveryDate}</p>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Items List (EXTREMELY DETAILED) */}
+                    <div className="space-y-4">
+                        <h4 className="font-extrabold text-gray-700 text-[11px] uppercase tracking-wider">Items Ordered</h4>
+                        {itemsList.map((item) => (
+                            <div key={item.index} className="space-y-2 border-b border-gray-55 pb-4 last:border-0 last:pb-0">
+                                <div className="flex justify-between items-start">
+                                    <div className="flex gap-3">
+                                        {/* Thumbnail */}
+                                        <div className="w-14 h-14 bg-gray-55 rounded-lg overflow-hidden border border-gray-100 flex-shrink-0">
+                                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                                            <img 
+                                                src={item.rawItem.product?.image || 'https://images.unsplash.com/photo-1611070973770-b1a672610042?w=100&auto=format&fit=crop&q=60'} 
+                                                alt={item.name} 
+                                                className="w-full h-full object-cover" 
+                                            />
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-[#052326] text-xs line-clamp-2 pr-2">{item.name}</p>
+                                            <p className="text-[9px] text-[#2d7c80] font-bold uppercase tracking-wide mt-0.5">{item.brand}</p>
+                                            <p className="text-[10px] text-gray-500 mt-1 font-medium">
+                                                ₹{parseFloat(item.rawItem.price).toFixed(2)} &times; {item.qty}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <p className="font-bold text-[#052326] text-xs whitespace-nowrap">₹{item.total.toFixed(2)}</p>
+                                </div>
+
+                                {/* Patient Details & Prescription for this specific Item */}
+                                {(item.rawItem.patient_name || item.rawItem.health_concern || item.rawItem.prescription_path) && (
+                                    <div className="bg-[#f2f2f2] border border-gray-100 rounded-lg p-2.5 ml-14 text-[11px] leading-relaxed text-gray-600 space-y-1">
+                                        <div className="flex items-center gap-1.5 text-gray-500 font-bold border-b border-gray-100 pb-1 mb-1">
+                                            <User size={12} /> Patient Details
+                                        </div>
+                                        {item.rawItem.patient_name && (
+                                            <p>
+                                                <strong>Name:</strong> {item.rawItem.patient_name} 
+                                                {item.rawItem.patient_age && ` (Age: ${item.rawItem.patient_age})`} 
+                                                {item.rawItem.patient_gender && ` [${item.rawItem.patient_gender}]`}
+                                            </p>
+                                        )}
+                                        {item.rawItem.health_concern && (
+                                            <p><strong>Concern:</strong> {item.rawItem.health_concern}</p>
+                                        )}
+                                        {item.rawItem.prescription_path && (
+                                            <div className="pt-1 flex items-center gap-1">
+                                                <ShieldCheck className="text-emerald-600" size={12} />
+                                                <a 
+                                                    href={item.rawItem.prescription_path} 
+                                                    target="_blank" 
+                                                    rel="noopener noreferrer" 
+                                                    className="text-emerald-700 hover:text-emerald-800 font-bold underline flex items-center gap-1"
+                                                >
+                                                    View prescription attachment <Eye size={10} />
+                                                </a>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Billing & Shipping Address details */}
+                    <div className="space-y-4 pt-4 border-t border-gray-100">
+                        <h4 className="font-extrabold text-gray-700 text-[11px] uppercase tracking-wider">Destination & Billing</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs leading-normal">
+                            <div className="bg-gray-55 border border-gray-100 p-3 rounded-lg space-y-1">
+                                <span className="font-bold text-[#052326] flex items-center gap-1 text-[10px] uppercase tracking-wider text-gray-500 border-b border-gray-200/50 pb-1 mb-1.5">
+                                    <MapPin size={11} /> Shipping Address
+                                </span>
+                                <p className="font-bold text-gray-800">{shipping.first_name} {shipping.last_name}</p>
+                                <p className="text-gray-600">{shipping.street_address}</p>
+                                <p className="text-gray-600">{shipping.city}, {shipping.state} {shipping.postcode}</p>
+                                <p className="font-mono text-[10px] text-gray-400 pt-1 flex items-center gap-1">
+                                    <Phone size={10} /> {shipping.phone}
+                                </p>
+                            </div>
+                            <div className="bg-gray-55 border border-gray-100 p-3 rounded-lg space-y-1">
+                                <span className="font-bold text-[#052326] flex items-center gap-1 text-[10px] uppercase tracking-wider text-gray-500 border-b border-gray-200/50 pb-1 mb-1.5">
+                                    <CreditCard size={11} /> Payment &amp; delivery
+                                </span>
+                                <p>Method: <span className="font-bold uppercase text-gray-800">{paymentMethodLabel}</span></p>
+                                <p className="mt-1">
+                                    Carrier: {(order?.shipping_method?.name === 'Standard Delivery' || !order?.shipping_method?.name)
+                                        ? 'Standard Shipping (Air)'
+                                        : order.shipping_method?.name}
+                                </p>
+                                <p className="text-[10px] text-gray-400 mt-1">Status: <span className="font-bold text-gray-600 uppercase">{order?.payment_status}</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Detailed itemized charges breakdown */}
+                    <div className="bg-gray-55 border border-gray-100 p-4 rounded-lg space-y-2.5 text-xs text-gray-600">
+                        <div className="flex justify-between">
+                            <span>Taxable Amount (Base Price)</span>
+                            <span className="font-bold text-gray-800">₹{calculatedTaxableTotal.toFixed(2)}</span>
+                        </div>
+                        
+                        {/* Dynamic Itemized GST lines on screen */}
+                        {isMaharashtra ? (
+                            <>
+                                <div className="flex justify-between pl-4 text-[11px] text-gray-400 font-semibold border-l border-gray-200">
+                                    <span>CGST (Intra-state)</span>
+                                    <span>₹{(calculatedTaxTotal / 2).toFixed(2)}</span>
+                                </div>
+                                <div className="flex justify-between pl-4 text-[11px] text-gray-400 font-semibold border-l border-gray-200">
+                                    <span>SGST (Intra-state)</span>
+                                    <span>₹{(calculatedTaxTotal / 2).toFixed(2)}</span>
+                                </div>
+                            </>
+                        ) : (
+                            <div className="flex justify-between pl-4 text-[11px] text-gray-400 font-semibold border-l border-gray-200">
+                                <span>IGST (Inter-state)</span>
+                                <span>₹{calculatedTaxTotal.toFixed(2)}</span>
+                            </div>
+                        )}
+
+                        <div className="flex justify-between">
+                            <span>GST (Total Tax Included)</span>
+                            <span className="font-bold text-gray-800">₹{calculatedTaxTotal.toFixed(2)}</span>
+                        </div>
+
+                        <div className="flex justify-between">
+                            <span>Shipping &amp; Logistics</span>
+                            <span className="font-bold text-gray-800">
+                                {parseFloat(order?.shipping_amount || '0') === 0 
+                                    ? 'FREE' 
+                                    : `₹${parseFloat(order?.shipping_amount || '0').toFixed(2)}`
+                                }
+                            </span>
+                        </div>
+
+                        {parseFloat(order?.discount_amount || '0') > 0 && (
+                            <div className="flex justify-between text-emerald-600 font-bold bg-emerald-50 border border-emerald-100/50 px-2.5 py-1.5 rounded-lg">
+                                <span className="flex items-center gap-1.5">
+                                    <Gift size={13} /> Coupon Discount Applied
+                                </span>
+                                <span>-₹{parseFloat(order?.discount_amount || '0').toFixed(2)}</span>
+                            </div>
+                        )}
+
+                        <div className="flex justify-between text-[#052326] font-extrabold text-sm pt-3 border-t border-gray-200">
+                            <span>Grand Total (GST Incl.)</span>
+                            <span className="font-mono text-base text-emerald-700">₹{parseFloat(order?.final_amount || '0').toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Action buttons (Download PDF Invoice) */}
+                <div className="print-hide">
+                    <button
+                        onClick={downloadInvoicePdf}
+                        className="w-full flex items-center justify-center gap-2 bg-[#052326] text-white hover:bg-[#0d3b40] font-bold py-4 px-4 rounded-lg transition-all text-xs text-center cursor-pointer active:scale-95"
+                    >
+                        <Download size={16} /> Download PDF Invoice
+                    </button>
+                </div>
+            </>
+        );
+    };
+
+    const renderTimeline = () => {
+        return (
+            <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="bg-white rounded-lg p-6 border border-[#052326]/5 flat-card"
+            >
+                <h3 className="font-bold text-[#052326] text-base mb-5 flex items-center gap-2">
+                    <Truck size={18} className="text-[#10b981]" /> What Happens Next?
+                </h3>
+                
+                <div className="relative">
+                    {/* Desktop connecting line */}
+                    <div className="hidden md:block absolute top-[18px] left-[5%] right-[5%] h-0.5 bg-gray-100 -z-0" />
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-4 relative z-10">
+                        
+                        {/* Step 1: Placed */}
+                        <div className="flex md:flex-col items-center md:text-center gap-4 md:gap-2">
+                            <div className="w-9 h-9 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-xs border-4 border-white">
+                                <Check size={16} />
+                            </div>
+                            <div>
+                                <p className="font-bold text-[#052326] text-xs">Order Received</p>
+                                <p className="text-[10px] text-gray-500 md:mt-1">We verified your payment</p>
+                            </div>
+                        </div>
+
+                        {/* Step 2: Verification (Prescription/Doctor) */}
+                        <div className="flex md:flex-col items-center md:text-center gap-4 md:gap-2">
+                            <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs border-4 border-white ${
+                                ['pending', 'processing', 'completed', 'shipped'].includes(currentStatus)
+                                    ? 'bg-emerald-500 text-white'
+                                    : 'bg-gray-200 text-gray-400'
+                            }`}>
+                                <ShieldCheck size={16} />
+                            </div>
+                            <div>
+                                <p className="font-bold text-[#052326] text-xs">Rx Verification</p>
+                                <p className="text-[10px] text-gray-500 md:mt-1">Doctor check (if required)</p>
+                            </div>
+                        </div>
+
+                        {/* Step 3: Dispatch */}
+                        <div className="flex md:flex-col items-center md:text-center gap-4 md:gap-2">
+                            <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs border-4 border-white ${
+                                ['processing', 'completed', 'shipped'].includes(currentStatus)
+                                    ? 'bg-emerald-500 text-white'
+                                    : 'bg-gray-200 text-gray-400'
+                            }`}>
+                                <ShoppingBag size={16} />
+                            </div>
+                            <div>
+                                <p className="font-bold text-[#052326] text-xs">Packaged & Dispatched</p>
+                                <p className="text-[10px] text-gray-500 md:mt-1">Packed at medical warehouse</p>
+                            </div>
+                        </div>
+
+                        {/* Step 4: Shipping */}
+                        <div className="flex md:flex-col items-center md:text-center gap-4 md:gap-2">
+                            <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs border-4 border-white ${
+                                currentStatus === 'shipped'
+                                    ? 'bg-emerald-500 text-white animate-pulse'
+                                    : 'bg-gray-200 text-gray-400'
+                            }`}>
+                                <Truck size={16} />
+                            </div>
+                            <div>
+                                <p className="font-bold text-[#052326] text-xs">Out for Delivery</p>
+                                <p className="text-[10px] text-gray-500 md:mt-1">Tracking ID will be shared</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </motion.div>
+        );
+    };
+
+    const renderWellnessCompass = () => {
+        return (
+            <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.15 }}
+                className="bg-white rounded-lg p-6 border border-[#052326]/5 flat-card"
+            >
+                <div className="mb-4">
+                    <span className="text-[10px] font-black tracking-widest text-[#2d7c80] uppercase bg-[#f0f9f9] px-2.5 py-1 rounded-lg">
+                        Cureza Wellness Compass
+                    </span>
+                    <h3 className="font-bold text-[#052326] text-lg mt-2">
+                        Which wellness goal are you focusing on next?
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-1">
+                        Get instant clinical ayurvedic tips and explore curated routines.
+                    </p>
+                </div>
+
+                {/* Selectable Concern Buttons */}
+                <div className="flex overflow-x-auto md:flex-wrap gap-2 mb-6 pb-2 no-scrollbar -mx-6 px-6 md:mx-0 md:px-0">
+                    {categoriesList.map((item) => {
+                        const Icon = item.icon;
+                        return (
+                            <button
+                                key={item.id}
+                                onClick={() => setActiveWellness(item.id)}
+                                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold border transition-all cursor-pointer flex-shrink-0 ${
+                                    selectedWellnessId === item.id
+                                        ? 'bg-[#052326] text-[#f0c417] border-[#052326]'
+                                        : 'bg-gray-50 text-[#052326] border-gray-200 hover:bg-gray-100'
+                                }`}
+                            >
+                                <Icon size={14} />
+                                <span>{item.label}</span>
+                            </button>
+                        );
+                    })}
+                </div>
+
+                {/* Tip display area with animations */}
+                <AnimatePresence mode="wait">
+                    {categoriesList.map((item) => item.id === selectedWellnessId && (
+                        <motion.div
+                            key={item.id}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: 10 }}
+                            transition={{ duration: 0.2 }}
+                            className="bg-background rounded-lg p-5 border border-emerald-600/10"
+                        >
+                            <div className="flex items-start gap-3">
+                                <div className="bg-white text-emerald-600 p-2 rounded-lg border border-emerald-100 flex-shrink-0">
+                                    <Award size={18} />
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-[#052326] text-sm">Ayurvedic Daily Practice:</h4>
+                                    <p className="text-xs text-gray-700 leading-relaxed mt-1">
+                                        {item.tip}
+                                    </p>
+                                    <Link 
+                                        href={item.link} 
+                                        className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-800 transition-colors mt-3"
+                                    >
+                                        {item.recommendation} <ArrowRight size={14} />
+                                    </Link>
+                                </div>
+                            </div>
+                        </motion.div>
+                    ))}
+                </AnimatePresence>
+            </motion.div>
+        );
+    };
+
+    const renderDoctorBooking = () => {
+        return (
+            <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg p-6 border border-emerald-100 relative overflow-hidden flat-card"
+            >
+                <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-[#052326]/5 rounded-full" />
+                
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                    <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                            <div className="flex -space-x-2">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img className="w-7 h-7 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&auto=format&fit=crop&q=80" alt="Doctor" />
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img className="w-7 h-7 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&auto=format&fit=crop&q=80" alt="Doctor" />
+                            </div>
+                            <div className="flex items-center text-amber-500 text-xs font-bold">
+                                <Star size={14} className="fill-current" /> 4.9/5 Rating
+                            </div>
+                        </div>
+                        <h3 className="font-extrabold text-[#052326] text-lg">Need Guidance on Dosage & Routine?</h3>
+                        <p className="text-xs text-gray-600 max-w-md">
+                            Book a free digital consultation with our verified wellness doctors to review your therapy.
+                        </p>
+                    </div>
+                    <Link 
+                        href="/doctor"
+                        className="bg-[#052326] hover:bg-[#0d3b40] text-[#f0c417] text-xs font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition-all whitespace-nowrap active:scale-95"
+                    >
+                        Consult a Doctor <MessageSquare size={14} />
+                    </Link>
+                </div>
+            </motion.div>
+        );
+    };
+
+    const renderWhatsAppSupport = () => {
+        return (
+            <div className="bg-[#eaf5eb] border border-emerald-200 rounded-lg p-5 text-[#052326] text-xs space-y-3 print-hide">
+                <div className="flex items-center gap-2 font-bold">
+                    <Phone size={16} className="text-emerald-600 animate-pulse" /> Support Assistance
+                </div>
+                <p className="text-gray-600 leading-normal">
+                    Need to modify your order address or have questions about your wellness package? Chat with our care team directly.
+                </p>
+                <a 
+                    href={`https://wa.me/919999999999?text=Hi%20Cureza%2C%20I%20have%20an%20inquiry%20regarding%20my%2520order%20%23${order?.order_number}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="inline-flex items-center gap-2 text-emerald-700 font-extrabold hover:underline"
+                >
+                    Chat on WhatsApp (10 AM - 7 PM) →
+                </a>
+            </div>
+        );
+    };
+
+    const renderLoyaltyReward = () => {
+        return (
+            <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.25 }}
+                className="bg-white rounded-lg p-6 border border-[#f0c417]/20 relative overflow-hidden flat-card"
+            >
+                {/* Gold ribbon tag */}
+                <div className="absolute right-0 top-0 bg-gradient-to-l from-[#f0c417] to-[#e4b30c] text-[#052326] text-[10px] font-black uppercase px-4 py-1.5 rounded-bl-lg tracking-widest">
+                    Exclusive Gift
+                </div>
+                
+                <div className="flex gap-4 items-start max-w-[90%]">
+                    <div className="w-12 h-12 bg-amber-50 rounded-lg flex items-center justify-center border border-amber-100 flex-shrink-0">
+                        <Gift size={24} className="text-[#f0c417]" />
+                    </div>
+                    <div>
+                        <h3 className="font-bold text-[#052326] text-base mb-1">Your Wellness Reward is Unlocked!</h3>
+                        <p className="text-xs text-gray-600 leading-relaxed">
+                            We want to support you on your long-term health path. Get <span className="font-bold text-[#052326]">15% OFF</span> your next purchase or doctor consultation.
+                        </p>
+                    </div>
+                </div>
+
+                <div className="mt-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-background p-3 rounded-lg border border-gray-100">
+                    <div className="flex-grow flex items-center justify-between px-3">
+                        <span className="text-xs text-gray-500 font-medium">Coupon Code:</span>
+                        <span className="font-mono font-bold text-[#052326] text-sm tracking-wider">CUREHEALTH15</span>
+                    </div>
+                    <button 
+                        onClick={() => copyToClipboard('CUREHEALTH15', 'coupon')}
+                        className="bg-[#052326] hover:bg-[#0d3b40] text-white text-xs font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition-all flex-shrink-0 active:scale-95 cursor-pointer"
+                    >
+                        {couponCopied ? (
+                            <>
+                                <Check size={14} className="text-[#f0c417]" /> Copied!
+                            </>
+                        ) : (
+                            <>
+                                <Copy size={14} /> Copy Code
+                            </>
+                        )}
+                    </button>
+                </div>
+            </motion.div>
+        );
+    };
+
+    const renderReferral = () => {
+        return (
+            <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="bg-[#052326] text-white rounded-lg p-6 relative overflow-hidden flat-card"
+            >
+                <div className="absolute right-0 bottom-0 w-48 h-48 bg-emerald-550/10 rounded-full blur-2xl pointer-events-none" />
+
+                <div className="flex gap-4 items-start">
+                    <div className="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0 text-[#f0c417]">
+                        <Share2 size={24} />
+                    </div>
+                    <div className="space-y-1">
+                        <h3 className="font-bold text-white text-base">Spread Wellness & Get ₹100!</h3>
+                        <p className="text-xs text-gray-300 leading-relaxed">
+                            Gift a friend ₹100 off their first wellness routine, and get ₹100 cashback credited to your wallet once they place their first order.
+                        </p>
+                    </div>
+                </div>
+
+                <div className="mt-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-white/5 p-2 rounded-lg border border-white/10">
+                    <div className="flex-grow flex items-center justify-between px-3 text-xs text-gray-200 font-mono overflow-x-auto whitespace-nowrap">
+                        <span>{referralLink}</span>
+                    </div>
+                    <button 
+                        onClick={() => copyToClipboard(referralLink, 'referral')}
+                        className="bg-[#f0c417] hover:bg-[#d8ae0a] text-[#052326] text-xs font-black py-2.5 px-5 rounded-lg flex items-center justify-center gap-2 transition-all flex-shrink-0 active:scale-95 cursor-pointer"
+                    >
+                        {referralCopied ? (
+                            <>
+                                <Check size={14} /> Copied Link
+                            </>
+                        ) : (
+                            <>
+                                <Copy size={14} /> Copy Link
+                            </>
+                        )}
+                    </button>
+                </div>
+            </motion.div>
+        );
+    };
+
+    const renderFeedback = () => {
+        return (
+            <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="bg-white rounded-lg p-6 border border-[#052326]/5 text-center flat-card"
+            >
+                {feedbackSubmitted !== null ? (
+                    <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }}>
+                        <p className="text-[#2d7c80] font-bold text-sm">Thank you for your feedback! 💚</p>
+                        <p className="text-xs text-gray-500 mt-1">We read every review to make shopping better for you.</p>
+                    </motion.div>
+                ) : (
+                    <>
+                        <h4 className="font-bold text-[#052326] text-xs uppercase tracking-wider mb-3">How was your checkout experience today?</h4>
+                        <div className="flex justify-center gap-5">
+                            {[
+                                { rating: 1, icon: <Frown size={28} />, color: 'hover:text-red-500 hover:scale-110' },
+                                { rating: 2, icon: <Meh size={28} />, color: 'hover:text-amber-500 hover:scale-110' },
+                                { rating: 3, icon: <Smile size={28} />, color: 'hover:text-emerald-500 hover:scale-110' },
+                                { rating: 4, icon: <Smile className="stroke-[2.5]" size={28} />, color: 'hover:text-[#2d7c80] hover:scale-110' },
+                                { rating: 5, icon: <Smile className="fill-[#f0f9f9] text-[#2d7c80]" size={28} />, color: 'hover:text-teal-600 hover:scale-110' }
+                            ].map((btn) => (
+                                <button
+                                    key={btn.rating}
+                                    onClick={() => handleFeedbackSubmit(btn.rating)}
+                                    className={`text-gray-400 transition-all duration-200 cursor-pointer ${btn.color}`}
+                                >
+                                    {btn.icon}
+                                </button>
+                            ))}
+                        </div>
+                    </>
+                )}
+            </motion.div>
+        );
+    };
+
+    const renderFaqs = () => {
+        return (
+            <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.35 }}
+                className="bg-white rounded-lg p-6 border border-[#052326]/5 flat-card"
+            >
+                <h3 className="font-bold text-[#052326] text-base mb-4 flex items-center gap-2">
+                    <HelpCircle size={18} className="text-[#f0c417]" /> Frequently Asked Questions
+                </h3>
+                
+                <div className="space-y-3">
+                    {faqs.map((faq, index) => (
+                        <div key={index} className="border-b border-gray-100 last:border-0 pb-3 last:pb-0">
+                            <button
+                                onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                                className="w-full flex justify-between items-center text-left py-2 text-xs font-bold text-[#052326] hover:text-emerald-700 transition-colors cursor-pointer"
+                            >
+                                <span>{faq.question}</span>
+                                <span className="text-gray-400 font-normal">{openFaq === index ? '−' : '+'}</span>
+                            </button>
+                            
+                            <AnimatePresence initial={false}>
+                                {openFaq === index && (
+                                    <motion.div
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: 'auto', opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="overflow-hidden"
+                                    >
+                                        <p className="text-[11px] text-gray-600 leading-relaxed pt-1 pb-2">
+                                            {faq.answer}
+                                        </p>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    ))}
+                </div>
+            </motion.div>
+        );
+    };
+
     return (
-        <div className="bg-[#f8f3ef] min-h-screen py-10 px-4 relative overflow-hidden">
+        <div className="bg-background min-h-screen py-10 relative overflow-hidden">
             <style>{printStyles}</style>
 
             {/* Confetti Canvas Overlay */}
             <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-10 print-hide" />
 
-            <div className="max-w-7xl mx-auto">
-                {/* Back to Shop Nav Link */}
-                <div className="mb-6 print-hide">
-                    <Link href="/shop" className="inline-flex items-center gap-2 text-[#052326] font-bold hover:text-emerald-700 transition-colors">
-                        <ChevronLeft size={20} /> Back to Shopping
-                    </Link>
-                </div>
+            <div className="container mx-auto px-4 md:px-6">
+                
 
                 {/* 2-Column Grid Layout */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     
-                    {/* LEFT COLUMN: Celebration, Timeline, Interactive Elements, Retention Banners */}
+                    {/* LEFT COLUMN: Main Transactional Details & Actions */}
                     <div className="lg:col-span-7 space-y-6 print-hide">
-                        
                         {/* 1. Celebration Header Card */}
                         <motion.div 
                             initial={{ opacity: 0, y: 30 }}
@@ -565,581 +1148,57 @@ function OrderSuccessContent() {
                                 <p className="text-xs text-gray-400">
                                     Placed on: {new Date(order?.created_at || '').toLocaleDateString(undefined, { dateStyle: 'long' })}
                                 </p>
-                                <button 
-                                    onClick={handleRecelebrate}
-                                    className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 transition-colors text-white text-xs font-bold px-4 py-2 rounded-lg border border-emerald-500/30 cursor-pointer"
-                                >
-                                    <Sparkles size={14} className="text-[#f0c417]" /> Celebrate Again
-                                </button>
-                            </div>
-                        </motion.div>
-
-                        {/* 2. Next Steps Timeline */}
-                        <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.1 }}
-                            className="bg-white rounded-lg p-6 border border-[#052326]/5 flat-card"
-                        >
-                            <h3 className="font-bold text-[#052326] text-base mb-5 flex items-center gap-2">
-                                <Truck size={18} className="text-[#10b981]" /> What Happens Next?
-                            </h3>
-                            
-                            <div className="relative">
-                                {/* Desktop connecting line */}
-                                <div className="hidden md:block absolute top-[18px] left-[5%] right-[5%] h-0.5 bg-gray-100 -z-0" />
-                                
-                                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-4 relative z-10">
-                                    
-                                    {/* Step 1: Placed */}
-                                    <div className="flex md:flex-col items-center md:text-center gap-4 md:gap-2">
-                                        <div className="w-9 h-9 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-xs border-4 border-white">
-                                            <Check size={16} />
-                                        </div>
-                                        <div>
-                                            <p className="font-bold text-[#052326] text-xs">Order Received</p>
-                                            <p className="text-[10px] text-gray-500 md:mt-1">We verified your payment</p>
-                                        </div>
-                                    </div>
-
-                                    {/* Step 2: Verification (Prescription/Doctor) */}
-                                    <div className="flex md:flex-col items-center md:text-center gap-4 md:gap-2">
-                                        <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs border-4 border-white ${
-                                            ['pending', 'processing', 'completed', 'shipped'].includes(currentStatus)
-                                                ? 'bg-emerald-500 text-white'
-                                                : 'bg-gray-200 text-gray-400'
-                                        }`}>
-                                            <ShieldCheck size={16} />
-                                        </div>
-                                        <div>
-                                            <p className="font-bold text-[#052326] text-xs">Rx Verification</p>
-                                            <p className="text-[10px] text-gray-500 md:mt-1">Doctor check (if required)</p>
-                                        </div>
-                                    </div>
-
-                                    {/* Step 3: Dispatch */}
-                                    <div className="flex md:flex-col items-center md:text-center gap-4 md:gap-2">
-                                        <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs border-4 border-white ${
-                                            ['processing', 'completed', 'shipped'].includes(currentStatus)
-                                                ? 'bg-emerald-500 text-white'
-                                                : 'bg-gray-200 text-gray-400'
-                                        }`}>
-                                            <ShoppingBag size={16} />
-                                        </div>
-                                        <div>
-                                            <p className="font-bold text-[#052326] text-xs">Packaged & Dispatched</p>
-                                            <p className="text-[10px] text-gray-500 md:mt-1">Packed at medical warehouse</p>
-                                        </div>
-                                    </div>
-
-                                    {/* Step 4: Shipping */}
-                                    <div className="flex md:flex-col items-center md:text-center gap-4 md:gap-2">
-                                        <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs border-4 border-white ${
-                                            currentStatus === 'shipped'
-                                                ? 'bg-emerald-500 text-white animate-pulse'
-                                                : 'bg-gray-200 text-gray-400'
-                                        }`}>
-                                            <Truck size={16} />
-                                        </div>
-                                        <div>
-                                            <p className="font-bold text-[#052326] text-xs">Out for Delivery</p>
-                                            <p className="text-[10px] text-gray-500 md:mt-1">Tracking ID will be shared</p>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </motion.div>
-
-                        {/* 3. Interactive Wellness Priority Quiz/Selector ("Fasa kr rkhna hai") */}
-                        <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.15 }}
-                            className="bg-white rounded-lg p-6 border border-[#052326]/5 flat-card"
-                        >
-                            <div className="mb-4">
-                                <span className="text-[10px] font-black tracking-widest text-[#2d7c80] uppercase bg-[#f0f9f9] px-2.5 py-1 rounded-lg">
-                                    Cureza Wellness Compass
-                                </span>
-                                <h3 className="font-bold text-[#052326] text-lg mt-2">
-                                    Which wellness goal are you focusing on next?
-                                </h3>
-                                <p className="text-xs text-gray-500 mt-1">
-                                    Get instant clinical ayurvedic tips and explore curated routines.
-                                </p>
-                            </div>
-
-                            {/* Selectable Concern Buttons */}
-                            <div className="flex flex-wrap gap-2 mb-6">
-                                {categoriesList.map((item) => {
-                                    const Icon = item.icon;
-                                    return (
-                                        <button
-                                            key={item.id}
-                                            onClick={() => setActiveWellness(item.id)}
-                                            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
-                                                selectedWellnessId === item.id
-                                                    ? 'bg-[#052326] text-[#f0c417] border-[#052326]'
-                                                    : 'bg-gray-50 text-[#052326] border-gray-200 hover:bg-gray-100'
-                                            }`}
-                                        >
-                                            <Icon size={14} />
-                                            <span>{item.label}</span>
-                                        </button>
-                                    );
-                                })}
-                            </div>
-
-                            {/* Tip display area with animations */}
-                            <AnimatePresence mode="wait">
-                                {categoriesList.map((item) => item.id === selectedWellnessId && (
-                                    <motion.div
-                                        key={item.id}
-                                        initial={{ opacity: 0, x: -10 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        exit={{ opacity: 0, x: 10 }}
-                                        transition={{ duration: 0.2 }}
-                                        className="bg-[#f8f3ef] rounded-lg p-5 border border-emerald-600/10"
+                                <div className="flex items-center gap-3">
+                                    <Link 
+                                        href="/shop"
+                                        className="flex items-center gap-2 bg-white hover:bg-white/90 text-[#052326] text-xs font-bold px-4 py-2 rounded-lg border border-white/20 transition-all cursor-pointer shadow-sm active:scale-95"
                                     >
-                                        <div className="flex items-start gap-3">
-                                            <div className="bg-white text-emerald-600 p-2 rounded-lg border border-emerald-100 flex-shrink-0">
-                                                <Award size={18} />
-                                            </div>
-                                            <div>
-                                                <h4 className="font-bold text-[#052326] text-sm">Ayurvedic Daily Practice:</h4>
-                                                <p className="text-xs text-gray-700 leading-relaxed mt-1">
-                                                    {item.tip}
-                                                </p>
-                                                <Link 
-                                                    href={item.link} 
-                                                    className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-800 transition-colors mt-3"
-                                                >
-                                                    {item.recommendation} <ArrowRight size={14} />
-                                                </Link>
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                ))}
-                            </AnimatePresence>
-                        </motion.div>
-
-                        {/* 4. Doctor Consultation Booking Card */}
-                        <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.2 }}
-                            className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg p-6 border border-emerald-100 relative overflow-hidden flat-card"
-                        >
-                            <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-[#052326]/5 rounded-full" />
-                            
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-                                <div className="space-y-2">
-                                    <div className="flex items-center gap-2">
-                                        <div className="flex -space-x-2">
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img className="w-7 h-7 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&auto=format&fit=crop&q=80" alt="Doctor" />
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img className="w-7 h-7 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&auto=format&fit=crop&q=80" alt="Doctor" />
-                                        </div>
-                                        <div className="flex items-center text-amber-500 text-xs font-bold">
-                                            <Star size={14} className="fill-current" /> 4.9/5 Rating
-                                        </div>
-                                    </div>
-                                    <h3 className="font-extrabold text-[#052326] text-lg">Need Guidance on Dosage & Routine?</h3>
-                                    <p className="text-xs text-gray-600 max-w-md">
-                                        Book a free digital consultation with our verified wellness doctors to review your therapy.
-                                    </p>
+                                        Shop More
+                                    </Link>
+                                    <button 
+                                        onClick={handleRecelebrate}
+                                        className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 transition-colors text-white text-xs font-bold px-4 py-2 rounded-lg border border-emerald-500/30 cursor-pointer"
+                                    >
+                                        <Sparkles size={14} className="text-[#f0c417]" /> Celebrate Again
+                                    </button>
                                 </div>
-                                <Link 
-                                    href="/doctor"
-                                    className="bg-[#052326] hover:bg-[#0d3b40] text-[#f0c417] text-xs font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition-all whitespace-nowrap active:scale-95"
-                                >
-                                    Consult a Doctor <MessageSquare size={14} />
-                                </Link>
                             </div>
                         </motion.div>
 
-                        {/* 5. Loyalty Reward Banner ("Fasa kr rkhna hai") */}
-                        <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.25 }}
-                            className="bg-white rounded-lg p-6 border border-[#f0c417]/20 relative overflow-hidden flat-card"
-                        >
-                            {/* Gold ribbon tag */}
-                            <div className="absolute right-0 top-0 bg-gradient-to-l from-[#f0c417] to-[#e4b30c] text-[#052326] text-[10px] font-black uppercase px-4 py-1.5 rounded-bl-lg tracking-widest">
-                                Exclusive Gift
-                            </div>
-                            
-                            <div className="flex gap-4 items-start max-w-[90%]">
-                                <div className="w-12 h-12 bg-amber-50 rounded-lg flex items-center justify-center border border-amber-100 flex-shrink-0">
-                                    <Gift size={24} className="text-[#f0c417]" />
-                                </div>
-                                <div>
-                                    <h3 className="font-bold text-[#052326] text-base mb-1">Your Wellness Reward is Unlocked!</h3>
-                                    <p className="text-xs text-gray-600 leading-relaxed">
-                                        We want to support you on your long-term health path. Get <span className="font-bold text-[#052326]">15% OFF</span> your next purchase or doctor consultation.
-                                    </p>
-                                </div>
-                            </div>
+                        {/* 2. Order Details */}
+                        {renderOrderDetails()}
 
-                            <div className="mt-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-[#f8f3ef] p-3 rounded-lg border border-gray-100">
-                                <div className="flex-grow flex items-center justify-between px-3">
-                                    <span className="text-xs text-gray-500 font-medium">Coupon Code:</span>
-                                    <span className="font-mono font-bold text-[#052326] text-sm tracking-wider">CUREHEALTH15</span>
-                                </div>
-                                <button 
-                                    onClick={() => copyToClipboard('CUREHEALTH15', 'coupon')}
-                                    className="bg-[#052326] hover:bg-[#0d3b40] text-white text-xs font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition-all flex-shrink-0 active:scale-95 cursor-pointer"
-                                >
-                                    {couponCopied ? (
-                                        <>
-                                            <Check size={14} className="text-[#f0c417]" /> Copied!
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Copy size={14} /> Copy Code
-                                        </>
-                                    )}
-                                </button>
-                            </div>
-                        </motion.div>
-
-                        {/* 6. Referral Code Generation Card ("Fasa kr rkhna hai") */}
-                        <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.3 }}
-                            className="bg-[#052326] text-white rounded-lg p-6 relative overflow-hidden flat-card"
-                        >
-                            <div className="absolute right-0 bottom-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
-
-                            <div className="flex gap-4 items-start">
-                                <div className="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0 text-[#f0c417]">
-                                    <Share2 size={24} />
-                                </div>
-                                <div className="space-y-1">
-                                    <h3 className="font-bold text-white text-base">Spread Wellness & Get ₹100!</h3>
-                                    <p className="text-xs text-gray-300 leading-relaxed">
-                                        Gift a friend ₹100 off their first wellness routine, and get ₹100 cashback credited to your wallet once they place their first order.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="mt-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-white/5 p-2 rounded-lg border border-white/10">
-                                <div className="flex-grow flex items-center justify-between px-3 text-xs text-gray-200 font-mono overflow-x-auto whitespace-nowrap">
-                                    <span>{referralLink}</span>
-                                </div>
-                                <button 
-                                    onClick={() => copyToClipboard(referralLink, 'referral')}
-                                    className="bg-[#f0c417] hover:bg-[#d8ae0a] text-[#052326] text-xs font-black py-2.5 px-5 rounded-lg flex items-center justify-center gap-2 transition-all flex-shrink-0 active:scale-95 cursor-pointer"
-                                >
-                                    {referralCopied ? (
-                                        <>
-                                            <Check size={14} /> Copied Link
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Copy size={14} /> Copy Link
-                                        </>
-                                    )}
-                                </button>
-                            </div>
-                        </motion.div>
-
-                        {/* 7. FAQs Accordion */}
-                        <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.35 }}
-                            className="bg-white rounded-lg p-6 border border-[#052326]/5 flat-card"
-                        >
-                            <h3 className="font-bold text-[#052326] text-base mb-4 flex items-center gap-2">
-                                <HelpCircle size={18} className="text-[#f0c417]" /> Frequently Asked Questions
-                            </h3>
-                            
-                            <div className="space-y-3">
-                                {faqs.map((faq, index) => (
-                                    <div key={index} className="border-b border-gray-100 last:border-0 pb-3 last:pb-0">
-                                        <button
-                                            onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                                            className="w-full flex justify-between items-center text-left py-2 text-xs font-bold text-[#052326] hover:text-emerald-700 transition-colors cursor-pointer"
-                                        >
-                                            <span>{faq.question}</span>
-                                            <span className="text-gray-400 font-normal">{openFaq === index ? '−' : '+'}</span>
-                                        </button>
-                                        
-                                        <AnimatePresence initial={false}>
-                                            {openFaq === index && (
-                                                <motion.div
-                                                    initial={{ height: 0, opacity: 0 }}
-                                                    animate={{ height: 'auto', opacity: 1 }}
-                                                    exit={{ height: 0, opacity: 0 }}
-                                                    transition={{ duration: 0.2 }}
-                                                    className="overflow-hidden"
-                                                >
-                                                    <p className="text-[11px] text-gray-600 leading-relaxed pt-1 pb-2">
-                                                        {faq.answer}
-                                                    </p>
-                                                </motion.div>
-                                            )}
-                                        </AnimatePresence>
-                                    </div>
-                                ))}
-                            </div>
-                        </motion.div>
-
-                        {/* 8. Smiley Feedback Survey */}
-                        <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.4 }}
-                            className="bg-white rounded-lg p-6 border border-[#052326]/5 text-center flat-card"
-                        >
-                            {feedbackSubmitted !== null ? (
-                                <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }}>
-                                    <p className="text-[#2d7c80] font-bold text-sm">Thank you for your feedback! 💚</p>
-                                    <p className="text-xs text-gray-500 mt-1">We read every review to make shopping better for you.</p>
-                                </motion.div>
-                            ) : (
-                                <>
-                                    <h4 className="font-bold text-[#052326] text-xs uppercase tracking-wider mb-3">How was your checkout experience today?</h4>
-                                    <div className="flex justify-center gap-5">
-                                        {[
-                                            { rating: 1, icon: <Frown size={28} />, color: 'hover:text-red-500 hover:scale-110' },
-                                            { rating: 2, icon: <Meh size={28} />, color: 'hover:text-amber-500 hover:scale-110' },
-                                            { rating: 3, icon: <Smile size={28} />, color: 'hover:text-emerald-500 hover:scale-110' },
-                                            { rating: 4, icon: <Smile className="stroke-[2.5]" size={28} />, color: 'hover:text-[#2d7c80] hover:scale-110' },
-                                            { rating: 5, icon: <Smile className="fill-[#f0f9f9] text-[#2d7c80]" size={28} />, color: 'hover:text-teal-600 hover:scale-110' }
-                                        ].map((btn) => (
-                                            <button
-                                                key={btn.rating}
-                                                onClick={() => handleFeedbackSubmit(btn.rating)}
-                                                className={`text-gray-400 transition-all duration-200 cursor-pointer ${btn.color}`}
-                                            >
-                                                {btn.icon}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </>
-                            )}
-                        </motion.div>
-
+                        {/* 3. Interactive Wellness Priority Quiz/Selector */}
+                        {renderWellnessCompass()}
                     </div>
 
-                    {/* RIGHT COLUMN: SCREEN-FACING ORDER DETAILS SUMMARY */}
+                    {/* RIGHT COLUMN: Support, Next Steps, Promotions & FAQs */}
                     <div className="lg:col-span-5 space-y-6 print-hide">
-                        
-                        <div className="bg-white rounded-lg border border-gray-100 p-6 space-y-6 flat-card">
-                            
-                            {/* Header Section */}
-                            <div className="pb-4 border-b border-gray-100 flex justify-between items-start">
-                                <div>
-                                    <h3 className="text-lg font-extrabold text-[#052326]">Order Details</h3>
-                                    <p className="text-[11px] font-mono text-gray-400 mt-1">ID: #{order?.order_number}</p>
-                                </div>
-                                <span className={`text-[10px] uppercase tracking-wider font-extrabold px-3 py-1 rounded-lg border ${
-                                    order?.payment_status === 'paid' 
-                                        ? 'bg-emerald-50 text-emerald-700 border-emerald-100' 
-                                        : 'bg-amber-50 text-amber-700 border-amber-100'
-                                }`}>
-                                    {order?.payment_status === 'paid' ? 'PAID RECEIPT' : 'COD - PENDING'}
-                                </span>
-                            </div>
+                        {/* 4. Next Steps Timeline */}
+                        {renderTimeline()}
 
-                            {/* Estimated Delivery Date Notification */}
-                            {estimatedDeliveryDate && (
-                                <div className="bg-[#f0f9f9] border border-[#2d7c80]/20 p-3.5 rounded-lg flex items-center gap-3">
-                                    <Calendar className="text-[#2d7c80] flex-shrink-0" size={20} />
-                                    <div>
-                                        <p className="text-[10px] text-[#2d7c80] font-black uppercase tracking-wider">Estimated Delivery</p>
-                                        <p className="text-xs font-bold text-gray-800 mt-0.5">{estimatedDeliveryDate}</p>
-                                    </div>
-                                </div>
-                            )}
+                        {/* 5. Doctor Consultation Booking Card */}
+                        {renderDoctorBooking()}
 
-                            {/* Items List (EXTREMELY DETAILED) */}
-                            <div className="space-y-4">
-                                <h4 className="font-extrabold text-gray-700 text-[11px] uppercase tracking-wider">Items Ordered</h4>
-                                {itemsList.map((item) => (
-                                    <div key={item.index} className="space-y-2 border-b border-gray-50 pb-4 last:border-0 last:pb-0">
-                                        <div className="flex justify-between items-start">
-                                            <div className="flex gap-3">
-                                                {/* Thumbnail */}
-                                                <div className="w-14 h-14 bg-gray-50 rounded-lg overflow-hidden border border-gray-100 flex-shrink-0">
-                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                                    <img 
-                                                        src={item.rawItem.product?.image || 'https://images.unsplash.com/photo-1611070973770-b1a672610042?w=100&auto=format&fit=crop&q=60'} 
-                                                        alt={item.name} 
-                                                        className="w-full h-full object-cover" 
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <p className="font-bold text-[#052326] text-xs line-clamp-2 pr-2">{item.name}</p>
-                                                    <p className="text-[9px] text-[#2d7c80] font-bold uppercase tracking-wide mt-0.5">{item.brand}</p>
-                                                    <p className="text-[10px] text-gray-500 mt-1 font-medium">
-                                                        ₹{parseFloat(item.rawItem.price).toFixed(2)} &times; {item.qty}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <p className="font-bold text-[#052326] text-xs whitespace-nowrap">₹{item.total.toFixed(2)}</p>
-                                        </div>
+                        {/* 6. Pharmacy WhatsApp Assistance Banner */}
+                        {renderWhatsAppSupport()}
 
-                                        {/* Patient Details & Prescription for this specific Item */}
-                                        {(item.rawItem.patient_name || item.rawItem.health_concern || item.rawItem.prescription_path) && (
-                                            <div className="bg-gray-50 border border-gray-100 rounded-lg p-2.5 ml-14 text-[11px] leading-relaxed text-gray-600 space-y-1">
-                                                <div className="flex items-center gap-1.5 text-gray-500 font-bold border-b border-gray-100 pb-1 mb-1">
-                                                    <User size={12} /> Patient Details
-                                                </div>
-                                                {item.rawItem.patient_name && (
-                                                    <p>
-                                                        <strong>Name:</strong> {item.rawItem.patient_name} 
-                                                        {item.rawItem.patient_age && ` (Age: ${item.rawItem.patient_age})`} 
-                                                        {item.rawItem.patient_gender && ` [${item.rawItem.patient_gender}]`}
-                                                    </p>
-                                                )}
-                                                {item.rawItem.health_concern && (
-                                                    <p><strong>Concern:</strong> {item.rawItem.health_concern}</p>
-                                                )}
-                                                {item.rawItem.prescription_path && (
-                                                    <div className="pt-1 flex items-center gap-1">
-                                                        <ShieldCheck className="text-emerald-600" size={12} />
-                                                        <a 
-                                                            href={item.rawItem.prescription_path} 
-                                                            target="_blank" 
-                                                            rel="noopener noreferrer" 
-                                                            className="text-emerald-700 hover:text-emerald-800 font-bold underline flex items-center gap-1"
-                                                        >
-                                                            View prescription attachment <Eye size={10} />
-                                                        </a>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
+                        {/* 7. Loyalty Reward Banner */}
+                        {renderLoyaltyReward()}
 
-                            {/* Billing & Shipping Address details */}
-                            <div className="space-y-4 pt-4 border-t border-gray-100">
-                                <h4 className="font-extrabold text-gray-700 text-[11px] uppercase tracking-wider">Destination & Billing</h4>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs leading-normal">
-                                    <div className="bg-gray-50 border border-gray-100 p-3 rounded-lg space-y-1">
-                                        <span className="font-bold text-[#052326] flex items-center gap-1 text-[10px] uppercase tracking-wider text-gray-500 border-b border-gray-200/50 pb-1 mb-1.5">
-                                            <MapPin size={11} /> Shipping Address
-                                        </span>
-                                        <p className="font-bold text-gray-800">{shipping.first_name} {shipping.last_name}</p>
-                                        <p className="text-gray-600">{shipping.street_address}</p>
-                                        <p className="text-gray-600">{shipping.city}, {shipping.state} {shipping.postcode}</p>
-                                        <p className="font-mono text-[10px] text-gray-400 pt-1 flex items-center gap-1">
-                                            <Phone size={10} /> {shipping.phone}
-                                        </p>
-                                    </div>
-                                    <div className="bg-gray-50 border border-gray-100 p-3 rounded-lg space-y-1">
-                                        <span className="font-bold text-[#052326] flex items-center gap-1 text-[10px] uppercase tracking-wider text-gray-500 border-b border-gray-200/50 pb-1 mb-1.5">
-                                            <CreditCard size={11} /> Payment &amp; delivery
-                                        </span>
-                                        <p>Method: <span className="font-bold uppercase text-gray-800">{paymentMethodLabel}</span></p>
-                                        <p className="mt-1">
-                                            Carrier: {(order?.shipping_method?.name === 'Standard Delivery' || !order?.shipping_method?.name)
-                                                ? 'Standard Shipping (Air)'
-                                                : order.shipping_method?.name}
-                                        </p>
-                                        <p className="text-[10px] text-gray-400 mt-1">Status: <span className="font-bold text-gray-600 uppercase">{order?.payment_status}</span></p>
-                                    </div>
-                                </div>
-                            </div>
+                        {/* 8. Referral Code Generation Card */}
+                        {renderReferral()}
 
-                            {/* Detailed itemized charges breakdown (WITH CGST, SGST, IGST ON SCREEN) */}
-                            <div className="bg-gray-50 border border-gray-100 p-4 rounded-lg space-y-2.5 text-xs text-gray-600">
-                                <div className="flex justify-between">
-                                    <span>Taxable Amount (Base Price)</span>
-                                    <span className="font-bold text-gray-800">₹{calculatedTaxableTotal.toFixed(2)}</span>
-                                </div>
-                                
-                                {/* Dynamic Itemized GST lines on screen */}
-                                {isMaharashtra ? (
-                                    <>
-                                        <div className="flex justify-between pl-4 text-[11px] text-gray-400 font-semibold border-l border-gray-200">
-                                            <span>CGST (Intra-state)</span>
-                                            <span>₹{(calculatedTaxTotal / 2).toFixed(2)}</span>
-                                        </div>
-                                        <div className="flex justify-between pl-4 text-[11px] text-gray-400 font-semibold border-l border-gray-200">
-                                            <span>SGST (Intra-state)</span>
-                                            <span>₹{(calculatedTaxTotal / 2).toFixed(2)}</span>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <div className="flex justify-between pl-4 text-[11px] text-gray-400 font-semibold border-l border-gray-200">
-                                        <span>IGST (Inter-state)</span>
-                                        <span>₹{calculatedTaxTotal.toFixed(2)}</span>
-                                    </div>
-                                )}
+                        {/* 9. Smiley Feedback Survey */}
+                        {renderFeedback()}
 
-                                <div className="flex justify-between">
-                                    <span>GST (Total Tax Included)</span>
-                                    <span className="font-bold text-gray-800">₹{calculatedTaxTotal.toFixed(2)}</span>
-                                </div>
-
-                                <div className="flex justify-between">
-                                    <span>Shipping &amp; Logistics</span>
-                                    <span className="font-bold text-gray-800">
-                                        {parseFloat(order?.shipping_amount || '0') === 0 
-                                            ? 'FREE' 
-                                            : `₹${parseFloat(order?.shipping_amount || '0').toFixed(2)}`
-                                        }
-                                    </span>
-                                </div>
-
-                                {parseFloat(order?.discount_amount || '0') > 0 && (
-                                    <div className="flex justify-between text-emerald-600 font-bold bg-emerald-50 border border-emerald-100/50 px-2.5 py-1.5 rounded-lg">
-                                        <span className="flex items-center gap-1.5">
-                                            <Gift size={13} /> Coupon Discount Applied
-                                        </span>
-                                        <span>-₹{parseFloat(order?.discount_amount || '0').toFixed(2)}</span>
-                                    </div>
-                                )}
-
-                                <div className="flex justify-between text-[#052326] font-extrabold text-sm pt-3 border-t border-gray-200">
-                                    <span>Grand Total (GST Incl.)</span>
-                                    <span className="font-mono text-base text-emerald-700">₹{parseFloat(order?.final_amount || '0').toFixed(2)}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Action buttons (Download PDF Invoice) */}
-                        <div className="print-hide">
-                            <button
-                                onClick={downloadInvoicePdf}
-                                className="w-full flex items-center justify-center gap-2 bg-[#052326] text-white hover:bg-[#0d3b40] font-bold py-4 px-4 rounded-lg transition-all text-xs text-center cursor-pointer"
-                            >
-                                <Download size={16} /> Download PDF Invoice
-                            </button>
-                        </div>
-
-                        {/* Pharmacy WhatsApp Assistance Banner */}
-                        <div className="bg-[#eaf5eb] border border-emerald-200 rounded-lg p-5 text-[#052326] text-xs space-y-3 print-hide">
-                            <div className="flex items-center gap-2 font-bold">
-                                <Phone size={16} className="text-emerald-600 animate-pulse" /> Support Assistance
-                            </div>
-                            <p className="text-gray-600 leading-normal">
-                                Need to modify your order address or have questions about your wellness package? Chat with our care team directly.
-                            </p>
-                            <a 
-                                href={`https://wa.me/919999999999?text=Hi%20Cureza%2C%20I%20have%20an%20inquiry%20regarding%20my%2520order%20%23${order?.order_number}`} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                className="inline-flex items-center gap-2 text-emerald-700 font-extrabold hover:underline"
-                            >
-                                Chat on WhatsApp (10 AM - 7 PM) →
-                            </a>
-                        </div>
-
+                        {/* 10. FAQs Accordion */}
+                        {renderFaqs()}
                     </div>
 
                 </div>
 
+                
                 {/* BOTTOM FULL-WIDTH: Recommended Products Carousel Grid */}
                 <div className="mt-12 border-t border-gray-200 pt-8 print-hide">
                     <div className="flex justify-between items-end mb-6">
@@ -1152,7 +1211,56 @@ function OrderSuccessContent() {
                         </Link>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                    {/* Mobile Carousel (Horizontal Scroll) */}
+                    <div className="flex md:hidden overflow-x-auto gap-6 pb-6 no-scrollbar -mx-4 px-4 snap-x snap-mandatory w-full">
+                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                        {recommendedProducts.map((prod: any) => (
+                            <div 
+                                key={prod.id} 
+                                className="flex-shrink-0 w-[280px] snap-start bg-white rounded-lg border border-gray-100 overflow-hidden flex flex-col group transition-shadow flat-card"
+                            >
+                                {/* Product Image */}
+                                <div className="h-44 bg-gray-50 overflow-hidden relative">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img 
+                                        src={prod.image || 'https://images.unsplash.com/photo-1611070973770-b1a672610042?w=300&auto=format&fit=crop&q=60'} 
+                                        alt={prod.title} 
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    />
+                                    <span className="absolute left-2 top-2 bg-[#f0c417] text-[#052326] text-[9px] font-black uppercase px-2 py-0.5 rounded-lg">
+                                        Best Seller
+                                    </span>
+                                </div>
+                                
+                                {/* Product Info */}
+                                <div className="p-4 flex-grow flex flex-col justify-between space-y-3">
+                                    <div>
+                                        <p className="text-[10px] text-gray-400 uppercase font-black tracking-wider">
+                                            {prod.brand?.name || 'Cureza Naturals'}
+                                        </p>
+                                        <h4 className="font-bold text-[#052326] text-xs line-clamp-2 mt-1 min-h-[32px]">
+                                            {prod.title}
+                                        </h4>
+                                    </div>
+                                    
+                                    <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                                        <span className="font-bold text-[#052326] text-sm">
+                                            ₹{parseFloat(prod.price || '399.00').toFixed(2)}
+                                        </span>
+                                        <Link 
+                                            href={`/product/${prod.id}`}
+                                            className="bg-[#052326] text-white group-hover:bg-[#f0c417] group-hover:text-[#052326] transition-colors p-1.5 rounded-lg flex items-center justify-center"
+                                        >
+                                            <ArrowRight size={14} />
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Desktop Grid Layout */}
+                    <div className="hidden md:grid md:grid-cols-4 gap-6">
                         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                         {recommendedProducts.map((prod: any) => (
                             <div 
@@ -1454,7 +1562,7 @@ function OrderSuccessContent() {
 export default function OrderSuccessPage() {
     return (
         <Suspense fallback={
-            <div className="min-h-screen bg-[#f8f3ef] flex flex-col items-center justify-center">
+            <div className="min-h-screen bg-background flex flex-col items-center justify-center">
                 <RefreshCw size={44} className="text-[#052326] animate-spin mb-4" />
                 <p className="text-[#052326] font-medium text-lg">Loading order success screen...</p>
             </div>
