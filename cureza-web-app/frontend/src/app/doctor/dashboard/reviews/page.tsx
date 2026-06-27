@@ -24,8 +24,8 @@ export default function DoctorReviewsPage() {
         try {
             setLoading(true);
             const [reviewsRes, statsRes] = await Promise.all([
-                api.get('/seller/reviews'),
-                api.get('/seller/reviews/statistics')
+                api.get('/doctor/reviews'),
+                api.get('/doctor/reviews/statistics')
             ]);
             
             setReviews(reviewsRes.data.data.data || []);
@@ -42,7 +42,7 @@ export default function DoctorReviewsPage() {
         if (!replyText.trim()) return;
         setSubmittingReply(true);
         try {
-            await api.post(`/seller/reviews/${reviewId}/reply`, {
+            await api.post(`/doctor/reviews/${reviewId}/reply`, {
                 reply_text: replyText
             });
             showToast('Reply posted successfully', 'success');

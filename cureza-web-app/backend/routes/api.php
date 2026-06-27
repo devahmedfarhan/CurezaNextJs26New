@@ -150,6 +150,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/prescriptions/patient/{patientId}', [App\Http\Controllers\PrescriptionController::class, 'patientHistory']);
         Route::get('/doctor/prescription-requests', [App\Http\Controllers\PrescriptionController::class, 'pendingProductPrescriptions']);
         Route::post('/doctor/prescription-requests/{id}/approve', [App\Http\Controllers\PrescriptionController::class, 'approveProductPrescription']);
+        
+        // Doctor Review Routes
+        Route::get('/doctor/reviews', [\App\Http\Controllers\Api\Seller\ReviewController::class, 'index']);
+        Route::get('/doctor/reviews/statistics', [\App\Http\Controllers\Api\Seller\ReviewController::class, 'statistics']);
+        Route::post('/doctor/reviews/{id}/reply', [\App\Http\Controllers\Api\Seller\ReviewController::class, 'reply']);
     });
 
     // Appointment Routes

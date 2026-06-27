@@ -162,7 +162,7 @@ export default function DoctorDashboardLayout({ children }: { children: React.Re
         return pathname === href || pathname.startsWith(href + '/');
     };
 
-    if (loading) return (
+    if (loading || !user) return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50/80">
             <div className="flex flex-col items-center gap-3">
                 <div className="w-8 h-8 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
@@ -429,10 +429,10 @@ export default function DoctorDashboardLayout({ children }: { children: React.Re
                                 <h3 className="text-[11px] font-semibold text-gray-600 uppercase tracking-wider">KYC Document Check</h3>
                                 <div className="divide-y divide-black/[0.05]">
                                     {[
-                                        { label: 'Profile Photo', key: 'profile_photo', status: user.profile_photo_status || 'pending', reason: user.profile_photo_rejection_reason },
-                                        { label: 'Medical License', key: 'license_doc', status: user.license_doc_status || 'pending', reason: user.license_doc_rejection_reason },
-                                        { label: 'Government ID', key: 'identity_proof', status: user.identity_proof_status || 'pending', reason: user.identity_proof_rejection_reason },
-                                        ...(user.ayush_document_path ? [{ label: 'Ayush Certificate', key: 'ayush_document', status: user.ayush_document_status || 'pending', reason: user.ayush_document_rejection_reason }] : [])
+                                        { label: 'Profile Photo', key: 'profile_photo', status: user?.profile_photo_status || 'pending', reason: user?.profile_photo_rejection_reason },
+                                        { label: 'Medical License', key: 'license_doc', status: user?.license_doc_status || 'pending', reason: user?.license_doc_rejection_reason },
+                                        { label: 'Government ID', key: 'identity_proof', status: user?.identity_proof_status || 'pending', reason: user?.identity_proof_rejection_reason },
+                                        ...(user?.ayush_document_path ? [{ label: 'Ayush Certificate', key: 'ayush_document', status: user?.ayush_document_status || 'pending', reason: user?.ayush_document_rejection_reason }] : [])
                                     ].map((doc) => (
                                         <div key={doc.key} className="py-3 first:pt-0 last:pb-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                             <div className="space-y-0.5">
