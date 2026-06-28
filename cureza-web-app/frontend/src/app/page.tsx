@@ -1,5 +1,4 @@
 import HeroSlider from '@/components/home/HeroSlider';
-import ShopByTabs from '@/components/home/ShopByTabs';
 import PioneeringBanner from '@/components/home/PioneeringBanner';
 import FormulatedWithPurpose from '@/components/home/FormulatedWithPurpose';
 import WatchAndExplore from '@/components/home/WatchAndExplore';
@@ -10,6 +9,15 @@ import TestimonialSlider from '@/components/home/TestimonialSlider';
 import FAQSection from '@/components/home/FAQSection';
 import BlogList from '@/components/blogs/BlogList';
 import ProductGrid from '@/components/product/ProductGrid';
+
+// NEW & RESTYLED HOMEPAGE SECTIONS
+import BrandBannerLayout from '@/components/home/BrandGrid';
+import ConcernSlider from '@/components/home/ConcernSlider';
+import CategorySlider from '@/components/home/CategorySlider';
+import OffersSection from '@/components/home/OffersSection';
+import DoctorQuickBook from '@/components/home/DoctorQuickBook';
+import LabReportsChecker from '@/components/home/LabReportsChecker';
+import CommunityCircleHighlight from '@/components/home/CommunityCircleHighlight';
 
 async function getSettings() {
   try {
@@ -58,70 +66,14 @@ export default async function Home() {
     getProducts({ collection: 'summer-sale', limit: 8 }),
     getProducts({ limit: 8 })
   ]);
-  const sectionOrder = (settings.homepage_section_order || 'hero,stats,purpose,partners,consultation,testimonials,marquee').split(',');
 
   return (
     <div className="w-full bg-[#F8F3EF]">
-      {sectionOrder.map((sectionKey: string) => {
-        switch (sectionKey.trim()) {
-          case 'hero':
-            return (
-              <div key="hero-section">
-                {/* 1. CINEMATIC HERO SLIDER */}
-                <HeroSlider />
-                {/* 2. CARE FOR YOUR CONCERN (HEALTH CATEGORIES CIRCLE GRID) */}
-                <ShopByTabs />
-              </div>
-            );
-          case 'stats':
-            return <PioneeringBanner key="stats-section" />;
-          case 'purpose':
-            return <FormulatedWithPurpose key="purpose-section" />;
-          case 'marquee':
-            return (
-              <div key="marquee-section">
-                {/* 5. WATCH & EXPLORE (SHOPPABLE VIDEO CAROUSEL) */}
-                <WatchAndExplore />
-                {/* 6. RECOGNIZED. REWARDED. (PRESS LOGO SLIDER) */}
-                <PressMarquee />
-              </div>
-            );
-          case 'consultation':
-            return <DoctorConsultationTimeline key="consultation-section" />;
-          case 'partners':
-            return <PartnerShowcase key="partners-section" />;
-          case 'testimonials':
-            return <TestimonialSlider key="testimonials-section" />;
-          default:
-            return null;
-        }
-      })}
+      {/* 1. CINEMATIC HERO SLIDER */}
+      <HeroSlider />
 
-      {/* 9. NEW LAUNCHES (Dynamic Grid from DB) */}
-      <div className="bg-white py-16">
-        <ProductGrid
-          title="New Launches"
-          subtitle="Exclusive new arrivals added this week"
-          columns={4}
-          categorySlug="latest-launch"
-          products={newLaunches}
-        />
-      </div>
-
-      {/* 9.5 SPECIAL OFFERS (Dynamic Collection from DB) */}
-      <div className="bg-[#052326]/5 py-16 border-y border-[#052326]/5">
-        <ProductGrid
-          title="Special Offers & Sales"
-          subtitle="Featured collections and limited-time wellness deals"
-          collectionSlug="summer-sale"
-          columns={4}
-          layout="carousel"
-          products={specialOffers}
-        />
-      </div>
-
-      {/* 10. BEST SELLERS (Grid) */}
-      <div className="bg-[#F8F3EF] py-16">
+      {/* 2. BEST SELLERS & SALE (Sequential top grids) */}
+      <div className="bg-[#F8F3EF] py-4">
         <ProductGrid
           title="Best Sellers"
           subtitle="Most loved by our community"
@@ -132,12 +84,73 @@ export default async function Home() {
         />
       </div>
 
-      {/* 12. FAQ SECTION */}
-      <div className="bg-[#F8F3EF] py-16 border-t border-[#052326]/5">
-        <FAQSection />
+      <div className="bg-[#052326]/5 py-4 border-y border-[#052326]/5">
+        <ProductGrid
+          title="Special Offers & Sales"
+          subtitle="Featured collections and limited-time wellness deals"
+          collectionSlug="summer-sale"
+          columns={4}
+          layout="carousel"
+          products={specialOffers}
+        />
       </div>
 
-      {/* 13. KNOWLEDGE HUB - RECENT INSIGHTS */}
+      {/* 3. FEATURED & NEW ARRIVALS */}
+      <div className="bg-white py-4">
+        <ProductGrid
+          title="New Launches"
+          subtitle="Exclusive new arrivals added this week"
+          columns={4}
+          categorySlug="latest-launch"
+          products={newLaunches}
+        />
+      </div>
+
+      {/* 4. SHOP BY BRAND */}
+      <BrandBannerLayout />
+
+      {/* 5. SHOP BY CONCERN */}
+      <ConcernSlider />
+
+      {/* 6. SHOP BY CATEGORY */}
+      <CategorySlider />
+
+      {/* 7. OFFERS PAGES / DISCOUNT DECK */}
+      <OffersSection />
+
+      {/* --- BOTTOM SECTION: RETAINING ALL EXISTING SECTIONS & EXTRA WIDGETS BEFORE FAQ --- */}
+      
+      {/* 8. PIONEERING STATS BANNER */}
+      <PioneeringBanner />
+
+      {/* 9. FORMULATED WITH PURPOSE */}
+      <FormulatedWithPurpose />
+
+      {/* 10. WATCH & EXPLORE (SHOPPABLE VIDEO CAROUSEL) */}
+      <WatchAndExplore />
+
+      {/* 11. RECOGNIZED. REWARDED. (PRESS MARQUEE) */}
+      <PressMarquee />
+
+      {/* 12. CLINICAL PATHWAY CONSULTATION TIMELINE */}
+      <DoctorConsultationTimeline />
+
+      {/* 13. DOCTOR QUICK BOOKING CLINIC WIDGET */}
+      <DoctorQuickBook />
+
+      {/* 14. CERTIFICATE OF ANALYSIS (COA) / LAB REPORTS CHECKER */}
+      <LabReportsChecker />
+
+      {/* 15. CUREZA CIRCLE DISCUSSION BOARD */}
+      <CommunityCircleHighlight />
+
+      {/* 16. PARTNER SHOWCASE */}
+      <PartnerShowcase />
+
+      {/* 17. TESTIMONIAL SLIDER */}
+      <TestimonialSlider />
+
+      {/* 18. KNOWLEDGE HUB - RECENT INSIGHTS */}
       <div className="bg-[#F8F3EF] py-20">
         <BlogList
           categories={['ayurveda', 'wellness']}
@@ -145,6 +158,11 @@ export default async function Home() {
           grid={3}
           isDarkBg={false}
         />
+      </div>
+
+      {/* 19. FAQ SECTION */}
+      <div className="bg-[#F8F3EF] py-16 border-t border-[#052326]/5">
+        <FAQSection />
       </div>
     </div>
   );

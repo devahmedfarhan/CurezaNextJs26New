@@ -87,50 +87,60 @@ export default function BrandBannerLayout() {
     };
 
     return (
-        <section className="container mx-auto px-4 pt-5 pb-0">
+        <section className="container mx-auto px-4 md:px-6 py-12 md:py-16 bg-white text-[#052326]">
 
             {/* MOBILE — Heading + Subtitle (NO BUTTON) */}
             <div className="md:hidden text-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                <span className="text-[10px] font-bold tracking-[0.25em] text-[#052326]/60 uppercase block mb-2">
+                    Curated Partners
+                </span>
+                <h2 className="text-2xl font-semibold tracking-tight">
                     Offers & Explore Brands
                 </h2>
-                <p className="text-gray-600 dark:text-gray-300 mt-1 text-base">
+                <p className="text-sm text-[#052326]/80 mt-2 font-light">
                     Discover top wellness brands with exclusive deals curated just for you.
                 </p>
             </div>
 
             {/* DESKTOP — Heading + Subtitle + Button */}
-            <div className="hidden md:flex flex-row justify-between items-end mb-6">
+            <div className="hidden md:flex flex-row justify-between items-end mb-8 pb-6 border-b border-[#052326]/10">
                 <div>
-                    <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+                    <span className="text-[10px] font-bold tracking-[0.25em] text-[#052326]/60 uppercase block mb-2">
+                        Curated Partners
+                    </span>
+                    <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
                         Offers & Explore Brands
                     </h2>
-                    <p className="text-gray-600 dark:text-gray-300 mt-1 text-sm">
+                    <p className="text-sm text-[#052326]/80 mt-2 font-light">
                         Discover top wellness brands with exclusive deals curated just for you.
                     </p>
                 </div>
 
                 <Link
                     href="/brands"
-                    className="px-5 py-3 rounded-full text-xs font-medium inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white transition-all duration-300"
+                    className="group inline-flex items-center text-xs font-bold uppercase tracking-wider text-[#052326] border border-[#052326]/20 px-5 py-2.5 rounded-[10px] bg-[#F8F3EF] hover:bg-[#052326] hover:text-[#F8F3EF] transition-all self-start sm:self-end shadow-sm"
                 >
                     Explore All Brands
                 </Link>
             </div>
 
             {/* TOP SECTION (Desktop Grid) */}
-            <div className="hidden md:grid grid-cols-4 gap-2 ">
+            <div className="hidden md:grid grid-cols-4 gap-4">
                 <Link
                     href={layout.big.link}
-                    className="col-span-2 row-span-2 w-full h-[700px] rounded-lg overflow-hidden relative group"
+                    className="col-span-2 row-span-2 w-full h-[700px] overflow-hidden relative group"
+                    style={{
+                        borderRadius: '8px',
+                        border: '1px solid rgba(85, 85, 85, 0.18)',
+                    }}
                 >
                     <img
                         src={layout.big.image}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         alt={layout.big.name}
                     />
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors flex items-end p-6">
-                        <span className="text-white text-xl font-bold">{layout.big.name}</span>
+                    <div className="absolute inset-0 bg-[#052326]/20 group-hover:bg-[#052326]/30 transition-colors flex items-end p-6">
+                        <span className="text-white text-xl font-bold bg-[#052326]/85 px-4 py-2 rounded-[6px] backdrop-blur-sm border border-white/15">{layout.big.name}</span>
                     </div>
                 </Link>
 
@@ -138,15 +148,19 @@ export default function BrandBannerLayout() {
                     <Link
                         key={i}
                         href={b.link}
-                        className="col-span-1 w-full h-[700px] rounded-lg overflow-hidden relative group"
+                        className="col-span-1 w-full h-[700px] overflow-hidden relative group"
+                        style={{
+                            borderRadius: '8px',
+                            border: '1px solid rgba(85, 85, 85, 0.18)',
+                        }}
                     >
                         <img 
                             src={b.image} 
                             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
                             alt={b.name} 
                         />
-                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors flex items-end p-4">
-                            <span className="text-white text-base font-bold">{b.name}</span>
+                        <div className="absolute inset-0 bg-[#052326]/20 group-hover:bg-[#052326]/30 transition-colors flex items-end p-4">
+                            <span className="text-white text-base font-bold bg-[#052326]/85 px-3 py-1.5 rounded-[6px] backdrop-blur-sm border border-white/15 truncate w-full max-w-[90%] text-center">{b.name}</span>
                         </div>
                     </Link>
                 ))}
@@ -154,19 +168,34 @@ export default function BrandBannerLayout() {
 
             {/* MOBILE VERSION */}
             <div className="md:hidden space-y-4">
-                <Link href={layout.big.link} className="block rounded-lg overflow-hidden relative group">
+                <Link 
+                    href={layout.big.link} 
+                    className="block overflow-hidden relative group"
+                    style={{
+                        borderRadius: '8px',
+                        border: '1px solid rgba(85, 85, 85, 0.18)',
+                    }}
+                >
                     <img src={layout.big.image} className="w-full h-auto object-cover" alt={layout.big.name} />
-                    <div className="absolute inset-0 bg-black/10 flex items-end p-4">
-                        <span className="text-white text-lg font-bold">{layout.big.name}</span>
+                    <div className="absolute inset-0 bg-[#052326]/20 flex items-end p-4">
+                        <span className="text-white text-lg font-bold bg-[#052326]/80 px-3 py-1 rounded-[6px]">{layout.big.name}</span>
                     </div>
                 </Link>
 
                 <div className="grid grid-cols-2 gap-2">
                     {layout.small.map((b, i) => (
-                        <Link key={i} href={b.link} className="rounded-lg overflow-hidden relative group">
+                        <Link 
+                            key={i} 
+                            href={b.link} 
+                            className="overflow-hidden relative group"
+                            style={{
+                                borderRadius: '8px',
+                                border: '1px solid rgba(85, 85, 85, 0.18)',
+                            }}
+                        >
                             <img src={b.image} className="w-full h-full object-cover" alt={b.name} />
-                            <div className="absolute inset-0 bg-black/15 flex items-end p-3">
-                                <span className="text-white text-sm font-bold truncate w-full">{b.name}</span>
+                            <div className="absolute inset-0 bg-[#052326]/20 flex items-end p-3">
+                                <span className="text-white text-xs font-bold truncate w-full bg-[#052326]/80 px-2 py-0.5 rounded-[4px] text-center">{b.name}</span>
                             </div>
                         </Link>
                     ))}
@@ -174,12 +203,20 @@ export default function BrandBannerLayout() {
             </div>
 
             {/* BOTTOM 6 BANNERS */}
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-2 mt-2">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-4 mt-4">
                 {layout.bottom.map((b, i) => (
-                    <Link key={i} href={b.link} className="rounded-lg overflow-hidden aspect-square relative group">
+                    <Link 
+                        key={i} 
+                        href={b.link} 
+                        className="overflow-hidden aspect-square relative group"
+                        style={{
+                            borderRadius: '8px',
+                            border: '1px solid rgba(85, 85, 85, 0.18)',
+                        }}
+                    >
                         <img src={b.image} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt={b.name} />
-                        <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors flex items-end p-2">
-                            <span className="text-white text-xs font-semibold truncate w-full">{b.name}</span>
+                        <div className="absolute inset-0 bg-[#052326]/10 group-hover:bg-[#052326]/20 transition-colors flex items-end p-2">
+                            <span className="text-white text-[10px] font-semibold truncate w-full bg-[#052326]/85 px-1.5 py-0.5 rounded-[4px] text-center">{b.name}</span>
                         </div>
                     </Link>
                 ))}
@@ -189,7 +226,7 @@ export default function BrandBannerLayout() {
             <div className="md:hidden flex justify-center mt-5">
                 <Link
                     href="/brands"
-                    className="px-5 py-3 rounded-full text-xs font-medium inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white transition-all duration-300"
+                    className="px-5 py-3 rounded-[10px] text-xs font-bold uppercase tracking-wider text-[#052326] border border-[#052326]/20 bg-[#F8F3EF] hover:bg-[#052326] hover:text-[#F8F3EF] transition-all"
                 >
                     Explore All Brands
                 </Link>

@@ -44,3 +44,18 @@
 - Maintain a premium minimal design. Avoid unnecessary visual effects.
 - Use subtle hover animations only where needed.
 - Do not use heavy animations; keep the UI lightweight, fast, and accessible.
+
+## Homepage Design System & Premium Aesthetics
+- **Core Color Palette**:
+  - *Primary Forest Green*: `#052326` (representing nature, botany, purity, and clinically advanced ayurveda/CBD).
+  - *Secondary Accent Gold*: `#F0C417` or `#D4AF37` (representing premium quality, gold standards, and ancient wisdom).
+  - *Background Soft Cream/Sand*: `#F8F3EF` (creating a warm, clean, organic look that softens the clinical nature of the site).
+  - *Text Base*: `#052326` for headings, `#052326/75` or charcoal for body copy.
+- **Official Gradients**:
+  - *Botanical Green*: `linear-gradient(135deg, #052326 0%, #0A4347 100%)`
+  - *Vibrant Gold*: `linear-gradient(135deg, #F0C417 0%, #D4AF37 50%, #B8860B 100%)`
+  - *Soft Gold Glow*: `linear-gradient(180deg, #F8F3EF 0%, #F3ECE6 100%)`
+- **Sliders & Carousels**:
+  - Hero slider should cycle every 8 seconds, utilizing custom gold active dot indicators, glassmorphic content cards, and smooth scale transitions.
+  - Category, concern, and product horizontal sliders must support touch swipe and drag with smooth scroll animations.
+
