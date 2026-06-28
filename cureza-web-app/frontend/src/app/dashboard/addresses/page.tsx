@@ -170,22 +170,22 @@ export default function AddressBookPage() {
                 <button
                     onClick={() => handleOpenModal()}
                     disabled={addresses.length >= 5}
-                    className="flex items-center gap-2 bg-[#052326] text-white hover:bg-[#0b4435] px-4 py-2.5 rounded-[10px] text-xs font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                    className="flex items-center gap-2 bg-[#052326] text-white hover:bg-[#0b4435] px-4 py-2.5 rounded-[8px] text-xs font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-none"
                 >
                     <Plus size={14} /> Add New Address
                 </button>
             </div>
 
             {addresses.length === 0 ? (
-                <div className="text-center py-16 bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/10 dark:border-white/5 shadow-sm">
+                <div className="text-center py-16 bg-white dark:bg-gray-900 rounded-[8px] border border-[#555555]/18 shadow-none">
                     <MapPin className="mx-auto h-10 w-10 text-[#052326]/20 mb-4 animate-pulse" />
-                    <h3 className="text-sm font-bold text-[#052326] dark:text-gray-200">No addresses found</h3>
+                    <h3 className="text-sm font-semibold text-[#052326] dark:text-gray-200">No addresses found</h3>
                     <p className="text-xs text-gray-500 mt-1">Add a new address to manage your delivery locations.</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {addresses.map((address) => (
-                        <div key={address.id} className="bg-white dark:bg-gray-900 p-6 rounded-[10px] border-[0.5px] border-black/10 dark:border-white/5 hover:border-black/30 dark:hover:border-white/20 transition-all shadow-[0_4px_25px_rgba(0,0,0,0.01)] relative group flex flex-col justify-between min-h-[160px]">
+                        <div key={address.id} className="bg-white dark:bg-gray-900 p-6 rounded-[8px] border border-[#555555]/18 hover:border-black/30 dark:hover:border-white/20 transition-all shadow-none relative group flex flex-col justify-between min-h-[160px]">
                             <div className="absolute top-4 right-4 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <button
                                     onClick={() => handleOpenModal(address)}
@@ -246,9 +246,9 @@ export default function AddressBookPage() {
             {/* Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-                    <div className="bg-white dark:bg-gray-900 rounded-[10px] w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl border-[0.5px] border-black/20 dark:border-white/10 animate-in zoom-in-95 duration-200">
+                    <div className="bg-white dark:bg-gray-900 rounded-[8px] w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-none border border-[#555555]/18 animate-in zoom-in-95 duration-200">
                         <div className="flex justify-between items-center px-8 py-6 border-b-[0.5px] border-black/10 dark:border-white/5 sticky top-0 bg-white dark:bg-gray-900 z-10">
-                            <h2 className="text-base font-bold text-[#052326] dark:text-gray-100 tracking-tight">
+                            <h2 className="text-base font-semibold text-[#052326] dark:text-gray-100 tracking-tight">
                                 {editingAddress ? 'Edit Delivery Address' : 'Add New Address'}
                             </h2>
                             <button
@@ -399,21 +399,21 @@ export default function AddressBookPage() {
 
                             {/* SECTION 3: Address Options */}
                             <div className="space-y-4">
-                                <h3 className="text-xs font-bold text-[#052326]/40 dark:text-gray-500 uppercase tracking-wider pb-2 border-b-[0.5px] border-black/10 dark:border-white/5">
+                                <h3 className="text-xs font-semibold text-[#052326]/40 dark:text-gray-500 uppercase tracking-wider pb-2 border-b-[0.5px] border-black/10 dark:border-white/5">
                                     Settings
                                 </h3>
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 bg-[#052326]/[0.02] p-4 rounded-[10px] border-[0.5px] border-black/10 dark:border-white/5">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 bg-[#052326]/[0.02] p-4 rounded-[8px] border border-[#555555]/18">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/60 dark:text-gray-400 block">
+                                        <label className="text-[10px] font-semibold uppercase tracking-wider text-[#052326]/60 dark:text-gray-400 block">
                                             Address Type
                                         </label>
-                                        <div className="flex gap-2 p-1 bg-[#052326]/5 rounded-[10px] w-fit border-[0.5px] border-black/5">
+                                        <div className="flex gap-2 p-1 bg-[#052326]/5 rounded-[8px] w-fit border border-[#555555]/18">
                                             <button
                                                 type="button"
                                                 onClick={() => setFormData({ ...formData, type: 'home' })}
                                                 className={`px-4 py-1.5 rounded-[8px] text-xs font-bold transition-all ${
                                                     formData.type === 'home'
-                                                        ? 'bg-[#052326] text-white shadow-sm'
+                                                        ? 'bg-[#052326] text-white'
                                                         : 'text-[#052326]/60 hover:text-[#052326]'
                                                 }`}
                                             >
@@ -451,17 +451,17 @@ export default function AddressBookPage() {
                                 </div>
                             </div>
 
-                            <div className="flex justify-end gap-3 pt-6 border-t-[0.5px] border-black/10 dark:border-white/5">
+                             <div className="flex justify-end gap-3 pt-6 border-t-[0.5px] border-black/10 dark:border-white/5">
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="px-6 py-2.5 rounded-[10px] border-[0.5px] border-black/50 hover:bg-[#052326]/5 text-[#052326] dark:text-gray-200 text-xs font-bold transition-all"
+                                    className="px-6 py-2.5 rounded-[8px] border border-[#555555]/18 hover:bg-[#052326]/5 text-[#052326] dark:text-gray-200 text-xs font-semibold transition-all"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-6 py-2.5 rounded-[10px] bg-[#052326] text-white hover:bg-[#0b4435] transition-all text-xs font-bold shadow-sm"
+                                    className="px-6 py-2.5 rounded-[8px] bg-[#052326] text-white hover:bg-[#0b4435] transition-all text-xs font-semibold shadow-none"
                                 >
                                     Save Address
                                 </button>

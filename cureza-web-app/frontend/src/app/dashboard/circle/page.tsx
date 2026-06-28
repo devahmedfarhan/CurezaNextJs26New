@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Trophy, Star, TrendingUp, Users, Gift, Calendar, Zap, CheckCircle2 } from 'lucide-react';
+import { Trophy, Star, TrendingUp, Users, Gift, Calendar, Zap, CheckCircle2, Settings } from 'lucide-react';
 import Link from 'next/link';
 import api from '@/lib/api';
 
@@ -19,6 +19,11 @@ export default function CircleHomePage() {
     const [claimingEvent, setClaimingEvent] = useState(false);
     const [checkingIn, setCheckingIn] = useState(false);
 
+    // Custom Module Settings
+    const [referralEnabled, setReferralEnabled] = useState(true);
+    const [influencerEnabled, setInfluencerEnabled] = useState(true);
+    const [challengesEnabled, setChallengesEnabled] = useState(true);
+
     const fetchAll = async () => {
         try {
             const [comm, wallet, refs] = await Promise.allSettled([
@@ -30,6 +35,10 @@ export default function CircleHomePage() {
             if (comm.status === 'fulfilled') {
                 setCommunityData(comm.value.data);
                 setCheckinStreakState(comm.value.data.checkin_streak || 0);
+                setReferralEnabled(comm.value.data.referral_enabled !== false);
+                setInfluencerEnabled(comm.value.data.influencer_enabled !== false);
+                setChallengesEnabled(comm.value.data.challenges_enabled !== false);
+                
                 if (comm.value.data.last_checkin_at) {
                     const lastCheckin = new Date(comm.value.data.last_checkin_at);
                     const today = new Date();
@@ -47,6 +56,21 @@ export default function CircleHomePage() {
             console.error("Error fetching circle data:", err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleToggleSettings = async (ref: boolean, inf: boolean, chal: boolean) => {
+        try {
+            await api.post('/user/circle/settings', {
+                referral_enabled: ref,
+                influencer_enabled: inf,
+                challenges_enabled: chal
+            });
+            // Force layout sidebar to reload/refresh settings
+            window.location.reload();
+        } catch (err) {
+            console.error("Error saving circle settings:", err);
+            alert("Failed to update preferences.");
         }
     };
 
@@ -146,7 +170,7 @@ export default function CircleHomePage() {
             </div>
 
             {/* Hero Card */}
-            <div className="bg-gradient-to-r from-gray-900 via-[#06282b] to-[#0a3a3e] rounded-2xl p-8 text-white relative overflow-hidden shadow-lg border border-white/5">
+            <div className="bg-gradient-to-r from-gray-900 via-[#06282b] to-[#0a3a3e] rounded-[8px] p-8 text-white relative overflow-hidden border border-white/5">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/4 blur-3xl"></div>
                 <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
                     <div className="flex items-center gap-6">
@@ -196,25 +220,25 @@ export default function CircleHomePage() {
 
             {/* Daily Check-in Card */}
             <div className="max-w-2xl mx-auto w-full">
-                <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col justify-between hover:shadow-md transition-all">
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-[8px] border border-[#555555]/18 flex flex-col justify-between transition-all">
                     <div className="space-y-4">
                         <div className="flex items-center gap-3">
-                            <div className="p-2.5 bg-yellow-50 dark:bg-yellow-950/30 text-yellow-600 dark:text-yellow-400 rounded-xl">
+                            <div className="p-2.5 bg-yellow-50 dark:bg-yellow-950/30 text-yellow-600 dark:text-yellow-400 rounded-[8px] border border-[#555555]/18">
                                 <Calendar size={20} />
                             </div>
                             <div>
-                                <h3 className="font-extrabold text-gray-900 dark:text-white text-base">Daily Check-in Streak</h3>
+                                <h3 className="font-semibold text-gray-900 dark:text-white text-base">Daily Check-in Streak</h3>
                                 <p className="text-xs text-gray-500">Visit Cureza daily to grow your streak and claim XP boosts</p>
                             </div>
                         </div>
-                        <div className="bg-neutral-50 dark:bg-gray-800/40 p-4 rounded-xl border border-neutral-100 dark:border-gray-800 flex justify-between items-center">
+                        <div className="bg-neutral-50 dark:bg-gray-800/40 p-4 rounded-[8px] border border-[#555555]/18 flex justify-between items-center">
                             <div>
-                                <span className="text-[10px] uppercase font-bold text-gray-400 block tracking-wider">Your Streak</span>
-                                <span className="text-2xl font-black text-gray-900 dark:text-white">{checkinStreakState} Days</span>
+                                <span className="text-[10px] uppercase font-semibold text-gray-400 block tracking-wider">Your Streak</span>
+                                <span className="text-2xl font-semibold text-gray-900 dark:text-white">{checkinStreakState} Days</span>
                             </div>
                             <div className="text-right">
-                                <span className="text-[10px] uppercase font-bold text-gray-400 block tracking-wider">Next Reward</span>
-                                <span className="text-sm font-bold text-yellow-600 dark:text-yellow-400 flex items-center gap-1">
+                                <span className="text-[10px] uppercase font-semibold text-gray-400 block tracking-wider">Next Reward</span>
+                                <span className="text-sm font-semibold text-yellow-600 dark:text-yellow-400 flex items-center gap-1">
                                     <Zap size={14} className="fill-current" /> +20 XP
                                 </span>
                             </div>
@@ -225,7 +249,7 @@ export default function CircleHomePage() {
                         {hasCheckedInToday ? (
                             <button
                                 disabled
-                                className="w-full py-3 bg-neutral-100 dark:bg-gray-800 text-neutral-400 dark:text-gray-500 font-bold rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-not-allowed border border-neutral-200/50 dark:border-gray-700/50"
+                                className="w-full py-3 bg-neutral-100 dark:bg-gray-800 text-neutral-400 dark:text-gray-500 font-semibold rounded-[8px] text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-not-allowed border border-[#555555]/18"
                             >
                                 <CheckCircle2 size={16} className="text-green-500" />
                                 Checked In Today (Streak Active)
@@ -234,7 +258,7 @@ export default function CircleHomePage() {
                             <button
                                 onClick={handleCheckIn}
                                 disabled={checkingIn}
-                                className="w-full py-3 bg-[#052326] text-white hover:bg-opacity-95 font-bold rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm hover:shadow active:scale-[0.98]"
+                                className="w-full py-3 bg-[#052326] text-white hover:bg-opacity-95 font-semibold rounded-[8px] text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-none active:scale-[0.98]"
                             >
                                 {checkingIn ? 'Checking in...' : 'Claim Daily Check-in (+20 XP)'}
                             </button>
@@ -244,31 +268,106 @@ export default function CircleHomePage() {
             </div>
 
             {/* Quick Stats (Referrals Card centered to match check-in card) */}
+            {communityData?.rules?.referral_module_enabled !== false && referralEnabled && (
+                <div className="max-w-2xl mx-auto w-full">
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-[8px] border border-[#555555]/18 transition-shadow">
+                        <div className="flex items-center gap-4">
+                            <div className="p-3 bg-green-50 dark:bg-green-950/20 text-green-600 dark:text-green-400 rounded-[8px] border border-[#555555]/18">
+                                <Users size={24} />
+                            </div>
+                            <div>
+                                <p className="text-xs text-gray-500 font-medium">Invited Friends Completed Orders</p>
+                                <h3 className="font-semibold text-gray-900 dark:text-white text-lg">{completedReferrals} / {totalReferrals} Friends</h3>
+                            </div>
+                        </div>
+                        <p className="text-xs text-green-600 mt-2 font-medium">Earned +200 XP & +100 pts per friend's first completed purchase</p>
+                    </div>
+                </div>
+            )}
+
+            {/* Circle Preferences Toggles Card */}
             <div className="max-w-2xl mx-auto w-full">
-                <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex items-center gap-4">
-                        <div className="p-3 bg-green-50 dark:bg-green-950/20 text-green-600 dark:text-green-400 rounded-xl">
-                            <Users size={24} />
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-[8px] border border-[#555555]/18 transition-all space-y-4">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 bg-neutral-50 dark:bg-gray-800/30 text-neutral-900 dark:text-gray-200 rounded-[8px] border border-black/10">
+                            <Settings size={20} />
                         </div>
                         <div>
-                            <p className="text-sm text-gray-500">Referrals</p>
-                            <h3 className="font-bold text-gray-900 dark:text-white text-lg">{completedReferrals} / {totalReferrals} Friends</h3>
+                            <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Loyalty Circle Preferences</h3>
+                            <p className="text-xs text-gray-500 font-medium">Configure which rewards modules you would like to participate in</p>
                         </div>
                     </div>
-                    <p className="text-xs text-green-600 mt-2 font-medium">Earned +200 XP & +100 pts per friend's first completed purchase</p>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                        {communityData?.rules?.referral_module_enabled !== false && (
+                            <label className="flex items-center justify-between p-3 bg-neutral-50 dark:bg-gray-800/20 border border-black/5 rounded-[8px] cursor-pointer hover:border-black/20 transition-all select-none">
+                                <div className="space-y-0.5">
+                                    <span className="block text-xs font-semibold text-gray-800 dark:text-gray-200">Refer & Earn</span>
+                                    <span className="block text-[9px] text-gray-450">Invite friends</span>
+                                </div>
+                                <input 
+                                    type="checkbox"
+                                    checked={referralEnabled}
+                                    onChange={async (e) => {
+                                        const val = e.target.checked;
+                                        setReferralEnabled(val);
+                                        await handleToggleSettings(val, influencerEnabled, challengesEnabled);
+                                    }}
+                                    className="w-4 h-4 rounded text-black border-gray-300 focus:ring-black"
+                                />
+                            </label>
+                        )}
+                        {communityData?.rules?.influencer_module_enabled !== false && (
+                            <label className="flex items-center justify-between p-3 bg-neutral-50 dark:bg-gray-800/20 border border-black/5 rounded-[8px] cursor-pointer hover:border-black/20 transition-all select-none">
+                                <div className="space-y-0.5">
+                                    <span className="block text-xs font-semibold text-gray-800 dark:text-gray-200">UGC Review Hub</span>
+                                    <span className="block text-[9px] text-gray-450">Social review</span>
+                                </div>
+                                <input 
+                                    type="checkbox"
+                                    checked={influencerEnabled}
+                                    onChange={async (e) => {
+                                        const val = e.target.checked;
+                                        setInfluencerEnabled(val);
+                                        await handleToggleSettings(referralEnabled, val, challengesEnabled);
+                                    }}
+                                    className="w-4 h-4 rounded text-black border-gray-300 focus:ring-black"
+                                />
+                            </label>
+                        )}
+                        {communityData?.rules?.challenges_module_enabled !== false && (
+                            <label className="flex items-center justify-between p-3 bg-neutral-50 dark:bg-gray-800/20 border border-black/5 rounded-[8px] cursor-pointer hover:border-black/20 transition-all select-none">
+                                <div className="space-y-0.5">
+                                    <span className="block text-xs font-semibold text-gray-800 dark:text-gray-200">Quests & Goals</span>
+                                    <span className="block text-[9px] text-gray-450">Challenges</span>
+                                </div>
+                                <input 
+                                    type="checkbox"
+                                    checked={challengesEnabled}
+                                    onChange={async (e) => {
+                                        const val = e.target.checked;
+                                        setChallengesEnabled(val);
+                                        await handleToggleSettings(referralEnabled, influencerEnabled, val);
+                                    }}
+                                    className="w-4 h-4 rounded text-black border-gray-350 focus:ring-black"
+                                />
+                            </label>
+                        )}
+                    </div>
                 </div>
             </div>
 
-            {/* Quick Links Grid (centered and columns scaled for 3 links) */}
-            <div className="max-w-2xl mx-auto w-full grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {/* Quick Links Grid */}
+            <div className="max-w-2xl mx-auto w-full grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {[
-                    { name: 'Activity Log', href: '/dashboard/circle/activity', icon: '📜' },
-                    { name: 'Refer & Earn', href: '/dashboard/circle/referrals', icon: '🤝' },
-                    { name: 'Badges', href: '/dashboard/circle/badges', icon: '🎖️' },
-                ].map((item) => (
-                    <Link key={item.name} href={item.href} className="bg-white dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm hover:border-[#052326] hover:shadow-md transition-all text-center group">
+                    { name: 'Activity Log', href: '/dashboard/circle/activity', icon: '📜', enabled: true },
+                    { name: 'Refer & Earn', href: '/dashboard/circle/referrals', icon: '🤝', enabled: communityData?.rules?.referral_module_enabled !== false && referralEnabled },
+                    { name: 'Influencer Hub', href: '/dashboard/circle/social', icon: '🎥', enabled: communityData?.rules?.influencer_module_enabled !== false && influencerEnabled },
+                    { name: 'Badges', href: '/dashboard/circle/badges', icon: '🎖️', enabled: true },
+                ].filter(item => item.enabled).map((item) => (
+                    <Link key={item.name} href={item.href} className="bg-white dark:bg-gray-900 p-6 rounded-[8px] border border-[#555555]/18 hover:border-[#052326] transition-all text-center group">
                         <div className="text-3xl mb-3 group-hover:scale-110 transition-transform">{item.icon}</div>
-                        <h3 className="font-bold text-gray-900 dark:text-white text-sm">{item.name}</h3>
+                        <h3 className="font-semibold text-gray-900 dark:text-white text-sm">{item.name}</h3>
                     </Link>
                 ))}
             </div>

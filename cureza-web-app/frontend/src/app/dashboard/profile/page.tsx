@@ -101,12 +101,12 @@ export default function ProfilePage() {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-xl font-bold text-[#052326] dark:text-gray-100 tracking-tight">My Profile</h1>
+                    <h1 className="text-xl font-semibold text-[#052326] dark:text-gray-100 tracking-tight">My Profile</h1>
                     <p className="text-xs text-gray-500 mt-1">Manage and update your personal information and contact details.</p>
                 </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-900 rounded-[10px] border-[0.5px] border-black/50 shadow-[0_4px_25px_rgba(0,0,0,0.02)] overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 premium-dashboard-card overflow-hidden">
                 {/* Alert Notification */}
                 {message && (
                     <div className={`p-4 border-b-[0.5px] ${
@@ -122,12 +122,12 @@ export default function ProfilePage() {
                 <div className="p-8">
                     <div className="flex flex-col lg:flex-row gap-10 items-start">
                         {/* LEFT COLUMN: Avatar & Quick Info */}
-                        <div className="w-full lg:w-64 shrink-0 flex flex-col items-center p-6 bg-[#052326]/[0.02] dark:bg-gray-800/20 rounded-[10px] border-[0.5px] border-black/10 dark:border-white/5">
+                        <div className="w-full lg:w-64 shrink-0 flex flex-col items-center p-6 bg-[#052326]/[0.02] dark:bg-gray-800/20 rounded-[8px] border border-[#555555]/18">
                             <div 
                                 className={`relative group ${isEditing ? 'cursor-pointer' : ''}`} 
                                 onClick={() => isEditing && fileInputRef.current?.click()}
                             >
-                                <div className="w-28 h-28 bg-[#052326] text-white rounded-[10px] overflow-hidden flex items-center justify-center font-bold text-3xl border-[0.5px] border-black/20 shadow-md relative">
+                                <div className="w-28 h-28 bg-[#052326] text-white rounded-[8px] overflow-hidden flex items-center justify-center font-semibold text-3xl border border-black/[0.08] dark:border-white/[0.08] relative">
                                     {previewUrl ? (
                                         <img
                                             src={previewUrl}
@@ -135,7 +135,7 @@ export default function ProfilePage() {
                                             className="w-full h-full object-cover"
                                         />
                                     ) : (
-                                        <span className="text-[#F8F3EF] tracking-wider select-none font-bold">
+                                        <span className="text-[#F8F3EF] tracking-wider select-none font-semibold">
                                             {name 
                                                 ? name.split(' ').filter(Boolean).map((n: string) => n[0]).join('').toUpperCase().slice(0, 2) 
                                                 : 'U'}
@@ -425,7 +425,7 @@ export default function ProfilePage() {
                                                 setAvatarFile(null);
                                                 setMessage(null);
                                             }}
-                                            className="px-6 py-2.5 rounded-[10px] border-[0.5px] border-black/50 hover:bg-[#052326]/5 text-[#052326] dark:text-gray-200 text-xs font-bold transition-all"
+                                            className="px-6 py-2.5 rounded-[8px] border border-[#555555]/18 hover:bg-[#052326]/5 text-[#052326] dark:text-gray-200 text-xs font-semibold transition-all"
                                             disabled={isLoading}
                                         >
                                             Cancel
@@ -433,7 +433,7 @@ export default function ProfilePage() {
                                         <button
                                             type="submit"
                                             disabled={isLoading}
-                                            className="px-6 py-2.5 rounded-[10px] bg-[#052326] text-white hover:bg-[#0b4435] transition-all flex items-center gap-2 disabled:opacity-50 text-xs font-bold shadow-sm"
+                                            className="px-6 py-2.5 rounded-[8px] bg-[#052326] text-white hover:bg-[#0b4435] transition-all flex items-center gap-2 disabled:opacity-50 text-xs font-semibold shadow-none"
                                         >
                                             {isLoading ? <Loader className="animate-spin" size={14} /> : <Save size={14} />}
                                             Save Changes
@@ -443,7 +443,7 @@ export default function ProfilePage() {
                                     <button
                                         type="button"
                                         onClick={() => setIsEditing(true)}
-                                        className="px-6 py-2.5 rounded-[10px] bg-[#052326] text-white hover:bg-[#0b4435] transition-all text-xs font-bold shadow-sm"
+                                        className="px-6 py-2.5 rounded-[8px] bg-[#052326] text-white hover:bg-[#0b4435] transition-all text-xs font-semibold shadow-none"
                                     >
                                         Edit Profile
                                     </button>

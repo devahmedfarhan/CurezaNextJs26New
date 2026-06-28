@@ -802,3 +802,41 @@ body {
   background: rgba(0, 0, 0, 0.4);
 }
 
+/* Customer Dashboard Premium Minimal Card and Typography System */
+.customer-theme .premium-dashboard-card,
+.customer-theme [data-slot="card"],
+.customer-theme .bg-white.border,
+.customer-theme .bg-white.rounded-xl,
+.customer-theme .bg-white.rounded-2xl,
+.customer-theme .bg-white.rounded-3xl,
+.customer-theme .dark\:bg-gray-900.border,
+.customer-theme .dark\:bg-gray-900.rounded-xl,
+.customer-theme .dark\:bg-gray-900.rounded-2xl,
+.customer-theme .dark\:bg-gray-900.rounded-3xl {
+  border-radius: 8px !important;
+  border: 1px solid rgba(85, 85, 85, 0.18) !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.customer-theme .font-bold,
+.customer-theme .font-extrabold,
+.customer-theme .font-semibold {
+  font-weight: 600 !important; /* Cap bold typography to 600 (Semi-Bold) */
+}
+
+.customer-theme h1,
+.customer-theme h2,
+.customer-theme h3,
+.customer-theme h4,
+.customer-theme h5,
+.customer-theme h6 {
+  font-weight: 600 !important; /* Cap headers to 600 (Semi-Bold) */
+}
+
+.customer-theme .font-light,
+.customer-theme .font-thin {
+  font-weight: 400 !important; /* Use regular or medium for light */
+}
+
+

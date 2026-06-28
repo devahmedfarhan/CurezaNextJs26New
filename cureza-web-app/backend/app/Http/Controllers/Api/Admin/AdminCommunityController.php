@@ -55,6 +55,13 @@ class AdminCommunityController extends Controller
             'points_join_event' => 'required|integer|min:0',
             'xp_daily_checkin' => 'required|integer|min:0',
             'points_daily_checkin' => 'required|integer|min:0',
+            'xp_instagram_review' => 'required|integer|min:0',
+            'points_instagram_review' => 'required|integer|min:0',
+            'xp_youtube_review' => 'required|integer|min:0',
+            'points_youtube_review' => 'required|integer|min:0',
+            'referral_module_enabled' => 'nullable|boolean',
+            'influencer_module_enabled' => 'nullable|boolean',
+            'challenges_module_enabled' => 'nullable|boolean',
         ]);
 
         GamificationService::updateRules($validated);

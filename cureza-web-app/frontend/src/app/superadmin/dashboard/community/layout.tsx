@@ -15,9 +15,9 @@ const routeMeta: Record<string, { title: string; description: string }> = {
         title: 'Referrals Log',
         description: 'Track registration connections, invitation codes, and points distribution.'
     },
-    '/superadmin/dashboard/community/leaderboard': {
-        title: 'Leaderboard & Rankings',
-        description: 'Global user placements based on points accumulated.'
+    '/superadmin/dashboard/community/messages': {
+        title: 'Influencer Messages',
+        description: 'Respond to influencer queries, partnership proposals, and product sample requests.'
     },
     '/superadmin/dashboard/community/challenges': {
         title: 'Challenges Manager',

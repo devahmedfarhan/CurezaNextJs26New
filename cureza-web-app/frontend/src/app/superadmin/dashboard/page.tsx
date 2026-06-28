@@ -284,7 +284,6 @@ export default function SuperAdminDashboardHome() {
                 { title: 'Circle Home', url: '/superadmin/dashboard/community' },
                 { title: 'Activity Log', url: '/superadmin/dashboard/community/activity' },
                 { title: 'Referrals', url: '/superadmin/dashboard/community/referrals' },
-                { title: 'Leaderboard', url: '/superadmin/dashboard/community/leaderboard' },
                 { title: 'Challenges', url: '/superadmin/dashboard/community/challenges' },
                 { title: 'Badges', url: '/superadmin/dashboard/community/badges' },
                 { title: 'Rewards Shop', url: '/superadmin/dashboard/community/rewards' },

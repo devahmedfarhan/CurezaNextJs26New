@@ -36,6 +36,34 @@ class CommunityController extends Controller
             'checkin_streak' => $wallet->checkin_streak,
             'last_checkin_at' => $wallet->last_checkin_at,
             'rules' => \App\Services\GamificationService::getRules(),
+            'referral_enabled' => (bool) ($wallet->referral_enabled ?? true),
+            'influencer_enabled' => (bool) ($wallet->influencer_enabled ?? true),
+            'challenges_enabled' => (bool) ($wallet->challenges_enabled ?? true),
+        ]);
+    }
+
+    /**
+     * Update customer circle preferences (enable/disable modules).
+     */
+    public function updateCircleSettings(Request $request)
+    {
+        $request->validate([
+            'referral_enabled' => 'required|boolean',
+            'influencer_enabled' => 'required|boolean',
+            'challenges_enabled' => 'required|boolean',
+        ]);
+
+        $wallet = \App\Models\Wallet::firstOrCreate(['user_id' => $request->user()->id]);
+        $wallet->update([
+            'referral_enabled' => $request->referral_enabled,
+            'influencer_enabled' => $request->influencer_enabled,
+            'challenges_enabled' => $request->challenges_enabled,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Your Circle preferences have been updated successfully!',
+            'wallet' => $wallet
         ]);
     }
 

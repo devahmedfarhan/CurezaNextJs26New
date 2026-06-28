@@ -62,6 +62,9 @@ filter: none !important;
 * Use proper whitespace between sections.
 * Keep alignment clean and balanced.
 
+
+container mx-auto px-4 md:px-6
+
 ## Responsive Design
 
 * Entire page must be **100% Mobile Responsive**.

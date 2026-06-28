@@ -20,7 +20,14 @@ export default function AdminCommunityPage() {
         xp_join_event: 250,
         points_join_event: 50,
         xp_daily_checkin: 20,
-        points_daily_checkin: 0
+        points_daily_checkin: 0,
+        xp_instagram_review: 500,
+        points_instagram_review: 250,
+        xp_youtube_review: 1000,
+        points_youtube_review: 500,
+        referral_module_enabled: true,
+        influencer_module_enabled: true,
+        challenges_module_enabled: true
     });
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -46,10 +53,10 @@ export default function AdminCommunityPage() {
     }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const { name, value, type, checked } = e.target;
         setRules((prev: any) => ({
             ...prev,
-            [name]: parseInt(value) || 0
+            [name]: type === 'checkbox' ? checked : (parseInt(value) || 0)
         }));
     };
 
@@ -132,6 +139,22 @@ export default function AdminCommunityPage() {
                 { label: "Daily Check-in XP", name: "xp_daily_checkin", desc: "XP earned per check-in." },
                 { label: "Daily Check-in Points", name: "points_daily_checkin", desc: "Points earned per check-in." }
             ]
+        },
+        {
+            title: "📸 Instagram Influencer Review",
+            desc: "Awarded when admin approves a review link posted on Instagram.",
+            fields: [
+                { label: "Instagram Review XP", name: "xp_instagram_review", desc: "XP for Instagram post." },
+                { label: "Instagram Review Points", name: "points_instagram_review", desc: "Points for Instagram post." }
+            ]
+        },
+        {
+            title: "🎥 YouTube Influencer Review",
+            desc: "Awarded when admin approves a review link posted on YouTube.",
+            fields: [
+                { label: "YouTube Review XP", name: "xp_youtube_review", desc: "XP for YouTube video." },
+                { label: "YouTube Review Points", name: "points_youtube_review", desc: "Points for YouTube video." }
+            ]
         }
     ];
 
@@ -190,6 +213,55 @@ export default function AdminCommunityPage() {
                 </div>
 
                 <form onSubmit={handleSaveRules} className="space-y-6">
+                    {/* Circle Module Toggles */}
+                    <div className="border border-gray-200 rounded-xl p-4 bg-gray-50/50 space-y-4 hover:border-black/25 transition-all">
+                        <div>
+                            <h4 className="font-extrabold text-gray-900 text-sm">🔄 Circle Module Toggles</h4>
+                            <p className="text-[10px] text-gray-400 font-medium leading-relaxed">Enable or disable specific community modules for your customers.</p>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <label className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg cursor-pointer hover:border-black/25 transition-all">
+                                <input 
+                                    type="checkbox"
+                                    name="referral_module_enabled"
+                                    checked={rules.referral_module_enabled !== false}
+                                    onChange={handleChange as any}
+                                    className="w-4 h-4 rounded text-black border-gray-300 focus:ring-black"
+                                />
+                                <div>
+                                    <span className="block text-xs font-bold text-gray-800">Refer & Earn</span>
+                                    <span className="block text-[9px] text-gray-400">Enable referrals module</span>
+                                </div>
+                            </label>
+                            <label className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg cursor-pointer hover:border-black/25 transition-all">
+                                <input 
+                                    type="checkbox"
+                                    name="influencer_module_enabled"
+                                    checked={rules.influencer_module_enabled !== false}
+                                    onChange={handleChange as any}
+                                    className="w-4 h-4 rounded text-black border-gray-300 focus:ring-black"
+                                />
+                                <div>
+                                    <span className="block text-xs font-bold text-gray-800">Influencer Reviews Hub</span>
+                                    <span className="block text-[9px] text-gray-400">Enable social reviews submissions</span>
+                                </div>
+                            </label>
+                            <label className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg cursor-pointer hover:border-black/25 transition-all">
+                                <input 
+                                    type="checkbox"
+                                    name="challenges_module_enabled"
+                                    checked={rules.challenges_module_enabled !== false}
+                                    onChange={handleChange as any}
+                                    className="w-4 h-4 rounded text-black border-gray-300 focus:ring-black"
+                                />
+                                <div>
+                                    <span className="block text-xs font-bold text-gray-800">Challenges</span>
+                                    <span className="block text-[9px] text-gray-400">Enable user quests/milestones</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {activityGroups.map((group, groupIdx) => (
                             <div key={groupIdx} className="border border-gray-200 rounded-xl p-4 bg-gray-50/50 space-y-4 hover:border-black/25 transition-all">

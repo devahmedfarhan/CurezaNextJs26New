@@ -315,6 +315,9 @@ class SellerOrderController extends Controller
 
                 // Complete referral
                 \App\Services\GamificationService::completeReferral($user);
+
+                // Increment purchase challenge progress
+                \App\Services\GamificationService::incrementChallengeProgress($user, 'purchase', 1);
             }
         }
 

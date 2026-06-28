@@ -3,6 +3,67 @@
 import { useState, useEffect } from 'react';
 import { Gift, ShoppingBag, MapPin } from 'lucide-react';
 import api from '@/lib/api';
+import Slider from '@/components/common/Slider';
+
+function RewardCard({ 
+    reward, 
+    userPoints, 
+    handleRedeemClick,
+    className = "" 
+}: { 
+    reward: any; 
+    userPoints: number; 
+    handleRedeemClick: (r: any) => void;
+    className?: string;
+}) {
+    const isAffordable = userPoints >= reward.points_cost;
+    const isOutOfStock = reward.stock === 0;
+
+    let color = 'bg-[#052326]';
+    if (reward.type === 'coupon') color = 'bg-emerald-650';
+    if (reward.type === 'physical') color = 'bg-blue-650';
+    if (reward.type === 'digital') color = 'bg-purple-650';
+
+    return (
+        <div className={`bg-white dark:bg-gray-900 rounded-[8px] premium-dashboard-card overflow-hidden flex flex-col transition-shadow ${className}`}>
+            <div className={`${color} h-32 flex items-center justify-center text-white relative`}>
+                <Gift size={44} className="opacity-90" />
+                <span className="absolute top-3 right-3 text-[10px] bg-white/20 text-white px-2.5 py-0.5 rounded-[4px] font-semibold uppercase tracking-wider">
+                    {reward.type}
+                </span>
+            </div>
+            <div className="p-6 flex-1 flex flex-col justify-between">
+                <div>
+                    <h3 className="font-semibold text-gray-900 dark:text-white text-base mb-1 truncate">{reward.name}</h3>
+                    <p className="text-xs text-gray-500 mb-4 line-clamp-2">{reward.description}</p>
+                    
+                    {reward.stock >= 0 && (
+                        <p className="text-[10px] text-gray-400 mb-3 font-semibold">
+                            {isOutOfStock ? 'OUT OF STOCK' : `STOCK: ${reward.stock} REMAINING`}
+                        </p>
+                    )}
+                </div>
+
+                <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-105 dark:border-gray-800">
+                    <span className="font-semibold text-sm text-yellow-600 dark:text-yellow-400">{reward.points_cost.toLocaleString()} points</span>
+                    <button
+                        onClick={() => handleRedeemClick(reward)}
+                        disabled={!isAffordable || isOutOfStock}
+                        className={`px-4 py-2 rounded-[8px] text-xs font-semibold uppercase tracking-wider transition-all ${
+                            isOutOfStock 
+                                ? 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                                : isAffordable
+                                    ? 'bg-[#052326] text-white hover:bg-opacity-90 active:scale-[0.97]'
+                                    : 'bg-gray-100 dark:bg-gray-800/40 text-gray-400 dark:text-gray-500 cursor-not-allowed border border-[#555555]/18'
+                        }`}
+                    >
+                        {isOutOfStock ? 'Sold Out' : 'Redeem'}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
 
 export default function CircleRewardsPage() {
     const [rewards, setRewards] = useState<any[]>([]);
@@ -74,13 +135,13 @@ export default function CircleRewardsPage() {
         return (
             <div className="space-y-6 animate-pulse">
                 <div className="flex justify-between items-center">
-                    <div className="h-8 w-48 bg-gray-200 rounded-lg"></div>
-                    <div className="h-10 w-32 bg-gray-200 rounded-lg"></div>
+                    <div className="h-8 w-48 bg-gray-200 rounded-[8px]"></div>
+                    <div className="h-10 w-32 bg-gray-200 rounded-[8px]"></div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="h-48 bg-gray-200 rounded-xl"></div>
-                    <div className="h-48 bg-gray-200 rounded-xl"></div>
-                    <div className="h-48 bg-gray-200 rounded-xl"></div>
+                    <div className="h-48 bg-gray-200 rounded-[8px]"></div>
+                    <div className="h-48 bg-gray-200 rounded-[8px]"></div>
+                    <div className="h-48 bg-gray-200 rounded-[8px]"></div>
                 </div>
             </div>
         );
@@ -90,14 +151,14 @@ export default function CircleRewardsPage() {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Rewards Shop</h1>
-                    <p className="text-gray-500">Redeem your hard-earned points for exclusive perks</p>
+                    <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Rewards Shop</h1>
+                    <p className="text-gray-500 text-xs mt-1">Redeem your hard-earned points for exclusive perks</p>
                 </div>
                 <div className="flex flex-wrap gap-3 self-start">
-                    <div className="bg-yellow-50 dark:bg-yellow-950/20 text-yellow-800 dark:text-yellow-400 border border-yellow-200/50 dark:border-yellow-900/30 px-5 py-2 rounded-lg font-bold shadow-sm text-sm">
+                    <div className="bg-yellow-50 dark:bg-yellow-950/20 text-yellow-800 dark:text-yellow-400 border border-[#555555]/18 px-5 py-2 rounded-[8px] font-semibold text-sm">
                         Redeemable: {userPoints.toLocaleString()} Points
                     </div>
-                    <div className="bg-emerald-50 dark:bg-emerald-950/20 text-emerald-800 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-900/30 px-5 py-2 rounded-lg font-bold shadow-sm text-sm">
+                    <div className="bg-emerald-50 dark:bg-emerald-950/20 text-emerald-800 dark:text-emerald-400 border border-[#555555]/18 px-5 py-2 rounded-[8px] font-semibold text-sm">
                         Lifetime: {userXP.toLocaleString()} XP
                     </div>
                 </div>
@@ -129,68 +190,62 @@ export default function CircleRewardsPage() {
 
             {/* shop Catalog */}
             {activeTab === 'shop' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {rewards.length === 0 ? (
-                        <div className="col-span-full bg-white dark:bg-gray-900 p-8 text-center border dark:border-gray-800 rounded-xl text-gray-500">
-                            No rewards available in the shop right now. Check back later!
-                        </div>
-                    ) : (
-                        rewards.map((reward) => {
-                            const isAffordable = userPoints >= reward.points_cost;
-                            const isOutOfStock = reward.stock === 0;
-
-                            let color = 'bg-[#052326]';
-                            if (reward.type === 'coupon') color = 'bg-emerald-650';
-                            if (reward.type === 'physical') color = 'bg-blue-650';
-                            if (reward.type === 'digital') color = 'bg-purple-650';
-
-                            return (
-                                <div key={reward.id} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-shadow">
-                                    <div className={`${color} h-32 flex items-center justify-center text-white relative`}>
-                                        <Gift size={44} className="opacity-90" />
-                                        <span className="absolute top-3 right-3 text-[10px] bg-white/20 text-white px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
-                                            {reward.type}
-                                        </span>
-                                    </div>
-                                    <div className="p-6 flex-1 flex flex-col">
-                                        <h3 className="font-bold text-gray-900 dark:text-white text-base mb-1">{reward.name}</h3>
-                                        <p className="text-xs text-gray-500 mb-4 flex-1">{reward.description}</p>
-                                        
-                                        {reward.stock >= 0 && (
-                                            <p className="text-[10px] text-gray-400 mb-3 font-semibold">
-                                                {isOutOfStock ? 'OUT OF STOCK' : `STOCK: ${reward.stock} REMAINING`}
-                                            </p>
-                                        )}
-
-                                        <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-100 dark:border-gray-800">
-                                            <span className="font-extrabold text-sm text-yellow-600 dark:text-yellow-400">{reward.points_cost.toLocaleString()} points</span>
-                                            <button
-                                                onClick={() => handleRedeemClick(reward)}
-                                                disabled={!isAffordable || isOutOfStock}
-                                                className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
-                                                    isOutOfStock 
-                                                        ? 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed'
-                                                        : isAffordable
-                                                            ? 'bg-[#052326] text-white hover:bg-opacity-90 active:scale-[0.97]'
-                                                            : 'bg-gray-100 dark:bg-gray-800/40 text-gray-400 dark:text-gray-500 cursor-not-allowed border border-gray-200/50 dark:border-gray-800/50'
-                                                }`}
-                                            >
-                                                {isOutOfStock ? 'Sold Out' : 'Redeem'}
-                                            </button>
-                                        </div>
-                                    </div>
+                rewards.length === 0 ? (
+                    <div className="bg-white dark:bg-gray-900 p-8 text-center border dark:border-gray-800 rounded-[8px] text-gray-500">
+                        No rewards available in the shop right now. Check back later!
+                    </div>
+                ) : (
+                    <>
+                        {/* Mobile/Tablet view */}
+                        <div className="block lg:hidden">
+                            {rewards.length > 2 ? (
+                                <Slider>
+                                    {rewards.map((reward) => (
+                                        <RewardCard 
+                                            key={reward.id} 
+                                            reward={reward} 
+                                            userPoints={userPoints} 
+                                            handleRedeemClick={handleRedeemClick} 
+                                            className="w-[280px] h-[340px]"
+                                        />
+                                    ))}
+                                </Slider>
+                            ) : (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {rewards.map((reward) => (
+                                        <RewardCard 
+                                            key={reward.id} 
+                                            reward={reward} 
+                                            userPoints={userPoints} 
+                                            handleRedeemClick={handleRedeemClick} 
+                                            className="h-[340px]"
+                                        />
+                                    ))}
                                 </div>
-                            );
-                        })
-                    )}
-                </div>
+                            )}
+                        </div>
+
+                        {/* Desktop view (always standard grid) */}
+                        <div className="hidden lg:grid lg:grid-cols-3 gap-6">
+                            {rewards.map((reward) => (
+                                <RewardCard 
+                                    key={reward.id} 
+                                    reward={reward} 
+                                    userPoints={userPoints} 
+                                    handleRedeemClick={handleRedeemClick} 
+                                    className="h-[340px]"
+                                />
+                            ))}
+                        </div>
+                    </>
+                )
             )}
 
             {/* Redemption History */}
             {activeTab === 'history' && (
-                <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
+                <div className="bg-white dark:bg-gray-900 premium-dashboard-card overflow-hidden">
                     {redemptions.length === 0 ? (
-                        <div className="p-8 text-center text-gray-500">
+                        <div className="p-8 text-center text-gray-500 text-xs">
                             You haven't redeemed any rewards yet. Redeem your points in the shop catalog!
                         </div>
                     ) : (
@@ -205,11 +260,11 @@ export default function CircleRewardsPage() {
                                 return (
                                     <div key={item.id} className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                         <div className="flex items-start gap-4">
-                                            <div className="p-3 bg-gray-105 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-lg shrink-0">
+                                            <div className="p-3 bg-gray-105 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-[8px] border border-[#555555]/18 shrink-0">
                                                 <ShoppingBag size={22} />
                                             </div>
                                             <div>
-                                                <h4 className="font-bold text-gray-900 dark:text-white text-sm">{item.reward?.name || 'Redeemed Item'}</h4>
+                                                <h4 className="font-semibold text-gray-900 dark:text-white text-sm">{item.reward?.name || 'Redeemed Item'}</h4>
                                                 <p className="text-[10px] text-gray-500">Redeemed on {date}</p>
                                                 
                                                 {item.coupon_code && (

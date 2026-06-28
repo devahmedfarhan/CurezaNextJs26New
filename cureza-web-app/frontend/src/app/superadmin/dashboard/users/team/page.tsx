@@ -43,7 +43,7 @@ const AVAILABLE_MODULES = [
     { id: 'events', name: 'Events', desc: 'Create and coordinate public events and health webinars' },
     { id: 'finance', name: 'Finance & Payouts', desc: 'Access payouts, transactions, and commission settings' },
     { id: 'support', name: 'Support & Tickets', desc: 'Manage customer, seller, and doctor support tickets' },
-    { id: 'community', name: 'Cureza Circle', desc: 'Manage referrals, leaderboards, challenges, and rewards shop' },
+    { id: 'community', name: 'Cureza Circle', desc: 'Manage referrals, challenges, and rewards shop' },
     { id: 'cms', name: 'CMS & Blogs', desc: 'Access homepage banners, FAQ listings, and blog posts' },
     { id: 'settings', name: 'Global Settings', desc: 'Access shipping options, payment gateways, and system settings' },
 ];

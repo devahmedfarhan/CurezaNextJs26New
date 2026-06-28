@@ -15,7 +15,7 @@ export default function AdminChallengesPage() {
     const [form, setForm] = useState({
         title: '',
         description: '',
-        type: 'purchase',
+        type: 'referral',
         goal_value: 1,
         reward_points: 100,
         start_date: '',
@@ -42,7 +42,7 @@ export default function AdminChallengesPage() {
         setForm({
             title: '',
             description: '',
-            type: 'purchase',
+            type: 'referral',
             goal_value: 1,
             reward_points: 100,
             start_date: new Date().toISOString().split('T')[0],
@@ -259,10 +259,8 @@ export default function AdminChallengesPage() {
                                         onChange={handleInputChange}
                                         className="w-full px-3 py-1.5 border-[0.5px] border-black/50 rounded-[10px] text-xs focus:outline-none focus:border-black focus:ring-1 focus:ring-black/10 bg-white font-normal"
                                     >
-                                        <option value="purchase">Purchases Count</option>
                                         <option value="referral">Referrals Count</option>
-                                        <option value="steps">Steps Goal</option>
-                                        <option value="social">Social Actions</option>
+                                        <option value="purchase">Purchases Count</option>
                                     </select>
                                 </div>
                                 <div className="space-y-1">

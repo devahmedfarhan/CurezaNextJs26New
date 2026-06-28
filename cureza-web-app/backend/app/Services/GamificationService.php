@@ -46,6 +46,16 @@ class GamificationService
             
             'xp_daily_checkin' => (int) ($settings->get('xp_daily_checkin')?->value ?? 20),
             'points_daily_checkin' => (int) ($settings->get('points_daily_checkin')?->value ?? 0),
+
+            'xp_instagram_review' => (int) ($settings->get('xp_instagram_review')?->value ?? 500),
+            'points_instagram_review' => (int) ($settings->get('points_instagram_review')?->value ?? 250),
+
+            'xp_youtube_review' => (int) ($settings->get('xp_youtube_review')?->value ?? 1000),
+            'points_youtube_review' => (int) ($settings->get('points_youtube_review')?->value ?? 500),
+
+            'referral_module_enabled' => filter_var($settings->get('referral_module_enabled')?->value ?? true, FILTER_VALIDATE_BOOLEAN),
+            'influencer_module_enabled' => filter_var($settings->get('influencer_module_enabled')?->value ?? true, FILTER_VALIDATE_BOOLEAN),
+            'challenges_module_enabled' => filter_var($settings->get('challenges_module_enabled')?->value ?? true, FILTER_VALIDATE_BOOLEAN),
         ];
     }
 
@@ -221,6 +231,9 @@ class GamificationService
                         'credit',
                         $referral->id
                     );
+
+                    // Increment active referral challenges
+                    self::incrementChallengeProgress($referrer, 'referral', 1);
                 }
 
                 // Credit welcome points/XP to referee as well
@@ -237,6 +250,43 @@ class GamificationService
             });
         } catch (\Exception $e) {
             Log::error("Error completing referral for referee {$referee->id}: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Increment challenge progress for active user quests of a specific type.
+     */
+    public static function incrementChallengeProgress(User $user, string $type, int $increment = 1): void
+    {
+        try {
+            $joinedChallenges = \App\Models\UserChallenge::where('user_id', $user->id)
+                ->where('status', 'in_progress')
+                ->whereHas('challenge', function ($query) use ($type) {
+                    $query->where('type', $type)
+                        ->where('is_active', true)
+                        ->where('start_date', '<=', now())
+                        ->where('end_date', '>=', now());
+                })
+                ->get();
+
+            foreach ($joinedChallenges as $userChallenge) {
+                $challenge = $userChallenge->challenge;
+                $newValue = $userChallenge->current_value + $increment;
+                
+                $status = 'in_progress';
+                if ($newValue >= $challenge->goal_value) {
+                    $status = 'completed';
+                }
+
+                $userChallenge->update([
+                    'current_value' => $newValue,
+                    'status' => $status
+                ]);
+
+                Log::info("Incremented challenge progress for user {$user->id}, challenge {$challenge->id} (type: {$type}) to {$newValue}");
+            }
+        } catch (\Exception $e) {
+            Log::error("Error incrementing challenge progress for user {$user->id}: " . $e->getMessage());
         }
     }
 }

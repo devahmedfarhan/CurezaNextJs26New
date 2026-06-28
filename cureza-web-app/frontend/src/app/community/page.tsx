@@ -169,9 +169,9 @@ export default function CurezaCircle() {
     const progressPercent = progressRange > 0 ? Math.min(Math.max((progressCurrent / progressRange) * 100, 0), 100) : 100;
 
     return (
-        <div className="community-page min-h-screen bg-[#F8F3EF] text-[#052326] py-12">
+        <div className="community-page min-h-screen bg-[#F8F3EF] text-[#052326] pt-12 pb-4">
             
-            <div className="max-w-5xl mx-auto px-6 space-y-16">
+            <div className="container mx-auto px-4 md:px-6 space-y-16">
                 
                 {/* HERO SECTION */}
                 <header className="relative overflow-hidden bg-gradient-to-br from-[#052326] via-[#093539] to-[#0e444b] text-white py-16 px-8 rounded-lg">
@@ -446,7 +446,7 @@ export default function CurezaCircle() {
                             <button
                                 onClick={() => slide('right')}
                                 className="absolute right-[-8px] top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white border border-[#052326]/10 text-[#052326] hover:bg-[#F8F3EF] transition-all flex items-center justify-center disabled:opacity-30 disabled:pointer-events-none"
-                                disabled={activeIndex >= storeRewards.length - (typeof window !== 'undefined' && window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1)}
+                                disabled={activeIndex >= storeRewards.length - (typeof window !== 'undefined' ? (window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1) : 3)}
                             >
                                 <ChevronRight size={18} />
                             </button>
@@ -461,7 +461,7 @@ export default function CurezaCircle() {
                                             onClick={() => {
                                                 if (sliderRef.current) {
                                                     const width = sliderRef.current.clientWidth;
-                                                    const cols = window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1;
+                                                    const cols = typeof window !== 'undefined' ? (window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1) : 3;
                                                     sliderRef.current.scrollTo({ left: idx * (width / cols), behavior: 'smooth' });
                                                 }
                                             }}
@@ -632,13 +632,6 @@ export default function CurezaCircle() {
                     </section>
 
                 </main>
-
-                {/* Subfooter */}
-                <footer className="border-t border-[#052326]/5 py-8 text-center text-xs text-gray-400">
-                    <div>
-                        © {new Date().getFullYear()} Cureza Wellness Pvt Ltd. All rights reserved. • Built for community-driven growth
-                    </div>
-                </footer>
                 
             </div>
 

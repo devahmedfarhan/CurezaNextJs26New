@@ -158,6 +158,8 @@ const data = {
         { title: "Circle Home", url: "/superadmin/dashboard/community" },
         { title: "Activity Log", url: "/superadmin/dashboard/community/activity" },
         { title: "Referrals", url: "/superadmin/dashboard/community/referrals" },
+        { title: "Influencer Reviews Hub", url: "/superadmin/dashboard/community/social" },
+        { title: "Influencer Messages", url: "/superadmin/dashboard/community/messages" },
         { title: "Challenges", url: "/superadmin/dashboard/community/challenges" },
         { title: "Badges", url: "/superadmin/dashboard/community/badges" },
         { title: "Rewards Shop", url: "/superadmin/dashboard/community/rewards" },

@@ -304,6 +304,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/user/daily-checkin', [CommunityController::class, 'dailyCheckIn']);
     Route::post('/user/claim-event-points', [CommunityController::class, 'claimEventAttendance']);
     Route::get('/user/redemptions', [CommunityController::class, 'redemptionsHistory']);
+    Route::post('/user/circle/settings', [CommunityController::class, 'updateCircleSettings']);
 
     // Dashboard Overview
     Route::get('/user/dashboard', [DashboardController::class, 'index']);
@@ -337,6 +338,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/reviews', [\App\Http\Controllers\Api\Customer\ReviewController::class, 'myReviews']);
         Route::get('/products/{productId}/eligibility', [\App\Http\Controllers\Api\Customer\ReviewController::class, 'checkProductReviewEligibility']);
         Route::get('/doctors/{doctorId}/eligibility', [\App\Http\Controllers\Api\Customer\ReviewController::class, 'checkDoctorReviewEligibility']);
+        
+        // Customer Influencer/Social Reviews Submissions
+        Route::post('/social-submissions', [\App\Http\Controllers\Api\Customer\SocialSubmissionController::class, 'store']);
+        Route::get('/social-submissions', [\App\Http\Controllers\Api\Customer\SocialSubmissionController::class, 'index']);
+
+        // Customer Influencer Messages (Contact)
+        Route::post('/influencer-messages', [\App\Http\Controllers\Api\Customer\InfluencerMessageController::class, 'store']);
+        Route::get('/influencer-messages', [\App\Http\Controllers\Api\Customer\InfluencerMessageController::class, 'index']);
     });
 
     // Admin Routes
@@ -573,6 +582,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/rewards-redemptions/{id}/status', [\App\Http\Controllers\Api\Admin\AdminRewardController::class, 'updateRedemptionStatus']);
 
         Route::get('/referrals', [\App\Http\Controllers\Api\Admin\AdminReferralController::class, 'index']);
+
+        // Super Admin Influencer/Social Reviews Moderation
+        Route::get('/social-submissions', [\App\Http\Controllers\Api\SuperAdmin\SocialSubmissionController::class, 'index']);
+        Route::patch('/social-submissions/{id}/status', [\App\Http\Controllers\Api\SuperAdmin\SocialSubmissionController::class, 'updateStatus']);
+
+        // Super Admin Influencer Messages Moderation/Replies
+        Route::get('/influencer-messages', [\App\Http\Controllers\Api\SuperAdmin\InfluencerMessageController::class, 'index']);
+        Route::post('/influencer-messages/{id}/reply', [\App\Http\Controllers\Api\SuperAdmin\InfluencerMessageController::class, 'reply']);
 
         // Dashboard & Analytics
         Route::get('/dashboard', [\App\Http\Controllers\Api\Admin\DashboardController::class, 'index']);
