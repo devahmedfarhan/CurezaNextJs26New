@@ -12,6 +12,7 @@ import {
   Shield,
   CreditCard,
   ChevronRight,
+  Cpu,
   Bell,
   Award,
   Megaphone,
@@ -215,6 +216,15 @@ const data = {
         { title: "AISensy API Configuration", url: "/superadmin/dashboard/settings/notifications?tab=whatsapp" },
         { title: "Delivery Audit Logs", url: "/superadmin/dashboard/settings/notifications?tab=logs" },
         { title: "System Integration Guide", url: "/superadmin/dashboard/settings/notifications?tab=guide" },
+      ],
+    },
+    {
+      title: "System",
+      url: "/superadmin/dashboard/communication",
+      icon: Cpu,
+      permission: "settings",
+      items: [
+        { title: "Communication Center", url: "/superadmin/dashboard/communication" },
       ],
     },
     {

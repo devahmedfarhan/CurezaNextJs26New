@@ -120,39 +120,17 @@ class NotificationService
      */
     private static function sendEmail(string $email, string $subject, string $content): array
     {
-        // Fetch mail configurations from system settings to check if they are set
-        $mailHost = SystemSetting::where('key', 'mail_host')->value('value');
-        
-        if (empty($mailHost)) {
-            // Local dev fallback / Simulated send
-            Log::info("Simulating Email to {$email} | Subject: {$subject}");
-            return [
-                'success' => true,
-                'message' => 'Simulated email sent successfully (No SMTP configured).'
-            ];
-        }
-
         try {
-            Mail::html($content, function ($message) use ($email, $subject) {
-                $fromAddress = SystemSetting::where('key', 'mail_from_address')->value('value') ?: config('mail.from.address');
-                $fromName = SystemSetting::where('key', 'mail_from_name')->value('value') ?: config('mail.from.name');
-                
-                if ($fromAddress) {
-                    $message->from($fromAddress, $fromName);
-                }
-                $message->to($email)->subject($subject);
-            });
-
+            app(\App\Services\Communication\CommunicationService::class)->send($email, $subject, $content);
             return [
                 'success' => true,
-                'message' => 'Email sent successfully.'
+                'message' => 'Email queued and routed successfully.'
             ];
         } catch (\Exception $e) {
-            Log::error("SMTP Mail Send Failed: " . $e->getMessage());
-            // Fail gracefully for simulation in local workspace development
+            Log::error("Central Email Routing Failed: " . $e->getMessage());
             return [
-                'success' => true,
-                'message' => 'Simulated email sent (SMTP error occurred: ' . $e->getMessage() . ')'
+                'success' => false,
+                'message' => 'Central routing error: ' . $e->getMessage()
             ];
         }
     }

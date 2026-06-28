@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             NotificationSeeder::class,
             FaqSeeder::class,
             HsnCodeSeeder::class,
+            CommunicationSeeder::class,
         ]);
     }
 }

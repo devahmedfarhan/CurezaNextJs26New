@@ -703,6 +703,33 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/{id}/restore', [\App\Http\Controllers\Admin\MediaController::class, 'restore']);
             Route::delete('/{id}/force', [\App\Http\Controllers\Admin\MediaController::class, 'forceDestroy']);
         });
+
+        // Unified Communication Center Routes
+        Route::prefix('communication')->group(function () {
+            Route::get('/analytics', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'analytics']);
+            Route::get('/smtp', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'smtpList']);
+            Route::post('/smtp', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'smtpStore']);
+            Route::put('/smtp/{id}', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'smtpUpdate']);
+            Route::delete('/smtp/{id}', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'smtpDelete']);
+            Route::post('/smtp/test-connection', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'smtpTestConnection']);
+            Route::post('/smtp/{id}/test-email', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'smtpSendTestEmail']);
+
+            Route::get('/templates', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'templatesList']);
+            Route::post('/templates', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'templateStore']);
+            Route::put('/templates/{id}', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'templateUpdate']);
+            Route::delete('/templates/{id}', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'templateDelete']);
+
+            Route::get('/subscribers', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'subscribersList']);
+            Route::post('/subscribers', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'subscriberStore']);
+            Route::put('/subscribers/{id}', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'subscriberUpdate']);
+            Route::delete('/subscribers/{id}', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'subscriberDelete']);
+            Route::post('/subscribers/import', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'subscribersImport']);
+            Route::get('/subscribers/export', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'subscribersExport']);
+
+            Route::get('/logs', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'logsList']);
+            Route::get('/queue', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'queueStatus']);
+            Route::post('/queue/clear-failed', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'clearFailedQueue']);
+        });
     });
 });
 
@@ -741,6 +768,14 @@ Route::prefix('blog')->group(function () {
     Route::get('/tags/{slug}', [\App\Http\Controllers\Api\BlogController::class, 'byTag']);
     Route::get('/authors/{slug}', [\App\Http\Controllers\Api\BlogController::class, 'byAuthor']);
 });
+
+// Public newsletter opt-in verification & subscribe
+Route::get('/newsletter/verify', [\App\Http\Controllers\Api\Public\NewsletterVerificationController::class, 'verify']);
+Route::post('/public/newsletter/subscribe', [\App\Http\Controllers\Api\Public\NewsletterVerificationController::class, 'subscribe']);
+
+// Email Tracking Pixel & Redirects
+Route::get('/api/public/email/track-open/{id}', [\App\Http\Controllers\Api\Public\EmailTrackingController::class, 'trackOpen']);
+Route::get('/api/public/email/track-click', [\App\Http\Controllers\Api\Public\EmailTrackingController::class, 'trackClick']);
 
 
 

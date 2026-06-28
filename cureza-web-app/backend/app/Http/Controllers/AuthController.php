@@ -365,7 +365,12 @@ class AuthController extends Controller
             // Send actual email if type is email
             if ($type === 'email') {
                 try {
-                    \Illuminate\Support\Facades\Mail::to($loginId)->send(new \App\Mail\OtpMail($otp));
+                    app(\App\Services\Communication\CommunicationService::class)->send(
+                        $loginId,
+                        "Cureza Login OTP Verification",
+                        "auth.otp",
+                        ['otp' => $otp, 'name' => 'Valued User']
+                    );
                 } catch (\Exception $e) {
                     \Illuminate\Support\Facades\Log::error("Failed to send OTP email to {$loginId}: " . $e->getMessage());
                 }

@@ -49,7 +49,7 @@ const getPermissionForPath = (pathname: string): string | null => {
     if (pathname.includes('/superadmin/dashboard/cms') || pathname.includes('/superadmin/dashboard/menu')) {
         return 'cms';
     }
-    if (pathname.includes('/superadmin/dashboard/settings')) {
+    if (pathname.includes('/superadmin/dashboard/settings') || pathname.includes('/superadmin/dashboard/communication')) {
         return 'settings';
     }
     return null;

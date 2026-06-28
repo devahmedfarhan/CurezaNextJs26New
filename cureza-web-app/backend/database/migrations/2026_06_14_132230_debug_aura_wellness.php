@@ -19,7 +19,7 @@ class DebugAuraWellness extends Migration
     {
         $user = User::where('email', 'aurawellness@cureza-seller.com')->first();
         if (!$user) {
-            file_put_contents('d:/Cureza/seller_debug.json', json_encode(['error' => 'User not found'], JSON_PRETTY_PRINT));
+            file_put_contents(base_path('seller_debug.json'), json_encode(['error' => 'User not found'], JSON_PRETTY_PRINT));
             return;
         }
 
@@ -89,7 +89,7 @@ class DebugAuraWellness extends Migration
             }),
         ];
 
-        file_put_contents('d:/Cureza/seller_debug.json', json_encode($dump, JSON_PRETTY_PRINT));
+        file_put_contents(base_path('seller_debug.json'), json_encode($dump, JSON_PRETTY_PRINT));
     }
 
     /**
