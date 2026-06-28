@@ -290,8 +290,33 @@ class SellerOrderController extends Controller
         }
 
         // Update status
+        $oldStatus = $order->status;
         $order->status = $request->status;
         $order->save();
+
+        if ($request->status === 'delivered' && $oldStatus !== 'delivered') {
+            $user = $order->user;
+            if ($user) {
+                $rules = \App\Services\GamificationService::getRules();
+                $purchaseXP = $rules['xp_product_purchase'] ?? 100;
+                $pointsPer100 = $rules['points_per_100_spent'] ?? 10;
+                
+                $orderTotal = (float) ($order->total ?? 0);
+                $purchasePoints = floor($orderTotal / 100) * $pointsPer100;
+
+                \App\Services\GamificationService::adjustXPAndPoints(
+                    $user,
+                    $purchaseXP,
+                    $purchasePoints,
+                    "Delivered product purchase (Order #" . $order->order_number . ")",
+                    'credit',
+                    'order_' . $order->id
+                );
+
+                // Complete referral
+                \App\Services\GamificationService::completeReferral($user);
+            }
+        }
 
         return response()->json([
             'message' => 'Order status updated successfully',

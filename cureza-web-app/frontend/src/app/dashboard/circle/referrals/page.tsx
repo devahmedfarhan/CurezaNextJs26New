@@ -48,7 +48,7 @@ export default function CircleReferralPage() {
             <div className="text-center space-y-4">
                 <h1 className="text-3xl font-bold text-gray-900">Invite Friends & Earn Big!</h1>
                 <p className="text-gray-500 text-lg max-w-xl mx-auto">
-                    Share the wellness journey with your friends. They get a coupon reward on sign up, and you get <span className="font-bold text-green-600">1000 XP</span> when they make their first purchase.
+                    Share the wellness journey with your friends. They get a coupon reward on sign up, and you get <span className="font-bold text-[#052326]">bonus XP & redeemable Points</span> when they make their first purchase.
                 </p>
             </div>
 
@@ -100,8 +100,8 @@ export default function CircleReferralPage() {
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                 <div className="p-6 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
                     <h3 className="font-bold text-gray-900">Your Referrals</h3>
-                    <span className="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full">
-                        Total Earned: {totalEarned} XP
+                    <span className="bg-[#052326]/10 text-[#052326] text-xs font-bold px-3 py-1 rounded-full">
+                        Total Earned: {totalEarned} Points
                     </span>
                 </div>
                 {referrals.length === 0 ? (
@@ -129,7 +129,7 @@ export default function CircleReferralPage() {
                                                 ? 'bg-green-100 text-green-800' 
                                                 : 'bg-yellow-100 text-yellow-800'
                                         }`}>
-                                            {item.status === 'completed' ? `+${item.reward_points} XP` : 'Pending Purchase'}
+                                            {item.status === 'completed' ? `+${item.reward_points} Points` : 'Pending Purchase'}
                                         </span>
                                     </div>
                                 </div>
@@ -154,7 +154,7 @@ export default function CircleReferralPage() {
                 <div>
                     <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-4">3</div>
                     <h3 className="font-bold text-gray-900 mb-2">You Earn</h3>
-                    <p className="text-sm text-gray-500">Get 1000 XP credited to your wallet instantly upon their order completion.</p>
+                    <p className="text-sm text-gray-500">Get bonus Points & XP credited to your wallet instantly upon their order completion.</p>
                 </div>
             </div>
         </div>

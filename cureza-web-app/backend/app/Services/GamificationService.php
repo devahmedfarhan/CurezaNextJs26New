@@ -20,11 +20,32 @@ class GamificationService
     {
         $settings = SystemSetting::where('group', 'gamification')->get()->keyBy('key');
 
+        $legacy100Spent = $settings->get('xp_per_100_spent')?->value;
+        $legacyReview = $settings->get('xp_per_review')?->value;
+        $legacyPhoto = $settings->get('xp_per_photo_upload')?->value;
+        $legacyReferral = $settings->get('xp_per_referral')?->value;
+
         return [
-            'xp_per_100_spent' => (int) ($settings->get('xp_per_100_spent')?->value ?? 10),
-            'xp_per_review' => (int) ($settings->get('xp_per_review')?->value ?? 50),
-            'xp_per_photo_upload' => (int) ($settings->get('xp_per_photo_upload')?->value ?? 100),
-            'xp_per_referral' => (int) ($settings->get('xp_per_referral')?->value ?? 1000),
+            'xp_product_purchase' => (int) ($settings->get('xp_product_purchase')?->value ?? 100),
+            'points_per_100_spent' => (int) ($settings->get('points_per_100_spent')?->value ?? $legacy100Spent ?? 10),
+            
+            'xp_write_review' => (int) ($settings->get('xp_write_review')?->value ?? $legacyReview ?? 50),
+            'points_write_review' => (int) ($settings->get('points_write_review')?->value ?? 20),
+            
+            'xp_ugc_upload' => (int) ($settings->get('xp_ugc_upload')?->value ?? $legacyPhoto ?? 100),
+            'points_ugc_upload' => (int) ($settings->get('points_ugc_upload')?->value ?? 40),
+            
+            'xp_refer_friend' => (int) ($settings->get('xp_refer_friend')?->value ?? 200),
+            'points_refer_friend' => (int) ($settings->get('points_refer_friend')?->value ?? $legacyReferral ?? 100),
+            
+            'xp_upload_prescription' => (int) ($settings->get('xp_upload_prescription')?->value ?? 150),
+            'points_upload_prescription' => (int) ($settings->get('points_upload_prescription')?->value ?? 0),
+            
+            'xp_join_event' => (int) ($settings->get('xp_join_event')?->value ?? 250),
+            'points_join_event' => (int) ($settings->get('points_join_event')?->value ?? 50),
+            
+            'xp_daily_checkin' => (int) ($settings->get('xp_daily_checkin')?->value ?? 20),
+            'points_daily_checkin' => (int) ($settings->get('points_daily_checkin')?->value ?? 0),
         ];
     }
 
@@ -42,24 +63,28 @@ class GamificationService
     }
 
     /**
-     * Credit or debit reward points to a user.
+     * Adjust both XP and points for a user.
      */
-    public static function adjustPoints(User $user, int $points, string $description, string $type = 'credit', $referenceId = null): void
+    public static function adjustXPAndPoints(User $user, int $xp, int $points, string $description, string $type = 'credit', $referenceId = null): void
     {
-        if ($points <= 0) return;
+        if ($xp <= 0 && $points <= 0) return;
 
-        DB::transaction(function () use ($user, $points, $description, $type, $referenceId) {
+        DB::transaction(function () use ($user, $xp, $points, $description, $type, $referenceId) {
             $wallet = Wallet::firstOrCreate(
                 ['user_id' => $user->id],
-                ['balance' => 0.00, 'points' => 0]
+                ['balance' => 0.00, 'points' => 0, 'xp' => 0]
             );
 
             if ($type === 'credit') {
-                $wallet->increment('points', $points);
+                if ($xp > 0) {
+                    $wallet->increment('xp', $xp);
+                }
+                if ($points > 0) {
+                    $wallet->increment('points', $points);
+                }
             } else {
-                // Ensure points do not go below zero
-                $currentPoints = $wallet->points;
-                $pointsToDecrement = min($points, $currentPoints);
+                // Debit/Spend only affects points, not lifetime XP
+                $pointsToDecrement = min($points, $wallet->points);
                 if ($pointsToDecrement > 0) {
                     $wallet->decrement('points', $pointsToDecrement);
                 }
@@ -68,16 +93,25 @@ class GamificationService
             $wallet->transactions()->create([
                 'type' => $type,
                 'points' => $points,
+                'xp' => $xp,
                 'amount' => 0.00,
                 'description' => $description,
                 'reference_id' => $referenceId,
             ]);
 
-            Log::info("Adjusted points for user {$user->id}: {$points} XP ({$type}). Reason: {$description}");
+            Log::info("Adjusted gamification for user {$user->id}: {$xp} XP, {$points} Points ({$type}). Reason: {$description}");
 
             // Verify if user unlocked any new badges
             self::checkBadges($user);
         });
+    }
+
+    /**
+     * Credit or debit reward points to a user (backwards compatibility wrapper).
+     */
+    public static function adjustPoints(User $user, int $points, string $description, string $type = 'credit', $referenceId = null): void
+    {
+        self::adjustXPAndPoints($user, 0, $points, $description, $type, $referenceId);
     }
 
     /**
@@ -167,30 +201,33 @@ class GamificationService
 
             DB::transaction(function () use ($referral, $referee) {
                 $rules = self::getRules();
-                $referralPoints = $rules['xp_per_referral'];
+                $refXP = $rules['xp_refer_friend'] ?? 200;
+                $refPoints = $rules['points_refer_friend'] ?? 100;
 
                 // Update referral status
                 $referral->update([
                     'status' => 'completed',
-                    'reward_points' => $referralPoints,
+                    'reward_points' => $refPoints,
                 ]);
 
-                // Credit points to referrer
+                // Credit points/XP to referrer
                 $referrer = User::find($referral->referrer_id);
                 if ($referrer) {
-                    self::adjustPoints(
+                    self::adjustXPAndPoints(
                         $referrer,
-                        $referralPoints,
+                        $refXP,
+                        $refPoints,
                         "Referral completion bonus: Referred " . $referee->name,
                         'credit',
                         $referral->id
                     );
                 }
 
-                // Credit points to referee as well
-                self::adjustPoints(
+                // Credit welcome points/XP to referee as well
+                self::adjustXPAndPoints(
                     $referee,
-                    200, // Welcome discount points
+                    100, // Welcome XP
+                    50,  // Welcome Points
                     "Referral welcome bonus",
                     'credit',
                     $referral->id

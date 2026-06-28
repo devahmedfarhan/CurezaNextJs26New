@@ -18,9 +18,9 @@ class AdminCommunityController extends Controller
         $totalReferrals = Referral::count();
         $completedReferrals = Referral::where('status', 'completed')->count();
         
-        $totalXPDistributed = WalletTransaction::where('points', '>', 0)
+        $totalXPDistributed = WalletTransaction::where('xp', '>', 0)
             ->where('type', 'credit')
-            ->sum('points');
+            ->sum('xp');
             
         $totalRedemptions = RewardRedemption::count();
 
@@ -41,10 +41,20 @@ class AdminCommunityController extends Controller
     public function updateSettings(Request $request)
     {
         $validated = $request->validate([
-            'xp_per_100_spent' => 'required|integer|min:0',
-            'xp_per_review' => 'required|integer|min:0',
-            'xp_per_photo_upload' => 'required|integer|min:0',
-            'xp_per_referral' => 'required|integer|min:0',
+            'xp_product_purchase' => 'required|integer|min:0',
+            'points_per_100_spent' => 'required|integer|min:0',
+            'xp_write_review' => 'required|integer|min:0',
+            'points_write_review' => 'required|integer|min:0',
+            'xp_ugc_upload' => 'required|integer|min:0',
+            'points_ugc_upload' => 'required|integer|min:0',
+            'xp_refer_friend' => 'required|integer|min:0',
+            'points_refer_friend' => 'required|integer|min:0',
+            'xp_upload_prescription' => 'required|integer|min:0',
+            'points_upload_prescription' => 'required|integer|min:0',
+            'xp_join_event' => 'required|integer|min:0',
+            'points_join_event' => 'required|integer|min:0',
+            'xp_daily_checkin' => 'required|integer|min:0',
+            'points_daily_checkin' => 'required|integer|min:0',
         ]);
 
         GamificationService::updateRules($validated);

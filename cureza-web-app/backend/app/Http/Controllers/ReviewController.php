@@ -86,10 +86,55 @@ class ReviewController extends Controller
         ]);
 
         $review = Review::findOrFail($id);
+        $oldStatus = $review->status;
         $review->update(['status' => $request->status]);
 
         // Update product stats
-        $review->product->updateRatingStats();
+        if ($review->product) {
+            $review->product->updateRatingStats();
+        }
+
+        // Award points/XP on review approval
+        $isNowApproved = in_array($request->status, ['approved', 'active']);
+        $wasPreviouslyApproved = in_array($oldStatus, ['approved', 'active']);
+        
+        if ($isNowApproved && !$wasPreviouslyApproved) {
+            $reviewer = \App\Models\User::where('email', $review->email)->first() ?? $review->customer;
+            if ($reviewer) {
+                $rules = \App\Services\GamificationService::getRules();
+                $reviewXP = $rules['xp_write_review'] ?? 50;
+                $reviewPoints = $rules['points_write_review'] ?? 20;
+
+                \App\Services\GamificationService::adjustXPAndPoints(
+                    $reviewer,
+                    $reviewXP,
+                    $reviewPoints,
+                    "Approved honest review for product: " . ($review->product->name ?? 'Product'),
+                    'credit',
+                    'review_' . $review->id
+                );
+
+                // Check for UGC Media
+                $hasMedia = (!empty($review->images) && count($review->images) > 0) 
+                    || !empty($review->video_url) 
+                    || (!empty($review->media) && count($review->media) > 0)
+                    || ($review->mediaItems()->count() > 0);
+
+                if ($hasMedia) {
+                    $ugcXP = $rules['xp_ugc_upload'] ?? 100;
+                    $ugcPoints = $rules['points_ugc_upload'] ?? 40;
+
+                    \App\Services\GamificationService::adjustXPAndPoints(
+                        $reviewer,
+                        $ugcXP,
+                        $ugcPoints,
+                        "Approved UGC photo/video upload for: " . ($review->product->name ?? 'Product'),
+                        'credit',
+                        'ugc_' . $review->id
+                    );
+                }
+            }
+        }
 
         return response()->json(['message' => 'Review status updated successfully.', 'review' => $review]);
     }

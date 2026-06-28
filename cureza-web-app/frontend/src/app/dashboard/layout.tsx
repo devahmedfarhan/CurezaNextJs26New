@@ -51,7 +51,6 @@ const SIDEBAR_SECTIONS = [
         title: 'Wellness & Rewards',
         links: [
             { name: 'Cureza Circle', href: '/dashboard/circle', icon: Star },
-            { name: 'Challenges', href: '/dashboard/circle/challenges', icon: Target },
             { name: 'Wallet & Rewards', href: '/dashboard/circle/rewards', icon: Wallet },
             { name: 'Refer & Earn', href: '/dashboard/circle/referrals', icon: Share2 },
             { name: 'My Reviews', href: '/dashboard/reviews', icon: Star },

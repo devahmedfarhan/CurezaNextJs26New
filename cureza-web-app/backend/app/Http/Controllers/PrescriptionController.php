@@ -347,6 +347,23 @@ class PrescriptionController extends Controller
             'prescription_path' => $fullPath
         ]);
 
+        // Award XP to patient for prescription validation
+        $rules = \App\Services\GamificationService::getRules();
+        $prescriptionXP = $rules['xp_upload_prescription'] ?? 150;
+        $prescriptionPoints = $rules['points_upload_prescription'] ?? 0;
+        
+        $patient = \App\Models\User::find($patientUserId);
+        if ($patient && ($prescriptionXP > 0 || $prescriptionPoints > 0)) {
+            \App\Services\GamificationService::adjustXPAndPoints(
+                $patient,
+                $prescriptionXP,
+                $prescriptionPoints,
+                "Uploaded valid prescription (Approved for product: " . $orderItem->product_name . ")",
+                'credit',
+                'prescription_' . $prescription->id
+            );
+        }
+
         return response()->json([
             'message' => 'Product prescription request approved and generated successfully',
             'prescription' => $prescription,

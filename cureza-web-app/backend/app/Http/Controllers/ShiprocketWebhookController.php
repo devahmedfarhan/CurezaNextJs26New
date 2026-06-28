@@ -161,9 +161,34 @@ class ShiprocketWebhookController extends Controller
                 // Check if ALL vendor shipments under this parent order are delivered
                 $undeliveredCount = $order->shipments()->where('status', '!=', 'delivered')->count();
                 if ($undeliveredCount === 0) {
+                    $oldOrderStatus = $order->status;
                     $order->status = 'delivered';
                     $order->save();
                     Log::info("All shipments for Order ID {$order->id} are delivered. Order marked DELIVERED.");
+
+                    if ($oldOrderStatus !== 'delivered') {
+                        $user = $order->user;
+                        if ($user) {
+                            $rules = \App\Services\GamificationService::getRules();
+                            $purchaseXP = $rules['xp_product_purchase'] ?? 100;
+                            $pointsPer100 = $rules['points_per_100_spent'] ?? 10;
+                            
+                            $orderTotal = (float) ($order->total ?? 0);
+                            $purchasePoints = floor($orderTotal / 100) * $pointsPer100;
+
+                            \App\Services\GamificationService::adjustXPAndPoints(
+                                $user,
+                                $purchaseXP,
+                                $purchasePoints,
+                                "Delivered product purchase (Order #" . $order->order_number . ")",
+                                'credit',
+                                'order_' . $order->id
+                            );
+
+                            // Complete referral
+                            \App\Services\GamificationService::completeReferral($user);
+                        }
+                    }
                 }
             }
         }

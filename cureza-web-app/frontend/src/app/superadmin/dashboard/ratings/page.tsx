@@ -745,27 +745,29 @@ function RatingsContent() {
                                                     <span>Status: {review.status}</span>
                                                 </div>
                                                 <div className="grid grid-cols-2 gap-2">
-                                                    {review.status !== 'hidden' ? (
+                                                    {review.status === 'hidden' ? (
+                                                        <span className="flex items-center justify-center gap-1 py-2 bg-red-50 dark:bg-red-950/20 text-red-500 rounded-[10px] text-xs font-medium border-[0.5px] border-red-200/50 cursor-not-allowed">
+                                                            Rejected
+                                                        </span>
+                                                    ) : (
                                                         <button
                                                             onClick={() => handleStatusUpdate(review.id, 'hidden')}
-                                                            className="flex items-center justify-center gap-1 py-2 bg-red-55 hover:bg-red-100 text-red-600 dark:bg-red-950/30 rounded-[10px] text-xs font-medium transition-colors border-[0.5px] border-black/50"
+                                                            className="flex items-center justify-center gap-1 py-2 bg-red-50 hover:bg-red-105 text-red-600 dark:bg-red-950/30 rounded-[10px] text-xs font-medium transition-colors border-[0.5px] border-red-200/50"
                                                         >
                                                             <X size={14} /> Reject
                                                         </button>
-                                                    ) : (
-                                                        <div />
                                                     )}
-                                                    {review.status !== 'active' ? (
-                                                        <button
-                                                            onClick={() => handleStatusUpdate(review.id, 'active')}
-                                                            className="flex items-center justify-center gap-1 py-2 bg-green-600 hover:bg-green-700 text-white rounded-[10px] text-xs font-medium transition-colors border-[0.5px] border-transparent col-span-2 shadow-none"
-                                                        >
-                                                            <Check size={14} /> Approve
-                                                        </button>
-                                                    ) : (
+                                                    {review.status === 'active' ? (
                                                         <span className="flex items-center justify-center gap-1 py-2 bg-neutral-50 dark:bg-neutral-850 text-neutral-400 dark:text-neutral-600 rounded-[10px] text-xs font-medium border-[0.5px] border-black/50 dark:border-neutral-800 cursor-not-allowed">
                                                             <Check size={14} /> Published
                                                         </span>
+                                                    ) : (
+                                                        <button
+                                                            onClick={() => handleStatusUpdate(review.id, 'active')}
+                                                            className="flex items-center justify-center gap-1 py-2 bg-green-600 hover:bg-green-700 text-white rounded-[10px] text-xs font-medium transition-colors border-[0.5px] border-transparent shadow-none"
+                                                        >
+                                                            <Check size={14} /> Approve
+                                                        </button>
                                                     )}
                                                 </div>
                                             </div>

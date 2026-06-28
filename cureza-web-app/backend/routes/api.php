@@ -301,6 +301,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/badges', [CommunityController::class, 'badges']);
     Route::get('/user/rewards', [CommunityController::class, 'rewardsList']);
     Route::post('/user/rewards/{id}/redeem', [CommunityController::class, 'redeemReward']);
+    Route::post('/user/daily-checkin', [CommunityController::class, 'dailyCheckIn']);
+    Route::post('/user/claim-event-points', [CommunityController::class, 'claimEventAttendance']);
     Route::get('/user/redemptions', [CommunityController::class, 'redemptionsHistory']);
 
     // Dashboard Overview

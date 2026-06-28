@@ -26,3 +26,79 @@ cd C:\Users\Admin\OneDrive\Documents\Cureza\cureza-web-app\backend
 php artisan serve
 
 
+# Universal Page Revamp Prompt (AntiGravirt)
+
+Revamp the entire page while maintaining a clean, modern, premium, and highly readable UI/UX.
+
+## Card Design
+
+* Apply **8px border-radius** to all cards.
+* Remove **all box shadows** and **drop shadows**.
+* Use only a subtle border.
+
+```css
+border-radius: 8px;
+border: 1px solid rgba(0, 0, 0, 0.05) !important;
+border-color: rgba(85, 85, 85, 0.18) !important;
+box-shadow: none !important;
+filter: none !important;
+```
+
+## Typography
+
+* Use a clean, modern, highly readable font.
+* Avoid bold typography.
+* Font weight should remain between **400–600** (Regular to Semi Bold).
+* Do not use heavy bold fonts.
+* Improve readability with proper line height and spacing.
+* Text should **not** be in ALL CAPS.
+* Use **Capitalized (Title Case)** wherever appropriate.
+* Maintain consistent typography throughout the page.
+
+## Layout
+
+* Content width should match the **Header Container Width** for perfect alignment.
+* Maintain consistent horizontal spacing.
+* Use proper whitespace between sections.
+* Keep alignment clean and balanced.
+
+## Responsive Design
+
+* Entire page must be **100% Mobile Responsive**.
+* Ensure proper spacing, typography scaling, and layout on:
+
+  * Desktop
+  * Laptop
+  * Tablet
+  * Mobile
+
+## Cards & Sections
+
+* If any section contains too many cards causing excessive vertical scrolling,
+  automatically convert that card layout into a **responsive horizontal carousel/slider**.
+* Carousel should support:
+
+  * Swipe on Mobile
+  * Mouse Drag on Desktop
+  * Navigation Arrows
+  * Pagination Dots (if needed)
+  * Smooth Animation
+* Avoid long scrolling inside a single section.
+
+## UI Consistency
+
+* Keep spacing, padding, margins, and border radius consistent across the page.
+* Maintain a premium minimal design.
+* Avoid unnecessary visual effects.
+* Use subtle hover animations only where needed.
+* Preserve accessibility and readability.
+
+## Performance
+
+* Do not use heavy animations.
+* Keep the UI lightweight and fast.
+* Ensure components render efficiently.
+
+## Goal
+
+Create a modern, premium, clean, minimal, and user-friendly interface with excellent readability, consistent spacing, responsive layouts, and an optimized browsing experience across all devices.
