@@ -193,7 +193,7 @@
 
         <div style="margin-top: 30px; text-align: center; font-size: 12px; color: #666;">
             <p>This is a computer-generated shipping label. No signature required.</p>
-            <p>For support, contact: support@cureza.com</p>
+            <p>For support, contact: support@cureza.in</p>
         </div>
     </div>
 </body>

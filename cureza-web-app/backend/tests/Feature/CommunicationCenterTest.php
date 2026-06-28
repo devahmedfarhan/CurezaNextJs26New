@@ -28,7 +28,7 @@ class CommunicationCenterTest extends TestCase
         // Create admin user for requests authentication
         $this->admin = User::factory()->create([
             'role' => 'super_admin',
-            'email' => 'admin@cureza.com',
+            'email' => 'admin@cureza.in',
         ]);
 
         // Seed a default active SMTP provider globally (for all tests)
@@ -36,11 +36,11 @@ class CommunicationCenterTest extends TestCase
             'provider_name' => 'Hostinger Test SMTP',
             'host' => 'smtp.hostinger.com',
             'port' => 465,
-            'username' => 'admin@cureza.com',
+            'username' => 'admin@cureza.in',
             'password' => 'secret',
             'encryption' => 'ssl',
             'sender_name' => 'Cureza',
-            'sender_email' => 'admin@cureza.com',
+            'sender_email' => 'admin@cureza.in',
             'is_active' => true,
         ]);
     }
@@ -59,7 +59,7 @@ class CommunicationCenterTest extends TestCase
             'password' => 'secret-pass',
             'encryption' => 'tls',
             'sender_name' => 'Cureza Test',
-            'sender_email' => 'sender@cureza.com',
+            'sender_email' => 'sender@cureza.in',
             'timeout' => 30,
             'retry_count' => 3,
             'is_active' => true,

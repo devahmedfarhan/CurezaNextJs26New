@@ -258,7 +258,7 @@
               GSTIN: <span style="color: #1e293b;">27ABVFA8814A1ZB</span> &nbsp;|&nbsp; 
               PAN: <span style="color: #1e293b;">ABVFA8814A</span>
             </div>
-            <div style="font-size: 10px; color: #64748b;">Email: <span style="color: #1e293b;">support@cureza.com</span></div>
+            <div style="font-size: 10px; color: #64748b;">Email: <span style="color: #1e293b;">support@cureza.in</span></div>
           </div>
         </td>
         <td style="width: 40%; text-align: right; vertical-align: top;">

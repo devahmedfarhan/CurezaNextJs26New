@@ -571,7 +571,7 @@ export default function AdminOrderDetailPage() {
                                 </div>
                                 <div className="pt-2 flex gap-3">
                                     <a
-                                        href={`https://track.cureza.com/?awb=${order.tracking_id}&provider=${encodeURIComponent(order.tracking_provider || '')}`}
+                                        href={`https://track.cureza.in/?awb=${order.tracking_id}&provider=${encodeURIComponent(order.tracking_provider || '')}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-flex items-center gap-2 bg-black text-white dark:bg-white dark:text-black px-4 py-2 rounded-[10px] text-xs font-semibold hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-colors shadow-none border-[0.5px] border-transparent"

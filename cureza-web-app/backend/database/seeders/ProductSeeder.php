@@ -22,13 +22,13 @@ class ProductSeeder extends Seeder
         // But for now, let's stick to Product.
         Schema::enableForeignKeyConstraints();
 
-        $seller = User::where('email', 'seller@cureza.com')->first();
+        $seller = User::where('email', 'seller@cureza.in')->first();
 
         if (!$seller) {
             // Create seller if missing (failsafe)
             $seller = User::create([
                 'name' => 'AyurLife Organics',
-                'email' => 'seller@cureza.com',
+                'email' => 'seller@cureza.in',
                 'password' => bcrypt('password'),
                 'role' => 'vendor',
                 'phone' => '9876543211',

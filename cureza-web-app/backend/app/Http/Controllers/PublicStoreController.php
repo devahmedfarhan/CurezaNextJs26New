@@ -66,7 +66,7 @@ class PublicStoreController extends Controller
                 if (empty($customerIds)) {
                     $customer = \App\Models\User::create([
                         'name' => 'John Doe',
-                        'email' => 'customer_demo_' . rand(100, 999) . '@cureza.com',
+                        'email' => 'customer_demo_' . rand(100, 999) . '@cureza.in',
                         'password' => bcrypt('password'),
                         'role' => 'customer',
                     ]);
@@ -106,7 +106,7 @@ class PublicStoreController extends Controller
                             'status' => 'active',
                             'reviewed_at' => now()->subDays(rand(1, 30)),
                             'full_name' => $data['name'],
-                            'email' => strtolower(str_replace(' ', '_', $data['name'])) . '@cureza.com',
+                            'email' => strtolower(str_replace(' ', '_', $data['name'])) . '@cureza.in',
                         ]);
                     }
                 }

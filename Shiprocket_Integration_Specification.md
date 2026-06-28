@@ -159,7 +159,7 @@ To keep customers updated dynamically without manual polling, we will configure 
 ### 5.1. Webhook Setup Rules
 We will register our callback listener under the Shiprocket account settings (**Settings ➔ API ➔ Webhooks**). The endpoint must comply with Shiprocket's developer guidelines:
 
-* **Webhook Listener URL:** `https://api.cureza.com/api/v1/updates/callback`
+* **Webhook Listener URL:** `https://api.cureza.in/api/v1/updates/callback`
   * *Critical Rule:* The webhook URL path **must not** contain keywords like `shiprocket`, `kartrocket`, `sr`, or `kr`.
 * **Method:** `POST`
 * **Headers:** The request will set `Content-Type: application/json`.

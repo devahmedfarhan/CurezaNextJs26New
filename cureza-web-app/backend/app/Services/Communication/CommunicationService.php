@@ -189,7 +189,7 @@ class CommunicationService
                         <p>&copy; " . date('Y') . " Cureza. All Rights Reserved.</p>
                         <p>Veer Nariman Rd, Fort, Mumbai 400001, MH</p>
                         <p style=\"margin-top: 15px; font-size: 10px;\">
-                            You are receiving this email because you registered or subscribed at cureza.com.
+                            You are receiving this email because you registered or subscribed at cureza.in.
                             <br>
                             <a href=\"{$unsubscribeUrl}\" style=\"color: #D4AF37; text-decoration: underline;\">Unsubscribe</a>
                         </p>

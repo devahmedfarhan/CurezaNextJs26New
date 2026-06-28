@@ -122,11 +122,11 @@ class AdminNotificationController extends Controller
             'carrier' => 'Delhivery Express',
             'tracking_number' => 'AWB884930103',
             'est_delivery_date' => Carbon::now()->addDays(3)->format('d-M-Y'),
-            'tracking_link' => 'https://cureza.com/track/AWB884930103',
-            'review_link' => 'https://cureza.com/reviews/add?order=9999',
-            'cart_link' => 'https://cureza.com/cart',
+            'tracking_link' => 'https://cureza.in/track/AWB884930103',
+            'review_link' => 'https://cureza.in/reviews/add?order=9999',
+            'cart_link' => 'https://cureza.in/cart',
             'product_name' => 'Cureza Ashwagandha Premium Extract',
-            'product_link' => 'https://cureza.com/product/ashwagandha-premium-extract',
+            'product_link' => 'https://cureza.in/product/ashwagandha-premium-extract',
         ];
 
         $result = NotificationService::send($template->code, $recipient, $dummyPlaceholders);

@@ -5,11 +5,11 @@ export const config = {
     // - Android Emulator: 'http://10.0.2.2:8000/api'
     // - iOS Simulator: 'http://localhost:8000/api'
     // - Physical Device (same WiFi): 'http://192.168.1.5:8000/api'
-    // - Production: 'https://api.cureza.com/api'
+    // - Production: 'https://api.cureza.in/api'
 
     API_BASE_URL: __DEV__
         ? 'http://192.168.1.5:8000/api' // Physical device via Expo Go
-        : 'https://api.cureza.com/api',
+        : 'https://api.cureza.in/api',
 
 
     // App Info

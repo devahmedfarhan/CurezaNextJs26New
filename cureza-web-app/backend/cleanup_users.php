@@ -51,9 +51,9 @@ try {
     DB::beginTransaction();
 
     $usersToKeepEmails = [
-        'admin@cureza.com',
-        'doctor@cureza.com',
-        'customer@cureza.com',
+        'admin@cureza.in',
+        'doctor@cureza.in',
+        'customer@cureza.in',
         'aurawellness@cureza-seller.com',
         'support@cureza.in'
     ];

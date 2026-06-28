@@ -185,7 +185,7 @@ export default function Footer() {
                   <span className="text-[10px] uppercase font-bold text-[#F8F3EF]/40 tracking-wider block mb-1">Grievance & Registry Officer</span>
                   <p className="text-[10px] text-[#F8F3EF]/75 font-medium leading-relaxed">
                     Grievance Officer: Mr. Sameer Verma<br />
-                    Email: compliance@cureza.com<br />
+                    Email: compliance@cureza.in<br />
                     Phone: +91 80 4099 2818
                   </p>
                 </li>

@@ -520,7 +520,7 @@ All communication between Frontend and Backend happens via secure JSON APIs.
 
 - **Meta Tags:** Dynamic generation of Title, Description, and Keywords based on product content.
 - **Semantic HTML:** Proper use of H1, H2, H3 tags for content hierarchy.
-- **URL Structure:** Clean, human-readable URLs (e.g., cureza.com/shop/ayurveda/dabur-chyawanprash).
+- **URL Structure:** Clean, human-readable URLs (e.g., cureza.in/shop/ayurveda/dabur-chyawanprash).
 - **Internal Linking:** Smart cross-linking between Blog posts, Categories, and Products to distribute 'link juice'.
 
 ### 8.3 Schema Markup (Structured Data)

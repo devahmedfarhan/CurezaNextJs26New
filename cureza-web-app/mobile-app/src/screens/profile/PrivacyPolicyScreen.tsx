@@ -127,7 +127,7 @@ export const PrivacyPolicyScreen: React.FC = () => {
                         If you have any questions about this privacy policy or our data practices, please contact us at:
                     </Text>
                     <View style={styles.contactBox}>
-                        <Text style={styles.contactItem}>Email: privacy@cureza.com</Text>
+                        <Text style={styles.contactItem}>Email: privacy@cureza.in</Text>
                         <Text style={styles.contactItem}>Phone: +91 9782425733</Text>
                         <Text style={styles.contactItem}>Address: Jaipur, Rajasthan, India</Text>
                     </View>

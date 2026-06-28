@@ -16,7 +16,7 @@ class UsersSeeder extends Seeder
     {
         // 1. Super Admin
         User::updateOrCreate(
-            ['email' => 'admin@cureza.com'],
+            ['email' => 'admin@cureza.in'],
             [
                 'name' => 'Super Admin',
                 'password' => Hash::make('password'),
@@ -27,7 +27,7 @@ class UsersSeeder extends Seeder
 
         // 2. Doctor
         User::updateOrCreate(
-            ['email' => 'doctor@cureza.com'],
+            ['email' => 'doctor@cureza.in'],
             [
                 'name' => 'Dr. Aravind Sharma',
                 'password' => Hash::make('password'),
@@ -43,7 +43,7 @@ class UsersSeeder extends Seeder
 
         // 4. Customer
         User::updateOrCreate(
-            ['email' => 'customer@cureza.com'],
+            ['email' => 'customer@cureza.in'],
             [
                 'name' => 'Rahul Verma',
                 'password' => Hash::make('password'),

@@ -353,7 +353,7 @@
                 GSTIN: <span style="color: #1e293b;">29ABCDE1234F1Z5</span> &nbsp;|&nbsp; 
                 PAN: <span style="color: #1e293b;">ABCDE1234F</span>
               </div>
-              <div class="text-xs text-muted">Email: <span style="color: #1e293b;">support@cureza.com</span></div>
+              <div class="text-xs text-muted">Email: <span style="color: #1e293b;">support@cureza.in</span></div>
             </div>
           </td>
 

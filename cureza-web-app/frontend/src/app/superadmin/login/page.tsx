@@ -127,7 +127,7 @@ export default function AdminLoginPage() {
                                         type="email"
                                         required
                                         className="block w-full rounded-xl border border-[#052326]/12 bg-[#F8F3EF]/40 text-[#052326] py-3 pl-10 pr-4 placeholder:text-gray-400 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#052326] focus:border-transparent transition-all"
-                                        placeholder="admin@cureza.com"
+                                        placeholder="admin@cureza.in"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                     />

@@ -456,7 +456,7 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
                                     {/* User Details */}
                                     <div className="p-4 border-b-[0.5px] border-black/50 bg-neutral-50/50">
                                         <p className="text-xs font-bold text-neutral-900 truncate">{user?.name || 'Admin User'}</p>
-                                        <p className="text-[10px] text-neutral-500 truncate mt-0.5">{user?.email || 'admin@cureza.com'}</p>
+                                        <p className="text-[10px] text-neutral-500 truncate mt-0.5">{user?.email || 'admin@cureza.in'}</p>
                                         <div className="mt-2.5 inline-flex items-center gap-1 text-[9px] font-bold bg-neutral-900 text-white px-2 py-0.5 rounded border-[0.5px] border-black/50">
                                             <Shield size={10} />
                                             <span>{user?.role === 'super_admin' ? 'SUPER ADMIN' : 'ADMINISTRATOR'}</span>

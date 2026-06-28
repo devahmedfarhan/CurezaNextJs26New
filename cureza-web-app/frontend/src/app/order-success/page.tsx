@@ -1338,7 +1338,7 @@ function OrderSuccessContent() {
                                 PAN: <span className="text-gray-800">ABVFA8814A</span>
                             </div>
                             <div className="text-[11px] text-gray-500">
-                                Email: <span className="text-gray-800">support@cureza.com</span>
+                                Email: <span className="text-gray-800">support@cureza.in</span>
                             </div>
                         </div>
                     </div>

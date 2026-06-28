@@ -466,7 +466,7 @@ export default function AdminTeamPage() {
                                 value={memberFormData.email}
                                 onChange={(e) => setMemberFormData({ ...memberFormData, email: e.target.value })}
                                 className={`w-full px-4 py-2.5 text-xs font-normal border-[0.5px] border-black/50 rounded-[10px] focus:outline-none focus:ring-1 focus:ring-black focus:border-black ${editingMember ? 'bg-neutral-50 text-neutral-400 cursor-not-allowed border-black/50' : ''}`}
-                                placeholder="email@cureza.com"
+                                placeholder="email@cureza.in"
                             />
                         </div>
                         <div>

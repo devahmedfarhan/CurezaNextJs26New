@@ -80,7 +80,7 @@ class SendEmailJob implements ShouldQueue
                     'password' => \App\Models\SystemSetting::where('key', 'mail_password')->value('value'),
                     'encryption' => \App\Models\SystemSetting::where('key', 'mail_encryption')->value('value') ?: 'tls',
                     'sender_name' => \App\Models\SystemSetting::where('key', 'mail_from_name')->value('value') ?: 'Cureza',
-                    'sender_email' => \App\Models\SystemSetting::where('key', 'mail_from_address')->value('value') ?: 'hello@cureza.com',
+                    'sender_email' => \App\Models\SystemSetting::where('key', 'mail_from_address')->value('value') ?: 'hello@cureza.in',
                 ]);
             }
         }

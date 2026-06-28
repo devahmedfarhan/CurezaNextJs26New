@@ -82,7 +82,7 @@ class SecurityHardeningTest extends TestCase
     {
         $this->withoutMiddleware(\Illuminate\Routing\Middleware\ThrottleRequests::class);
 
-        $loginId = 'customer@cureza.com';
+        $loginId = 'customer@cureza.in';
         $user = User::factory()->create([
             'email' => $loginId,
             'role' => 'customer'

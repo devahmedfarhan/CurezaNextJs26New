@@ -516,7 +516,7 @@ export default function SellerProfilePage() {
                         <div className="bg-white p-5 rounded-lg border border-neutral-950/15 shadow-sm font-sans max-w-xl">
                             <div className="text-xs text-gray-500 flex items-center gap-1.5 mb-1.5 select-none">
                                 <span className="bg-[#f1f3f4] px-1.5 py-0.5 rounded text-[10px] font-semibold text-[#3c4043]">Cureza</span>
-                                <span className="text-[#3c4043]">https://www.cureza.com &gt; brand &gt; {profile?.slug || 'aura-wellness'}</span>
+                                <span className="text-[#3c4043]">https://www.cureza.in &gt; brand &gt; {profile?.slug || 'aura-wellness'}</span>
                             </div>
                             <h4 className="text-xl text-[#1a0dab] hover:underline cursor-pointer font-normal leading-tight mb-1">
                                 {fullMetaTitle}

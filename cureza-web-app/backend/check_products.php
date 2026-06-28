@@ -7,7 +7,7 @@ $kernel->bootstrap();
 try {
     echo "--- Seller Accounts & Data check (Corrected Columns) ---\n";
     $emails = [
-        'seller@cureza.com',
+        'seller@cureza.in',
         'aurawellness@cureza-seller.com',
         'vedicpure@cureza-seller.com',
         'hemphorizon@cureza-seller.com'

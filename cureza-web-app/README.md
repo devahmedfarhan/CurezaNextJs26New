@@ -592,6 +592,6 @@ This project is proprietary software. All rights reserved.
 
 **Built with ❤️ by the Cureza Team**
 
-[🌐 Website](http://localhost:3000) • [📧 Contact](mailto:support@cureza.com) • [📚 Documentation](./SETUP_GUIDE.md)
+[🌐 Website](http://localhost:3000) • [📧 Contact](mailto:support@cureza.in) • [📚 Documentation](./SETUP_GUIDE.md)
 
 </div>

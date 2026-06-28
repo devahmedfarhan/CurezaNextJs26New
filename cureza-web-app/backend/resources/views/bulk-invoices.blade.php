@@ -195,7 +195,7 @@
 
         <div class="footer">
             <p>Thank you for your business!</p>
-            <p>For support, contact: support@cureza.com</p>
+            <p>For support, contact: support@cureza.in</p>
         </div>
     </div>
     @endforeach

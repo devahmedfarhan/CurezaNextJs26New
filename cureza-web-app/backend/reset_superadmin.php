@@ -10,7 +10,7 @@ $kernel->bootstrap();
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-$email = 'admin@cureza.com';
+$email = 'admin@cureza.in';
 $password = 'password';
 
 $user = User::firstOrNew(['email' => $email]);

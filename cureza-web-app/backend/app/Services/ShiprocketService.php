@@ -208,7 +208,7 @@ class ShiprocketService
             'billing_pincode' => $shipping['pincode'] ?? $shipping['zip'] ?? 'N/A',
             'billing_state' => $shipping['state'] ?? 'N/A',
             'billing_country' => 'India',
-            'billing_email' => $order->user->email ?? 'customer@cureza.com',
+            'billing_email' => $order->user->email ?? 'customer@cureza.in',
             'billing_phone' => $shipping['phone'] ?? $order->user->phone ?? '0000000000',
             'shipping_is_billing' => true,
             'order_items' => $orderItemsPayload,

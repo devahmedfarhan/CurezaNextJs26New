@@ -1,8 +1,8 @@
 Stakeholder Role	Login Email	Password	Dashboard/Login URL
-Super Admin	admin@cureza.com	password	http://localhost:3000/superadmin
-Doctor	doctor@cureza.com	password	http://localhost:3000/doctor
-Customer (User)	customer@cureza.com	password	http://localhost:3000/login
-Seller / Vendor	seller@cureza.com	password	http://localhost:3000/seller
+Super Admin	admin@cureza.in	password	http://localhost:3000/superadmin
+Doctor	doctor@cureza.in	password	http://localhost:3000/doctor
+Customer (User)	customer@cureza.in	password	http://localhost:3000/login
+Seller / Vendor	seller@cureza.in	password	http://localhost:3000/seller
 1	Aura Wellness	aurawellness@cureza-seller.com	password123
 2	Vedic Pure	vedicpure@cureza-seller.com	password123
 3	Hemp Horizon	hemphorizon@cureza-seller.com	password123

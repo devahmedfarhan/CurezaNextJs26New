@@ -45,7 +45,7 @@ export const HelpSupportScreen: React.FC = () => {
     };
 
     const handleEmail = () => {
-        Linking.openURL('mailto:support@cureza.com');
+        Linking.openURL('mailto:support@cureza.in');
     };
 
     const handleWhatsApp = () => {

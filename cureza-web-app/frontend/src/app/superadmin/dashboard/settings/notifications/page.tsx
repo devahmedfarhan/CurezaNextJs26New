@@ -448,11 +448,11 @@ function NotificationSettingsContent() {
             tracking_number: 'BD88200192',
             est_delivery_date: '22-Jun-2026',
             tracking_link: 'https://bluedart.com/track',
-            review_link: 'https://cureza.com/product/ashwagandha#reviews',
-            cart_link: 'https://cureza.com/cart',
+            review_link: 'https://cureza.in/product/ashwagandha#reviews',
+            cart_link: 'https://cureza.in/cart',
             product_name: 'Organic Ashwagandha Extract Capsule',
-            product_link: 'https://cureza.com/product/ashwagandha',
-            unsubscribe_link: 'https://cureza.com/unsubscribe'
+            product_link: 'https://cureza.in/product/ashwagandha',
+            unsubscribe_link: 'https://cureza.in/unsubscribe'
         };
 
         Object.keys(mockData).forEach((key) => {

@@ -290,7 +290,7 @@
             <div class="footer-left">
                 <div>* This document is generated digitally and is valid without a physical signature.</div>
                 <div>* Invalid for medicolegal validation. Valid for 1 single discharge/execution only.</div>
-                <div style="margin-top: 5px; font-weight: bold; color: #0f4c3a;">Cureza Healthcare | www.cureza.com</div>
+                <div style="margin-top: 5px; font-weight: bold; color: #0f4c3a;">Cureza Healthcare | www.cureza.in</div>
             </div>
             <div class="signature-block">
                 <div class="sig-line">Dr. {{ $prescription->doctor->name ?? 'Abdul Shafiz Shaikh' }}</div>

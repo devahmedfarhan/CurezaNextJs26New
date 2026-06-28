@@ -2869,7 +2869,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                     })()}
 
                                     <div className="border-t-[0.5px] border-black/50 mt-12 pt-4 flex justify-between items-end">
-                                        <div className="text-[9px] text-neutral-450 font-normal">Thank you for ordering with us. For support, contact support@cureza.com.</div>
+                                        <div className="text-[9px] text-neutral-450 font-normal">Thank you for ordering with us. For support, contact support@cureza.in.</div>
                                         <div className="text-center w-48">
                                             <div className="h-6 signature-font text-neutral-850 font-semibold text-lg">{authSignatory}</div>
                                             <div className="border-b-[0.5px] border-neutral-350 w-full mb-1"></div>

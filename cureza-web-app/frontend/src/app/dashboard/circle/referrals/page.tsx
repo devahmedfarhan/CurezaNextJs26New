@@ -21,7 +21,7 @@ export default function CircleReferralPage() {
     const referralCode = referralsData?.referral_code || 'GUEST';
     
     // In a real NextJS app, read from window.location.origin
-    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://cureza.com';
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://cureza.in';
     const referralLink = `${origin}/register?ref=${referralCode}`;
 
     const handleCopy = () => {

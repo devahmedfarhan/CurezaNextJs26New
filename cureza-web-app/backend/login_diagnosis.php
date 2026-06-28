@@ -94,7 +94,7 @@ if ($customer) {
 
         // Admin Test
         echo "\n--- Testing Admin Login ---\n";
-        testLogin('admin@cureza.com', '123123123', '/admin/login', 'ADMIN (Reset Password)');
+        testLogin('admin@cureza.in', '123123123', '/admin/login', 'ADMIN (Reset Password)');
     } catch (\Exception $e) {
         echo "Setup Error: " . $e->getMessage(); 
     }

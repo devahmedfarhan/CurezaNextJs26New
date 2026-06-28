@@ -221,7 +221,7 @@ export default function AdminGeneralSettingsPage() {
                             </div>
                             <div>
                                 <label className="block text-xs font-medium text-neutral-600 mb-1.5">Support Email</label>
-                                <input type="email" defaultValue="support@cureza.com" className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none bg-neutral-50 text-neutral-400 cursor-not-allowed text-xs font-normal" disabled />
+                                <input type="email" defaultValue="support@cureza.in" className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none bg-neutral-50 text-neutral-400 cursor-not-allowed text-xs font-normal" disabled />
                             </div>
                             <div>
                                 <label className="block text-xs font-medium text-neutral-600 mb-1.5">Base Currency</label>
@@ -549,7 +549,7 @@ export default function AdminGeneralSettingsPage() {
                                 <label className="block text-xs font-medium text-neutral-600 mb-1.5">Sender Email Address</label>
                                 <input 
                                     type="email" 
-                                    placeholder="hello@cureza.com" 
+                                    placeholder="hello@cureza.in" 
                                     value={settings.mail_from_address.value}
                                     onChange={(e) => handleInputChange('mail_from_address', e.target.value)}
                                     className="w-full px-3 py-2 border-[0.5px] border-black/10 rounded-[10px] outline-none text-xs text-neutral-900 bg-white" 

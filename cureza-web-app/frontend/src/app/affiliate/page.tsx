@@ -54,11 +54,11 @@ export default function AffiliatePage() {
 
                         <div className="pt-6">
                             <a 
-                                href="mailto:info@cureza.com?subject=Affiliate Program Application" 
+                                href="mailto:info@cureza.in?subject=Affiliate Program Application" 
                                 className="w-full py-4 px-6 bg-[#052326] text-white hover:bg-[#052326] hover:text-[#101828] font-bold rounded-xl text-xs uppercase tracking-wider transition duration-300 flex items-center justify-center gap-2"
                             >
                                 <Mail size={16} />
-                                Email info@cureza.com
+                                Email info@cureza.in
                             </a>
                         </div>
                     </div>

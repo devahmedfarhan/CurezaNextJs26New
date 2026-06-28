@@ -627,7 +627,7 @@ export default function PublicTrackOrderPage() {
                                 {/* 3. Support Contacts Desk */}
                                 <div className="grid grid-cols-2 gap-3">
                                     <a 
-                                        href="mailto:support@cureza.com"
+                                        href="mailto:support@cureza.in"
                                         className="bg-white border border-[#052326]/6 hover:border-[#052326] p-4 rounded-[10px] flex flex-col items-center text-center gap-2 transition-all shadow-sm group"
                                     >
                                         <div className="w-8 h-8 rounded-[6px] bg-[#052326]/5 flex items-center justify-center text-[#052326] group-hover:bg-[#052326] group-hover:text-white transition-all">
@@ -635,7 +635,7 @@ export default function PublicTrackOrderPage() {
                                         </div>
                                         <div>
                                             <p className="text-xs font-semibold text-[#052326]/60">Email Helpdesk</p>
-                                            <p className="text-xs font-bold text-[#052326] mt-0.5">support@cureza.com</p>
+                                            <p className="text-xs font-bold text-[#052326] mt-0.5">support@cureza.in</p>
                                         </div>
                                     </a>
                                     <a 

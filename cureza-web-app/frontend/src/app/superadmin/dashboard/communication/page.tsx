@@ -138,8 +138,8 @@ export default function CommunicationCenterPage() {
     // Form Formats
     const [smtpForm, setSmtpForm] = useState({
         provider_name: '', host: '', port: 465, username: '', password: '',
-        encryption: 'ssl', sender_name: 'Cureza Wellness', sender_email: 'admin@cureza.com',
-        reply_to: 'support@cureza.com', timeout: 30, retry_count: 3,
+        encryption: 'ssl', sender_name: 'Cureza Wellness', sender_email: 'admin@cureza.in',
+        reply_to: 'support@cureza.in', timeout: 30, retry_count: 3,
         max_emails_per_hour: 100, max_emails_per_day: 1000,
         is_active: false, is_backup: false, priority: 1, notes: ''
     });
@@ -244,8 +244,8 @@ export default function CommunicationCenterPage() {
             setSelectedSmtp(null);
             setSmtpForm({
                 provider_name: '', host: '', port: 465, username: '', password: '',
-                encryption: 'ssl', sender_name: 'Cureza Wellness', sender_email: 'admin@cureza.com',
-                reply_to: 'support@cureza.com', timeout: 30, retry_count: 3,
+                encryption: 'ssl', sender_name: 'Cureza Wellness', sender_email: 'admin@cureza.in',
+                reply_to: 'support@cureza.in', timeout: 30, retry_count: 3,
                 max_emails_per_hour: 100, max_emails_per_day: 1000,
                 is_active: false, is_backup: false, priority: 1, notes: ''
             });
@@ -1200,7 +1200,7 @@ export default function CommunicationCenterPage() {
                                         value={smtpForm.username} 
                                         onChange={(e) => setSmtpForm({...smtpForm, username: e.target.value})} 
                                         className="w-full p-2 border border-neutral-200 rounded-lg text-xs" 
-                                        placeholder="admin@cureza.com"
+                                        placeholder="admin@cureza.in"
                                     />
                                 </div>
                                 <div className="space-y-1">
@@ -1326,7 +1326,7 @@ export default function CommunicationCenterPage() {
                                     value={testEmailRecipient} 
                                     onChange={(e) => setTestEmailRecipient(e.target.value)} 
                                     className="w-full p-2 border border-neutral-200 rounded-lg text-xs" 
-                                    placeholder="e.g. test@cureza.com"
+                                    placeholder="e.g. test@cureza.in"
                                 />
                             </div>
                             <div className="flex justify-end gap-2 border-t border-neutral-100 pt-4">

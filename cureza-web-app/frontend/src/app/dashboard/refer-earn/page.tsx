@@ -40,7 +40,7 @@ export default function ReferEarnPage() {
                                 <input
                                     type="text"
                                     readOnly
-                                    value="https://cureza.com/ref/john-doe"
+                                    value="https://cureza.in/ref/john-doe"
                                     className="flex-1 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 text-gray-600 dark:text-gray-300"
                                 />
                                 <button className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-6 rounded-lg font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2">

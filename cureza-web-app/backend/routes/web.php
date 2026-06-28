@@ -18,7 +18,7 @@ Route::get('/seed-aura-reviews', function () {
         // Fallback: create a dummy customer user
         $customer = \App\Models\User::create([
             'name' => 'John Doe',
-            'email' => 'customer_demo_' . rand(100, 999) . '@cureza.com',
+            'email' => 'customer_demo_' . rand(100, 999) . '@cureza.in',
             'password' => bcrypt('password'),
             'role' => 'customer',
         ]);
@@ -59,7 +59,7 @@ Route::get('/seed-aura-reviews', function () {
                 'status' => 'active',
                 'reviewed_at' => now()->subDays(rand(1, 30)),
                 'full_name' => 'Demo Customer',
-                'email' => 'demo_customer@cureza.com',
+                'email' => 'demo_customer@cureza.in',
             ]);
             $count++;
         }

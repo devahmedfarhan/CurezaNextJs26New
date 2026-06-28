@@ -161,7 +161,7 @@ export default function SEOSettings({ formData, handleInputChange, isSuperAdmin 
                             </div>
                             <div className="space-y-0.5 max-w-[calc(100%-40px)]">
                                 <p className="text-[10px] font-bold text-gray-900 dark:text-white">Cureza Wellness</p>
-                                <p className="text-[10px] text-gray-400 font-medium truncate">https://cureza.com › product › {formData.category_id || 'category'}</p>
+                                <p className="text-[10px] text-gray-400 font-medium truncate">https://cureza.in › product › {formData.category_id || 'category'}</p>
                             </div>
                         </div>
 
