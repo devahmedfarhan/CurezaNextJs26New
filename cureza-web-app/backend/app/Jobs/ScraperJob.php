@@ -351,12 +351,14 @@ class ScraperJob implements ShouldQueue
                             $price = str_contains($vPrice, '.') ? floatval($vPrice) : floatval($vPrice) / 100.0;
                         }
 
+                        $processedImages = $this->processAndUploadImages($images, trim(html_entity_decode($shopifyData['title'])), $productUrl, $task);
+
                         $productData = [
                             'source_url' => $productUrl,
                             'title' => trim(html_entity_decode($shopifyData['title'])),
                             'price' => $price,
                             'description' => isset($shopifyData['description']) ? trim(strip_tags(html_entity_decode($shopifyData['description']))) : null,
-                            'images' => $images,
+                            'images' => $processedImages,
                             'sku' => $shopifyData['variants'][0]['sku'] ?? null,
                             'status' => 'pending',
                             'brand_id' => $this->brandId,
@@ -572,7 +574,8 @@ class ScraperJob implements ShouldQueue
             }
 
             // Remove duplicates and limit to 10 images max to save database payload space
-            $productData['images'] = array_slice(array_unique($productData['images']), 0, 10);
+            $imagesToProcess = array_slice(array_unique($productData['images']), 0, 10);
+            $productData['images'] = $this->processAndUploadImages($imagesToProcess, $productData['title'], $productUrl, $task);
 
             ScrapedProduct::create($productData);
             if ($task) {
@@ -644,5 +647,119 @@ class ScraperJob implements ShouldQueue
             Log::warning("Scraper Exception: {$errMsg} on {$url}");
             return null;
         }
+    }
+
+    protected function processAndUploadImages(array $images, string $productTitle, string $productUrl, ?ScrapingTask $task): array
+    {
+        $uploadedImages = [];
+        $imageKit = app(\App\Services\ImageKitService::class);
+        $hasKey = !empty(config('services.imagekit.private_key'));
+
+        if (!$hasKey) {
+            if ($task) {
+                $task->addLog("Warning: ImageKit CDN credentials not configured. Storing remote image URLs directly.");
+            }
+            return $images;
+        }
+
+        foreach ($images as $index => $imageUrl) {
+            if (empty($imageUrl)) {
+                continue;
+            }
+
+            if ($task) {
+                $task->addLog("Processing image " . ($index + 1) . "/" . count($images) . ": Downloading locally...");
+            }
+            
+            try {
+                $response = Http::timeout(20)->get($imageUrl);
+                if (!$response->successful()) {
+                    throw new \Exception("Failed to download image, HTTP status: " . $response->status());
+                }
+
+                $content = $response->body();
+                
+                // Determine file extension
+                $path = parse_url($imageUrl, PHP_URL_PATH);
+                $extension = pathinfo($path, PATHINFO_EXTENSION);
+                if ($extension) {
+                    $extension = strtok($extension, '?');
+                }
+                $extension = strtolower($extension ?: 'jpg');
+                if (!in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'avif'])) {
+                    $extension = 'jpg';
+                }
+
+                // Create temp path
+                $tempDir = storage_path('app/temp_scraper');
+                if (!file_exists($tempDir)) {
+                    mkdir($tempDir, 0775, true);
+                }
+                $fileName = uniqid('scraped_', true) . '.' . $extension;
+                $tempFilePath = $tempDir . '/' . $fileName;
+                file_put_contents($tempFilePath, $content);
+
+                if ($task) {
+                    $task->addLog("Uploading image to ImageKit CDN: {$fileName}");
+                }
+
+                // Upload via ImageKitService
+                $uploadResult = $imageKit->upload(
+                    $tempFilePath,
+                    $fileName,
+                    '/scraped-products',
+                    ['scraped', 'scraper-job-' . ($this->taskId ?: 'direct')]
+                );
+
+                // Delete local temp file
+                if (file_exists($tempFilePath)) {
+                    unlink($tempFilePath);
+                }
+
+                if (isset($uploadResult['url'])) {
+                    $uploadedImages[] = $uploadResult['url'];
+                    if ($task) {
+                        $task->addLog("Successfully uploaded to CDN: " . $uploadResult['url']);
+                    }
+
+                    // Register in Media Library database
+                    try {
+                        $folder = \App\Models\MediaFolder::firstOrCreate(
+                            ['slug' => 'scraped-products'],
+                            ['name' => 'Scraped Products']
+                        );
+
+                        \App\Models\Media::create([
+                            'file_id' => $uploadResult['fileId'] ?? null,
+                            'url' => $uploadResult['url'] ?? '',
+                            'thumbnail_url' => $uploadResult['thumbnailUrl'] ?? null,
+                            'file_name' => $uploadResult['name'] ?? $fileName,
+                            'folder_id' => $folder->id,
+                            'width' => $uploadResult['width'] ?? null,
+                            'height' => $uploadResult['height'] ?? null,
+                            'size_bytes' => $uploadResult['size'] ?? strlen($content),
+                            'extension' => $extension,
+                            'title' => pathinfo($fileName, PATHINFO_FILENAME),
+                            'alt_text' => $productTitle,
+                            'caption' => 'Scraped from ' . $productUrl,
+                            'description' => 'Automatically scraped product image',
+                            'tags' => ['scraped'],
+                        ]);
+                    } catch (\Exception $me) {
+                        Log::error("Failed to register scraped image in media library: " . $me->getMessage());
+                    }
+                } else {
+                    throw new \Exception("ImageKit did not return a valid URL.");
+                }
+            } catch (\Exception $e) {
+                if ($task) {
+                    $task->addLog("Warning: Failed to process image {$imageUrl}. Fallback to original URL. Error: " . $e->getMessage());
+                }
+                Log::warning("Scraped image CDN upload failed: " . $e->getMessage());
+                $uploadedImages[] = $imageUrl;
+            }
+        }
+
+        return $uploadedImages;
     }
 }
