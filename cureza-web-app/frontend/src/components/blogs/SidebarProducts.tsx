@@ -38,13 +38,13 @@ export default function SidebarProducts({ products, backendUrl }: SidebarProduct
     };
 
     return (
-        <div className="bg-white border border-[#052326]/5 rounded-2xl p-5 shadow-sm space-y-4">
+        <div className="bg-white border border-[#555555]/18 rounded-[8px] p-5 shadow-none space-y-4" style={{ boxShadow: 'none', filter: 'none' }}>
             <div className="flex items-center justify-between border-b pb-2">
-                <h4 className="text-[10px] font-bold tracking-[0.2em] text-[#052326]/60 uppercase">
-                    Recommended Products
+                <h4 className="text-[10px] font-semibold tracking-[0.2em] text-[#052326]/60">
+                    Recommended products
                 </h4>
-                <span className="bg-cureza-green/10 text-cureza-green text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                    Expert Choice
+                <span className="bg-cureza-green/10 text-cureza-green text-[8px] font-semibold px-2 py-0.5 rounded-full tracking-wider">
+                    Expert choice
                 </span>
             </div>
             
@@ -64,15 +64,15 @@ export default function SidebarProducts({ products, backendUrl }: SidebarProduct
                     return (
                         <div 
                             key={product.id}
-                            className="relative flex items-center gap-3 p-2 rounded-xl border border-[#052326]/5 hover:border-[#052326]/10 hover:bg-gradient-to-r hover:from-gray-50 hover:to-white transition-all duration-300 group"
+                            className="relative flex items-center gap-3 p-2 rounded-[8px] border border-[#555555]/18 hover:bg-gradient-to-r hover:from-gray-50 hover:to-white transition-all duration-300 group"
                         >
-                            <Link href={prodUrl} className="w-14 h-14 rounded-lg overflow-hidden bg-gray-50 flex-shrink-0 border border-gray-100 block">
+                            <Link href={prodUrl} className="w-14 h-14 rounded-[8px] overflow-hidden bg-gray-50 flex-shrink-0 border border-gray-100 block">
                                 <img src={pImg} alt={product.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                             </Link>
 
                             <div className="flex-1 min-w-0 pr-8">
                                 <Link href={prodUrl}>
-                                    <h5 className="font-bold text-xs text-[#052326] hover:text-cureza-green transition-colors truncate">
+                                    <h5 className="font-semibold text-xs text-[#052326] hover:text-cureza-green transition-colors truncate">
                                         {product.title}
                                     </h5>
                                 </Link>
@@ -80,12 +80,12 @@ export default function SidebarProducts({ products, backendUrl }: SidebarProduct
                                 {/* Rating */}
                                 <div className="flex items-center gap-1 mt-0.5">
                                     <Star size={8} fill="currentColor" className="text-[#F0C417]" />
-                                    <span className="text-[9px] font-bold text-[#052326]/70">{rating}</span>
+                                    <span className="text-[9px] font-semibold text-[#052326]/70">{rating}</span>
                                 </div>
 
                                 {/* Pricing */}
                                 <div className="flex items-center gap-1.5 mt-1">
-                                    <span className="text-xs font-bold text-[#052326]">₹{product.price}</span>
+                                    <span className="text-xs font-semibold text-[#052326]">₹{product.price}</span>
                                     {originalPrice && originalPrice > product.price && (
                                         <span className="text-[10px] text-gray-400 line-through">₹{originalPrice}</span>
                                     )}
@@ -96,7 +96,7 @@ export default function SidebarProducts({ products, backendUrl }: SidebarProduct
                             <button
                                 onClick={(e) => handleQuickAdd(e, product)}
                                 disabled={isAdding}
-                                className={`absolute right-2.5 p-2 rounded-lg transition-all duration-300 ${
+                                className={`absolute right-2.5 p-2 rounded-[8px] transition-all duration-300 ${
                                     isAdding
                                         ? "bg-cureza-green text-white"
                                         : "bg-[#052326]/5 text-[#052326] hover:bg-cureza-green hover:text-white"

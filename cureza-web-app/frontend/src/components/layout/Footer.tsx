@@ -188,7 +188,7 @@ export default function Footer() {
               </h4>
               <ul className="space-y-2.5 text-[12px] font-semibold text-[#F8F3EF]/90">
                 <li><Link href="/about" className="hover:text-[#F0C417] transition-colors">Our Story</Link></li>
-                <li><Link href="/blog" className="hover:text-[#F0C417] transition-colors">Wellness Library</Link></li>
+                <li><Link href="/wellness-library" className="hover:text-[#F0C417] transition-colors">Wellness Library</Link></li>
                 <li><Link href="/press" className="hover:text-[#F0C417] transition-colors">Press & Media</Link></li>
                 <li><Link href="/medical-policy" className="hover:text-[#F0C417] transition-colors">Medical Product Policy</Link></li>
                 <li><Link href="/lab-reports" className="hover:text-[#F0C417] transition-colors">Lab Reports & COA</Link></li>

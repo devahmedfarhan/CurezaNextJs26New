@@ -40,9 +40,9 @@ export default function TableOfContents({ headings }: { headings: Heading[] }) {
     if (!headings || headings.length === 0) return null;
 
     return (
-        <div className="bg-white border border-[#052326]/5 rounded-2xl p-5 shadow-sm">
-            <h4 className="text-[10px] font-bold tracking-[0.2em] text-[#052326]/60 uppercase mb-4">
-                On This Page
+        <div className="bg-white border border-[#555555]/18 rounded-[8px] p-5 shadow-none" style={{ boxShadow: 'none', filter: 'none' }}>
+            <h4 className="text-[10px] font-semibold tracking-[0.2em] text-[#052326]/60 mb-4">
+                On this page
             </h4>
             <div className="space-y-3 border-l border-gray-100 pl-3">
                 {headings.map((heading) => (
@@ -55,7 +55,7 @@ export default function TableOfContents({ headings }: { headings: Heading[] }) {
                                 : 'font-semibold text-gray-800 hover:translate-x-0.5'
                         } ${
                             activeId === heading.id 
-                                ? 'text-cureza-green font-bold border-l-2 border-cureza-green -ml-[14px] pl-[13px]' 
+                                ? 'text-cureza-green font-semibold border-l-2 border-cureza-green -ml-[14px] pl-[13px]' 
                                 : ''
                         }`}
                         onClick={(e) => {

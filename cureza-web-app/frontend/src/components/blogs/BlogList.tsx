@@ -70,18 +70,18 @@ export default async function BlogList({
                 
                 {/* Header Section */}
                 <div className="text-center max-w-3xl mx-auto mb-16">
-                    <span className={`text-[10px] font-bold tracking-[0.25em] uppercase block mb-3 ${
+                    <span className={`text-[10px] font-semibold tracking-wider block mb-3 ${
                         isDarkBg ? 'text-[#F0C417]' : 'text-cureza-green'
                     }`}>
                         {tag}
                     </span>
-                    <h2 className={`text-3xl md:text-5xl font-extrabold tracking-tight leading-tight ${
+                    <h2 className={`text-3xl md:text-5xl font-semibold tracking-tight leading-tight ${
                         isDarkBg ? 'text-[#F8F3EF]' : 'text-[#052326]'
                     }`}>
                         {title}
                     </h2>
                     <div className="w-12 h-[3px] bg-[#F0C417] mx-auto my-5 rounded-full"></div>
-                    <p className={`text-xs md:text-sm mt-3 max-w-xl font-light mx-auto leading-relaxed ${
+                    <p className={`text-xs md:text-sm mt-3 max-w-xl font-normal mx-auto leading-relaxed ${
                         isDarkBg ? 'text-[#F8F3EF]/85' : 'text-[#052326]/80'
                     }`}>
                         {subtitle}
@@ -107,7 +107,8 @@ export default async function BlogList({
                                     <Link
                                         key={post.id}
                                         href={`/blog/${post.category?.slug}/${post.slug}`}
-                                        className="bg-white border border-[#052326]/5 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full group"
+                                        className="bg-white border border-[#555555]/18 rounded-[8px] overflow-hidden transition-all duration-300 flex flex-col h-full group"
+                                        style={{ boxShadow: 'none', filter: 'none' }}
                                     >
                                         {/* Image Container */}
                                         <div className="aspect-[16/10] relative overflow-hidden bg-gray-50 border-b border-gray-100">
@@ -118,13 +119,13 @@ export default async function BlogList({
                                                     className="object-cover w-full h-full group-hover:scale-102 transition-transform duration-500"
                                                 />
                                             ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs font-semibold">
-                                                    No Image
+                                                <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs font-medium">
+                                                    No image
                                                 </div>
                                             )}
                                             {/* Category Badge */}
                                             <div className="absolute top-4 left-4">
-                                                <span className="bg-[#052326] text-[#F8F3EF] border border-[#F8F3EF]/10 px-2.5 py-0.5 rounded-full text-[8px] font-bold tracking-widest uppercase shadow-md">
+                                                <span className="bg-[#052326] text-[#F8F3EF] border border-[#F8F3EF]/10 px-2.5 py-0.5 rounded-full text-[8px] font-semibold tracking-wider">
                                                     {post.category?.name}
                                                 </span>
                                             </div>
@@ -133,29 +134,29 @@ export default async function BlogList({
                                         {/* Content Area */}
                                         <div className="p-6 flex flex-col flex-grow justify-between gap-6">
                                             <div className="space-y-3">
-                                                <div className="flex items-center justify-between text-[10px] tracking-widest uppercase font-semibold text-gray-400">
+                                                <div className="flex items-center justify-between text-[10px] tracking-wider font-semibold text-gray-400">
                                                     <span>{format(new Date(post.published_at), 'MMM d, yyyy')}</span>
                                                     <span className="flex items-center gap-1">
                                                         <Clock size={10} className="text-[#F0C417]" />
-                                                        {readTime} Min Read
+                                                        {readTime} Min read
                                                     </span>
                                                 </div>
                                                 
-                                                <h3 className="text-base md:text-lg font-bold text-[#052326] leading-snug line-clamp-2 hover:text-cureza-green transition-colors">
+                                                <h3 className="text-base md:text-lg font-semibold text-[#052326] leading-snug line-clamp-2 hover:text-cureza-green transition-colors">
                                                     {post.title}
                                                 </h3>
 
-                                                <p className="text-gray-500 text-xs font-light line-clamp-3 leading-relaxed">
+                                                <p className="text-gray-500 text-xs font-normal line-clamp-3 leading-relaxed">
                                                     {post.excerpt}
                                                 </p>
                                             </div>
 
                                             <div className="pt-4 border-t border-gray-100 flex items-center justify-between mt-auto">
-                                                <span className="text-[10px] text-gray-600 font-semibold">
+                                                <span className="text-[10px] text-gray-600 font-medium">
                                                     By {post.author?.name}
                                                 </span>
-                                                <span className="text-cureza-green text-[10px] tracking-widest font-extrabold uppercase inline-flex items-center gap-0.5 hover:translate-x-0.5 transition-transform">
-                                                    Read Article <ArrowUpRight size={12} />
+                                                <span className="text-cureza-green text-[10px] tracking-wider font-semibold inline-flex items-center gap-0.5 hover:translate-x-0.5 transition-transform">
+                                                    Read article <ArrowUpRight size={12} />
                                                 </span>
                                             </div>
                                         </div>
@@ -168,9 +169,9 @@ export default async function BlogList({
                         <div className="text-center pt-4">
                             <Link 
                                 href="/blog" 
-                                className="inline-flex items-center gap-2 px-8 py-3.5 border border-[#052326]/15 hover:border-[#052326] text-[#052326] rounded-full text-xs font-bold tracking-widest uppercase hover:bg-[#052326] hover:text-[#F8F3EF] transition-all shadow-sm"
+                                className="inline-flex items-center gap-2 px-8 py-3.5 border border-[#052326]/15 hover:border-[#052326] text-[#052326] rounded-full text-xs font-semibold tracking-wider hover:bg-[#052326] hover:text-[#F8F3EF] transition-all"
                             >
-                                Explore All Journal Entries
+                                Explore all journal entries
                             </Link>
                         </div>
                     </div>

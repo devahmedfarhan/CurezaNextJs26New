@@ -55,10 +55,13 @@ export default function BlogProductCard({ product }: BlogProductCardProps) {
         : '/fallback.png';
 
     return (
-        <div className="my-8 mx-auto max-w-2xl bg-gradient-to-r from-[#F8F3EF] to-white border border-[#052326]/10 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col sm:flex-row group">
+        <div 
+            className="my-8 mx-auto max-w-2xl bg-gradient-to-r from-[#F8F3EF] to-white border border-[#555555]/18 rounded-[8px] overflow-hidden transition-all duration-300 flex flex-col sm:flex-row group"
+            style={{ boxShadow: 'none', filter: 'none' }}
+        >
             
             {/* Image section */}
-            <div className="relative w-full sm:w-48 h-48 sm:h-auto overflow-hidden bg-gray-50 flex-shrink-0 border-r border-[#052326]/5">
+            <div className="relative w-full sm:w-48 h-48 sm:h-auto overflow-hidden bg-gray-50 flex-shrink-0 border-r border-[#555555]/18">
                 <Link href={productUrl}>
                     <img
                         src={imageUrl}
@@ -71,12 +74,12 @@ export default function BlogProductCard({ product }: BlogProductCardProps) {
                 {/* Badges */}
                 <div className="absolute top-3 left-3 flex flex-col gap-1">
                     {product.is_prescription_required && (
-                        <span className="bg-[#D32F2F] text-white text-[8px] font-bold px-2 py-0.5 rounded-[4px] shadow-sm tracking-wider flex items-center gap-0.5">
+                        <span className="bg-[#D32F2F] text-white text-[8px] font-semibold px-2 py-0.5 rounded-[4px] tracking-wider flex items-center gap-0.5">
                             <ShieldAlert className="w-2.5 h-2.5" /> Rx Required
                         </span>
                     )}
                     {discountPercentage > 0 && (
-                        <span className="bg-[#F0C417] text-[#052326] text-[8px] font-bold px-2 py-0.5 rounded-[4px] shadow-sm">
+                        <span className="bg-[#F0C417] text-[#052326] text-[8px] font-semibold px-2 py-0.5 rounded-[4px]">
                             {discountPercentage}% OFF
                         </span>
                     )}
@@ -86,24 +89,24 @@ export default function BlogProductCard({ product }: BlogProductCardProps) {
             {/* Content info section */}
             <div className="p-5 flex flex-col justify-between flex-1">
                 <div>
-                    <div className="flex justify-between items-center text-[9px] font-bold text-[#052326]/50 uppercase tracking-widest mb-1.5">
+                    <div className="flex justify-between items-center text-[9px] font-semibold text-[#052326]/50 tracking-wider mb-1.5">
                         <span>{typeof product.brand === 'object' ? product.brand?.name : (product.brand || "Brand")}</span>
                         <span>{typeof product.category === 'object' ? product.category?.name : (product.category || "Category")}</span>
                     </div>
 
                     <Link href={productUrl}>
-                        <h4 className="font-bold text-[#052326] text-base leading-snug group-hover:text-cureza-green transition-colors mb-2">
+                        <h4 className="font-semibold text-[#052326] text-base leading-snug group-hover:text-cureza-green transition-colors mb-2">
                             {product.title}
                         </h4>
                     </Link>
 
-                    <p className="text-[#052326]/75 text-xs font-light leading-relaxed line-clamp-2 mb-3">
+                    <p className="text-[#052326]/75 text-xs font-normal leading-relaxed line-clamp-2 mb-3">
                         {product.short_description || product.shortDescription || "Premium formulation compounded for optimal therapeutic wellness."}
                     </p>
 
                     {/* Rating */}
                     <div className="flex items-center gap-1.5 mb-4">
-                        <div className="flex items-center gap-0.5 bg-[#F0C417]/10 text-[#052326] px-2 py-0.5 rounded text-xs font-bold">
+                        <div className="flex items-center gap-0.5 bg-[#F0C417]/10 text-[#052326] px-2 py-0.5 rounded text-xs font-semibold">
                             <Star size={10} fill="currentColor" className="text-[#F0C417]" />
                             <span>{rating}</span>
                         </div>
@@ -112,12 +115,12 @@ export default function BlogProductCard({ product }: BlogProductCardProps) {
                 </div>
 
                 {/* Price and Cart Action */}
-                <div className="flex items-center justify-between pt-3 border-t border-[#052326]/5">
+                <div className="flex items-center justify-between pt-3 border-t border-[#555555]/18">
                     <div className="flex flex-col">
                         {discountPercentage > 0 && (
                             <span className="text-[10px] text-[#052326]/40 line-through">₹{originalPrice}</span>
                         )}
-                        <span className="text-base font-bold text-[#052326]">₹{price}</span>
+                        <span className="text-base font-semibold text-[#052326]">₹{price}</span>
                     </div>
 
                     <div className="flex gap-2">
@@ -131,7 +134,7 @@ export default function BlogProductCard({ product }: BlogProductCardProps) {
                         
                         <button
                             onClick={handleCart}
-                            className="flex items-center justify-center gap-1.5 px-4 py-2 bg-cureza-green hover:bg-[#0b3830] text-white text-xs font-bold uppercase tracking-wider rounded-lg transition-all hover:scale-102 shadow-sm"
+                            className="flex items-center justify-center gap-1.5 px-4 py-2 bg-cureza-green hover:bg-[#0b3830] text-white text-xs font-semibold tracking-wider rounded-[8px] transition-all hover:scale-102"
                         >
                             <ShoppingBag size={12} />
                             {product.is_prescription_required ? "Rx Consult" : "Buy Now"}
