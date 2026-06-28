@@ -685,8 +685,27 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Banner Management (Super Admin)
         Route::apiResource('banners', \App\Http\Controllers\Api\Admin\BannerController::class);
+
+        // Media Library API Endpoints
+        Route::prefix('media')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\MediaController::class, 'index']);
+            Route::post('/upload', [\App\Http\Controllers\Admin\MediaController::class, 'store']);
+            Route::post('/bulk', [\App\Http\Controllers\Admin\MediaController::class, 'bulk']);
+            Route::get('/stats', [\App\Http\Controllers\Admin\MediaController::class, 'getStats']);
+            Route::get('/folders', [\App\Http\Controllers\Admin\MediaController::class, 'listFolders']);
+            Route::post('/folders', [\App\Http\Controllers\Admin\MediaController::class, 'createFolder']);
+            Route::put('/folders/{id}', [\App\Http\Controllers\Admin\MediaController::class, 'updateFolder']);
+            Route::delete('/folders/{id}', [\App\Http\Controllers\Admin\MediaController::class, 'destroyFolder']);
+            
+            Route::get('/{id}', [\App\Http\Controllers\Admin\MediaController::class, 'show']);
+            Route::put('/{id}', [\App\Http\Controllers\Admin\MediaController::class, 'update']);
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\MediaController::class, 'destroy']);
+            Route::post('/{id}/restore', [\App\Http\Controllers\Admin\MediaController::class, 'restore']);
+            Route::delete('/{id}/force', [\App\Http\Controllers\Admin\MediaController::class, 'forceDestroy']);
+        });
     });
 });
+
 
 // Cart Routes (Public/Guest accessible)
 Route::get('/cart', [CartController::class, 'index']);

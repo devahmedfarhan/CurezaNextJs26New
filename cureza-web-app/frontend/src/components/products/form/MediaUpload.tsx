@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Upload, X, Image as ImageIcon, Video, GripVertical, Trash2, RefreshCw } from 'lucide-react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import ImagePickerModal from '@/components/admin/ImagePickerModal';
 
 interface MediaUploadProps {
     formData: any;
@@ -75,18 +76,41 @@ export default function MediaUpload({ formData, setFormData, handleFileChange, i
                                     />
                                 )}
                                 <div className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 backdrop-blur-[2px]">
-                                    <button type="button" className={`text-white ${isSuperAdmin ? 'hover:text-gray-300' : 'hover:text-emerald-200'} text-xs font-bold flex flex-col items-center gap-1.5 cursor-pointer`}>
-                                        <RefreshCw size={22} className="animate-hover-spin" /> Replace
-                                        <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, 'primary')} className="absolute inset-0 opacity-0 cursor-pointer" />
-                                    </button>
+                                    {isSuperAdmin ? (
+                                        <ImagePickerModal 
+                                            onSelect={(url) => setFormData({ ...formData, image: url })}
+                                            trigger={
+                                                <button type="button" className="text-white hover:text-gray-300 text-xs font-bold flex flex-col items-center gap-1.5 cursor-pointer">
+                                                    <RefreshCw size={22} className="animate-hover-spin" /> Choose from Library
+                                                </button>
+                                            }
+                                        />
+                                    ) : (
+                                        <button type="button" className="text-white hover:text-emerald-200 text-xs font-bold flex flex-col items-center gap-1.5 cursor-pointer">
+                                            <RefreshCw size={22} className="animate-hover-spin" /> Replace
+                                            <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, 'primary')} className="absolute inset-0 opacity-0 cursor-pointer" />
+                                        </button>
+                                    )}
                                 </div>
                             </>
                         ) : (
-                            <div className="text-center p-4">
-                                <Upload className="mx-auto text-gray-400 mb-2.5" size={32} />
-                                <span className={`text-xs font-bold text-gray-500 dark:text-gray-400 ${isSuperAdmin ? 'capitalize' : 'uppercase'} tracking-wider block`}>Upload Main</span>
-                                <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, 'primary')} className="absolute inset-0 opacity-0 cursor-pointer" />
-                            </div>
+                            isSuperAdmin ? (
+                                <ImagePickerModal 
+                                    onSelect={(url) => setFormData({ ...formData, image: url })}
+                                    trigger={
+                                        <div className="text-center p-4 cursor-pointer w-full h-full flex flex-col items-center justify-center">
+                                            <Upload className="mx-auto text-gray-400 mb-2.5" size={32} />
+                                            <span className="text-xs font-bold text-gray-500 dark:text-gray-400 capitalize tracking-wider block">Choose from Library</span>
+                                        </div>
+                                    }
+                                />
+                            ) : (
+                                <div className="text-center p-4">
+                                    <Upload className="mx-auto text-gray-400 mb-2.5" size={32} />
+                                    <span className={`text-xs font-bold text-gray-500 dark:text-gray-400 ${isSuperAdmin ? 'capitalize' : 'uppercase'} tracking-wider block`}>Upload Main</span>
+                                    <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, 'primary')} className="absolute inset-0 opacity-0 cursor-pointer" />
+                                </div>
+                            )
                         )}
                     </div>
                 </div>
@@ -95,11 +119,30 @@ export default function MediaUpload({ formData, setFormData, handleFileChange, i
                 <div className="col-span-2">
                     <div className="flex justify-between items-center mb-2.5">
                         <label className={labelClass}>Gallery Images</label>
-                        <label className={`text-xs ${isSuperAdmin ? 'text-black dark:text-white bg-neutral-100 dark:bg-neutral-800 border-black/50' : 'text-cureza-green bg-cureza-green/5 border-cureza-green/10'} font-extrabold cursor-pointer hover:underline flex items-center gap-1 px-2.5 py-1 rounded-lg border-[0.5px]`}>
-                            <Upload size={13} /> Add More
-                            <input type="file" multiple accept="image/*" onChange={(e) => handleFileChange(e, 'gallery')} className="hidden" />
-                        </label>
+                        {isSuperAdmin ? (
+                            <ImagePickerModal 
+                                multiple={true}
+                                onSelect={(urls) => {
+                                    const arrayUrls = Array.isArray(urls) ? urls : [urls];
+                                    setFormData({ 
+                                        ...formData, 
+                                        gallery_images: [...(formData.gallery_images || []), ...arrayUrls] 
+                                    });
+                                }}
+                                trigger={
+                                    <button type="button" className="text-xs text-black dark:text-white bg-neutral-100 dark:bg-neutral-800 border-black/50 font-extrabold cursor-pointer hover:underline flex items-center gap-1 px-2.5 py-1 rounded-lg border-[0.5px]">
+                                        <Upload size={13} className="inline mr-1" /> Choose from Library
+                                    </button>
+                                }
+                            />
+                        ) : (
+                            <label className={`text-xs ${isSuperAdmin ? 'text-black dark:text-white bg-neutral-100 dark:bg-neutral-800 border-black/50' : 'text-cureza-green bg-cureza-green/5 border-cureza-green/10'} font-extrabold cursor-pointer hover:underline flex items-center gap-1 px-2.5 py-1 rounded-lg border-[0.5px]`}>
+                                <Upload size={13} /> Add More
+                                <input type="file" multiple accept="image/*" onChange={(e) => handleFileChange(e, 'gallery')} className="hidden" />
+                            </label>
+                        )}
                     </div>
+
 
                     <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId="gallery" direction="horizontal">

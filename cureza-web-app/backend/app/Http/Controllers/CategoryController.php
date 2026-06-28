@@ -67,9 +67,34 @@ class CategoryController extends Controller
         // Handle Image Upload
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('categories', 'public');
-            $imagePath = '/storage/' . $imagePath;
+            try {
+                $imageKit = app(\App\Services\ImageKitService::class);
+                $file = $request->file('image');
+                $result = $imageKit->upload(
+                    $file,
+                    $file->getClientOriginalName(),
+                    'categories'
+                );
+                $imagePath = $result['url'];
+
+                // Index in our media library database table
+                \App\Models\Media::create([
+                    'file_id' => $result['fileId'] ?? null,
+                    'url' => $result['url'],
+                    'thumbnail_url' => $result['thumbnailUrl'] ?? null,
+                    'file_name' => $file->getClientOriginalName(),
+                    'size_bytes' => $file->getSize(),
+                    'extension' => strtolower($file->getClientOriginalExtension()),
+                    'title' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+                    'tags' => ['categories', 'legacy-upload'],
+                ]);
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Category ImageKit upload failed: ' . $e->getMessage());
+                $imagePath = $request->file('image')->store('categories', 'public');
+                $imagePath = '/storage/' . $imagePath;
+            }
         }
+
 
         $category = Category::create([
             'name' => $validated['name'],
@@ -115,14 +140,41 @@ class CategoryController extends Controller
         
         // Handle Image Upload
         if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($category->image) {
-                $oldPath = str_replace('/storage/', '', $category->image);
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            try {
+                $imageKit = app(\App\Services\ImageKitService::class);
+                $file = $request->file('image');
+                
+                // Delete old local image if exists
+                if ($category->image && !str_starts_with($category->image, 'http')) {
+                    $oldPath = str_replace('/storage/', '', $category->image);
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+                }
+                
+                $result = $imageKit->upload(
+                    $file,
+                    $file->getClientOriginalName(),
+                    'categories'
+                );
+                $data['image'] = $result['url'];
+
+                // Index in our media library database table
+                \App\Models\Media::create([
+                    'file_id' => $result['fileId'] ?? null,
+                    'url' => $result['url'],
+                    'thumbnail_url' => $result['thumbnailUrl'] ?? null,
+                    'file_name' => $file->getClientOriginalName(),
+                    'size_bytes' => $file->getSize(),
+                    'extension' => strtolower($file->getClientOriginalExtension()),
+                    'title' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+                    'tags' => ['categories', 'legacy-upload'],
+                ]);
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Category update ImageKit upload failed: ' . $e->getMessage());
+                $path = $request->file('image')->store('categories', 'public');
+                $data['image'] = '/storage/' . $path;
             }
-            $path = $request->file('image')->store('categories', 'public');
-            $data['image'] = '/storage/' . $path;
         }
+
 
         if (isset($validated['is_active'])) {
              $data['is_active'] = filter_var($validated['is_active'], FILTER_VALIDATE_BOOLEAN);

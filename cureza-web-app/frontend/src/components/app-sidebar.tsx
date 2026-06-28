@@ -17,7 +17,8 @@ import {
   Megaphone,
   HelpCircle,
   Star,
-  Truck
+  Truck,
+  Image as ImageIcon
 } from "lucide-react"
 
 import {
@@ -181,6 +182,18 @@ const data = {
         { title: "Menu Builder", url: "/superadmin/dashboard/menu" },
       ],
     },
+    {
+      title: "Media Library",
+      url: "/superadmin/dashboard/media",
+      icon: ImageIcon,
+      permission: "cms",
+      items: [
+        { title: "All Media", url: "/superadmin/dashboard/media" },
+        { title: "Folders", url: "/superadmin/dashboard/media/folders" },
+        { title: "Trash", url: "/superadmin/dashboard/media/trash" },
+      ],
+    },
+
     {
       title: "Shipping & Checkout",
       url: "/superadmin/dashboard/settings/checkout-cart",

@@ -219,28 +219,24 @@ class ProductController extends Controller
             unset($data['tags']);
         }
 
-        // Handle File Uploads
+        // Handle File Uploads (ImageKit)
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products/primary', 'public');
-            $data['image'] = '/storage/' . $path;
+            $data['image'] = $this->uploadToImageKit($request->file('image'), 'products/primary');
         }
         if ($request->hasFile('gallery_images')) {
             $galleryPaths = [];
             foreach ($request->file('gallery_images') as $file) {
-                $path = $file->store('products/gallery', 'public');
-                $galleryPaths[] = '/storage/' . $path;
+                $galleryPaths[] = $this->uploadToImageKit($file, 'products/gallery');
             }
             $data['images'] = $galleryPaths; // Store as JSON array in 'images' column
         }
 
         if ($request->hasFile('video_cover')) {
-            $path = $request->file('video_cover')->store('products/videos/covers', 'public');
-            $data['video_cover'] = '/storage/' . $path;
+            $data['video_cover'] = $this->uploadToImageKit($request->file('video_cover'), 'products/videos/covers');
         }
 
         if ($request->hasFile('video_file')) {
-            $path = $request->file('video_file')->store('products/videos/files', 'public');
-            $data['video_file'] = '/storage/' . $path;
+            $data['video_file'] = $this->uploadToImageKit($request->file('video_file'), 'products/videos/files');
         }
 
         // Handle Banners Upload
@@ -252,12 +248,10 @@ class ProductController extends Controller
             ];
 
             if ($request->hasFile("banners.{$i}.desktop")) {
-                $path = $request->file("banners.{$i}.desktop")->store('products/banners', 'public');
-                $bannerItem['desktop'] = '/storage/' . $path;
+                $bannerItem['desktop'] = $this->uploadToImageKit($request->file("banners.{$i}.desktop"), 'products/banners');
             }
             if ($request->hasFile("banners.{$i}.mobile")) {
-                $path = $request->file("banners.{$i}.mobile")->store('products/banners', 'public');
-                $bannerItem['mobile'] = '/storage/' . $path;
+                $bannerItem['mobile'] = $this->uploadToImageKit($request->file("banners.{$i}.mobile"), 'products/banners');
             }
 
             if ($bannerItem['desktop'] || $bannerItem['mobile']) {
@@ -398,26 +392,22 @@ class ProductController extends Controller
 
         // Handle File Uploads
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products/primary', 'public');
-            $data['image'] = '/storage/' . $path;
+            $data['image'] = $this->uploadToImageKit($request->file('image'), 'products/primary');
         }
         if ($request->hasFile('gallery_images')) {
             $galleryPaths = [];
             foreach ($request->file('gallery_images') as $file) {
-                $path = $file->store('products/gallery', 'public');
-                $galleryPaths[] = '/storage/' . $path;
+                $galleryPaths[] = $this->uploadToImageKit($file, 'products/gallery');
             }
             $data['images'] = $galleryPaths;
         }
 
         if ($request->hasFile('video_cover')) {
-            $path = $request->file('video_cover')->store('products/videos/covers', 'public');
-            $data['video_cover'] = '/storage/' . $path;
+            $data['video_cover'] = $this->uploadToImageKit($request->file('video_cover'), 'products/videos/covers');
         }
 
         if ($request->hasFile('video_file')) {
-            $path = $request->file('video_file')->store('products/videos/files', 'public');
-            $data['video_file'] = '/storage/' . $path;
+            $data['video_file'] = $this->uploadToImageKit($request->file('video_file'), 'products/videos/files');
         }
 
         // Handle Banners Upload
@@ -429,12 +419,10 @@ class ProductController extends Controller
             ];
 
             if ($request->hasFile("banners.{$i}.desktop")) {
-                $path = $request->file("banners.{$i}.desktop")->store('products/banners', 'public');
-                $bannerItem['desktop'] = '/storage/' . $path;
+                $bannerItem['desktop'] = $this->uploadToImageKit($request->file("banners.{$i}.desktop"), 'products/banners');
             }
             if ($request->hasFile("banners.{$i}.mobile")) {
-                $path = $request->file("banners.{$i}.mobile")->store('products/banners', 'public');
-                $bannerItem['mobile'] = '/storage/' . $path;
+                $bannerItem['mobile'] = $this->uploadToImageKit($request->file("banners.{$i}.mobile"), 'products/banners');
             }
 
             if ($bannerItem['desktop'] || $bannerItem['mobile']) {
@@ -875,5 +863,34 @@ class ProductController extends Controller
         });
         
         return response()->json($bundles);
+    }
+
+    /**
+     * Upload a product file to ImageKit and index it in the media table.
+     */
+    private function uploadToImageKit($file, $folder, $tags = [])
+    {
+        try {
+            $imageKit = app(\App\Services\ImageKitService::class);
+            $result = $imageKit->upload($file, $file->getClientOriginalName(), $folder, $tags);
+            
+            // Index in the media table
+            \App\Models\Media::create([
+                'file_id' => $result['fileId'] ?? null,
+                'url' => $result['url'],
+                'thumbnail_url' => $result['thumbnailUrl'] ?? null,
+                'file_name' => $file->getClientOriginalName(),
+                'size_bytes' => $file->getSize(),
+                'extension' => strtolower($file->getClientOriginalExtension()),
+                'title' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+                'tags' => array_merge($tags, ['products', 'legacy-upload']),
+            ]);
+
+            return $result['url'];
+        } catch (\Exception $e) {
+            Log::error("Product file ImageKit upload failed: " . $e->getMessage() . ". Falling back to local storage.");
+            $path = $file->store($folder, 'public');
+            return '/storage/' . $path;
+        }
     }
 }
