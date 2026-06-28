@@ -57,28 +57,35 @@ export default function SitemapContent() {
         fetchSitemapData();
     }, []);
 
+    const cardStyle = {
+        borderRadius: '8px',
+        border: '1px solid rgba(85, 85, 85, 0.18)',
+        boxShadow: 'none',
+        filter: 'none',
+    };
+
     return (
         <div className="bg-[#F8F3EF] min-h-screen py-16 text-[#052326]">
-            <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+            <div className="container mx-auto px-4 md:px-6">
                 
                 {/* Breadcrumbs */}
-                <div className="flex items-center gap-2 text-xs font-semibold text-[#052326]/60 mb-6 uppercase tracking-wider">
+                <div className="flex items-center gap-2 text-xs font-semibold text-[#052326]/60 mb-6 tracking-wider">
                     <Link href="/" className="hover:text-[#052326] transition-colors">Home</Link>
                     <ChevronRight size={12} />
                     <span className="text-[#052326]">Visual Sitemap</span>
                 </div>
 
                 {/* Hero section */}
-                <div className="bg-gradient-to-br from-[#052326] to-[#0e444b] text-white p-8 md:p-12 rounded-[24px] mb-12 shadow-xl relative overflow-hidden">
+                <div style={{ ...cardStyle, border: 'none' }} className="bg-gradient-to-br from-[#052326] to-[#0e444b] text-white p-8 md:p-12 mb-12 relative overflow-hidden">
                     <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none transform translate-x-12 translate-y-12">
                         <Compass size={320} />
                     </div>
                     <div className="relative z-10 space-y-4 max-w-3xl">
-                        <span className="inline-flex items-center gap-1.5 bg-[#F0C417] text-[#052326] px-3.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider">
+                        <span className="inline-flex items-center gap-1.5 bg-[#F0C417] text-[#052326] px-3.5 py-1 rounded-full text-xs font-semibold tracking-wider">
                             <Map size={12} className="animate-pulse" />
                             Navigation Directory
                         </span>
-                        <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
+                        <h1 className="text-3xl md:text-5xl font-semibold tracking-tight leading-tight">
                             Explore Cureza
                         </h1>
                         <p className="text-sm md:text-base text-white/80 leading-relaxed font-light">
@@ -91,9 +98,9 @@ export default function SitemapContent() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     
                     {/* Section 1: Core Pages */}
-                    <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#052326]/8 shadow-sm space-y-5 hover:shadow-md transition-shadow">
-                        <h2 className="text-lg font-extrabold flex items-center gap-2.5 text-[#052326] pb-3 border-b border-[#052326]/8">
-                            <span className="p-2 rounded-lg bg-[#052326]/5 text-[#052326]">
+                    <div style={cardStyle} className="bg-white p-6 md:p-8 space-y-5">
+                        <h2 className="text-lg font-semibold flex items-center gap-2.5 text-[#052326] pb-3 border-b border-[#052326]/8">
+                            <span className="p-2 rounded-[8px] bg-[#052326]/5 text-[#052326] border border-[rgba(85,85,85,0.08)]">
                                 <Compass size={18} />
                             </span>
                             Core Pages
@@ -110,9 +117,9 @@ export default function SitemapContent() {
                     </div>
 
                     {/* Section 2: Shop & Categories */}
-                    <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#052326]/8 shadow-sm space-y-5 hover:shadow-md transition-shadow">
-                        <h2 className="text-lg font-extrabold flex items-center gap-2.5 text-[#052326] pb-3 border-b border-[#052326]/8">
-                            <span className="p-2 rounded-lg bg-[#052326]/5 text-[#052326]">
+                    <div style={cardStyle} className="bg-white p-6 md:p-8 space-y-5">
+                        <h2 className="text-lg font-semibold flex items-center gap-2.5 text-[#052326] pb-3 border-b border-[#052326]/8">
+                            <span className="p-2 rounded-[8px] bg-[#052326]/5 text-[#052326] border border-[rgba(85,85,85,0.08)]">
                                 <ShoppingBag size={18} />
                             </span>
                             Shop & Catalog
@@ -129,7 +136,7 @@ export default function SitemapContent() {
                                 </li>
                             ) : categories.length > 0 ? (
                                 <div className="pt-2 border-t border-[#052326]/6 space-y-2.5">
-                                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#052326]/40 block mb-1">Product Categories</span>
+                                    <span className="text-[10px] font-semibold text-[#052326]/40 block mb-1">Product Categories</span>
                                     {categories.slice(0, 5).map((category) => (
                                         <li key={category.id}>
                                             <Link href={`/category/${category.slug}`} className="hover:text-[#F0C417] flex items-center gap-1.5 text-xs text-[#052326]/70 transition-colors font-medium">
@@ -143,9 +150,9 @@ export default function SitemapContent() {
                     </div>
 
                     {/* Section 3: Registered Brands */}
-                    <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#052326]/8 shadow-sm space-y-5 hover:shadow-md transition-shadow">
-                        <h2 className="text-lg font-extrabold flex items-center gap-2.5 text-[#052326] pb-3 border-b border-[#052326]/8">
-                            <span className="p-2 rounded-lg bg-[#052326]/5 text-[#052326]">
+                    <div style={cardStyle} className="bg-white p-6 md:p-8 space-y-5">
+                        <h2 className="text-lg font-semibold flex items-center gap-2.5 text-[#052326] pb-3 border-b border-[#052326]/8">
+                            <span className="p-2 rounded-[8px] bg-[#052326]/5 text-[#052326] border border-[rgba(85,85,85,0.08)]">
                                 <Tag size={18} />
                             </span>
                             Our Brands
@@ -158,7 +165,7 @@ export default function SitemapContent() {
                             <ul className="grid grid-cols-2 gap-3 text-xs font-semibold text-[#052326]/80">
                                 {brands.map((brand) => (
                                     <li key={brand.id}>
-                                        <Link href={`/brand/${brand.slug}`} className="hover:text-[#F0C417] flex items-center gap-1 transition-colors border border-[#052326]/8 px-2.5 py-1.5 rounded-lg bg-[#F8F3EF]/50 hover:bg-[#052326]/5 font-medium">
+                                        <Link href={`/brand/${brand.slug}`} style={cardStyle} className="hover:text-[#F0C417] flex items-center gap-1 transition-colors px-2.5 py-1.5 bg-[#F8F3EF]/50 hover:bg-[#052326]/5 font-medium">
                                             {brand.name}
                                         </Link>
                                     </li>
@@ -170,9 +177,9 @@ export default function SitemapContent() {
                     </div>
 
                     {/* Section 4: Legal & Policies */}
-                    <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#052326]/8 shadow-sm space-y-5 hover:shadow-md transition-shadow">
-                        <h2 className="text-lg font-extrabold flex items-center gap-2.5 text-[#052326] pb-3 border-b border-[#052326]/8">
-                            <span className="p-2 rounded-lg bg-[#052326]/5 text-[#052326]">
+                    <div style={cardStyle} className="bg-white p-6 md:p-8 space-y-5">
+                        <h2 className="text-lg font-semibold flex items-center gap-2.5 text-[#052326] pb-3 border-b border-[#052326]/8">
+                            <span className="p-2 rounded-[8px] bg-[#052326]/5 text-[#052326] border border-[rgba(85,85,85,0.08)]">
                                 <ShieldCheck size={18} />
                             </span>
                             Policies & Legal
@@ -192,9 +199,9 @@ export default function SitemapContent() {
                     </div>
 
                     {/* Section 5: Blogs & Reading */}
-                    <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#052326]/8 shadow-sm space-y-5 hover:shadow-md transition-shadow md:col-span-2">
-                        <h2 className="text-lg font-extrabold flex items-center gap-2.5 text-[#052326] pb-3 border-b border-[#052326]/8">
-                            <span className="p-2 rounded-lg bg-[#052326]/5 text-[#052326]">
+                    <div style={cardStyle} className="bg-white p-6 md:p-8 space-y-5 md:col-span-2">
+                        <h2 className="text-lg font-semibold flex items-center gap-2.5 text-[#052326] pb-3 border-b border-[#052326]/8">
+                            <span className="p-2 rounded-[8px] bg-[#052326]/5 text-[#052326] border border-[rgba(85,85,85,0.08)]">
                                 <BookOpen size={18} />
                             </span>
                             Wellness Library & Articles

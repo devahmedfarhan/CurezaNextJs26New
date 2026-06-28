@@ -9,9 +9,16 @@ export const metadata: Metadata = {
 };
 
 export default function CancellationRefundPolicy() {
+    const cardStyle = {
+        borderRadius: '8px',
+        border: '1px solid rgba(85, 85, 85, 0.18)',
+        boxShadow: 'none',
+        filter: 'none',
+    };
+
     return (
         <div className="bg-[#F8F3EF] min-h-screen py-16 text-[#052326]">
-            <div className="container mx-auto max-w-4xl px-6">
+            <div className="container mx-auto px-4 md:px-6">
                 {/* Back Link */}
                 <div className="mb-8">
                     <Link href="/shop" className="inline-flex items-center gap-2 text-[#052326]/70 font-semibold hover:text-[#052326] transition text-sm">
@@ -19,10 +26,10 @@ export default function CancellationRefundPolicy() {
                     </Link>
                 </div>
 
-                <div className="bg-white rounded-[14px] border border-[#052326]/12 p-8 md:p-12 shadow-premium-light">
+                <div style={cardStyle} className="bg-white p-8 md:p-12">
                     {/* Header */}
                     <header className="mb-10 pb-6 border-b border-[#052326]/12">
-                        <h1 className="text-3xl md:text-4xl font-extrabold font-heading text-[#052326]">
+                        <h1 className="text-3xl md:text-4xl font-semibold font-heading text-[#052326]">
                             {pageData.title}
                         </h1>
                         {pageData.description && (
@@ -30,8 +37,8 @@ export default function CancellationRefundPolicy() {
                                 {pageData.description}
                             </p>
                         )}
-                        <div className="text-[10px] text-[#052326]/60 font-semibold uppercase tracking-wider mt-3">
-                            <span>LAST UPDATED:</span> {new Date(pageData.updated_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                        <div className="text-[10px] text-[#052326]/60 font-semibold mt-3">
+                            <span>Last Updated:</span> {new Date(pageData.updated_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                         </div>
                     </header>
 

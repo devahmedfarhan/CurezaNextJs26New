@@ -143,29 +143,36 @@ export default function LabReportsContent() {
         )
     }));
 
+    const cardStyle = {
+        borderRadius: '8px',
+        border: '1px solid rgba(85, 85, 85, 0.18)',
+        boxShadow: 'none',
+        filter: 'none',
+    };
+
     return (
         <div className="bg-[#F8F3EF] min-h-screen py-12 text-[#052326]">
-            <div className="container mx-auto px-4 md:px-8">
+            <div className="container mx-auto px-4 md:px-6">
                 
                 {/* Breadcrumbs */}
-                <div className="flex items-center gap-2 text-xs font-semibold text-[#052326]/60 mb-6 uppercase tracking-wider">
+                <div className="flex items-center gap-2 text-xs font-semibold text-[#052326]/60 mb-6 tracking-wider">
                     <Link href="/" className="hover:text-[#052326] transition-colors">Home</Link>
                     <ChevronRight size={12} />
                     <span className="text-[#052326]">Lab Reports & COA</span>
                 </div>
 
-                {/* Hero / Header Section */}
-                <div className="bg-gradient-to-br from-[#052326] to-[#0d454a] text-white p-8 md:p-12 rounded-[24px] mb-10 shadow-xl relative overflow-hidden">
+                {/* Hero / Header Section - Inside container layout */}
+                <div style={{ ...cardStyle, border: 'none' }} className="bg-gradient-to-br from-[#052326] to-[#0d454a] text-white p-8 md:p-12 mb-10 relative overflow-hidden">
                     <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none transform translate-x-12 translate-y-12">
                         <FlaskConical size={280} />
                     </div>
 
                     <div className="relative z-10 space-y-4 max-w-4xl">
-                        <span className="inline-flex items-center gap-1.5 bg-[#F0C417] text-[#052326] px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wider">
+                        <span className="inline-flex items-center gap-1.5 bg-[#F0C417] text-[#052326] px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider">
                             <ShieldCheck size={12} />
                             Cureza Certified Transparency
                         </span>
-                        <h1 className="text-3xl md:text-5xl font-black font-heading tracking-tight leading-tight">
+                        <h1 className="text-3xl md:text-5xl font-semibold font-heading tracking-tight leading-tight">
                             {dynamicCoa ? dynamicCoa.title : 'Lab Reports & Certificates of Analysis (COA)'}
                         </h1>
                         {dynamicCoa ? (
@@ -182,14 +189,14 @@ export default function LabReportsContent() {
                 </div>
 
                 {/* Filters Row */}
-                <div className="bg-white p-4 rounded-2xl border border-[#052326]/8 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+                <div style={cardStyle} className="bg-white p-4 flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
                     {/* Brand Select Filter */}
                     <div className="flex items-center gap-2.5 w-full md:w-auto">
                         <Filter size={16} className="text-[#052326]/60" />
                         <select 
                             value={selectedBrandSlug}
                             onChange={(e) => setSelectedBrandSlug(e.target.value)}
-                            className="bg-[#F8F3EF] border border-[#052326]/10 rounded-xl px-4 py-2.5 text-xs font-bold text-[#052326] focus:outline-none focus:ring-2 focus:ring-[#052326]/20 transition-all w-full md:w-56"
+                            className="bg-[#F8F3EF] border border-[#052326]/10 rounded-[8px] px-4 py-2.5 text-xs font-semibold text-[#052326] focus:outline-none focus:ring-2 focus:ring-[#052326]/20 transition-all w-full md:w-56"
                         >
                             <option value="all">Filter by Brand (All)</option>
                             {brands.map((brand) => (
@@ -206,7 +213,7 @@ export default function LabReportsContent() {
                             placeholder="Search reports or batch numbers..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-[#F8F3EF] border border-[#052326]/10 rounded-xl pl-10 pr-4 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#052326]/20 transition-all text-[#052326]"
+                            className="w-full bg-[#F8F3EF] border border-[#052326]/10 rounded-[8px] pl-10 pr-4 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#052326]/20 transition-all text-[#052326]"
                         />
                     </div>
                 </div>
@@ -218,9 +225,9 @@ export default function LabReportsContent() {
                         <span className="text-sm text-[#052326]/60 font-medium">Loading lab reports registry...</span>
                     </div>
                 ) : filteredBrandReports.length === 0 ? (
-                    <div className="text-center py-20 bg-white rounded-2xl border border-[#052326]/8 shadow-sm">
+                    <div style={cardStyle} className="text-center py-20 bg-white">
                         <AlertCircle className="mx-auto text-gray-400 mb-4" size={40} />
-                        <h3 className="text-lg font-bold text-gray-950 mb-1">No Reports Found</h3>
+                        <h3 className="text-lg font-semibold text-gray-950 mb-1">No Reports Found</h3>
                         <p className="text-sm text-gray-500">Try adjusting your filters or search query.</p>
                     </div>
                 ) : (
@@ -229,7 +236,7 @@ export default function LabReportsContent() {
                             <div key={index} className="space-y-4">
                                 {/* Brand header */}
                                 <div className="flex items-center gap-3 border-b border-[#052326]/8 pb-2.5">
-                                    <div className="h-8 w-8 rounded-lg bg-white overflow-hidden flex items-center justify-center border border-[#052326]/6">
+                                    <div style={cardStyle} className="h-8 w-8 bg-white overflow-hidden flex items-center justify-center">
                                         {br.logo ? (
                                             <img 
                                                 src={br.logo.startsWith('http') ? br.logo : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'}/storage/${br.logo}`} 
@@ -237,11 +244,11 @@ export default function LabReportsContent() {
                                                 className="max-h-full max-w-full object-contain p-1"
                                             />
                                         ) : (
-                                            <span className="text-xs font-bold uppercase">{br.brandName.slice(0, 2)}</span>
+                                            <span className="text-xs font-semibold">{br.brandName.slice(0, 2)}</span>
                                         )}
                                     </div>
-                                    <h2 className="text-lg font-extrabold text-[#052326]">{br.brandName}</h2>
-                                    <span className="text-xs bg-[#052326]/5 text-[#052326] px-2.5 py-1 rounded-full font-bold">
+                                    <h2 className="text-lg font-semibold text-[#052326]">{br.brandName}</h2>
+                                    <span className="text-xs bg-[#052326]/5 text-[#052326] px-2.5 py-1 rounded-full font-semibold">
                                         {br.reports.length} Reports
                                     </span>
                                 </div>
@@ -252,29 +259,30 @@ export default function LabReportsContent() {
                                         <div 
                                             key={report.id}
                                             onClick={() => handleReportClick(report)}
-                                            className="bg-white rounded-2xl p-5 border border-[#052326]/8 hover:border-[#052326]/20 hover:shadow-md cursor-pointer transition-all flex flex-col justify-between group relative overflow-hidden"
+                                            style={cardStyle}
+                                            className="bg-white p-5 hover:border-[#052326]/20 cursor-pointer transition-all flex flex-col justify-between group relative overflow-hidden"
                                         >
                                             <div className="space-y-3.5">
                                                 {/* File type icon badge */}
                                                 <div className="flex justify-between items-start">
-                                                    <span className={`p-2 rounded-xl flex items-center justify-center ${
+                                                    <span className={`p-2 rounded-[8px] flex items-center justify-center ${
                                                         report.type === 'pdf' 
                                                             ? 'bg-rose-50 text-rose-600' 
                                                             : 'bg-indigo-50 text-indigo-600'
                                                     }`}>
                                                         {report.type === 'pdf' ? <FileText size={20} /> : <ImageIcon size={20} />}
                                                     </span>
-                                                    <span className="text-[10px] uppercase bg-green-50 text-green-700 font-extrabold px-2.5 py-1 rounded-full tracking-wider border border-green-150 flex items-center gap-1">
+                                                    <span className="text-[10px] bg-green-50 text-green-700 font-semibold px-2.5 py-1 rounded-full tracking-wider border border-green-150 flex items-center gap-1">
                                                         <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-ping"></span>
                                                         Lab Verified
                                                     </span>
                                                 </div>
 
                                                 <div className="space-y-1">
-                                                    <h3 className="font-extrabold text-sm text-[#052326] group-hover:text-[#F0C417] transition-colors leading-snug">
+                                                    <h3 className="font-semibold text-sm text-[#052326] group-hover:text-[#F0C417] transition-colors leading-snug">
                                                         {report.title}
                                                     </h3>
-                                                    <p className="text-[10px] text-gray-500 font-medium">Batch No: <strong className="text-gray-700 font-bold">{report.batchNo}</strong></p>
+                                                    <p className="text-[10px] text-gray-500 font-medium">Batch No: <strong className="text-gray-700 font-semibold">{report.batchNo}</strong></p>
                                                 </div>
 
                                                 <div className="text-[10px] text-[#052326]/70 leading-relaxed font-light space-y-0.5 pt-1.5 border-t border-dashed border-gray-100">
@@ -283,9 +291,9 @@ export default function LabReportsContent() {
                                                 </div>
                                             </div>
 
-                                            <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs font-bold text-[#052326]/80 group-hover:text-[#052326] transition-colors">
+                                            <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs font-semibold text-[#052326]/80 group-hover:text-[#052326] transition-colors">
                                                 <span className="capitalize">{report.type} Document</span>
-                                                <span className="flex items-center gap-1 text-[11px] font-extrabold uppercase text-[#052326]/60 group-hover:translate-x-1 transition-transform">
+                                                <span className="flex items-center gap-1 text-[11px] font-semibold text-[#052326]/60 group-hover:translate-x-1 transition-transform">
                                                     Open Report <ExternalLink size={12} />
                                                 </span>
                                             </div>

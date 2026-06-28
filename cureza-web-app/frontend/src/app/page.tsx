@@ -35,6 +35,19 @@ import {
   WhiteLabelAdvisory,
   SecureGatewayLogos
 } from '@/components/home-sections/Zone10_FooterCompliance';
+import {
+  HempTruthMeter,
+  HeritageTimeline,
+  RatioNavigator,
+  CropToDropTimeline,
+  HempNutritionGrid,
+  EcoImpactShowcase,
+  SkincareBeautyStandard,
+  QualityProtocolSeal,
+  ClinicalTrustShowcase,
+  SeenOnMediaShowers
+} from '@/components/home-sections/Zone12_CompetitorInsights';
+
 
 async function getSettings() {
   try {
@@ -202,9 +215,22 @@ export default async function Home() {
         <FAQSection />
       </div>
 
+      {/* COMPETITOR-INSPIRED PREMIUM SECTIONS */}
+      <HempTruthMeter />
+      <HeritageTimeline />
+      <RatioNavigator />
+      <CropToDropTimeline />
+      <HempNutritionGrid />
+      <EcoImpactShowcase />
+      <SkincareBeautyStandard />
+      <QualityProtocolSeal />
+      <ClinicalTrustShowcase />
+      <SeenOnMediaShowers />
+
       {/* NEW: Verified Compliant High-Risk Settlement Gateway */}
       <SecureGatewayLogos />
     </div>
+
   );
 }
 

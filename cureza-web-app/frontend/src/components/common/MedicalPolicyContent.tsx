@@ -46,30 +46,37 @@ export default function MedicalPolicyContent() {
         fetchDynamicRxBrands();
     }, []);
 
+    const cardStyle = {
+        borderRadius: '8px',
+        border: '1px solid rgba(85, 85, 85, 0.18)',
+        boxShadow: 'none',
+        filter: 'none',
+    };
+
     return (
         <div className="bg-[#F8F3EF] min-h-screen py-12 text-[#052326]">
             {/* Standard responsive container for alignment */}
-            <div className="container mx-auto px-4 md:px-8">
+            <div className="container mx-auto px-4 md:px-6">
                 
                 {/* Breadcrumbs */}
-                <div className="flex items-center gap-2 text-xs font-semibold text-[#052326]/60 mb-6 uppercase tracking-wider">
+                <div className="flex items-center gap-2 text-xs font-semibold text-[#052326]/60 mb-6 tracking-wider">
                     <Link href="/" className="hover:text-[#052326] transition-colors">Home</Link>
                     <ChevronRight size={12} />
                     <span className="text-[#052326]">Medical Product Policy</span>
                 </div>
 
                 {/* Hero / Header Section - Inside container layout */}
-                <div className="bg-gradient-to-br from-[#052326] to-[#0b3c41] text-white p-8 md:p-12 rounded-[24px] mb-10 shadow-xl relative overflow-hidden w-full">
+                <div style={{ ...cardStyle, border: 'none' }} className="bg-gradient-to-br from-[#052326] to-[#0b3c41] text-white p-8 md:p-12 mb-10 relative overflow-hidden w-full">
                     {/* Abstract background design element */}
                     <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none transform translate-x-12 translate-y-12">
                         <ShieldAlert size={260} />
                     </div>
 
                     <div className="relative z-10 space-y-4 max-w-4xl">
-                        <span className="inline-block bg-[#F0C417] text-[#052326] px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wider">
+                        <span className="inline-block bg-[#F0C417] text-[#052326] px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider">
                             Schedule E-1 Rx Guidelines
                         </span>
-                        <h1 className="text-3xl md:text-5xl font-black font-heading tracking-tight leading-tight">
+                        <h1 className="text-3xl md:text-5xl font-semibold font-heading tracking-tight leading-tight">
                             {dynamicPolicy ? dynamicPolicy.title : 'Cureza RX Medication Policy'}
                         </h1>
                         <p className="text-sm md:text-base text-white/80 leading-relaxed font-light">
@@ -84,7 +91,7 @@ export default function MedicalPolicyContent() {
                     {/* Main Content Areas */}
                     <div className="lg:col-span-2 space-y-8">
                         {dynamicPolicy ? (
-                            <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#052326]/8 shadow-sm">
+                            <div style={cardStyle} className="bg-white p-6 md:p-8">
                                 <div 
                                     className="prose prose-sm sm:prose max-w-none text-[#052326]/80 leading-relaxed dynamic-legal-content"
                                     dangerouslySetInnerHTML={{ __html: dynamicPolicy.content }} 
@@ -93,9 +100,9 @@ export default function MedicalPolicyContent() {
                         ) : (
                             <>
                                 {/* 1. Dynamic Brand/Seller Registry Section */}
-                                <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#052326]/8 shadow-sm space-y-4">
-                                    <h2 className="text-xl font-bold flex items-center gap-2.5">
-                                        <span className="p-2 rounded-lg bg-[#052326]/5 text-[#052326]">
+                                <div style={cardStyle} className="bg-white p-6 md:p-8 space-y-4">
+                                    <h2 className="text-xl font-semibold flex items-center gap-2.5">
+                                        <span className="p-2 rounded-[8px] bg-[#052326]/5 text-[#052326] border border-[rgba(85,85,85,0.08)]">
                                             <CheckCircle size={20} />
                                         </span>
                                         Cureza Group of Brands (CGB)
@@ -105,7 +112,7 @@ export default function MedicalPolicyContent() {
                                     </p>
                                     
                                     <div>
-                                        <h3 className="text-xs font-bold uppercase tracking-wider text-[#052326]/60 mb-3">
+                                        <h3 className="text-xs font-semibold tracking-wider text-[#052326]/60 mb-3">
                                             Our Active Rx & Medicine Brands
                                         </h3>
                                         {loadingBrands ? (
@@ -133,9 +140,9 @@ export default function MedicalPolicyContent() {
                                 </div>
 
                                 {/* 2. Medical Supervision & Schedule E-1 */}
-                                <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#052326]/8 shadow-sm space-y-4">
-                                    <h2 className="text-xl font-bold flex items-center gap-2.5">
-                                        <span className="p-2 rounded-lg bg-[#052326]/5 text-[#052326]">
+                                <div style={cardStyle} className="bg-white p-6 md:p-8 space-y-4">
+                                    <h2 className="text-xl font-semibold flex items-center gap-2.5">
+                                        <span className="p-2 rounded-[8px] bg-[#052326]/5 text-[#052326] border border-[rgba(85,85,85,0.08)]">
                                             <FileText size={20} />
                                         </span>
                                         Supervision & Prescription Requirement
@@ -143,8 +150,8 @@ export default function MedicalPolicyContent() {
                                     <p className="text-sm text-[#052326]/70 leading-relaxed font-light">
                                         Cannabis falls under <strong>Schedule E-1 of The Drugs and Cosmetics Rules, 1945</strong>. As per law, any consumable medicine containing Schedule E-1 substances must be taken under medical supervision only.
                                     </p>
-                                    <div className="bg-[#052326]/5 p-4 rounded-xl border-l-4 border-[#052326] text-xs space-y-2">
-                                        <p className="font-bold">Important Dispatch Requirement:</p>
+                                    <div className="bg-[#052326]/5 p-4 rounded-[8px] border-l-4 border-[#052326] text-xs space-y-2">
+                                        <p className="font-semibold">Important Dispatch Requirement:</p>
                                         <p className="text-[#052326]/80 leading-relaxed font-light">
                                             A supporting prescription is proof that the medicine will be consumed following due medical diligence. We only initiate shipping of consumable medical products after receiving and verifying a valid prescription corresponding to your order.
                                         </p>
@@ -152,9 +159,9 @@ export default function MedicalPolicyContent() {
                                 </div>
 
                                 {/* 3. Medical Experts Panel */}
-                                <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#052326]/8 shadow-sm space-y-4">
-                                    <h2 className="text-xl font-bold flex items-center gap-2.5">
-                                        <span className="p-2 rounded-lg bg-[#052326]/5 text-[#052326]">
+                                <div style={cardStyle} className="bg-white p-6 md:p-8 space-y-4">
+                                    <h2 className="text-xl font-semibold flex items-center gap-2.5">
+                                        <span className="p-2 rounded-[8px] bg-[#052326]/5 text-[#052326] border border-[rgba(85,85,85,0.08)]">
                                             <Stethoscope size={20} />
                                         </span>
                                         Consultation & Expert Medical Panel
@@ -167,14 +174,14 @@ export default function MedicalPolicyContent() {
                                     </p>
                                     
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                                        <div className="p-4 rounded-xl bg-[#F8F3EF] border border-[#052326]/6 space-y-1">
-                                            <h4 className="text-xs font-bold uppercase text-[#052326]">Prescription Validity</h4>
+                                        <div className="p-4 rounded-[8px] bg-[#F8F3EF] border border-[#052326]/6 space-y-1">
+                                            <h4 className="text-xs font-semibold text-[#052326]">Prescription Validity</h4>
                                             <p className="text-xs text-[#052326]/70 font-light leading-relaxed">
                                                 Any prescription generated through our internal or external doctor networks is valid for exactly <strong>120 days</strong> from the date of issue.
                                             </p>
                                         </div>
-                                        <div className="p-4 rounded-xl bg-[#F8F3EF] border border-[#052326]/6 space-y-1">
-                                            <h4 className="text-xs font-bold uppercase text-[#052326]">Data & Health Sharing</h4>
+                                        <div className="p-4 rounded-[8px] bg-[#F8F3EF] border border-[#052326]/6 space-y-1">
+                                            <h4 className="text-xs font-semibold text-[#052326]">Data & Health Sharing</h4>
                                             <p className="text-xs text-[#052326]/70 font-light leading-relaxed">
                                                 Doctors share your medical history and prescription details with us to facilitate order dispatch. This data is protected as per our Privacy Policy.
                                             </p>
@@ -183,9 +190,9 @@ export default function MedicalPolicyContent() {
                                 </div>
 
                                 {/* 4. Ayurvedic Efficacy & Research Disclaimer */}
-                                <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#052326]/8 shadow-sm space-y-4">
-                                    <h2 className="text-xl font-bold flex items-center gap-2.5">
-                                        <span className="p-2 rounded-lg bg-[#052326]/5 text-[#052326]">
+                                <div style={cardStyle} className="bg-white p-6 md:p-8 space-y-4">
+                                    <h2 className="text-xl font-semibold flex items-center gap-2.5">
+                                        <span className="p-2 rounded-[8px] bg-[#052326]/5 text-[#052326] border border-[rgba(85,85,85,0.08)]">
                                             <HelpCircle size={20} />
                                         </span>
                                         Efficacy & Research Disclaimer
@@ -205,25 +212,25 @@ export default function MedicalPolicyContent() {
                     <div className="space-y-6">
                         
                         {/* Strict Safety warnings card */}
-                        <div className="bg-[#DF5252]/10 border border-[#DF5252]/20 rounded-2xl p-6 space-y-4">
-                            <h3 className="text-base font-bold text-[#DF5252] flex items-center gap-2">
+                        <div style={cardStyle} className="bg-[#DF5252]/10 p-6 space-y-4 border-[#DF5252]/20">
+                            <h3 className="text-base font-semibold text-[#DF5252] flex items-center gap-2">
                                 <AlertOctagon size={20} />
-                                CRITICAL WARNINGS
+                                Critical Warnings
                             </h3>
                             <div className="space-y-3.5 text-xs text-[#052326]">
-                                <div className="flex gap-2 items-start bg-white/50 p-2.5 rounded-lg border-l-2 border-[#DF5252]">
+                                <div className="flex gap-2 items-start bg-white/50 p-2.5 rounded-[8px] border-l-2 border-[#DF5252]">
                                     <AlertTriangle size={16} className="text-[#DF5252] shrink-0 mt-0.5" />
-                                    <p className="font-bold uppercase tracking-wide">DO NOT CONSUME IF PREGNANT OR BREASTFEEDING.</p>
+                                    <p className="font-semibold tracking-wide">Do not consume if pregnant or breastfeeding.</p>
                                 </div>
-                                <div className="flex gap-2 items-start bg-white/50 p-2.5 rounded-lg border-l-2 border-[#DF5252]">
+                                <div className="flex gap-2 items-start bg-white/50 p-2.5 rounded-[8px] border-l-2 border-[#DF5252]">
                                     <AlertTriangle size={16} className="text-[#DF5252] shrink-0 mt-0.5" />
                                     <p className="font-light">Do not consume if you suffer from <strong>Glaucoma</strong> or <strong>severe liver issues</strong>.</p>
                                 </div>
-                                <div className="flex gap-2 items-start bg-white/50 p-2.5 rounded-lg border-l-2 border-[#DF5252]">
+                                <div className="flex gap-2 items-start bg-white/50 p-2.5 rounded-[8px] border-l-2 border-[#DF5252]">
                                     <AlertTriangle size={16} className="text-[#DF5252] shrink-0 mt-0.5" />
                                     <p className="font-light">Do not consume if you have <strong>very low blood pressure</strong>.</p>
                                 </div>
-                                <div className="flex gap-2 items-start bg-white/50 p-2.5 rounded-lg border-l-2 border-[#DF5252]">
+                                <div className="flex gap-2 items-start bg-white/50 p-2.5 rounded-[8px] border-l-2 border-[#DF5252]">
                                     <AlertTriangle size={16} className="text-[#DF5252] shrink-0 mt-0.5" />
                                     <p className="font-light"><strong>Impairment Alert:</strong> Consumption may impair your ability to drive or operate machinery. Do not handle sharp or dangerous objects after use.</p>
                                 </div>
@@ -231,8 +238,8 @@ export default function MedicalPolicyContent() {
                         </div>
 
                         {/* Dispatch & Age gate */}
-                        <div className="bg-[#052326] text-white rounded-2xl p-6 space-y-4">
-                            <h3 className="text-base font-bold text-[#F0C417] flex items-center gap-2">
+                        <div style={{ ...cardStyle, border: 'none', backgroundColor: '#052326' }} className="text-white p-6 space-y-4">
+                            <h3 className="text-base font-semibold text-[#F0C417] flex items-center gap-2">
                                 <Info size={18} />
                                 Shipping & Dispatch
                             </h3>
@@ -247,20 +254,20 @@ export default function MedicalPolicyContent() {
                         </div>
 
                         {/* Payment & Refund Terms */}
-                        <div className="bg-white border border-[#052326]/8 rounded-2xl p-6 space-y-4 shadow-sm">
-                            <h3 className="text-base font-bold flex items-center gap-2">
+                        <div style={cardStyle} className="bg-white p-6 space-y-4">
+                            <h3 className="text-base font-semibold flex items-center gap-2">
                                 <DollarSign size={18} className="text-[#052326]" />
                                 Payment & Refund Terms
                             </h3>
                             <div className="space-y-3.5 text-xs">
-                                <div className="space-y-1.5 p-3 rounded-lg bg-green-50 border border-green-200">
-                                    <h4 className="font-bold text-green-800">100% Refund Guarantee</h4>
+                                <div className="space-y-1.5 p-3 rounded-[8px] bg-green-50 border border-green-200">
+                                    <h4 className="font-semibold text-green-800">100% Refund Guarantee</h4>
                                     <p className="text-green-700 leading-relaxed font-light">
                                         If you consult our Medical Experts Panel but do not receive a prescription, you are eligible for a <strong>100% refund</strong> or a store-wide credit voucher valid for 1 year.
                                     </p>
                                 </div>
-                                <div className="space-y-1.5 p-3 rounded-lg bg-orange-50 border border-orange-200">
-                                    <h4 className="font-bold text-orange-800">External Prescriptions</h4>
+                                <div className="space-y-1.5 p-3 rounded-[8px] bg-orange-50 border border-orange-200">
+                                    <h4 className="font-semibold text-orange-800">External Prescriptions</h4>
                                     <p className="text-orange-700 leading-relaxed font-light">
                                         If you submit a prescription from an external doctor that does not clear our compliance check, a refund is <strong>not issued</strong>, but you will receive store credit valid for 1 year.
                                     </p>
