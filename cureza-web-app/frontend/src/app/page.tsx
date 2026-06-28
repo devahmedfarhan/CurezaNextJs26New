@@ -66,12 +66,14 @@ async function getSettings() {
   };
 }
 
-async function getProducts(params: { category?: string; collection?: string; limit?: number }) {
+async function getProducts(params: { category?: string; collection?: string; limit?: number; mega_menu_section?: string }) {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000';
   const query = new URLSearchParams();
   if (params.limit) query.append('limit', String(params.limit));
   if (params.category) query.append('category', params.category);
   if (params.collection) query.append('collection', params.collection);
+  if (params.mega_menu_section) query.append('mega_menu_section', params.mega_menu_section);
+
 
   try {
     const res = await fetch(`${backendUrl}/api/products?${query.toString()}`, {
@@ -90,12 +92,27 @@ async function getProducts(params: { category?: string; collection?: string; lim
 }
 
 export default async function Home() {
-  const [settings, newLaunches, specialOffers, bestSellers] = await Promise.all([
+  const [
+    settings,
+    newArrivals,
+    specialOffers,
+    bestSellers,
+    thcProducts,
+    cbdHempProducts,
+    herbalAyurvedaProducts,
+    supplementsWellnessProducts
+  ] = await Promise.all([
     getSettings(),
     getProducts({ category: 'latest-launch', limit: 8 }),
     getProducts({ collection: 'summer-sale', limit: 8 }),
-    getProducts({ limit: 8 })
+    getProducts({ limit: 8 }),
+    getProducts({ mega_menu_section: 'thc', limit: 8 }),
+    getProducts({ mega_menu_section: 'cbd', limit: 8 }),
+    getProducts({ mega_menu_section: 'herbal', limit: 8 }),
+    getProducts({ mega_menu_section: 'supplements', limit: 8 })
   ]);
+
+
 
   return (
     <div className="w-full bg-[#F8F3EF]">
@@ -114,6 +131,73 @@ export default async function Home() {
         />
       </div>
 
+      {/* NEW ARRIVAL */}
+      <div className="bg-white py-4 border-b border-[#052326]/5">
+        <ProductGrid
+          title="New Arrivals"
+          subtitle="Freshly added wellness solutions to our catalog"
+          layout="grid"
+          columns={4}
+          limit={8}
+          categorySlug="latest-launch"
+          products={newArrivals}
+          viewAllLink="/shop?category=latest-launch"
+        />
+      </div>
+
+      {/* MEDICAL CANNABIS THC */}
+      <div className="bg-[#F8F3EF] py-4 border-b border-[#052326]/5">
+        <ProductGrid
+          title="Medical Cannabis THC"
+          subtitle="Standardized THC formulations for professional care"
+          layout="grid"
+          columns={4}
+          limit={8}
+          products={thcProducts}
+          viewAllLink="/shop?section=thc"
+        />
+      </div>
+
+      {/* CBD & HEMP PRODUCTS */}
+      <div className="bg-white py-4 border-b border-[#052326]/5">
+        <ProductGrid
+          title="CBD & Hemp Products"
+          subtitle="High-quality CBD extracts and organic hemp formulations"
+          layout="grid"
+          columns={4}
+          limit={8}
+          products={cbdHempProducts}
+          viewAllLink="/shop?section=cbd"
+        />
+      </div>
+
+      {/* HERBAL & AYURVEDA */}
+      <div className="bg-[#F8F3EF] py-4 border-b border-[#052326]/5">
+        <ProductGrid
+          title="Herbal & Ayurveda"
+          subtitle="Traditional remedies rooted in classical Indian wellness"
+          layout="grid"
+          columns={4}
+          limit={8}
+          products={herbalAyurvedaProducts}
+          viewAllLink="/shop?section=herbal"
+        />
+      </div>
+
+      {/* SUPPLEMENTS & WELLNESS */}
+      <div className="bg-white py-4 border-b border-[#052326]/5">
+        <ProductGrid
+          title="Supplements & Wellness"
+          subtitle="Daily nutritional supplements and wellness essentials"
+          layout="grid"
+          columns={4}
+          limit={8}
+          products={supplementsWellnessProducts}
+          viewAllLink="/shop?section=supplements"
+        />
+      </div>
+
+
       <div className="bg-[#052326]/5 py-4 border-y border-[#052326]/5">
         <ProductGrid
           title="Special Offers & Sales"
@@ -125,16 +209,6 @@ export default async function Home() {
         />
       </div>
 
-      {/* 3. FEATURED & NEW ARRIVALS */}
-      <div className="bg-white py-4">
-        <ProductGrid
-          title="New Launches"
-          subtitle="Exclusive new arrivals added this week"
-          columns={4}
-          categorySlug="latest-launch"
-          products={newLaunches}
-        />
-      </div>
 
       {/* 4. SHOP BY BRAND */}
       <BrandBannerLayout />

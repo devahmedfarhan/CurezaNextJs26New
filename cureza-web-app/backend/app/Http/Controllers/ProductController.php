@@ -33,6 +33,14 @@ class ProductController extends Controller
             }
         }
 
+        if ($request->has('mega_menu_section')) {
+            $section = $request->input('mega_menu_section');
+            $query->whereHas('category', function ($q) use ($section) {
+                $q->where('mega_menu_section', $section);
+            });
+        }
+
+
         if ($request->has('concern')) {
             $concernSlug = $request->input('concern');
             if ($concernSlug === 'ungrouped') {
