@@ -19,6 +19,23 @@ import DoctorQuickBook from '@/components/home/DoctorQuickBook';
 import LabReportsChecker from '@/components/home/LabReportsChecker';
 import CommunityCircleHighlight from '@/components/home/CommunityCircleHighlight';
 
+// Landing Page Integrated Sections
+import { SubscriptionRefillBanner } from '@/components/home-sections/Zone3_RxEngine';
+import {
+  SpectrumEducation,
+  CBDDosageCalculator,
+  VeterinaryDosageCalculator
+} from '@/components/home-sections/Zone4_CBDHemp';
+import {
+  TeleconsultationBooking,
+  SynergyBundles
+} from '@/components/home-sections/Zone5_AyurvedaClinic';
+import { IngredientGlossary } from '@/components/home-sections/Zone8_EducationalContent';
+import {
+  WhiteLabelAdvisory,
+  SecureGatewayLogos
+} from '@/components/home-sections/Zone10_FooterCompliance';
+
 async function getSettings() {
   try {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000';
@@ -115,8 +132,15 @@ export default async function Home() {
       {/* 6. SHOP BY CATEGORY */}
       <CategorySlider />
 
+      {/* NEW: Multi-Vertical Synergy & Clinical Integrative Bundles */}
+      <SynergyBundles />
+
       {/* 7. OFFERS PAGES / DISCOUNT DECK */}
       <OffersSection />
+
+      {/* NEW: Adherence Support Program & Scientific Breakdown (Stacked together) */}
+      <SubscriptionRefillBanner />
+      <SpectrumEducation />
 
       {/* --- BOTTOM SECTION: RETAINING ALL EXISTING SECTIONS & EXTRA WIDGETS BEFORE FAQ --- */}
       
@@ -138,14 +162,27 @@ export default async function Home() {
       {/* 13. DOCTOR QUICK BOOKING CLINIC WIDGET */}
       <DoctorQuickBook />
 
+      {/* NEW: Medical Validation & Regulated Telemedicine: Registered AYUSH Doctors */}
+      <TeleconsultationBooking />
+
       {/* 14. CERTIFICATE OF ANALYSIS (COA) / LAB REPORTS CHECKER */}
       <LabReportsChecker />
+
+      {/* NEW: Clinical & Veterinary Dosage Calculators */}
+      <CBDDosageCalculator />
+      <VeterinaryDosageCalculator />
 
       {/* 15. CUREZA CIRCLE DISCUSSION BOARD */}
       <CommunityCircleHighlight />
 
+      {/* NEW: Molecular Glossary & The Interactive Ingredient Glossary */}
+      <IngredientGlossary />
+
       {/* 16. PARTNER SHOWCASE */}
       <PartnerShowcase />
+
+      {/* NEW: White-Label Formulation Consulting */}
+      <WhiteLabelAdvisory />
 
       {/* 17. TESTIMONIAL SLIDER */}
       <TestimonialSlider />
@@ -164,6 +201,10 @@ export default async function Home() {
       <div className="bg-[#F8F3EF] py-16 border-t border-[#052326]/5">
         <FAQSection />
       </div>
+
+      {/* NEW: Verified Compliant High-Risk Settlement Gateway */}
+      <SecureGatewayLogos />
     </div>
   );
 }
+

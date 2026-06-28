@@ -77,6 +77,16 @@ export default function Footer() {
             <p className="text-xs md:text-sm text-[#F8F3EF]/80 max-w-sm font-light leading-relaxed">
               Trusted wellness solutions for pain, balance, and everyday health.
             </p>
+            <div className="pt-4 border-t border-[#F8F3EF]/10 max-w-sm space-y-2">
+              <span className="text-[10px] uppercase font-bold text-[#F8F3EF]/50 tracking-wider block">Cureza Clinical Registry</span>
+              <p className="text-[11px] text-[#F8F3EF]/75 font-medium leading-relaxed">
+                Authentic health marketplace integrating AYUSH formulations, NABL tested hemp cannabinoids, and allopathic pharmaceuticals.
+              </p>
+              <p className="text-[10px] font-semibold text-[#F0C417] leading-relaxed">
+                Ministry of AYUSH DL: DL-3882B<br />
+                Drug License: DL-WZ-90181 / DL-WZ-90182
+              </p>
+            </div>
             {/* Social Icons with white round bg */}
             <div className="flex gap-3 pt-2">
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-white text-[#052326] hover:bg-[#F0C417] hover:text-[#052326] flex items-center justify-center transition-all shadow-sm">
@@ -164,6 +174,14 @@ export default function Footer() {
                 <li><Link href="/track-order" className="hover:text-[#F0C417] transition-colors">Track Your Order</Link></li>
                 <li><Link href="/faq" className="hover:text-[#F0C417] transition-colors">Help Center / FAQs</Link></li>
                 <li><Link href="/contact" className="hover:text-[#F0C417] transition-colors">Contact Support</Link></li>
+                <li className="pt-3 border-t border-[#F8F3EF]/10">
+                  <span className="text-[10px] uppercase font-bold text-[#F8F3EF]/40 tracking-wider block mb-1">Grievance & Registry Officer</span>
+                  <p className="text-[10px] text-[#F8F3EF]/75 font-medium leading-relaxed">
+                    Grievance Officer: Mr. Sameer Verma<br />
+                    Email: compliance@cureza.com<br />
+                    Phone: +91 80 4099 2818
+                  </p>
+                </li>
               </ul>
             </div>
 
@@ -201,6 +219,19 @@ export default function Footer() {
 
           </div>
 
+          {/* Medical and Legal Disclaimer Block */}
+          <div className="border-t border-[#F8F3EF]/10 pt-8 mt-8 text-[10px] text-[#F8F3EF]/60 leading-relaxed font-medium text-justify space-y-4">
+            <p>
+              <strong className="text-white">Prescription Medicine Disclaimer:</strong> Allopathic pharmaceutical formulations hosted on this platform are dispensed strictly under the guidance of registered medical practitioners (RMPs). A valid prescription is mandatory for shipping. Standard pharmacist validation audits are conducted prior to invoicing.
+            </p>
+            <p>
+              <strong className="text-white">Hemp & Cannabinoid Disclaimer:</strong> Cannabidiol (CBD) and hemp-derived therapeutics are legal and compliant under the Drugs and Cosmetics Act, 1940 and rules thereunder, and formulated in accordance with the guidelines of the Ministry of AYUSH. THC-dominant formulations require mandatory digital consultations with verified AYUSH practitioners.
+            </p>
+            <p>
+              <strong className="text-white">General Medical Disclaimer:</strong> The content provided across Cureza Wellness Pvt Ltd (including ingredients, dosages, calculators, and symptom mapping guides) exists purely for educational and reference purposes. It does not replace professional clinical diagnosis, advice, or therapy.
+            </p>
+          </div>
+
           {/* Divider & Core Info */}
           <div className="border-t border-[#F8F3EF]/10 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-bold text-[#F8F3EF]/50">
             <div className="flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
@@ -209,6 +240,8 @@ export default function Footer() {
               </span>
               <span className="hidden md:inline">•</span>
               <p>© 2026 Cureza Wellness Pvt Ltd. All rights reserved.</p>
+              <span className="hidden md:inline">•</span>
+              <p className="text-[9px] uppercase tracking-widest text-[#F0C417]">Distilled Clinical Architecture</p>
             </div>
 
             {/* Legal Anchor Links */}
@@ -218,9 +251,6 @@ export default function Footer() {
               <Link href="/legal/terms-of-service" className="hover:text-[#F8F3EF] transition-colors">Terms of Service</Link>
               <Link href="/site-map" className="hover:text-[#F8F3EF] transition-colors">Sitemap</Link>
             </div>
-
-
-
 
             {/* Brand Credit */}
             <div className="flex items-center gap-1.5 text-xs text-[#F8F3EF]/80 font-bold">
@@ -235,3 +265,4 @@ export default function Footer() {
     </footer>
   );
 }
+
