@@ -1,14 +1,8 @@
----
-trigger: always_on
----
-
-# Design Rules
+# Cureza Workspace Rules
 
 ## Layout and Width
 - **Container Width Alignment**: All public page containers and main layouts must strictly align with the global header/navigation container width (`container mx-auto px-4 md:px-6`).
 - **No Narrow Restrictions**: Avoid restricting main page layout wrappers with `max-w-7xl` or other narrow constraints. This ensures page grids align seamlessly with the header on wide/2K monitors.
-
-## Page Revamp Standards
 
 ### Card Design
 - Apply **8px border-radius** to all cards.
@@ -37,7 +31,7 @@ trigger: always_on
 ### Responsive Design & Card Carousels
 - Entire page must be **100% Mobile Responsive** across desktop, laptop, tablet, and mobile.
 - If any section contains too many cards causing excessive vertical scrolling, automatically convert that card layout into a **responsive horizontal carousel/slider**.
-- Carousels must support:
+- Carousels must support: (Only Mobile & Tablets)
   - Swipe on mobile
   - Mouse drag on desktop
   - Navigation arrows
