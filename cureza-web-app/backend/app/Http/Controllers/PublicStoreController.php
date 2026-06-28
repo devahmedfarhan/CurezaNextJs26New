@@ -98,7 +98,7 @@ class PublicStoreController extends Controller
                         ->exists();
                     if (!$exists) {
                         \App\Models\Review::create([
-                            'customer_id' => $customerIds[array_rand($customerIds)],
+                            'customer_id' => null,
                             'seller_id' => $sellerId,
                             'review_type' => 'seller',
                             'rating' => $data['rating'],
