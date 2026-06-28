@@ -263,6 +263,26 @@ class DemoDataMasterSeeder extends Seeder
                 'expires_at' => now()->addMonth(),
                 'created_at' => now(),
                 'updated_at' => now(),
+            ],
+            [
+                'code' => 'CLEANERSALE',
+                'type' => 'percent',
+                'value' => 20.00,
+                'min_cart_value' => 499.00,
+                'is_active' => true,
+                'expires_at' => now()->addMonth(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'code' => 'LAUNCH10',
+                'type' => 'percent',
+                'value' => 10.00,
+                'min_cart_value' => 0.00,
+                'is_active' => true,
+                'expires_at' => now()->addMonths(2),
+                'created_at' => now(),
+                'updated_at' => now(),
             ]
         ]);
 
