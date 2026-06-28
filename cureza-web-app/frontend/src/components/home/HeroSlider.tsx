@@ -178,7 +178,10 @@ export default function HeroSlider() {
               <span className="absolute top-2 left-2 px-2.5 py-1 text-[9px] font-bold bg-[#052326] text-[#F8F3EF] rounded-md tracking-wider">
                 {currentSlide.badge}
               </span>
-              <button className="absolute top-2 right-2 p-1.5 rounded-full bg-white/10 backdrop-blur-md text-[#F8F3EF] hover:bg-white/20 transition-all">
+              <button 
+                aria-label="Add to Wishlist"
+                className="absolute top-2 right-2 p-1.5 rounded-full bg-white/10 backdrop-blur-md text-[#F8F3EF] hover:bg-white/20 transition-all"
+              >
                 <Heart className="w-3.5 h-3.5" />
               </button>
             </div>

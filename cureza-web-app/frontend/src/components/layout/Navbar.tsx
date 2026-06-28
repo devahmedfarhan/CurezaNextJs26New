@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   Search, ShoppingCart, User, Menu, Heart, LogOut, ShoppingBag, X, 
   ChevronDown, ChevronRight, HelpCircle, ClipboardList, Sparkles, 
@@ -172,8 +173,14 @@ export default function Navbar() {
                   title={user.name}
                 >
                   {user.profile_image_url ? (
-                    <div className="w-8 h-8 rounded-full overflow-hidden border border-[#052326]/12 shadow-sm">
-                      <img src={user.profile_image_url} alt={user.name} className="w-full h-full object-cover" />
+                    <div className="w-8 h-8 rounded-full overflow-hidden border border-[#052326]/12 shadow-sm relative">
+                      <Image 
+                        src={user.profile_image_url} 
+                        alt={user.name} 
+                        width={32}
+                        height={32}
+                        className="w-full h-full object-cover" 
+                      />
                     </div>
                   ) : (
                     <div className="w-8 h-8 rounded-full bg-[#052326] text-white flex items-center justify-center font-bold text-xs shadow-sm border border-emerald-800/20">

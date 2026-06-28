@@ -13,11 +13,13 @@ import { SWRConfig } from "swr";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
 });
 
 const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-heading",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -37,6 +39,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning data-theme="light" className={`${inter.variable} ${manrope.variable}`}>
+      <head>
+        {process.env.NEXT_PUBLIC_BACKEND_URL && (
+          <link rel="preconnect" href={process.env.NEXT_PUBLIC_BACKEND_URL} />
+        )}
+      </head>
       <body
         className={`${inter.variable} ${manrope.variable} antialiased font-sans bg-background text-charcoal`}
         suppressHydrationWarning

@@ -115,12 +115,12 @@ export default function ProductGrid({
 
   return (
     <section className="py-16 bg-transparent text-[#052326]">
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto px-4 md:px-6">
         
         {/* Premium Header Layout */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 pb-6 border-b border-[#052326]/10 gap-6">
           <div>
-            <span className="text-[10px] font-bold tracking-[0.2em] text-[#052326]/50 uppercase block mb-2">
+            <span className="text-[10px] font-bold tracking-[0.2em] text-[#052326]/75 uppercase block mb-2">
               Curated Catalog
             </span>
             <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">

@@ -12,7 +12,7 @@ export default function FAQSection() {
     };
 
     return (
-        <section className="container mx-auto px-4">
+        <section className="container mx-auto px-4 md:px-6">
             <h2 className="text-3xl md:text-4xl font-bold text-charcoal dark:text-gray-100 mb-8 text-center">
                 Frequently Asked Questions
             </h2>
@@ -21,7 +21,14 @@ export default function FAQSection() {
                 {FAQS.map((faq, index) => (
                     <div
                         key={index}
-                        className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden"
+                        className="bg-white dark:bg-gray-900 overflow-hidden"
+                        style={{
+                            borderRadius: '8px',
+                            border: '1px solid rgba(0, 0, 0, 0.05)',
+                            borderColor: 'rgba(85, 85, 85, 0.18)',
+                            boxShadow: 'none',
+                            filter: 'none'
+                        }}
                     >
                         <button
                             onClick={() => toggle(index)}

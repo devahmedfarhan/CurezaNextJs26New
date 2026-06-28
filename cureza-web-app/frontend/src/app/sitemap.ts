@@ -41,8 +41,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // 2. Fetch Dynamic Products
     try {
         const res = await axios.get(`${BACKEND_URL}/api/products`);
-        if (res.data && Array.isArray(res.data)) {
-            productUrls = res.data.map((product: any) => ({
+        const productsData = res.data?.data || res.data;
+        if (productsData && Array.isArray(productsData)) {
+            productUrls = productsData.map((product: any) => ({
                 url: `${SITE_URL}/product/${product.slug}`,
                 lastModified: new Date(product.updated_at || new Date()),
                 changeFrequency: 'daily',
@@ -72,8 +73,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // 4. Fetch Dynamic Categories
     try {
         const res = await axios.get(`${BACKEND_URL}/api/categories`);
-        if (res.data && Array.isArray(res.data)) {
-            categoryUrls = res.data.map((category: any) => ({
+        const categoriesData = res.data?.data || res.data;
+        if (categoriesData && Array.isArray(categoriesData)) {
+            categoryUrls = categoriesData.map((category: any) => ({
                 url: `${SITE_URL}/category/${category.slug}`,
                 lastModified: new Date(),
                 changeFrequency: 'weekly',

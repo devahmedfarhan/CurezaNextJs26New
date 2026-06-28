@@ -62,7 +62,7 @@ export function SpectrumEducation() {
                 </p>
               </div>
               <div className="mt-6 pt-4 border-t border-[#052326]/8">
-                <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Active Molecules</span>
+                <span className="text-[10px] uppercase font-bold text-[#052326]/75 tracking-wider">Active Molecules</span>
                 <p className="text-xs font-semibold text-[#052326] mt-0.5">{spec.compounds}</p>
               </div>
             </div>
@@ -116,10 +116,11 @@ export function CBDDosageCalculator() {
               {/* Weight Slider */}
               <div>
                 <div className="flex justify-between items-center text-xs font-semibold text-[#052326]">
-                  <span>Patient Body Weight</span>
+                  <label htmlFor="patientWeightRange">Patient Body Weight</label>
                   <span>{weight} kg</span>
                 </div>
                 <input
+                  id="patientWeightRange"
                   type="range"
                   min="40"
                   max="120"
@@ -175,14 +176,14 @@ export function CBDDosageCalculator() {
             <div className="bg-[#052326]/5 rounded-lg p-6 flex flex-col justify-between border border-[#052326]/8">
               <div className="space-y-4">
                 <div className="text-center">
-                  <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Estimated Target Dose</span>
-                  <p className="text-4xl font-extrabold text-[#052326] mt-1">{dosage} mg <span className="text-xs font-semibold text-gray-500">/ day</span></p>
+                  <span className="text-[10px] uppercase font-bold text-[#052326]/75 tracking-wider">Estimated Target Dose</span>
+                  <p className="text-4xl font-extrabold text-[#052326] mt-1">{dosage} mg <span className="text-xs font-semibold text-[#052326]/75">/ day</span></p>
                 </div>
                 <div className="border-t border-[#052326]/8 pt-4 text-[11px] leading-relaxed text-[#052326]/80 font-medium">
                   We recommend splitting this dose: <strong className="text-[#052326]">60% sublingually</strong> in the morning and <strong className="text-[#052326]">40% ingestible</strong> 2 hours prior to sleep.
                 </div>
               </div>
-              <div className="mt-6 text-[10px] text-gray-400 font-semibold text-center leading-normal">
+              <div className="mt-6 text-[10px] text-[#052326]/75 font-semibold text-center leading-normal">
                 Consult with verified AYUSH doctors before escalating dosages.
               </div>
             </div>
@@ -236,8 +237,9 @@ export function VeterinaryDosageCalculator() {
           </div>
 
           <div>
-            <label className="block font-bold mb-1">Pet Weight: {petWeight} kg</label>
+            <label htmlFor="petWeightRange" className="block font-bold mb-1">Pet Weight: {petWeight} kg</label>
             <input
+              id="petWeightRange"
               type="range"
               min="2"
               max="40"

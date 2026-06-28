@@ -13,7 +13,13 @@ export default function robots(): MetadataRoute.Robots {
                 '/doctor/dashboard/',
                 '/superadmin/',
                 '/checkout/',
-                '/cart/'
+                '/cart/',
+                '/account/',
+                '/api/',
+                '/*?*sort=',
+                '/*?*filter_',
+                '/*?*price=',
+                '/*?*page='
             ],
         },
         sitemap: `${SITE_URL}/sitemap.xml`,

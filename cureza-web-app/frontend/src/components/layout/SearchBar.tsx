@@ -178,6 +178,7 @@ export default function SearchBar() {
                         setShowDropdown(true);
                     }}
                     placeholder="Search for medicines, wellness products, doctors..."
+                    aria-label="Search"
                     className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-full py-2.5 pl-5 pr-24 focus:outline-none focus:border-cureza-green focus:ring-1 focus:ring-cureza-green transition-colors text-sm"
                 />
 
@@ -186,6 +187,7 @@ export default function SearchBar() {
                     <button
                         type="button"
                         onClick={handleClear}
+                        aria-label="Clear search query"
                         className="absolute right-14 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                     >
                         <X size={18} />
@@ -195,6 +197,7 @@ export default function SearchBar() {
                 {/* Search button */}
                 <button
                     type="submit"
+                    aria-label="Submit search"
                     className="absolute right-2 top-1/2 -translate-y-1/2 bg-cureza-green text-white p-1.5 rounded-full hover:bg-green-800 transition"
                 >
                     <Search size={18} />

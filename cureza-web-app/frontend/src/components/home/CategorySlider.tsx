@@ -62,7 +62,7 @@ export default function CategorySlider() {
       {/* HEADER SECTION */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6 border-b border-[#052326]/10 pb-6">
         <div>
-          <span className="text-[10px] font-bold tracking-[0.25em] text-[#052326]/60 uppercase block mb-2">
+          <span className="text-[10px] font-bold tracking-[0.25em] text-[#052326]/80 uppercase block mb-2">
             Curated Categories
           </span>
           <h2 className="text-3xl md:text-4xl font-semibold text-[#052326] tracking-tight">

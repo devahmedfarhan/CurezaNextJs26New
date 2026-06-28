@@ -1,3 +1,5 @@
+import { Metadata } from 'next';
+import faqsData from '@/data/home-faqs.json';
 import HeroSlider from '@/components/home/HeroSlider';
 import PioneeringBanner from '@/components/home/PioneeringBanner';
 import FormulatedWithPurpose from '@/components/home/FormulatedWithPurpose';
@@ -9,6 +11,37 @@ import TestimonialSlider from '@/components/home/TestimonialSlider';
 import FAQSection from '@/components/home/FAQSection';
 import BlogList from '@/components/blogs/BlogList';
 import ProductGrid from '@/components/product/ProductGrid';
+
+export const metadata: Metadata = {
+  title: "Cureza: Buy Medical Cannabis CBD, Ayurveda & Natural Wellness Online",
+  description: "Cureza Marketplace is India's leading platform for clinical-grade CBD products, authentic Ayurvedic medicines, and organic wellness supplements verified by doctors.",
+  alternates: {
+    canonical: "https://cureza.in/",
+  },
+  openGraph: {
+    title: "Cureza: Buy Medical Cannabis CBD, Ayurveda & Natural Wellness Online",
+    description: "Cureza Marketplace is India's leading platform for clinical-grade CBD products, authentic Ayurvedic medicines, and organic wellness supplements verified by doctors.",
+    url: "https://cureza.in/",
+    siteName: "Cureza Marketplace",
+    images: [
+      {
+        url: "/BannerPNG.png",
+        width: 1200,
+        height: 630,
+        alt: "Cureza Marketplace Banner",
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cureza: Buy Medical Cannabis CBD, Ayurveda & Natural Wellness Online",
+    description: "Cureza Marketplace is India's leading platform for clinical-grade CBD products, authentic Ayurvedic medicines, and organic wellness supplements verified by doctors.",
+    images: ["/BannerPNG.png"],
+  },
+};
+
 
 // NEW & RESTYLED HOMEPAGE SECTIONS
 import BrandBannerLayout from '@/components/home/BrandGrid';
@@ -114,8 +147,121 @@ export default async function Home() {
 
 
 
+  const schemas = [
+    {
+      "@context": "https://schema.org",
+      "@type": "MedicalOrganization",
+      "@id": "https://cureza.in/#organization",
+      "name": "Cureza Marketplace",
+      "url": "https://cureza.in",
+      "logo": "https://cureza.in/Logo%20Full.svg",
+      "image": "https://cureza.in/BannerPNG.png",
+      "description": "India's premier online marketplace for clinical-grade CBD products, authentic Ayurvedic medicines, and organic wellness supplements verified by doctors.",
+      "telephone": "+91-9876543210",
+      "email": "support@cureza.in",
+      "medicalSpecialty": [
+        "AyurvedicMedicine",
+        "CannabisTherapeutics",
+        "HolisticHealth"
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "102, Green Botanical Avenue, Sector 5",
+        "addressLocality": "Bengaluru",
+        "addressRegion": "Karnataka",
+        "postalCode": "560001",
+        "addressCountry": "IN"
+      },
+      "sameAs": [
+        "https://www.facebook.com/curezamarketplace",
+        "https://www.instagram.com/cureza_wellness",
+        "https://x.com/curezain",
+        "https://www.wikidata.org/wiki/Q114389"
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": "https://cureza.in/#website",
+      "url": "https://cureza.in",
+      "name": "Cureza Marketplace",
+      "description": "Multi-Vendor Wellness Marketplace for CBD, Ayurveda & Natural supplements.",
+      "publisher": {
+        "@id": "https://cureza.in/#organization"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://cureza.in/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "@id": "https://cureza.in/#webpage",
+      "url": "https://cureza.in",
+      "name": "Cureza: Buy Medical Cannabis CBD, Ayurveda & Natural Wellness Online",
+      "description": "Cureza Marketplace is India's leading platform for clinical-grade CBD products, authentic Ayurvedic medicines, and organic wellness supplements verified by doctors.",
+      "isPartOf": {
+        "@id": "https://cureza.in/#website"
+      },
+      "about": [
+        {
+          "@type": "Thing",
+          "name": "Cannabidiol",
+          "sameAs": "https://en.wikipedia.org/wiki/Cannabidiol"
+        },
+        {
+          "@type": "Thing",
+          "name": "Ayurveda",
+          "sameAs": "https://en.wikipedia.org/wiki/Ayurveda"
+        },
+        {
+          "@type": "Thing",
+          "name": "Alternative Medicine",
+          "sameAs": "https://en.wikipedia.org/wiki/Alternative_medicine"
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://cureza.in"
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqsData.map((faq: any) => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer
+        }
+      }))
+    }
+  ];
+
   return (
     <div className="w-full bg-[#F8F3EF]">
+      {/* ENTERPRISE JSON-LD SCHEMAS */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
+      />
+
+      {/* Accessibility & SEO Root Heading */}
+      <h1 className="sr-only">
+        Cureza Marketplace - Buy Medical Cannabis CBD, Ayurveda & Natural Wellness Online
+      </h1>
+
       {/* 1. CINEMATIC HERO SLIDER */}
       <HeroSlider />
 

@@ -56,7 +56,7 @@ export function TeleconsultationBooking() {
                   </div>
                   <h4 className="text-xs md:text-sm font-semibold text-[#052326] mt-2">{doc.name}</h4>
                   <p className="text-[10px] text-[#052326]/65 font-medium">{doc.deg}</p>
-                  <p className="text-[10px] text-gray-400 mt-1 font-semibold">Reg: {doc.reg}</p>
+                  <p className="text-[10px] text-[#052326]/75 mt-1 font-semibold">Reg: {doc.reg}</p>
                   
                   <button
                     onClick={() => setSelectedDoctor(doc.name)}
@@ -98,8 +98,9 @@ export function TeleconsultationBooking() {
                 <h4 className="text-sm font-bold text-center">Schedule Virtual AYUSH Consultation</h4>
                 
                 <div>
-                  <label className="block font-semibold mb-1 text-gray-400">Selected Practitioner</label>
+                  <label htmlFor="selectedDoctorInput" className="block font-semibold mb-1 text-gray-700">Selected Practitioner</label>
                   <input
+                    id="selectedDoctorInput"
                     type="text"
                     readOnly
                     value={selectedDoctor || 'Please select a provider on the left...'}
@@ -108,8 +109,9 @@ export function TeleconsultationBooking() {
                 </div>
 
                 <div>
-                  <label className="block font-semibold mb-1 text-gray-400">Prefered Appointment Date</label>
+                  <label htmlFor="bookingDateInput" className="block font-semibold mb-1 text-gray-700">Prefered Appointment Date</label>
                   <input
+                    id="bookingDateInput"
                     type="date"
                     required
                     value={bookingDate}
@@ -193,7 +195,7 @@ export function SynergyBundles() {
               
               <div className="mt-6 pt-4 border-t border-[#052326]/8 flex justify-between items-center">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-gray-400">Bundle Price</span>
+                  <span className="text-[10px] uppercase font-bold text-[#052326]/75">Bundle Price</span>
                   <p className="text-lg font-bold text-[#052326]">₹{bun.price}</p>
                 </div>
                 

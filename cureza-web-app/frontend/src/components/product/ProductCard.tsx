@@ -1,6 +1,7 @@
 'use client';
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { Heart, Star, ShoppingBag, ShieldAlert } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
@@ -70,13 +71,15 @@ export default function ProductCard({ product }: any) {
       <div className="relative w-full aspect-square overflow-hidden bg-[#F8F3EF]/50 border-b border-[#052326]/5">
         <Link href={productUrl}>
           {imageError || !imgSrc ? (
-            <img
+            <Image
               src="/fallback.png"
               alt="Product Placeholder"
-              className="w-full h-full object-cover opacity-80"
+              fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
+              className="object-cover opacity-80"
             />
           ) : (
-            <img
+            <Image
               src={(() => {
                 if (imgSrc.startsWith('http')) return imgSrc;
                 const backend = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000';
@@ -85,7 +88,9 @@ export default function ProductCard({ product }: any) {
               })()}
               onError={() => setImageError(true)}
               alt={product.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
+              className="object-cover group-hover:scale-105 transition-transform duration-700"
             />
           )}
         </Link>
@@ -135,7 +140,7 @@ export default function ProductCard({ product }: any) {
         
         <div className="space-y-1.5 sm:space-y-2">
           {/* BRAND & CATEGORY HEADER */}
-          <div className="flex justify-between items-center text-[9px] sm:text-[10px] font-bold text-[#052326]/50 uppercase tracking-wider">
+          <div className="flex justify-between items-center text-[9px] sm:text-[10px] font-bold text-[#052326]/75 uppercase tracking-wider">
             <span>{typeof product.brand === 'object' ? product.brand?.name : (product.brand || "Brand")}</span>
             <span>{typeof product.category === 'object' ? product.category?.name : (product.category || "Category")}</span>
           </div>
@@ -175,7 +180,7 @@ export default function ProductCard({ product }: any) {
             <div className="flex items-center gap-1 bg-[#052326]/5 px-2 py-0.5 rounded-[4px] sm:rounded-[6px]">
               <Star size={11} fill="currentColor" className="text-[#F0C417]" />
               <span className="font-bold text-[#052326]">{rating}</span>
-              <span className="text-[#052326]/50">({reviewsCount})</span>
+              <span className="text-[#052326]/75">({reviewsCount})</span>
             </div>
 
             {boughtLastMonth > 0 && (
@@ -189,7 +194,7 @@ export default function ProductCard({ product }: any) {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-2.5 sm:pt-3 gap-2.5 sm:gap-3">
             <div className="flex flex-row items-baseline gap-2 sm:flex-col sm:gap-0 min-w-[65px] sm:min-w-[70px]">
               {discountPercentage > 0 && (
-                <span className="text-[9px] sm:text-[10px] text-[#052326]/40 line-through">
+                <span className="text-[9px] sm:text-[10px] text-[#052326]/65 line-through">
                   ₹{originalPrice}
                 </span>
               )}

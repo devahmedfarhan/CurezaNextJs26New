@@ -1,6 +1,7 @@
 'use client';
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -91,7 +92,7 @@ export default function BrandBannerLayout() {
 
             {/* MOBILE — Heading + Subtitle (NO BUTTON) */}
             <div className="md:hidden text-center mb-6">
-                <span className="text-[10px] font-bold tracking-[0.25em] text-[#052326]/60 uppercase block mb-2">
+                <span className="text-[10px] font-bold tracking-[0.25em] text-[#052326]/80 uppercase block mb-2">
                     Curated Partners
                 </span>
                 <h2 className="text-2xl font-semibold tracking-tight">
@@ -105,7 +106,7 @@ export default function BrandBannerLayout() {
             {/* DESKTOP — Heading + Subtitle + Button */}
             <div className="hidden md:flex flex-row justify-between items-end mb-8 pb-6 border-b border-[#052326]/10">
                 <div>
-                    <span className="text-[10px] font-bold tracking-[0.25em] text-[#052326]/60 uppercase block mb-2">
+                    <span className="text-[10px] font-bold tracking-[0.25em] text-[#052326]/80 uppercase block mb-2">
                         Curated Partners
                     </span>
                     <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
@@ -134,9 +135,11 @@ export default function BrandBannerLayout() {
                         border: '1px solid rgba(85, 85, 85, 0.18)',
                     }}
                 >
-                    <img
+                    <Image
                         src={layout.big.image}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
                         alt={layout.big.name}
                     />
                     <div className="absolute inset-0 bg-[#052326]/20 group-hover:bg-[#052326]/30 transition-colors flex items-end p-6">
@@ -154,9 +157,11 @@ export default function BrandBannerLayout() {
                             border: '1px solid rgba(85, 85, 85, 0.18)',
                         }}
                     >
-                        <img 
+                        <Image 
                             src={b.image} 
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                            fill
+                            sizes="(max-width: 768px) 50vw, 25vw"
+                            className="object-cover transition-transform duration-500 group-hover:scale-105" 
                             alt={b.name} 
                         />
                         <div className="absolute inset-0 bg-[#052326]/20 group-hover:bg-[#052326]/30 transition-colors flex items-end p-4">
@@ -170,13 +175,19 @@ export default function BrandBannerLayout() {
             <div className="md:hidden space-y-4">
                 <Link 
                     href={layout.big.link} 
-                    className="block overflow-hidden relative group"
+                    className="block overflow-hidden relative group h-[200px]"
                     style={{
                         borderRadius: '8px',
                         border: '1px solid rgba(85, 85, 85, 0.18)',
                     }}
                 >
-                    <img src={layout.big.image} className="w-full h-auto object-cover" alt={layout.big.name} />
+                    <Image 
+                        src={layout.big.image} 
+                        fill
+                        sizes="100vw"
+                        className="object-cover" 
+                        alt={layout.big.name} 
+                    />
                     <div className="absolute inset-0 bg-[#052326]/20 flex items-end p-4">
                         <span className="text-white text-lg font-bold bg-[#052326]/80 px-3 py-1 rounded-[6px]">{layout.big.name}</span>
                     </div>
@@ -187,13 +198,19 @@ export default function BrandBannerLayout() {
                         <Link 
                             key={i} 
                             href={b.link} 
-                            className="overflow-hidden relative group"
+                            className="overflow-hidden relative group h-[120px]"
                             style={{
                                 borderRadius: '8px',
                                 border: '1px solid rgba(85, 85, 85, 0.18)',
                             }}
                         >
-                            <img src={b.image} className="w-full h-full object-cover" alt={b.name} />
+                            <Image 
+                                src={b.image} 
+                                fill
+                                sizes="50vw"
+                                className="object-cover" 
+                                alt={b.name} 
+                            />
                             <div className="absolute inset-0 bg-[#052326]/20 flex items-end p-3">
                                 <span className="text-white text-xs font-bold truncate w-full bg-[#052326]/80 px-2 py-0.5 rounded-[4px] text-center">{b.name}</span>
                             </div>
@@ -214,7 +231,13 @@ export default function BrandBannerLayout() {
                             border: '1px solid rgba(85, 85, 85, 0.18)',
                         }}
                     >
-                        <img src={b.image} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt={b.name} />
+                        <Image 
+                            src={b.image} 
+                            fill
+                            sizes="(max-width: 640px) 33vw, 16vw"
+                            className="object-cover transition-transform duration-500 group-hover:scale-105" 
+                            alt={b.name} 
+                        />
                         <div className="absolute inset-0 bg-[#052326]/10 group-hover:bg-[#052326]/20 transition-colors flex items-end p-2">
                             <span className="text-white text-[10px] font-semibold truncate w-full bg-[#052326]/85 px-1.5 py-0.5 rounded-[4px] text-center">{b.name}</span>
                         </div>

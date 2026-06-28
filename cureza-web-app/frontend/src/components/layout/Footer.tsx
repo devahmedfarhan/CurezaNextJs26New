@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Facebook, Instagram, Linkedin, ShieldCheck, ArrowRight } from 'lucide-react';
 import api from '@/lib/api';
@@ -37,10 +38,14 @@ export default function Footer() {
     <footer className="w-full text-[#F8F3EF] relative transition-colors duration-300 z-10 bg-[#052326]">
       
       {/* 1. SINGLE LEAFY BACKGROUND IMAGE FOR THE ENTIRE FOOTER */}
-      <div 
-        className="absolute inset-0 pointer-events-none z-0 overflow-hidden bg-cover bg-center" 
-        style={{ backgroundImage: 'url(/hemp-leaves-banner.png)' }}
-      >
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <Image
+          src="/hemp-leaves-banner.png"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+        />
         {/* Brand Dark Green gradient overlay to cover the whole footer height */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#052326]/85 via-[#052326]/92 to-[#052326]/96 w-full h-full" />
       </div>
@@ -115,6 +120,7 @@ export default function Footer() {
                 <input
                   type="email"
                   placeholder="Signup for our Newsletter"
+                  aria-label="Email Address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-6 py-4 bg-white text-[#052326] font-semibold text-xs rounded-full border border-transparent focus:outline-none placeholder-[#052326]/50 pr-12 shadow-md"
@@ -122,6 +128,7 @@ export default function Footer() {
                 />
                 <button 
                   type="submit" 
+                  aria-label="Subscribe to newsletter"
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-[#052326] hover:text-[#F0C417] transition-colors"
                 >
                   <ArrowRight size={18} />

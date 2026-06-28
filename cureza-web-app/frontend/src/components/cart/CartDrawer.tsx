@@ -249,6 +249,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 ref={drawerRef}
                 role="dialog"
                 aria-modal="true"
+                aria-labelledby="cart-drawer-title"
                 className={`fixed top-0 right-0 h-full w-[85%] sm:w-[440px] bg-[#F2F2F2] dark:bg-[#031416] z-[10000] transform transition-transform ease-in-out rounded-l-[12px] overflow-hidden border-l-[0.3px] border-[#00000050] dark:border-white/30`}
                 style={{
                     transitionDuration: `${transitionSpeed}ms`,
@@ -264,7 +265,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                             ) : (
                                 <ShoppingBag size={16} className="text-[#052326] dark:text-[#EDE8E1] transition-transform duration-300 hover:scale-110" />
                             )}
-                            <h2 className="text-[13px] font-semibold tracking-[0.12em] text-[#052326] dark:text-[#EDE8E1] capitalize">
+                            <h2 id="cart-drawer-title" className="text-[13px] font-semibold tracking-[0.12em] text-[#052326] dark:text-[#EDE8E1] capitalize">
                                 {cartTitle}
                             </h2>
                             <span className="bg-[#052326] dark:bg-[#EDE8E1] text-[#F8F3EF] dark:text-[#052326] text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#052326]/10 dark:border-white/10 shadow-sm">
@@ -449,6 +450,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                                                         updateQuantity(item.id, item.quantity - 1);
                                                                     }
                                                                 }}
+                                                                aria-label="Decrease quantity"
                                                                 className="w-5 h-5 flex items-center justify-center rounded-[12px] hover:bg-white dark:hover:bg-gray-800 text-[#052326] dark:text-[#EDE8E1] transition active:scale-95"
                                                             >
                                                                 <Minus size={8} />
@@ -458,6 +460,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                                             </span>
                                                             <button
                                                                 onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                                                aria-label="Increase quantity"
                                                                 className="w-5 h-5 flex items-center justify-center rounded-[12px] hover:bg-white dark:hover:bg-gray-800 text-[#052326] dark:text-[#EDE8E1] transition active:scale-95"
                                                             >
                                                                 <Plus size={8} />
@@ -471,6 +474,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
                                                     <button
                                                         onClick={() => removeFromCart(item.id)}
+                                                        aria-label={`Remove ${item.title} from cart`}
                                                         className="text-[#052326]/40 dark:text-white/40 hover:text-red-500 dark:hover:text-red-450 hover:bg-red-50 dark:hover:bg-red-955/10 p-1.5 rounded-[12px] transition active:scale-90"
                                                     >
                                                         <Trash2 size={11} />

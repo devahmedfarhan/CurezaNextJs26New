@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
+import Image from 'next/image';
 import { Award, HeartHandshake, ShieldAlert, Sparkles } from 'lucide-react';
 
 interface StatItem {
@@ -112,10 +113,15 @@ export default function PioneeringBanner() {
       className="relative w-full py-16 md:py-24 bg-[#052326] text-[#F8F3EF] overflow-hidden"
     >
       {/* Background Image Banner with 50% Opacity */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center pointer-events-none opacity-50"
-        style={{ backgroundImage: "url('/banner.png')" }}
-      />
+      <div className="absolute inset-0 pointer-events-none opacity-50 z-0">
+        <Image
+          src="/banner.png"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+      </div>
 
       <div className="container mx-auto px-6 relative z-10">
         
