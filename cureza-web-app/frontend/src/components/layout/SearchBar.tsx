@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Search, X, Ticket, Copy, Check, TrendingUp, Sparkles, ShoppingBag } from 'lucide-react';
+import { Search, X, Ticket, Copy, Check, TrendingUp, Sparkles, ShoppingBag, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
@@ -17,13 +17,14 @@ export default function SearchBar() {
     const [categories, setCategories] = useState<any[]>([]);
     const [coupons, setCoupons] = useState<any[]>([]);
     const [copiedCode, setCopiedCode] = useState<string | null>(null);
+    const [history, setHistory] = useState<string[]>([]);
 
     const searchRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
     const { addToCart } = useCart();
     const { showToast } = useToast();
 
-    // Fetch categories and coupons for suggestions
+    // Fetch categories, coupons and local search history on mount
     useEffect(() => {
         api.get('/categories')
             .then(res => setCategories(res.data.slice(0, 5)))
@@ -32,7 +33,41 @@ export default function SearchBar() {
         api.get('/coupons')
             .then(res => setCoupons(res.data.slice(0, 3)))
             .catch(err => console.error("Error fetching search coupons", err));
+
+        // Load search history from localStorage
+        const storedHistory = localStorage.getItem('cureza_search_history');
+        if (storedHistory) {
+            try {
+                setHistory(JSON.parse(storedHistory));
+            } catch (e) {
+                console.error("Error parsing search history", e);
+            }
+        }
     }, []);
+
+    const addToHistory = (searchTerm: string) => {
+        const term = searchTerm.trim();
+        if (!term) return;
+        setHistory(prev => {
+            const filtered = prev.filter(h => h.toLowerCase() !== term.toLowerCase());
+            const updated = [term, ...filtered].slice(0, 5);
+            localStorage.setItem('cureza_search_history', JSON.stringify(updated));
+            return updated;
+        });
+    };
+
+    const removeFromHistory = (termToRemove: string) => {
+        setHistory(prev => {
+            const updated = prev.filter(h => h !== termToRemove);
+            localStorage.setItem('cureza_search_history', JSON.stringify(updated));
+            return updated;
+        });
+    };
+
+    const clearHistory = () => {
+        setHistory([]);
+        localStorage.removeItem('cureza_search_history');
+    };
 
     // Handle search suggestions fetch
     useEffect(() => {
@@ -73,6 +108,7 @@ export default function SearchBar() {
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         if (query.trim()) {
+            addToHistory(query);
             router.push(`/search?q=${encodeURIComponent(query)}`);
             setShowDropdown(false);
             setIsFocused(false);
@@ -193,6 +229,52 @@ export default function SearchBar() {
                                     ))}
                                 </div>
 
+                                {/* Recent Searches */}
+                                {history.length > 0 && (
+                                    <div className="mb-5">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <h4 className="font-semibold text-xs text-[#052326]/60 dark:text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
+                                                <Clock size={12} className="text-cureza-green" /> Recent Searches
+                                            </h4>
+                                            <button
+                                                type="button"
+                                                onClick={clearHistory}
+                                                className="text-[10px] text-red-500 hover:text-red-700 font-bold tracking-wider uppercase transition"
+                                            >
+                                                Clear
+                                            </button>
+                                        </div>
+                                        <ul className="space-y-1.5 text-xs text-charcoal dark:text-gray-300">
+                                            {history.map((term) => (
+                                                <li key={term} className="flex items-center justify-between group/history">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setQuery(term);
+                                                            addToHistory(term);
+                                                            router.push(`/search?q=${encodeURIComponent(term)}`);
+                                                            setIsFocused(false);
+                                                            setShowDropdown(false);
+                                                        }}
+                                                        className="flex-1 text-left py-0.5 hover:text-cureza-green transition-colors flex items-center gap-2 font-medium"
+                                                    >
+                                                        <span className="text-[#052326]/40 dark:text-gray-500">🕒</span>
+                                                        <span>{term}</span>
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeFromHistory(term)}
+                                                        className="text-gray-400 hover:text-red-500 opacity-0 group-hover/history:opacity-100 transition-opacity px-1"
+                                                        title="Remove"
+                                                    >
+                                                        <X size={12} />
+                                                    </button>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+
                                 <h4 className="font-semibold text-xs text-[#052326]/60 dark:text-gray-400 uppercase tracking-wider mb-2">Trending Searches</h4>
                                 <ul className="space-y-1.5 text-xs text-charcoal dark:text-gray-300">
                                     {['Organic Ashwagandha', 'Triphala Cleanse', 'Hemp Massage Oil', 'Liver Detox'].map((term) => (
@@ -201,6 +283,7 @@ export default function SearchBar() {
                                                 type="button"
                                                 onClick={() => {
                                                     setQuery(term);
+                                                    addToHistory(term);
                                                     router.push(`/search?q=${encodeURIComponent(term)}`);
                                                     setIsFocused(false);
                                                     setShowDropdown(false);

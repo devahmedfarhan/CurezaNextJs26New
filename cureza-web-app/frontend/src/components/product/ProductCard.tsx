@@ -55,10 +55,19 @@ export default function ProductCard({ product }: any) {
   const productUrl = `/shop/${typeof product.category === 'object' ? product.category?.slug : (product.category?.toLowerCase() || 'general')}/${product.slug || product.id}`;
 
   return (
-    <div className="group bg-white rounded-[10px] border-[0.5px] border-[#052326]/12 hover:border-[#052326]/20 transition-all duration-500 overflow-hidden flex flex-col h-full">
+    <div 
+      className="group bg-white transition-all duration-500 overflow-hidden flex flex-col h-full"
+      style={{
+        borderRadius: '8px',
+        border: '1px solid rgba(0, 0, 0, 0.05)',
+        borderColor: 'rgba(85, 85, 85, 0.18)',
+        boxShadow: 'none',
+        filter: 'none'
+      }}
+    >
       
       {/* IMAGE AREA */}
-      <div className="relative w-full aspect-[4/5] overflow-hidden bg-[#F8F3EF]/50 border-b border-[#052326]/5">
+      <div className="relative w-full aspect-square overflow-hidden bg-[#F8F3EF]/50 border-b border-[#052326]/5">
         <Link href={productUrl}>
           {imageError || !imgSrc ? (
             <img
