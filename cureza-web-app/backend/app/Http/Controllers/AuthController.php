@@ -86,6 +86,15 @@ class AuthController extends Controller
 
             DB::commit();
 
+            // Trigger Welcome Series email for new registered customer
+            if ($user->role === 'customer') {
+                try {
+                    app(\App\Services\Communication\CampaignService::class)->triggerWelcomeSeries($user->email, $user->name);
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error("Failed to trigger welcome series email for user {$user->email}: " . $e->getMessage());
+                }
+            }
+
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([
