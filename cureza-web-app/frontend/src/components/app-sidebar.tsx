@@ -19,7 +19,8 @@ import {
   HelpCircle,
   Star,
   Truck,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Mail
 } from "lucide-react"
 
 import {
@@ -122,9 +123,23 @@ const data = {
       items: [
         { title: "Offers & Coupons", url: "/superadmin/dashboard/marketing/offers" },
         { title: "Bundle Offers", url: "/superadmin/dashboard/marketing/bundles" },
-        { title: "Broadcast Center", url: "/superadmin/dashboard/marketing/broadcast" },
         { title: "Automation", url: "/superadmin/dashboard/marketing/automation" },
         { title: "Pixel Settings", url: "/superadmin/dashboard/marketing/pixel" },
+      ],
+    },
+    {
+      title: "Broadcast Center",
+      url: "/superadmin/dashboard/marketing/broadcast",
+      icon: Mail,
+      permission: "marketing",
+      items: [
+        { title: "Campaigns & Broadcasts", url: "/superadmin/dashboard/marketing/broadcast?tab=campaigns" },
+        { title: "Email Templates", url: "/superadmin/dashboard/marketing/broadcast?tab=templates" },
+        { title: "Audience Lists", url: "/superadmin/dashboard/marketing/broadcast?tab=audience" },
+        { title: "SMTP Providers", url: "/superadmin/dashboard/marketing/broadcast?tab=smtp" },
+        { title: "Outbound Logs", url: "/superadmin/dashboard/marketing/broadcast?tab=logs" },
+        { title: "Queue Manager", url: "/superadmin/dashboard/marketing/broadcast?tab=queue" },
+        { title: "System Setup", url: "/superadmin/dashboard/marketing/broadcast?tab=settings" },
       ],
     },
     {
@@ -218,15 +233,7 @@ const data = {
         { title: "System Integration Guide", url: "/superadmin/dashboard/settings/notifications?tab=guide" },
       ],
     },
-    {
-      title: "System",
-      url: "/superadmin/dashboard/communication",
-      icon: Cpu,
-      permission: "settings",
-      items: [
-        { title: "Communication Center", url: "/superadmin/dashboard/communication" },
-      ],
-    },
+
     {
       title: "Global Settings",
       url: "/superadmin/dashboard/settings",

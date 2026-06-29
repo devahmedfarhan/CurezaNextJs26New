@@ -1,11 +1,48 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Mail, Send, Users, BarChart2, Plus, X, Eye, CheckCircle2, Inbox, ArrowRight, HelpCircle, Loader2, RefreshCw, Calendar, Filter, Sparkles, AlertCircle, Copy, Check, ChevronRight, Edit, Trash2 } from 'lucide-react';
+import { Mail, Send, Users, BarChart2, Plus, X, Eye, CheckCircle2, Inbox, ArrowRight, HelpCircle, Loader2, RefreshCw, Calendar, Filter, Sparkles, AlertCircle, Copy, Check, ChevronRight, Edit, Trash2, Key, Clock, AlertTriangle, Settings, Database, Sliders, Search } from 'lucide-react';
 import { useToast } from '@/contexts/ToastContext';
 import api from '@/lib/api';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import VisualCodeEditor from '@/components/admin/VisualCodeEditor';
+
+interface SmtpProvider {
+    id: number;
+    provider_name: string;
+    host: string;
+    port: number;
+    username: string;
+    password?: string;
+    encryption: string;
+    sender_name: string;
+    sender_email: string;
+    reply_to?: string;
+    timeout: number;
+    retry_count: number;
+    max_emails_per_hour: number;
+    max_emails_per_day: number;
+    is_active: boolean;
+    is_backup: boolean;
+    priority: number;
+    notes?: string;
+}
+
+interface EmailLog {
+    id: number;
+    recipient: string;
+    subject: string;
+    template_key?: string;
+    status: string;
+    retry_count: number;
+    smtp_used?: string;
+    created_at: string;
+    sent_at?: string;
+    error_details?: string;
+    response?: string;
+}
 
 interface Campaign {
     id: number;
@@ -28,7 +65,7 @@ interface Campaign {
     created_at: string;
 }
 
-export default function BroadcastPage() {
+function BroadcastPageContent({ defaultTab = 'campaigns' }: { defaultTab?: 'campaigns' | 'templates' | 'audience' | 'smtp' | 'logs' | 'queue' | 'settings' }) {
     const { showToast } = useToast();
     const [campaigns, setCampaigns] = useState<Campaign[]>([]);
     const [loading, setLoading] = useState(true);
@@ -37,7 +74,16 @@ export default function BroadcastPage() {
     const [selectedCampaignIds, setSelectedCampaignIds] = useState<number[]>([]);
 
     // Tab selection
-    const [activeTab, setActiveTab] = useState<'campaigns' | 'templates' | 'audience'>('campaigns');
+    const [activeTab, setActiveTab] = useState<'campaigns' | 'templates' | 'audience' | 'smtp' | 'logs' | 'queue' | 'settings'>(defaultTab);
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        const tab = searchParams.get('tab');
+        if (tab && ['campaigns', 'templates', 'audience', 'smtp', 'logs', 'queue', 'settings'].includes(tab)) {
+            setActiveTab(tab as any);
+        }
+    }, [searchParams]);
 
     // Templates State
     const [dbTemplates, setDbTemplates] = useState<any[]>([]);
@@ -123,6 +169,42 @@ export default function BroadcastPage() {
     const [isImportingCsv, setIsImportingCsv] = useState(false);
     const subFileInputRef = useRef<HTMLInputElement>(null);
 
+    // SMTP Providers tab state
+    const [smtpList, setSmtpList] = useState<SmtpProvider[]>([]);
+    const [loadingSmtp, setLoadingSmtp] = useState(false);
+    const [smtpModalOpen, setSmtpModalOpen] = useState(false);
+    const [selectedSmtp, setSelectedSmtp] = useState<SmtpProvider | null>(null);
+    const [testEmailModalOpen, setTestEmailModalOpen] = useState(false);
+    const [testEmailSmtpId, setTestEmailSmtpId] = useState<number | null>(null);
+    const [testEmailRecipient, setTestEmailRecipient] = useState('');
+    const [connectionValidating, setConnectionValidating] = useState(false);
+    const [actionLoading, setActionLoading] = useState(false);
+    const [smtpForm, setSmtpForm] = useState({
+        provider_name: '', host: '', port: 465, username: '', password: '',
+        encryption: 'ssl', sender_name: 'Cureza Wellness', sender_email: 'admin@cureza.in',
+        reply_to: 'support@cureza.in', timeout: 30, retry_count: 3,
+        max_emails_per_hour: 100, max_emails_per_day: 1000,
+        is_active: false, is_backup: false, priority: 1, notes: ''
+    });
+
+    // Outbound Logs tab state
+    const [logs, setLogs] = useState<EmailLog[]>([]);
+    const [loadingLogs, setLoadingLogs] = useState(false);
+    const [logSearch, setLogSearch] = useState('');
+    const [logStatusFilter, setLogStatusFilter] = useState('');
+    const [logDetailsModalOpen, setLogDetailsModalOpen] = useState(false);
+    const [selectedLog, setSelectedLog] = useState<EmailLog | null>(null);
+
+    // Queue Manager tab state
+    const [queueData, setQueueData] = useState({ pending_jobs: 0, failed_jobs: 0, queue_connection: 'database' });
+    const [loadingQueue, setLoadingQueue] = useState(false);
+
+    // Extra general analytics state
+    const [commAnalytics, setCommAnalytics] = useState<any>({
+        sent: 0, queued: 0, delivered: 0, failed: 0, subscribers: 0,
+        campaigns: 0, smtp_health: 'Loading...', open_rate: 0, click_rate: 0, bounce_rate: 0, spam_rate: 0
+    });
+
     const emailTemplates: any[] = [];
 
     const mergeTags = [
@@ -189,6 +271,189 @@ export default function BroadcastPage() {
             showToast('Failed to load campaigns list', 'error');
         } finally {
             if (!silent) setLoading(false);
+        }
+    };
+
+    const fetchSmtpProviders = async () => {
+        setLoadingSmtp(true);
+        try {
+            const res = await api.get('/admin/communication/smtp');
+            setSmtpList(res.data || []);
+        } catch (error) {
+            console.error('Failed to load SMTP configurations:', error);
+            showToast('Failed to fetch SMTP configurations from server.', 'error');
+        } finally {
+            setLoadingSmtp(false);
+        }
+    };
+
+    const fetchOutboundLogs = async () => {
+        setLoadingLogs(true);
+        try {
+            const res = await api.get('/admin/communication/logs');
+            setLogs(res.data.data || res.data || []);
+        } catch (error) {
+            console.error('Failed to load outbound logs:', error);
+            showToast('Failed to fetch outbound logs.', 'error');
+        } finally {
+            setLoadingLogs(false);
+        }
+    };
+
+    const fetchQueueData = async () => {
+        setLoadingQueue(true);
+        try {
+            const res = await api.get('/admin/communication/queue');
+            setQueueData(res.data || { pending_jobs: 0, failed_jobs: 0, queue_connection: 'database' });
+        } catch (error) {
+            console.error('Failed to load queue status:', error);
+        } finally {
+            setLoadingQueue(false);
+        }
+    };
+
+    const fetchCommAnalytics = async () => {
+        try {
+            const res = await api.get('/admin/communication/analytics');
+            setCommAnalytics(res.data || {
+                sent: 0, queued: 0, delivered: 0, failed: 0, subscribers: 0,
+                campaigns: 0, smtp_health: 'Loading...', open_rate: 0, click_rate: 0, bounce_rate: 0, spam_rate: 0
+            });
+        } catch (error) {
+            console.error('Failed to load communication analytics:', error);
+        }
+    };
+
+    // SMTP Operations
+    const openSmtpModal = (provider: SmtpProvider | null = null) => {
+        if (provider) {
+            setSelectedSmtp(provider);
+            setSmtpForm({
+                provider_name: provider.provider_name,
+                host: provider.host,
+                port: provider.port,
+                username: provider.username,
+                password: '********', // masked
+                encryption: provider.encryption,
+                sender_name: provider.sender_name,
+                sender_email: provider.sender_email,
+                reply_to: provider.reply_to || '',
+                timeout: provider.timeout,
+                retry_count: provider.retry_count,
+                max_emails_per_hour: provider.max_emails_per_hour,
+                max_emails_per_day: provider.max_emails_per_day,
+                is_active: provider.is_active,
+                is_backup: provider.is_backup,
+                priority: provider.priority,
+                notes: provider.notes || ''
+            });
+        } else {
+            setSelectedSmtp(null);
+            setSmtpForm({
+                provider_name: '', host: '', port: 465, username: '', password: '',
+                encryption: 'ssl', sender_name: 'Cureza Wellness', sender_email: 'admin@cureza.in',
+                reply_to: 'support@cureza.in', timeout: 30, retry_count: 3,
+                max_emails_per_hour: 100, max_emails_per_day: 1000,
+                is_active: false, is_backup: false, priority: 1, notes: ''
+            });
+        }
+        setSmtpModalOpen(true);
+    };
+
+    const handleSaveSmtp = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setActionLoading(true);
+        try {
+            if (selectedSmtp) {
+                await api.put(`/admin/communication/smtp/${selectedSmtp.id}`, smtpForm);
+                showToast('SMTP Provider configuration updated successfully.', 'success');
+            } else {
+                await api.post('/admin/communication/smtp', smtpForm);
+                showToast('SMTP Provider configuration created and verified.', 'success');
+            }
+            setSmtpModalOpen(false);
+            fetchSmtpProviders();
+        } catch (error: any) {
+            console.error(error);
+            showToast(error.response?.data?.error_details || error.response?.data?.message || 'SMTP Validation and Auth Failed.', 'error');
+        } finally {
+            setActionLoading(false);
+        }
+    };
+
+    const handleTestSmtpConnection = async () => {
+        setConnectionValidating(true);
+        try {
+            const res = await api.post('/admin/communication/smtp/test-connection', {
+                host: smtpForm.host,
+                port: smtpForm.port,
+                username: smtpForm.username,
+                password: smtpForm.password,
+                encryption: smtpForm.encryption
+            });
+            if (res.data.success) {
+                showToast('SMTP Connected successfully! Credentials verified.', 'success');
+            } else {
+                showToast('SMTP Connection failed.', 'error');
+            }
+        } catch (error: any) {
+            showToast(error.response?.data?.error || 'Validation failed: Outgoing socket rejected.', 'error');
+        } finally {
+            setConnectionValidating(false);
+        }
+    };
+
+    const handleSendTestEmail = async () => {
+        if (!testEmailRecipient) return showToast('Please enter recipient email.', 'error');
+        setActionLoading(true);
+        try {
+            await api.post(`/admin/communication/smtp/${testEmailSmtpId}/test-email`, {
+                recipient: testEmailRecipient
+            });
+            showToast(`SMTP Connected. Test email dispatched to ${testEmailRecipient}`, 'success');
+            setTestEmailModalOpen(false);
+            setTestEmailRecipient('');
+        } catch (error: any) {
+            showToast(error.response?.data?.error || 'SMTP Failed. Sending verification email failed.', 'error');
+        } finally {
+            setActionLoading(false);
+        }
+    };
+
+    const handleDeleteSmtp = async (id: number) => {
+        if (!confirm('Are you sure you want to delete this SMTP provider?')) return;
+        try {
+            await api.delete(`/admin/communication/smtp/${id}`);
+            showToast('SMTP Provider deleted successfully.', 'success');
+            fetchSmtpProviders();
+        } catch (error) {
+            showToast('Failed to delete SMTP configuration.', 'error');
+        }
+    };
+
+    // Queue Operations
+    const handleClearFailedQueue = async () => {
+        if (!confirm('Are you sure you want to delete all failed queue jobs?')) return;
+        setActionLoading(true);
+        try {
+            await api.post('/admin/communication/queue/clear-failed');
+            showToast('Failed jobs queue truncated.', 'success');
+            fetchQueueData();
+        } catch (error) {
+            showToast('Failed to clear queue.', 'error');
+        } finally {
+            setActionLoading(false);
+        }
+    };
+
+    const getLogStatusBadge = (status: string) => {
+        const nStatus = status.toLowerCase();
+        if (nStatus === 'sent' || nStatus === 'subscribed' || nStatus === 'delivered') {
+            return <span className="px-2 py-0.5 rounded-[8px] text-[10px] font-semibold bg-green-50 text-green-700 border border-green-200">Active / {status}</span>;
+        } else if (nStatus === 'failed' || nStatus === 'unsubscribed') {
+            return <span className="px-2 py-0.5 rounded-[8px] text-[10px] font-semibold bg-red-50 text-red-700 border border-red-200">{status}</span>;
+        } else {
+            return <span className="px-2 py-0.5 rounded-[8px] text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">{status}</span>;
         }
     };
 
@@ -563,7 +828,29 @@ export default function BroadcastPage() {
     useEffect(() => {
         fetchCampaigns();
         fetchTemplates();
+        fetchCommAnalytics();
     }, []);
+
+    useEffect(() => {
+        if (activeTab === 'smtp') {
+            fetchSmtpProviders();
+        } else if (activeTab === 'logs') {
+            fetchOutboundLogs();
+        } else if (activeTab === 'queue') {
+            fetchQueueData();
+        } else if (activeTab === 'campaigns') {
+            fetchCommAnalytics();
+        }
+    }, [activeTab]);
+
+    useEffect(() => {
+        if (activeTab === 'logs') {
+            const timer = setTimeout(() => {
+                fetchOutboundLogs();
+            }, 300);
+            return () => clearTimeout(timer);
+        }
+    }, [logSearch, logStatusFilter, activeTab]);
 
     useEffect(() => {
         if (activeTab === 'audience') {
@@ -937,59 +1224,56 @@ export default function BroadcastPage() {
                         <div className="flex gap-2">
                             <button 
                                 onClick={() => {
-                                    if (activeTab === 'campaigns') fetchCampaigns();
-                                    else if (activeTab === 'templates') fetchTemplates();
-                                    else {
+                                    if (activeTab === 'campaigns') {
+                                        fetchCampaigns();
+                                        fetchCommAnalytics();
+                                    } else if (activeTab === 'templates') {
+                                        fetchTemplates();
+                                    } else if (activeTab === 'audience') {
                                         fetchTabCustomers(tabCustomerPage, tabCustomerSearch);
                                         fetchTabSubscribers(tabSubscriberPage, tabSubscriberSearch);
+                                    } else if (activeTab === 'smtp') {
+                                        fetchSmtpProviders();
+                                    } else if (activeTab === 'logs') {
+                                        fetchOutboundLogs();
+                                    } else if (activeTab === 'queue') {
+                                        fetchQueueData();
                                     }
                                 }}
                                 className="p-2 border border-black/5 !border-color-[rgba(85,85,85,0.18)] rounded-[8px] hover:bg-neutral-50 shadow-none transition-colors"
                             >
-                                <RefreshCw size={14} className={loading || loadingTemplates ? 'animate-spin' : ''} />
+                                <RefreshCw size={14} className={loading || loadingTemplates || loadingSmtp || loadingLogs || loadingQueue ? 'animate-spin' : ''} />
                             </button>
-                            <button 
-                                onClick={handleCreateCampaign}
-                                className="bg-[#052326] text-white px-4 py-2 rounded-[8px] flex items-center gap-2 hover:bg-neutral-900 transition-colors font-medium text-xs shadow-none"
-                            >
-                                <Plus size={14} />
-                                Create Broadcast Wizard
-                            </button>
+                            {activeTab === 'smtp' ? (
+                                <button 
+                                    onClick={() => openSmtpModal()}
+                                    className="bg-[#052326] text-white px-4 py-2 rounded-[8px] flex items-center gap-2 hover:bg-neutral-900 transition-colors font-medium text-xs shadow-none"
+                                >
+                                    <Plus size={14} /> Add Provider
+                                </button>
+                            ) : activeTab === 'templates' ? (
+                                <button 
+                                    onClick={() => handleOpenTemplateModal()}
+                                    className="bg-[#052326] text-white px-4 py-2 rounded-[8px] flex items-center gap-2 hover:bg-neutral-900 transition-colors font-medium text-xs shadow-none"
+                                >
+                                    <Plus size={14} /> Create Template
+                                </button>
+                            ) : activeTab === 'audience' ? (
+                                <button 
+                                    onClick={() => openSubModal()}
+                                    className="bg-[#052326] text-white px-4 py-2 rounded-[8px] flex items-center gap-2 hover:bg-neutral-900 transition-colors font-medium text-xs shadow-none"
+                                >
+                                    <Plus size={14} /> Add Subscriber
+                                </button>
+                            ) : (
+                                <button 
+                                    onClick={handleCreateCampaign}
+                                    className="bg-[#052326] text-white px-4 py-2 rounded-[8px] flex items-center gap-2 hover:bg-neutral-900 transition-colors font-medium text-xs shadow-none"
+                                >
+                                    <Plus size={14} /> Create Broadcast Wizard
+                                </button>
+                            )}
                         </div>
-                    </div>
-
-                    {/* Tabs navigation */}
-                    <div className="flex border-b border-black/5 !border-color-[rgba(85,85,85,0.18)] mb-6">
-                        <button
-                            onClick={() => setActiveTab('campaigns')}
-                            className={`pb-3 px-4 text-xs font-semibold border-b-2 transition-all ${
-                                activeTab === 'campaigns'
-                                    ? 'border-[#052326] text-[#052326]'
-                                    : 'border-transparent text-neutral-400 hover:text-[#052326]'
-                            }`}
-                        >
-                            Campaigns & Broadcasts
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('templates')}
-                            className={`pb-3 px-4 text-xs font-semibold border-b-2 transition-all ${
-                                activeTab === 'templates'
-                                    ? 'border-[#052326] text-[#052326]'
-                                    : 'border-transparent text-neutral-400 hover:text-[#052326]'
-                            }`}
-                        >
-                            Email Templates
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('audience')}
-                            className={`pb-3 px-4 text-xs font-semibold border-b-2 transition-all ${
-                                activeTab === 'audience'
-                                    ? 'border-[#052326] text-[#052326]'
-                                    : 'border-transparent text-neutral-400 hover:text-[#052326]'
-                            }`}
-                        >
-                            Audience Lists
-                        </button>
                     </div>
 
                     {activeTab === 'campaigns' && (
@@ -1035,6 +1319,54 @@ export default function BroadcastPage() {
                                     <p className="text-[10px] text-[#052326]/50 font-normal">Queue scheduler agent status</p>
                                 </div>
                             </div>
+
+                            {/* SMTP & Delivery Metrics cards */}
+                            {commAnalytics && commAnalytics.sent !== undefined && (
+                                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 animate-in fade-in duration-200">
+                                    <div className="bg-white border border-black/5 !border-color-[rgba(85,85,85,0.18)] p-5 rounded-[8px] space-y-1 shadow-none">
+                                        <span className="text-[10px] text-[#052326]/60 font-medium uppercase tracking-wider block">Total Outbound Emails</span>
+                                        <h3 className="text-2xl font-semibold text-[#052326]">
+                                            {commAnalytics.sent.toLocaleString()}
+                                        </h3>
+                                        <p className="text-[10px] text-gray-400 font-normal">Delivered through SMTP</p>
+                                    </div>
+                                    <div className="bg-white border border-black/5 !border-color-[rgba(85,85,85,0.18)] p-5 rounded-[8px] space-y-1 shadow-none">
+                                        <span className="text-[10px] text-[#052326]/60 font-medium uppercase tracking-wider block">Delivery Failure Count</span>
+                                        <h3 className="text-2xl font-semibold text-red-650">
+                                            {commAnalytics.failed.toLocaleString()}
+                                        </h3>
+                                        <p className="text-[10px] text-gray-400 font-normal">Bounces / socket issues</p>
+                                    </div>
+                                    <div className="bg-white border border-black/5 !border-color-[rgba(85,85,85,0.18)] p-5 rounded-[8px] space-y-1 shadow-none">
+                                        <span className="text-[10px] text-[#052326]/60 font-medium uppercase tracking-wider block">SMTP Provider Health</span>
+                                        <h3 className="text-2xl font-semibold text-emerald-700">
+                                            {commAnalytics.smtp_health || 'Connected'}
+                                        </h3>
+                                        <p className="text-[10px] text-gray-400 font-normal">Hostinger connection status</p>
+                                    </div>
+                                    <div className="bg-white border border-black/5 !border-color-[rgba(85,85,85,0.18)] p-5 rounded-[8px] space-y-2 shadow-none flex flex-col justify-between">
+                                        <span className="text-[10px] text-[#052326]/60 font-medium uppercase tracking-wider block">SMTP Success Rate</span>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-2xl font-semibold text-[#052326]">
+                                                {commAnalytics.sent + commAnalytics.failed > 0
+                                                    ? ((commAnalytics.sent / (commAnalytics.sent + commAnalytics.failed)) * 100).toFixed(1) + '%'
+                                                    : '100%'
+                                                }
+                                            </span>
+                                            <div className="flex-1 bg-neutral-100 h-2 rounded-full overflow-hidden">
+                                                <div 
+                                                    className="bg-emerald-600 h-full rounded-full" 
+                                                    style={{ 
+                                                        width: `${commAnalytics.sent + commAnalytics.failed > 0 
+                                                            ? (commAnalytics.sent / (commAnalytics.sent + commAnalytics.failed)) * 100 
+                                                            : 100}%`
+                                                    }} 
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
                             {selectedCampaignIds.length > 0 && (
                                 <div className="bg-[#F8F3EF] border border-black/5 !border-color-[rgba(85,85,85,0.18)] px-4 py-3 rounded-[8px] flex items-center justify-between text-xs mb-4">
@@ -1538,6 +1870,224 @@ export default function BroadcastPage() {
                                         </div>
                                     </div>
                                 )}
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'smtp' && (
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-1 gap-4 animate-in fade-in duration-200">
+                                {smtpList.map((smtp) => (
+                                    <div key={smtp.id} className="bg-white border border-black/5 !border-color-[rgba(85,85,85,0.18)] p-5 rounded-[8px] flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-none">
+                                        <div className="space-y-1">
+                                            <div className="flex items-center gap-2">
+                                                <h3 className="text-sm font-semibold text-neutral-900">{smtp.provider_name}</h3>
+                                                {smtp.is_active && (
+                                                    <span className="bg-green-50 text-green-700 border border-green-200 text-[9px] px-2 py-0.5 rounded-[8px] font-bold">PRIMARY ACTIVE</span>
+                                                )}
+                                                {smtp.is_backup && (
+                                                    <span className="bg-neutral-100 text-neutral-700 border border-neutral-300 text-[9px] px-2 py-0.5 rounded-[8px] font-bold">FAILOVER BACKUP</span>
+                                                )}
+                                            </div>
+                                            <p className="text-xs text-neutral-500 font-normal">Host: <b>{smtp.host}:{smtp.port}</b> | Encryption: <b>{smtp.encryption.toUpperCase()}</b> | Sender: <b>{smtp.sender_name} ({smtp.sender_email})</b></p>
+                                            {smtp.notes && <p className="text-[10px] text-neutral-400 italic font-normal">Notes: {smtp.notes}</p>}
+                                        </div>
+                                        <div className="flex items-center gap-2 shrink-0">
+                                            <button 
+                                                onClick={() => { setTestEmailSmtpId(smtp.id); setTestEmailRecipient(''); setTestEmailModalOpen(true); }}
+                                                className="border border-black/10 hover:bg-neutral-50 text-neutral-700 px-2.5 py-1.5 rounded-[8px] text-xs font-semibold bg-white shadow-none transition-colors"
+                                            >
+                                                Send Test
+                                            </button>
+                                            <button 
+                                                onClick={() => openSmtpModal(smtp)}
+                                                className="border border-black/10 hover:bg-neutral-50 text-neutral-700 px-2.5 py-1.5 rounded-[8px] text-xs font-semibold bg-white shadow-none transition-colors"
+                                            >
+                                                Configure
+                                            </button>
+                                            <button 
+                                                onClick={() => handleDeleteSmtp(smtp.id)}
+                                                className="border border-red-200 text-red-600 hover:bg-red-50 p-1.5 rounded-[8px] transition-all shadow-none"
+                                            >
+                                                <Trash2 size={14} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+
+                                {smtpList.length === 0 && !loadingSmtp && (
+                                    <div className="text-center py-12 text-neutral-500 text-xs bg-white border border-black/5 !border-color-[rgba(85,85,85,0.18)] rounded-[8px]">
+                                        No SMTP providers configured. Click "Add Provider" to set up your Hostinger SMTP server.
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'logs' && (
+                        <div className="space-y-4 animate-in fade-in duration-200">
+                            <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
+                                <div className="relative w-full sm:max-w-xs">
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={14} />
+                                    <input 
+                                        type="text"
+                                        placeholder="Search logs by recipient or subject..."
+                                        value={logSearch}
+                                        onChange={(e) => setLogSearch(e.target.value)}
+                                        className="w-full pl-8 pr-3 py-1.5 bg-white border border-black/5 !border-color-[rgba(85,85,85,0.18)] rounded-[8px] text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-neutral-950 shadow-none outline-none"
+                                    />
+                                </div>
+                                <select
+                                    value={logStatusFilter}
+                                    onChange={(e) => setLogStatusFilter(e.target.value)}
+                                    className="border border-black/5 !border-color-[rgba(85,85,85,0.18)] rounded-[8px] py-1.5 px-3 text-xs bg-white focus:outline-none w-full sm:w-auto font-semibold shadow-none outline-none"
+                                >
+                                    <option value="">All Logs</option>
+                                    <option value="sent">Sent</option>
+                                    <option value="delivered">Delivered</option>
+                                    <option value="queued">Queued</option>
+                                    <option value="failed">Failed</option>
+                                </select>
+                            </div>
+
+                            <div className="bg-white border border-black/5 !border-color-[rgba(85,85,85,0.18)] rounded-[8px] shadow-none overflow-hidden">
+                                <table className="w-full text-left border-collapse text-xs">
+                                    <thead>
+                                        <tr className="bg-neutral-50 border-b border-neutral-100 text-neutral-500 font-semibold">
+                                            <th className="p-3 bg-neutral-50">Recipient</th>
+                                            <th className="p-3 bg-neutral-50">Subject</th>
+                                            <th className="p-3 bg-neutral-50">Template</th>
+                                            <th className="p-3 bg-neutral-50">SMTP Provider</th>
+                                            <th className="p-3 bg-neutral-50">Status</th>
+                                            <th className="p-3 bg-neutral-50">Date</th>
+                                            <th className="p-3 text-right bg-neutral-50">Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-neutral-100">
+                                        {logs
+                                            .filter(log => {
+                                                const matchesSearch = (log.recipient || '').toLowerCase().includes(logSearch.toLowerCase()) || 
+                                                    (log.subject || '').toLowerCase().includes(logSearch.toLowerCase());
+                                                const matchesStatus = logStatusFilter ? log.status === logStatusFilter : true;
+                                                return matchesSearch && matchesStatus;
+                                            })
+                                            .map((log) => (
+                                                <tr key={log.id} className="hover:bg-neutral-50/30 transition-colors">
+                                                    <td className="p-3 font-semibold text-neutral-900">{log.recipient}</td>
+                                                    <td className="p-3 text-neutral-600 max-w-xs truncate font-normal">{log.subject}</td>
+                                                    <td className="p-3 text-neutral-400 font-mono text-[10px]">{log.template_key || 'Raw HTML'}</td>
+                                                    <td className="p-3 text-neutral-500 font-mono text-[10px]">{log.smtp_used || 'Log Driver'}</td>
+                                                    <td className="p-3">{getLogStatusBadge(log.status)}</td>
+                                                    <td className="p-3 text-neutral-400 text-[10px] font-normal">{new Date(log.created_at).toLocaleString()}</td>
+                                                    <td className="p-3 text-right">
+                                                        <button 
+                                                            onClick={() => { setSelectedLog(log); setLogDetailsModalOpen(true); }}
+                                                            className="text-neutral-550 hover:text-neutral-950 font-semibold"
+                                                        >
+                                                            View
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+
+                                        {logs.length === 0 && !loadingLogs && (
+                                            <tr>
+                                                <td colSpan={7} className="text-center py-8 text-neutral-500 font-normal">
+                                                    No delivery logs available.
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'queue' && (
+                        <div className="space-y-6 animate-in fade-in duration-200">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="bg-white border border-black/5 !border-color-[rgba(85,85,85,0.18)] p-6 rounded-[8px] shadow-none">
+                                    <h3 className="text-xs font-semibold text-[#052326] uppercase tracking-wider mb-4">Queue Monitor</h3>
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between text-xs py-2 border-b border-neutral-100 font-normal">
+                                            <span className="text-neutral-500 font-medium">Queue Connection Driver</span>
+                                            <span className="font-semibold text-neutral-900 uppercase">{queueData.queue_connection}</span>
+                                        </div>
+                                        <div className="flex justify-between text-xs py-2 border-b border-neutral-100 font-normal">
+                                            <span className="text-neutral-500 font-medium">Active Pending Jobs</span>
+                                            <span className="font-semibold text-amber-600">{queueData.pending_jobs}</span>
+                                        </div>
+                                        <div className="flex justify-between text-xs py-2 border-b border-neutral-100 font-normal">
+                                            <span className="text-neutral-500 font-medium">Failed / Permanent Error Jobs</span>
+                                            <span className="font-semibold text-red-600">{queueData.failed_jobs}</span>
+                                        </div>
+                                    </div>
+                                    {queueData.failed_jobs > 0 && (
+                                        <button 
+                                            onClick={handleClearFailedQueue}
+                                            disabled={actionLoading}
+                                            className="mt-6 w-full border border-red-200 text-red-650 hover:bg-red-50 py-2 rounded-[8px] text-xs font-semibold bg-white transition-all shadow-none"
+                                        >
+                                            Clear Failed Jobs
+                                        </button>
+                                    )}
+                                </div>
+
+                                <div className="bg-white border border-black/5 !border-color-[rgba(85,85,85,0.18)] p-6 rounded-[8px] space-y-4 shadow-none">
+                                    <h3 className="text-xs font-semibold text-[#052326] uppercase tracking-wider">Queue Backoff Guidelines</h3>
+                                    <p className="text-xs text-neutral-500 leading-relaxed font-normal">
+                                        All platform outbound emails are queued automatically to prevent blocking user requests. When SMTP socket issues occur, jobs will trigger retries under a backoff algorithm:
+                                    </p>
+                                    <div className="grid grid-cols-3 gap-2 text-center">
+                                        <div className="bg-neutral-50 p-2.5 rounded-[8px] border border-black/5 !border-color-[rgba(85,85,85,0.18)]">
+                                            <span className="text-[10px] text-neutral-400 font-semibold uppercase">Retry 1</span>
+                                            <p className="text-xs font-semibold text-neutral-800 mt-0.5">1 Minute</p>
+                                        </div>
+                                        <div className="bg-neutral-50 p-2.5 rounded-[8px] border border-black/5 !border-color-[rgba(85,85,85,0.18)]">
+                                            <span className="text-[10px] text-neutral-400 font-semibold uppercase">Retry 2</span>
+                                            <p className="text-xs font-semibold text-neutral-800 mt-0.5">5 Minutes</p>
+                                        </div>
+                                        <div className="bg-neutral-50 p-2.5 rounded-[8px] border border-black/5 !border-color-[rgba(85,85,85,0.18)]">
+                                            <span className="text-[10px] text-neutral-400 font-semibold uppercase">Retry 3</span>
+                                            <p className="text-xs font-semibold text-neutral-800 mt-0.5">15 Minutes</p>
+                                        </div>
+                                    </div>
+                                    <p className="text-[10px] text-neutral-400 italic font-normal">
+                                        If all 3 retries fail, emails are moved into the failed queue and audited in the Outbound Logs registry.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'settings' && (
+                        <div className="bg-white border border-black/5 !border-color-[rgba(85,85,85,0.18)] p-6 max-w-2xl space-y-6 rounded-[8px] shadow-none animate-in fade-in duration-200">
+                            <div>
+                                <h3 className="text-sm font-semibold text-neutral-900">Communication Defaults</h3>
+                                <p className="text-xs text-neutral-400 mt-0.5 font-normal">Control double opt-in settings, pixel tracking, and email routing definitions.</p>
+                            </div>
+                            <div className="space-y-4 text-xs font-normal">
+                                <div className="flex justify-between items-center py-3 border-b border-neutral-100">
+                                    <div>
+                                        <span className="font-semibold text-neutral-800">Double Opt-In Verification</span>
+                                        <p className="text-[10px] text-neutral-400 mt-0.5 font-normal">Send a verification email to new subscribers before adding them to lists.</p>
+                                    </div>
+                                    <span className="px-3 py-1 font-semibold bg-green-50 text-green-700 border border-green-200 rounded-[8px] text-[10px]">ENABLED</span>
+                                </div>
+                                <div className="flex justify-between items-center py-3 border-b border-neutral-100">
+                                    <div>
+                                        <span className="font-semibold text-neutral-800">Tracking Pixel Integration</span>
+                                        <p className="text-[10px] text-neutral-400 mt-0.5 font-normal">Appends transparent 1x1 image tracker to read email open analytics.</p>
+                                    </div>
+                                    <span className="px-3 py-1 font-semibold bg-green-50 text-green-700 border border-green-200 rounded-[8px] text-[10px]">ENABLED</span>
+                                </div>
+                                <div className="flex justify-between items-center py-3 border-b border-neutral-100">
+                                    <div>
+                                        <span className="font-semibold text-neutral-800">Central Service Lockout (`Mail::send` protection)</span>
+                                        <p className="text-[10px] text-neutral-400 mt-0.5 font-normal">Prevents core code modules from calling direct Laravel Mail class bypasses.</p>
+                                    </div>
+                                    <span className="px-3 py-1 font-semibold bg-green-50 text-green-700 border border-green-200 rounded-[8px] text-[10px]">ACTIVE</span>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -2503,6 +3053,293 @@ export default function BroadcastPage() {
                     </div>
                 </DialogContent>
             </Dialog>
+
+            {/* SMTP Provider Modal */}
+            <Dialog open={smtpModalOpen} onOpenChange={setSmtpModalOpen}>
+                <DialogContent className="sm:max-w-[550px] border border-black/5 !border-color-[rgba(85,85,85,0.18)] rounded-[8px] bg-white shadow-none p-6">
+                    <DialogHeader>
+                        <DialogTitle className="text-sm font-semibold text-[#052326]">
+                            {selectedSmtp ? 'Modify SMTP Configuration' : 'Add SMTP Provider'}
+                        </DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleSaveSmtp} className="space-y-4 pt-2 text-xs">
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-1">
+                                <label className="font-semibold text-neutral-500">Provider Name</label>
+                                <input 
+                                    type="text" 
+                                    required
+                                    value={smtpForm.provider_name} 
+                                    onChange={(e) => setSmtpForm({...smtpForm, provider_name: e.target.value})} 
+                                    className="w-full p-2 border border-neutral-200 rounded-[8px] text-xs font-semibold focus:ring-1 focus:ring-black outline-none" 
+                                    placeholder="e.g. Hostinger SMTP"
+                                />
+                            </div>
+                            <div className="space-y-1">
+                                <label className="font-semibold text-neutral-500">SMTP Host</label>
+                                <input 
+                                    type="text" 
+                                    required
+                                    value={smtpForm.host} 
+                                    onChange={(e) => setSmtpForm({...smtpForm, host: e.target.value})} 
+                                    className="w-full p-2 border border-neutral-200 rounded-[8px] text-xs font-semibold focus:ring-1 focus:ring-black outline-none" 
+                                    placeholder="smtp.hostinger.com"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-4">
+                            <div className="space-y-1">
+                                <label className="font-semibold text-neutral-500">SMTP Port</label>
+                                <input 
+                                    type="number" 
+                                    required
+                                    value={smtpForm.port} 
+                                    onChange={(e) => setSmtpForm({...smtpForm, port: parseInt(e.target.value) || 465})} 
+                                    className="w-full p-2 border border-neutral-200 rounded-[8px] text-xs font-semibold focus:ring-1 focus:ring-black outline-none" 
+                                    placeholder="465"
+                                />
+                            </div>
+                            <div className="space-y-1">
+                                <label className="font-semibold text-neutral-500">Encryption</label>
+                                <select 
+                                    value={smtpForm.encryption} 
+                                    onChange={(e) => setSmtpForm({...smtpForm, encryption: e.target.value})} 
+                                    className="w-full p-2 border border-neutral-200 rounded-[8px] text-xs bg-white font-semibold focus:ring-1 focus:ring-black outline-none"
+                                >
+                                    <option value="ssl">SSL (Port 465)</option>
+                                    <option value="tls">TLS (Port 587)</option>
+                                    <option value="none">None</option>
+                                </select>
+                            </div>
+                            <div className="space-y-1">
+                                <label className="font-semibold text-neutral-500">Timeout (sec)</label>
+                                <input 
+                                    type="number" 
+                                    value={smtpForm.timeout} 
+                                    onChange={(e) => setSmtpForm({...smtpForm, timeout: parseInt(e.target.value) || 30})} 
+                                    className="w-full p-2 border border-neutral-200 rounded-[8px] text-xs font-semibold focus:ring-1 focus:ring-black outline-none"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-1">
+                                <label className="font-semibold text-neutral-500">Username</label>
+                                <input 
+                                    type="text" 
+                                    required
+                                    value={smtpForm.username} 
+                                    onChange={(e) => setSmtpForm({...smtpForm, username: e.target.value})} 
+                                    className="w-full p-2 border border-neutral-200 rounded-[8px] text-xs font-semibold focus:ring-1 focus:ring-black outline-none" 
+                                    placeholder="admin@cureza.in"
+                                />
+                            </div>
+                            <div className="space-y-1">
+                                <label className="font-semibold text-neutral-500">Password</label>
+                                <input 
+                                    type="password" 
+                                    required
+                                    value={smtpForm.password} 
+                                    onChange={(e) => setSmtpForm({...smtpForm, password: e.target.value})} 
+                                    className="w-full p-2 border border-neutral-200 rounded-[8px] text-xs font-semibold focus:ring-1 focus:ring-black outline-none" 
+                                    placeholder="SMTP Secret"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-4">
+                            <div className="space-y-1">
+                                <label className="font-semibold text-neutral-500">Sender Name</label>
+                                <input 
+                                    type="text" 
+                                    required
+                                    value={smtpForm.sender_name} 
+                                    onChange={(e) => setSmtpForm({...smtpForm, sender_name: e.target.value})} 
+                                    className="w-full p-2 border border-neutral-200 rounded-[8px] text-xs font-semibold focus:ring-1 focus:ring-black outline-none"
+                                />
+                            </div>
+                            <div className="space-y-1">
+                                <label className="font-semibold text-neutral-500">Sender Email</label>
+                                <input 
+                                    type="email" 
+                                    required
+                                    value={smtpForm.sender_email} 
+                                    onChange={(e) => setSmtpForm({...smtpForm, sender_email: e.target.value})} 
+                                    className="w-full p-2 border border-neutral-200 rounded-[8px] text-xs font-semibold focus:ring-1 focus:ring-black outline-none"
+                                />
+                            </div>
+                            <div className="space-y-1">
+                                <label className="font-semibold text-neutral-500">Reply-To</label>
+                                <input 
+                                    type="email" 
+                                    value={smtpForm.reply_to} 
+                                    onChange={(e) => setSmtpForm({...smtpForm, reply_to: e.target.value})} 
+                                    className="w-full p-2 border border-neutral-200 rounded-[8px] text-xs font-semibold focus:ring-1 focus:ring-black outline-none"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 pt-2">
+                            <div className="flex items-center gap-2">
+                                <input 
+                                    type="checkbox" 
+                                    id="is_active_smtp" 
+                                    checked={smtpForm.is_active} 
+                                    onChange={(e) => setSmtpForm({...smtpForm, is_active: e.target.checked})} 
+                                    className="rounded border-neutral-300 h-3.5 w-3.5 text-[#052326] focus:ring-[#052326]"
+                                />
+                                <label htmlFor="is_active_smtp" className="font-semibold text-neutral-600">Primary SMTP</label>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <input 
+                                    type="checkbox" 
+                                    id="is_backup_smtp" 
+                                    checked={smtpForm.is_backup} 
+                                    onChange={(e) => setSmtpForm({...smtpForm, is_backup: e.target.checked})} 
+                                    className="rounded border-neutral-300 h-3.5 w-3.5 text-[#052326] focus:ring-[#052326]"
+                                />
+                                <label htmlFor="is_backup_smtp" className="font-semibold text-neutral-600">Failover backup</label>
+                            </div>
+                        </div>
+
+                        <div className="space-y-1">
+                            <label className="font-semibold text-neutral-500">Admin Notes</label>
+                            <textarea 
+                                value={smtpForm.notes} 
+                                onChange={(e) => setSmtpForm({...smtpForm, notes: e.target.value})} 
+                                className="w-full p-2 border border-neutral-200 rounded-[8px] text-xs h-16 font-semibold focus:ring-1 focus:ring-black outline-none" 
+                                placeholder="SMTP comments, priority rules..."
+                            />
+                        </div>
+
+                        <DialogFooter className="flex items-center justify-between border-t border-neutral-100 pt-4">
+                            <button 
+                                type="button" 
+                                onClick={handleTestSmtpConnection}
+                                disabled={connectionValidating}
+                                className="border border-neutral-300 hover:bg-neutral-50 text-neutral-700 px-3 py-2 rounded-[8px] text-xs font-semibold flex items-center gap-1.5 transition-all bg-white shadow-none"
+                            >
+                                {connectionValidating ? <Loader2 size={13} className="animate-spin" /> : null}
+                                Validate Credentials
+                            </button>
+                            <div className="flex items-center gap-2">
+                                <button type="button" onClick={() => setSmtpModalOpen(false)} className="border border-neutral-200 hover:bg-neutral-50 px-3 py-2 rounded-[8px] font-semibold text-neutral-600 transition-colors shadow-none text-xs">Cancel</button>
+                                <button 
+                                    type="submit" 
+                                    disabled={actionLoading}
+                                    className="bg-[#052326] hover:bg-neutral-900 text-white px-4 py-2 rounded-[8px] font-semibold flex items-center gap-1.5 transition-all shadow-none text-xs"
+                                >
+                                    {actionLoading ? <Loader2 size={13} className="animate-spin" /> : null}
+                                    Save SMTP
+                                </button>
+                            </div>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
+
+            {/* Send Test Email Modal */}
+            <Dialog open={testEmailModalOpen} onOpenChange={setTestEmailModalOpen}>
+                <DialogContent className="sm:max-w-[400px] border border-black/5 !border-color-[rgba(85,85,85,0.18)] rounded-[8px] bg-white shadow-none p-6">
+                    <DialogHeader>
+                        <DialogTitle className="text-sm font-semibold text-[#052326]">
+                            Send Test Email
+                        </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 pt-2 text-xs">
+                        <div className="space-y-1">
+                            <label className="font-semibold text-neutral-500">Recipient Email Address</label>
+                            <input 
+                                type="email" 
+                                required
+                                value={testEmailRecipient} 
+                                onChange={(e) => setTestEmailRecipient(e.target.value)} 
+                                className="w-full p-2 border border-neutral-200 rounded-[8px] text-xs font-semibold focus:ring-1 focus:ring-black outline-none" 
+                                placeholder="e.g. test@cureza.in"
+                            />
+                        </div>
+                        <DialogFooter className="flex justify-end gap-2 border-t border-neutral-100 pt-4">
+                            <button type="button" onClick={() => setTestEmailModalOpen(false)} className="border border-neutral-200 hover:bg-neutral-50 px-3 py-2 rounded-[8px] font-semibold text-neutral-600 transition-colors shadow-none text-xs">Cancel</button>
+                            <button 
+                                type="button" 
+                                onClick={handleSendTestEmail}
+                                disabled={actionLoading}
+                                className="bg-[#052326] hover:bg-neutral-900 text-white px-4 py-2 rounded-[8px] font-semibold flex items-center gap-1.5 transition-all shadow-none text-xs"
+                            >
+                                {actionLoading ? <Loader2 size={13} className="animate-spin" /> : null}
+                                Test Send
+                            </button>
+                        </DialogFooter>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+            {/* Outbound Log Details Modal */}
+            <Dialog open={logDetailsModalOpen} onOpenChange={setLogDetailsModalOpen}>
+                <DialogContent className="sm:max-w-[550px] border border-black/5 !border-color-[rgba(85,85,85,0.18)] rounded-[8px] bg-white shadow-none p-6">
+                    <DialogHeader>
+                        <DialogTitle className="text-sm font-semibold text-[#052326]">
+                            Outbound Dispatch Audit Log Details
+                        </DialogTitle>
+                    </DialogHeader>
+                    {selectedLog && (
+                        <div className="space-y-4 pt-2 text-xs font-normal">
+                            <div className="grid grid-cols-2 gap-4 border-b pb-4">
+                                <div className="space-y-0.5">
+                                    <span className="text-[10px] text-neutral-400 uppercase font-semibold">Recipient</span>
+                                    <p className="font-semibold text-neutral-900">{selectedLog.recipient}</p>
+                                </div>
+                                <div className="space-y-0.5">
+                                    <span className="text-[10px] text-neutral-400 uppercase font-semibold">Status</span>
+                                    <p className="font-semibold">{selectedLog.status.toUpperCase()}</p>
+                                </div>
+                                <div className="space-y-0.5">
+                                    <span className="text-[10px] text-neutral-400 uppercase font-semibold">SMTP Connection Used</span>
+                                    <p className="font-semibold text-neutral-900">{selectedLog.smtp_used || 'system'}</p>
+                                </div>
+                                <div className="space-y-0.5">
+                                    <span className="text-[10px] text-neutral-400 uppercase font-semibold">Retry Attempts</span>
+                                    <p className="font-semibold text-neutral-900">{selectedLog.retry_count || 0}</p>
+                                </div>
+                            </div>
+
+                            <div className="space-y-1">
+                                <span className="text-[10px] text-neutral-400 uppercase font-semibold">Subject Line</span>
+                                <p className="font-semibold text-neutral-900 bg-neutral-50 p-2 rounded-[8px] border border-neutral-100">{selectedLog.subject}</p>
+                            </div>
+
+                            {selectedLog.error_details && (
+                                <div className="space-y-1">
+                                    <span className="text-[10px] text-red-650 uppercase font-semibold">SMTP Socket Error Details</span>
+                                    <pre className="font-mono text-[10px] text-red-700 bg-red-50/50 p-3 rounded-[8px] border border-red-150 overflow-x-auto whitespace-pre-wrap">
+                                        {selectedLog.error_details}
+                                    </pre>
+                                </div>
+                            )}
+
+                            {selectedLog.response && (
+                                <div className="space-y-1">
+                                    <span className="text-[10px] text-neutral-400 uppercase font-semibold">Server Response Log</span>
+                                    <pre className="font-mono text-[10px] text-neutral-700 bg-neutral-50 p-3 rounded-[8px] border border-neutral-100 overflow-x-auto whitespace-pre-wrap">
+                                        {selectedLog.response}
+                                    </pre>
+                                </div>
+                            )}
+
+                            <DialogFooter className="pt-2">
+                                <button 
+                                    type="button" 
+                                    onClick={() => setLogDetailsModalOpen(false)}
+                                    className="px-4 py-2 border border-neutral-200 hover:bg-neutral-50 rounded-[8px] text-xs font-semibold text-neutral-600 transition-colors shadow-none"
+                                >
+                                    Close Details
+                                </button>
+                            </DialogFooter>
+                        </div>
+                    )}
+                </DialogContent>
+            </Dialog>
         </div>
     );
 
@@ -2515,4 +3352,16 @@ export default function BroadcastPage() {
         }
         return 'None';
     }
+}
+
+export default function BroadcastPage(props: any) {
+    return (
+        <Suspense fallback={
+            <div className="flex h-screen items-center justify-center bg-[#F8F3EF]">
+                <Loader2 className="animate-spin text-[#052326]" size={32} />
+            </div>
+        }>
+            <BroadcastPageContent {...props} />
+        </Suspense>
+    );
 }
