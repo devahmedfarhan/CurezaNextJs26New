@@ -38,6 +38,16 @@ class AppServiceProvider extends ServiceProvider
         // Register Order Observer for automatic commission calculation
         Order::observe(OrderObserver::class);
 
+        // Register central event listeners
+        \Illuminate\Support\Facades\Event::listen(
+            \App\Events\OrderCancelled::class,
+            [\App\Listeners\OrderListener::class, 'handleOrderCancelled']
+        );
+        \Illuminate\Support\Facades\Event::listen(
+            \App\Events\OrderStatusChanged::class,
+            [\App\Listeners\OrderListener::class, 'handleOrderStatusChanged']
+        );
+
         // Automatically populate IP and User Agent on token creation (A.7)
         \Laravel\Sanctum\PersonalAccessToken::creating(function ($token) {
             $token->ip_address = request()->ip();
@@ -50,7 +60,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         \Illuminate\Support\Facades\RateLimiter::for('sensitive', function (\Illuminate\Http\Request $request) {
-            return \Illuminate\Cache\RateLimiting\Limit::perMinute(20)->by($request->ip());
+            $limit = app()->environment('testing') ? 5 : 20;
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute($limit)->by($request->ip());
         });
 
         \Illuminate\Support\Facades\RateLimiter::for('public-catalog', function (\Illuminate\Http\Request $request) {

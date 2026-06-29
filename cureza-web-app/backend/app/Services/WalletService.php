@@ -92,7 +92,7 @@ class WalletService
             DB::table('transaction_logs')->insert([
                 'wallet_type' => 'seller',
                 'wallet_id' => $wallet->id,
-                'action' => 'credit_earnings_escrow',
+                'action' => 'credit_earnings',
                 'amount' => $amount,
                 'balance_before' => $balanceBefore,
                 'balance_after' => $wallet->available_balance,

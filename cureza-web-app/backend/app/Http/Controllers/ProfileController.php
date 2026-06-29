@@ -71,6 +71,21 @@ class ProfileController extends Controller
 
         $user->save();
 
+        // Dual-write sync for sellers: propagate to sellerProfile and brand
+        if ($user->role === 'seller') {
+            $profile = $user->sellerProfile;
+            if ($profile) {
+                $profile->gst_number = $user->gst_number;
+                $profile->save();
+            }
+
+            $brand = $user->brand;
+            if ($brand && $user->company_name) {
+                $brand->name = $user->company_name;
+                $brand->save();
+            }
+        }
+
         // Return updated user with full avatar URL
         $userData = $user->toArray();
         if ($user->profile_image) {

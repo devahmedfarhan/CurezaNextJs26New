@@ -74,8 +74,11 @@ class AdminSellerRequestController extends Controller
                         ]);
                     }
 
-                    // Update User Phone
-                    $seller->update(['phone' => $newData['phone'] ?? $seller->phone]);
+                    // Update User Phone & Company Name
+                    $seller->update([
+                        'phone' => $newData['phone'] ?? $seller->phone,
+                        'company_name' => $newData['brand_name'] ?? $seller->company_name
+                    ]);
 
                     // Update Profile Business Info
                     if (!$profile) {
@@ -200,6 +203,7 @@ class AdminSellerRequestController extends Controller
                     // GST
                     if (isset($mergedKycNumbers['gst_cert'])) {
                         $kycUpdates['gst_number'] = $mergedKycNumbers['gst_cert'];
+                        $seller->update(['gst_number' => $mergedKycNumbers['gst_cert']]);
                     }
 
                     // Update document statuses array

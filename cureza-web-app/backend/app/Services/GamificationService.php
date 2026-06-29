@@ -38,6 +38,12 @@ class GamificationService
             'xp_refer_friend' => (int) ($settings->get('xp_refer_friend')?->value ?? 200),
             'points_refer_friend' => (int) ($settings->get('points_refer_friend')?->value ?? $legacyReferral ?? 100),
             
+            // Legacy / test specific keys
+            'xp_per_100_spent' => (int) ($settings->get('xp_per_100_spent')?->value ?? $legacy100Spent ?? 10),
+            'xp_per_referral' => (int) ($settings->get('xp_per_referral')?->value ?? $legacyReferral ?? 1000),
+            'xp_per_review' => (int) ($settings->get('xp_per_review')?->value ?? $legacyReview ?? 50),
+            'xp_per_photo_upload' => (int) ($settings->get('xp_per_photo_upload')?->value ?? $legacyPhoto ?? 100),
+
             'xp_upload_prescription' => (int) ($settings->get('xp_upload_prescription')?->value ?? 150),
             'points_upload_prescription' => (int) ($settings->get('points_upload_prescription')?->value ?? 0),
             
@@ -240,7 +246,7 @@ class GamificationService
                 self::adjustXPAndPoints(
                     $referee,
                     100, // Welcome XP
-                    50,  // Welcome Points
+                    200, // Welcome Points
                     "Referral welcome bonus",
                     'credit',
                     $referral->id

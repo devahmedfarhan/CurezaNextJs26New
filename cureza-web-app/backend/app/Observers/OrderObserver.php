@@ -25,7 +25,13 @@ class OrderObserver
             $newStatus = $order->status;
             Log::info("OrderObserver: Order #{$order->order_number} status changed from '{$oldStatus}' to '{$newStatus}'.");
 
+            // Sync order items status
+            $order->items()->update(['status' => $newStatus]);
+
             $this->dispatchOrderStatusEmail($order, $newStatus);
+
+            // Dispatch dynamic domain event for state synchronization
+            event(new \App\Events\OrderStatusChanged($order, $oldStatus, $newStatus));
         }
 
         if ($order->isDirty('payment_status')) {
@@ -48,6 +54,9 @@ class OrderObserver
     {
         Log::info("OrderObserver: Order #{$order->order_number} created. Dispatching confirmation email.");
         $this->dispatchOrderStatusEmail($order, 'confirmed');
+
+        // Dispatch domain event for order creation
+        event(new \App\Events\OrderCreated($order));
     }
 
     /**
@@ -132,15 +141,17 @@ class OrderObserver
         }
 
         try {
-            $this->communicationService->send(
-                $email,
-                $subject,
+            \App\Services\NotificationService::send(
                 $templateKey,
-                $variables,
-                $options
+                [
+                    'email' => $email,
+                    'phone' => $order->phone ?? ($order->user ? $order->user->phone : null),
+                    'name' => $name,
+                ],
+                $variables
             );
         } catch (\Exception $e) {
-            Log::error("OrderObserver failed to queue email for Order #{$order->order_number} on status {$status}. Error: " . $e->getMessage());
+            Log::error("OrderObserver failed to send notification for Order #{$order->order_number} on status {$status}. Error: " . $e->getMessage());
         }
     }
 }

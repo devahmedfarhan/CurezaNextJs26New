@@ -1,0 +1,293 @@
+=========================================
+DATABASE TABLES SUMMARY
+=========================================
+
+Table: migrations (Rows: 158)
+Columns: id, migration, batch
+
+Table: password_reset_tokens (Rows: 0)
+Columns: email, token, created_at
+
+Table: sessions (Rows: 13)
+Columns: id, user_id, ip_address, user_agent, payload, last_activity
+
+Table: cache (Rows: 21)
+Columns: key, value, expiration
+
+Table: cache_locks (Rows: 0)
+Columns: key, owner, expiration
+
+Table: jobs (Rows: 2)
+Columns: id, queue, payload, attempts, reserved_at, available_at, created_at
+
+Table: job_batches (Rows: 0)
+Columns: id, name, total_jobs, pending_jobs, failed_jobs, failed_job_ids, options, cancelled_at, created_at, finished_at
+
+Table: failed_jobs (Rows: 0)
+Columns: id, uuid, connection, queue, payload, exception, failed_at
+
+Table: personal_access_tokens (Rows: 18)
+Columns: id, tokenable_type, tokenable_id, name, token, abilities, last_used_at, expires_at, created_at, updated_at, ip_address, user_agent
+
+Table: notifications (Rows: 38)
+Columns: id, type, notifiable_type, notifiable_id, data, read_at, created_at, updated_at
+
+Table: categories (Rows: 88)
+Columns: id, name, slug, type, parent_id, image, icon, sub_heading, description, bottom_description, is_active, created_at, updated_at, show_in_mega_menu, mega_menu_section
+
+Table: menu_items (Rows: 13)
+Columns: id, title, url, parent_id, order, is_active, created_at, updated_at
+
+Table: tags (Rows: 57)
+Columns: id, name, slug, description, created_at, updated_at
+
+Table: product_tag (Rows: 20)
+Columns: id, product_id, tag_id, created_at, updated_at
+
+Table: products (Rows: 9)
+Columns: id, title, slug, sku, brand_id, category_id, seller_id, price, original_price, stock_status, stock, image, images, video_url, short_description, long_description, highlights, specifications, return_policy, warranty_info, variants, tags, seo_title, seo_description, meta_schema, rating, reviews_count, sales_count, views_count, status, created_at, updated_at, concern_id, additional_info, bought_last_month, banners, faqs, is_prescription_required, deleted_at, video_cover, video_file, gst_slab, gst_inclusive, hsn_code, is_bestseller, is_new_arrival
+
+Table: attributes (Rows: 1)
+Columns: id, name, slug, type, is_active, sort_order, created_at, updated_at
+
+Table: attribute_terms (Rows: 2)
+Columns: id, attribute_id, name, slug, value, sort_order, created_at, updated_at
+
+Table: product_variants (Rows: 0)
+Columns: id, product_id, sku, attributes, price, original_price, stock, stock_status, image, is_default, created_at, updated_at
+
+Table: blog_authors (Rows: 2)
+Columns: id, name, slug, bio, image, social_links, created_at, updated_at, meta_title, meta_description, meta_keywords
+
+Table: blog_categories (Rows: 4)
+Columns: id, name, slug, description, icon, is_active, deleted_at, created_at, updated_at, meta_title, meta_description, meta_keywords
+
+Table: blog_post_tags (Rows: 33)
+Columns: id, blog_post_id, tag_id, created_at, updated_at
+
+Table: blog_posts (Rows: 12)
+Columns: id, title, slug, excerpt, content, featured_image, category_id, author_id, status, published_at, is_featured, meta_title, meta_description, meta_keywords, views_count, deleted_at, created_at, updated_at, fact_checked_by, fact_checker_title, fact_checker_image, fact_checker_credentials, recommended_products, citations
+
+Table: blog_tags (Rows: 12)
+Columns: id, name, slug, created_at, updated_at, meta_title, meta_description, meta_keywords
+
+Table: carts (Rows: 11)
+Columns: id, user_id, session_id, created_at, updated_at, coupon_code
+
+Table: addresses (Rows: 4)
+Columns: id, user_id, name, phone, address_line_1, address_line_2, city, state, zip, country, type, is_default, created_at, updated_at
+
+Table: coupons (Rows: 6)
+Columns: id, code, type, value, min_cart_value, expires_at, is_active, created_at, updated_at
+
+Table: shipping_methods (Rows: 4)
+Columns: id, name, cost, estimated_days, is_active, created_at, updated_at
+
+Table: orders (Rows: 4)
+Columns: id, order_number, user_id, total_amount, discount_amount, tax_amount, shipping_amount, final_amount, status, payment_status, payment_method, shipping_address_json, billing_address_json, coupon_code, created_at, updated_at, order_notes, igst, shipping_method_id, cgst, sgst, admin_commission, seller_earnings, platform_commission_percentage, payment_gateway_percentage, platform_commission_amount, payment_gateway_fee, commission_calculated_at, tracking_id, tracking_provider, checkout_rating
+
+Table: prescriptions (Rows: 9)
+Columns: id, prescription_number, user_id, doctor_id, date, patient_details, vitals, chief_complaints, diagnosis, medicines, advice, notes, created_at, updated_at
+
+Table: wallets (Rows: 7)
+Columns: id, user_id, balance, points, created_at, updated_at, xp, last_checkin_at, checkin_streak, referral_enabled, influencer_enabled, challenges_enabled
+
+Table: wallet_transactions (Rows: 10)
+Columns: id, wallet_id, type, amount, points, description, reference_id, created_at, updated_at, xp
+
+Table: membership_tiers (Rows: 3)
+Columns: id, name, min_points, benefits, icon, created_at, updated_at
+
+Table: challenges (Rows: 2)
+Columns: id, title, description, type, goal_value, reward_points, start_date, end_date, is_active, created_at, updated_at
+
+Table: user_challenges (Rows: 1)
+Columns: id, user_id, challenge_id, current_value, status, created_at, updated_at
+
+Table: referrals (Rows: 2)
+Columns: id, referrer_id, referred_user_id, referral_code, status, reward_points, created_at, updated_at
+
+Table: recently_viewed_products (Rows: 21)
+Columns: id, user_id, product_id, viewed_at, created_at, updated_at
+
+Table: comparisons (Rows: 1)
+Columns: id, user_id, product_ids, created_at, updated_at
+
+Table: wishlists (Rows: 3)
+Columns: id, user_id, product_id, created_at, updated_at
+
+Table: attribute_values (Rows: 1)
+Columns: id, attribute_id, value, created_at, updated_at
+
+Table: product_attribute_values (Rows: 0)
+Columns: id, product_id, attribute_value_id, created_at, updated_at
+
+Table: appointments (Rows: 2)
+Columns: id, doctor_id, patient_id, appointment_date, status, notes, created_at, updated_at, consultation_type, is_follow_up, urgency_level, health_concern, medical_background, documents, preferred_slot, reschedule_allowed, consent_accepted, payment_status, payment_method, amount, payment_id, payment_details
+
+Table: activity_logs (Rows: 963)
+Columns: id, user_id, action, description, ip_address, user_agent, created_at, updated_at
+
+Table: brands (Rows: 1)
+Columns: id, name, slug, logo, description, user_id, created_at, updated_at, is_active, banner_path, short_description, keywords, meta_title, meta_description, meta_keywords, faqs, purity_standards, genuine_badge_text, brand_vision, show_in_mega_menu, mega_menu_section
+
+Table: seller_profiles (Rows: 1)
+Columns: id, user_id, contact_person, registering_as, pan_number, tax_id, gst_number, vat_number, bank_name, branch_name, bank_account_number, ifsc_code, bic_swift_code, address_line_1, address_line_2, city, state, country, pin_code, sourcing_method, sell_on_other_platforms, brand_started_on, annual_turnover, product_count, has_website, found_us_via, cheque_image_path, signature_image_path, status, is_verified, created_at, updated_at, pan_status, gst_status, cheque_status, signature_status, aadhaar_number, aadhaar_image_path, aadhaar_status, pan_updated_at, gst_updated_at, cheque_updated_at, signature_updated_at, aadhaar_updated_at, pan_image_path, gst_image_path, product_categories, concerns_catered, trade_license_image_path, trademark_image_path, drug_license_image_path, pan_business_image_path, organization_type, kyc_numbers, kyc_docs, company_type, account_holder_name, warned_at, rejection_reason, resubmit_allowed, kyc_document_statuses, kyc_document_reasons, selected_licenses, pickup_address_line_1, pickup_address_line_2, pickup_address_city, pickup_address_state, pickup_address_country, pickup_address_pin_code, gstin_verified, gstin_verified_at, tcs_rate, tds_rate, default_gst_slab, default_gst_inclusive, default_hsn_code
+
+Table: upsells (Rows: 0)
+Columns: id, parent_product_id, upsell_product_id, priority, is_active, created_at, updated_at
+
+Table: shipments (Rows: 4)
+Columns: id, order_id, seller_id, courier_name, tracking_number, status, shipped_at, delivered_at, created_at, updated_at, pickup_time_slot, pickup_scheduled_at, weight, dimensions_l, dimensions_w, dimensions_h, shipping_charge, remittance_status, remitted_at, payout_status, payout_amount, payout_transaction_id
+
+Table: refunds (Rows: 2)
+Columns: id, order_id, user_id, amount, reason, status, payment_result_json, admin_notes, created_at, updated_at
+
+Table: product_change_requests (Rows: 2)
+Columns: id, product_id, seller_id, change_type, proposed_data, original_data, status, rejection_reason, reviewed_by, reviewed_at, created_at, updated_at, gst_slab, gst_inclusive
+
+Table: seller_commissions (Rows: 1)
+Columns: id, seller_id, base_commission_percentage, payment_gateway_percentage, effective_commission_percentage, valid_from, valid_until, is_active, notes, created_at, updated_at
+
+Table: seller_wallets (Rows: 1)
+Columns: id, seller_id, total_earnings, pending_amount, available_balance, paid_amount, on_hold_amount, created_at, updated_at
+
+Table: seller_transactions (Rows: 5)
+Columns: id, seller_id, order_id, payout_id, type, amount, balance_before, balance_after, description, metadata, created_at, tcs_deduction, tds_deduction, reconciliation_status
+
+Table: payouts (Rows: 2)
+Columns: id, user_id, amount, status, payment_method, transaction_id, notes, created_at, updated_at, seller_id, requested_amount, approved_amount, bank_details, requested_at, processed_at, processed_by
+
+Table: store_change_requests (Rows: 3)
+Columns: id, seller_id, brand_id, proposed_data, status, rejection_reason, reviewed_by, reviewed_at, created_at, updated_at
+
+Table: reviews (Rows: 21)
+Columns: id, product_id, full_name, email, images, video_url, created_at, updated_at, customer_id, seller_id, order_id, review_type, rating, review_text, media, status, reviewed_at, moderated_by, moderated_at, deleted_at
+
+Table: review_replies (Rows: 5)
+Columns: id, review_id, seller_id, reply_text, status, created_at, updated_at, deleted_at
+
+Table: review_media (Rows: 5)
+Columns: id, review_id, media_type, media_path, thumbnail_path, display_order, created_at, updated_at
+
+Table: rating_aggregates (Rows: 19)
+Columns: id, aggregatable_type, aggregatable_id, average_rating, total_reviews, rating_1_count, rating_2_count, rating_3_count, rating_4_count, rating_5_count, last_calculated_at, created_at, updated_at
+
+Table: tickets (Rows: 5)
+Columns: id, created_by_id, created_by_role, assigned_admin_id, subject, category, priority, status, related_type, related_id, created_at, updated_at, deleted_at
+
+Table: ticket_messages (Rows: 22)
+Columns: id, ticket_id, sender_id, sender_role, message, is_internal_note, created_at, updated_at, is_read
+
+Table: ticket_attachments (Rows: 2)
+Columns: id, ticket_message_id, file_path, file_name, file_type, file_size, created_at, updated_at
+
+Table: seller_change_requests (Rows: 9)
+Columns: id, seller_id, section, old_data, new_data, status, rejection_reason, reviewed_by, reviewed_at, created_at, updated_at
+
+Table: seller_notification_settings (Rows: 1)
+Columns: id, seller_id, order_notifications, payment_notifications, ticket_notifications, email_notifications, in_app_notifications, whatsapp_notifications, created_at, updated_at
+
+Table: bundle_offers (Rows: 1)
+Columns: id, main_product_id, bundled_product_ids, discount_percentage, title, is_active, created_at, updated_at
+
+Table: order_items (Rows: 5)
+Columns: id, order_id, product_id, seller_id, product_name, quantity, price, total, status, patient_name, patient_age, patient_gender, health_concern, prescription_path, created_at, updated_at, doctor_id, base_price, gst_slab, gst_amount, cgst, sgst, igst, net_amount, hsn_code
+
+Table: cart_items (Rows: 4)
+Columns: id, cart_id, product_id, quantity, price, patient_name, patient_age, patient_gender, health_concern, prescription_path, created_at, updated_at, doctor_id, is_gift
+
+Table: transaction_logs (Rows: 3)
+Columns: id, wallet_type, wallet_id, action, amount, balance_before, balance_after, description, ip_address, user_agent, created_at
+
+Table: system_settings (Rows: 97)
+Columns: id, key, value, group, is_secret, created_at, updated_at
+
+Table: reward_slabs (Rows: 1)
+Columns: id, name, min_value, gift_product_id, gift_variant_id, display_icon_url, start_date, end_date, is_active, priority, seller_id, category_id, created_at, updated_at, discount_amount, free_shipping
+
+Table: scraped_products (Rows: 62)
+Columns: id, source_url, title, price, description, images, sku, status, error_message, brand_id, category_id, created_at, updated_at
+
+Table: scraping_tasks (Rows: 12)
+Columns: id, url, depth, status, total_count, processed_count, logs, created_at, updated_at, brand_id, category_id
+
+Table: brand_category (Rows: 11)
+Columns: id, brand_id, category_id, created_at, updated_at
+
+Table: collections (Rows: 1)
+Columns: id, name, slug, description, image, is_active, created_at, updated_at
+
+Table: collection_product (Rows: 1)
+Columns: collection_id, product_id
+
+Table: legal_pages (Rows: 7)
+Columns: id, title, slug, description, content, status, created_at, updated_at
+
+Table: admin_roles (Rows: 2)
+Columns: id, name, slug, permissions, created_at, updated_at
+
+Table: users (Rows: 7)
+Columns: id, name, email, email_verified_at, password, role, phone, remember_token, created_at, updated_at, brand_id, date_of_birth, gender, address, city, state, country, postal_code, medical_license_number, license_issuing_state, license_issuing_country, license_issue_date, specialization, years_of_experience, medical_school, practice_name, practice_address, practice_city, practice_state, practice_country, practice_postal_code, practice_email, certifications, professional_affiliations, doctor_status, rejection_reason, profile_image, state_council_name, medical_council_name, ayush_id, license_path, ayush_id_path, identity_proof_path, license_expiry_date, email_otp, mobile_otp, otp_expires_at, mobile_verified_at, admin_remarks, approved_at, approved_by, registration_source, registration_ip, device_info, profile_photo_path, languages_spoken, bio, consultation_duration, secondary_specializations, areas_of_expertise, treatable_conditions, registration_date, ayush_system_type, ayush_certificate_path, identity_proof_type, identity_proof_number, highest_qualification, degree_name, completion_year, education_history, additional_certifications, clinic_name, clinic_address, clinic_city, clinic_state, clinic_pincode, google_map_link, available_days, time_slots, timezone, emergency_availability, max_consultations_per_day, break_times, bank_account_holder, bank_name, bank_account_number, bank_ifsc, payout_status, commission_percentage, agreed_to_terms, agreed_to_telemedicine_guidelines, declaration_of_truth, consent_timestamp, consent_ip, consent_version, audit_logs, ayush_document_path, pending_updates, consultation_fee, consultation_modes, profile_photo_status, license_doc_status, identity_proof_status, profile_photo_rejection_reason, license_doc_rejection_reason, identity_proof_rejection_reason, ayush_document_status, ayush_document_rejection_reason, admin_role_id, unsubscribed_marketing, referral_code, gst_number, company_name
+
+Table: notification_templates (Rows: 16)
+Columns: id, name, code, flow, channel, subject, content, trigger_type, delay_value, delay_unit, status, whatsapp_template_name, whatsapp_status, variables, created_at, updated_at
+
+Table: notification_logs (Rows: 2)
+Columns: id, recipient_email, recipient_phone, recipient_name, template_code, flow, channel, subject, content, status, error_message, sent_at, created_at, updated_at
+
+Table: product_waitlists (Rows: 0)
+Columns: id, product_id, user_id, email, phone, notified, created_at, updated_at
+
+Table: faqs (Rows: 116)
+Columns: id, category, topic_id, topic_title, topic_icon, topic_description, subtopic_id, subtopic_title, question, answer, order, created_at, updated_at
+
+Table: badges (Rows: 6)
+Columns: id, name, description, icon, rule_type, rule_value, is_active, created_at, updated_at
+
+Table: user_badges (Rows: 2)
+Columns: id, user_id, badge_id, unlocked_at, created_at, updated_at
+
+Table: rewards (Rows: 5)
+Columns: id, name, description, points_cost, type, coupon_code, stock, image_url, is_active, created_at, updated_at
+
+Table: reward_redemptions (Rows: 0)
+Columns: id, user_id, reward_id, points_spent, coupon_code, status, shipping_address, created_at, updated_at
+
+Table: hsn_codes (Rows: 30)
+Columns: id, code, description, gst_rate, created_at, updated_at
+
+Table: banners (Rows: 0)
+Columns: id, title, image, location, status, link, created_at, updated_at
+
+Table: reports (Rows: 0)
+Columns: id, name, type, format, file_path, status, error, parameters, generated_by, created_at, updated_at
+
+Table: campaigns (Rows: 2)
+Columns: id, title, subject, segment, template, status, recipients, delivered, open_rate, sent_at, created_at, updated_at, body, scheduled_at, total_sent, total_opened, total_clicked, total_failed, channel, settings
+
+Table: social_submissions (Rows: 1)
+Columns: id, customer_id, platform, link, content_type, views_count, likes_count, status, points_awarded, xp_awarded, bonus_type, bonus_details, moderated_by, moderated_at, created_at, updated_at
+
+Table: influencer_messages (Rows: 0)
+Columns: id, customer_id, subject, message, status, reply_text, replied_by, replied_at, created_at, updated_at
+
+Table: media_folders (Rows: 1)
+Columns: id, name, slug, parent_id, created_at, updated_at
+
+Table: media (Rows: 3)
+Columns: id, file_id, url, thumbnail_url, file_name, folder_id, width, height, size_bytes, extension, title, alt_text, caption, description, tags, deleted_at, created_at, updated_at
+
+Table: communication_smtp_settings (Rows: 2)
+Columns: id, provider_name, host, port, username, password, encryption, sender_name, sender_email, reply_to, timeout, retry_count, max_emails_per_hour, max_emails_per_day, is_active, is_backup, priority, notes, created_at, updated_at
+
+Table: communication_templates (Rows: 0)
+Columns: id, key, name, subject, body, variables, is_active, theme, created_at, updated_at
+
+Table: communication_logs (Rows: 22)
+Columns: id, recipient, subject, provider_name, template_key, status, retry_count, response, smtp_used, error_details, variables, sent_at, created_at, updated_at
+
+Table: communication_subscribers (Rows: 3)
+Columns: id, email, name, status, double_opt_in_token, double_opt_in_verified_at, tags, segments, created_at, updated_at, phone
+
+=========================================

@@ -231,37 +231,7 @@ class DoctorController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        // 1. Total Unique Patients
-        $totalPatients = \App\Models\Appointment::where('doctor_id', $user->id)
-            ->distinct('patient_id')
-            ->count('patient_id');
-
-        // 2. Total Appointments
-        $totalAppointments = \App\Models\Appointment::where('doctor_id', $user->id)->count();
-
-        // 3. Total Doctor Earnings
-        $completedAppointments = \App\Models\Appointment::where('doctor_id', $user->id)
-            ->where('status', 'completed')
-            ->get();
-
-        $totalEarnings = 0;
-        foreach ($completedAppointments as $appt) {
-            $amt = (float)$appt->amount;
-            $isFollowUp = $appt->is_follow_up == 1 || $appt->is_follow_up == true;
-            if ($isFollowUp) {
-                $docShare = 1.0;
-            } else if ($appt->consultation_type === 'chat') {
-                $docShare = 0.80;
-            } else {
-                $docShare = 0.85;
-            }
-            $totalEarnings += ($amt * $docShare);
-        }
-
-        // 4. Pending Requests
-        $pendingRequests = \App\Models\Appointment::where('doctor_id', $user->id)
-            ->where('status', 'pending')
-            ->count();
+        $stats = (new \App\Services\DashboardAnalyticsService())->getDoctorDashboardStats($user->id);
 
         // 5. Today's Appointments or Recent Appointments
         $todayAppointments = \App\Models\Appointment::where('doctor_id', $user->id)
@@ -279,12 +249,7 @@ class DoctorController extends Controller
             });
 
         return response()->json([
-            'summary' => [
-                'total_patients' => $totalPatients,
-                'total_appointments' => $totalAppointments,
-                'total_earnings' => round($totalEarnings, 2),
-                'pending_requests' => $pendingRequests,
-            ],
+            'summary' => $stats,
             'appointments' => $todayAppointments
         ]);
     }

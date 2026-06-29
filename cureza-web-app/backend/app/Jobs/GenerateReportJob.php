@@ -49,10 +49,10 @@ class GenerateReportJob implements ShouldQueue
                     ->get();
 
                 // CSV Header
-                $csvContent .= "ID,Order Number,Final Amount,Payment Method,Status,Created At,Customer Name\n";
+                $csvContent .= "ID,Order Number,Final Amount,Payment Method,Order Status,Payment Status,Created At,Customer Name\n";
                 foreach ($data as $ord) {
                     $customerName = $ord->user ? $ord->user->name : 'Guest';
-                    $csvContent .= "{$ord->id},\"{$ord->order_number}\",{$ord->final_amount},\"{$ord->payment_method}\",\"{$ord->payment_status}\",\"{$ord->created_at}\",\"{$customerName}\"\n";
+                    $csvContent .= "{$ord->id},\"{$ord->order_number}\",{$ord->final_amount},\"{$ord->payment_method}\",\"{$ord->status}\",\"{$ord->payment_status}\",\"{$ord->created_at}\",\"{$customerName}\"\n";
                 }
             } elseif ($type === 'users') {
                 $data = User::whereBetween('created_at', [$startDate, $endDate])

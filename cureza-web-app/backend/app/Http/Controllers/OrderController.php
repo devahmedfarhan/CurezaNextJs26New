@@ -297,7 +297,7 @@ class OrderController extends Controller
                 ]);
 
                 // Deduct Stock
-                $itemData['product']->decrement('stock', $itemData['quantity']);
+                app(\App\Services\InventoryService::class)->decrementStock($itemData['product']->id, $itemData['quantity']);
             }
 
             // Clear cart if user is authenticated
