@@ -255,10 +255,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useAuth();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
+  const [currentSearch, setCurrentSearch] = useState('');
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCurrentSearch(window.location.search);
+      
+      const handleUrlChange = () => {
+        setCurrentSearch(window.location.search);
+      };
+      
+      window.addEventListener('popstate', handleUrlChange);
+      return () => window.removeEventListener('popstate', handleUrlChange);
+    }
+  }, [pathname]);
 
   if (!mounted) {
     return null;
@@ -330,12 +344,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             if (pathname === targetPath) {
                               if (!targetQuery) {
                                 isSubActive = true;
-                              } else if (typeof window !== 'undefined') {
-                                const currentParams = new URLSearchParams(window.location.search);
-                                const targetParams = new URLSearchParams(targetQuery);
+                              } else {
                                 isSubActive = true;
+                                const currentParams = new URLSearchParams(currentSearch);
+                                const targetParams = new URLSearchParams(targetQuery);
                                 targetParams.forEach((val, key) => {
-                                  if (currentParams.get(key) !== val) {
+                                  let currentVal = currentParams.get(key);
+                                  // Fallback for default tab
+                                  if (!currentVal && key === 'tab' && val === 'campaigns') {
+                                    currentVal = 'campaigns';
+                                  }
+                                  if (currentVal !== val) {
                                     isSubActive = false;
                                   }
                                 });
@@ -347,6 +366,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                 <SidebarMenuSubButton asChild>
                                   <Link 
                                     href={subItem.url} 
+                                    onClick={() => {
+                                      setTimeout(() => {
+                                        if (typeof window !== 'undefined') {
+                                          setCurrentSearch(window.location.search);
+                                        }
+                                      }, 50);
+                                    }}
                                     className={`flex items-center w-full px-2.5 py-1.5 rounded-md text-[11px] font-medium transition-colors ${
                                       isSubActive 
                                         ? "text-neutral-900 bg-neutral-100/60 font-bold border-[0.5px] border-neutral-950/5" 
