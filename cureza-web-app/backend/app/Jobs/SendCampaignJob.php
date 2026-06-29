@@ -37,47 +37,50 @@ class SendCampaignJob implements ShouldQueue
         try {
             $this->campaign->update(['status' => 'sending']);
 
-            // 1. Gather Subscribers based on campaign segment selection
-            $subscribersQuery = Subscriber::where('status', 'subscribed');
-            $segment = strtolower($this->campaign->segment);
-
-            if ($segment === 'repeat') {
-                // Fetch users who are repeat buyers (order count > 1)
-                $repeatEmails = Order::groupBy('user_id')
-                    ->havingRaw('count(*) > 1')
-                    ->join('users', 'orders.user_id', '=', 'users.id')
-                    ->whereNotNull('users.email')
-                    ->pluck('users.email')
-                    ->toArray();
-
-                $subscribersQuery->whereIn('email', $repeatEmails);
-            } elseif ($segment === 'inactive') {
-                // Fetch subscribers registered/created > 30 days ago
-                $subscribersQuery->where('created_at', '<', Carbon::now()->subDays(30));
-            } elseif ($segment !== 'all' && !empty($segment)) {
-                // Filter by segment tags inside JSON
-                $subscribersQuery->where(function($q) use ($segment) {
-                    $q->whereJsonContains('segments', $segment)
-                      ->orWhereJsonContains('tags', $segment);
-                });
+            // 1. Gather Subscribers based on campaign rule criteria
+            $rules = $this->campaign->settings['rules'] ?? [];
+            
+            // Check if segment has fallback names
+            if (empty($rules) && !empty($this->campaign->segment)) {
+                if (strtolower($this->campaign->segment) === 'repeat') {
+                    $rules = [['field' => 'orders_count', 'operator' => 'greater_than', 'value' => '1']];
+                } elseif (strtolower($this->campaign->segment) === 'inactive') {
+                    $rules = [['field' => 'status', 'operator' => 'not_equals', 'value' => 'active']];
+                }
             }
 
-            $recipients = $subscribersQuery->whereNotNull('email')->get();
+            $subscribersQuery = \App\Http\Controllers\Api\Admin\CampaignController::resolveSubscribersQuery(
+                $this->campaign->channel, 
+                $rules
+            );
+            
+            $recipients = $subscribersQuery->get();
             $recipientCount = $recipients->count();
 
             // If no newsletter subscribers are configured, seed fallback from user table for visual admin progress
             if ($recipientCount === 0) {
-                $users = User::where('role', 'customer')->whereNotNull('email')->take(10)->get();
+                $users = User::where('role', 'customer')
+                    ->where(function($q) {
+                        $q->whereNotNull('email')->orWhereNotNull('phone');
+                    })
+                    ->take(10)
+                    ->get();
                 foreach ($users as $user) {
                     Subscriber::updateOrCreate(
                         ['email' => $user->email],
                         [
                             'name' => $user->name,
+                            'phone' => $user->phone,
                             'status' => 'subscribed',
                         ]
                     );
                 }
-                $recipients = Subscriber::where('status', 'subscribed')->get();
+                
+                $subscribersQuery = \App\Http\Controllers\Api\Admin\CampaignController::resolveSubscribersQuery(
+                    $this->campaign->channel, 
+                    $rules
+                );
+                $recipients = $subscribersQuery->get();
                 $recipientCount = $recipients->count();
             }
 
@@ -99,39 +102,70 @@ class SendCampaignJob implements ShouldQueue
 
             foreach ($recipients as $recipient) {
                 try {
-                    $placeholders = [
-                        'name' => $recipient->name ?: 'Wellness Explorer',
-                        'email' => $recipient->email,
-                        'unsubscribe_url' => config('app.url', 'http://localhost:3000') . '/newsletter/unsubscribe?email=' . urlencode($recipient->email),
-                    ];
+                    // Safety throttling delay (100ms) between messages to prevent API rate-limiting blocks
+                    usleep(100000);
 
-                    // If a custom HTML body exists in the campaign, compile variables and pass as body content
-                    if (!empty($bodyContent)) {
-                        $compiledBody = $bodyContent;
-                        foreach ($placeholders as $k => $v) {
-                            $compiledBody = str_replace(['{{ $' . $k . ' }}', '{{' . $k . '}}', '{{ ' . $k . ' }}'], $v, $compiledBody);
-                        }
-                        
-                        $communicationService->send(
-                            $recipient->email,
-                            $this->campaign->subject,
-                            $compiledBody,
-                            null, // raw HTML
+                    if ($this->campaign->channel === 'whatsapp') {
+                        $placeholders = [
+                            'customer_name' => $recipient->name ?: 'Customer',
+                            'name' => $recipient->name ?: 'Customer',
+                            'email' => $recipient->email,
+                            'phone' => $recipient->phone,
+                            'cart_link' => config('app.url', 'http://localhost:3000') . '/cart',
+                            'tracking_link' => config('app.url', 'http://localhost:3000') . '/orders/track',
+                            'review_link' => config('app.url', 'http://localhost:3000') . '/reviews',
+                            'product_name' => 'Premium Cureza Wellness Item',
+                            'product_link' => config('app.url', 'http://localhost:3000') . '/shop',
+                            'unsubscribe_link' => config('app.url', 'http://localhost:3000') . '/newsletter/unsubscribe?email=' . urlencode($recipient->email),
+                        ];
+
+                        // Send WhatsApp via NotificationService
+                        \App\Services\NotificationService::send(
+                            $templateKey,
+                            [
+                                'name' => $recipient->name ?: 'Customer',
+                                'phone' => $recipient->phone,
+                                'email' => $recipient->email
+                            ],
                             $placeholders
                         );
                     } else {
-                        // Pass template key
-                        $communicationService->send(
-                            $recipient->email,
-                            $this->campaign->subject,
-                            $templateKey, // passes template code
-                            $placeholders
-                        );
+                        $placeholders = [
+                            'name' => $recipient->name ?: 'Wellness Explorer',
+                            'email' => $recipient->email,
+                            'unsubscribe_url' => config('app.url', 'http://localhost:3000') . '/newsletter/unsubscribe?email=' . urlencode($recipient->email),
+                        ];
+
+                        // If a custom HTML body exists in the campaign, compile variables and pass as body content
+                        if (!empty($bodyContent)) {
+                            $compiledBody = $bodyContent;
+                            foreach ($placeholders as $k => $v) {
+                                $compiledBody = str_replace(['{{ $' . $k . ' }}', '{{' . $k . '}}', '{{ ' . $k . ' }}'], $v, $compiledBody);
+                            }
+                            
+                            $communicationService->send(
+                                $recipient->email,
+                                $this->campaign->subject,
+                                $compiledBody,
+                                $placeholders,
+                                ['skip_layout' => true]
+                            );
+                        } else {
+                            // Pass template key
+                            $communicationService->send(
+                                $recipient->email,
+                                $this->campaign->subject,
+                                $templateKey, // passes template code
+                                $placeholders,
+                                ['skip_layout' => true]
+                            );
+                        }
                     }
 
                     $sentCount++;
                 } catch (\Exception $e) {
-                    Log::error("Campaign send failed for {$recipient->email}: " . $e->getMessage());
+                    $recipientLabel = $this->campaign->channel === 'whatsapp' ? $recipient->phone : $recipient->email;
+                    Log::error("Campaign send failed for {$recipientLabel}: " . $e->getMessage());
                     $failedCount++;
                 }
 
@@ -154,9 +188,34 @@ class SendCampaignJob implements ShouldQueue
                 'sent_at' => Carbon::now()
             ]);
 
+            $this->cleanupCsvSubscribers();
+
         } catch (\Exception $e) {
             Log::error("SendCampaignJob failed: " . $e->getMessage());
             $this->campaign->update(['status' => 'failed']);
+            $this->cleanupCsvSubscribers();
+        }
+    }
+
+    /**
+     * Clean up temporary subscribers imported via CSV list.
+     */
+    protected function cleanupCsvSubscribers(): void
+    {
+        try {
+            $rules = $this->campaign->settings['rules'] ?? [];
+            foreach ($rules as $rule) {
+                if (isset($rule['field']) && $rule['field'] === 'selected_ids' && $rule['operator'] === 'in') {
+                    $ids = array_filter(explode(',', $rule['value']));
+                    if (!empty($ids)) {
+                        Subscriber::whereIn('id', $ids)
+                            ->whereJsonContains('tags->csv_temp', true)
+                            ->delete();
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            Log::error("Failed to cleanup CSV temporary subscribers: " . $e->getMessage());
         }
     }
 }

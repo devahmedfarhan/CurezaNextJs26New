@@ -10,6 +10,7 @@ class Subscriber extends Model
 
     protected $fillable = [
         'email',
+        'phone',
         'name',
         'status',
         'double_opt_in_token',

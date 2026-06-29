@@ -368,6 +368,45 @@ class CommunicationController extends Controller
     }
 
     /**
+     * Bulk Delete Subscribers.
+     */
+    public function subscriberBulkDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:communication_subscribers,id',
+        ]);
+
+        $count = \App\Models\Subscriber::whereIn('id', $request->ids)->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => "Successfully deleted {$count} subscriber(s)."
+        ]);
+    }
+
+    /**
+     * Bulk Update Subscriber Status.
+     */
+    public function subscriberBulkStatus(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:communication_subscribers,id',
+            'status' => 'required|string|in:pending,subscribed,unsubscribed',
+        ]);
+
+        $count = \App\Models\Subscriber::whereIn('id', $request->ids)->update([
+            'status' => $request->status
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => "Successfully updated status to '{$request->status}' for {$count} subscriber(s)."
+        ]);
+    }
+
+    /**
      * CSV Import of Subscribers.
      */
     public function subscribersImport(Request $request)

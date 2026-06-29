@@ -219,7 +219,7 @@ export default function SuperAdminDashboardHome() {
             links: [
                 { title: 'Offers & Coupons', url: '/superadmin/dashboard/marketing/offers' },
                 { title: 'Bundle Offers', url: '/superadmin/dashboard/marketing/bundles' },
-                { title: 'Email Campaigns', url: '/superadmin/dashboard/marketing/email' },
+                { title: 'Broadcast Center', url: '/superadmin/dashboard/marketing/broadcast' },
                 { title: 'Automation', url: '/superadmin/dashboard/marketing/automation' },
                 { title: 'Pixel Settings', url: '/superadmin/dashboard/marketing/pixel' }
             ]

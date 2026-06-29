@@ -45,6 +45,12 @@ class SubscriberRepository implements SubscriberRepositoryInterface
     {
         $query = Subscriber::query()->orderBy('created_at', 'desc');
 
+        // Exclude temporary CSV contacts from database listing
+        $query->where(function ($q) {
+            $q->whereNull('tags')
+              ->orWhereJsonDoesntContain('tags->csv_temp', true);
+        });
+
         if (!empty($filters['search'])) {
             $search = $filters['search'];
             $query->where(function ($q) use ($search) {

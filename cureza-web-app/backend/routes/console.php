@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Schedule;
 
 Schedule::command('seller:clean-incomplete')->daily();
 Schedule::command('notifications:process-flows')->everyFiveMinutes();
+Schedule::command('campaigns:dispatch-scheduled')->everyMinute();
 Schedule::call(function () {
     (new \App\Services\WalletService())->releaseEscrowBalances();
 })->daily();

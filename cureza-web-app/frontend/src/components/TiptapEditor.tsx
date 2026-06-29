@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
@@ -13,6 +14,7 @@ import {
     Undo, Redo, Link as LinkIcon, Image as ImageIcon,
     Youtube as YoutubeIcon
 } from 'lucide-react';
+import ImagePickerModal from '@/components/admin/ImagePickerModal';
 
 // Define Custom FontSize Extension
 const FontSize = Extension.create({
@@ -70,11 +72,8 @@ const MenuBar = ({ editor }: { editor: any }) => {
         return null;
     }
 
-    const addImage = () => {
-        const url = window.prompt('URL');
-        if (url) {
-            editor.chain().focus().setImage({ src: url }).run();
-        }
+    const addImage = (url: string) => {
+        editor.chain().focus().setImage({ src: url }).run();
     };
 
     const addLink = () => {
@@ -212,9 +211,20 @@ const MenuBar = ({ editor }: { editor: any }) => {
             <button type="button" onClick={addLink} className={`p-2 rounded hover:bg-gray-200 ${editor.isActive('link') ? 'bg-gray-200 text-black' : 'text-gray-600'}`} title="Add Link">
                 <LinkIcon size={16} />
             </button>
-            <button type="button" onClick={addImage} className="p-2 rounded hover:bg-gray-200 text-gray-600" title="Add Image">
-                <ImageIcon size={16} />
-            </button>
+            <ImagePickerModal
+                onSelect={(url) => {
+                    if (typeof url === 'string') {
+                        addImage(url);
+                    } else if (Array.isArray(url) && url.length > 0) {
+                        addImage(url[0]);
+                    }
+                }}
+                trigger={
+                    <button type="button" className="p-2 rounded hover:bg-gray-200 text-gray-600" title="Add Image from Gallery">
+                        <ImageIcon size={16} />
+                    </button>
+                }
+            />
             <button type="button" onClick={addYoutube} className="p-2 rounded hover:bg-gray-200 text-gray-600" title="Add Youtube Video">
                 <YoutubeIcon size={16} />
             </button>
@@ -271,6 +281,12 @@ export default function TiptapEditor({ content, onChange }: TiptapEditorProps) {
         },
         immediatelyRender: false,
     });
+
+    useEffect(() => {
+        if (editor && !editor.isFocused && content !== editor.getHTML()) {
+            editor.commands.setContent(content);
+        }
+    }, [content, editor]);
 
     return (
         <div className="border border-gray-300 rounded-lg overflow-hidden bg-white">

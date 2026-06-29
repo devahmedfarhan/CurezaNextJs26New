@@ -296,8 +296,8 @@ export default function MarketingDashboardPage() {
                         </div>
                     </Link>
 
-                    {/* Email Campaigns */}
-                    <Link href="/superadmin/dashboard/marketing/email" className="group">
+                    {/* Broadcast Center */}
+                    <Link href="/superadmin/dashboard/marketing/broadcast" className="group">
                         <div className="h-full bg-white border-[0.35px] border-black/50 hover:border-neutral-950 rounded-[10px] p-6 transition-all duration-300 flex flex-col justify-between">
                             <div className="space-y-4">
                                 <div className="w-10 h-10 bg-neutral-50 border-[0.35px] border-black/50 text-black rounded-[10px] flex items-center justify-center group-hover:scale-105 transition-transform">
@@ -305,15 +305,15 @@ export default function MarketingDashboardPage() {
                                 </div>
                                 <div>
                                     <h4 className="font-medium text-gray-900 group-hover:text-black transition-colors flex items-center gap-1.5 text-sm">
-                                        Email Campaigns <ArrowUpRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        Broadcast Center <ArrowUpRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                                     </h4>
                                     <p className="text-xs text-gray-500 mt-1.5 font-normal leading-relaxed">
-                                        Create newsletters, select subscriber segments (e.g. repeat buyers), design templates, and simulator dispatches.
+                                        Create newsletters, select subscriber segments (e.g. repeat buyers), design layouts, and run scheduled dispatches.
                                     </p>
                                 </div>
                             </div>
                             <div className="flex justify-between items-center mt-6 pt-4 border-t-[0.5px] border-black/50 text-xs text-gray-400 font-normal">
-                                <span>Templates Ready</span>
+                                <span>Email Dispatch</span>
                                 <span className="text-black font-medium flex items-center gap-1">Manage <ChevronRight className="h-3 w-3" /></span>
                             </div>
                         </div>

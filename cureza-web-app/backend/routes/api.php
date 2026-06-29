@@ -609,6 +609,10 @@ Route::middleware('auth:sanctum')->group(function () {
         // Campaigns
         Route::get('/campaigns', [\App\Http\Controllers\Api\Admin\CampaignController::class, 'index']);
         Route::post('/campaigns', [\App\Http\Controllers\Api\Admin\CampaignController::class, 'store']);
+        Route::post('/campaigns/preview-recipients', [\App\Http\Controllers\Api\Admin\CampaignController::class, 'previewRecipients']);
+        Route::post('/campaigns/bulk-delete', [\App\Http\Controllers\Api\Admin\CampaignController::class, 'bulkDelete']);
+        Route::post('/campaigns/{id}/duplicate', [\App\Http\Controllers\Api\Admin\CampaignController::class, 'duplicate']);
+        Route::delete('/campaigns/{id}', [\App\Http\Controllers\Api\Admin\CampaignController::class, 'destroy']);
 
         // Finance & Payouts
         Route::prefix('finance')->group(function () {
@@ -725,6 +729,8 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/subscribers/{id}', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'subscriberDelete']);
             Route::post('/subscribers/import', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'subscribersImport']);
             Route::get('/subscribers/export', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'subscribersExport']);
+            Route::post('/subscribers/bulk-delete', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'subscriberBulkDelete']);
+            Route::post('/subscribers/bulk-status', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'subscriberBulkStatus']);
 
             Route::get('/logs', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'logsList']);
             Route::get('/queue', [\App\Http\Controllers\Api\Admin\CommunicationController::class, 'queueStatus']);
