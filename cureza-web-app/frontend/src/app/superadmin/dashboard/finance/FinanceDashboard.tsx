@@ -677,22 +677,20 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
 
     const productGrossSubtotal = completedInvoiceOrders.reduce((sum, order) => {
         const shippingNum = Number(order.shipping_amount || 0);
-        const taxNum = Number(order.tax_amount || 0);
         const itemsSum = order.items && order.items.length > 0 
             ? order.items.reduce((itemSum, item) => itemSum + Number(item.price * item.quantity), 0) 
-            : (Number(order.final_amount) + Number(order.discount_amount || 0) - shippingNum - taxNum);
+            : (Number(order.final_amount) + Number(order.discount_amount || 0) - shippingNum);
         return sum + itemsSum;
     }, 0);
 
     const productDiscounts = completedInvoiceOrders.reduce((sum, order) => {
         const shippingNum = Number(order.shipping_amount || 0);
-        const taxNum = Number(order.tax_amount || 0);
         const itemsSum = order.items && order.items.length > 0 
             ? order.items.reduce((itemSum, item) => itemSum + Number(item.price * item.quantity), 0) 
-            : (Number(order.final_amount) + Number(order.discount_amount || 0) - shippingNum - taxNum);
+            : (Number(order.final_amount) + Number(order.discount_amount || 0) - shippingNum);
         const discount = Number(order.discount_amount || 0);
-        const calculatedDiscount = itemsSum + shippingNum + taxNum - Number(order.final_amount) > 0 
-            ? itemsSum + shippingNum + taxNum - Number(order.final_amount) 
+        const calculatedDiscount = itemsSum + shippingNum - Number(order.final_amount) > 0 
+            ? itemsSum + shippingNum - Number(order.final_amount) 
             : discount;
         return sum + calculatedDiscount;
     }, 0);
@@ -1273,7 +1271,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                         <div className="p-4 bg-neutral-50 rounded-[10px] border-[0.5px] border-black/10">
                                             <div className="flex justify-between items-center mb-2">
                                                 <span className="text-xs font-semibold text-blue-800">5. Seller Ecosystem Yield (Merchants Net Earnings)</span>
-                                                <span className="text-[10px] font-mono bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Formula: Gross Sales - Platform Comm - Tax/Ship Deductions</span>
+                                                <span className="text-[10px] font-mono bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Formula: Gross Sales - Platform Comm - Gateway Fee - Tax/Ship Deductions</span>
                                             </div>
                                             <div className="space-y-1 text-xs text-neutral-600">
                                                 <div className="flex justify-between">
@@ -1287,6 +1285,10 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                                 <div className="flex justify-between text-neutral-500">
                                                     <span>GST on platform fee ({gstRate}%):</span>
                                                     <span className="font-mono">- ₹{(overview?.compliance?.gst || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                                                </div>
+                                                <div className="flex justify-between text-neutral-500">
+                                                    <span>Payment Gateway Fees Deducted:</span>
+                                                    <span className="font-mono">- ₹{gatewayFeesTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
                                                 </div>
                                                 <div className="flex justify-between text-neutral-500">
                                                     <span>TCS Deducted (1%):</span>
@@ -1360,11 +1362,14 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
                                         <tbody className="divide-y divide-neutral-50 font-medium">
                                             {invoiceOrders && invoiceOrders.length > 0 ? (
                                                 invoiceOrders.map(order => {
+                                                    const shippingNum = Number(order.shipping_amount || 0);
                                                     const itemsSubtotal = order.items && order.items.length > 0 
                                                         ? order.items.reduce((sum, item) => sum + Number(item.price * item.quantity), 0) 
-                                                        : (Number(order.final_amount) + Number(order.discount_amount || 0));
+                                                        : (Number(order.final_amount) + Number(order.discount_amount || 0) - shippingNum);
                                                     const discount = Number(order.discount_amount || 0);
-                                                    const calculatedDiscount = itemsSubtotal - order.final_amount > 0 ? itemsSubtotal - order.final_amount : discount;
+                                                    const calculatedDiscount = itemsSubtotal + shippingNum - order.final_amount > 0 
+                                                        ? itemsSubtotal + shippingNum - order.final_amount 
+                                                        : discount;
                                                     const comm = Number(order.platform_commission_amount || 0);
                                                     const gstOnComm = comm * 0.18;
                                                     
