@@ -830,82 +830,15 @@ export default function SellerFinancePage() {
 
                         {/* Segments Metrics */}
                         {(() => {
-                            // Section 1: Active/Running Calculation (FIFO method)
-                            const allEarnings = transactions
-                                .filter(t => t.type === 'earning')
-                                .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()); // oldest first
-
-                            let runningPaidPool = summary.wallet.paid_amount;
-                            const platRate = Number(summary?.commission_rate?.platform ?? 25);
-                            const gateRate = Number(summary?.commission_rate?.gateway ?? 2.5);
-
-                            const earningsWithUnpaidPortion = allEarnings.map(t => {
-                                const grossVal = t.metadata?.order_total 
-                                    ? Number(t.metadata.order_total) 
-                                    : (t.order?.total_amount ? Number(t.order.total_amount) : Math.abs(t.amount) / 0.685);
-                                
-                                const platformFeeVal = t.metadata?.platform_commission 
-                                    ? Number(t.metadata.platform_commission) 
-                                    : grossVal * (platRate / 100);
-                                    
-                                const gstVal = t.metadata?.platform_commission_gst 
-                                    ? Number(t.metadata.platform_commission_gst) 
-                                    : platformFeeVal * 0.18;
-                                const tcsVal = t.tcs_deduction !== undefined && t.tcs_deduction !== null
-                                    ? Number(t.tcs_deduction)
-                                    : (t.metadata?.tcs_amount 
-                                        ? Number(t.metadata.tcs_amount) 
-                                        : grossVal * 0.01);
-                                const tdsVal = t.tds_deduction !== undefined && t.tds_deduction !== null
-                                    ? Number(t.tds_deduction)
-                                    : (t.metadata?.tds_amount 
-                                        ? Number(t.metadata.tds_amount) 
-                                        : grossVal * 0.01);
-                                
-                                const shippingCharge = t.metadata?.shipping_charge ? Number(t.metadata.shipping_charge) : 0;
-                                const isCOD = t.order ? (t.order as any).payment_method?.toLowerCase() === 'cod' : false;
-                                const gatewayFeeVal = t.metadata?.gateway_fee 
-                                    ? Number(t.metadata.gateway_fee) 
-                                    : (isCOD ? 0 : grossVal * (gateRate / 100));
-                                    
-                                const netYieldVal = Number(t.amount);
-
-                                let unpaidYield = netYieldVal;
-                                if (runningPaidPool > 0) {
-                                    if (runningPaidPool >= netYieldVal) {
-                                        unpaidYield = 0;
-                                        runningPaidPool -= netYieldVal;
-                                    } else {
-                                        unpaidYield = netYieldVal - runningPaidPool;
-                                        runningPaidPool = 0;
-                                    }
-                                }
-
-                                const unpaidRatio = netYieldVal > 0 ? (unpaidYield / netYieldVal) : 1;
-
-                                return {
-                                    created_at: t.created_at,
-                                    gross: grossVal * unpaidRatio,
-                                    platformFee: platformFeeVal * unpaidRatio,
-                                    gst: gstVal * unpaidRatio,
-                                    gatewayFee: gatewayFeeVal * unpaidRatio,
-                                    tcs: tcsVal * unpaidRatio,
-                                    tds: tdsVal * unpaidRatio,
-                                    shippingCharge: shippingCharge * unpaidRatio,
-                                    orderCount: unpaidRatio > 0 ? 1 : 0
-                                };
-                            });
-
-                            const rangeEarnings = earningsWithUnpaidPortion.filter(t => isDateInRange(t.created_at, range));
-                            const gross = rangeEarnings.reduce((sum, t) => sum + t.gross, 0);
-                            const platformCommission = rangeEarnings.reduce((sum, t) => sum + t.platformFee, 0);
-                            const gst = rangeEarnings.reduce((sum, t) => sum + t.gst, 0);
-                            const gatewayFee = rangeEarnings.reduce((sum, t) => sum + t.gatewayFee, 0);
-                            const tcs = rangeEarnings.reduce((sum, t) => sum + t.tcs, 0);
-                            const tds = rangeEarnings.reduce((sum, t) => sum + t.tds, 0);
-                            const shippingCharge = rangeEarnings.reduce((sum, t) => sum + (t.shippingCharge || 0), 0);
-                            const actualHandYield = Math.max(0, gross - platformCommission - gst - gatewayFee - tcs - tds - shippingCharge);
-                            const orderCount = rangeEarnings.reduce((sum, t) => sum + t.orderCount, 0);
+                            const gross = summary.summary.total_sales;
+                            const platformCommission = summary.summary.platform_commission;
+                            const gst = summary.summary.platform_commission_gst ?? (platformCommission * 0.18);
+                            const gatewayFee = summary.summary.gateway_fee;
+                            const tcs = summary.summary.tcs_deduction ?? 0;
+                            const tds = summary.summary.tds_deduction ?? 0;
+                            const shippingCharge = summary.summary.shipping_charge ?? 0;
+                            const actualHandYield = summary.summary.net_earnings;
+                            const orderCount = summary.summary.order_count;
 
                             // Section 2: Lifetime / All-Time Calculation
                             const lifetimeGross = lifetimeSummary.summary.total_sales;

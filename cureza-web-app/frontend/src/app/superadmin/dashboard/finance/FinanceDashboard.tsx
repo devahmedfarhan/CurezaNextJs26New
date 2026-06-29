@@ -187,6 +187,7 @@ interface SellerCommissionConfig {
 interface Order {
     id: number;
     order_number: string;
+    status: string;
     created_at: string;
     final_amount: number;
     tax_amount: number;
@@ -670,7 +671,11 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
     const totalPlatformVolume = productSalesTotal + docSalesTotal;
 
     // Detailed Product separations
-    const productGrossSubtotal = invoiceOrders.reduce((sum, order) => {
+    const completedInvoiceOrders = invoiceOrders.filter(order =>
+        ['delivered', 'cod_reconciled'].includes(order.status)
+    );
+
+    const productGrossSubtotal = completedInvoiceOrders.reduce((sum, order) => {
         const shippingNum = Number(order.shipping_amount || 0);
         const taxNum = Number(order.tax_amount || 0);
         const itemsSum = order.items && order.items.length > 0 
@@ -679,7 +684,7 @@ export default function FinanceDashboard({ defaultTab = 'overview' }: FinanceDas
         return sum + itemsSum;
     }, 0);
 
-    const productDiscounts = invoiceOrders.reduce((sum, order) => {
+    const productDiscounts = completedInvoiceOrders.reduce((sum, order) => {
         const shippingNum = Number(order.shipping_amount || 0);
         const taxNum = Number(order.tax_amount || 0);
         const itemsSum = order.items && order.items.length > 0 
