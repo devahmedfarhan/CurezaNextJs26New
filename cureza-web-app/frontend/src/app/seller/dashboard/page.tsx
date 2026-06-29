@@ -340,11 +340,11 @@ export default function SellerDashboardPage() {
                                 <tbody className="divide-y divide-gray-50 font-semibold text-gray-700">
                                     {recentOrders.length === 0 ? (
                                         <tr>
-                                            <td colSpan={4} className="py-4 text-center text-gray-400 italic text-[10px]">No recent orders found.</td>
+                                            <td colSpan={4} className="py-4 text-center text-gray-450 italic text-[10px]">No recent orders found.</td>
                                         </tr>
                                     ) : (
-                                        recentOrders.slice(0, 3).map((order) => (
-                                            <tr key={order.id} className="hover:bg-gray-50/50 transition">
+                                        recentOrders.slice(0, 3).map((order, index) => (
+                                            <tr key={`${order.id}-${index}`} className="hover:bg-gray-50/50 transition">
                                                 <td className="py-3 pr-2 font-semibold text-gray-900">{order.order_number}</td>
                                                 <td className="py-3 pr-2">{order.customer}</td>
                                                 <td className="py-3 pr-2 font-semibold text-gray-900">₹{(order.amount ?? 0).toLocaleString('en-IN')}</td>
